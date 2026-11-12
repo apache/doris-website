@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-union",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-union.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-union.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f0d7a76f9ed2f4c5d4a173fa511013ac234b0646f4138d39450f1298d600a213",
+    "sourceTechnicalHash": "b029231ec20226d4acbb7f734730357bef870357d20538422af43dd21175e9a7",
+    "targetHash": "d9ab5b1b6d1a9ec97f2b58a30febc9c05ca2eeddf89170a9e7372bf02cc52320",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:46:12.395Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f0d7a76f9ed2f4c5d4a173fa511013ac234b0646f4138d39450f1298d600a213",
+      "targetHash": "d9ab5b1b6d1a9ec97f2b58a30febc9c05ca2eeddf89170a9e7372bf02cc52320",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

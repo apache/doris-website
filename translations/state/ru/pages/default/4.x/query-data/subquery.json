@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/subquery",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/subquery.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-data/subquery.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4b1e034a6e4ce63a7375950ccb34f9d11d3203cfb6d7bb3510330923ad28f7a9",
+    "sourceTechnicalHash": "825e5422811e8eff48afb20ae4944514e44c01565879911f712a88875dbbacbd",
+    "targetHash": "1cc1ee8f6b998773d67a545e8b07505b806d19f3169c574a2a1f8eef6cc58b1f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:34.223Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4b1e034a6e4ce63a7375950ccb34f9d11d3203cfb6d7bb3510330923ad28f7a9",
+      "targetHash": "1cc1ee8f6b998773d67a545e8b07505b806d19f3169c574a2a1f8eef6cc58b1f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-data/subquery",
+        "sourcePath": "docs/query-data/subquery.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-data/subquery.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "4b1e034a6e4ce63a7375950ccb34f9d11d3203cfb6d7bb3510330923ad28f7a9",
+        "targetHash": "1cc1ee8f6b998773d67a545e8b07505b806d19f3169c574a2a1f8eef6cc58b1f",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}

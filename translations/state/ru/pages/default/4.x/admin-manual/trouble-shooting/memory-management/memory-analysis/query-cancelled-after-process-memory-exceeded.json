@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "db4229bb45836a3f68f25eb61ea3d82e1c2c186611343e43085d386cc4a064e2",
+    "sourceTechnicalHash": "6e5fa9063b7accb4b8a22edfb9a90cbb8746048c92c92d4a16fdc369c8e502ca",
+    "targetHash": "87a85ff0d4b3b972ee6f40f39a0b18c52d0c29dcf87c49ddf9415850f646751b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:56.814Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "db4229bb45836a3f68f25eb61ea3d82e1c2c186611343e43085d386cc4a064e2",
+      "targetHash": "87a85ff0d4b3b972ee6f40f39a0b18c52d0c29dcf87c49ddf9415850f646751b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded",
+        "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "db4229bb45836a3f68f25eb61ea3d82e1c2c186611343e43085d386cc4a064e2",
+        "targetHash": "87a85ff0d4b3b972ee6f40f39a0b18c52d0c29dcf87c49ddf9415850f646751b",
+        "commit": "8046b263706ddcdf890bf51f6efec7f3ea77bf66",
+        "pr": "https://github.com/apache/doris-website/pull/4433"
+      }
+    }
+  }
+}

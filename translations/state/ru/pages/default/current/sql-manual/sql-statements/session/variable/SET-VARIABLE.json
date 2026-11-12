@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/variable/SET-VARIABLE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/variable/SET-VARIABLE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/variable/SET-VARIABLE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d3c4ad60808cabc89fa177f3c6a775f6b8cf29ef5cc4b0745cc84fa99ebde283",
+    "sourceTechnicalHash": "2adbb3b8d822d9a239f1e932072eb52820a579202cf9ad74558d5544e829a1d0",
+    "targetHash": "48efb5d69901adbf51205cc8c321e43f673b64a2854028f6ad9596952d5139d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:36:20.835Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d3c4ad60808cabc89fa177f3c6a775f6b8cf29ef5cc4b0745cc84fa99ebde283",
+      "targetHash": "48efb5d69901adbf51205cc8c321e43f673b64a2854028f6ad9596952d5139d6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

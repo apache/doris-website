@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-in-range",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-in-range.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-in-range.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "73ebf218c05157ec1d3544f8bebab2d7e7e6f47bee2f2e76bc2f76bd2d2df457",
+    "sourceTechnicalHash": "1c3acca026a1b15691de0d55db96f666c8b721559880db078c0010c243fa36fc",
+    "targetHash": "fbd226eaba8c496561db3c170613188be13b3d01e4d53f3a00b71479d22b7b1e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:47:51.858Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "73ebf218c05157ec1d3544f8bebab2d7e7e6f47bee2f2e76bc2f76bd2d2df457",
+      "targetHash": "fbd226eaba8c496561db3c170613188be13b3d01e4d53f3a00b71479d22b7b1e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

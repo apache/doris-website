@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/transaction",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/transaction.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/transaction.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "9430bff38572db96b769a04713ac19cbc1477776bc00a39695be9a33691afbb7",
+    "sourceTechnicalHash": "e1679f2d93a9952945dcfeee9369dbee74293491091a1ab3ae89b72913e6c352",
+    "targetHash": "63ff575dc74e415ac0e0b191d5ad2f7e3b72792fc3cf3a3f3f3d0ff836945555",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:26:56.822Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9430bff38572db96b769a04713ac19cbc1477776bc00a39695be9a33691afbb7",
+      "targetHash": "63ff575dc74e415ac0e0b191d5ad2f7e3b72792fc3cf3a3f3f3d0ff836945555",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

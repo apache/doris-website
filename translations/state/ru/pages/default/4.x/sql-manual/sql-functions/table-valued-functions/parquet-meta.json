@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/parquet-meta",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/parquet-meta.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/parquet-meta.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a19a40cabaee920613dce316160b12f14584b837de937ff4fc2bf37304190adb",
+    "sourceTechnicalHash": "bd95cb35dd1207b90dc3e6a5d20c76e65b271955d6cc029d661dfc47758b6b3b",
+    "targetHash": "51033459c091208f0a740805cdf11052df131217ad15bd07183e3165c7778ae6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:57:07.924Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a19a40cabaee920613dce316160b12f14584b837de937ff4fc2bf37304190adb",
+      "targetHash": "51033459c091208f0a740805cdf11052df131217ad15bd07183e3165c7778ae6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/table-valued-functions/parquet-meta",
+        "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/parquet-meta.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/parquet-meta.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "a19a40cabaee920613dce316160b12f14584b837de937ff4fc2bf37304190adb",
+        "targetHash": "51033459c091208f0a740805cdf11052df131217ad15bd07183e3165c7778ae6",
+        "commit": "069e0e3bb176c7bb849b0d1de5db70877753e1bc",
+        "pr": "https://github.com/apache/doris-website/pull/4454"
+      }
+    }
+  }
+}

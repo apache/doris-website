@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-mac",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-mac.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/source-install/compilation-mac.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "82855c544dde6fcca4e993b522f1146a19acd297807eec6ad3c1c885264a17e1",
+    "sourceTechnicalHash": "436a4c841449ddbb23dff6bd6fecc3fb895eb6b4198154c923ad09763931aca6",
+    "targetHash": "79c5fe1c5c3138f4c87d9a8161ea0d0d3f6f261da6c3520a4b42f218f4a118f3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:34:39.574Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "82855c544dde6fcca4e993b522f1146a19acd297807eec6ad3c1c885264a17e1",
+      "targetHash": "79c5fe1c5c3138f4c87d9a8161ea0d0d3f6f261da6c3520a4b42f218f4a118f3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

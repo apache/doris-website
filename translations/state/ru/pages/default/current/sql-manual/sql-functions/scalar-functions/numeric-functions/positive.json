@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/positive",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/positive.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/positive.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f26f1d38dffbd922cba8dda5a85863abf0202762a5c4d88a33cb410926a0f440",
+    "sourceTechnicalHash": "df5aac780531cf07d358402461cd0ee897dc2bc61fe07dcdded5358233fe16e8",
+    "targetHash": "1ad322bf2b40a885c6b2b3b7461586b2bd3fa1018a0e7dd7bb1ae2b81743a03b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:32:03.550Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f26f1d38dffbd922cba8dda5a85863abf0202762a5c4d88a33cb410926a0f440",
+      "targetHash": "1ad322bf2b40a885c6b2b3b7461586b2bd3fa1018a0e7dd7bb1ae2b81743a03b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

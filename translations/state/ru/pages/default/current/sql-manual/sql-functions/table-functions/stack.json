@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/stack",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/stack.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/stack.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6d4daa1ae671f425a37203c41e736542f9141ee79887426bef48f45c94e9fd7e",
+    "sourceTechnicalHash": "8ca23bfc5ba0457517fb9144d45cfeacd3a3c96a722ddd569547f40b6e0f89d2",
+    "targetHash": "16007db7606780feeeb8a933cd9acce29c72e24174c76721212d38ed0d6229b9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:03:40.418Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6d4daa1ae671f425a37203c41e736542f9141ee79887426bef48f45c94e9fd7e",
+      "targetHash": "16007db7606780feeeb8a933cd9acce29c72e24174c76721212d38ed0d6229b9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

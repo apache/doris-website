@@ -1,0 +1,139 @@
+---
+{
+    "title": "Производительность и настройка",
+    "language": "ru",
+    "description": "Навигация по производительности и настройке Apache Doris: методика настройки, производительность запросов и загрузки данных, принципы работы технологий оптимизации и тесты производительности."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Адаптивный оптимизатор и движок выполнения Pipeline в Apache Doris позволяют выполнять большинство рабочих нагрузок без дополнительной настройки, однако в промышленных средах обычно всё же требуется систематическая настройка производительности. Начните с методики настройки, чтобы выявить узкие места, а затем переходите к оптимизации конкретных сценариев выполнения запросов или загрузки данных. Если вам встретится план выполнения, который сложно объяснить, обратитесь к принципам работы технологий оптимизации, чтобы разобраться в лежащих в его основе механизмах.
+
+## Методика настройки {#tuning-methodology}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Обзор настройки производительности"
+    description="Изучите полный процесс настройки, средства диагностики и анализа, предоставляемые Doris, и способы систематического выявления проблем с производительностью."
+    link="performance-tuning-overview/tuning-overview"
+/>
+</div>
+
+## Производительность запросов {#query-performance}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Оптимизация схемы и индексов"
+    description="Определите верхний предел производительности запросов с помощью выбора модели таблицы, партиционирования и бакетирования, проектирования ключевых столбцов и выбора индексов (префиксного, BloomFilter, NGram и инвертированного)."
+    link="tuning/tuning-plan/schema-and-index-optimization"
+/>
+
+<GettingStartedCard
+    title="Материализованное представление"
+    description="Предварительно вычисляйте результаты с помощью синхронных или асинхронных материализованных представлений и ускоряйте существующие SQL-запросы за счёт прозрачного переписывания без изменения самих запросов."
+    link="materialized-view/intro"
+/>
+
+<GettingStartedCard
+    title="Оптимизация Join"
+    description="Устраняйте Shuffle с помощью Colocation Join и используйте Distribute и Leading Hint, чтобы вручную корректировать план Join, когда оптимизатор принимает неоптимальное решение."
+    link="join-optimization-intro"
+/>
+
+<GettingStartedCard
+    title="Ускорение с помощью кэширования"
+    description="Сочетайте SQL Cache, Condition Cache и файловый кэш внешних таблиц, чтобы при повторных запросах повторно использовать результаты, вычисления фильтров и удалённые данные."
+    link="caching-intro"
+/>
+
+<GettingStartedCard
+    title="Настройка выполнения"
+    description="Опираясь на сведения об узких местах выполнения в Profile, настройте параллелизм, время ожидания RuntimeFilter, параметры обработки перекоса данных и правила CBO."
+    link="tuning/tuning-execution/intro"
+/>
+
+<GettingStartedCard
+    title="Высокая конкурентная нагрузка и точечные запросы"
+    description="Используйте построчное хранение и выполнение с коротким замыканием для поддержки запросов по первичному ключу с высоким QPS в таблицах Unique Key, а для ускорения KV-запросов используйте таблицы-словари вместо соединений с таблицами измерений."
+    link="high-concurrency-intro"
+/>
+
+<GettingStartedCard
+    title="Подсчёт уникальных значений"
+    description="Используйте BITMAP для точной дедупликации или HLL для приближённого вычисления UV, когда допустима погрешность 1%-2%, чтобы существенно сократить потребление памяти и затраты на хранение."
+    link="distinct-counts/intro"
+/>
+
+<GettingStartedCard
+    title="Профиль запроса"
+    description="С помощью Profile анализируйте распределение времени между такими операторами, как Scan, Exchange, Join и агрегация, чтобы быстро определить самый медленный этап запроса."
+    link="query-profile"
+/>
+</div>
+
+## Производительность загрузки данных {#ingestion-performance}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Настройка DML"
+    description="Для планов выполнения INSERT, UPDATE и DELETE настройте параллелизм записи, размер пакета и путь выполнения, чтобы добиться стабильной производительности загрузки данных."
+    link="tuning/tuning-plan/dml-tuning-plan"
+/>
+</div>
+
+## Принципы работы технологий оптимизации {#optimization-technology-principles}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Оптимизатор запросов"
+    description="Рассматриваются переписывание на основе правил и стоимостная модель оптимизатора Nereids, включая эквивалентные преобразования на основе правил и Join Enumeration на основе стоимости."
+    link="optimization-technology-principle/query-optimizer"
+/>
+
+<GettingStartedCard
+    title="Движок выполнения Pipeline"
+    description="Рассматриваются модель Pipeline, механизм планирования и параллельное выполнение Morsel-Driven, составляющие основу слоя выполнения Doris."
+    link="optimization-technology-principle/pipeline-execution-engine"
+/>
+
+<GettingStartedCard
+    title="Runtime Filter"
+    description="Рассматривается механизм выполнения, при котором RuntimeFilter создаётся на стороне построения Join и проталкивается на сторону зондирования для пропуска ненужных данных."
+    link="optimization-technology-principle/runtime-filter"
+/>
+
+<GettingStartedCard
+    title="Оптимизация TopN"
+    description="Рассматриваются выполнение с коротким замыканием и оптимизация частичной сортировки в сценариях ORDER BY ... LIMIT, позволяющие пропустить большую часть данных и быстро вернуть TopN."
+    link="optimization-technology-principle/topn-optimization"
+/>
+
+<GettingStartedCard
+    title="Статистика"
+    description="Рассматриваются сбор и использование статистики таблиц, столбцов и гистограмм, на основе которой стоимостной оптимизатор запросов выбирает планы."
+    link="optimization-technology-principle/statistics"
+/>
+</div>
+
+## Тесты производительности {#benchmarks}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Star Schema Benchmark (SSB)"
+    description="Результаты тестирования Doris по SSB на стандартном оборудовании, включая воспроизводимую конфигурацию среды и основные приёмы настройки."
+    link="../benchmark/ssb"
+/>
+
+<GettingStartedCard
+    title="TPC-H"
+    description="Результаты тестирования Doris по TPC-H: загрузка данных, задержка запросов и рекомендации по сравнению."
+    link="../benchmark/tpch"
+/>
+
+<GettingStartedCard
+    title="TPC-DS"
+    description="Результаты тестирования Doris по TPC-DS в более сложных аналитических сценариях с несколькими таблицами."
+    link="../benchmark/tpcds"
+/>
+</div>

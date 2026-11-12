@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/weekday",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/weekday.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/weekday.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b616cca4f0b0787e5b6f3fa0d1c4558b0dc549aa4497c36f739f0e91b856a34c",
+    "sourceTechnicalHash": "cee7a3e68a00cf0af410115d81ce958cbca6e30dce8509e2a0833080f95938e0",
+    "targetHash": "232653777a0ac21ff30eb06345c864314694a6740a0614d358330e02188fe737",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:07:17.631Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b616cca4f0b0787e5b6f3fa0d1c4558b0dc549aa4497c36f739f0e91b856a34c",
+      "targetHash": "232653777a0ac21ff30eb06345c864314694a6740a0614d358330e02188fe737",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

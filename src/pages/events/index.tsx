@@ -1,3 +1,5 @@
+import {translate} from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React, { useEffect } from 'react';
 import Layout from '../../theme/Layout';
 import Link from '@docusaurus/Link';
@@ -32,28 +34,28 @@ enum EventsStatusEnum {
 
 const EVENTS_PAGE_DATA = {
     banner: {
-        title: 'Events',
-        desc: "Stay tuned to community voices. Together, we celebrate collaboration, innovation, and the power of shared knowledge. Let's connect, learn, and grow!",
+        title: translate({id: "landing.events.001", message: "Events"}),
+        desc: translate({id: "landing.events.data.001", message: "Stay tuned to community voices. Together, we celebrate collaboration, innovation, and the power of shared knowledge. Let's connect, learn, and grow!"}),
         action: {
-            label: 'Are we missing any ? Click here to contribute',
+            label: translate({id: "landing.events.002", message: "Are we missing any ? Click here to contribute"}),
             link: 'https://github.com/apache/doris/discussions/50296',
             type: 'primary',
         },
     },
     eventListEn: [
         {
-            cardTitle: 'Bridging Lake and Database: Real-time Queries on Iceberg',
-            detailTitle: 'Bridging Lake and Database: Real-time Queries on Iceberg',
-            tag: 'Apache Doris Webinar',
-            date: 'September 23, 2025 7PM EST',
-            cardDate: 'September 23, 2025',
-            address: 'Virtual',
-            description: 'In this talk, We will deep-dive into how Apache Doris supports real-time queries on Iceberg tables, achieving flexible yet high-performance real-time queries—a problem that is attracting growing industry attention.',
+            cardTitle: translate({id: "landing.events.data.002", message: "Bridging Lake and Database: Real-time Queries on Iceberg"}),
+            detailTitle: translate({id: "landing.events.data.002", message: "Bridging Lake and Database: Real-time Queries on Iceberg"}),
+            tag: translate({id: "landing.events.data.003", message: "Apache Doris Webinar"}),
+            date: translate({id: "landing.events.data.004", message: "September 23, 2025 7PM EST"}),
+            cardDate: translate({id: "landing.events.data.005", message: "September 23, 2025"}),
+            address: translate({id: "landing.events.data.006", message: "Virtual"}),
+            description: translate({id: "landing.events.003", message: "In this talk, We will deep-dive into how Apache Doris supports real-time queries on Iceberg tables, achieving flexible yet high-performance real-time queries—a problem that is attracting growing industry attention."}),
             start_date: '2025-09-23T07:00:00.000Z',
             end_date: '2025-09-23T24:00:00.000Z',
             img: (
                 <img
-                    alt="cover img"
+                    alt={translate({id: "landing.events.004", message: "cover img"})}
                     width={384}
                     height={164}
                     className="rounded-t-lg"
@@ -64,18 +66,18 @@ const EVENTS_PAGE_DATA = {
             link: 'https://www.velodb.io/events/doris-webinar-20250923',
         },
         {
-            cardTitle: 'NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm',
-            detailTitle: 'NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm',
-            tag: 'Apache Doris Meetup',
-            date: 'August 22, 2025 1:30-5:00 PM (GMT+8)',
-            cardDate: 'August 22, 2025',
-            address: 'Room 4&5 14/F Fairmont House, 8 Cotton Tree Drive, Central, Hong Kong',
-            description: 'This joint event, co-hosted by NebulaGraph and Apache Doris, brings together industry leaders and technical experts to explore how modern graph and analytics technologies are reshaping financial risk control, observability, and compliance.',
+            cardTitle: translate({id: "landing.events.data.007", message: "NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm"}),
+            detailTitle: translate({id: "landing.events.data.007", message: "NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm"}),
+            tag: translate({id: "landing.events.data.008", message: "Apache Doris Meetup"}),
+            date: translate({id: "landing.events.data.009", message: "August 22, 2025 1:30-5:00 PM (GMT+8)"}),
+            cardDate: translate({id: "landing.events.data.010", message: "August 22, 2025"}),
+            address: translate({id: "landing.events.data.011", message: "Room 4&5 14/F Fairmont House, 8 Cotton Tree Drive, Central, Hong Kong"}),
+            description: translate({id: "landing.events.005", message: "This joint event, co-hosted by NebulaGraph and Apache Doris, brings together industry leaders and technical experts to explore how modern graph and analytics technologies are reshaping financial risk control, observability, and compliance."}),
             start_date: '2025-08-22T13:30:00.000Z',
             end_date: '2025-08-22T17:00:00.000Z',
             img: (
                 <img
-                    alt="cover img"
+                    alt={translate({id: "landing.events.006", message: "cover img"})}
                     width={384}
                     height={164}
                     className="rounded-t-lg"
@@ -86,18 +88,18 @@ const EVENTS_PAGE_DATA = {
             link: 'https://www.velodb.io/events/apache-doris-meetup-20250822',
         },
         {
-            cardTitle: 'Real-Time IoT Analytics with Apache Doris',
-            detailTitle: 'Real-Time IoT Analytics with Apache Doris',
-            tag: 'Apache Doris Meetup',
-            date: 'August 20, 2025 5:00-7:00 PM PDT',
-            cardDate: 'August 20, 2025',
-            address: 'Plug and Play Tech Center 440 N Wolfe Rd, Sunnyvale, CA 94085',
-            description: 'Join EMQ and VeloDB for a developer-focused meetup exploring how to build scalable, real-time data pipelines using MQTT and Apache Doris.',
+            cardTitle: translate({id: "landing.events.data.012", message: "Real-Time IoT Analytics with Apache Doris"}),
+            detailTitle: translate({id: "landing.events.data.012", message: "Real-Time IoT Analytics with Apache Doris"}),
+            tag: translate({id: "landing.events.data.008", message: "Apache Doris Meetup"}),
+            date: translate({id: "landing.events.data.013", message: "August 20, 2025 5:00-7:00 PM PDT"}),
+            cardDate: translate({id: "landing.events.data.014", message: "August 20, 2025"}),
+            address: translate({id: "landing.events.data.015", message: "Plug and Play Tech Center 440 N Wolfe Rd, Sunnyvale, CA 94085"}),
+            description: translate({id: "landing.events.007", message: "Join EMQ and VeloDB for a developer-focused meetup exploring how to build scalable, real-time data pipelines using MQTT and Apache Doris."}),
             start_date: '2025-08-20T17:00:00.000Z',
             end_date: '2025-08-20T19:00:00.000Z',
             img: (
                 <img
-                    alt="cover img"
+                    alt={translate({id: "landing.events.008", message: "cover img"})}
                     width={384}
                     height={164}
                     className="rounded-t-lg"
@@ -108,18 +110,18 @@ const EVENTS_PAGE_DATA = {
             link: 'https://www.velodb.io/events/doris-meetup-250820',
         },
         {
-            cardTitle: 'Migrating from Snowflake to Apache Doris',
-            detailTitle: 'Migrating from Snowflake to Apache Doris',
-            tag: 'Apache Doris Webinar',
-            date: 'July 22, 2025 11:00 AM–12:00 PM IST',
-            cardDate: 'July 22, 2025',
-            address: 'Virtual',
-            description: 'If you are using Snowflake and considering a move to open source to cut costs or gain more flexibility, do not miss the next VeloDB webinar! ',
+            cardTitle: translate({id: "landing.events.data.016", message: "Migrating from Snowflake to Apache Doris"}),
+            detailTitle: translate({id: "landing.events.data.016", message: "Migrating from Snowflake to Apache Doris"}),
+            tag: translate({id: "landing.events.data.003", message: "Apache Doris Webinar"}),
+            date: translate({id: "landing.events.data.017", message: "July 22, 2025 11:00 AM–12:00 PM IST"}),
+            cardDate: translate({id: "landing.events.data.018", message: "July 22, 2025"}),
+            address: translate({id: "landing.events.data.006", message: "Virtual"}),
+            description: translate({id: "landing.events.009", message: "If you are using Snowflake and considering a move to open source to cut costs or gain more flexibility, do not miss the next VeloDB webinar! "}),
             start_date: '2025-07-22T13:30:00.000Z',
             end_date: '2025-07-22T14:30:00.000Z',
             img: (
                 <img
-                    alt="cover img"
+                    alt={translate({id: "landing.events.010", message: "cover img"})}
                     width={384}
                     height={164}
                     className="rounded-t-lg"
@@ -130,18 +132,18 @@ const EVENTS_PAGE_DATA = {
             link: 'https://www.velodb.io/events/apache-doris-webinar-20250722',
         },
         {
-            cardTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
-            detailTitle: 'Apache Doris: Fastest Analytics & Search Database for AI Era',
-            tag: 'Apache Doris Webinar',
-            date: 'June 26, 2025 7-8pm EDT',
-            cardDate: 'June 26, 2025',
-            address: 'Virtual',
-            description: 'Join Rayner Chen, Apache Doris PMC Chair and Tech VP at VeloDB, as he breaks down why Doris is purpose-built for the AI era. Hear directly from the expert shaping the future of real-time analytics.',
+            cardTitle: translate({id: "landing.events.data.019", message: "Apache Doris: Fastest Analytics & Search Database for AI Era"}),
+            detailTitle: translate({id: "landing.events.data.019", message: "Apache Doris: Fastest Analytics & Search Database for AI Era"}),
+            tag: translate({id: "landing.events.data.003", message: "Apache Doris Webinar"}),
+            date: translate({id: "landing.events.data.020", message: "June 26, 2025 7-8pm EDT"}),
+            cardDate: translate({id: "landing.events.data.021", message: "June 26, 2025"}),
+            address: translate({id: "landing.events.data.006", message: "Virtual"}),
+            description: translate({id: "landing.events.011", message: "Join Rayner Chen, Apache Doris PMC Chair and Tech VP at VeloDB, as he breaks down why Doris is purpose-built for the AI era. Hear directly from the expert shaping the future of real-time analytics."}),
             start_date: '2025-06-26T21:00:00.000Z',
             end_date: '2025-06-26T22:00:00.000Z',
             img: (
                 <img
-                    alt="cover img"
+                    alt={translate({id: "landing.events.012", message: "cover img"})}
                     width={384}
                     height={164}
                     className="rounded-t-lg"
@@ -152,18 +154,18 @@ const EVENTS_PAGE_DATA = {
             link: 'https://www.velodb.io/events/apache-doris-webinar-20250625',
         },
         {
-            cardTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
-            detailTitle: 'Explore Apache Doris Compute-Storage Decoupled Mode',
-            tag: 'Apache Doris Webinar',
-            date: 'March 27, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 27, 2025',
-            address: 'Virtual',
-            description: 'Apache Doris PMC Chair will dive deep into the compute-storage decoupled mode of Doris',
+            cardTitle: translate({id: "landing.events.data.022", message: "Explore Apache Doris Compute-Storage Decoupled Mode"}),
+            detailTitle: translate({id: "landing.events.data.022", message: "Explore Apache Doris Compute-Storage Decoupled Mode"}),
+            tag: translate({id: "landing.events.data.003", message: "Apache Doris Webinar"}),
+            date: translate({id: "landing.events.data.023", message: "March 27, 2025 21:00-22:00 GMT+8"}),
+            cardDate: translate({id: "landing.events.data.024", message: "March 27, 2025"}),
+            address: translate({id: "landing.events.data.006", message: "Virtual"}),
+            description: translate({id: "landing.events.013", message: "Apache Doris PMC Chair will dive deep into the compute-storage decoupled mode of Doris"}),
             start_date: '2025-03-27T21:00:00.000Z',
             end_date: '2025-03-27T22:00:00.000Z',
             img: (
                 <img
-                    alt="cover img"
+                    alt={translate({id: "landing.events.014", message: "cover img"})}
                     width={384}
                     height={164}
                     className="rounded-t-lg"
@@ -174,18 +176,18 @@ const EVENTS_PAGE_DATA = {
             link: 'https://www.velodb.io/events/apache-doris-compute-storage-decoupled-mode-and-velo-db-cloud-demo',
         },
         {
-            cardTitle: 'Interpreting 2025 Roadmap',
-            detailTitle: 'Interpreting the Apache Doris 2025 Roadmap',
-            tag: 'Apache Doris Webinar',
-            date: 'March 20, 2025 21:00-22:00 GMT+8',
-            cardDate: 'March 20, 2025',
+            cardTitle: translate({id: "landing.events.data.025", message: "Interpreting 2025 Roadmap"}),
+            detailTitle: translate({id: "landing.events.data.026", message: "Interpreting the Apache Doris 2025 Roadmap"}),
+            tag: translate({id: "landing.events.data.003", message: "Apache Doris Webinar"}),
+            date: translate({id: "landing.events.data.027", message: "March 20, 2025 21:00-22:00 GMT+8"}),
+            cardDate: translate({id: "landing.events.data.028", message: "March 20, 2025"}),
             start_date: '2025-03-20T21:00:00.000Z',
             end_date: '2025-03-20T22:00:00.000Z',
-            address: 'Virtual',
-            description: 'Join us as we dive into the key development directions of Apache Doris in 2025 !',
+            address: translate({id: "landing.events.data.006", message: "Virtual"}),
+            description: translate({id: "landing.events.015", message: "Join us as we dive into the key development directions of Apache Doris in 2025 !"}),
             img: (
                 <img
-                    alt="address icon"
+                    alt={translate({id: "landing.events.016", message: "address icon"})}
                     width={64}
                     height={64}
                     src={`${require('@site/static/images/events/event-1.png').default}`}
@@ -205,7 +207,7 @@ const EVENTS_PAGE_DATA = {
             description:
                 'Apache Doris 4.0 版本正式上线混合检索功能，实现全文搜索、向量搜索、结构化分析的一站式 SQL 引擎支持，彻底打破传统检索与分析的系统壁垒！',
             start_date: '2025-12-04T19:30:00.000Z',
-            end_date: '2025-012-04T20:30:00.000Z',
+            end_date: '2025-12-04T20:30:00.000Z',
             img: (
                 <img
                     alt="doris-meetup-20251204"
@@ -243,7 +245,7 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
-            detailTitle: 'Doris Summit 2025 | Powering Real-Time Analytics & Search in the AI Era',
+            detailTitle: translate({id: "landing.events.data.029", message: "Doris Summit 2025 | Powering Real-Time Analytics & Search in the AI Era"}),
             date: '2025 年 11 月 5 日',
             address: '线上直播',
             description:
@@ -364,7 +366,7 @@ const EVENTS_PAGE_DATA = {
             description:
                 '此次活动将首次解读面向 AI 的实时分析型数据库 — Apache Doris 4.0 全新特性，聚焦其在 AI、湖仓一体、存算分离、可观测性、高并发点查等关键场景的技术实践。活动将深入探讨 Apache Doris 如何应对各类复杂业务需求，并邀请来自浪潮与中泰证券的技术专家分享实战经验，共同探索基于 Apache Doris 及其商业化产品 SelectDB 构建实时数据平台的最佳路径。',
             start_date: '2025-08-15T13:00:00.000Z',
-            end_date: '2025-08-14T17:00:00.000Z',
+            end_date: '2025-08-15T17:00:00.000Z',
             img: (
                 <img
                     alt="doris-meetup-20250717"
@@ -450,7 +452,7 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
-            detailTitle: 'CommunityOverCode Asia 2025',
+            detailTitle: translate({id: "landing.events.data.030", message: "CommunityOverCode Asia 2025"}),
             date: '2025 年 07 月 25 日 - 27 日',
             address: '北京市海淀区中关村国家自主创新示范区会议中心',
             description:
@@ -459,7 +461,7 @@ const EVENTS_PAGE_DATA = {
             end_date: '2025-07-27T20:30:00.000Z',
             img: (
                 <img
-                    alt="CommunityOverCode Asia 2025"
+                    alt={translate({id: "landing.events.017", message: "CommunityOverCode Asia 2025"})}
                     width={384}
                     height={164}
                     className="rounded-t-lg"
@@ -859,15 +861,18 @@ const STATUS_COLOR_MAP = {
 };
 
 export default function Events() {
+    const {i18n: {currentLocale}} = useDocusaurusContext();
     const { banner, eventListEn, eventListZh } = EVENTS_PAGE_DATA;
     const [showMore, setShowMore] = useState(false);
-    const [eventList, setEventList] = useState<Event[]>(formatEventList(eventListEn));
-    const [selectedLanguage, setSelectedLanguage] = useState<'en' | 'zh'>('en');
+    const [eventList, setEventList] = useState<Event[]>(formatEventList(currentLocale === 'zh-CN' ? eventListZh : eventListEn));
+    const [selectedLanguage, setSelectedLanguage] = useState<'en' | 'zh'>(currentLocale === 'zh-CN' ? 'zh' : 'en');
 
     const EventCard = ({ data }: { data: Event }) => {
         return (
             <Link
                 to={data.link}
+                data-event-id={`${selectedLanguage}:${data.link}`}
+                lang={selectedLanguage === 'zh' ? 'zh-CN' : currentLocale}
                 style={{ transition: 'all 0.2s ease-in-out' }}
                 className="!no-underline w-[24rem] rounded-lg hover:translate-y-[-0.5rem]"
             >
@@ -893,7 +898,11 @@ export default function Events() {
                         style={{ color: `${STATUS_COLOR_MAP[data.status]}` }}
                         className={`mb-4 text-[0.75rem]/[1.25rem] font-semibold`}
                     >
-                        {data.status}
+                        {{
+                            [EventsStatusEnum.Pre]: translate({id: 'landing.events.status.upcoming', message: 'Upcoming'}),
+                            [EventsStatusEnum.Processing]: translate({id: 'landing.events.status.processing', message: 'Processing'}),
+                            [EventsStatusEnum.Complete]: translate({id: 'landing.events.status.completed', message: 'Completed'}),
+                        }[data.status]}
                     </div>
                     <div className="mb-4 line-clamp-2 text-[1.25rem]/[2rem] h-[3.75rem] font-semibold text-[#000]">
                         {data.detailTitle}
@@ -901,7 +910,7 @@ export default function Events() {
                     <p className="line-clamp-2 mb-4 text-[#1D1D1D] text-[0.875rem]/[1.375rem]">{data.description}</p>
                     <p className="mb-[0.675rem] flex items-center text-[#4C576C] text-[0.875rem]/[1.375rem]">
                         <img
-                            alt="date icon"
+                            alt={translate({id: "landing.events.018", message: "date icon"})}
                             width={16}
                             className="inline mr-2"
                             height={16}
@@ -927,7 +936,8 @@ export default function Events() {
     }, [selectedLanguage]);
 
     return (
-        <Layout>
+        <Layout title={translate({id: 'landing.events.seo.title', message: 'Apache Doris Community Events'})}
+            description={translate({id: 'landing.events.seo.description', message: 'Explore Apache Doris community events, technical meetups, and webinars.'})}>
             <section>
                 <div className="events-banner-container container">
                     <div className="banner-title mb-4">{banner.title}</div>
@@ -941,51 +951,57 @@ export default function Events() {
                 </div>
             </section>
             <section className="mb-[5.5rem] mt-[1.25rem]">
-                <div className="max-w-[75rem] lg:px-0 px-4 text-[1rem]/[180%] mx-auto flex justify-start gap-x-[2.5rem] font-medium">
-                    <div className="h-[3.25rem] pb-4">Event Language Type:</div>
-                    <div
+                <div className="max-w-[75rem] lg:px-0 px-4 text-[1rem]/[180%] mx-auto flex flex-wrap justify-start gap-x-[2.5rem] font-medium">
+                    <div className="h-[3.25rem] pb-4">{translate({id: "landing.events.019", message: "Event Language Type:"})}</div>
+                    <button
+                        type="button"
+                        aria-pressed={selectedLanguage === 'en'}
                         onClick={() => setSelectedLanguage('en')}
                         className={`h-[3.25rem] cursor-pointer pb-4 hover:text-[#1D1D1D] ${selectedLanguage === 'en'
                             ? 'text-[#1D1D1D] border-b-[2px]  border-primary'
                             : 'text-[#4C576C]'
                             }`}
                     >
-                        English
-                    </div>
+                        {translate({id: "landing.events.020", message: "English"})}
+                    </button>
 
-                    <div
+                    <button
+                        type="button"
+                        aria-pressed={selectedLanguage === 'zh'}
                         onClick={() => setSelectedLanguage('zh')}
                         className={`h-[3.25rem] cursor-pointer hover:text-[#1D1D1D] pb-4 ${selectedLanguage === 'zh'
                             ? 'text-[#1D1D1D] border-b-[2px] border-primary'
                             : 'text-[#4C576C]'
                             }`}
                     >
-                        Chinese
-                    </div>
+                        {translate({id: "landing.events.021", message: "Chinese"})}
+                    </button>
                 </div>
+                <p className="container">{translate({id: 'landing.events.mediaLanguage', message: 'Event posters and linked recordings retain their original language. Chinese event descriptions are shown in Chinese.'})}</p>
                 <div className="max-w-[75rem] pt-[5rem] border-t-[0.5px] border-[#E3E8F2] mx-auto ">
                     <div
                         className={`flex justify-center lg:justify-start flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${!showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
                             } `}
                     >
-                        {eventList.slice(0, 9).map((event: Event, index) => (
-                            <EventCard data={event} key={index} />
+                        {eventList.slice(0, 9).map((event: Event) => (
+                            <EventCard data={event} key={event.link} />
                         ))}
                     </div>
                     {showMore ? (
                         <div className="flex justify-center lg:justify-start flex-wrap gap-x-[1.5rem] gap-y-[5rem] mb-[2.5rem] ">
-                            {eventList.slice(9).map((event: Event, index) => (
-                                <EventCard data={event} key={index} />
+                            {eventList.slice(9).map((event: Event) => (
+                                <EventCard data={event} key={event.link} />
                             ))}
                         </div>
                     ) : null}
                     {eventList.length > 9 ? (
-                        <div
+                        <button
+                            type="button"
                             onClick={() => setShowMore(true)}
-                            className="cursor-pointer text-center mx-auto text-primary text-[0.875rem]/[1.375rem]"
+                            className="block cursor-pointer text-center mx-auto text-primary text-[0.875rem]/[1.375rem]"
                         >
-                            See More <ArrowDown className="inline" />
-                        </div>
+                            {translate({id: "landing.events.022", message: "See More"})} <ArrowDown className="inline" />
+                        </button>
                     ) : null}
                 </div>
             </section>

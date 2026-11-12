@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-array",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-array.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-array.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "86aeefd42cbb4f6dd964c8447a730c393a03bfe03b645aecbcbf77c938735fa1",
+    "sourceTechnicalHash": "f2321f026770af68ad3a4e72d3bdd61f528a47dc82520ad56656be880d0b467f",
+    "targetHash": "940e0d54232f2ae4e621628020b040249e9361e149ea0bb85d729f372a6691c2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:45:53.769Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "86aeefd42cbb4f6dd964c8447a730c393a03bfe03b645aecbcbf77c938735fa1",
+      "targetHash": "940e0d54232f2ae4e621628020b040249e9361e149ea0bb85d729f372a6691c2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

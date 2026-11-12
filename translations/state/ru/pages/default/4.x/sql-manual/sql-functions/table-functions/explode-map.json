@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-map",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-map.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-map.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "71e7f3fb39e24960282cb68ddc9c232bbb4e439f7d6bbf806abbe0831767bddf",
+    "sourceTechnicalHash": "834ebcac2ebde175bb4b7bc954bb8eaed99be16cd4217b6293fe0d5e416ba489",
+    "targetHash": "49256a068ccd5039435d968ee913cd3ccd56ad194373e406a1b77027e60293a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:57:05.985Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "71e7f3fb39e24960282cb68ddc9c232bbb4e439f7d6bbf806abbe0831767bddf",
+      "targetHash": "49256a068ccd5039435d968ee913cd3ccd56ad194373e406a1b77027e60293a8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/table-functions/explode-map",
+        "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-map.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-map.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "71e7f3fb39e24960282cb68ddc9c232bbb4e439f7d6bbf806abbe0831767bddf",
+        "targetHash": "49256a068ccd5039435d968ee913cd3ccd56ad194373e406a1b77027e60293a8",
+        "commit": "069e0e3bb176c7bb849b0d1de5db70877753e1bc",
+        "pr": "https://github.com/apache/doris-website/pull/4454"
+      }
+    }
+  }
+}

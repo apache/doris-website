@@ -2,36 +2,37 @@
 {
     "title": "ARRAY | 半構造化",
     "language": "ja",
-    "description": "ARRAY<T> 型は、各要素が同じデータ型を持つ順序付きの要素集合を表します。例えば、",
+    "description": "ARRAY<T> 型は、各要素が同じデータ型である順序付き要素集合を表します。たとえば、",
     "sidebar_label": "ARRAY"
 }
 ---
 
-# ARRAY のドキュメント
+# ARRAY ドキュメント {#array-documentation}
 
-## 型の説明
+## 型の説明 {#type-description}
 
-`ARRAY<T>` 型は、各要素が同じデータ型を持つ順序付きの要素集合を表します。例えば、整数の配列は `[1, 2, 3]`、文字列の配列は `["a", "b", "c"]` と表せます。
+`ARRAY<T>` 型は、各要素が同じデータ型である順序付き要素集合を表します。たとえば、整数の配列は `[1, 2, 3]`、文字列の配列は `["a", "b", "c"]` として表せます。
 
-- `ARRAY<T>` は T 型の要素からなる配列を表し、T 型の要素には NULL を指定できます。T に使用できる型は、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, STRUCT, MAP, VARIANT, JSONB, ARRAY<T>` です。
-  - 注: 上記の T 型のうち、`JSONB` と `VARIANT` は Doris の計算レイヤーでのみサポートされ、**Doris でテーブルを作成する際に `ARRAY<JSONB>` と `ARRAY<VARIANT>` は使用できません**。
+- `ARRAY<T>` は T 型の要素で構成される配列を表し、T は NULL 許容です。T でサポートされる型は次のとおりです: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, STRUCT, MAP, VARIANT, JSONB, ARRAY<T>`。
+  - 注: 上記の T 型のうち、`JSONB` と `VARIANT` は Doris の計算レイヤーでのみサポートされ、**Doris のテーブル作成で `ARRAY<JSONB>` および `ARRAY<VARIANT>` を使用することはサポートされません**。
 
-## 型の制約
+## 型の制約 {#type-constraints}
 
-- `ARRAY<T>` 型がサポートするネストの最大深度は 9 です。
-- `ARRAY<T>` 型同士の変換可否は、T 型の変換可否によって決まります。`Array<T>` 型から他の型への変換はできません。
-  - 例えば、`ARRAY<INT>` から `ARRAY<BIGINT>` へ変換できます。これは `INT` から `BIGINT` へ変換できるためです。
-  - `Variant` 型から `Array<T>` 型へ変換できます。
-  - 文字列型から `ARRAY<T>` 型へ変換できます。文字列を解析できない場合は NULL を返します。
-- `AGGREGATE` テーブルモデルでは、`ARRAY<T>` 型で使用できる集約方式は `REPLACE` と `REPLACE_IF_NOT_NULL` のみです。**どのテーブルモデルでも、KEY 列、パーティション列、バケット列には使用できません**。
-- `ARRAY<T>` 型の列は、**`ORDER BY` と `GROUP BY` の操作をサポートします**。
-  - `ORDER BY` と `GROUP BY` をサポートする T 型は、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6` です。
-- `ARRAY<T>` 型の列は `JOIN KEY` として使用できず、`DELETE` 文でも使用できません。
+- `ARRAY<T>` 型でサポートされる最大ネスト深度は 9 です。
+- `ARRAY<T>` 型間の変換は、T を変換できるかどうかによって決まります。`Array<T>` 型は他の型に変換できません。
+  - 例: `ARRAY<INT>` は `ARRAY<BIGINT>` に変換できます。これは `INT` と `BIGINT` の間で変換できるためです。
+  - `Variant` 型は `Array<T>` 型に変換できます。
+  - 文字列型は `ARRAY<T>` 型に変換できます（解析によって変換され、解析に失敗した場合は NULL を返します）。
+- `AGGREGATE` テーブルモデルでは、`ARRAY<T>` 型は `REPLACE` と `REPLACE_IF_NOT_NULL` のみをサポートします。**どのテーブルモデルでも、KEY 列、パーティション列、バケット列として使用できません**。
+- `ARRAY<T>` 型の列は **`ORDER BY` および `GROUP BY` 操作をサポートします**。
+  - `ORDER BY` と `GROUP BY` をサポートする T 型は次のとおりです: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`。
+- `ARRAY<T>` 型の列は `IN` または `NOT IN` 操作をサポートしません。
+- `ARRAY<T>` 型の列は `JOIN KEY` として使用できず、`DELETE` 文で使用することもできません。
 
-## 定数の構築
+## 定数の構築 {#constant-construction}
 
-- `ARRAY()` 関数を使用して `ARRAY<T>` 型の値を構築します。T は引数に共通する型です。
-    
+- `ARRAY()` 関数を使用して `ARRAY<T>` 型の値を構築します。T はパラメータの共通型です。
+
     ```SQL
     -- [1, 2, 3] T is INT
     SELECT ARRAY(1, 2, 3);
@@ -39,8 +40,8 @@
     -- ["1", "2", "abc"] , T is STRING
     SELECT ARRAY(1, 2, 'abc');
     ```
-- `[]` を使用して `ARRAY<T>` 型の値を構築します。T は要素に共通する型です。
-  
+- `[]` を使用して `ARRAY<T>` 型の値を構築します。T はパラメータの共通型です。
+
    ```SQL
     -- ["abc", "def", "efg"] T is STRING
     SELECT ["abc", "def", "efg"];
@@ -49,10 +50,10 @@
     SELECT [1, 2, 'abc'];
     ```
 
-## 型の変更
+## 型の変更 {#modifying-type}
 
-- 型の変更は、`ARRAY` の要素型が `VARCHAR` の場合にのみ可能です。
-   - `VARCHAR` の長さは小さい値から大きい値にのみ変更でき、逆方向には変更できません。
+- 変更できるのは、`ARRAY` 内部の要素型が `VARCHAR` の場合だけです。
+   - `VARCHAR` のパラメータは小さい値から大きい値への変更のみ可能で、逆方向には変更できません。
 
     ```SQL
     CREATE TABLE `array_table` (
@@ -67,11 +68,11 @@
 
     ALTER TABLE array_table MODIFY COLUMN array_column ARRAY<VARCHAR(20)>;
     ```
-- `ARRAY<T>` 型の列には、デフォルト値として NULL だけを指定できます。一度指定したデフォルト値は変更できません。
+- `ARRAY<T>` 型の列のデフォルト値として指定できるのは NULL のみで、一度指定すると変更できません。
 
-## 要素へのアクセス
+## 要素へのアクセス {#element-access}
 
-- `[k]` を使用して `ARRAY<T>` の k 番目の要素にアクセスします。k は 1 から始まり、範囲外の場合は NULL を返します。
+- `[k]` を使用して `ARRAY<T>` の k 番目の要素にアクセスします。k は 1 から始まります。範囲外の場合は NULL を返します。
 
   ```SQL
   SELECT [1, 2, 3][1];
@@ -96,8 +97,8 @@
     +-------------------------+
   ```
 
-- `ELEMENT_AT(ARRAY, k)` を使用して `ARRAY<T>` の k 番目の要素にアクセスします。k は 1 から始まり、範囲外の場合は NULL を返します。
-  
+- `ELEMENT_AT(ARRAY, k)` を使用して `ARRAY<T>` の k 番目の要素にアクセスします。k は 1 から始まります。範囲外の場合は NULL を返します。
+
   ```SQL
   SELECT ELEMENT_AT(ARRAY(1, 2, 3) , 2);
   +--------------------------------+
@@ -113,7 +114,7 @@
   |                         3 |
   +---------------------------+
 
-  SELECT ELEMENT_AT([["abc", "def"], ["def", "gef"], [3]] , 3);                      
+  SELECT ELEMENT_AT([["abc", "def"], ["def", "gef"], [3]] , 3);
   +-------------------------------------------------------+
   | ELEMENT_AT([["abc", "def"], ["def", "gef"], [3]] , 3) |
   +-------------------------------------------------------+
@@ -121,9 +122,9 @@
   +-------------------------------------------------------+
   ```
 
-## 比較
+## 比較関係 {#comparison-relationship}
 
-ARRAY は順序を持つ型であり、[1, 2, 3] と [3, 2, 1] は異なる配列です。二つの ARRAY が等しいのは、対応する要素が順番にすべて等しい場合に限ります。
+ARRAY は順序付き型であり、[1, 2, 3] と [3, 2, 1] は異なる 2 つの ARRAY です。2 つの ARRAY が等しいのは、要素が順序どおりに 1 つずつ等しい場合に限られます。
 
 ```sql
 select array(1,2,3) = array(3,2,1);
@@ -148,11 +149,11 @@ select array(1,2,3) = array(1,2,3,3);
 +-------------------------------+
 ```
 
-大小比較では、ARRAY は辞書順に従います。配列 `A` と `B` について、インデックス `i = 1` から、同じ位置にある要素 `A[i]` と `B[i]` を比較します。
+半順序比較では、ARRAY は辞書順に従います。2 つの配列 `A` と `B` について、インデックス `i = 1` から開始し、対応する位置の要素 `A[i]` と `B[i]` を比較します。
 
-- `A[i] ≠ B[i]` の場合、その要素の比較結果（< または >）が配列全体の比較結果になります。
-- `A[i] = B[i]` の場合、次の位置を比較します。
-- 両配列に共通する長さの範囲で、すべての要素が等しい場合は、短い配列の方が小さくなります。
+- `A[i] ≠ B[i]` の場合、比較結果（<、>）によって配列全体の比較結果が直接決まります
+- `A[i] = B[i]` の場合、次の位置の比較を続けます
+- 共通する長さの範囲内ですべての要素が等しい場合、短い配列が小さくなります。
 
 ```sql
 select array(1,2,3) > array(1,2,3,3), array(1,2,3) < array(1,2,3,3);
@@ -177,13 +178,13 @@ select array(null) < array(-1), array(null) > array(-1);
 +-------------------------+-------------------------+
 ```
 
-## クエリの高速化
+## クエリ高速化 {#query-acceleration}
 
-- Doris テーブルの `ARRAY<T>` 型の列には転置インデックスを追加でき、その列に対する `ARRAY` 関数を使った計算を高速化できます。
-  - 転置インデックスがサポートする T 型は、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6` です。
-  - 高速化される `ARRAY` 関数は `ARRAY_CONTAINS` と `ARRAYS_OVERLAP` です。ただし、関数の引数に NULL が含まれる場合は、通常のベクトル化計算に切り替わります。
+- Doris テーブルの `ARRAY<T>` 型の列には転置インデックスを追加でき、その列に対する `ARRAY` 関数の計算を高速化できます。
+  - 転置インデックスでサポートされる T 型は次のとおりです: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`。
+  - 高速化される `ARRAY` 関数は `ARRAY_CONTAINS` と `ARRAYS_OVERLAP` です。ただし、関数パラメータに NULL が含まれる場合は、通常のベクトル化計算にフォールバックします。
 
-## 例
+## 例 {#examples}
 
 - 多次元配列
 
@@ -215,8 +216,8 @@ select array(null) < array(-1), array(null) > array(-1);
   +---------------------+--------------------------+
   ```
 
-- ネストした複合型
-  
+- ネストされた複合型
+
   ```SQL
   -- Create table
   CREATE TABLE IF NOT EXISTS array_map_table (
@@ -327,4 +328,3 @@ select array(null) < array(-1), array(null) > array(-1);
   |    3 | [7, 8, 9]    |
   +------+--------------+
   ```
-

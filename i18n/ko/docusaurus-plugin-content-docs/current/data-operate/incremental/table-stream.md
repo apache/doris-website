@@ -36,10 +36,10 @@
 <!-- Knowledge type: Operations guide + Feature description -->
 <!-- Use cases: Incremental ETL / Downstream table sync / Change auditing / Exactly-once consumption of table changes -->
 
-Table Stream(이하 Stream)은 [Row Binlog](row-binlog)를 기반으로 하는 변경 데이터 소비 객체입니다. 소비 진행 위치를 기억하므로, 읽을 때마다 마지막 소비 이후 기본 테이블에서 발생한 변경 사항만 반환합니다. 소비 오프셋은 변경 사항을 대상 테이블에 쓰는 트랜잭션 내에서 함께 이동하므로, 변경 사항이 누락되거나 중복 소비되지 않습니다.
+Table Stream(이하 Stream)은 [Changelog](changelog)를 기반으로 하는 변경 데이터 소비 객체입니다. 소비 진행 위치를 기억하므로, 읽을 때마다 마지막 소비 이후 기본 테이블에서 발생한 변경 사항만 반환합니다. 소비 오프셋은 변경 사항을 대상 테이블에 쓰는 트랜잭션 내에서 함께 이동하므로, 변경 사항이 누락되거나 중복 소비되지 않습니다.
 
 :::caution 실험적 기능
-이 기능은 버전 5.0.0부터 제공되는 실험적 기능입니다. FE 구성에서 `enable_feature_binlog = true`와 `enable_table_stream = true`를 설정해야 합니다.
+이 기능은 버전 5.0.0부터 제공되는 실험적 기능입니다. FE 구성에서 `enable_feature_changelog = true`와 `enable_table_stream = true`를 설정해야 합니다.
 :::
 
 ## 기본 개념 {#basic-concepts}
@@ -48,7 +48,7 @@ Table Stream(이하 Stream)은 [Row Binlog](row-binlog)를 기반으로 하는 �
 
 | 개념 | 설명 |
 |---|---|
-| 기본 테이블 | Stream이 추적하는 테이블로, Row Binlog가 활성화되어 있어야 합니다. 하나의 기본 테이블에 여러 Stream을 둘 수 있으며, 각 Stream은 독립적으로 소비합니다 |
+| 기본 테이블 | Stream이 추적하는 테이블로, Changelog가 활성화되어 있어야 합니다. 하나의 기본 테이블에 여러 Stream을 둘 수 있으며, 각 Stream은 독립적으로 소비합니다 |
 | 소비 오프셋 | Stream은 기본 테이블의 각 파티션에 대해 지금까지 소비한 커밋 타임스탬프(TSO)를 기록합니다. Stream을 읽으면 각 파티션의 오프셋부터 문 실행 시작 시점의 최신 커밋까지 발생한 변경 사항을 반환합니다 |
 | 변경 유형 | `APPEND`(삽입), `UPDATE_BEFORE`(업데이트 전 값), `UPDATE_AFTER`(업데이트 후 값), `DELETE`(삭제, 삭제 전 값 포함) |
 | 소비 유형 | Stream 생성 시 지정하는 `type`으로, 변경 사항을 출력하는 세분화 수준을 결정합니다. [소비 유형](#consumption-types)을 참조하세요 |
@@ -62,8 +62,8 @@ Table Stream(이하 Stream)은 [Row Binlog](row-binlog)를 기반으로 하는 �
 
 <!-- Knowledge type: Environment requirements -->
 
-- Doris 5.0.0 이상이며, FE에서 `enable_feature_binlog = true`와 `enable_table_stream = true`가 설정되어 있어야 합니다.
-- Row Binlog가 활성화된 내부 기본 테이블이 필요합니다. `min_delta` / `detail` 유형에는 추가로 `binlog.need_historical_value`가 활성화된 Unique Key MoW 테이블이 필요합니다. [Row Binlog](row-binlog#supported-scope-and-limitations)를 참조하세요.
+- Doris 5.0.0 이상이며, FE에서 `enable_feature_changelog = true`와 `enable_table_stream = true`가 설정되어 있어야 합니다.
+- Changelog가 활성화된 내부 기본 테이블이 필요합니다. `min_delta` / `detail` 유형에는 추가로 `changelog.need_historical_value`가 활성화된 Unique Key MoW 테이블이 필요합니다. [Changelog](changelog#supported-scope-and-limitations)를 참조하세요.
 - Stream이 속한 데이터베이스에 대한 `CREATE_PRIV`와 기본 테이블에 대한 `SELECT_PRIV`가 필요합니다.
 
 ## Stream 생성 및 관리 {#creating-and-managing-streams}
@@ -84,7 +84,7 @@ ON TABLE [<db_name>.]<table_name>
 
 | 속성 | 기본값 | 설명 |
 |---|---|---|
-| `type` | `min_delta` | 소비 유형입니다. `min_delta`와 `detail`은 기본 테이블이 `binlog.need_historical_value`가 활성화된 Unique Key MoW 테이블이어야 합니다. Duplicate Key 테이블에서 `min_delta`는 `append_only`로 동작합니다 |
+| `type` | `min_delta` | 소비 유형입니다. `min_delta`와 `detail`은 기본 테이블이 `changelog.need_historical_value`가 활성화된 Unique Key MoW 테이블이어야 합니다. Duplicate Key 테이블에서 `min_delta`는 `append_only`로 동작합니다 |
 | `show_initial_rows` | `false` | Stream 생성 시 이미 존재하는 데이터를 변경 사항으로 출력할지 여부입니다. [초기 행](#initial-rows)을 참조하세요 |
 
 예시:
@@ -102,8 +102,8 @@ Stream 생성 요구 사항과 각 요구 사항을 충족하지 못했을 때 �
 
 | 요구 사항 | 충족하지 못했을 때 발생하는 오류 |
 |---|---|
-| 기본 테이블에서 Row Binlog 활성화 | `Base Olap table ... need to enable row binlog for table stream` |
-| `type = min_delta`인 경우, `binlog.need_historical_value`가 활성화된 MoW 기본 테이블 | `MIN_DELTA table stream requires base mow table to enable binlog.need_historical_value=true` |
+| 기본 테이블에서 Changelog 활성화 | `Base Olap table ... need to enable changelog for table stream` |
+| `type = min_delta`인 경우, `changelog.need_historical_value`가 활성화된 MoW 기본 테이블 | `MIN_DELTA table stream requires base mow table to enable changelog.need_historical_value=true` |
 | Stream이 속한 데이터베이스에 대한 `CREATE_PRIV`와 기본 테이블에 대한 `SELECT_PRIV` | - |
 
 Stream과 기본 테이블은 서로 다른 데이터베이스에 있어도 됩니다. Stream은 테이블이나 뷰와 같은 이름을 사용할 수 없습니다. `CREATE OR REPLACE STREAM`은 아직 지원되지 않습니다. 전체 구문은 [CREATE STREAM](../../sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM)을 참조하세요.
@@ -169,7 +169,7 @@ ALTER STREAM orders_stream SET COMMENT 'new comment';
 DROP STREAM [IF EXISTS] [<db_name>.]<stream_name> [FORCE];
 ```
 
-- Stream을 삭제해도 기본 테이블이나 해당 테이블의 Row Binlog에는 영향을 주지 않습니다.
+- Stream을 삭제해도 기본 테이블이나 해당 테이블의 Changelog에는 영향을 주지 않습니다.
 - 기본 테이블이 삭제된 Stream은 Catalog에 남습니다. `FORCE`를 사용하여 삭제하세요.
 - 컴퓨팅과 스토리지가 분리된 모드에서는 반드시 `DROP STREAM ... FORCE`를 사용해야 합니다.
 - Stream에 `DROP TABLE`을 실행하면 실패하며, `DROP STREAM`을 사용하라는 안내가 표시됩니다.
@@ -183,9 +183,9 @@ DROP STREAM [IF EXISTS] [<db_name>.]<stream_name> [FORCE];
 
 | 소비 유형 | 출력 | 적합한 용도 | 기본 테이블 요구 사항 |
 |---|---|---|---|
-| `append_only` | 삽입된 행만 출력하며, 업데이트와 삭제는 출력하지 않음 | 추가 전용 로그 및 이벤트 테이블, 다운스트림에서 새 데이터만 필요한 경우 | Row Binlog 활성화 |
-| `min_delta`(기본값) | 두 소비 사이의 모든 변경 사항을 키별로 통합하여 최종 변경 사항만 출력 | 최소한의 행을 처리하여 다운스트림 테이블을 동기화하는 경우 | `binlog.need_historical_value`가 활성화된 Unique Key MoW 테이블 |
-| `detail` | 변경 사항을 통합하지 않고 모든 변경을 행 단위로 출력 | 감사, 재생 등 전체 수정 이력이 필요한 모든 경우 | `binlog.need_historical_value`가 활성화된 Unique Key MoW 테이블 |
+| `append_only` | 삽입된 행만 출력하며, 업데이트와 삭제는 출력하지 않음 | 추가 전용 로그 및 이벤트 테이블, 다운스트림에서 새 데이터만 필요한 경우 | Changelog 활성화 |
+| `min_delta`(기본값) | 두 소비 사이의 모든 변경 사항을 키별로 통합하여 최종 변경 사항만 출력 | 최소한의 행을 처리하여 다운스트림 테이블을 동기화하는 경우 | `changelog.need_historical_value`가 활성화된 Unique Key MoW 테이블 |
+| `detail` | 변경 사항을 통합하지 않고 모든 변경을 행 단위로 출력 | 감사, 재생 등 전체 수정 이력이 필요한 모든 경우 | `changelog.need_historical_value`가 활성화된 Unique Key MoW 테이블 |
 
 아래에서는 동일한 데이터로 세 소비 유형을 비교합니다. 기본 테이블 `orders`는 before image가 활성화된 Unique Key MoW 테이블이며, Stream을 생성한 후 다음 문을 실행합니다.
 
@@ -269,7 +269,7 @@ ORDER BY __DORIS_STREAM_SEQUENCE_COL__, __DORIS_STREAM_LSN_COL__;
 
 ### Duplicate Key 테이블에서의 동작 {#behavior-on-duplicate-key-tables}
 
-Duplicate Key 테이블은 삽입만 기록하므로 세 유형의 출력이 동일합니다. 쓰인 각 행이 하나의 `APPEND`가 되고, 동일한 키를 여러 번 써도 병합되지 않으며, `DELETE` 문으로 삭제된 행은 출력되지 않습니다([Row Binlog](row-binlog#duplicate-key-tables) 참조). Duplicate Key 테이블에 생성한 `min_delta` Stream은 자동으로 `append_only`로 처리됩니다.
+Duplicate Key 테이블은 삽입만 기록하므로 세 유형의 출력이 동일합니다. 쓰인 각 행이 하나의 `APPEND`가 되고, 동일한 키를 여러 번 써도 병합되지 않으며, `DELETE` 문으로 삭제된 행은 출력되지 않습니다([Changelog](changelog#duplicate-key-tables) 참조). Duplicate Key 테이블에 생성한 `min_delta` Stream은 자동으로 `append_only`로 처리됩니다.
 
 ## 초기 행 {#initial-rows}
 
@@ -372,11 +372,11 @@ Stream의 열은 기본 테이블의 현재 표시되는 열과 가상 열 세 �
 
 <!-- Knowledge type: Usage limitations -->
 
-- 기본 테이블은 Row Binlog가 활성화된 내부 테이블이어야 합니다. 지원되는 테이블 모델과 열 유형 제한은 [Row Binlog](row-binlog#supported-scope-and-limitations)를 참조하세요.
+- 기본 테이블은 Changelog가 활성화된 내부 테이블이어야 합니다. 지원되는 테이블 모델과 열 유형 제한은 [Changelog](changelog#supported-scope-and-limitations)를 참조하세요.
 - Stream은 기본 테이블의 기본 인덱스만 읽습니다. rollup / 구체화된 뷰는 지정할 수 없으며, `TABLET (...)` 절은 지원하지 않습니다.
 - Stream은 `INSERT`, `UPDATE`, `DELETE`의 대상이 될 수 없습니다.
 - 소비 유형과 `show_initial_rows`는 생성 후 변경할 수 없습니다.
-- Row Binlog 보존 기간은 소비 진행 상황과 관계없이 `binlog.ttl_seconds`로 제어되며, 기본값은 하루입니다. 오프셋이 만료되면 `min_delta` 읽기는 실패하고, `detail`과 `append_only`는 만료된 변경 사항을 건너뜁니다. 현재 구현에서 `IS_STALE` / `STALE_REASON`은 TTL 만료를 보고하지 않습니다. 보존 기간 내에 소비하세요. [보존 및 정리](row-binlog#retention-and-cleanup)를 참조하세요.
+- Changelog 보존 기간은 소비 진행 상황과 관계없이 `changelog.ttl_seconds`로 제어되며, 기본값은 하루입니다. 오프셋이 만료되면 `min_delta` 읽기는 실패하고, `detail`과 `append_only`는 만료된 변경 사항을 건너뜁니다. 현재 구현에서 `IS_STALE` / `STALE_REASON`은 TTL 만료를 보고하지 않습니다. 보존 기간 내에 소비하세요. [보존 및 정리](changelog#retention-and-cleanup)를 참조하세요.
 - 기본 테이블 삭제, 파티션 삭제 또는 교체와 같은 작업이 Stream에 미치는 영향은 [Table Stream 고급 기능](table-stream-advanced#effect-of-base-table-changes)을 참조하세요.
 
 ## 자주 묻는 질문 {#faq}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/datetime-conversion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "91dea6c8438bfe5dbad9ec0a96f82e28437115c390361da8e7fe82510bb9b5a0",
+    "sourceTechnicalHash": "1a64ef3816170429b0a947ef5d899d5e95f80075b1fb42a4dbc2c3c00afa5ccf",
+    "targetHash": "576c8cc9ea16d69ff6740e17fa941755848e18b68deb1c3dbe62a1f01d98c7cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:51:22.080Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "91dea6c8438bfe5dbad9ec0a96f82e28437115c390361da8e7fe82510bb9b5a0",
+      "targetHash": "576c8cc9ea16d69ff6740e17fa941755848e18b68deb1c3dbe62a1f01d98c7cd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

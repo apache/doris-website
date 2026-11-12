@@ -2,7 +2,7 @@
 {
     "title": "Lance 混合检索性能最佳实践",
     "language": "zh-CN",
-    "description": "指导 Apache Doris 用户优化 Lance 标量过滤与向量、全文混合检索：对齐索引 Fragment 覆盖范围、选择 Segment 粒度、配置共享缓存并分析查询 Profile。"
+    "description": "指导 Apache Doris 用户使用 Lance 向量与 BM25 自动检索下推，理解近似函数、预过滤、NULL 与零向量语义以及 JOIN 边界，并通过对齐索引 Fragment 范围、选择 Segment 粒度和分析 Profile 优化性能。"
 }
 ---
 
@@ -11,6 +11,94 @@
 :::note
 Lance Catalog 为实验性功能，从 Apache Doris 4.2 开始支持。请先按 [Lance Catalog](../catalogs/lance-catalog.mdx) 配置访问并确认读写版本兼容性。Doris 读取已有 Lance 索引，索引构建和维护由兼容的 Lance 工具完成。最新 Lance SDK 或上游提案不代表当前 Doris 内置读取器已经支持对应能力。
 :::
+
+## 普通 SQL 的自动检索下推 {#automatic-search}
+
+在包含 Lance 自动检索能力的 Doris 4.2 构建中，符合条件的普通 SQL 可以使用与显式 TVF 相同的原生检索路径。这与直接调用 TVF 是两个层次的能力，不能因为较早构建支持 `vector_search()` 就认为它也支持自动改写。无需单独的自动检索会话开关。
+
+### 函数映射
+
+| SQL 表达式 | 要求的排序方向 | Lance 度量及 SQL 返回值 |
+|---|---|---|
+| [l2_distance_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate.md) | `ASC` | `l2`；返回 `CAST(sqrt(_distance) AS FLOAT)`，即欧氏距离，而非原生平方 L2。 |
+| [inner_product_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/inner-product-approximate.md) | `DESC` | `dot`；返回 `1.0f - _distance`，即内积相似度。 |
+| [cosine_distance_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance-approximate.md) | `ASC` | `cosine`；返回原生余弦距离。 |
+| [cosine_similarity_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity-approximate.md) | `DESC` | `cosine`；返回 `1.0f - _distance`。 |
+| [hamming_distance_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance-approximate.md) | `ASC` | `hamming`；返回不同 bit 的数量。 |
+| `score()` 配合 `MATCH_ANY`、`MATCH_ALL` 或 `MATCH_PHRASE` | `DESC` | Lance BM25；分别对应 Match OR、Match AND 或 Phrase。 |
+
+精确距离和相似度函数保留标量执行，包括 `cosine_distance()`、`cosine_similarity()` 和 [hamming_distance](../../sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance.md)。`l1_distance()` 也保留标量执行，当前内置 Lance 向量检索 API 未提供 L1 度量。
+
+### 向量与 BM25 示例
+
+配置 Catalog 后，假设 `lance_catalog.default.items` 包含 `id`、`category`、`content`、四维 Float32 fixed-size-list 列 `embedding`，以及三字节 UInt8 fixed-size-list 列 `binary_embedding`。需要索引加速时，通过 Lance 工具构建兼容的向量索引，并为 `content` 创建已提交的 FTS 索引。
+
+```sql
+SELECT id, cosine_distance_approximate(embedding, [0.1,0.2,0.3,0.4]) AS distance
+FROM lance_catalog.default.items
+WHERE category = 'book'
+ORDER BY distance ASC LIMIT 10 OFFSET 5;
+
+SELECT id, cosine_similarity_approximate(embedding, [0.1,0.2,0.3,0.4]) AS similarity
+FROM lance_catalog.default.items
+ORDER BY similarity DESC LIMIT 10;
+
+SELECT id, hamming_distance_approximate(binary_embedding, [0,255,170]) AS distance
+FROM lance_catalog.default.items
+ORDER BY distance ASC LIMIT 10;
+
+SELECT id, score() AS relevance
+FROM lance_catalog.default.items
+WHERE content MATCH_ALL 'storage engine' AND category = 'book'
+ORDER BY relevance DESC LIMIT 10;
+```
+
+第一条查询先在 `category = 'book'` 范围内检索，再裁剪候选。每个 Split 请求 15 个候选且 offset 为零，Doris 合并后执行最终的 `OFFSET 5 LIMIT 10`。其余查询按各自顺序返回最多 10 个邻居或 BM25 命中。索引检索可能是近似的，实际行数也可能少于请求值。已有兼容索引会被复用，未覆盖数据沿用 Flat Search 路径；BM25 必须有已有 FTS 索引。
+
+### 下推条件与回退
+
+- 查询形状必须是直接 Lance Catalog 表扫描、可选过滤、投影以及仅有一个检索排序键且 `LIMIT` 为正的 Top-N。JOIN/EXISTS、第二排序键、DISTINCT、表采样及不可移动的投影表达式都会阻止此改写。
+- 浮点度量要求物理 Float32 fixed-size-list，Hamming 要求物理 UInt8 fixed-size-list。查询向量必须是维度匹配的常量数组。Float16/Float64、多向量列及任意改变元素值的 cast 不会自动改写。UInt8 在 Doris 中映射为 SMALLINT，安全扩宽到 Hamming 函数的 BIGINT 参数不会改变 byte 值。
+- 向量查询存在不可下推的残余谓词、反向检索排序、缺失原生元数据或原生向量/Schema 校验未通过时，保留标量执行。自动改写要求 `LIMIT + OFFSET` 不超过原生 UINT32 候选预算，该限制不约束普通标量 SQL。
+- BM25 要求直接字符串列上有一个顶层受支持 MATCH 谓词、字面量查询、使用索引存储的 analyzer，并按 `score()` 降序排列。其余标量谓词必须全部可下推。允许将 `score() > literal`、`score() >= literal` 作为分数下界残余条件，不支持分数上界或其他分数谓词。不支持的带分数查询形状会报错，不会悄悄将 `score()` 当成普通标量计算。
+- 分数取决于 Lance 已存储的 analyzer、索引及快照全局统计，不保证与独立建立的 Doris 内表索引得到相同数值。此改写不会启用模糊检索、analyzer 覆盖或多列 `SEARCH()` 表达式。受支持的多向量查询及 `nprobes`、`refine_factor`、`ef` 等调优应使用显式 TVF。
+
+### 原生近似检索语义
+
+`_approximate` 后缀表示符合条件的 Top-N 可以采用 Lance 原生候选语义；未改写时执行标量内核。若必须穷举排名或对所有存储行执行标量输入校验，应使用精确函数。
+
+| 输入 | 标量执行 | 符合条件的原生检索 |
+|---|---|---|
+| 存储的 NULL 向量 | 报错 | 不进入候选集。 |
+| 存储向量产生 NaN 距离 | 可能返回 NaN | 被排除，因此可能少返回行。 |
+| 向量元素为 NULL | 报错 | 不属于受支持的原生输入范围，必须保证元素非 NULL。 |
+| 存储的零范数余弦向量 | 距离为 2，相似度为 0 | 产生未定义/NaN 原生距离时被排除。 |
+| 余弦查询范数为零或非有限值，包括 Float32 平方范数上溢/下溢 | 保留标量行为 | 跳过自动改写。 |
+| Hamming 输入 | 整数数组，元素均在 `[0,255]` | 物理 UInt8 向量及合法的 byte 查询。 |
+
+原生余弦计算和索引估计的数值可能与标量结果不同。Hamming 统计不同 bit，而非不同 byte：`hamming_distance([0,255,170], [255,0,85])` 返回 24。Hamming 在隐式 cast 前拒绝浮点、Decimal 和 LARGEINT 数组，并在 byte 转换前拒绝越界值。精确函数继续提供标量执行语义。
+
+### WHERE 预过滤与 JOIN 边界
+
+Lance 表自身完全可下推的谓词在同一固定快照上先于检索执行。Doris 先尝试仅扫描 row ID，并在查询内的检索 Reader 之间共享完整 allowlist；空列表表示无行。超过 65,536 个 ID 时，丢弃部分列表，改为保留完整原生谓词预过滤。临时与缓存列表的容量均计入查询内存限额，停止或失败的收集不会进入缓存。这与普通扫描中的 JOIN Runtime Filter 下推是不同机制。
+
+以下 ACL 示例假设 `internal.auth.allowed_items` 包含 `item_id` 和 `principal_id`。
+
+```sql
+SELECT d.id,
+       l2_distance_approximate(d.embedding, [0.1,0.2,0.3,0.4]) AS distance
+FROM lance_catalog.default.items d
+WHERE EXISTS (
+    SELECT 1 FROM internal.auth.allowed_items a
+    WHERE a.item_id = d.id AND a.principal_id = 42
+)
+ORDER BY distance ASC
+LIMIT 10;
+```
+
+该查询保留 JOIN、标量距离计算和全局 Top-N。此改写不会跨越 ACL 半连接，也不会把业务 ID 映射为 Lance 原生 `_rowid`。在 ACL 过滤前直接选择未过滤 Top-K 可能遗漏最近的授权行。增加第二排序键同样会阻止自动改写。
+
+对实际查询运行 `EXPLAIN`，确认 `externalSearchType=VECTOR` 及 `lanceMetric=l2|dot|cosine|hamming`，或 `externalSearchType=FULL_TEXT`。`LanceRowIdPrefilterTime`、`LanceRowIdPrefilterRows`、`LanceRowIdPrefilterCacheHits` 和 `LanceRowIdPrefilterFallbacks` 反映 Doris allowlist 工作，与下文原生 row-ID loader 指标不同。需要检索调参或此规则之外的受支持查询形状时，使用显式 TVF。自动改写后的检索满足相应条件时，也可以使用已有两阶段输出读取。
 
 ## 1. 将候选生成所需的过滤条件放在检索内部 {#candidate-filters}
 

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/reset-rpc-channel",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/reset-rpc-channel.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/reset-rpc-channel.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "7b60e0560c9ae9ff7a29987ef9d539af41d68afa7bf8c2f969406561ea600732",
+    "sourceTechnicalHash": "262ac11fc973a3c763f2f5474f9c395ea9728ca89c5ce0ea8a1477e79af66302",
+    "targetHash": "59f7370f8d42c9c39e6b80e0f1451714fd00f5047f6f453902440c1e58ace12d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:12:38.270Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7b60e0560c9ae9ff7a29987ef9d539af41d68afa7bf8c2f969406561ea600732",
+      "targetHash": "59f7370f8d42c9c39e6b80e0f1451714fd00f5047f6f453902440c1e58ace12d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

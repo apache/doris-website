@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-km.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "cce69ccd8b658c8dc643469890a43ad73b47c97a518e6b3e2a0fe7d248330eb3",
+    "sourceTechnicalHash": "9f71c9cc5b194dae3c51cdf6bcb3a3bc9fab6a32001853dfbbdf438f43a37db2",
+    "targetHash": "610b092343813cd54af008f582c57057c3f0bf3daeaaab2d7dfe5842ff6e6efe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:35:48.907Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cce69ccd8b658c8dc643469890a43ad73b47c97a518e6b3e2a0fe7d248330eb3",
+      "targetHash": "610b092343813cd54af008f582c57057c3f0bf3daeaaab2d7dfe5842ff6e6efe",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

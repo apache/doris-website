@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/backends-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/backends-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/backends-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "2def1fc6b6f1d5a46d19893dc639d2736df5bb6cabc35d9b0f14672a8aeaf9dd",
+    "sourceTechnicalHash": "852628364800e64bb69311328ebee40b531cd6db9288997094d88a2fb571a884",
+    "targetHash": "dbda18e17d8e19ceb39b960cd0564dae741bdd17897ea41f9aa1d420697abccb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:13:42.979Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2def1fc6b6f1d5a46d19893dc639d2736df5bb6cabc35d9b0f14672a8aeaf9dd",
+      "targetHash": "dbda18e17d8e19ceb39b960cd0564dae741bdd17897ea41f9aa1d420697abccb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

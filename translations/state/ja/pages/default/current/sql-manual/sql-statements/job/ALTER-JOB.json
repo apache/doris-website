@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/job/ALTER-JOB.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/ALTER-JOB.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "1858982063830e2a004306697bb77d29d1a6596ee3fb3034f9f2f7f54362ca9e",
     "sourceTechnicalHash": "fee84e03b098506ea9a6db7918f88c08b224c492caf9051cc319cb38d2466780",
-    "targetHash": "856c18ca90c244c71f52ad9e17f07e2fc57d0659f14aa2046b2d24de60e30c0f",
+    "targetHash": "147285602887b8ffa0cd42e2d4becfcd29d9b27d0ca32bb940491b60c56064fa",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:50:40.612Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T05:25:58.449Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "1858982063830e2a004306697bb77d29d1a6596ee3fb3034f9f2f7f54362ca9e",
+      "targetHash": "147285602887b8ffa0cd42e2d4becfcd29d9b27d0ca32bb940491b60c56064fa",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"3\",\"3\"]; received [\"1\",\"1\",\"1\",\"2\",\"3\",\"3\"]\nprotected node 34: expected [\"code\",\"sql\",null,\" ALTER JOB my_job\\n PROPERTIES(\\n \\\"session.insert_max_filter_ratio\\\"=\\\"0.5\\\" \\n );\"]; received [\"code\",\"sql\",null,\" ALTER JOB my_job\\n PROPERTIES(\\n \\\"session.insert_max_filter_ratio\\\"=\\\"0.5\\\"\\n );\"]\nprotected node 35: expected [\"code\",\"sql\",null,\" ALTER JOB my_job\\n INSERT INTO db1.tbl1 \\n SELECT * FROM S3\\n (\\n     \\\"uri\\\" = \\\"s3://bucket/*.csv\\\",\\n     \\\"s3.access_key\\\" = \\\"<s3_access_key>\\\",\\n     \\\"s3.secret_key\\\" = \\\"<s3_secret_key>\\\",\\n     \\\"s3.region\\\" = \\\"<s3_region>\\\",\\n     \\\"s3.endpoint\\\" = \\\"<s3_endpoint>\\\",\\n     \\\"format\\\" = \\\"<format>\\\"\\n );\"]; received [\"code\",\"sql\",null,\" ALTER JOB my_job\\n INSERT INTO db1.tbl1\\n SELECT * FROM S3\\n (\\n     \\\"uri\\\" = \\\"s3://bucket/*.csv\\\",\\n     \\\"s3.access_key\\\" = \\\"<s3_access_key>\\\",\\n     \\\"s3.secret_key\\\" = \\\"<s3_secret_key>\\\",\\n     \\\"s3.region\\\" = \\\"<s3_region>\\\",\\n     \\\"s3.endpoint\\\" = \\\"<s3_endpoint>\\\",\\n     \\\"format\\\" = \\\"<format>\\\"\\n );\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"3\",\"3\"]; received [\"1\",\"1\",\"1\",\"2\",\"3\",\"3\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"DO\"]; received [\"inlineCode\",null,null,\"ALTER JOB\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"ALTER JOB\"]; received [\"inlineCode\",null,null,\"DO\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 34: expected [\"code\",\"sql\",null,\" ALTER JOB my_job\\n PROPERTIES(\\n \\\"session.insert_max_filter_ratio\\\"=\\\"0.5\\\" \\n );\"]; received [\"code\",\"sql\",null,\" ALTER JOB my_job\\n PROPERTIES(\\n \\\"session.insert_max_filter_ratio\\\"=\\\"0.5\\\"\\n );\"]\nprotected node 35: expected [\"code\",\"sql\",null,\" ALTER JOB my_job\\n INSERT INTO db1.tbl1 \\n SELECT * FROM S3\\n (\\n     \\\"uri\\\" = \\\"s3://bucket/*.csv\\\",\\n     \\\"s3.access_key\\\" = \\\"<s3_access_key>\\\",\\n     \\\"s3.secret_key\\\" = \\\"<s3_secret_key>\\\",\\n     \\\"s3.region\\\" = \\\"<s3_region>\\\",\\n     \\\"s3.endpoint\\\" = \\\"<s3_endpoint>\\\",\\n     \\\"format\\\" = \\\"<format>\\\"\\n );\"]; received [\"code\",\"sql\",null,\" ALTER JOB my_job\\n INSERT INTO db1.tbl1\\n SELECT * FROM S3\\n (\\n     \\\"uri\\\" = \\\"s3://bucket/*.csv\\\",\\n     \\\"s3.access_key\\\" = \\\"<s3_access_key>\\\",\\n     \\\"s3.secret_key\\\" = \\\"<s3_secret_key>\\\",\\n     \\\"s3.region\\\" = \\\"<s3_region>\\\",\\n     \\\"s3.endpoint\\\" = \\\"<s3_endpoint>\\\",\\n     \\\"format\\\" = \\\"<format>\\\"\\n );\"]\nprotected node 36: expected [\"code\",\"sql\",null,\"ALTER JOB my_job\\nPROPERTIES(\\n\\\"session.insert_max_filter_ratio\\\"=\\\"0.5\\\" \\n)\\nINSERT INTO db1.tbl1 \\nselect * from S3(\\n    \\\"uri\\\" = \\\"s3://bucket/*.csv\\\",\\n    \\\"s3.access_key\\\" = \\\"<s3_access_key>\\\",\\n    \\\"s3.secret_key\\\" = \\\"<s3_secret_key>\\\",\\n    \\\"s3.region\\\" = \\\"<s3_region>\\\",\\n    \\\"s3.endpoint\\\" = \\\"<s3_endpoint>\\\",\\n    \\\"format\\\" = \\\"<format>\\\"\\n);\"]; received [\"code\",\"sql\",null,\"ALTER JOB my_job\\nPROPERTIES(\\n\\\"session.insert_max_filter_ratio\\\"=\\\"0.5\\\"\\n)\\nINSERT INTO db1.tbl1\\nselect * from S3(\\n    \\\"uri\\\" = \\\"s3://bucket/*.csv\\\",\\n    \\\"s3.access_key\\\" = \\\"<s3_access_key>\\\",\\n    \\\"s3.secret_key\\\" = \\\"<s3_secret_key>\\\",\\n    \\\"s3.region\\\" = \\\"<s3_region>\\\",\\n    \\\"s3.endpoint\\\" = \\\"<s3_endpoint>\\\",\\n    \\\"format\\\" = \\\"<format>\\\"\\n);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"3\",\"3\"]; received [\"1\",\"1\",\"1\",\"2\",\"3\",\"3\"]\nprotected node 34: expected [\"code\",\"sql\",null,\" ALTER JOB my_job\\n PROPERTIES(\\n \\\"session.insert_max_filter_ratio\\\"=\\\"0.5\\\" \\n );\"]; received [\"code\",\"sql\",null,\" ALTER JOB my_job\\n PROPERTIES(\\n \\\"session.insert_max_filter_ratio\\\"=\\\"0.5\\\"\\n );\"]\nprotected node 35: expected [\"code\",\"sql\",null,\" ALTER JOB my_job\\n INSERT INTO db1.tbl1 \\n SELECT * FROM S3\\n (\\n     \\\"uri\\\" = \\\"s3://bucket/*.csv\\\",\\n     \\\"s3.access_key\\\" = \\\"<s3_access_key>\\\",\\n     \\\"s3.secret_key\\\" = \\\"<s3_secret_key>\\\",\\n     \\\"s3.region\\\" = \\\"<s3_region>\\\",\\n     \\\"s3.endpoint\\\" = \\\"<s3_endpoint>\\\",\\n     \\\"format\\\" = \\\"<format>\\\"\\n );\"]; received [\"code\",\"sql\",null,\" ALTER JOB my_job\\n INSERT INTO db1.tbl1\\n SELECT * FROM S3\\n (\\n     \\\"uri\\\" = \\\"s3://bucket/*.csv\\\",\\n     \\\"s3.access_key\\\" = \\\"<s3_access_key>\\\",\\n     \\\"s3.secret_key\\\" = \\\"<s3_secret_key>\\\",\\n     \\\"s3.region\\\" = \\\"<s3_region>\\\",\\n     \\\"s3.endpoint\\\" = \\\"<s3_endpoint>\\\",\\n     \\\"format\\\" = \\\"<format>\\\"\\n );\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/job/ALTER-JOB.md",
+        "blob": "20b1e368618986c69057f26d9324a74e60b5b411"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/ALTER-JOB.md",
+        "blob": "ef1a4268cb89857bf4f514be75219e3146946559"
+      }
+    }
   }
 }

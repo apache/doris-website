@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { useEffect, useMemo } from 'react';
 import { Form, message } from 'antd';
 import FormSelect from '../form-select/form-select';
@@ -6,6 +7,7 @@ import { CPUEnum, DownloadTypeEnum, Option } from '@site/src/constant/download.d
 import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { DownloadIcon } from '../Icons/download-icon';
+import {DOWNLOAD_TYPE_LABELS, localizeDownloadOptions} from './download-labels';
 
 interface DownloadFormToolsProps {
     data: Option[];
@@ -131,6 +133,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
 
     const formBody = (
         <Form
+            validateMessages={{required: translate({id: 'landing.download.required', message: 'Select an option.'})}}
             form={form}
             onFinish={val => {
                 if (isOperatorBinary) return;
@@ -151,8 +154,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
         >
             <Form.Item name="tool" rules={[{ required: true }]} hidden={!showToolSelect}>
                 <FormSelect
-                    placeholder="Tools"
-                    label="Tools"
+                    placeholder={translate({id: "landing.downloadformtools.001", message: "Tools"})}
+                    label={translate({id: "landing.downloadformtools.002", message: "Tools"})}
                     isCascader={false}
                     popupExtraClass={popupExtraClass}
                     options={data}
@@ -164,8 +167,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         <>
                             <Form.Item name="version" rules={[{ required: true }]}>
                                 <FormSelect
-                                    placeholder="Version"
-                                    label="Version"
+                                    placeholder={translate({id: "landing.downloadformtools.003", message: "Version"})}
+                                    label={translate({id: "landing.downloadformtools.004", message: "Version"})}
                                     isCascader={false}
                                     popupExtraClass={popupExtraClass}
                                     options={getOptions}
@@ -173,8 +176,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             </Form.Item>
                             <Form.Item name="architecture" rules={[{ required: true }]}>
                                 <FormSelect
-                                    placeholder="Architecture"
-                                    label="Architecture"
+                                    placeholder={translate({id: "landing.downloadformtools.005", message: "Architecture"})}
+                                    label={translate({id: "landing.downloadformtools.006", message: "Architecture"})}
                                     isCascader={false}
                                     popupExtraClass={popupExtraClass}
                                     options={getArchitectureOptions}
@@ -184,11 +187,11 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     ) : (
                         <Form.Item name="version" rules={[{ required: true }]}>
                             <FormSelect
-                                placeholder="Version"
-                                label="Version"
+                                placeholder={translate({id: "landing.downloadformtools.007", message: "Version"})}
+                                label={translate({id: "landing.downloadformtools.008", message: "Version"})}
                                 isCascader={tool !== ToolsEnum.Operator}
                                 popupExtraClass={popupExtraClass}
-                                options={getOptions}
+                                options={localizeDownloadOptions(getOptions)}
                                 displayRender={label => {
                                     if (label.length > 1) {
                                         return `${label[0]} (${label[1]})`;
@@ -205,17 +208,17 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
             </Form.Item>
             <Form.Item name="tarBall" rules={[{ required: true }]}>
                 <FormSelect
-                    placeholder="Tarball"
-                    label="Tarball"
+                    placeholder={translate({id: "landing.downloadformtools.009", message: "Tarball"})}
+                    label={translate({id: "landing.downloadformtools.010", message: "Tarball"})}
                     isCascader={false}
                     popupExtraClass={popupExtraClass}
                     options={[
                         {
-                            label: DownloadTypeEnum.Binary,
+                            label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Binary],
                             value: DownloadTypeEnum.Binary,
                         },
                         {
-                            label: DownloadTypeEnum.Source,
+                            label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Source],
                             value: DownloadTypeEnum.Source,
                         },
                     ]}
@@ -229,10 +232,10 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     >
                         <div className="mb-3 flex items-center justify-between gap-4 border-b border-[var(--brand-terminal)]/30 pb-3">
                             <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-terminal)]">
-                                Docker command
+                                {translate({id: "landing.downloadformtools.011", message: "Docker command"})}
                             </span>
                             <button
-                                aria-label="Copy Docker pull command"
+                                aria-label={translate({id: "landing.downloadformtools.012", message: "Copy Docker pull command"})}
                                 className="shrink-0 rounded-md border border-[var(--brand-terminal)] bg-black px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--brand-terminal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-terminal)] focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
                                 disabled={!operatorBinaryCommand}
                                 style={{
@@ -243,10 +246,10 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 type="button"
                                 onClick={() => {
                                     copy(operatorBinaryCommand);
-                                    message.success('Copy Successfully!');
+                                    message.success(translate({id: 'landing.download.copied', message: 'Copied'}));
                                 }}
                             >
-                                Copy
+                                {translate({id: "landing.downloadformtools.013", message: "Copy"})}
                             </button>
                         </div>
                         <div className="flex min-w-0 items-start">
@@ -257,7 +260,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 $
                             </span>
                             <code
-                                aria-label="Docker pull command"
+                                aria-label={translate({id: 'landing.download.dockerCommand', message: 'Docker pull command'})}
                                 className="min-w-0 flex-1 select-text whitespace-normal break-all !bg-black !p-0 font-mono text-sm leading-6 !text-[var(--brand-terminal)]"
                                 style={{ backgroundColor: '#000000', color: 'var(--brand-terminal)' }}
                             >
@@ -272,13 +275,13 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         type="submit"
                         className={`w-full text-lg ${isArchive ? 'download-next__archive-button' : 'button-primary'}`}
                     >
-                        Download
+                        {translate({id: "landing.downloadformtools.014", message: "Download"})}
                     </button>
                 </Form.Item>
             )}
             {!isOperatorBinary && (
-                <div
-                    className="flex cursor-pointer text-primary items-center mt-4 justify-center"
+                <button type="button"
+                    className="flex w-full cursor-pointer text-primary items-center mt-4 justify-center"
                     onClick={() => {
                         const url = getDownloadLinkByCard({
                             version: version,
@@ -287,10 +290,10 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             type: '',
                         });
                         copy(url);
-                        message.success('Copy Successfully!');
+                        message.success(translate({id: 'landing.download.copied', message: 'Copied'}));
                     }}
                 >
-                    <span className="mr-2">Copy link</span>
+                    <span className="mr-2">{translate({id: "landing.downloadformtools.015", message: "Copy link"})}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <rect
                             x="2.5"
@@ -308,11 +311,11 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             fill="var(--brand-primary)"
                         />
                     </svg>
-                </div>
+                </button>
             )}
             {!isOperatorBinary && (
                 <div className="flex justify-center mt-4">
-                    <div
+                    <button type="button"
                         className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
@@ -325,8 +328,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         }}
                     >
                         ASC
-                    </div>
-                    <div
+                    </button>
+                    <button type="button"
                         className="inline-flex items-center ml-4 text-[#8592A6] hover:text-primary cursor-pointer hover:underline"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
@@ -339,7 +342,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         }}
                     >
                         SHA-512
-                    </div>
+                    </button>
                 </div>
             )}
             {/* {tool === ToolsEnum.StreamLoader && ( */}
@@ -370,7 +373,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
 
     return (
         <div className="rounded-lg border border-b-[0.375rem] border-primary px-8 pt-[3.125rem] pb-[2.1875rem]">
-            <div className="mb-8 text-xl font-medium text-left">Downloads</div>
+            <div className="mb-8 text-xl font-medium text-left">{translate({id: "landing.downloadformtools.016", message: "Downloads"})}</div>
             {formBody}
         </div>
     );

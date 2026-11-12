@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/certificate",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/certificate.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/certificate.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "efbfc5df855603b3fb9c93c65fa16dfab974c63a71d763c4f755a0b143532e59",
+    "sourceTechnicalHash": "c9b1c554a7c56cf797bac04bb61dd3ee8c9ea524b9d5e752a5bc317ee2feeefc",
+    "targetHash": "8b6b83370505575d36bd061a975d4a5f629ab946baaed1e546c791c92006637f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:08:02.872Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "efbfc5df855603b3fb9c93c65fa16dfab974c63a71d763c4f755a0b143532e59",
+      "targetHash": "8b6b83370505575d36bd061a975d4a5f629ab946baaed1e546c791c92006637f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

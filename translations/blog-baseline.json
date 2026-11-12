@@ -1,0 +1,1774 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "5e9ed76441890c1096e7c562746d00702e93f038",
+  "pluginId": "blog",
+  "version": "current",
+  "sourceRoot": "blog",
+  "locales": [
+    "ja",
+    "ko",
+    "ru"
+  ],
+  "historicalFallbackLocales": [
+    "zh-CN",
+    "ja",
+    "ko",
+    "ru"
+  ],
+  "documents": [
+    {
+      "docId": "1-billion-json-records-1-second-query-response.mdx",
+      "sourcePath": "blog/1-billion-json-records-1-second-query-response.mdx",
+      "sourceHash": "f1bd634acd0edeeb3253f27049c0c64204ef36c2ac8996f797177d62cb1c2529",
+      "permalink": "/blog/1-billion-json-records-1-second-query-response"
+    },
+    {
+      "docId": "a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris.md",
+      "sourcePath": "blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris.md",
+      "sourceHash": "e37661169644ebb02e01a09db4fd05d40cd1def9a6cf9e2a08f077a54f05fa11",
+      "permalink": "/blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris"
+    },
+    {
+      "docId": "a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse.md",
+      "sourcePath": "blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse.md",
+      "sourceHash": "ee2d65db1f1e9b10544f3942b15a28a11699f3b5b181ac183f8244e78e45d029",
+      "permalink": "/blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse"
+    },
+    {
+      "docId": "AB-Testing-was-a-Handful-Until-we-Found-the-Replacement-for-Druid.md",
+      "sourcePath": "blog/AB-Testing-was-a-Handful-Until-we-Found-the-Replacement-for-Druid.md",
+      "sourceHash": "a07ff1c951b3431115628b94636e5dad9c417a0a03964a2f96a69f3146d3155c",
+      "permalink": "/blog/AB-Testing-was-a-Handful-Until-we-Found-the-Replacement-for-Druid"
+    },
+    {
+      "docId": "ai-unicorn-minimax-from-loki-and-built-a-pb-scale-logging-system-with-doris.md",
+      "sourcePath": "blog/ai-unicorn-minimax-from-loki-and-built-a-pb-scale-logging-system-with-doris.md",
+      "sourceHash": "ec4a14291a63cff0372654dbe2d56cb8fa9b65dcbf1b6772d4e58be5c00775cb",
+      "permalink": "/blog/ai-unicorn-minimax-from-loki-and-built-a-pb-scale-logging-system-with-doris"
+    },
+    {
+      "docId": "Annoucing.md",
+      "sourcePath": "blog/Annoucing.md",
+      "sourceHash": "7cfd30ca506a7c5d40d5a404577f63d677ee805738c1e7d789cdf24700f4b55b",
+      "permalink": "/blog/Annoucing"
+    },
+    {
+      "docId": "apache-doris-4-1-iceberg-v3.mdx",
+      "sourcePath": "blog/apache-doris-4-1-iceberg-v3.mdx",
+      "sourceHash": "531a27a4206823de757ac07670b35302c92573a59971b9554e238e0f6b827e97",
+      "permalink": "/blog/apache-doris-4-1-iceberg-v3"
+    },
+    {
+      "docId": "apache-doris-4-1-spill-to-disk.mdx",
+      "sourcePath": "blog/apache-doris-4-1-spill-to-disk.mdx",
+      "sourceHash": "9ca6fae42fce39c310da18c4a2e3f13c492270334b6ee16492c5f0b199d709c1",
+      "permalink": "/blog/apache-doris-4-1-spill-to-disk"
+    },
+    {
+      "docId": "apache-doris-5-multimodal-lakehouse-preview.md",
+      "sourcePath": "blog/apache-doris-5-multimodal-lakehouse-preview.md",
+      "sourceHash": "a240b7ac723bde45b4e580168a32c488399a4e3ad90fc42050783802359876e6",
+      "permalink": "/blog/apache-doris-5-multimodal-lakehouse-preview"
+    },
+    {
+      "docId": "apache-doris-and-deepseek-community-voice.mdx",
+      "sourcePath": "blog/apache-doris-and-deepseek-community-voice.mdx",
+      "sourceHash": "2cc8c68038142027eb83c2ccece723e2c62c09f6105038d7f96aa9f0da20104e",
+      "permalink": "/blog/apache-doris-and-deepseek-community-voice"
+    },
+    {
+      "docId": "apache-doris-and-iceberg-building-hyperscale-data-lakehouse.mdx",
+      "sourcePath": "blog/apache-doris-and-iceberg-building-hyperscale-data-lakehouse.mdx",
+      "sourceHash": "2779fc66e6d1297f0442414b8a59b248411977ee74e256c37af63daed366b126",
+      "permalink": "/blog/apache-doris-and-iceberg-building-hyperscale-data-lakehouse"
+    },
+    {
+      "docId": "apache-doris-and-polaris-per-user-identity-mode.mdx",
+      "sourcePath": "blog/apache-doris-and-polaris-per-user-identity-mode.mdx",
+      "sourceHash": "7f74e91211acecc869f9d4819c06ad3476a1ea7b3b20bb44d82582131f2dc7ea",
+      "permalink": "/blog/apache-doris-and-polaris-per-user-identity-mode"
+    },
+    {
+      "docId": "apache-doris-empowered-5G-fully-connected-factory-with-a-unified-real-time-data-platform.mdx",
+      "sourcePath": "blog/apache-doris-empowered-5G-fully-connected-factory-with-a-unified-real-time-data-platform.mdx",
+      "sourceHash": "0c7628d5393b4e3bb1fb172ed4a4c1e0cebe9ec062b6c869be305a88f0ad1aba",
+      "permalink": "/blog/apache-doris-empowered-5G-fully-connected-factory-with-a-unified-real-time-data-platform"
+    },
+    {
+      "docId": "apache-doris-fluss-stream-lake-analytics.md",
+      "sourcePath": "blog/apache-doris-fluss-stream-lake-analytics.md",
+      "sourceHash": "ad62423ad5827260527cb27e9e0232d59bfe23f39baf5188aad936d4727acc5a",
+      "permalink": "/blog/apache-doris-fluss-stream-lake-analytics"
+    },
+    {
+      "docId": "apache-doris-for-log-and-time-series-data-analysis-in-netease.md",
+      "sourcePath": "blog/apache-doris-for-log-and-time-series-data-analysis-in-netease.md",
+      "sourceHash": "9e48d5a5d210e42b11cd533dc8009037813e1b2e8ae0d362c2c79453d8a2c73e",
+      "permalink": "/blog/apache-doris-for-log-and-time-series-data-analysis-in-netease"
+    },
+    {
+      "docId": "apache-doris-lance-physical-ai-analytics.md",
+      "sourcePath": "blog/apache-doris-lance-physical-ai-analytics.md",
+      "sourceHash": "9e2866190fdd68d11ad2172e2db44ff924a89e9c519e456d86aaec1284c485e4",
+      "permalink": "/blog/apache-doris-lance-physical-ai-analytics"
+    },
+    {
+      "docId": "apache-doris-min-io.mdx",
+      "sourcePath": "blog/apache-doris-min-io.mdx",
+      "sourceHash": "f26298756043580a85eccde4e7edddd8e95a2f45a3272379eb5cb98e722c486e",
+      "permalink": "/blog/apache-doris-min-io"
+    },
+    {
+      "docId": "apache-doris-paimon-agentic-ai-data-loop.md",
+      "sourcePath": "blog/apache-doris-paimon-agentic-ai-data-loop.md",
+      "sourceHash": "4edb0935dbe8393e79e27a6a97f97c30767877e8d8a557c89c020a3dcef3cda3",
+      "permalink": "/blog/apache-doris-paimon-agentic-ai-data-loop"
+    },
+    {
+      "docId": "apache-doris-python-udf-calling-the-python-ecosystem-from-sql.mdx",
+      "sourcePath": "blog/apache-doris-python-udf-calling-the-python-ecosystem-from-sql.mdx",
+      "sourceHash": "6a4f8ac60d5ec038cb2474d1d36017abcb5a175934c3117bedbcc0aae4a5b388",
+      "permalink": "/blog/apache-doris-python-udf-calling-the-python-ecosystem-from-sql"
+    },
+    {
+      "docId": "apache-doris-rust-native-streaming-ingestion-with-apache-iggy.mdx",
+      "sourcePath": "blog/apache-doris-rust-native-streaming-ingestion-with-apache-iggy.mdx",
+      "sourceHash": "1a08d3f77d04bb50c3f7c6d2323e3b6f23ce380cd474677b9c50393ce2c38408",
+      "permalink": "/blog/apache-doris-rust-native-streaming-ingestion-with-apache-iggy"
+    },
+    {
+      "docId": "apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics.md",
+      "sourcePath": "blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics.md",
+      "sourceHash": "121e858562ac844fde14d581cc2cf1e677a59b7f881df158a60f0e06191f743f",
+      "permalink": "/blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics"
+    },
+    {
+      "docId": "apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse.md",
+      "sourcePath": "blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse.md",
+      "sourceHash": "e07a24e736c63d4212b745fd53384b20c595a777d855200dd53e976c93902ea7",
+      "permalink": "/blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse"
+    },
+    {
+      "docId": "apache-doris-the-data-lakehouse-evolution.mdx",
+      "sourcePath": "blog/apache-doris-the-data-lakehouse-evolution.mdx",
+      "sourceHash": "1c0c9486570955c7ba3ad9c43ffbf9da910476c5bc629a68eba5ca36efca6b61",
+      "permalink": "/blog/apache-doris-the-data-lakehouse-evolution"
+    },
+    {
+      "docId": "apache-doris-variant-open-lakehouse.md",
+      "sourcePath": "blog/apache-doris-variant-open-lakehouse.md",
+      "sourceHash": "172538d9b2b9bd80b0e166f635635910307d707b213085e7c9f630b3e0cb1230",
+      "permalink": "/blog/apache-doris-variant-open-lakehouse"
+    },
+    {
+      "docId": "apache-doris-vs-rockset.md",
+      "sourcePath": "blog/apache-doris-vs-rockset.md",
+      "sourceHash": "e337951d4d5124faa9062305cd6a2449f4f94f8b1f2f319db9bdd528084ef7e1",
+      "permalink": "/blog/apache-doris-vs-rockset"
+    },
+    {
+      "docId": "arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.md",
+      "sourcePath": "blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.md",
+      "sourceHash": "46056433267a9959502a3571b1170f201714bf8f2dfd28131ea4b3d72e4bf381",
+      "permalink": "/blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer"
+    },
+    {
+      "docId": "asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb.mdx",
+      "sourcePath": "blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb.mdx",
+      "sourceHash": "7e89e7a095e69263899b833e5e42aa637775c69c3e0709ae1d971bdc7f5d2405",
+      "permalink": "/blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb"
+    },
+    {
+      "docId": "auto-increment-columns-in-databases.md",
+      "sourcePath": "blog/auto-increment-columns-in-databases.md",
+      "sourceHash": "637b3c21ccb768531f03f079c6f412ab4e232b9e117055ab542f5e1ff4837db1",
+      "permalink": "/blog/auto-increment-columns-in-databases"
+    },
+    {
+      "docId": "auto-partition-in-apache-doris.md",
+      "sourcePath": "blog/auto-partition-in-apache-doris.md",
+      "sourceHash": "096d7245a1645fbab82cea4d2f3d60da4ff7d4e3ec069b86ba0b9162ea8fafe3",
+      "permalink": "/blog/auto-partition-in-apache-doris"
+    },
+    {
+      "docId": "Auto-Synchronization-of-an-Entire-MySQL-Database-for-Data-Analysis.md",
+      "sourcePath": "blog/Auto-Synchronization-of-an-Entire-MySQL-Database-for-Data-Analysis.md",
+      "sourceHash": "0e1cb682a976b9c10f3fe6cbc7f8e7a8c049eeaa848428fba47b068e7c0aa8f7",
+      "permalink": "/blog/Auto-Synchronization-of-an-Entire-MySQL-Database-for-Data-Analysis"
+    },
+    {
+      "docId": "autonomous-driving-multimodal-search.mdx",
+      "sourcePath": "blog/autonomous-driving-multimodal-search.mdx",
+      "sourceHash": "8880041f885494bdc6af68faa70dc5496fbe19cee71605439a7abeaa3b6782d2",
+      "permalink": "/blog/autonomous-driving-multimodal-search"
+    },
+    {
+      "docId": "BestPractice_Kwai.md",
+      "sourcePath": "blog/BestPractice_Kwai.md",
+      "sourceHash": "fee0073a396ea06052e391a36b87cca13f63d684deddcd2acf213cd0c47f7ea7",
+      "permalink": "/blog/BestPractice_Kwai"
+    },
+    {
+      "docId": "breaking-down-data-silos-with-an-apache-doris-based-cdp.md",
+      "sourcePath": "blog/breaking-down-data-silos-with-an-apache-doris-based-cdp.md",
+      "sourceHash": "47841222cf12748fe839ec5a4b9332f2159edb6824ca9264b8b3a621d265bf97",
+      "permalink": "/blog/breaking-down-data-silos-with-an-apache-doris-based-cdp"
+    },
+    {
+      "docId": "Building-a-Data-Warehouse-for-Traditional-Industry.md",
+      "sourcePath": "blog/Building-a-Data-Warehouse-for-Traditional-Industry.md",
+      "sourceHash": "168a5a3a6825a9b5baea2480961ca653be192e27423ee76efa9e24ae692da80c",
+      "permalink": "/blog/Building-a-Data-Warehouse-for-Traditional-Industry"
+    },
+    {
+      "docId": "Building-A-Log-Analytics-Solution-10-Times-More-Cost-Effective-Than-Elasticsearch.md",
+      "sourcePath": "blog/Building-A-Log-Analytics-Solution-10-Times-More-Cost-Effective-Than-Elasticsearch.md",
+      "sourceHash": "c3da98a251d321871dced7380ab7a1de51f01dfe058891b37f474999c1fe8252",
+      "permalink": "/blog/Building-A-Log-Analytics-Solution-10-Times-More-Cost-Effective-Than-Elasticsearch"
+    },
+    {
+      "docId": "building-real-time-lakehouse-with-apache-doris.mdx",
+      "sourcePath": "blog/building-real-time-lakehouse-with-apache-doris.mdx",
+      "sourceHash": "37e7c3b74bd319d004a07fc8f99c8923bc2db918c2ba8a1e4ebcd8175b96288a",
+      "permalink": "/blog/building-real-time-lakehouse-with-apache-doris"
+    },
+    {
+      "docId": "Building-the-Next-Generation-Data-Lakehouse-10X-Performance.md",
+      "sourcePath": "blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance.md",
+      "sourceHash": "7e2f45073a108d5425221dff40f0e1cd037caab94d5e9634b562e2fcceea81c8",
+      "permalink": "/blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance"
+    },
+    {
+      "docId": "bytedance-hybrid-search-usecase.mdx",
+      "sourcePath": "blog/bytedance-hybrid-search-usecase.mdx",
+      "sourceHash": "3cb07a16446d3ac1ca4a6b86636f77cfecaae9b60d764f98f626a3e0e635b7c2",
+      "permalink": "/blog/bytedance-hybrid-search-usecase"
+    },
+    {
+      "docId": "Choosing-an-OLAP-Engine-for-Financial-Risk-Management-What-to-Consider.md",
+      "sourcePath": "blog/Choosing-an-OLAP-Engine-for-Financial-Risk-Management-What-to-Consider.md",
+      "sourceHash": "f8faf99899c5bdd1c170fb05e03aa81d318d6fe9b424365ca4a4f709387bd03b",
+      "permalink": "/blog/Choosing-an-OLAP-Engine-for-Financial-Risk-Management-What-to-Consider"
+    },
+    {
+      "docId": "chunking-embedding-cookbook.mdx",
+      "sourcePath": "blog/chunking-embedding-cookbook.mdx",
+      "sourceHash": "d8aef39b78b7e9efc169c434e0c6b18fc37214fabcf64b7f285684ba47b57faa",
+      "permalink": "/blog/chunking-embedding-cookbook"
+    },
+    {
+      "docId": "coffeebench-olap-showdown-part1-250829.mdx",
+      "sourcePath": "blog/coffeebench-olap-showdown-part1-250829.mdx",
+      "sourceHash": "693d99db200a3dc5e2fea0bc945768c8fbb22752f95a8f30539202bf8cd3a5b1",
+      "permalink": "/blog/coffeebench-olap-showdown-part1-250829"
+    },
+    {
+      "docId": "coffeebench-part2-250917.mdx",
+      "sourcePath": "blog/coffeebench-part2-250917.mdx",
+      "sourceHash": "473299fd4a08474f9eec75f46262983e2c773cf89c4e45d36d216d206ba72995",
+      "permalink": "/blog/coffeebench-part2-250917"
+    },
+    {
+      "docId": "community-voice-2025-how-do-you-choose-between-doris-and-clickhouse.mdx",
+      "sourcePath": "blog/community-voice-2025-how-do-you-choose-between-doris-and-clickhouse.mdx",
+      "sourceHash": "f0428d81fa882fcf599563d825d5467b9fbeba56914d4bb1af5ad191ebc58bbb",
+      "permalink": "/blog/community-voice-2025-how-do-you-choose-between-doris-and-clickhouse"
+    },
+    {
+      "docId": "community-voice-cut-costs-and-boost-efficiency-how-doriss-unified-lakehouse-breaks-down-data-silos.mdx",
+      "sourcePath": "blog/community-voice-cut-costs-and-boost-efficiency-how-doriss-unified-lakehouse-breaks-down-data-silos.mdx",
+      "sourceHash": "88a6b0d2c13710c6f88701f81a6f4decd49c43b436a05ec3c630891969eb267e",
+      "permalink": "/blog/community-voice-cut-costs-and-boost-efficiency-how-doriss-unified-lakehouse-breaks-down-data-silos"
+    },
+    {
+      "docId": "community-voice-doris-breaking-down-the-barriers-of-sql-dialects-and-building-a-unified-data-query-ecosystem.mdx",
+      "sourcePath": "blog/community-voice-doris-breaking-down-the-barriers-of-sql-dialects-and-building-a-unified-data-query-ecosystem.mdx",
+      "sourceHash": "69455f99a9892904b908a8bbd63a18a6597f0975519dac809cd23399777dadd0",
+      "permalink": "/blog/community-voice-doris-breaking-down-the-barriers-of-sql-dialects-and-building-a-unified-data-query-ecosystem"
+    },
+    {
+      "docId": "community-voice-doris-lakehouse-integration.mdx",
+      "sourcePath": "blog/community-voice-doris-lakehouse-integration.mdx",
+      "sourceHash": "dae1d1cace8dace68522a71931f4683e33b75168291bafc37be5885ca3ff8acb",
+      "permalink": "/blog/community-voice-doris-lakehouse-integration"
+    },
+    {
+      "docId": "community-voice-lakehouse-manus-mcp-lets-talk-about-lakehouse.mdx",
+      "sourcePath": "blog/community-voice-lakehouse-manus-mcp-lets-talk-about-lakehouse.mdx",
+      "sourceHash": "1566192a5fc54036d9e29a4688df5e72ac4c5578ba42a9602b4f6fbf7503b3f6",
+      "permalink": "/blog/community-voice-lakehouse-manus-mcp-lets-talk-about-lakehouse"
+    },
+    {
+      "docId": "community-voice-lakehouse-starting-with-apache-doris-s3-tables.mdx",
+      "sourcePath": "blog/community-voice-lakehouse-starting-with-apache-doris-s3-tables.mdx",
+      "sourceHash": "897ade64e4641c46b06cad2d797ab862031802e7c4b7a2d07505e918501bbbef",
+      "permalink": "/blog/community-voice-lakehouse-starting-with-apache-doris-s3-tables"
+    },
+    {
+      "docId": "community-voice-when-doris-meets-iceberg.mdx",
+      "sourcePath": "blog/community-voice-when-doris-meets-iceberg.mdx",
+      "sourceHash": "4774cf7eb782097a6c732c043255d5b738270c7a44363602be39eb1008775306",
+      "permalink": "/blog/community-voice-when-doris-meets-iceberg"
+    },
+    {
+      "docId": "cross-cluster-replication-for-read-write.md",
+      "sourcePath": "blog/cross-cluster-replication-for-read-write.md",
+      "sourceHash": "8685cf34e93bf69a67123f3555e212c2a3596eff64611674cb198b62a261450e",
+      "permalink": "/blog/cross-cluster-replication-for-read-write"
+    },
+    {
+      "docId": "data-analysis-for-live-streaming-what-happens-in-real-time-is-analyzed-in-real-time.md",
+      "sourcePath": "blog/data-analysis-for-live-streaming-what-happens-in-real-time-is-analyzed-in-real-time.md",
+      "sourceHash": "a50a3377910393a682a1a9b7c489a58f4a11f2332104129da624b64de2c853ed",
+      "permalink": "/blog/data-analysis-for-live-streaming-what-happens-in-real-time-is-analyzed-in-real-time"
+    },
+    {
+      "docId": "data-pruning-250908.mdx",
+      "sourcePath": "blog/data-pruning-250908.mdx",
+      "sourceHash": "7901bdbd9ab68498412000010e5548bfec449433eb56fc8306d8ec363f05371b",
+      "permalink": "/blog/data-pruning-250908"
+    },
+    {
+      "docId": "data-trait-250905.mdx",
+      "sourcePath": "blog/data-trait-250905.mdx",
+      "sourceHash": "3b1d23344f1e79884ba071a75f3532bcd5d7ec71d7e2347020f9c53a9b6d6bb6",
+      "permalink": "/blog/data-trait-250905"
+    },
+    {
+      "docId": "Database-Dissection-How-Fast-Data-Queries-Are-Implemented.md",
+      "sourcePath": "blog/Database-Dissection-How-Fast-Data-Queries-Are-Implemented.md",
+      "sourceHash": "237bb7adbca8252b2503d9ef54db0e7b583fcbb05c0107657c41778e72905e8f",
+      "permalink": "/blog/Database-Dissection-How-Fast-Data-Queries-Are-Implemented"
+    },
+    {
+      "docId": "Database-in-Fintech-How-to-Support-ten-thousand-Dashboards-Without-Causing-a-Mess.md",
+      "sourcePath": "blog/Database-in-Fintech-How-to-Support-ten-thousand-Dashboards-Without-Causing-a-Mess.md",
+      "sourceHash": "ab14069e4b2089b19420f1709c292f109a36b041b4a1902b3913063f234c76c7",
+      "permalink": "/blog/Database-in-Fintech-How-to-Support-ten-thousand-Dashboards-Without-Causing-a-Mess"
+    },
+    {
+      "docId": "databricks-rt-and-ltap-oltp-olap-real-time-olap-and-htap.mdx",
+      "sourcePath": "blog/databricks-rt-and-ltap-oltp-olap-real-time-olap-and-htap.mdx",
+      "sourceHash": "9f70adcacf46093948defd61701fccf2aa7e74432e98881713edf97123492253",
+      "permalink": "/blog/databricks-rt-and-ltap-oltp-olap-real-time-olap-and-htap"
+    },
+    {
+      "docId": "dbt-for-apache-doris-1.1.0-five-demos.md",
+      "sourcePath": "blog/dbt-for-apache-doris-1.1.0-five-demos.md",
+      "sourceHash": "12d91a237c8467c66ac3a32c2ead96d5d25159c7b8cc52e68010c7c35e1610a2",
+      "permalink": "/blog/dbt-for-apache-doris-1.1.0-five-demos"
+    },
+    {
+      "docId": "Doris-34x-than-ck-real-time-updates.mdx",
+      "sourcePath": "blog/Doris-34x-than-ck-real-time-updates.mdx",
+      "sourceHash": "8216e787c225cd554f50807ec7dddaf36261b0cd54c59de72a12d7715de2781f",
+      "permalink": "/blog/Doris-34x-than-ck-real-time-updates"
+    },
+    {
+      "docId": "Doris-70-better-on-graviton.mdx",
+      "sourcePath": "blog/Doris-70-better-on-graviton.mdx",
+      "sourceHash": "89eed379519c070920c15983c0a5a2436793caeac5eb35f04f25a9a7fbc8c2b3",
+      "permalink": "/blog/Doris-70-better-on-graviton"
+    },
+    {
+      "docId": "doris-compute-storage-decoupled.md",
+      "sourcePath": "blog/doris-compute-storage-decoupled.md",
+      "sourceHash": "4ef3f675286a178edff20c2cff0251c89deb7343926480e92533d0a20e0748b7",
+      "permalink": "/blog/doris-compute-storage-decoupled"
+    },
+    {
+      "docId": "doris-introduction-community-voice.mdx",
+      "sourcePath": "blog/doris-introduction-community-voice.mdx",
+      "sourceHash": "90935f844b7fbe66d73a9b8d69bdad91e963f017f4b7d4c50220eb8637e50fed",
+      "permalink": "/blog/doris-introduction-community-voice"
+    },
+    {
+      "docId": "Doris-onelake-fabric-integration.mdx",
+      "sourcePath": "blog/Doris-onelake-fabric-integration.mdx",
+      "sourceHash": "93445efe5c62a7177025e8cbc081ff02190942f55f56a8f3e096b3ce535b7ca1",
+      "permalink": "/blog/Doris-onelake-fabric-integration"
+    },
+    {
+      "docId": "Doris-tops-jsonbench-in-cold-queries.mdx",
+      "sourcePath": "blog/Doris-tops-jsonbench-in-cold-queries.mdx",
+      "sourceHash": "0c4e7ed970a7c8ddf484aaf36b83f71b7475c174145b2ff191ceaa08978130f6",
+      "permalink": "/blog/Doris-tops-jsonbench-in-cold-queries"
+    },
+    {
+      "docId": "doris4-native-hybrid-search.mdx",
+      "sourcePath": "blog/doris4-native-hybrid-search.mdx",
+      "sourceHash": "d4480955d5d8d087ef6b79e654eeb0f7be8aa749adc3c42891c478b663b1e2a8",
+      "permalink": "/blog/doris4-native-hybrid-search"
+    },
+    {
+      "docId": "dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch.mdx",
+      "sourcePath": "blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch.mdx",
+      "sourceHash": "8895d3488984aa33d261ecc22d477e770f6fcad7f858345dd9d4fb4468859bee",
+      "permalink": "/blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch"
+    },
+    {
+      "docId": "elasticsearch-vs-apache-doris-community-voice.mdx",
+      "sourcePath": "blog/elasticsearch-vs-apache-doris-community-voice.mdx",
+      "sourceHash": "406e01ecd045f4d89a54cf0fdb6d2d1da4b59ce0a2b9ca30133fe2a1a1e017cb",
+      "permalink": "/blog/elasticsearch-vs-apache-doris-community-voice"
+    },
+    {
+      "docId": "empowering-cyber-security-by-enabling-seven-times-faster-log-analysis.md",
+      "sourcePath": "blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis.md",
+      "sourceHash": "f0af1421ab7651b73197f9da478e1acef362aa89b9bdfa1402040cc45fe67dc3",
+      "permalink": "/blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis"
+    },
+    {
+      "docId": "emqx-apache-doris-ecosystem-for-iot-analytics.mdx",
+      "sourcePath": "blog/emqx-apache-doris-ecosystem-for-iot-analytics.mdx",
+      "sourceHash": "fddfe9ae0098002b0a3101516c6b396f74554ba468f7610290480798573e1fef",
+      "permalink": "/blog/emqx-apache-doris-ecosystem-for-iot-analytics"
+    },
+    {
+      "docId": "evolution-of-the-apache-doris-execution-engine.md",
+      "sourcePath": "blog/evolution-of-the-apache-doris-execution-engine.md",
+      "sourceHash": "b0abcd55fbaa1371018f9a729742657fe7f897eac7259ce6e58b0fa48e7f622d",
+      "permalink": "/blog/evolution-of-the-apache-doris-execution-engine"
+    },
+    {
+      "docId": "Flink-realtime-write.md",
+      "sourcePath": "blog/Flink-realtime-write.md",
+      "sourceHash": "831d13be8887d58eeb43c1cfeec88f15a89da315b7aee60cb8123fcad737eb42",
+      "permalink": "/blog/Flink-realtime-write"
+    },
+    {
+      "docId": "For-Entry-Level-Data-Engineers-How-to-Build-a-Simple-but-Solid-Data-Architecture.md",
+      "sourcePath": "blog/For-Entry-Level-Data-Engineers-How-to-Build-a-Simple-but-Solid-Data-Architecture.md",
+      "sourceHash": "e270575e8ebbe64f21b6d646432f89bdd1cf2707e8ca1a58391f9b24867f0565",
+      "permalink": "/blog/For-Entry-Level-Data-Engineers-How-to-Build-a-Simple-but-Solid-Data-Architecture"
+    },
+    {
+      "docId": "from-clickhouse-elasticsearch-to-apache-doris-kwai.mdx",
+      "sourcePath": "blog/from-clickhouse-elasticsearch-to-apache-doris-kwai.mdx",
+      "sourceHash": "46d360fdfc5ab33026091c2e06ed9fd750d6911031b3415aecb58feb3acd7bad",
+      "permalink": "/blog/from-clickhouse-elasticsearch-to-apache-doris-kwai"
+    },
+    {
+      "docId": "from-clickhouse-to-doris-trillion-log-scale-analytics.mdx",
+      "sourcePath": "blog/from-clickhouse-to-doris-trillion-log-scale-analytics.mdx",
+      "sourceHash": "28bda22a902af51069f453e7518ea61b509c03ad6e636eef5815e4f5ba148f4f",
+      "permalink": "/blog/from-clickhouse-to-doris-trillion-log-scale-analytics"
+    },
+    {
+      "docId": "from-data-silos-to-context-silos.mdx",
+      "sourcePath": "blog/from-data-silos-to-context-silos.mdx",
+      "sourceHash": "d0dc9af1c85829b6e6e01ef567a9cfef8de4b7a3ddf3f0feb4049f3952558f28",
+      "permalink": "/blog/from-data-silos-to-context-silos"
+    },
+    {
+      "docId": "from-elasticsearch-to-apache-doris-upgrading-an-observability-platform.md",
+      "sourcePath": "blog/from-elasticsearch-to-apache-doris-upgrading-an-observability-platform.md",
+      "sourceHash": "58bc86fdaf18a18597c1146cde1c26c3433d62a27b4403e8bcc381f2d66b6fdd",
+      "permalink": "/blog/from-elasticsearch-to-apache-doris-upgrading-an-observability-platform"
+    },
+    {
+      "docId": "from-elasticsearch-to-doris-boosting-queries-by-56x.mdx",
+      "sourcePath": "blog/from-elasticsearch-to-doris-boosting-queries-by-56x.mdx",
+      "sourceHash": "1730bd2eecac1f492875eec417601131bb15bff7e91c89f890e16672d5ad4506",
+      "permalink": "/blog/from-elasticsearch-to-doris-boosting-queries-by-56x"
+    },
+    {
+      "docId": "from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture.mdx",
+      "sourcePath": "blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture.mdx",
+      "sourceHash": "7032e4a95a165e5988be75270fa9096f5f7615674d5789d267c9668e17cb5db4",
+      "permalink": "/blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture"
+    },
+    {
+      "docId": "from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings.mdx",
+      "sourcePath": "blog/from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings.mdx",
+      "sourceHash": "144014fe454bc0ecc8818eb9d1db643b6c3885d4185fd91a03b7869d0aa7f359",
+      "permalink": "/blog/from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings"
+    },
+    {
+      "docId": "from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale.mdx",
+      "sourcePath": "blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale.mdx",
+      "sourceHash": "0405231d059c84a1d724e93d6f58ebbfd1ba2f79f2ae3d1bb66671df109c8945",
+      "permalink": "/blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale"
+    },
+    {
+      "docId": "how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents.md",
+      "sourcePath": "blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents.md",
+      "sourceHash": "af2a351ad163794b4fff80310d45f67b908f9c6a69595fab642aa1f2dc7efcfa",
+      "permalink": "/blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents"
+    },
+    {
+      "docId": "how-meituan-consolidated-its-analytics-stack-on-apache-doris.mdx",
+      "sourcePath": "blog/how-meituan-consolidated-its-analytics-stack-on-apache-doris.mdx",
+      "sourceHash": "e2f27710e0295113616e8597186b4a49d7f3c0c58faa1a517d5a9e733b0915b5",
+      "permalink": "/blog/how-meituan-consolidated-its-analytics-stack-on-apache-doris"
+    },
+    {
+      "docId": "how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+      "sourcePath": "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+      "sourceHash": "c3ae0b744ff7c94ba17f92b95ecea1f27bf6743bc338419a669877cce7914ed8",
+      "permalink": "/blog/how-stepfun-built-agent-observability-platform-with-apache-doris"
+    },
+    {
+      "docId": "how-we-built-production-vector-search-in-apache-doris.mdx",
+      "sourcePath": "blog/how-we-built-production-vector-search-in-apache-doris.mdx",
+      "sourceHash": "78de671af1c3e441bd2f91bee86a6a73ae43cb2ee06ecc21d783b8de5be3524f",
+      "permalink": "/blog/how-we-built-production-vector-search-in-apache-doris"
+    },
+    {
+      "docId": "How-We-Increased-Database-Query-Concurrency-by-20-Times.md",
+      "sourcePath": "blog/How-We-Increased-Database-Query-Concurrency-by-20-Times.md",
+      "sourceHash": "989b7238578dc987fe97a35b92798150789b9cde4878e85d77dc9f8dccec2a3b",
+      "permalink": "/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times"
+    },
+    {
+      "docId": "HTAP-pg-doris.mdx",
+      "sourcePath": "blog/HTAP-pg-doris.mdx",
+      "sourceHash": "2a179d03fb176fd3e43895a434d1856a2548de6042375eb845e54ae039565e95",
+      "permalink": "/blog/HTAP-pg-doris"
+    },
+    {
+      "docId": "Improving-Query-Speed-to-Make-the-Most-out-of-Your-Data.md",
+      "sourcePath": "blog/Improving-Query-Speed-to-Make-the-Most-out-of-Your-Data.md",
+      "sourceHash": "84b5eabce1207901bf887da2be47064c65828741aabb764ad2a532a859e10061",
+      "permalink": "/blog/Improving-Query-Speed-to-Make-the-Most-out-of-Your-Data"
+    },
+    {
+      "docId": "introduction-to-apache-doris-a-next-generation-real-time-data-warehouse.md",
+      "sourcePath": "blog/introduction-to-apache-doris-a-next-generation-real-time-data-warehouse.md",
+      "sourceHash": "42ee07c9665e3c8df8e959635c1e72affc53d3083a20587ea802eed2a02e9997",
+      "permalink": "/blog/introduction-to-apache-doris-a-next-generation-real-time-data-warehouse"
+    },
+    {
+      "docId": "inverted-index-accelerates-text-searches-by-40-time-apache-doris.md",
+      "sourcePath": "blog/inverted-index-accelerates-text-searches-by-40-time-apache-doris.md",
+      "sourceHash": "a1d39cfaa42ffd13e5b4ae0608b7e50402463074e0d48c50abab4dd2d091d76d",
+      "permalink": "/blog/inverted-index-accelerates-text-searches-by-40-time-apache-doris"
+    },
+    {
+      "docId": "inverted-index-deepdive.mdx",
+      "sourcePath": "blog/inverted-index-deepdive.mdx",
+      "sourceHash": "a9932458966c430b0af9f8c5d7c3fda19e16f393e17a322b474fe4c01e302a1b",
+      "permalink": "/blog/inverted-index-deepdive"
+    },
+    {
+      "docId": "Is-Your-Latest-Data-Really-the-Latest-Check-the-Data-Update-Mechanism-of-Your-Database.md",
+      "sourcePath": "blog/Is-Your-Latest-Data-Really-the-Latest-Check-the-Data-Update-Mechanism-of-Your-Database.md",
+      "sourceHash": "208486467ff2179622997f6270bd798af0938e20fd517fe13c9553a5412edd08",
+      "permalink": "/blog/Is-Your-Latest-Data-Really-the-Latest-Check-the-Data-Update-Mechanism-of-Your-Database"
+    },
+    {
+      "docId": "JD_OLAP.md",
+      "sourcePath": "blog/JD_OLAP.md",
+      "sourceHash": "73a6e53b0af895ae8f161c049e3760f6cb658ac804b1f56fa0c675bb39c41f04",
+      "permalink": "/blog/JD_OLAP"
+    },
+    {
+      "docId": "jd.md",
+      "sourcePath": "blog/jd.md",
+      "sourceHash": "d12857094232cc5476eccc6fe4417fd87ab055f1f302aa05b05c544909803160",
+      "permalink": "/blog/jd"
+    },
+    {
+      "docId": "job-scheduler-for-task-automation.md",
+      "sourcePath": "blog/job-scheduler-for-task-automation.md",
+      "sourceHash": "95dda379fdd3f04078b76ea87f7cc80eed3db36fc94a7afac8f8f0be64a169a9",
+      "permalink": "/blog/job-scheduler-for-task-automation"
+    },
+    {
+      "docId": "json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris.mdx",
+      "sourcePath": "blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris.mdx",
+      "sourceHash": "7647841f9d258b997f29834ae297e3ddcd474b0809580cb06744de770e45d63d",
+      "permalink": "/blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris"
+    },
+    {
+      "docId": "kwai-paimon-vector-search-apache-doris.md",
+      "sourcePath": "blog/kwai-paimon-vector-search-apache-doris.md",
+      "sourceHash": "cadc0fd509c2a221e44198e4e5539b19e724efa6ccc0470959489dbc98f6341d",
+      "permalink": "/blog/kwai-paimon-vector-search-apache-doris"
+    },
+    {
+      "docId": "kwai-replace-clickhouse-with-apache-doris-for-unified-lakehouse.mdx",
+      "sourcePath": "blog/kwai-replace-clickhouse-with-apache-doris-for-unified-lakehouse.mdx",
+      "sourceHash": "e9bb709b8652b9ae6beaaf4fa3a7cdec705afa44f73efdb43bc51fcf8433ad49",
+      "permalink": "/blog/kwai-replace-clickhouse-with-apache-doris-for-unified-lakehouse"
+    },
+    {
+      "docId": "leading-ai-company-revamped-observability-with-apache-doris.mdx",
+      "sourcePath": "blog/leading-ai-company-revamped-observability-with-apache-doris.mdx",
+      "sourceHash": "9c235354d1dbbf9a0c96a27dc4e8d64dec60689e6ae8ec8b095f3ccd548355f7",
+      "permalink": "/blog/leading-ai-company-revamped-observability-with-apache-doris"
+    },
+    {
+      "docId": "less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase.md",
+      "sourcePath": "blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase.md",
+      "sourceHash": "ae7298e3598e2df8925f73817f0053292cef774c5dcc8a713b957a0b04bb42f4",
+      "permalink": "/blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase"
+    },
+    {
+      "docId": "linkedcare.md",
+      "sourcePath": "blog/linkedcare.md",
+      "sourceHash": "96553b23ab9efefbe4b00c2f314e099734ebbcb83eb968b60c8fde5fb621f084",
+      "permalink": "/blog/linkedcare"
+    },
+    {
+      "docId": "Listen-to-That-Poor-BI-Engineer-We-Need-Fast-Joins.md",
+      "sourcePath": "blog/Listen-to-That-Poor-BI-Engineer-We-Need-Fast-Joins.md",
+      "sourceHash": "d84df325e92f61d12b2d0d4b750a77f7868983cc4c34a472de0aac12c944fed3",
+      "permalink": "/blog/Listen-to-That-Poor-BI-Engineer-We-Need-Fast-Joins"
+    },
+    {
+      "docId": "llm-observability.md",
+      "sourcePath": "blog/llm-observability.md",
+      "sourceHash": "ff25902ca5e7d9a26ffe4ffb32b79aabbe18acd1b8f665511b53fe3fccefb257",
+      "permalink": "/blog/llm-observability"
+    },
+    {
+      "docId": "log-analysis-elasticsearch-vs-apache-doris.md",
+      "sourcePath": "blog/log-analysis-elasticsearch-vs-apache-doris.md",
+      "sourceHash": "2e65519f01196fac8ca97f7ea4ecd7c7684c5f89700a6c810eb202baf68b583f",
+      "permalink": "/blog/log-analysis-elasticsearch-vs-apache-doris"
+    },
+    {
+      "docId": "Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second.md",
+      "sourcePath": "blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second.md",
+      "sourceHash": "438379d3c9ec25e03778b2009c47148b063726c55490b1607045370be4319483",
+      "permalink": "/blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second"
+    },
+    {
+      "docId": "LY.md",
+      "sourcePath": "blog/LY.md",
+      "sourceHash": "96a7c433f00282e5d4f2e0fe7ec725ddb023a6c066a95740ca048b080111f636",
+      "permalink": "/blog/LY"
+    },
+    {
+      "docId": "meet-d-crew-apache-doris-mascot-family.md",
+      "sourcePath": "blog/meet-d-crew-apache-doris-mascot-family.md",
+      "sourceHash": "f07c0ce204a667e7517acb5ae59b86d4250997bff5d4b4b58d909bf323ac6f50",
+      "permalink": "/blog/meet-d-crew-apache-doris-mascot-family"
+    },
+    {
+      "docId": "meituan.md",
+      "sourcePath": "blog/meituan.md",
+      "sourceHash": "64aa18251498b77b9c41dcf71187823361de7905f17f2ceefbdb1de4fa9fdb25",
+      "permalink": "/blog/meituan"
+    },
+    {
+      "docId": "mexican-mining-giant-azure-to-apache-doris.mdx",
+      "sourcePath": "blog/mexican-mining-giant-azure-to-apache-doris.mdx",
+      "sourceHash": "ccd4fbd85108c35f4a245e872cd1f2380e200f2061c9b2b3d79025a8e0c62f3f",
+      "permalink": "/blog/mexican-mining-giant-azure-to-apache-doris"
+    },
+    {
+      "docId": "migrate-lakehouse-from-bigquery-to-doris.md",
+      "sourcePath": "blog/migrate-lakehouse-from-bigquery-to-doris.md",
+      "sourceHash": "8f658838f279285c61dc4af0cf1378ffeaf5c6b60940e72fbc36cc78bc935cb0",
+      "permalink": "/blog/migrate-lakehouse-from-bigquery-to-doris"
+    },
+    {
+      "docId": "migrating-from-clickhouse-to-apache-doris-what-happened.md",
+      "sourcePath": "blog/migrating-from-clickhouse-to-apache-doris-what-happened.md",
+      "sourceHash": "756a7994beaf4b540aeae39727f9ae241dd50868f23eac8076cfb734a845149e",
+      "permalink": "/blog/migrating-from-clickhouse-to-apache-doris-what-happened"
+    },
+    {
+      "docId": "multi-tenant-workload-isolation-in-apache-doris.md",
+      "sourcePath": "blog/multi-tenant-workload-isolation-in-apache-doris.md",
+      "sourceHash": "4477f169297de27c0e5d57d860a3a05664aad2b745d0dd162a50155bce2cb897",
+      "permalink": "/blog/multi-tenant-workload-isolation-in-apache-doris"
+    },
+    {
+      "docId": "netease-games-unified-doris-lakehouse.mdx",
+      "sourcePath": "blog/netease-games-unified-doris-lakehouse.mdx",
+      "sourceHash": "45ae9752eb3afe9bb06f609bbec692ca660ae4fa6677032722d6476503fcb75d",
+      "permalink": "/blog/netease-games-unified-doris-lakehouse"
+    },
+    {
+      "docId": "Netease.md",
+      "sourcePath": "blog/Netease.md",
+      "sourceHash": "4b722988554726ade66f1f95b91e6097df5fc55c6a6a75a5a57d55c1d6eb362a",
+      "permalink": "/blog/Netease"
+    },
+    {
+      "docId": "NIO.md",
+      "sourcePath": "blog/NIO.md",
+      "sourceHash": "f26d656c6e43a81892c01df9d619d0fbbf764c66d1739147aa75818d32be8f9a",
+      "permalink": "/blog/NIO"
+    },
+    {
+      "docId": "olake-iceberg-and-doris.mdx",
+      "sourcePath": "blog/olake-iceberg-and-doris.mdx",
+      "sourceHash": "55210325f145604a7665e16bc84b52812ccb0d4e5d4620a963fa8d11d87f26f1",
+      "permalink": "/blog/olake-iceberg-and-doris"
+    },
+    {
+      "docId": "ortege-studio-1-scaling-bitcoin-data-to-billions-of-records.md",
+      "sourcePath": "blog/ortege-studio-1-scaling-bitcoin-data-to-billions-of-records.md",
+      "sourceHash": "3bd2b2bf51637657266ff63dd0b2ad9eddfea98600337cfde6043bd4924fbca4",
+      "permalink": "/blog/ortege-studio-1-scaling-bitcoin-data-to-billions-of-records"
+    },
+    {
+      "docId": "ortege-studio-2-fine-tuning-apache-doris-for-maximum-performance-and-resilience.md",
+      "sourcePath": "blog/ortege-studio-2-fine-tuning-apache-doris-for-maximum-performance-and-resilience.md",
+      "sourceHash": "a93690cbcb41ebd4bd25cd20130f1cbb939a44a7cebc53071470e6ab9fb02885",
+      "permalink": "/blog/ortege-studio-2-fine-tuning-apache-doris-for-maximum-performance-and-resilience"
+    },
+    {
+      "docId": "postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement.mdx",
+      "sourcePath": "blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement.mdx",
+      "sourceHash": "f62c7af59e9baa398c9dc3af22d4e85d5c73af44bb714ffbfba32344b06408a4",
+      "permalink": "/blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement"
+    },
+    {
+      "docId": "principle-of-Doris-SQL-parsing.md",
+      "sourcePath": "blog/principle-of-Doris-SQL-parsing.md",
+      "sourceHash": "076febf221fb940a0cbfd53210a3e0defcb4d93199740e1a5a057895a17cfdc8",
+      "permalink": "/blog/principle-of-Doris-SQL-parsing"
+    },
+    {
+      "docId": "principle-of-Doris-Stream-Load.md",
+      "sourcePath": "blog/principle-of-Doris-Stream-Load.md",
+      "sourceHash": "93cc5bfd8c3204fe14d2c7abbaf486a954e7d694cea9d4d14b8625b7f0d17e4c",
+      "permalink": "/blog/principle-of-Doris-Stream-Load"
+    },
+    {
+      "docId": "puppygraph-apache-doris.mdx",
+      "sourcePath": "blog/puppygraph-apache-doris.mdx",
+      "sourceHash": "29497957aeaf6b7bc5132b766390e08933377383a9e3778aebbeb913312fdf12",
+      "permalink": "/blog/puppygraph-apache-doris"
+    },
+    {
+      "docId": "real-time-analytical-data-platform-for-the-agentic-ai-era.mdx",
+      "sourcePath": "blog/real-time-analytical-data-platform-for-the-agentic-ai-era.mdx",
+      "sourceHash": "8778c4b3d9df8825aa7f8a094b4a06d2957f6e15609705825419c234768cd6dc",
+      "permalink": "/blog/real-time-analytical-data-platform-for-the-agentic-ai-era"
+    },
+    {
+      "docId": "real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.mdx",
+      "sourcePath": "blog/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.mdx",
+      "sourceHash": "c6e66218409f22e87215a5f9e7305e7fcecd0d72795fa57b959c341265e50324",
+      "permalink": "/blog/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris"
+    },
+    {
+      "docId": "real-time-lakehouse-in-cainiao-large-scale-business-scenarios.mdx",
+      "sourcePath": "blog/real-time-lakehouse-in-cainiao-large-scale-business-scenarios.mdx",
+      "sourceHash": "105e1822a3aac60622a086241c8ef80eeac0d8e0966695f9adc1c791a1b87dfb",
+      "permalink": "/blog/real-time-lakehouse-in-cainiao-large-scale-business-scenarios"
+    },
+    {
+      "docId": "real-time-update-deep-dive.mdx",
+      "sourcePath": "blog/real-time-update-deep-dive.mdx",
+      "sourceHash": "3973a637b9acb9a02006455ed46f20b490fcf8e0485f14a1d652b333f5cfda6b",
+      "permalink": "/blog/real-time-update-deep-dive"
+    },
+    {
+      "docId": "release-2.0.2.md",
+      "sourcePath": "blog/release-2.0.2.md",
+      "sourceHash": "7c81ac3087a391908fb2b0191a6d72fb78f4e46951dd7b18a4db524fe6e97616",
+      "permalink": "/blog/release-2.0.2"
+    },
+    {
+      "docId": "release-flink-doris-connector-24.0.0.md",
+      "sourcePath": "blog/release-flink-doris-connector-24.0.0.md",
+      "sourceHash": "91f027c1cf3d652fcd1eb73776482f11c9dadd9c659b903f44e1a745f6c11dc5",
+      "permalink": "/blog/release-flink-doris-connector-24.0.0"
+    },
+    {
+      "docId": "release-note-0.15.0.md",
+      "sourcePath": "blog/release-note-0.15.0.md",
+      "sourceHash": "95dfb224ac7a999ef5dff911d60d4a49a52feba57a7a6c90ad5fd73896a74787",
+      "permalink": "/blog/release-note-0.15.0"
+    },
+    {
+      "docId": "release-note-1.0.0.md",
+      "sourcePath": "blog/release-note-1.0.0.md",
+      "sourceHash": "632915e626d1de1b385ba43c769294720c3febe883c02ce4c312a6489bdfecf1",
+      "permalink": "/blog/release-note-1.0.0"
+    },
+    {
+      "docId": "release-note-1.1.0.md",
+      "sourcePath": "blog/release-note-1.1.0.md",
+      "sourceHash": "6cd49516f58df852104a87a9199ef57cce06fa58c582f193088435492c1b8744",
+      "permalink": "/blog/release-note-1.1.0"
+    },
+    {
+      "docId": "release-note-1.1.1.md",
+      "sourcePath": "blog/release-note-1.1.1.md",
+      "sourceHash": "0ac1064faa79035f7110bd54032781b58bf3411f1f18f861978c13b4ecc85369",
+      "permalink": "/blog/release-note-1.1.1"
+    },
+    {
+      "docId": "release-note-1.1.2.md",
+      "sourcePath": "blog/release-note-1.1.2.md",
+      "sourceHash": "b897beb348ab4efbb659e69265d488156c4d7015661a13d7d2945ecbd1e82ccd",
+      "permalink": "/blog/release-note-1.1.2"
+    },
+    {
+      "docId": "release-note-1.1.3.md",
+      "sourcePath": "blog/release-note-1.1.3.md",
+      "sourceHash": "dfa9d586b5c96be9c802fd365114d3a4c521d1681039ca5acf40042c3b2a7784",
+      "permalink": "/blog/release-note-1.1.3"
+    },
+    {
+      "docId": "release-note-1.1.4.md",
+      "sourcePath": "blog/release-note-1.1.4.md",
+      "sourceHash": "28ddf3448b44495a6ef5d28bdb2e7e3135632aa927d0f5761f68c95c614cc4af",
+      "permalink": "/blog/release-note-1.1.4"
+    },
+    {
+      "docId": "release-note-1.1.5.md",
+      "sourcePath": "blog/release-note-1.1.5.md",
+      "sourceHash": "2bc0b6f3996d0a65f12adbf9174fea70e9b061e2cdde9493b252f7d33d7dc9f7",
+      "permalink": "/blog/release-note-1.1.5"
+    },
+    {
+      "docId": "release-note-1.2.0.md",
+      "sourcePath": "blog/release-note-1.2.0.md",
+      "sourceHash": "6dd961b241439de806d14e28a4878a103c1fcf09c1ff64527a0432854239010d",
+      "permalink": "/blog/release-note-1.2.0"
+    },
+    {
+      "docId": "release-note-1.2.1.md",
+      "sourcePath": "blog/release-note-1.2.1.md",
+      "sourceHash": "3de231c40fefb3fa8f462c4e7078f02eae171a7b04df89c6ba806c2ac913e312",
+      "permalink": "/blog/release-note-1.2.1"
+    },
+    {
+      "docId": "release-note-1.2.2.md",
+      "sourcePath": "blog/release-note-1.2.2.md",
+      "sourceHash": "d1493656e005e942b3340c2acfb7c5721a3e104b66242aa1c2ca5ebc40bd1665",
+      "permalink": "/blog/release-note-1.2.2"
+    },
+    {
+      "docId": "release-note-1.2.3.md",
+      "sourcePath": "blog/release-note-1.2.3.md",
+      "sourceHash": "91602961ef6866633406b973d4084d507ffb6cfbbfdeae3308735b18bdc6934f",
+      "permalink": "/blog/release-note-1.2.3"
+    },
+    {
+      "docId": "release-note-1.2.4.md",
+      "sourcePath": "blog/release-note-1.2.4.md",
+      "sourceHash": "5f6582b2baccf2d94de6309f4f5761dbca56c9104bcdc2a7f7d673ab5865e602",
+      "permalink": "/blog/release-note-1.2.4"
+    },
+    {
+      "docId": "release-note-1.2.5.md",
+      "sourcePath": "blog/release-note-1.2.5.md",
+      "sourceHash": "93b71754ed70d4a6de70c6c4cd747aa47c40f5954e4f946df90ad44cc7a5bc04",
+      "permalink": "/blog/release-note-1.2.5"
+    },
+    {
+      "docId": "release-note-1.2.6.md",
+      "sourcePath": "blog/release-note-1.2.6.md",
+      "sourceHash": "2784f3854879dd40d276adb05d49bcbf34fbe76e3ee002e4728d6b8a72294c4c",
+      "permalink": "/blog/release-note-1.2.6"
+    },
+    {
+      "docId": "release-note-1.2.7.md",
+      "sourcePath": "blog/release-note-1.2.7.md",
+      "sourceHash": "513420c089de8ac37be098ea678533c396f91646b29dd835a685780d27add2d8",
+      "permalink": "/blog/release-note-1.2.7"
+    },
+    {
+      "docId": "release-note-2.0.0.md",
+      "sourcePath": "blog/release-note-2.0.0.md",
+      "sourceHash": "5bd617f50a0bedcea8b7a752999ea9d8051f6754da94c371b762b4c8929b4c20",
+      "permalink": "/blog/release-note-2.0.0"
+    },
+    {
+      "docId": "release-note-2.0.1.md",
+      "sourcePath": "blog/release-note-2.0.1.md",
+      "sourceHash": "d07ae94cd16f331f4e4cda358706384e4d6efe1d000a6d271ca9912d25eb2a8f",
+      "permalink": "/blog/release-note-2.0.1"
+    },
+    {
+      "docId": "release-note-2.0.10.md",
+      "sourcePath": "blog/release-note-2.0.10.md",
+      "sourceHash": "df5135f26c0aa5d96fcfc45229c9fe4eab555990abdfd00ec81204ca978ceaa9",
+      "permalink": "/blog/release-note-2.0.10"
+    },
+    {
+      "docId": "release-note-2.0.11.md",
+      "sourcePath": "blog/release-note-2.0.11.md",
+      "sourceHash": "b6af391fc63df2d30e7677f7158ac3228927bcdbe70002bb108f0efeaa3171af",
+      "permalink": "/blog/release-note-2.0.11"
+    },
+    {
+      "docId": "release-note-2.0.12.md",
+      "sourcePath": "blog/release-note-2.0.12.md",
+      "sourceHash": "d78f5627e9d33706564d3b6d275fd46e757c1c6ffc7831342f54f302aaee5784",
+      "permalink": "/blog/release-note-2.0.12"
+    },
+    {
+      "docId": "release-note-2.0.13.md",
+      "sourcePath": "blog/release-note-2.0.13.md",
+      "sourceHash": "996a559199795a8561e39ce5c7c03b022a5141ca6c4c4df6737715918dc4fed7",
+      "permalink": "/blog/release-note-2.0.13"
+    },
+    {
+      "docId": "release-note-2.0.14.md",
+      "sourcePath": "blog/release-note-2.0.14.md",
+      "sourceHash": "6af486b5bb74ef15fb0dc9e6ecea5b0078c43db701db4c3cf45276a1a63d4733",
+      "permalink": "/blog/release-note-2.0.14"
+    },
+    {
+      "docId": "release-note-2.0.15.md",
+      "sourcePath": "blog/release-note-2.0.15.md",
+      "sourceHash": "45454bc69bd9489708c3e163a069c9a5236d9cd8caf4499ccbb62bb46977761c",
+      "permalink": "/blog/release-note-2.0.15"
+    },
+    {
+      "docId": "release-note-2.0.3.md",
+      "sourcePath": "blog/release-note-2.0.3.md",
+      "sourceHash": "461f705f09b235024c920a69886957418f08ffa4ab293a07d435284b4db3ede2",
+      "permalink": "/blog/release-note-2.0.3"
+    },
+    {
+      "docId": "release-note-2.0.4.md",
+      "sourcePath": "blog/release-note-2.0.4.md",
+      "sourceHash": "94e3799224d552955245155c121acdd3edfd84947b563d028d322d5f0f07c54d",
+      "permalink": "/blog/release-note-2.0.4"
+    },
+    {
+      "docId": "release-note-2.0.5.md",
+      "sourcePath": "blog/release-note-2.0.5.md",
+      "sourceHash": "6bd1bef6f172d2b9f74ffe14c054e0fbbcba33c707f6a5a37ab1b5e66fd0b95b",
+      "permalink": "/blog/release-note-2.0.5"
+    },
+    {
+      "docId": "release-note-2.0.7.md",
+      "sourcePath": "blog/release-note-2.0.7.md",
+      "sourceHash": "b88c7b88b730c202e01d89a9d811f95189c1111626177b7238323a1b4ba53370",
+      "permalink": "/blog/release-note-2.0.7"
+    },
+    {
+      "docId": "release-note-2.0.8.md",
+      "sourcePath": "blog/release-note-2.0.8.md",
+      "sourceHash": "c1fdb73b20d38f95fd03c8d9dc00142bfcc1897f8a62f262f8ed201a52e2a0aa",
+      "permalink": "/blog/release-note-2.0.8"
+    },
+    {
+      "docId": "release-note-2.0.9.md",
+      "sourcePath": "blog/release-note-2.0.9.md",
+      "sourceHash": "42110a0bc1cbb888a5c46d106deff293b6fd28c044ca412596b0681cb6f34e2b",
+      "permalink": "/blog/release-note-2.0.9"
+    },
+    {
+      "docId": "release-note-2.1.0.md",
+      "sourcePath": "blog/release-note-2.1.0.md",
+      "sourceHash": "87c2f1c31d7ad61e86c66a2e3df39175d1075bdd8c10a5e184a75ec20d57fb05",
+      "permalink": "/blog/release-note-2.1.0"
+    },
+    {
+      "docId": "release-note-2.1.1.md",
+      "sourcePath": "blog/release-note-2.1.1.md",
+      "sourceHash": "4e2440477a0bf0d981bd0bbc8af05926d8bfc1cc51d727d8c02d9adacebe36e0",
+      "permalink": "/blog/release-note-2.1.1"
+    },
+    {
+      "docId": "release-note-2.1.10.md",
+      "sourcePath": "blog/release-note-2.1.10.md",
+      "sourceHash": "fc6ef38d00fe45ce478c17d0f90e4f2a3c87e11fb38c8bb88996fcb5e8ee3475",
+      "permalink": "/blog/release-note-2.1.10"
+    },
+    {
+      "docId": "release-note-2.1.2.md",
+      "sourcePath": "blog/release-note-2.1.2.md",
+      "sourceHash": "d64fdba4f3e24912d492c9c49b8afdc28ed5a1dcbd4d351fb4cb98674647d449",
+      "permalink": "/blog/release-note-2.1.2"
+    },
+    {
+      "docId": "release-note-2.1.3.md",
+      "sourcePath": "blog/release-note-2.1.3.md",
+      "sourceHash": "445a1493fc10103d38bc6dfde7e3c6440e196c68ca5de884ca6d58312f974860",
+      "permalink": "/blog/release-note-2.1.3"
+    },
+    {
+      "docId": "release-note-2.1.4.md",
+      "sourcePath": "blog/release-note-2.1.4.md",
+      "sourceHash": "758c32b364f8506278cdab30d02be01f7225ea9b568c1cdb7e35e7332a197131",
+      "permalink": "/blog/release-note-2.1.4"
+    },
+    {
+      "docId": "release-note-2.1.6.md",
+      "sourcePath": "blog/release-note-2.1.6.md",
+      "sourceHash": "89cb478d6c78fc9b0af7ea8477d18ed37d393b6b1332a9ea57cd2fc12f44ad11",
+      "permalink": "/blog/release-note-2.1.6"
+    },
+    {
+      "docId": "release-note-2.1.7.md",
+      "sourcePath": "blog/release-note-2.1.7.md",
+      "sourceHash": "50b0c8598b82f57cfdf8ec6faaae068d6b849b78487266cff80f0272c0981df0",
+      "permalink": "/blog/release-note-2.1.7"
+    },
+    {
+      "docId": "release-note-2.1.8.md",
+      "sourcePath": "blog/release-note-2.1.8.md",
+      "sourceHash": "258caaceb8bb5170b0123ee1a12c68547e7f4546978a815c9e13c0404d77e7b5",
+      "permalink": "/blog/release-note-2.1.8"
+    },
+    {
+      "docId": "release-note-2.1.9.md",
+      "sourcePath": "blog/release-note-2.1.9.md",
+      "sourceHash": "3df240629c25cf1fdd58aafa5e0d3ccfddfd4504d15bb91733f9486b5e3e6b55",
+      "permalink": "/blog/release-note-2.1.9"
+    },
+    {
+      "docId": "release-note-3.0.0.md",
+      "sourcePath": "blog/release-note-3.0.0.md",
+      "sourceHash": "bf544f5280b0d834969432dfc96cd1414ae1159ade3619dc99cba8b578a9bd7e",
+      "permalink": "/blog/release-note-3.0.0"
+    },
+    {
+      "docId": "release-note-3.0.1.md",
+      "sourcePath": "blog/release-note-3.0.1.md",
+      "sourceHash": "cc74512788c9202e2bc92878c953331f2d615d7df76253f3544854591baae869",
+      "permalink": "/blog/release-note-3.0.1"
+    },
+    {
+      "docId": "release-note-3.0.2.md",
+      "sourcePath": "blog/release-note-3.0.2.md",
+      "sourceHash": "e2b863882414b2a60fba08657a137e58aef8e26d93ebe0fc7c61808ba6cfce7b",
+      "permalink": "/blog/release-note-3.0.2"
+    },
+    {
+      "docId": "release-note-3.0.3.md",
+      "sourcePath": "blog/release-note-3.0.3.md",
+      "sourceHash": "cb2a1e5c4285358ed76f6ebb1ee57532b766c3822c6f3eb6b50d5aa216db7a0a",
+      "permalink": "/blog/release-note-3.0.3"
+    },
+    {
+      "docId": "release-note-3.0.4.md",
+      "sourcePath": "blog/release-note-3.0.4.md",
+      "sourceHash": "f72b68c68ffe1f2c2a1104c50720a3405e91e3348ac1f7a57b4f935425981bc4",
+      "permalink": "/blog/release-note-3.0.4"
+    },
+    {
+      "docId": "release-note-3.0.5.md",
+      "sourcePath": "blog/release-note-3.0.5.md",
+      "sourceHash": "89da0980b7a2bf492a5c1c5c5c152a2ee37387375880e162ae22968946bc9e53",
+      "permalink": "/blog/release-note-3.0.5"
+    },
+    {
+      "docId": "release-note-3.0.6.md",
+      "sourcePath": "blog/release-note-3.0.6.md",
+      "sourceHash": "c009e111355ed9f16c0fb516d202d824539562f625a649876c3296e137d17e4c",
+      "permalink": "/blog/release-note-3.0.6"
+    },
+    {
+      "docId": "Replacing-Apache-Hive-Elasticsearch-and-PostgreSQL-with-Apache-Doris.md",
+      "sourcePath": "blog/Replacing-Apache-Hive-Elasticsearch-and-PostgreSQL-with-Apache-Doris.md",
+      "sourceHash": "5ba9a73a653e83ca75aeb58ac0811f994462a65ec65171e9f47c13d968fe468c",
+      "permalink": "/blog/Replacing-Apache-Hive-Elasticsearch-and-PostgreSQL-with-Apache-Doris"
+    },
+    {
+      "docId": "rtabench-250902.mdx",
+      "sourcePath": "blog/rtabench-250902.mdx",
+      "sourceHash": "9a6a326aabc2de4c9e6cef413e740fe64c6c120ea92118a666c9566908914d31",
+      "permalink": "/blog/rtabench-250902"
+    },
+    {
+      "docId": "Say-Goodbye-to-OOM-Crashes.md",
+      "sourcePath": "blog/Say-Goodbye-to-OOM-Crashes.md",
+      "sourceHash": "db2fc056573143bfec4f72f99d0b4794bb9f20118bca02ff309a47d064f3b2bc",
+      "permalink": "/blog/Say-Goodbye-to-OOM-Crashes"
+    },
+    {
+      "docId": "search-in-apache-doris-4-1-unifying-full-text-log-search-and-real-time-sql-analytics.mdx",
+      "sourcePath": "blog/search-in-apache-doris-4-1-unifying-full-text-log-search-and-real-time-sql-analytics.mdx",
+      "sourceHash": "347960b1a841926ac1ce32ec3a1eb766cfdf29f73d263a0f9348dc24f16bc6b3",
+      "permalink": "/blog/search-in-apache-doris-4-1-unifying-full-text-log-search-and-real-time-sql-analytics"
+    },
+    {
+      "docId": "sf-technology-replaced-presto-with-apache-doris.mdx",
+      "sourcePath": "blog/sf-technology-replaced-presto-with-apache-doris.mdx",
+      "sourceHash": "2d89e6effb95881c1f575e79d077266e3e1f435013a19514e088242fa833a879",
+      "permalink": "/blog/sf-technology-replaced-presto-with-apache-doris"
+    },
+    {
+      "docId": "ssb.md",
+      "sourcePath": "blog/ssb.md",
+      "sourceHash": "a67ccb7175a00287e75d00d09106096281d326c973e52eafcbea908502d5cb40",
+      "permalink": "/blog/ssb"
+    },
+    {
+      "docId": "stability-at-scale-how-apache-doris-handles-pressure.mdx",
+      "sourcePath": "blog/stability-at-scale-how-apache-doris-handles-pressure.mdx",
+      "sourceHash": "d9d3029dcf3376df5692d96cbdd38c1ab3fccf567f83ee1950cc5dacbc1710d8",
+      "permalink": "/blog/stability-at-scale-how-apache-doris-handles-pressure"
+    },
+    {
+      "docId": "Step-by-step-Guide-to-Building-a-High-Performing-Risk-Data-Mart.md",
+      "sourcePath": "blog/Step-by-step-Guide-to-Building-a-High-Performing-Risk-Data-Mart.md",
+      "sourceHash": "60261adad26b204074d3c615ab7ff841cee5fc305c34e3c5c16088b296e6e64b",
+      "permalink": "/blog/Step-by-step-Guide-to-Building-a-High-Performing-Risk-Data-Mart"
+    },
+    {
+      "docId": "summit.md",
+      "sourcePath": "blog/summit.md",
+      "sourceHash": "136bd816f22c391788ea24f8d25b80d5ab655263fa4333d8db92e406c3f548b8",
+      "permalink": "/blog/summit"
+    },
+    {
+      "docId": "telecom-giant-journey-from-clickhouse-to-apache-doris-13pb-in-one-table.mdx",
+      "sourcePath": "blog/telecom-giant-journey-from-clickhouse-to-apache-doris-13pb-in-one-table.mdx",
+      "sourceHash": "a7c812a2a808da8588e691f018372795be82e10236e4be23c289d0da4bc17182",
+      "permalink": "/blog/telecom-giant-journey-from-clickhouse-to-apache-doris-13pb-in-one-table"
+    },
+    {
+      "docId": "Tencent-Data-Engineers-Why-We-Went-from-ClickHouse-to-Apache-Doris.md",
+      "sourcePath": "blog/Tencent-Data-Engineers-Why-We-Went-from-ClickHouse-to-Apache-Doris.md",
+      "sourceHash": "20dd5a0569931da80f2c97b67eead6ecb7b1350fd94d53cc474a098e063a20ad",
+      "permalink": "/blog/Tencent-Data-Engineers-Why-We-Went-from-ClickHouse-to-Apache-Doris"
+    },
+    {
+      "docId": "Tencent-LLM.md",
+      "sourcePath": "blog/Tencent-LLM.md",
+      "sourceHash": "3be83c9800d8e3b5b3e0972857c055a2ab398914f48cb5eb705a767bcce099e2",
+      "permalink": "/blog/Tencent-LLM"
+    },
+    {
+      "docId": "tencent-music-migrate-elasticsearch-to-doris.md",
+      "sourcePath": "blog/tencent-music-migrate-elasticsearch-to-doris.md",
+      "sourceHash": "874205cb0f4cdaac74ad00a9ef92f2a9957fa3d1ba8e593d76e825e02fe6725d",
+      "permalink": "/blog/tencent-music-migrate-elasticsearch-to-doris"
+    },
+    {
+      "docId": "Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How.md",
+      "sourcePath": "blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How.md",
+      "sourceHash": "786aa26e4cd15a8456c986ef14f29b48dbd93b4bdd3869761bdb0f4aa919f50a",
+      "permalink": "/blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How"
+    },
+    {
+      "docId": "top-commercial-bank-migrated-from-elasticsearch-to-apache-doris-for-pb-scale-log-storage-and-analytics.mdx",
+      "sourcePath": "blog/top-commercial-bank-migrated-from-elasticsearch-to-apache-doris-for-pb-scale-log-storage-and-analytics.mdx",
+      "sourceHash": "ce47b5434395b0b3252280890d3e42cd9eefb697ffe4865a8e299ba2d6fa068d",
+      "permalink": "/blog/top-commercial-bank-migrated-from-elasticsearch-to-apache-doris-for-pb-scale-log-storage-and-analytics"
+    },
+    {
+      "docId": "tpch.md",
+      "sourcePath": "blog/tpch.md",
+      "sourceHash": "52e4185c5e10c55685543e2c8a9911aa370bf644e3fee4cace82966cd427fb5e",
+      "permalink": "/blog/tpch"
+    },
+    {
+      "docId": "Understanding-Data-Compaction-in-3-Minutes.md",
+      "sourcePath": "blog/Understanding-Data-Compaction-in-3-Minutes.md",
+      "sourceHash": "7e17d54d3be886f7f10d148d20f6c75af3ba97567dff6ef4f50e09fc0aa89bf0",
+      "permalink": "/blog/Understanding-Data-Compaction-in-3-Minutes"
+    },
+    {
+      "docId": "unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance.mdx",
+      "sourcePath": "blog/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance.mdx",
+      "sourceHash": "20c27a0e4436e713b51fbb13df84366b679a9f604b2f531a5823ff327f249c87",
+      "permalink": "/blog/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance"
+    },
+    {
+      "docId": "Use-Apache-Doris-with-AI-chatbots.md",
+      "sourcePath": "blog/Use-Apache-Doris-with-AI-chatbots.md",
+      "sourceHash": "580fa09392aeecf78199ca54fc6d587a414daf7d8a276c59151bf8e9c6a06614",
+      "permalink": "/blog/Use-Apache-Doris-with-AI-chatbots"
+    },
+    {
+      "docId": "variant-in-apache-doris-2.1.md",
+      "sourcePath": "blog/variant-in-apache-doris-2.1.md",
+      "sourceHash": "1240575bd7c106bc04466c516b1295294f50c9bde9eb3e17aa80a1992a0c4739",
+      "permalink": "/blog/variant-in-apache-doris-2.1"
+    },
+    {
+      "docId": "variant-tech-deepdive-202601.mdx",
+      "sourcePath": "blog/variant-tech-deepdive-202601.mdx",
+      "sourceHash": "414ea2b7021de3b3476f6c4edc4b28e23c432e441d9bc152bfa6dd9bfe46fd60",
+      "permalink": "/blog/variant-tech-deepdive-202601"
+    },
+    {
+      "docId": "vector-search.md",
+      "sourcePath": "blog/vector-search.md",
+      "sourceHash": "7d91d5309d643295ca0282e8cd1fd04d66b1ea220ba5ea7785ddf9d527aedd48",
+      "permalink": "/blog/vector-search"
+    },
+    {
+      "docId": "web3-doris-flink.mdx",
+      "sourcePath": "blog/web3-doris-flink.mdx",
+      "sourceHash": "989f6fefdf343f81daf0474c60dd4f227537ca2a476c4c52659f6d8bab55f1bd",
+      "permalink": "/blog/web3-doris-flink"
+    },
+    {
+      "docId": "web3-doris-paimon.mdx",
+      "sourcePath": "blog/web3-doris-paimon.mdx",
+      "sourceHash": "848aaf34afdea5213f1af6c485fa1160c374a63ac7a84c1e4bb691c38863aee9",
+      "permalink": "/blog/web3-doris-paimon"
+    },
+    {
+      "docId": "when-to-scale-postgresql-analytics.mdx",
+      "sourcePath": "blog/when-to-scale-postgresql-analytics.mdx",
+      "sourceHash": "8edf763aa1d7af7a1a1689613f28c8f42aabe5ee13c6a2635818edd0501805d3",
+      "permalink": "/blog/when-to-scale-postgresql-analytics"
+    },
+    {
+      "docId": "which-powers-observability-better.mdx",
+      "sourcePath": "blog/which-powers-observability-better.mdx",
+      "sourceHash": "6b912d916fa05c788fc7aa95ceaa1a6573d33ff51a967a35e33f96e11039e529",
+      "permalink": "/blog/which-powers-observability-better"
+    },
+    {
+      "docId": "why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+      "sourcePath": "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+      "sourceHash": "5280cf6af3386aff0d2b3a78c2f6227df402f7bf2d947c7e10317d5df524a33e",
+      "permalink": "/blog/why-ai-agents-need-real-time-analytics-and-hybrid-search"
+    },
+    {
+      "docId": "why-apache-doris-is-best-alternatives-for-real-time-analytics.md",
+      "sourcePath": "blog/why-apache-doris-is-best-alternatives-for-real-time-analytics.md",
+      "sourceHash": "599a61e85445c9222fa399b9b793ed136d86cf87f5ae56a6ca63ba6a2cf936b1",
+      "permalink": "/blog/why-apache-doris-is-best-alternatives-for-real-time-analytics"
+    },
+    {
+      "docId": "xanhsm-with-apache-doris.mdx",
+      "sourcePath": "blog/xanhsm-with-apache-doris.mdx",
+      "sourceHash": "36b2847f6606577874a7883bb0673b642053e114dab8e556491c471d34440914",
+      "permalink": "/blog/xanhsm-with-apache-doris"
+    },
+    {
+      "docId": "xiaomi_vector.md",
+      "sourcePath": "blog/xiaomi_vector.md",
+      "sourceHash": "95d1a1a671d5b7bcea7e3b2a6e6563d3f0306df6d35ba41cd33856e85b429792",
+      "permalink": "/blog/xiaomi_vector"
+    },
+    {
+      "docId": "xiaomi-unified-usecase.mdx",
+      "sourcePath": "blog/xiaomi-unified-usecase.mdx",
+      "sourceHash": "dbf17719d23a0128718eeb9f161b8340d5c53d69ddb060564674a94483c3154a",
+      "permalink": "/blog/xiaomi-unified-usecase"
+    },
+    {
+      "docId": "xiaomi.md",
+      "sourcePath": "blog/xiaomi.md",
+      "sourceHash": "9fb7d6e51cf836cb9eb7af9a4f7922f63b026bcd41f8c5d5a500f19f863757a7",
+      "permalink": "/blog/xiaomi"
+    },
+    {
+      "docId": "Zipping-up-the-Lambda-Architecture-for-40-Percent-Faster-Performance.md",
+      "sourcePath": "blog/Zipping-up-the-Lambda-Architecture-for-40-Percent-Faster-Performance.md",
+      "sourceHash": "e2b1b6afdbb2079ed241a3f543e804bdfcf10f612d21cf76ba30a28ebcaf221d",
+      "permalink": "/blog/Zipping-up-the-Lambda-Architecture-for-40-Percent-Faster-Performance"
+    }
+  ],
+  "sourceFiles": [
+    "blog/1-billion-json-records-1-second-query-response.mdx",
+    "blog/AB-Testing-was-a-Handful-Until-we-Found-the-Replacement-for-Druid.md",
+    "blog/Annoucing.md",
+    "blog/Auto-Synchronization-of-an-Entire-MySQL-Database-for-Data-Analysis.md",
+    "blog/BestPractice_Kwai.md",
+    "blog/Building-A-Log-Analytics-Solution-10-Times-More-Cost-Effective-Than-Elasticsearch.md",
+    "blog/Building-a-Data-Warehouse-for-Traditional-Industry.md",
+    "blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance.md",
+    "blog/Choosing-an-OLAP-Engine-for-Financial-Risk-Management-What-to-Consider.md",
+    "blog/Database-Dissection-How-Fast-Data-Queries-Are-Implemented.md",
+    "blog/Database-in-Fintech-How-to-Support-ten-thousand-Dashboards-Without-Causing-a-Mess.md",
+    "blog/Doris-34x-than-ck-real-time-updates.mdx",
+    "blog/Doris-70-better-on-graviton.mdx",
+    "blog/Doris-onelake-fabric-integration.mdx",
+    "blog/Doris-tops-jsonbench-in-cold-queries.mdx",
+    "blog/Flink-realtime-write.md",
+    "blog/For-Entry-Level-Data-Engineers-How-to-Build-a-Simple-but-Solid-Data-Architecture.md",
+    "blog/HTAP-pg-doris.mdx",
+    "blog/How-We-Increased-Database-Query-Concurrency-by-20-Times.md",
+    "blog/Improving-Query-Speed-to-Make-the-Most-out-of-Your-Data.md",
+    "blog/Is-Your-Latest-Data-Really-the-Latest-Check-the-Data-Update-Mechanism-of-Your-Database.md",
+    "blog/JD_OLAP.md",
+    "blog/LY.md",
+    "blog/Listen-to-That-Poor-BI-Engineer-We-Need-Fast-Joins.md",
+    "blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second.md",
+    "blog/NIO.md",
+    "blog/Netease.md",
+    "blog/Replacing-Apache-Hive-Elasticsearch-and-PostgreSQL-with-Apache-Doris.md",
+    "blog/Say-Goodbye-to-OOM-Crashes.md",
+    "blog/Step-by-step-Guide-to-Building-a-High-Performing-Risk-Data-Mart.md",
+    "blog/Tencent-Data-Engineers-Why-We-Went-from-ClickHouse-to-Apache-Doris.md",
+    "blog/Tencent-LLM.md",
+    "blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How.md",
+    "blog/Understanding-Data-Compaction-in-3-Minutes.md",
+    "blog/Use-Apache-Doris-with-AI-chatbots.md",
+    "blog/Zipping-up-the-Lambda-Architecture-for-40-Percent-Faster-Performance.md",
+    "blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris.md",
+    "blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse.md",
+    "blog/ai-unicorn-minimax-from-loki-and-built-a-pb-scale-logging-system-with-doris.md",
+    "blog/apache-doris-4-1-iceberg-v3.mdx",
+    "blog/apache-doris-4-1-spill-to-disk.mdx",
+    "blog/apache-doris-5-multimodal-lakehouse-preview.md",
+    "blog/apache-doris-and-deepseek-community-voice.mdx",
+    "blog/apache-doris-and-iceberg-building-hyperscale-data-lakehouse.mdx",
+    "blog/apache-doris-and-polaris-per-user-identity-mode.mdx",
+    "blog/apache-doris-empowered-5G-fully-connected-factory-with-a-unified-real-time-data-platform.mdx",
+    "blog/apache-doris-fluss-stream-lake-analytics.md",
+    "blog/apache-doris-for-log-and-time-series-data-analysis-in-netease.md",
+    "blog/apache-doris-lance-physical-ai-analytics.md",
+    "blog/apache-doris-min-io.mdx",
+    "blog/apache-doris-paimon-agentic-ai-data-loop.md",
+    "blog/apache-doris-python-udf-calling-the-python-ecosystem-from-sql.mdx",
+    "blog/apache-doris-rust-native-streaming-ingestion-with-apache-iggy.mdx",
+    "blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics.md",
+    "blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse.md",
+    "blog/apache-doris-the-data-lakehouse-evolution.mdx",
+    "blog/apache-doris-variant-open-lakehouse.md",
+    "blog/apache-doris-vs-rockset.md",
+    "blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.md",
+    "blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb.mdx",
+    "blog/auto-increment-columns-in-databases.md",
+    "blog/auto-partition-in-apache-doris.md",
+    "blog/autonomous-driving-multimodal-search.mdx",
+    "blog/breaking-down-data-silos-with-an-apache-doris-based-cdp.md",
+    "blog/building-real-time-lakehouse-with-apache-doris.mdx",
+    "blog/bytedance-hybrid-search-usecase.mdx",
+    "blog/chunking-embedding-cookbook.mdx",
+    "blog/coffeebench-olap-showdown-part1-250829.mdx",
+    "blog/coffeebench-part2-250917.mdx",
+    "blog/community-voice-2025-how-do-you-choose-between-doris-and-clickhouse.mdx",
+    "blog/community-voice-cut-costs-and-boost-efficiency-how-doriss-unified-lakehouse-breaks-down-data-silos.mdx",
+    "blog/community-voice-doris-breaking-down-the-barriers-of-sql-dialects-and-building-a-unified-data-query-ecosystem.mdx",
+    "blog/community-voice-doris-lakehouse-integration.mdx",
+    "blog/community-voice-lakehouse-manus-mcp-lets-talk-about-lakehouse.mdx",
+    "blog/community-voice-lakehouse-starting-with-apache-doris-s3-tables.mdx",
+    "blog/community-voice-when-doris-meets-iceberg.mdx",
+    "blog/cross-cluster-replication-for-read-write.md",
+    "blog/data-analysis-for-live-streaming-what-happens-in-real-time-is-analyzed-in-real-time.md",
+    "blog/data-pruning-250908.mdx",
+    "blog/data-trait-250905.mdx",
+    "blog/databricks-rt-and-ltap-oltp-olap-real-time-olap-and-htap.mdx",
+    "blog/dbt-for-apache-doris-1.1.0-five-demos.md",
+    "blog/doris-compute-storage-decoupled.md",
+    "blog/doris-introduction-community-voice.mdx",
+    "blog/doris4-native-hybrid-search.mdx",
+    "blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch.mdx",
+    "blog/elasticsearch-vs-apache-doris-community-voice.mdx",
+    "blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis.md",
+    "blog/emqx-apache-doris-ecosystem-for-iot-analytics.mdx",
+    "blog/evolution-of-the-apache-doris-execution-engine.md",
+    "blog/from-clickhouse-elasticsearch-to-apache-doris-kwai.mdx",
+    "blog/from-clickhouse-to-doris-trillion-log-scale-analytics.mdx",
+    "blog/from-data-silos-to-context-silos.mdx",
+    "blog/from-elasticsearch-to-apache-doris-upgrading-an-observability-platform.md",
+    "blog/from-elasticsearch-to-doris-boosting-queries-by-56x.mdx",
+    "blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture.mdx",
+    "blog/from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings.mdx",
+    "blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale.mdx",
+    "blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents.md",
+    "blog/how-meituan-consolidated-its-analytics-stack-on-apache-doris.mdx",
+    "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+    "blog/how-we-built-production-vector-search-in-apache-doris.mdx",
+    "blog/introduction-to-apache-doris-a-next-generation-real-time-data-warehouse.md",
+    "blog/inverted-index-accelerates-text-searches-by-40-time-apache-doris.md",
+    "blog/inverted-index-deepdive.mdx",
+    "blog/jd.md",
+    "blog/job-scheduler-for-task-automation.md",
+    "blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris.mdx",
+    "blog/kwai-paimon-vector-search-apache-doris.md",
+    "blog/kwai-replace-clickhouse-with-apache-doris-for-unified-lakehouse.mdx",
+    "blog/leading-ai-company-revamped-observability-with-apache-doris.mdx",
+    "blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase.md",
+    "blog/linkedcare.md",
+    "blog/llm-observability.md",
+    "blog/log-analysis-elasticsearch-vs-apache-doris.md",
+    "blog/meet-d-crew-apache-doris-mascot-family.md",
+    "blog/meituan.md",
+    "blog/mexican-mining-giant-azure-to-apache-doris.mdx",
+    "blog/migrate-lakehouse-from-bigquery-to-doris.md",
+    "blog/migrating-from-clickhouse-to-apache-doris-what-happened.md",
+    "blog/multi-tenant-workload-isolation-in-apache-doris.md",
+    "blog/netease-games-unified-doris-lakehouse.mdx",
+    "blog/olake-iceberg-and-doris.mdx",
+    "blog/ortege-studio-1-scaling-bitcoin-data-to-billions-of-records.md",
+    "blog/ortege-studio-2-fine-tuning-apache-doris-for-maximum-performance-and-resilience.md",
+    "blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement.mdx",
+    "blog/principle-of-Doris-SQL-parsing.md",
+    "blog/principle-of-Doris-Stream-Load.md",
+    "blog/puppygraph-apache-doris.mdx",
+    "blog/real-time-analytical-data-platform-for-the-agentic-ai-era.mdx",
+    "blog/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.mdx",
+    "blog/real-time-lakehouse-in-cainiao-large-scale-business-scenarios.mdx",
+    "blog/real-time-update-deep-dive.mdx",
+    "blog/release-2.0.2.md",
+    "blog/release-flink-doris-connector-24.0.0.md",
+    "blog/release-note-0.15.0.md",
+    "blog/release-note-1.0.0.md",
+    "blog/release-note-1.1.0.md",
+    "blog/release-note-1.1.1.md",
+    "blog/release-note-1.1.2.md",
+    "blog/release-note-1.1.3.md",
+    "blog/release-note-1.1.4.md",
+    "blog/release-note-1.1.5.md",
+    "blog/release-note-1.2.0.md",
+    "blog/release-note-1.2.1.md",
+    "blog/release-note-1.2.2.md",
+    "blog/release-note-1.2.3.md",
+    "blog/release-note-1.2.4.md",
+    "blog/release-note-1.2.5.md",
+    "blog/release-note-1.2.6.md",
+    "blog/release-note-1.2.7.md",
+    "blog/release-note-2.0.0.md",
+    "blog/release-note-2.0.1.md",
+    "blog/release-note-2.0.10.md",
+    "blog/release-note-2.0.11.md",
+    "blog/release-note-2.0.12.md",
+    "blog/release-note-2.0.13.md",
+    "blog/release-note-2.0.14.md",
+    "blog/release-note-2.0.15.md",
+    "blog/release-note-2.0.3.md",
+    "blog/release-note-2.0.4.md",
+    "blog/release-note-2.0.5.md",
+    "blog/release-note-2.0.7.md",
+    "blog/release-note-2.0.8.md",
+    "blog/release-note-2.0.9.md",
+    "blog/release-note-2.1.0.md",
+    "blog/release-note-2.1.1.md",
+    "blog/release-note-2.1.10.md",
+    "blog/release-note-2.1.2.md",
+    "blog/release-note-2.1.3.md",
+    "blog/release-note-2.1.4.md",
+    "blog/release-note-2.1.6.md",
+    "blog/release-note-2.1.7.md",
+    "blog/release-note-2.1.8.md",
+    "blog/release-note-2.1.9.md",
+    "blog/release-note-3.0.0.md",
+    "blog/release-note-3.0.1.md",
+    "blog/release-note-3.0.2.md",
+    "blog/release-note-3.0.3.md",
+    "blog/release-note-3.0.4.md",
+    "blog/release-note-3.0.5.md",
+    "blog/release-note-3.0.6.md",
+    "blog/rtabench-250902.mdx",
+    "blog/search-in-apache-doris-4-1-unifying-full-text-log-search-and-real-time-sql-analytics.mdx",
+    "blog/sf-technology-replaced-presto-with-apache-doris.mdx",
+    "blog/ssb.md",
+    "blog/stability-at-scale-how-apache-doris-handles-pressure.mdx",
+    "blog/summit.md",
+    "blog/telecom-giant-journey-from-clickhouse-to-apache-doris-13pb-in-one-table.mdx",
+    "blog/tencent-music-migrate-elasticsearch-to-doris.md",
+    "blog/top-commercial-bank-migrated-from-elasticsearch-to-apache-doris-for-pb-scale-log-storage-and-analytics.mdx",
+    "blog/tpch.md",
+    "blog/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance.mdx",
+    "blog/variant-in-apache-doris-2.1.md",
+    "blog/variant-tech-deepdive-202601.mdx",
+    "blog/vector-search.md",
+    "blog/web3-doris-flink.mdx",
+    "blog/web3-doris-paimon.mdx",
+    "blog/when-to-scale-postgresql-analytics.mdx",
+    "blog/which-powers-observability-better.mdx",
+    "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+    "blog/why-apache-doris-is-best-alternatives-for-real-time-analytics.md",
+    "blog/xanhsm-with-apache-doris.mdx",
+    "blog/xiaomi-unified-usecase.mdx",
+    "blog/xiaomi.md",
+    "blog/xiaomi_vector.md"
+  ],
+  "historicalPaths": [
+    "blog/1-billion-json-records-1-second-query-response.md",
+    "blog/1-billion-json-records-1-second-query-response.mdx",
+    "blog/1.1 Release.md",
+    "blog/360.md",
+    "blog/AB-Testing-was-a-Handful-Until-we-Found-the-Replacement-for-Druid.md",
+    "blog/Annoucing.md",
+    "blog/Auto-Synchronization-of-an-Entire-MySQL-Database-for-Data-Analysis.md",
+    "blog/BestPractice_Kwai.md",
+    "blog/Building-A-Log-Analytics-Solution-10-Times-More-Cost-Effective-Than-Elasticsearch.md",
+    "blog/Building-a-Data-Warehouse-for-Traditional-Industry.md",
+    "blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance.md",
+    "blog/Choosing-an-OLAP-Engine-for-Financial-Risk-Management-What-to-Consider.md",
+    "blog/Compaction.md",
+    "blog/Data Lakehouse.md",
+    "blog/Data_Update.md",
+    "blog/Database-Dissection-How-Fast-Data-Queries-Are-Implemented.md",
+    "blog/Database-in-Fintech-How-to-Support-ten-thousand-Dashboards-Without-Causing-a-Mess.md",
+    "blog/Doris-34x-than-ck-real-time-updates.mdx",
+    "blog/Doris-70-better-on-graviton.mdx",
+    "blog/Doris-onelake-fabric-integration.mdx",
+    "blog/Doris-tops-jsonbench-in-cold-queries.mdx",
+    "blog/Douyu.md",
+    "blog/Duyansoft.md",
+    "blog/FDC.md",
+    "blog/Flink-realtime-write.md",
+    "blog/For-Entry-Level-Data-Engineers-How-to-Build-a-Simple-but-Solid-Data-Architecture.md",
+    "blog/HCDS.md",
+    "blog/HTAP-pg-doris.md",
+    "blog/HTAP-pg-doris.mdx",
+    "blog/HYXJ.md",
+    "blog/High_concurrency.md",
+    "blog/How-We-Increased-Database-Query-Concurrency-by-20-Times.md",
+    "blog/Improving-Query-Speed-to-Make-the-Most-out-of-Your-Data.md",
+    "blog/Inverted Index.md",
+    "blog/Is-Your-Latest-Data-Really-the-Latest-Check-the-Data-Update-Mechanism-of-Your-Database.md",
+    "blog/JD_OLAP.md",
+    "blog/LY.md",
+    "blog/Listen-to-That-Poor-BI-Engineer-We-Need-Fast-Joins.md",
+    "blog/Log-Analysis-How-to-Digest-15-Billion-Logs-Per-Day-and-Keep-Big-Queries-Within-1-Second.md",
+    "blog/Memory_Management.md",
+    "blog/Midland Realty.md",
+    "blog/Moka.md",
+    "blog/NIO.md",
+    "blog/Netease.md",
+    "blog/Pingan.md",
+    "blog/Poly.md",
+    "blog/Replacing-Apache-Hive-Elasticsearch-and-PostgreSQL-with-Apache-Doris.md",
+    "blog/Say-Goodbye-to-OOM-Crashes.md",
+    "blog/Step-by-step-Guide-to-Building-a-High-Performing-Risk-Data-Mart.md",
+    "blog/Tencent Music.md",
+    "blog/Tencent-Data-Engineers-Why-We-Went-from-ClickHouse-to-Apache-Doris.md",
+    "blog/Tencent-LLM.md",
+    "blog/Tianyancha.md",
+    "blog/Tiered-Storage-for-Hot-and-Cold-Data-What-Why-and-How.md",
+    "blog/Understanding-Data-Compaction-in-3-Minutes.md",
+    "blog/Use-Apache-Doris-with-AI-chatbots.md",
+    "blog/Xingyun.md",
+    "blog/Zhihu.md",
+    "blog/Zipping-up-the-Lambda-Architecture-for-40%-Faster-Performance.md",
+    "blog/Zipping-up-the-Lambda-Architecture-for-40-Faster-Performance.md",
+    "blog/Zipping-up-the-Lambda-Architecture-for-40-Percent-Faster-Performance.md",
+    "blog/a-fast-secure-high-available-real-time-data-warehouse-based-on-apache-doris.md",
+    "blog/a-financial-anti-fraud-solution-based-on-the-apache-doris-data-warehouse.md",
+    "blog/ai-unicorn-minimax-from-loki-and-built-a-pb-scale-logging-system-with-doris.md",
+    "blog/apache-doris-4-1-iceberg-v3.md",
+    "blog/apache-doris-4-1-iceberg-v3.mdx",
+    "blog/apache-doris-4-1-spill-to-disk.md",
+    "blog/apache-doris-4-1-spill-to-disk.mdx",
+    "blog/apache-doris-5-multimodal-lakehouse-preview.md",
+    "blog/apache-doris-and-deepseek-community-voice.md",
+    "blog/apache-doris-and-deepseek-community-voice.mdx",
+    "blog/apache-doris-and-iceberg-building-hyperscale-data-lakehouse.md",
+    "blog/apache-doris-and-iceberg-building-hyperscale-data-lakehouse.mdx",
+    "blog/apache-doris-and-polaris-per-user-identity-mode.md",
+    "blog/apache-doris-and-polaris-per-user-identity-mode.mdx",
+    "blog/apache-doris-empowered-5G-fully-connected-factory-with-a-unified-real-time-data-platform.md",
+    "blog/apache-doris-empowered-5G-fully-connected-factory-with-a-unified-real-time-data-platform.mdx",
+    "blog/apache-doris-fluss-stream-lake-analytics.md",
+    "blog/apache-doris-for-log-and-time-series-data-analysis-in-netease.md",
+    "blog/apache-doris-lance-physical-ai-analytics.md",
+    "blog/apache-doris-min-io.md",
+    "blog/apache-doris-min-io.mdx",
+    "blog/apache-doris-paimon-agentic-ai-data-loop.md",
+    "blog/apache-doris-python-udf-calling-the-python-ecosystem-from-sql.mdx",
+    "blog/apache-doris-rust-native-streaming-ingestion-with-apache-iggy.mdx",
+    "blog/apache-doris-speeds-up-data-reporting-tagging-and-data-lake-analytics.md",
+    "blog/apache-doris-summit-asia-2023-what-can-you-expect-from-apache-doris-as-a-data-warehouse.md",
+    "blog/apache-doris-the-data-lakehouse-evolution.md",
+    "blog/apache-doris-the-data-lakehouse-evolution.mdx",
+    "blog/apache-doris-variant-open-lakehouse.md",
+    "blog/apache-doris-vs-rockset.md",
+    "blog/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.md",
+    "blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb.md",
+    "blog/asof-join-benchmark-apache-doris-vs-clickhouse-and-duckdb.mdx",
+    "blog/auto-increment-columns-in-databases.md",
+    "blog/auto-partition-in-apache-doris.md",
+    "blog/autonomous-driving-multimodal-search.md",
+    "blog/autonomous-driving-multimodal-search.mdx",
+    "blog/breaking-down-data-silos-with-an-apache-doris-based-cdp.md",
+    "blog/building-real-time-lakehouse-with-apache-doris.md",
+    "blog/building-real-time-lakehouse-with-apache-doris.mdx",
+    "blog/bytedance-hybrid-search-usecase.md",
+    "blog/bytedance-hybrid-search-usecase.mdx",
+    "blog/chunking-embedding-cookbook.md",
+    "blog/chunking-embedding-cookbook.mdx",
+    "blog/coffeebench-olap-showdown-part1-250829.md",
+    "blog/coffeebench-olap-showdown-part1-250829.mdx",
+    "blog/coffeebench-part2-250917.md",
+    "blog/coffeebench-part2-250917.mdx",
+    "blog/community-voice-2025-how-do-you-choose-between-doris-and-clickhouse.md",
+    "blog/community-voice-2025-how-do-you-choose-between-doris-and-clickhouse.mdx",
+    "blog/community-voice-cut-costs-and-boost-efficiency-how-doriss-unified-lakehouse-breaks-down-data-silos.md",
+    "blog/community-voice-cut-costs-and-boost-efficiency-how-doriss-unified-lakehouse-breaks-down-data-silos.mdx",
+    "blog/community-voice-doris-breaking-down-the-barriers-of-sql-dialects-and-building-a-unified-data-query-ecosystem.md",
+    "blog/community-voice-doris-breaking-down-the-barriers-of-sql-dialects-and-building-a-unified-data-query-ecosystem.mdx",
+    "blog/community-voice-doris-lakehouse-integration.md",
+    "blog/community-voice-doris-lakehouse-integration.mdx",
+    "blog/community-voice-lakehouse-manus-mcp-lets-talk-about-lakehouse.md",
+    "blog/community-voice-lakehouse-manus-mcp-lets-talk-about-lakehouse.mdx",
+    "blog/community-voice-lakehouse-starting-with-apache-doris-s3-tables.md",
+    "blog/community-voice-lakehouse-starting-with-apache-doris-s3-tables.mdx",
+    "blog/community-voice-when-doris-meets-iceberg.md",
+    "blog/community-voice-when-doris-meets-iceberg.mdx",
+    "blog/cross-cluster-replication-for-read-write.md",
+    "blog/data-analysis-for-live-streaming-what-happens-in-real-time-is-analyzed-in-real-time.md",
+    "blog/data-pruning-250908.md",
+    "blog/data-pruning-250908.mdx",
+    "blog/data-trait-250905.md",
+    "blog/data-trait-250905.mdx",
+    "blog/databricks-rt-and-ltap-oltp-olap-real-time-olap-and-htap.mdx",
+    "blog/dbt-for-apache-doris-1.1.0-five-demos.md",
+    "blog/doris-compute-storage-decoupled.md",
+    "blog/doris-introduction-community-voice.md",
+    "blog/doris-introduction-community-voice.mdx",
+    "blog/doris-supercharges-cisco-webex-data-platform.md",
+    "blog/doris4-native-hybrid-search.md",
+    "blog/doris4-native-hybrid-search.mdx",
+    "blog/dynamic-json-in-agent-workloads-apache-doris-clickhouse-elasticsearch-and-opensearch.mdx",
+    "blog/elasticsearch-vs-apache-doris-community-voice.md",
+    "blog/elasticsearch-vs-apache-doris-community-voice.mdx",
+    "blog/empowering-cyber-security-by-enabling-seven-times-faster-log-analysis.md",
+    "blog/emqx-apache-doris-ecosystem-for-iot-analytics.md",
+    "blog/emqx-apache-doris-ecosystem-for-iot-analytics.mdx",
+    "blog/evolution-of-the-apache-doris-execution-engine.md",
+    "blog/from-clickhouse-elasticsearch-to-apache-doris-kwai.md",
+    "blog/from-clickhouse-elasticsearch-to-apache-doris-kwai.mdx",
+    "blog/from-clickhouse-to-doris-trillion-log-scale-analytics.md",
+    "blog/from-clickhouse-to-doris-trillion-log-scale-analytics.mdx",
+    "blog/from-data-silos-to-context-silos.md",
+    "blog/from-data-silos-to-context-silos.mdx",
+    "blog/from-elasticsearch-to-apache-doris-upgrading-an-observability-platform.md",
+    "blog/from-elasticsearch-to-doris-boosting-queries-by-56x.md",
+    "blog/from-elasticsearch-to-doris-boosting-queries-by-56x.mdx",
+    "blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture.md",
+    "blog/from-hive-hbase-and-trino-to-apache-doris-tuhu-cars-unified-olap-architecture.mdx",
+    "blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration.md",
+    "blog/from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings.md",
+    "blog/from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings.mdx",
+    "blog/from-spark-to-apache-doris-how-kwai-made-a-b-testing-metrics-145x-faster-at-scale.mdx",
+    "blog/how-big-data-is-saving-lives-in-real-time-iov-data-analytics-helps-prevent-accidents.md",
+    "blog/how-meituan-consolidated-its-analytics-stack-on-apache-doris.mdx",
+    "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.md",
+    "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+    "blog/how-we-built-production-vector-search-in-apache-doris.md",
+    "blog/how-we-built-production-vector-search-in-apache-doris.mdx",
+    "blog/introduction-to-apache-doris-a-next-generation-real-time-data-warehouse.md",
+    "blog/inverted-index-accelerates-text-searches-by-40-time-apache-doris.md",
+    "blog/inverted-index-deepdive.md",
+    "blog/inverted-index-deepdive.mdx",
+    "blog/jd.md",
+    "blog/job-scheduler-for-task-automation.md",
+    "blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris.md",
+    "blog/json-in-agent-observability-variant-and-inverted-indexes-in-apache-doris.mdx",
+    "blog/kwai-paimon-vector-search-apache-doris.md",
+    "blog/kwai-replace-clickhouse-with-apache-doris-for-unified-lakehouse.md",
+    "blog/kwai-replace-clickhouse-with-apache-doris-for-unified-lakehouse.mdx",
+    "blog/leading-ai-company-revamped-observability-with-apache-doris.md",
+    "blog/leading-ai-company-revamped-observability-with-apache-doris.mdx",
+    "blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase.md",
+    "blog/linkedcare.md",
+    "blog/llm-observability.md",
+    "blog/log-analysis-elasticsearch-vs-apache-doris.md",
+    "blog/meet-d-crew-apache-doris-mascot-family.md",
+    "blog/meituan.md",
+    "blog/mexican-mining-giant-azure-to-apache-doris.md",
+    "blog/mexican-mining-giant-azure-to-apache-doris.mdx",
+    "blog/migrate-lakehouse-from-bigquery-to-doris.md",
+    "blog/migrating-from-clickhouse-to-apache-doris-what-happened.md",
+    "blog/multi-tenant-workload-isolation-in-apache-doris.md",
+    "blog/netease-games-unified-doris-lakehouse.md",
+    "blog/netease-games-unified-doris-lakehouse.mdx",
+    "blog/olake-iceberg-and-doris.md",
+    "blog/olake-iceberg-and-doris.mdx",
+    "blog/ortege-studio-1-scaling-bitcoin-data-to-billions-of-records.md",
+    "blog/ortege-studio-2-fine-tuning-apache-doris-for-maximum-performance-and-resilience.md",
+    "blog/postgresql-cdc-to-apache-doris-real-time-sync-with-one-sql-statement.mdx",
+    "blog/principle-of-Doris-SQL-parsing.md",
+    "blog/principle-of-Doris-Stream-Load.md",
+    "blog/puppygraph-apache-doris.md",
+    "blog/puppygraph-apache-doris.mdx",
+    "blog/real-time-analytical-data-platform-for-the-agentic-ai-era.md",
+    "blog/real-time-analytical-data-platform-for-the-agentic-ai-era.mdx",
+    "blog/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.md",
+    "blog/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.mdx",
+    "blog/real-time-data-warehouse-in-TikTok-based-on-doris.md",
+    "blog/real-time-lakehouse-in-cainiao-large-scale-business-scenarios.md",
+    "blog/real-time-lakehouse-in-cainiao-large-scale-business-scenarios.mdx",
+    "blog/real-time-update-deep-dive.md",
+    "blog/real-time-update-deep-dive.mdx",
+    "blog/release-1.1.1.md",
+    "blog/release-1.1.2.md",
+    "blog/release-1.1.3.md",
+    "blog/release-1.1.4.md",
+    "blog/release-1.1.5.md",
+    "blog/release-1.2.0.md",
+    "blog/release-1.2.1.md",
+    "blog/release-1.2.3.md",
+    "blog/release-2.0.2.md",
+    "blog/release-flink-doris-connector-24.0.0.md",
+    "blog/release-note-0.15.0.md",
+    "blog/release-note-1.0.0.md",
+    "blog/release-note-1.1.0.md",
+    "blog/release-note-1.1.1.md",
+    "blog/release-note-1.1.2.md",
+    "blog/release-note-1.1.3.md",
+    "blog/release-note-1.1.4.md",
+    "blog/release-note-1.1.5.md",
+    "blog/release-note-1.2.0.md",
+    "blog/release-note-1.2.1.md",
+    "blog/release-note-1.2.2.md",
+    "blog/release-note-1.2.3.md",
+    "blog/release-note-1.2.4.md",
+    "blog/release-note-1.2.5.md",
+    "blog/release-note-1.2.6.md",
+    "blog/release-note-1.2.7.md",
+    "blog/release-note-2.0.0.md",
+    "blog/release-note-2.0.1.md",
+    "blog/release-note-2.0.10.md",
+    "blog/release-note-2.0.11.md",
+    "blog/release-note-2.0.12.md",
+    "blog/release-note-2.0.13.md",
+    "blog/release-note-2.0.14.md",
+    "blog/release-note-2.0.15.md",
+    "blog/release-note-2.0.2.md",
+    "blog/release-note-2.0.3.md",
+    "blog/release-note-2.0.4.md",
+    "blog/release-note-2.0.5.md",
+    "blog/release-note-2.0.7.md",
+    "blog/release-note-2.0.8.md",
+    "blog/release-note-2.0.9.md",
+    "blog/release-note-2.1.0.md",
+    "blog/release-note-2.1.1.md",
+    "blog/release-note-2.1.10.md",
+    "blog/release-note-2.1.2.md",
+    "blog/release-note-2.1.3.md",
+    "blog/release-note-2.1.4.md",
+    "blog/release-note-2.1.5.md",
+    "blog/release-note-2.1.6.md",
+    "blog/release-note-2.1.7.md",
+    "blog/release-note-2.1.8.md",
+    "blog/release-note-2.1.9.md",
+    "blog/release-note-3.0.0.md",
+    "blog/release-note-3.0.1.md",
+    "blog/release-note-3.0.2.md",
+    "blog/release-note-3.0.3.md",
+    "blog/release-note-3.0.4.md",
+    "blog/release-note-3.0.5.md",
+    "blog/release-note-3.0.6.md",
+    "blog/rtabench-250902.md",
+    "blog/rtabench-250902.mdx",
+    "blog/scenario.md",
+    "blog/search-in-apache-doris-4-1-unifying-full-text-log-search-and-real-time-sql-analytics.mdx",
+    "blog/sf-technology-replaced-presto-with-apache-doris.md",
+    "blog/sf-technology-replaced-presto-with-apache-doris.mdx",
+    "blog/ssb.md",
+    "blog/stability-at-scale-how-apache-doris-handles-pressure.md",
+    "blog/stability-at-scale-how-apache-doris-handles-pressure.mdx",
+    "blog/summit.md",
+    "blog/telecom-giant-journey-from-clickhouse-to-apache-doris-13pb-in-one-table.md",
+    "blog/telecom-giant-journey-from-clickhouse-to-apache-doris-13pb-in-one-table.mdx",
+    "blog/tencent-music-migrate-elasticsearch-to-doris.md",
+    "blog/the-financial-sectors-choice-fast-secure-and-highly-available-real-time-data-warehousing-based-on-apache-doris.md",
+    "blog/top-commercial-bank-migrated-from-elasticsearch-to-apache-doris-for-pb-scale-log-storage-and-analytics.md",
+    "blog/top-commercial-bank-migrated-from-elasticsearch-to-apache-doris-for-pb-scale-log-storage-and-analytics.mdx",
+    "blog/tpch.md",
+    "blog/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance.md",
+    "blog/unified-lakehouse-with-apache-doris-and-paimon-xiaomi-achieves-6×-faster-performance.mdx",
+    "blog/variant-in-apache-doris-2.1.md",
+    "blog/variant-tech-deepdive-202601.md",
+    "blog/variant-tech-deepdive-202601.mdx",
+    "blog/vector-search.md",
+    "blog/web3-doris-flink.md",
+    "blog/web3-doris-flink.mdx",
+    "blog/web3-doris-paimon.md",
+    "blog/web3-doris-paimon.mdx",
+    "blog/when-to-scale-postgresql-analytics.md",
+    "blog/when-to-scale-postgresql-analytics.mdx",
+    "blog/which-powers-observability-better.md",
+    "blog/which-powers-observability-better.mdx",
+    "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.md",
+    "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+    "blog/why-apache-doris-is-best-alternatives-for-real-time-analytics.md",
+    "blog/xanhsm-with-apache-doris.md",
+    "blog/xanhsm-with-apache-doris.mdx",
+    "blog/xiaomi-unified-usecase.md",
+    "blog/xiaomi-unified-usecase.mdx",
+    "blog/xiaomi.md",
+    "blog/xiaomi_vector.md"
+  ]
+}

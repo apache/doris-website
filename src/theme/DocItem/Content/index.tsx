@@ -8,6 +8,7 @@ import type {Props} from '@theme/DocItem/Content';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { isFallbackSource, isTranslatedLocale } from '@site/src/utils/localization';
 import {docTranslation} from '@site/src/utils/translation';
+import {useContentRouteData} from '@site/src/utils/contentRoute';
 
 /**
  Title can be declared inside md content or declared through
@@ -34,9 +35,10 @@ export default function DocItemContent({children}: Props): JSX.Element {
   const {pluginId} = useDocsVersion();
   const {metadata} = useDoc();
   const {i18n: {currentLocale}} = useDocusaurusContext();
-  const contentLanguage = isTranslatedLocale(currentLocale)
+  const page = useContentRouteData();
+  const contentLanguage = page?.contentLocale ?? (isTranslatedLocale(currentLocale)
     ? docTranslation(metadata)?.contentLocale ?? (isFallbackSource(metadata.source, currentLocale) ? 'en' : currentLocale)
-    : undefined;
+    : currentLocale);
 
   if (pluginId === 'course') {
     return <div className="course-doc-content" lang={contentLanguage}><MDXContent>{children}</MDXContent></div>;

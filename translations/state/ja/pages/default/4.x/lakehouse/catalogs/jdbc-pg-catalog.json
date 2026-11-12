@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-pg-catalog.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-pg-catalog.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "4aeaaac0be3b07633a2d3ba18dc8568873b98bef994ad93a8d70259f63e0e5d0",
-    "sourceTechnicalHash": "189c1e77d4fab0aeb7fb1ecffd2b074906127fe3c4c244ae7a25dd9e384b76e4",
-    "targetHash": "3d476b2fca279dc0d53452d6f67e80d7fe92cb5b9251c7cbefebe6b401b2b57c",
+    "sourceCommit": "819add3ae97a4996554421080fd612755b2c2129",
+    "sourceHash": "1c6d80cd1541139acf1ce158d2f2ad78129874511b529b13b4ad65379c7cf2d7",
+    "sourceTechnicalHash": "f8aacc8d81cb44cfeb93bb9bbd5430beed9588dd3222735db7bef643a0e9e199",
+    "targetHash": "aa4d5150618477d8d784f9fa730ad41f8978f9cc9e048aec8d24676171dc244d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.714Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T04:50:58.368Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1c6d80cd1541139acf1ce158d2f2ad78129874511b529b13b4ad65379c7cf2d7",
+      "targetHash": "aa4d5150618477d8d784f9fa730ad41f8978f9cc9e048aec8d24676171dc244d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"11\",\"2\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"42\",\"42.5\",\"5432\",\"6\",\"8\"]; received [\"1\",\"1\",\"11\",\"2\",\"2\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"42\",\"42.5\",\"5432\",\"6\",\"8\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"JAVA_OPTS\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"JAVA_OPTS\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

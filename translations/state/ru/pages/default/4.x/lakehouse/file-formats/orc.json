@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/file-formats/orc",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/file-formats/orc.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/file-formats/orc.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bb309f78cee75df49af834cc20d4ee2ffe6ee792cc9609730643b57b783964ca",
+    "sourceTechnicalHash": "26c3359bd968d9af220c9b51de575c5133489bc6b7dadf700db1d080e16ac560",
+    "targetHash": "c6f838d93483e03714d98b489a1498519a412fbc9169cce7081a4e424812c3d7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:02:26.823Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bb309f78cee75df49af834cc20d4ee2ffe6ee792cc9609730643b57b783964ca",
+      "targetHash": "c6f838d93483e03714d98b489a1498519a412fbc9169cce7081a4e424812c3d7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

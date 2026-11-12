@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "56821822efd43ad6dd59023a87e095a887da3886e07ad1410beb4097ac4acb19",
+    "sourceTechnicalHash": "a1391f730074220c621ca75da43b69bf38489e91f13bab6d00a62df750115d46",
+    "targetHash": "a1df5b2c5485f38c1b40fcee252f7ed6b755e81852b165fdc5154cacc56f3e74",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:32:19.255Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "56821822efd43ad6dd59023a87e095a887da3886e07ad1410beb4097ac4acb19",
+      "targetHash": "a1df5b2c5485f38c1b40fcee252f7ed6b755e81852b165fdc5154cacc56f3e74",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

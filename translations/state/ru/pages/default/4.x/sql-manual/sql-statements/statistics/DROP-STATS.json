@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/statistics/DROP-STATS",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/statistics/DROP-STATS.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/statistics/DROP-STATS.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0f82b90082ee7d82543ab2dd83661c263351b32a94812c55a0f24e3a11e3cf11",
+    "sourceTechnicalHash": "ead23ea17a92c98ba1a2e00e15d127ebf6655bc6905b01d83694b235f9496112",
+    "targetHash": "90e5ae72340fd023da15c95a1baa8920a75db0063f407786cd9ee2b15f3ceb31",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:51:52.153Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0f82b90082ee7d82543ab2dd83661c263351b32a94812c55a0f24e3a11e3cf11",
+      "targetHash": "90e5ae72340fd023da15c95a1baa8920a75db0063f407786cd9ee2b15f3ceb31",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/statistics/DROP-STATS",
+        "sourcePath": "docs/sql-manual/sql-statements/statistics/DROP-STATS.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/statistics/DROP-STATS.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "0f82b90082ee7d82543ab2dd83661c263351b32a94812c55a0f24e3a11e3cf11",
+        "targetHash": "90e5ae72340fd023da15c95a1baa8920a75db0063f407786cd9ee2b15f3ceb31",
+        "commit": "ce24bd33dc04ac6b20bee9fd337ed9e8b6433ad0",
+        "pr": "https://github.com/apache/doris-website/pull/4456"
+      }
+    }
+  }
+}

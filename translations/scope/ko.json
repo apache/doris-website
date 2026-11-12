@@ -2,6 +2,14 @@
   "schemaVersion": 1,
   "locale": "ko",
   "maxBatchPages": 20,
+  "automaticGroups": [
+    "DEV",
+    "4X",
+    "COMMUNITY",
+    "COURSE",
+    "RELEASES",
+    "BLOG"
+  ],
   "groups": [
     {
       "id": "DEV",
@@ -20,6 +28,66 @@
       "pluginId": "community",
       "version": "current",
       "sourceRoot": "community"
+    },
+    {
+      "id": "COURSE",
+      "pluginId": "course",
+      "version": "current",
+      "sourceRoot": "course"
+    },
+    {
+      "id": "RELEASES",
+      "pluginId": "releases",
+      "version": "current",
+      "sourceRoot": "releasenotes",
+      "sourcePolicy": {
+        "mode": "new-only",
+        "baseline": "translations/release-notes-baseline.json"
+      }
+    },
+    {
+      "id": "COURSEUI",
+      "pluginId": "course-ui",
+      "version": "current",
+      "sourceRoot": "src",
+      "kind": "code",
+      "routeBasePath": "/course",
+      "include": [
+        "components/course/",
+        "pages/course/"
+      ]
+    },
+    {
+      "id": "REPORT",
+      "pluginId": "community-report",
+      "version": "current",
+      "sourceRoot": "src/pages/community-report/_reports",
+      "kind": "partial",
+      "routeBasePath": "/community-report"
+    },
+    {
+      "id": "REPORTUI",
+      "pluginId": "community-report-ui",
+      "version": "current",
+      "sourceRoot": "src",
+      "kind": "code",
+      "routeBasePath": "/community-report",
+      "include": [
+        "components/community-report-next/",
+        "pages/community-report/"
+      ]
+    },
+    {
+      "id": "BLOG",
+      "pluginId": "blog",
+      "version": "current",
+      "sourceRoot": "blog",
+      "kind": "blog",
+      "routeBasePath": "/blog",
+      "sourcePolicy": {
+        "mode": "new-only",
+        "baseline": "translations/blog-baseline.json"
+      }
     }
   ],
   "retainEnglish": [],

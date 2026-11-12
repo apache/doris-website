@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/recycle/RECOVER.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/recycle/RECOVER.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "dd397620db8baa8583654417ce2fabf404a3b3182a295656f98531fd7e9ceae0",
-    "sourceTechnicalHash": "ed1a7cc2545c70691ba20c2eb870bf7911bba9561ceb9d7b91465349d267dfe9",
-    "targetHash": "33a7dc59a8d3189ec046d6cbb33af9ae26e68e6e9bf0fef7bcdff3e6afc39d8c",
+    "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+    "sourceHash": "16585c8d3f2bd6569f51c09e5e9f8dc1c09b32cc111651461fffddeaebaf1c97",
+    "sourceTechnicalHash": "f9a38c2f7cd98849fca36e545af33dce473bef32983dc13fd23714dc3435fb48",
+    "targetHash": "4adecaa8773db2650bd3af9ef3507ecc929b5e7c02f4d9855fa1ab5b21f53323",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:46:39.012Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T18:11:43.387Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "16585c8d3f2bd6569f51c09e5e9f8dc1c09b32cc111651461fffddeaebaf1c97",
+      "targetHash": "4adecaa8773db2650bd3af9ef3507ecc929b5e7c02f4d9855fa1ab5b21f53323",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>] \\n        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>] \\n        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }\"]; received [\"code\",\"sql\",null,\"RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]\\n        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>]\\n        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>] \\n        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>] \\n        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }\"]; received [\"code\",\"sql\",null,\"RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]\\n        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>]\\n        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"catalog_trash_expire_second\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"catalog_trash_expire_second\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>] \\n        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>] \\n        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }\"]; received [\"code\",\"sql\",null,\"RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]\\n        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>]\\n        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"p1\"]; received [\"inlineCode\",null,null,\"example_tbl\"]\nprotected node 23: expected [\"inlineCode\",null,null,\"example_tbl\"]; received [\"inlineCode\",null,null,\"p1\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>] \\n        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>] \\n        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }\"]; received [\"code\",\"sql\",null,\"RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]\\n        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>]\\n        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

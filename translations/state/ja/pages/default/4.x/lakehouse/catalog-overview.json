@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalog-overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalog-overview.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "b90d0f3f62af7606c96e3e0e39c2ca10887b39f9c28daebd546b603a6204f00b",
-    "sourceTechnicalHash": "5586df1a0394cb6690e28ab97d12c85313a9b33d1a4b606ddc3ea34ea57d7321",
-    "targetHash": "85f364170b89407c347c0c783f3212b2181a4730192e843a82b081f508c1c37c",
+    "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+    "sourceHash": "b6b394b4874598a913b8823bedd8c5f6841119184dc2bef513f3eb83fedf7582",
+    "sourceTechnicalHash": "3ec42de61d8dc9c52cb8d66642fe8576c988e5f33471eecacfd0a3a6baada26b",
+    "targetHash": "3b2189683a7327bf0e4d7189d8aed137b22c8b9027305edbf9278ffe34877a40",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.712Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T18:29:26.473Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "b6b394b4874598a913b8823bedd8c5f6841119184dc2bef513f3eb83fedf7582",
+      "targetHash": "3b2189683a7327bf0e4d7189d8aed137b22c8b9027305edbf9278ffe34877a40",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 113: expected [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); \\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]; received [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']);\\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"3\",\"3\",\"3.1\",\"4.1\",\"4.1\",\"4.1.0\",\"4.1.0\",\"4.1.0\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"4.1\",\"4.1\",\"4.1.0\",\"4.1.0\",\"4.1.0\",\"4.1.5\",\"4.1.5\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"exclude\"]; received [\"inlineCode\",null,null,\"include\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"include\"]; received [\"inlineCode\",null,null,\"exclude\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 78: expected [\"inlineCode\",null,null,\"SWITCH\"]; received [\"inlineCode\",null,null,\"USE\"]\nprotected node 79: expected [\"inlineCode\",null,null,\"USE\"]; received [\"inlineCode\",null,null,\"SWITCH\"]\nprotected node 113: expected [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); \\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]; received [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']);\\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 113: expected [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); \\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]; received [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']);\\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

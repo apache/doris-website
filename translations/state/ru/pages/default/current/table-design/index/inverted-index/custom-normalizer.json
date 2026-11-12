@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/inverted-index/custom-normalizer",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/inverted-index/custom-normalizer.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/custom-normalizer.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4b3e12c6de2c7d3a496c03b911567da67e65cf01100b1546846f207afd6b260b",
+    "sourceTechnicalHash": "a3d94bf78fcebac7bef8b731b4593768f081cfeca06f636f5ed85d2bc4395c83",
+    "targetHash": "2e847fbeef67563e64c5e961fe0fca05aea5f872326bdbb3623e8b89f18ef4fd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:57:05.548Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4b3e12c6de2c7d3a496c03b911567da67e65cf01100b1546846f207afd6b260b",
+      "targetHash": "2e847fbeef67563e64c5e961fe0fca05aea5f872326bdbb3623e8b89f18ef4fd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

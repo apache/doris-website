@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "cd22ab94ec5012929caff1e0ca2e9d916563b24cc1ec33898e689a0241aed77d",
+    "sourceTechnicalHash": "171066805d6a281271565e80fc9c9f0e9a61dc7e137100cb003bf3adc3582299",
+    "targetHash": "86febcd5f3c130b9d11e05ffc74a3c7a3851484fdfc6e4e37397a235c2ed70b5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:40:39.160Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cd22ab94ec5012929caff1e0ca2e9d916563b24cc1ec33898e689a0241aed77d",
+      "targetHash": "86febcd5f3c130b9d11e05ffc74a3c7a3851484fdfc6e4e37397a235c2ed70b5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "headings",
+              "message": "Translation heading structure differs from its current source"
+            },
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"100\",\"100\",\"100\",\"100\",\"100\",\"100\",\"12\",\"12\",\"138\",\"16\",\"16\",\"16\",\"16\",\"192.168.88.61\",\"192.168.88.62\",\"192.168.88.62\",\"192.168.88.63\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.1.9\",\"25.1.0\",\"25.2.0\",\"25.4.0\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"30000\",\"31545\",\"31545\",\"32\",\"32767\",\"3600\",\"3600\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\",\"60\",\"60\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8030\",\"8040\",\"9030\",\"9030\",\"9030\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"100\",\"100\",\"100\",\"100\",\"100\",\"100\",\"12\",\"12\",\"138\",\"16\",\"16\",\"16\",\"16\",\"192.168.88.61\",\"192.168.88.62\",\"192.168.88.62\",\"192.168.88.63\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.1.9\",\"25.1.0\",\"25.2.0\",\"25.4.0\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"30000\",\"31545\",\"31545\",\"32\",\"32767\",\"3600\",\"3600\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\",\"60\",\"60\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8030\",\"8040\",\"9030\",\"9030\",\"9030\"]\nheading IDs: expected [{\"depth\":2,\"id\":\"cluster-planning\"},{\"depth\":3,\"id\":\"image-settings\"},{\"depth\":3,\"id\":\"replica-settings\"},{\"depth\":3,\"id\":\"compute-resource-settings\"},{\"depth\":2,\"id\":\"customized-startup-configuration\"},{\"depth\":3,\"id\":\"fe-customized-startup-configuration\"},{\"depth\":4,\"id\":\"step-1-configure-and-deploy-the-configmap\"},{\"depth\":4,\"id\":\"step-2-configure-the-doriscluster-resource\"},{\"depth\":3,\"id\":\"be-customized-startup-configuration\"},{\"depth\":4,\"id\":\"step-1-configure-and-deploy-the-configmap-1\"},{\"depth\":4,\"id\":\"step-2-configure-the-doriscluster-resource-1\"},{\"depth\":3,\"id\":\"mounting-multiple-configmaps\"},{\"depth\":2,\"id\":\"configure-persistent-storage\"},{\"depth\":3,\"id\":\"fe-persistent-storage-configuration\"},{\"depth\":4,\"id\":\"fe-metadata-persistence\"},{\"depth\":4,\"id\":\"fe-log-persistence\"},{\"depth\":3,\"id\":\"be-persistent-storage-configuration\"},{\"depth\":4,\"id\":\"be-data-persistence\"},{\"depth\":4,\"id\":\"be-log-persistence\"},{\"depth\":2,\"id\":\"access-configuration\"},{\"depth\":3,\"id\":\"clusterip\"},{\"depth\":4,\"id\":\"step-1-configure-clusterip-as-the-service-type\"},{\"depth\":4,\"id\":\"step-2-get-the-service-access-address\"},{\"depth\":4,\"id\":\"step-3-access-doris-inside-a-container\"},{\"depth\":3,\"id\":\"nodeport\"},{\"depth\":4,\"id\":\"step-1-configure-nodeport-for-fe-and-be\"},{\"depth\":4,\"id\":\"step-2-get-the-service\"},{\"depth\":4,\"id\":\"step-3-access-the-service-using-nodeport\"},{\"depth\":3,\"id\":\"loadbalancer\"},{\"depth\":4,\"id\":\"step-1-configure-loadbalancer-mode\"},{\"depth\":4,\"id\":\"step-2-get-the-service-1\"},{\"d; received [{\"depth\":2,\"id\":\"планирование-кластера\"},{\"depth\":3,\"id\":\"настройка-образов\"},{\"depth\":3,\"id\":\"настройка-реплик\"},{\"depth\":3,\"id\":\"настройка-вычислительных-ресурсов\"},{\"depth\":2,\"id\":\"пользовательская-конфигурация-запуска\"},{\"depth\":3,\"id\":\"пользовательская-конфигурация-запуска-fe\"},{\"depth\":4,\"id\":\"шаг-1-настройка-и-развертывание-configmap\"},{\"depth\":4,\"id\":\"шаг-2-настройка-ресурса-doriscluster\"},{\"depth\":3,\"id\":\"пользовательская-конфигурация-запуска-be\"},{\"depth\":4,\"id\":\"шаг-2-настройка-ресурса-doriscluster-1\"},{\"depth\":3,\"id\":\"монтирование-нескольких-configmap\"},{\"depth\":2,\"id\":\"настройка-постоянного-хранения\"},{\"depth\":3,\"id\":\"настройка-постоянного-хранения-для-fe\"},{\"depth\":4,\"id\":\"постоянное-хранение-метаданных-fe\"},{\"depth\":4,\"id\":\"постоянное-хранение-журналов-fe\"},{\"depth\":3,\"id\":\"настройка-постоянного-хранения-для-be\"},{\"depth\":4,\"id\":\"постоянное-хранение-данных-be\"},{\"depth\":4,\"id\":\"постоянное-хранение-журналов-be\"},{\"depth\":2,\"id\":\"настройка-доступа\"},{\"depth\":3,\"id\":\"clusterip\"},{\"depth\":4,\"id\":\"шаг-1-настройка-clusterip-в-качестве-типа-service\"},{\"depth\":4,\"id\":\"шаг-2-получение-адреса-доступа-к-сервису\"},{\"depth\":4,\"id\":\"шаг-3-доступ-к-doris-из-контейнера\"},{\"depth\":3,\"id\":\"nodeport\"},{\"depth\":4,\"id\":\"шаг-1-настройка-nodeport-для-fe-и-be\"},{\"depth\":4,\"id\":\"шаг-2-получение-service\"},{\"depth\":4,\"id\":\"шаг-3-доступ-к-сервису-через-nodeport\"},{\"depth\":3,\"id\":\"loadbalancer\"},{\"depth\":4,\"id\":\"шаг-1-настройка-режима-loadbalancer\"},{\"depth\":4,\"id\":\"шаг-2-получение-servic\nprotected node 68: expected [\"inlineCode\",null,null,\"meta_dir\"]; received [\"link\",\"#fe-customized-startup-configuration\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

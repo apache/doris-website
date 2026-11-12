@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-mysql-table",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "e68f1e6e67ed6765bf762406505c061c997f8d9cfd4cc0209549e327c86dcc2d",
+    "sourceTechnicalHash": "16ea972b163cda4c21bad73b86692f99b367a0d0752d3af354fbe56af73815ff",
+    "targetHash": "ea9c653dcafc83b9ae627f16de14a13b982c4a6f8eb19a13afa20d7f73234c87",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-03T22:01:21.420Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e68f1e6e67ed6765bf762406505c061c997f8d9cfd4cc0209549e327c86dcc2d",
+      "targetHash": "ea9c653dcafc83b9ae627f16de14a13b982c4a6f8eb19a13afa20d7f73234c87",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operation steps / Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: этапы операций / параметры конфигурации -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Real-time sync of a single MySQL table to Doris with column mapping or data transformation -->\"]; received [\"html\",null,null,\"<!-- Подходящий сценарий: синхронизация одной таблицы MySQL с Doris в реальном времени с сопоставлением столбцов или преобразованием данных -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+        "blob": "beca83534df4d29735ffa6c344a27ffaa3cd896f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+        "blob": "ab620b1a3ee6d659419256a7fc50c4bc14e61b65"
+      }
+    }
+  }
+}

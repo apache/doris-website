@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile-approx-array",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/percentile-approx-array.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/percentile-approx-array.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "def2b34c597c5bc690350fecc45499ca2884a091d33e47b2f167b480b457a561",
+    "sourceTechnicalHash": "6a99bf4da14c52ef76b49c9f031184316d09a8c55bf20d3f71855a966deb0237",
+    "targetHash": "a0d0da9c62f870c11715b25838bac7e01b87b78f73fdf6c1bd6850067a3d262a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:24:05.381Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "def2b34c597c5bc690350fecc45499ca2884a091d33e47b2f167b480b457a561",
+      "targetHash": "a0d0da9c62f870c11715b25838bac7e01b87b78f73fdf6c1bd6850067a3d262a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

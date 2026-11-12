@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/replace-empty",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/replace-empty.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/replace-empty.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e5138c6d8db8a15c99430b3fe0655dea226a2fe34ddab7d5d2c295e1fbd78465",
+    "sourceTechnicalHash": "c05b47113743dd225fffdd5cfdb4cdf43b1ce99e4e9a3b05adb5881a20f2eca8",
+    "targetHash": "8008359ce9f0c42824d221a603fb2b5d79fadae49c1bf65462cfdd7c2a7966c7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:51:19.201Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5138c6d8db8a15c99430b3fe0655dea226a2fe34ddab7d5d2c295e1fbd78465",
+      "targetHash": "8008359ce9f0c42824d221a603fb2b5d79fadae49c1bf65462cfdd7c2a7966c7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

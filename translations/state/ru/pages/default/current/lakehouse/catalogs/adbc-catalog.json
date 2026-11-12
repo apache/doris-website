@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/adbc-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/adbc-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/adbc-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "a38a7e443169fc1f69a25255151a9ea9a6f484c7fbdbb5900ecd8099a574c63f",
+    "sourceTechnicalHash": "2cbd6c90a914641a5a5c26e37ba8ca738de64760f176692fdc41919e45cd959c",
+    "targetHash": "653d115c32a52d1e1fe30db4dd5037742d2d1a142cda6f41a6f4df3f039d6899",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:56:34.782Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a38a7e443169fc1f69a25255151a9ea9a6f484c7fbdbb5900ecd8099a574c63f",
+      "targetHash": "653d115c32a52d1e1fe30db4dd5037742d2d1a142cda6f41a6f4df3f039d6899",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

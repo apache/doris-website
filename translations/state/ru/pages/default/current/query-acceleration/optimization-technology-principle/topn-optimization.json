@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/optimization-technology-principle/topn-optimization",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/optimization-technology-principle/topn-optimization.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/optimization-technology-principle/topn-optimization.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ea58aae5192fa98d0658026c943f6c6940c117999a9c5a2da2a33ccbd6f7cd81",
+    "sourceTechnicalHash": "4d0da710a6703ab5fefb8167dd30e45b0bd352414e170382b1c4218fae6de4da",
+    "targetHash": "b0bedf05f1c18c49ffe785aa1e2cdae3ff2d786977cfacdb169a2700514c29d9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:58:44.543Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ea58aae5192fa98d0658026c943f6c6940c117999a9c5a2da2a33ccbd6f7cd81",
+      "targetHash": "b0bedf05f1c18c49ffe785aa1e2cdae3ff2d786977cfacdb169a2700514c29d9",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 71: expected [\"inlineCode\",null,null,\"PerBackend\"]; received [\"inlineCode\",null,null,\"SecondPhase\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"SecondPhase\"]; received [\"inlineCode\",null,null,\"PerBackend\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: ETIMEDOUT"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 71: expected [\"inlineCode\",null,null,\"PerBackend\"]; received [\"inlineCode\",null,null,\"SecondPhase\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"SecondPhase\"]; received [\"inlineCode\",null,null,\"PerBackend\"]"
+            }
+          ]
+        }
+      ],
+      "localCorrections": [
+        {
+          "at": "2026-10-22T09:01:03.692115+00:00",
+          "sourceAttempt": 3,
+          "before": "В именах остальных метрик после `SecondPhase` добавляется `PerBackend`, например",
+          "after": "В именах остальных метрик `PerBackend` добавляется после `SecondPhase`, например",
+          "beforeTargetHash": "660e215bb265ce18d57d9380db472f731948ee62e47e813f75fe11d2bfeae1d3",
+          "afterTargetHash": "b0bedf05f1c18c49ffe785aa1e2cdae3ff2d786977cfacdb169a2700514c29d9",
+          "reason": "Reordered the Russian sentence to preserve the English protected inline-code sequence (PerBackend after SecondPhase) without changing its meaning. The exact third model output and original warning are retained; no additional model call."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/schema-change-mysql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
+    "sourceHash": "c2d7b80090020e2b2b5e927bc649cace844a29232623020fef93401fa2a94ee4",
+    "sourceTechnicalHash": "ef45743857fb604d9437140171f9a44f1fb10082ac44b81b313dd8560e14ed97",
+    "targetHash": "70559edac68072faf527a6f08cd3eb0ee6c52a837681f1090ecdf725f5dd047c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-04T09:30:53.074Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c2d7b80090020e2b2b5e927bc649cace844a29232623020fef93401fa2a94ee4",
+      "targetHash": "70559edac68072faf527a6f08cd3eb0ee6c52a837681f1090ecdf725f5dd047c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Концепция -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during MySQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: Изменения схемы на стороне источника во время синхронизации MySQL с автоматическим созданием таблиц -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+        "blob": "9575d2f49d7fc930b2e15d798a44813caff0a2e0"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+        "blob": "fad68e62e75cb0aff754362434220fd54aaf8422"
+      }
+    }
+  }
+}

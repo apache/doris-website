@@ -3,6 +3,14 @@
     "message": "コミュニティ",
     "description": "The label for version current"
   },
+  "sidebar.community.category.Community": {
+    "message": "コミュニティ",
+    "description": "The label for category Community in sidebar community"
+  },
+  "sidebar.community.category.For Contributor": {
+    "message": "貢献者向け",
+    "description": "The label for category For Contributor in sidebar community"
+  },
   "sidebar.community.category.About the Community": {
     "message": "コミュニティについて",
     "description": "The label for category About the Community in sidebar community"
@@ -51,9 +59,9 @@
     "message": "データ形式リファレンス",
     "description": "The label for category Data Format Reference in sidebar community"
   },
-  "sidebar.community.category.Release": {
-    "message": "リリース",
-    "description": "The label for category Release in sidebar community"
+  "sidebar.community.category.How to Release": {
+    "message": "リリース方法",
+    "description": "The label for category How to Release in sidebar community"
   },
   "sidebar.community.category.Design Documents": {
     "message": "設計ドキュメント",

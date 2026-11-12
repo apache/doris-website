@@ -20,8 +20,10 @@ retain their existing asset layout.
   present because the asset CDN does not interpret Apache rules.
 - Exact Docusaurus client-redirect templates become HTTP 301 rules. Large
   `.html`/`.htm`, 3.x and release-note alias families use guarded prefix rules;
-  other aliases are grouped by destination. Real files retain priority, missing
-  destinations do not redirect through a generic rule, and query/fragment
+  other aliases are grouped by destination and split into directives of at most
+  8,000 UTF-8 bytes, below Apache's 8,190-byte `.htaccess` line limit. The bound
+  includes escaped paths, redirect targets and flags. Real files retain priority,
+  missing destinations do not redirect through a generic rule, and query/fragment
   forwarding follows the original template. Custom HTML such as the tracked
   Slack redirect remains a page.
   Binary compatibility rules live in their static-resource directories, so
@@ -80,8 +82,9 @@ yarn serve:publish --site .i18n-build/dev-publish
 redirect pages, rule counts and verification. `.i18n-build/build-result.json`
 also records per-locale timing and build success. Counts describe raw files,
 not compressed network transfer or Git pack size. Source changes, invalid
-redirects, resource verification failures and asset collisions preserve the
-previous complete output.
+redirects, oversized Apache control lines (including continued lines and
+static-resource controls), resource verification failures and asset collisions
+preserve the previous complete output.
 
 Changes to publication infrastructure make Build Check build every active
 version and enabled locale using the optimized mode on CI, with the existing

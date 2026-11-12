@@ -1,0 +1,43 @@
+---
+{
+    "title": "Настройка выполнения запросов",
+    "language": "ru",
+    "description": "Навигация по настройке выполнения запросов в Apache Doris: настройка параллелизма, времени ожидания RuntimeFilter, обработка перекоса данных и управление правилами CBO с помощью Hint."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Настройка выполнения запросов помогает устранить узкие места производительности, проявляющиеся во время выполнения: неподходящий уровень параллелизма, слишком позднее срабатывание RuntimeFilters, перекос данных при Shuffle, а также ситуации, когда выбор оптимизатора требует ручного вмешательства. Сначала найдите признаки проблемы в Profile, затем выберите соответствующий способ настройки.
+
+## Оптимизация во время выполнения {#runtime-optimization}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Настройка параллелизма"
+    description="Рекомендации по настройке `parallel_pipeline_task_num` для сканирования одной таблицы, JOIN, агрегации и сценариев с большим числом одновременных запросов, позволяющие сбалансировать задержку выполнения запросов и накладные расходы на планирование."
+    link="parallelism-tuning"
+/>
+
+<GettingStartedCard
+    title="Настройка времени ожидания RuntimeFilter"
+    description="Определите по Profile, что RuntimeFilter находится в состоянии NOT_READY, и настройте `runtime_filter_wait_time_ms`, чтобы фильтрация действительно приносила пользу на стороне Probe."
+    link="adjustment-of-runtimefilter-wait-time"
+/>
+
+<GettingStartedCard
+    title="Обработка перекоса данных"
+    description="Выявите узкие места выполнения на отдельных узлах, возникающие из-за Join Key или распределения по бакетам, и сбалансируйте Shuffle с помощью таких методов, как Broadcast Join и Leading Hint."
+    link="data-skew-handling"
+/>
+</div>
+
+## Управление оптимизатором {#optimizer-control}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Управление правилами CBO с помощью Hint"
+    description="Когда адаптивной оптимизации недостаточно, используйте Hint `USE_CBO_RULE`, чтобы явно включить правила преобразования на основе стоимости, например проталкивание агрегации."
+    link="../tuning-plan/controlling-hints-with-cbo-rule"
+/>
+</div>

@@ -9,6 +9,7 @@ const {audit} = require('./audit-coverage.cjs');
 const {baselineEntries} = require('./plan-translations-baseline.cjs');
 const {hash, identity, loadConfig, languageName, loadRecords, pipelineLocale} = require('./state.cjs');
 const {structure} = require('./structure.cjs');
+const {docKey} = require('./release-policy.cjs');
 
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 const keyFor = locale => page => identity({...page, locale});
@@ -19,7 +20,7 @@ const priority = {delete: 0, move: 1, move_and_update: 1, update: 2, formatting_
 const managed = (scope, item) => scope.groups.find(group => group.pluginId === item.pluginId && group.version === item.version);
 const taskId = item => {
     const seed = JSON.stringify([item.pluginId, item.version, item.docId, item.locale, item.kind,
-        item.sourceHash ?? '', item.previousDocId ?? '']);
+        item.sourceHash ?? '', item.previousDocId ?? '',...(Object.hasOwn(item,'chineseSourceBlob')?[item.chineseSourceBlob]:[])]);
     const number = BigInt(`0x${createHash('sha256').update(seed).digest('hex').slice(0, 12)}`).toString().padStart(15, '0');
     return `T06-${item.groupId}-${number}`;
 };
@@ -28,7 +29,7 @@ const chinesePath = (group, page) => {
     if (!group.sourceRoot || !page.sourcePath.startsWith(`${group.sourceRoot}/`)) return null;
     const plugin = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
     const version = group.version === 'current' ? 'current' : `version-${group.version}`;
-    return `i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/${page.sourcePath.slice(group.sourceRoot.length + 1)}`;
+    return group.kind==='blog'?`i18n/zh-CN/docusaurus-plugin-content-blog/${page.sourcePath.slice(group.sourceRoot.length+1)}`:`i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/${page.sourcePath.slice(group.sourceRoot.length + 1)}`;
 };
 
 function validateActive(data, scope) {
@@ -90,9 +91,10 @@ function validateSourcePaths(paths, scope) {
     assert(Array.isArray(paths) && paths.length > 0 && paths.length <= 20, 'paths must contain 1 to 20 exact source files');
     assert.equal(new Set(paths).size, paths.length, 'Duplicate exact source path');
     for (const file of paths) {
-        assert(typeof file === 'string' && /\.mdx?$/.test(file) && !file.includes('\\') && !/[\x00-\x1f\x7f]/.test(file)
+        assert(typeof file === 'string' && /\.(mdx?|tsx?)$/.test(file) && !file.includes('\\') && !/[\x00-\x1f\x7f]/.test(file)
             && file.split('/').every(part => part && part !== '.' && part !== '..')
-            && scope.groups.some(group => file.startsWith(`${group.sourceRoot}/`)),
+            && scope.groups.some(group => file.startsWith(`${group.sourceRoot}/`)
+                && (group.kind ? require('./source-groups.cjs').matchesSource(group, file) : /\.mdx?$/.test(file))),
         `Exact source path is outside the managed scope: ${file}`);
     }
 }
@@ -115,10 +117,12 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     const resolvedDeletions = validateResolved(resolved);
     const activeByKey = new Map(candidates.map(candidate => [key(candidate), candidate]));
     const baselineByKey = new Map(baseline.filter(page => managed(scope, page)).map(page => [key(page), page]));
-    const old = new Map(baselineByKey);
+    const excluded = new Set((report.policyExclusions ?? []).map(docKey));
+    const old = new Map([...baselineByKey].filter(([, page]) => !excluded.has(docKey(page))));
     for (const record of records.values()) if (managed(scope, record)) old.set(key(record), {...old.get(key(record)), ...record});
+    for (const [id, page] of old) if (excluded.has(docKey(page))) old.delete(id);
     const pages = report.groups.filter(group => managed(scope, group)).flatMap(group =>
-        group.entries.filter(page => page.state !== 'draft' && page.state !== 'retain_english')
+        group.entries.filter(page => !['draft','retain_english','historical_excluded','policy_review'].includes(page.state))
             .map(page => ({...page, groupId: group.id})));
     const sourcePaths = new Set(pages.map(page => page.sourcePath));
     for (const file of filters.paths ?? []) assert(sourcePaths.has(file), `Not a registered translatable source file: ${file}`);
@@ -130,11 +134,19 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     const tasks = [];
     const exceptions = report.groups.flatMap(group => group.unregistered.map(sourcePath => ({kind: 'unregistered_file',
         groupId: group.id, sourcePath}))).concat(report.reports.filter(item => managed(scope, item)));
+    exceptions.push(...(report.policyExclusions ?? []).map(page => ({...page,
+        groupId:managed(scope, page)?.id})));
     const changedChinese = new Set(chineseChangedPaths);
     for (const page of pages) {
         const previous = old.get(key(page));
+        const sourceControl=require('./source-revisions.cjs').info(previous);
         const group = managed(scope, page);
         const chinese = chinesePath(group, page);
+        const sourceDriven=report.maintenancePolicy==='source-revisions-v1'||!!sourceControl;
+        let chineseSourceBlob;
+        if(sourceDriven){let content=null;try{content=chinese?readCurrent(chinese):null;}catch(e){if(e.code!=='ENOENT')throw e;}
+            chineseSourceBlob=Object.hasOwn(page,'chineseSourceBlob')?page.chineseSourceBlob
+                :sourceControl?.current?.['zh-CN']?.blob??(content==null?null:require('./source-revisions.cjs').blob(content));}
         if (chinese && changedChinese.has(chinese) && baselineByKey.get(key(page))?.sourceHash === page.sourceHash) {
             exceptions.push({kind: 'zh_only_change', groupId: page.groupId, docId: page.docId,
                 sourcePath: page.sourcePath, chinesePath: chinese,
@@ -157,7 +169,8 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         }
         if (moveFrom && !current.has(key(moveFrom))) matchedRemoval.add(key(moveFrom));
         const candidate = activeByKey.get(key(page));
-        const activeValid = candidate?.sourceHash === page.sourceHash && candidate.sourcePath === page.sourcePath;
+        const activeValid = candidate?.sourceHash === page.sourceHash && candidate.sourcePath === page.sourcePath
+            && (!sourceDriven||candidate.chineseSourceBlob===chineseSourceBlob);
         if (candidate && !activeValid) exceptions.push({kind: 'stale_active_candidate', groupId: page.groupId,
             docId: page.docId, pr: candidate.pr, candidateHash: candidate.sourceHash, sourceHash: page.sourceHash});
         let kind;
@@ -168,14 +181,16 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         else if (page.state.startsWith('stale_')) {
             const historical = previous?.sourcePath
                 ? readAt(previous.sourceCommit ?? report.baselineCommit, previous.sourcePath) : null;
-            kind = historical && hash(historical) === previous.sourceHash
+            kind = !sourceControl && historical && hash(historical) === previous.sourceHash
                 && await formattingOnly(historical, source, page.sourcePath) ? 'formatting_review' : 'update';
         } else kind = previous ? 'translate_backlog' : 'translate_new';
-        const protectedTask = ['target_modified', 'state_conflict', 'source_divergence', 'unsupported_route', 'formatting_review'].includes(kind);
+        const protectedTask = ['target_modified', 'state_conflict', 'source_divergence', 'unsupported_route', 'formatting_review'].includes(kind)
+            || (sourceControl ? !require('./source-revisions.cjs').canGenerate(previous) : previous?.ownership==='human');
         const task = {groupId: page.groupId, pluginId: page.pluginId, version: page.version, docId: page.docId,
             locale: scope.locale, kind, sourcePath: page.sourcePath, targetPath: page.targetPath,
             permalink: page.permalink, sourceHash: page.sourceHash, sourceCommit: report.sourceCommit,
             targetHash: page.targetHash, state: page.state, reviewStatus: page.reviewStatus,
+            ...(sourceDriven&&{chineseSourceBlob}),
             estimatedSourceTokens: estimate(source), requiresHumanReview: protectedTask,
             sourceChange: page.change,
             // An open PR owns this identity until it is merged or closed,
@@ -213,6 +228,9 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         activeCandidates: tasks.filter(task => task.activePr).length,
     };
     assert.equal(allCounts.required, allCounts.mergedCurrent + allCounts.pending);
+    const automaticPages=pages.filter(page=>!scope.automaticGroups||scope.automaticGroups.includes(page.groupId));
+    const automaticCounts={required:automaticPages.length,mergedCurrent:automaticPages.filter(page=>page.state==='current').length,
+        pending:automaticPages.filter(page=>page.state!=='current').length};
     const selectedTasks = tasks.filter(task => (!filters.plugin || task.pluginId === filters.plugin)
         && (!filters.version || task.version === filters.version)
         && (!filters.paths || filters.paths.includes(task.sourcePath))
@@ -221,7 +239,11 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     let tokens = 0;
     const blockedTargets = new Set(active?.blockedTargets ?? []);
     for (const task of selectedTasks) {
+        task.automationEligible = !scope.automaticGroups || scope.automaticGroups.includes(task.groupId);
+    }
+    for (const task of selectedTasks) {
         if (selected.length >= limit) break;
+        if (!task.automationEligible) continue;
         if (task.activePr || task.requiresHumanReview || blockedTargets.has(task.targetPath)) continue;
         if (tokenBudget !== null && tokens + task.estimatedSourceTokens > tokenBudget) continue;
         selected.push(task.id);
@@ -230,6 +252,9 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     return {schemaVersion: 1, locale: scope.locale, sourceCommit: report.sourceCommit,
         baselineCommit: report.baselineCommit, counts: allCounts, selectedCount: selected.length,
         selectedEstimatedSourceTokens: tokens, selected, tasks: selectedTasks,
+        automaticGroups: scope.automaticGroups ?? scope.groups.map(group => group.id),
+        automaticCounts,
+        deferredAutomationTasks: selectedTasks.filter(task => !task.automationEligible).length,
         exceptions: exceptions.sort((a, b) => compare(JSON.stringify(a), JSON.stringify(b)))};
 }
 
@@ -256,13 +281,14 @@ async function main() {
     assert(!(options['--path'] && sourcePaths), 'path and paths are mutually exclusive');
     const report = await audit({root, sourceRef: options['--source-ref'] ?? 'HEAD'});
     if (options['--audit-output']) fs.writeFileSync(options['--audit-output'], JSON.stringify(report, null, 2) + '\n');
-    const chineseRoots = ['i18n/zh-CN/docusaurus-plugin-content-docs', 'i18n/zh-CN/docusaurus-plugin-content-docs-community'];
+    const chineseRoots = config.maintenancePolicy?['i18n/zh-CN']:
+        ['i18n/zh-CN/docusaurus-plugin-content-docs', 'i18n/zh-CN/docusaurus-plugin-content-docs-community'];
     execFileSync('git', ['diff', '--quiet', report.sourceCommit, '--', ...chineseRoots], {cwd: root});
     const untrackedChinese = execFileSync('git', ['ls-files', '--others', '--exclude-standard', '--', ...chineseRoots],
         {cwd: root, encoding: 'utf8'}).trim();
     assert(!untrackedChinese, `Uncommitted Chinese counterpart: ${untrackedChinese}`);
-    const chineseChangedPaths = execFileSync('git', ['diff', '--name-only', report.baselineCommit, report.sourceCommit, '--', ...chineseRoots],
-        {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);
+    const chineseChangedPaths = execFileSync('git', ['diff', '--name-only','-z', report.baselineCommit, report.sourceCommit, '--', ...chineseRoots],
+        {cwd: root, encoding: 'utf8'}).split('\0').filter(Boolean);
     const records = loadRecords(root, scope.locale);
     const active = options['--active-candidates'] ? JSON.parse(fs.readFileSync(options['--active-candidates'], 'utf8')) : null;
     const resolved = JSON.parse(fs.readFileSync(path.join(root, `translations/state/${scope.locale}/resolved-deletions.json`), 'utf8'));

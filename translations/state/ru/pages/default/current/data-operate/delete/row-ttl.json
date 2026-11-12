@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/delete/row-ttl",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/delete/row-ttl.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/delete/row-ttl.md",
+    "sourceCommit": "b1f54b8f686135f54d3ffab1841aa9e27ee02666",
+    "sourceHash": "70c2ecde0c056eb0396c8be44a77d497a624e2b3951d78e72c707b5a711590a8",
+    "sourceTechnicalHash": "0d26dfe54a7c06155e041af85882282e56827f0d9ff92f71e5c60f5ce81d5b99",
+    "targetHash": "5127f976b95c6cc085813bcfd12be005a04a8a812370457d60f4dc74a4981d38",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-29T23:43:50.743Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "70c2ecde0c056eb0396c8be44a77d497a624e2b3951d78e72c707b5a711590a8",
+      "targetHash": "5127f976b95c6cc085813bcfd12be005a04a8a812370457d60f4dc74a4981d38",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge Type: Feature Overview -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Обзор функции -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use Case: Row-level Data Expiration -->\"]; received [\"html\",null,null,\"<!-- Сценарий использования: Истечение данных на уровне строк -->\"]\nprotected node 6: expected [\"html\",null,null,\"<!-- Knowledge Type: Operational Steps -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Операционные шаги -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/delete/row-ttl.md",
+        "blob": "f03fb16a7346487f9a8a882cd4c8d492db5630d5"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/delete/row-ttl.md",
+        "blob": "41d144d2e6e489864eea5771cc9ac03b81607f56"
+      }
+    }
+  }
+}

@@ -15,16 +15,18 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 概念说明 -->
 <!-- 适用场景: OceanBase 自动建表同步期间的上游表结构变更 -->
 
 OceanBase Schema Change 同步用于在持续导入期间，将上游 OceanBase 表的列结构变更自动应用到 Doris 目标表。该能力仅适用于 [OceanBase CDC 自动建表同步](./continuous-load-oceanbase-database.md)。
 
-:::caution 实验性功能
-
-OceanBase Schema Change 同步自 Doris 4.1.4 起作为实验性功能提供，仅支持 MySQL 兼容模式。
-
-:::
+OceanBase Schema Change 同步仅支持 MySQL 兼容模式。
 
 ## 支持的 Schema Change
 

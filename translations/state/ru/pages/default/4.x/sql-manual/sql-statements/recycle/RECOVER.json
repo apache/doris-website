@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/recycle/RECOVER",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/recycle/RECOVER.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/recycle/RECOVER.md",
+    "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+    "sourceHash": "16585c8d3f2bd6569f51c09e5e9f8dc1c09b32cc111651461fffddeaebaf1c97",
+    "sourceTechnicalHash": "f9a38c2f7cd98849fca36e545af33dce473bef32983dc13fd23714dc3435fb48",
+    "targetHash": "6587f5f70dfef99f428c1aef98ddb317c121bdfff4267aedd2ea73e90f73eb83",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-26T20:12:38.190Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "previousSourceHash": "dd397620db8baa8583654417ce2fabf404a3b3182a295656f98531fd7e9ceae0",
+      "previousTargetHash": "098bf3a5cd4bb3fdd9542e692e8fbd5eb291fd40de5813cae31b797ee42fceef",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 1,
+        "totalLines": 94,
+        "ratio": 0.010638297872340425
+      },
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "16585c8d3f2bd6569f51c09e5e9f8dc1c09b32cc111651461fffddeaebaf1c97",
+      "targetHash": "6587f5f70dfef99f428c1aef98ddb317c121bdfff4267aedd2ea73e90f73eb83",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

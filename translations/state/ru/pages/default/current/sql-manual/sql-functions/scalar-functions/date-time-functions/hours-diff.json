@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hours-diff",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-diff.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-diff.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "83b83dd99b546e5e8510daaf5780b4a88c4b169771ba103b9499609d9b215a4c",
+    "sourceTechnicalHash": "baa6e51cda63af4ca28a9df8f7518e351989023febc658bae63cf73708ac9049",
+    "targetHash": "4155f9d0cdd765657abb29a551c968b57659d2f9f79ddd2b35a4d80fa68ee215",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:59:01.576Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "83b83dd99b546e5e8510daaf5780b4a88c4b169771ba103b9499609d9b215a4c",
+      "targetHash": "4155f9d0cdd765657abb29a551c968b57659d2f9f79ddd2b35a4d80fa68ee215",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

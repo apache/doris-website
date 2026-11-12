@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-concat",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-concat.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-concat.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "fba0ad984d31569632e4c51ba7ad9fe73576c283978e1ef903128184b8dea8a9",
+    "sourceTechnicalHash": "b588420d965aacd4144f548192d5e8f4a2447b15d724eec0252ada4596e7c644",
+    "targetHash": "9f00fb9b5413494296824124301287f95c9c8149e45a423ddf123aeade2cd598",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:57:17.258Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fba0ad984d31569632e4c51ba7ad9fe73576c283978e1ef903128184b8dea8a9",
+      "targetHash": "9f00fb9b5413494296824124301287f95c9c8149e45a423ddf123aeade2cd598",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

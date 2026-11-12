@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bool",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bool.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-bool.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "de031dab37c2864add1f2e2ae02b8dbc6d89f04cce2bf6827b585dd176136d8b",
+    "sourceTechnicalHash": "f4c47e156abcd3075f09d4ff301a4cd8864ccb1f5b3dec18f07e6878ff762cb0",
+    "targetHash": "486e99a46fe2afe7f4b0ef14f682150e079d64b12bd7da0d2a16a46584cdc4dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:20:13.064Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "de031dab37c2864add1f2e2ae02b8dbc6d89f04cce2bf6827b585dd176136d8b",
+      "targetHash": "486e99a46fe2afe7f4b0ef14f682150e079d64b12bd7da0d2a16a46584cdc4dc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

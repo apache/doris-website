@@ -45,7 +45,7 @@
         "image": "/images/user-logo/Commercial Distribution/Alibaba Cloud.jpg"
     },
     {
-        "story": "Tencent is the largest internet company in the world and one of the highest grossing multimedia companies in the world. Tencent has multiple businesses using Apache Doris to perform real-time analysis on user behavior data, better supporting business analysis and decision-making.",
+        "story": "Tencent is a leading global internet and technology company. Tencent has multiple businesses using Apache Doris to perform real-time analysis on user behavior data, better supporting business analysis and decision-making.",
         "name": "Tencent",
         "category": "Technology",
         "logo": "Tencent",
@@ -198,7 +198,7 @@
         "image": "/images/user-logo/Media & Entertainment/Tantan.jpg"
     },
     {
-        "story": "A mobile application focused on personal well-being and self-improvement, offering features like mindfulness exercises and personal development resources.",
+        "story": "An interest-based social networking platform where people use avatars to meet and interact.",
         "name": "Soul App",
         "category": "Media & Entertainment",
         "logo": "Soul App",
@@ -1134,7 +1134,7 @@
         "image": "/images/user-logo/Media & Entertainment/Tenclass.jpg"
     },
     {
-        "story": "A state-owned bank that leverages Apache Doris to propel its digitalization and refined management of marketing, risk control, and customer services.",
+        "story": "A bank that uses Apache Doris to support digitalization and refined management of marketing, risk control, and customer services.",
         "name": "Wuxi Xishang Bank",
         "category": "Finance",
         "logo": "Wuxi Xishang Bank",

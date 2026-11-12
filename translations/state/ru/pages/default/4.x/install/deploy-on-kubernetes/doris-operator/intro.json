@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/doris-operator/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/doris-operator/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/doris-operator/intro.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "67ee131943040669472126c9c0a281e477039b0b1b00270ca64de21e67b325e3",
+    "sourceTechnicalHash": "0e2e6cc0d3a40ae882fb278834131cbc05b85f4d939112829a9a8ed7e8372162",
+    "targetHash": "46773c59fe1b439b72f1bf150a16faa05406be33503a58ac82424c5d8153ef14",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:28.135Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "67ee131943040669472126c9c0a281e477039b0b1b00270ca64de21e67b325e3",
+      "targetHash": "46773c59fe1b439b72f1bf150a16faa05406be33503a58ac82424c5d8153ef14",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "install/deploy-on-kubernetes/doris-operator/intro",
+        "sourcePath": "docs/install/deploy-on-kubernetes/doris-operator/intro.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/doris-operator/intro.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "67ee131943040669472126c9c0a281e477039b0b1b00270ca64de21e67b325e3",
+        "targetHash": "46773c59fe1b439b72f1bf150a16faa05406be33503a58ac82424c5d8153ef14",
+        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
+        "pr": "https://github.com/apache/doris-website/pull/4436"
+      }
+    }
+  }
+}

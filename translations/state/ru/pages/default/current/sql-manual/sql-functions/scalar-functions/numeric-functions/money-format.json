@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/money-format",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/money-format.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/money-format.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0d98b41d61981874dc4ab8ea5dccf60d46f4a340f29f1d4f08713d4055102ebf",
+    "sourceTechnicalHash": "59cfa15cf92be101fcbe5995a03b17a6cf90a887366e35e2405540768fb0f48c",
+    "targetHash": "7901f1221e87e38f902da66954830cf92a810128177cdffd9f71e7d411282cf2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:31:22.341Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0d98b41d61981874dc4ab8ea5dccf60d46f4a340f29f1d4f08713d4055102ebf",
+      "targetHash": "7901f1221e87e38f902da66954830cf92a810128177cdffd9f71e7d411282cf2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

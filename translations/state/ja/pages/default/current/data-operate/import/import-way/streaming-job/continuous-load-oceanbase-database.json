@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "790ee17a3c1a22b2602225f3359df603f0aadde04f65e378c8e71cce93af7fae",
-    "sourceTechnicalHash": "9c495e6fb067ae4589571ad04d37d69067c1d2aa463c392f389886dd063d978f",
-    "targetHash": "8faf2479ffaa295d5c005d82a8a399e3c10ff0c0e3bb8c9d6f5cbe6ff90a8b0f",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "6fb56dbf89ef45bcb044f0ca25f3943c081d8de4b4188eac3244908d912617aa",
+    "sourceTechnicalHash": "225696700c349676eced1428f8cefab1aa3c4bf39f6bdfdb43238e8bab2b13af",
+    "targetHash": "07300decad971771683bc327e7149db99398f2adc5db5098a6ce5654457153c0",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.097Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T05:11:45.411Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "6fb56dbf89ef45bcb044f0ca25f3943c081d8de4b4188eac3244908d912617aa",
+      "targetHash": "07300decad971771683bc327e7149db99398f2adc5db5098a6ce5654457153c0",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 手順 + 構成パラメータ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Mirror an OceanBase database in MySQL compatibility mode to Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OceanBase MySQL 互換モードのデータベースを Doris にミラーリング -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"source_db\"]; received [\"inlineCode\",null,null,\"orders\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+        "blob": "eaf23f02783a09e440cf81a4e1817389c65094e0"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+        "blob": "ef24d76c844088cf587e3383c46873ff2e279ddd"
+      }
+    }
   }
 }

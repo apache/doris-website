@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/complex-types/variant",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/complex-types/variant.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/complex-types/variant.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f58d7e4b406c1196e3d45a3872936362204fe03d668051b30c535d5dbdf026d7",
+    "sourceTechnicalHash": "64a1e2b0c20e77b8b462d3ca12d6a1176bf1465b3abcd557d86e133356fd99dd",
+    "targetHash": "859b0523f85dc2c3e21e435217c3fe0cef92fefce979175a7e99608ec9d60fc6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:11:13.370Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f58d7e4b406c1196e3d45a3872936362204fe03d668051b30c535d5dbdf026d7",
+      "targetHash": "859b0523f85dc2c3e21e435217c3fe0cef92fefce979175a7e99608ec9d60fc6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

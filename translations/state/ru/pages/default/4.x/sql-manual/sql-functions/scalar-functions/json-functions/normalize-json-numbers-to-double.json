@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ba669573c14bdef01775207921d1b475296f889627dffbe506f44a14e4e72066",
+    "sourceTechnicalHash": "5196b415ff51e517ecc966ce00ff15631ec17108907a4709c804908e4e038fbc",
+    "targetHash": "d6473ca2c47ee9c3b0a988552bfde98a049ad8fb4cd6267ef5c2d80b4bd2b6d9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:43:29.476Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ba669573c14bdef01775207921d1b475296f889627dffbe506f44a14e4e72066",
+      "targetHash": "d6473ca2c47ee9c3b0a988552bfde98a049ad8fb4cd6267ef5c2d80b4bd2b6d9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/normalize-json-numbers-to-double.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "ba669573c14bdef01775207921d1b475296f889627dffbe506f44a14e4e72066",
+        "targetHash": "d6473ca2c47ee9c3b0a988552bfde98a049ad8fb4cd6267ef5c2d80b4bd2b6d9",
+        "commit": "0fe6c204567e14dcccd04b15a6522fe8311d1745",
+        "pr": "https://github.com/apache/doris-website/pull/4450"
+      }
+    }
+  }
+}

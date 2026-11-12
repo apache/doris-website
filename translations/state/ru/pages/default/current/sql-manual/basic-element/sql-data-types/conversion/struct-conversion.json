@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/struct-conversion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/struct-conversion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/struct-conversion.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "9672feff9fdbe4de67befcffa23739c9c9b91c633ed2fa80026887874ae08753",
+    "sourceTechnicalHash": "aba7529890dc7e13c333afd68e1a6122bb57ca994bd04b2de2d2b3bce15fa6aa",
+    "targetHash": "6f2587374e7707335c626ace5ed7bd7301e9a119ed53edf416fe30d425b8f98a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:50:37.018Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9672feff9fdbe4de67befcffa23739c9c9b91c633ed2fa80026887874ae08753",
+      "targetHash": "6f2587374e7707335c626ace5ed7bd7301e9a119ed53edf416fe30d425b8f98a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

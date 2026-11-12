@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-unity-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-unity-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-unity-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "1dc3d6523046cd239467676140efc79d246f2ad354faa33fcec7993ab5fba1cf",
+    "sourceTechnicalHash": "5880cbd1625a30868cd0cdd2d8e5b5a40f2ea75af52d1242c34e6acf51dac697",
+    "targetHash": "012b0ff8722023acb7924708c1b7ea171c222057af357da85ddee0b6277f24ed",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:53:45.123Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1dc3d6523046cd239467676140efc79d246f2ad354faa33fcec7993ab5fba1cf",
+      "targetHash": "012b0ff8722023acb7924708c1b7ea171c222057af357da85ddee0b6277f24ed",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

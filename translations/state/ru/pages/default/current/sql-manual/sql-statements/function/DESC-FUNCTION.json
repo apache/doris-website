@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/function/DESC-FUNCTION",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/function/DESC-FUNCTION.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/function/DESC-FUNCTION.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "277c4be4eca4534de7a794dd11ac469c6ac2c968d0306e9a43e76a3688084237",
+    "sourceTechnicalHash": "9db91e18e7b3324f9d8294c485b06d53235cac3b6e073c8db81238b2892b0f18",
+    "targetHash": "bc0821c1a9719a8d63534ca9d3613b93a55722ef137a6e97459aed742a59ccbd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:05:04.006Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "277c4be4eca4534de7a794dd11ac469c6ac2c968d0306e9a43e76a3688084237",
+      "targetHash": "bc0821c1a9719a8d63534ca9d3613b93a55722ef137a6e97459aed742a59ccbd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

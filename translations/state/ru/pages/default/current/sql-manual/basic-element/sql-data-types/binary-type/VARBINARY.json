@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/binary-type/VARBINARY",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "689cb9c2d15f710ad3bb37b8fa769af21e9ede33dc90d8229c0c79fb96b6cc36",
+    "sourceTechnicalHash": "7b6279ce51c6f3e93b3941e0c5834cf4ba5cb5ced5797ab9e25074593c3007b2",
+    "targetHash": "1b2a4b3bafe1a329a25ac25e51a4f6af04eca9f4bb40d4b747c7afa75212f469",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:46:46.940Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "689cb9c2d15f710ad3bb37b8fa769af21e9ede33dc90d8229c0c79fb96b6cc36",
+      "targetHash": "1b2a4b3bafe1a329a25ac25e51a4f6af04eca9f4bb40d4b747c7afa75212f469",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

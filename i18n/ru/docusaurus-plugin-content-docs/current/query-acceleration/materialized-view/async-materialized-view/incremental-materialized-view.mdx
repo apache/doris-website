@@ -1,0 +1,1414 @@
+---
+{
+    "title": "Инкрементальное сопровождение представлений (IVM)",
+    "language": "ru",
+    "description": "Как Doris 5.0 использует инкрементальное сопровождение представлений (IVM) для обработки вставок, обновлений и удалений на уровне строк базовых таблиц и как настроить обновление, переход к резервным способам обновления, диагностику и эксплуатацию в рабочей среде.",
+    "keywords": [
+        "Incremental View Maintenance",
+        "IVM",
+        "Doris IVM",
+        "async materialized view",
+        "materialized view incremental maintenance",
+        "materialized view row-level update",
+        "IVM incremental refresh",
+        "IVM refresh interval",
+        "IVM scheduled refresh",
+        "IVM fallback",
+        "IvmFallbackReason",
+        "IVM supported queries",
+        "IVM aggregate functions",
+        "internal Table Stream",
+        "row-level incremental refresh",
+        "REFRESH INCREMENTAL",
+        "INCREMENTAL FALLBACK",
+        "Changelog",
+        "Table Stream"
+    ]
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+{/* Knowledge type: Feature description / How-to guide / Parameter reference / Troubleshooting */}
+{/* Use cases: Frequent base table inserts, updates and deletes / Small share of changed rows / Expensive full or partition recomputation */}
+
+Инкрементальное сопровождение представлений (IVM) поддерживает асинхронное материализованное представление на основе изменений на уровне строк в его базовых таблицах. Обычное асинхронное материализованное представление пересчитывает все свои данные или каждую затронутую партицию; IVM обрабатывает только строки, вставленные, обновлённые и удалённые в базовых таблицах между двумя обновлениями представления, и применяет эти изменения к материализованному представлению.
+
+:::caution Экспериментальная функция
+IVM доступно начиная с Doris 5.0.0. Это экспериментальная функция, отключённая по умолчанию. Перед использованием включите changelog и Table Stream в конфигурации FE. См. раздел [Предварительные требования](#prerequisites).
+:::
+
+{/* Knowledge type: Scenario selection */}
+{/* Use cases: Choosing IVM / Estimating refresh cost */}
+
+## Когда использовать IVM {#when-to-use-ivm}
+
+Прежде чем выбирать способ обновления, сопоставьте количество изменённых строк за одно обновление, размер затронутых партиций и требования к согласованности.
+
+| Сценарий | Рекомендация | Причина |
+|---|---|---|
+| В базовых таблицах часто выполняются вставки, обновления и удаления, а изменённые строки составляют небольшую долю таблицы или партиции | Используйте IVM | Обрабатываются только изменения на уровне строк между двумя обновлениями, поэтому партиции целиком не пересчитываются |
+| Изменения сосредоточены в нескольких партициях, и затраты на их пересчёт приемлемы | Используйте `PARTITIONS` | Более простая настройка; пересчитываются затронутые партиции |
+| Создание первоначального базового состояния, небольшой объём данных или восстановление базового состояния IVM | Используйте `COMPLETE` | Пересчитываются все данные материализованного представления |
+| Результаты должны быть транзакционно согласованы с базовыми таблицами в реальном времени | Не используйте асинхронное материализованное представление | IVM по-прежнему обновляется через асинхронные задачи и не обеспечивает согласованность в реальном времени |
+
+{/* Knowledge type: Architecture decision */}
+{/* Use cases: Choosing between INCREMENTAL / PARTITIONS / COMPLETE / AUTO */}
+
+## Отличия от инкрементального обновления на уровне партиций {#differences-from-partition-level-incremental-refresh}
+
+Doris поддерживает четыре способа обновления асинхронных материализованных представлений. IVM соответствует `INCREMENTAL`. Не путайте его с инкрементальным обновлением на уровне партиций, которое обеспечивает `PARTITIONS`.
+
+| Способ обновления | Гранулярность вычислений | Подходящий сценарий | Поведение при невыполнении условий |
+|---|---|---|---|
+| `INCREMENTAL` | Изменения на уровне строк | Количество изменённых строк значительно меньше объёма всей таблицы или затронутых партиций | По умолчанию завершается ошибкой; при указании `FALLBACK` возможен переход к резервному способу обновления |
+| `PARTITIONS` | Каждая затронутая партиция материализованного представления | Изменения сосредоточены в нескольких партициях, и затраты на их пересчёт приемлемы | По умолчанию завершается ошибкой; переходит к `COMPLETE`, если указан `FALLBACK` |
+| `COMPLETE` | Все данные | Небольшой объём данных, первоначальное базовое состояние или восстановление базового состояния IVM | Всегда пересчитывает всё |
+| `AUTO` | Выбирается Doris автоматически | Требуется, чтобы Doris выбрал доступную стратегию | По очереди пробует IVM, обновление партиций и полное обновление, используя доступный способ |
+
+`INCREMENTAL FALLBACK` меняет только обработку ошибок во время обновления. При создании материализованного представления SQL его определения по-прежнему должен удовлетворять требованиям IVM; `FALLBACK` не позволяет неподдерживаемому определению пройти проверку при создании.
+
+{/* Knowledge type: How it works */}
+{/* Use cases: Understanding the IVM data flow / Consistency mechanism */}
+
+## Принцип работы {#how-it-works}
+
+IVM использует возможности changelog и Table Stream в Doris:
+
+![Принцип работы IVM: изменения базовых таблиц попадают в changelog, а затем во внутренние Table Stream; дельта-план объединяет ещё не обработанные изменения с согласованным снимком, обновляет материализованное представление и продвигает позиции потребления в той же транзакции](/images/next/query-acceleration/ivm-workflow.jpg)
+
+При создании материализованного представления с поддержкой IVM Doris создаёт внутренний Table Stream для каждой базовой таблицы, участвующей в инкрементальном сопровождении. Имена внутренних Stream начинаются с `__doris_ivm_stream_`. Создавать, потреблять или удалять эти Stream самостоятельно не требуется.
+
+Во время обновления Doris формирует дельта-план из ещё не обработанных изменений каждой базовой таблицы. Для запросов с соединениями он также читает снимок базовых таблиц, согласованный с позициями потребления, чтобы вычисления по нескольким таблицам использовали единую согласованную границу данных. Данные материализованного представления и позиции потребления фиксируются в одной транзакции; если транзакция завершается ошибкой, ни то ни другое не фиксируется.
+
+{/* Knowledge type: Pre-deployment checklist */}
+{/* Use cases: Enabling IVM / Evaluating tables before creation */}
+
+## Предварительные требования {#prerequisites}
+
+### Версия и конфигурация FE {#version-and-fe-configuration}
+
+1. Используйте Doris 5.0.0 или более позднюю версию.
+2. Задайте следующие параметры в `fe.conf` на каждом FE и перезапустите все FE:
+
+    ```text
+    enable_feature_changelog = true
+    enable_table_stream = true
+    ```
+
+Оба параметра являются статическими, то есть не изменяются динамически. `enable_feature_changelog` включает changelog и глобальную временную метку фиксации транзакций; `enable_table_stream` включает DDL для Table Stream и управление внутренними Stream.
+
+### Требования к базовым таблицам {#base-table-requirements}
+
+Базовые таблицы, участвующие в инкрементальном сопровождении, должны быть внутренними OLAP-таблицами Doris в Internal Catalog и соответствовать следующим требованиям:
+
+| Модель базовой таблицы | Поддержка | Требования и поведение |
+|---|---|---|
+| Unique Key Merge-on-Write | Да | Необходимо включить changelog и сохранение образа строки до изменения; обрабатываются вставки, обновления и удаления |
+| Duplicate Key | Да | Необходимо включить changelog; предоставляются только добавленные данные, а удаления через предикаты удаления не записываются |
+| Unique Key Merge-on-Read | Нет | Используйте Merge-on-Write |
+| Aggregate Key | Не поддерживается для инкрементального сопровождения | Может использоваться только как таблица, указанная в `excluded_trigger_tables`, которая не запускает инкрементальное обновление |
+| Внешние таблицы | Нет | Базовые таблицы, инкрементально сопровождаемые IVM, должны быть внутренними таблицами Doris |
+
+Для нагрузок, требующих обработки обновлений и удалений, используйте таблицу Unique Key Merge-on-Write и задайте при её создании следующие свойства:
+
+```sql
+PROPERTIES (
+    "enable_unique_key_merge_on_write" = "true",
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
+);
+```
+
+Changelog можно включить только при создании таблицы, после чего отключить его нельзя. Полный список ограничений по моделям таблиц, типам столбцов, способам записи и DDL см. в разделе [Changelog](../../../data-operate/incremental/changelog).
+
+{/* Knowledge type: Step-by-step guide */}
+{/* Use cases: First-time setup / Feature verification */}
+
+## Быстрый старт {#quick-start}
+
+В следующем примере создаётся IVM, агрегирующее заказы по статусу. Первое обновление использует `COMPLETE` для создания полного базового состояния; последующие обновления используют `INCREMENTAL FALLBACK` для обработки изменений на уровне строк.
+
+Последовательность действий:
+
+1. Создайте базовую таблицу Unique Key Merge-on-Write с включённым changelog.
+2. Создайте IVM с `REFRESH INCREMENTAL FALLBACK`.
+3. Выполните обновление `COMPLETE` для создания полного базового состояния.
+4. Измените данные базовой таблицы и выполните инкрементальное обновление.
+5. Запросите сведения о задаче обновления, чтобы проверить результат и причину перехода к резервному способу обновления.
+
+### Шаг 1: создание базовой таблицы и загрузка начальных данных {#step-1-create-the-base-table-and-load-initial-data}
+
+Создайте базовую таблицу с поддержкой обновлений и удалений, включив changelog и сохранение образа строки до изменения:
+
+```sql
+CREATE DATABASE IF NOT EXISTS ivm_demo;
+USE ivm_demo;
+
+CREATE TABLE orders (
+    order_id BIGINT,
+    order_status VARCHAR(16),
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
+);
+
+INSERT INTO orders VALUES
+    (1, 'created', 100.00),
+    (2, 'created', 200.00),
+    (3, 'paid',    300.00);
+```
+
+### Шаг 2: создание IVM {#step-2-create-the-ivm}
+
+Укажите `REFRESH INCREMENTAL` в `CREATE MATERIALIZED VIEW`. В этом примере также указан `FALLBACK`, чтобы Doris мог перейти к обновлению партиций или полному обновлению, если изменение нельзя безопасно обработать инкрементально. Для запуска используется `ON MANUAL`, чтобы можно было пошагово наблюдать за каждым обновлением; в рабочей среде представления обычно переводят на запуск по расписанию или при фиксации транзакции. См. раздел [Настройка интервала автоматического обновления](#setting-the-automatic-refresh-interval).
+
+```sql
+CREATE MATERIALIZED VIEW orders_by_status
+BUILD DEFERRED
+REFRESH INCREMENTAL FALLBACK ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+AS
+SELECT
+    order_status,
+    COUNT(*) AS order_count,
+    SUM(amount) AS total_amount
+FROM orders
+GROUP BY order_status;
+```
+
+После создания представления Doris автоматически создаёт соответствующий внутренний Table Stream. Проверить соответствие можно с помощью `mv_infos`:
+
+```sql
+SELECT Name, RefreshInfo, IvmBaseTableStreams
+FROM mv_infos("database" = "ivm_demo")
+WHERE Name = "orders_by_status";
+```
+
+### Шаг 3: создание полного базового состояния {#step-3-build-the-full-baseline}
+
+Используйте `COMPLETE` для первого обновления, чтобы создать базовое состояние для последующего инкрементального сопровождения:
+
+```sql
+REFRESH MATERIALIZED VIEW orders_by_status COMPLETE;
+```
+
+Задача обновления выполняется асинхронно. После её успешного завершения запросите данные материализованного представления:
+
+```sql
+SELECT order_status, order_count, total_amount
+FROM orders_by_status
+ORDER BY order_status;
+```
+
+```text
++--------------+-------------+--------------+
+| order_status | order_count | total_amount |
++--------------+-------------+--------------+
+| created      |           2 |       300.00 |
+| paid         |           1 |       300.00 |
++--------------+-------------+--------------+
+```
+
+### Шаг 4: запись изменений и инкрементальное обновление {#step-4-write-changes-and-run-an-incremental-refresh}
+
+Следующие операторы обновляют заказ 1, удаляют заказ 2 и вставляют заказ 4:
+
+```sql
+INSERT INTO orders VALUES (1, 'paid', 100.00);
+DELETE FROM orders WHERE order_id = 2;
+INSERT INTO orders VALUES (4, 'created', 400.00);
+
+REFRESH MATERIALIZED VIEW orders_by_status INCREMENTAL FALLBACK;
+```
+
+После успешного завершения задачи обновления IVM обработало только перечисленные выше изменения на уровне строк. Теперь материализованное представление содержит:
+
+```sql
+SELECT order_status, order_count, total_amount
+FROM orders_by_status
+ORDER BY order_status;
+```
+
+```text
++--------------+-------------+--------------+
+| order_status | order_count | total_amount |
++--------------+-------------+--------------+
+| created      |           1 |       400.00 |
+| paid         |           2 |       400.00 |
++--------------+-------------+--------------+
+```
+
+### Шаг 5: проверка способа обновления и причины перехода к резервному способу {#step-5-confirm-the-refresh-method-and-fallback-reason}
+
+Запросите сведения о последней задаче обновления, чтобы проверить запрошенный способ, фактический охват обновления и причину перехода к резервному способу:
+
+```sql
+SELECT Status, TaskContext, RefreshMode, IvmFallbackReason, ErrorMsg
+FROM tasks("type" = "mv")
+WHERE MvDatabaseName = "ivm_demo"
+  AND MvName = "orders_by_status"
+ORDER BY CreateTime DESC, TaskId DESC
+LIMIT 1;
+```
+
+- `TaskContext` содержит способ обновления, запрошенный этой задачей, например `INCREMENTAL`.
+- `RefreshMode` содержит охват партиций, фактически обновлённых задачей: `COMPLETE`, `PARTIAL` или `NOT_REFRESH`.
+- `IvmFallbackReason` пуст, если перехода от IVM к резервному способу не было; в противном случае содержит устойчивый код причины перехода.
+- `ErrorMsg` содержит подробности ошибки строгого инкрементального обновления.
+
+{/* Knowledge type: Compatibility reference / SQL examples */}
+{/* Use cases: Evaluating SQL before creation / Diagnosing unsupported syntax */}
+
+## Поддерживаемые запросы {#supported-queries}
+
+IVM проверяет SQL определения при создании материализованного представления. Если явно указано `REFRESH INCREMENTAL`, неподдерживаемое определение приводит к ошибке создания. В этом разделе перечислены поддерживаемые реляционные операции и агрегатные функции с исполняемым примером для каждой, а затем приведены неподдерживаемые формы запросов.
+
+### Таблицы для примеров {#example-tables}
+
+В примерах этого раздела используются три базовые таблицы: таблица клиентов `customers`, таблица продаж `sales` и таблица возвратов `refunds`. Все три являются таблицами Unique Key Merge-on-Write с включённым changelog и сохранением образа строки до изменения. Выполнить примеры можно в базе данных `ivm_demo`, созданной в разделе [Быстрый старт](#quick-start):
+
+```sql
+CREATE TABLE customers (
+    customer_id BIGINT,
+    name VARCHAR(32),
+    city VARCHAR(16)
+)
+UNIQUE KEY(customer_id)
+DISTRIBUTED BY HASH(customer_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
+);
+
+CREATE TABLE sales (
+    sale_id BIGINT,
+    customer_id BIGINT,
+    channel VARCHAR(16),
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(sale_id)
+DISTRIBUTED BY HASH(sale_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
+);
+
+CREATE TABLE refunds (
+    refund_id BIGINT,
+    sale_id BIGINT,
+    amount DECIMAL(10, 2)
+)
+UNIQUE KEY(refund_id)
+DISTRIBUTED BY HASH(refund_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
+);
+
+INSERT INTO customers VALUES
+    (1, 'Alice', 'Beijing'),
+    (2, 'Bob',   'Shanghai'),
+    (3, 'Carol', 'Beijing');
+
+INSERT INTO sales VALUES
+    (101, 1,    'web',   120.00),
+    (102, 1,    'app',    80.00),
+    (103, 2,    'web',   200.00),
+    (104, NULL, 'store',  50.00);
+
+INSERT INTO refunds VALUES
+    (9001, 102, 80.00),
+    (9002, 103, 50.00);
+```
+
+Данные намеренно содержат два особых случая, используемых в примерах соединений и агрегации: у заказа 104 из магазина нет клиента, поэтому его `customer_id` равен `NULL`, а у клиентки Carol пока нет заказов.
+
+Во всех примерах используется одна последовательность действий: выполните соответствующий `CREATE MATERIALIZED VIEW`, затем `REFRESH MATERIALIZED VIEW <mv_name> COMPLETE` для создания базового состояния, а после успешного завершения задачи обновления выполните `SELECT * FROM <mv_name>`, чтобы увидеть результат. Приведённые здесь результаты отсортированы по первым столбцам.
+
+### Поддерживаемые реляционные операции {#supported-relational-operations}
+
+| Операция | Описание |
+|---|---|
+| Столбцы и выражения | Выбор части столбцов или вычисление новых столбцов с помощью детерминированных выражений |
+| Фильтры `WHERE` | Фильтрация строк базовых таблиц по условию |
+| Подзапросы `FROM` | Подзапросы с псевдонимами в предложении `FROM`; допускается вложенность, но агрегации запрещены |
+| Строки констант | `SELECT` без `FROM`, всегда возвращающий одну строку констант, например `SELECT -1, 'unknown'`. Может быть ветвью `UNION ALL`, одной из сторон соединения или всем определением |
+| Агрегация `GROUP BY` | Агрегация должна быть самой внешней операцией запроса, над которой допускаются только проекции; поддерживаются детерминированные выражения над столбцами группировки и результатами агрегации |
+| `GROUPING SETS`, `ROLLUP`, `CUBE` | Можно использовать с `GROUPING()` и `GROUPING_ID()`; действуют те же ограничения, что и для `GROUP BY` |
+| `SELECT DISTINCT` | Обрабатывается как `GROUP BY` без агрегатных функций; действуют те же ограничения, что и для `GROUP BY` |
+| `INNER JOIN`, `CROSS JOIN` | Поддерживаются соединения нескольких таблиц и самосоединения |
+| `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, `FULL OUTER JOIN` | Сторона, сохраняющая все свои строки (левая сторона LEFT JOIN, правая сторона RIGHT JOIN, обе стороны FULL JOIN), не должна быть таблицей Duplicate Key без changelog, указанной в `excluded_trigger_tables`, поскольку у строк такой таблицы нет фиксированного идентификатора |
+| Вложенные внешние соединения | Сторона внешнего соединения, которая может дополняться значениями `NULL`, сама является соединением. Чем сложнее эта сторона, тем больше план инкрементального обновления |
+| `UNION ALL` | Ветви могут читать разные таблицы, одну и ту же таблицу или содержать строки констант |
+| Цепочка IVM | Другое IVM используется как базовая таблица. Для IVM, используемого как базовая таблица, необходимо включить changelog и сохранение образа строки до изменения |
+
+Приведённые ниже примеры сгруппированы по категориям.
+
+#### Запросы к одной таблице {#single-table-queries}
+
+<Tabs>
+<TabItem value="projection" label="Столбцы и выражения" default>
+
+Выберите нужные столбцы или вычислите новые с помощью выражений. Выражения должны быть детерминированными, то есть одинаковые входные данные всегда должны давать одинаковый результат; например, `NOW()` и `RAND()` использовать нельзя.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_projection
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id, channel, amount, amount * 0.9 AS discounted_amount
+FROM sales;
+```
+
+Результат:
+
+```text
++---------+---------+--------+-------------------+
+| sale_id | channel | amount | discounted_amount |
++---------+---------+--------+-------------------+
+|     101 | web     | 120.00 |           108.000 |
+|     102 | app     |  80.00 |            72.000 |
+|     103 | web     | 200.00 |           180.000 |
+|     104 | store   |  50.00 |            45.000 |
++---------+---------+--------+-------------------+
+```
+
+</TabItem>
+<TabItem value="where" label="Фильтр WHERE">
+
+Сохраняет только строки, удовлетворяющие условию. При обновлении строки базовой таблицы Doris повторно проверяет условие на новых значениях: строка, которая больше не соответствует условию, удаляется из материализованного представления, а строка, которая начинает ему соответствовать, добавляется в него.
+
+```sql
+CREATE MATERIALIZED VIEW mv_large_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id, customer_id, amount
+FROM sales
+WHERE amount >= 100;
+```
+
+Результат:
+
+```text
++---------+-------------+--------+
+| sale_id | customer_id | amount |
++---------+-------------+--------+
+|     101 |           1 | 120.00 |
+|     103 |           2 | 200.00 |
++---------+-------------+--------+
+```
+
+</TabItem>
+<TabItem value="subquery" label="Подзапрос FROM">
+
+Используйте подзапрос с псевдонимом в предложении `FROM`, например чтобы сначала выбрать веб-заказы, а затем соединить их с таблицей клиентов. Подзапросы могут быть вложенными; внутри них также разрешены только операции, перечисленные в этом разделе, и не допускаются агрегации.
+
+```sql
+CREATE MATERIALIZED VIEW mv_web_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT w.sale_id, c.name, w.amount
+FROM (
+    SELECT sale_id, customer_id, amount
+    FROM sales
+    WHERE channel = 'web'
+) AS w
+INNER JOIN customers AS c ON w.customer_id = c.customer_id;
+```
+
+Результат:
+
+```text
++---------+-------+--------+
+| sale_id | name  | amount |
++---------+-------+--------+
+|     101 | Alice | 120.00 |
+|     103 | Bob   | 200.00 |
++---------+-------+--------+
+```
+
+</TabItem>
+<TabItem value="constant-row" label="Строка констант">
+
+Строка констант задаётся оператором `SELECT` без `FROM`, который всегда возвращает одну строку констант. Типичный сценарий использования: добавление элемента «неизвестно» в таблицу измерения для строк, которым не удалось найти в ней соответствие:
+
+```sql
+CREATE MATERIALIZED VIEW mv_customers_with_unknown
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT customer_id, name, city
+FROM customers
+UNION ALL
+SELECT -1, 'unknown', 'unknown';
+```
+
+Результат:
+
+```text
++-------------+---------+----------+
+| customer_id | name    | city     |
++-------------+---------+----------+
+|          -1 | unknown | unknown  |
+|           1 | Alice   | Beijing  |
+|           2 | Bob     | Shanghai |
+|           3 | Carol   | Beijing  |
++-------------+---------+----------+
+```
+
+Строка констант также может быть одной из сторон соединения, например `CROSS JOIN (SELECT 0.14 AS usd_rate) r` для добавления параметра к каждой строке, или всем определением материализованного представления, например `SELECT 1 AS id, 'x' AS name`.
+
+Строка констант не создаёт изменений. Первое обновление материализованного представления, содержащего строку констант, всегда выполняется как `COMPLETE`, даже если запрошено `INCREMENTAL`; последующие инкрементальные обновления обрабатывают только изменения базовых таблиц.
+
+</TabItem>
+</Tabs>
+
+#### Агрегация {#aggregation}
+
+<Tabs>
+<TabItem value="group-by" label="GROUP BY" default>
+
+Вычисляет результаты агрегации для каждой группы. Входными данными агрегации могут быть одна таблица, соединение, `UNION ALL` или подзапрос `FROM`, но сама агрегация должна быть самой внешней операцией запроса. Следующий пример соединяет `sales` с `customers`, а затем агрегирует данные по городам; у заказа 104 нет клиента, поэтому он не учитывается.
+
+```sql
+CREATE MATERIALIZED VIEW mv_city_sales
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.city, COUNT(*) AS sale_cnt, SUM(s.amount) AS total_amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id
+GROUP BY c.city;
+```
+
+Результат:
+
+```text
++----------+----------+--------------+
+| city     | sale_cnt | total_amount |
++----------+----------+--------------+
+| Beijing  |        2 |       200.00 |
+| Shanghai |        1 |       200.00 |
++----------+----------+--------------+
+```
+
+Проекция над агрегацией может переименовывать столбцы, менять их порядок или выполнять вычисления над столбцами группировки и результатами агрегации с помощью детерминированных выражений. Например, `SUM(amount) * 100`, `MAX(amount) + 1` и `SUM(amount) / COUNT(*)` поддерживают инкрементальное обновление с учётом ограничений используемых агрегатных функций. `HAVING` и агрегации внутри подзапроса или входных данных соединения не поддерживаются. См. раздел [Неподдерживаемые формы запросов](#unsupported-query-forms).
+
+</TabItem>
+<TabItem value="grouping-sets" label="GROUPING SETS / ROLLUP / CUBE">
+
+Вычисляет несколько комбинаций измерений в рамках одной агрегации. В следующем примере используется `ROLLUP(c.city, s.channel)` для получения подробных данных по городам и каналам, промежуточных итогов по каждому городу и общего итога; в строках промежуточных и общего итогов свёрнутые столбцы имеют значение `NULL`. Также поддерживаются `GROUPING SETS`, `CUBE` и функции `GROUPING()` и `GROUPING_ID()`, определяющие строки промежуточных итогов.
+
+```sql
+CREATE MATERIALIZED VIEW mv_city_channel_rollup
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.city, s.channel, SUM(s.amount) AS total_amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id
+GROUP BY ROLLUP(c.city, s.channel);
+```
+
+Результат:
+
+```text
++----------+---------+--------------+
+| city     | channel | total_amount |
++----------+---------+--------------+
+| NULL     | NULL    |       400.00 |
+| Beijing  | NULL    |       200.00 |
+| Beijing  | app     |        80.00 |
+| Beijing  | web     |       120.00 |
+| Shanghai | NULL    |       200.00 |
+| Shanghai | web     |       200.00 |
++----------+---------+--------------+
+```
+
+</TabItem>
+<TabItem value="distinct" label="SELECT DISTINCT">
+
+`SELECT DISTINCT` обрабатывается как `GROUP BY` без агрегатных функций, и к нему применяются те же ограничения, что и к `GROUP BY`. Обратите внимание: `UNION` (то есть `UNION DISTINCT`) по-прежнему не поддерживается.
+
+```sql
+CREATE MATERIALIZED VIEW mv_channels
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT DISTINCT channel
+FROM sales;
+```
+
+Результат:
+
+```text
++---------+
+| channel |
++---------+
+| app     |
+| store   |
+| web     |
++---------+
+```
+
+</TabItem>
+</Tabs>
+
+#### Соединения {#joins}
+
+<Tabs>
+<TabItem value="inner-join" label="INNER JOIN" default>
+
+Сохраняет только строки, для которых найдено соответствие с обеих сторон. У заказа 104 нет клиента, поэтому он не попадает в результат.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_customer
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT s.sale_id, c.name, c.city, s.amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+Результат:
+
+```text
++---------+-------+----------+--------+
+| sale_id | name  | city     | amount |
++---------+-------+----------+--------+
+|     101 | Alice | Beijing  | 120.00 |
+|     102 | Alice | Beijing  |  80.00 |
+|     103 | Bob   | Shanghai | 200.00 |
++---------+-------+----------+--------+
+```
+
+</TabItem>
+<TabItem value="cross-join" label="CROSS JOIN">
+
+Возвращает все комбинации строк с обеих сторон (декартово произведение). В следующем примере выполняется самосоединение `customers`, чтобы перечислить все пары клиентов.
+
+```sql
+CREATE MATERIALIZED VIEW mv_customer_pairs
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT a.name AS customer_a, b.name AS customer_b
+FROM customers a
+CROSS JOIN customers b
+WHERE a.customer_id < b.customer_id;
+```
+
+Результат:
+
+```text
++------------+------------+
+| customer_a | customer_b |
++------------+------------+
+| Alice      | Bob        |
+| Alice      | Carol      |
+| Bob        | Carol      |
++------------+------------+
+```
+
+</TabItem>
+<TabItem value="outer-join" label="Внешние соединения">
+
+Внешнее соединение сохраняет все строки одной стороны и дополняет другую сторону значениями `NULL`, если соответствие не найдено. `LEFT OUTER JOIN` сохраняет левую сторону, `RIGHT OUTER JOIN` сохраняет правую, а `FULL OUTER JOIN` сохраняет обе стороны.
+
+**LEFT OUTER JOIN**: сохраняет все заказы. У заказа 104 нет соответствующего клиента, поэтому `name` имеет значение `NULL`.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_left
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT s.sale_id, s.amount, c.name
+FROM sales s
+LEFT OUTER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+Результат:
+
+```text
++---------+--------+-------+
+| sale_id | amount | name  |
++---------+--------+-------+
+|     101 | 120.00 | Alice |
+|     102 |  80.00 | Alice |
+|     103 | 200.00 | Bob   |
+|     104 |  50.00 | NULL  |
++---------+--------+-------+
+```
+
+**RIGHT OUTER JOIN**: сохраняет всех клиентов. Carol, у которой пока нет заказов, тоже попадает в результат.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_right
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, s.amount
+FROM sales s
+RIGHT OUTER JOIN customers c ON s.customer_id = c.customer_id;
+```
+
+Результат:
+
+```text
++-------+---------+--------+
+| name  | sale_id | amount |
++-------+---------+--------+
+| Alice |     101 | 120.00 |
+| Alice |     102 |  80.00 |
+| Bob   |     103 | 200.00 |
+| Carol |    NULL |   NULL |
++-------+---------+--------+
+```
+
+**FULL OUTER JOIN**: сохраняет и заказ 104, у которого нет клиента, и Carol, у которой нет заказов.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_full
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, s.amount
+FROM customers c
+FULL OUTER JOIN sales s ON c.customer_id = s.customer_id;
+```
+
+Результат:
+
+```text
++-------+---------+--------+
+| name  | sale_id | amount |
++-------+---------+--------+
+| NULL  |     104 |  50.00 |
+| Alice |     101 | 120.00 |
+| Alice |     102 |  80.00 |
+| Bob   |     103 | 200.00 |
+| Carol |    NULL |   NULL |
++-------+---------+--------+
+```
+
+</TabItem>
+<TabItem value="nested-outer-join" label="Вложенные внешние соединения">
+
+Сторона внешнего соединения, которая может дополняться значениями `NULL`, называется стороной, порождающей NULL, например правая сторона LEFT JOIN. Вложенным внешним соединением называется соединение, у которого сторона, порождающая NULL, сама является соединением. В следующем примере сначала используется `sales LEFT JOIN refunds` для присоединения возвратов, а затем всё это соединение используется как правая сторона `customers LEFT JOIN`.
+
+```sql
+CREATE MATERIALIZED VIEW mv_customer_refunds
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT c.name, s.sale_id, r.refund_id, r.amount AS refund_amount
+FROM customers c
+LEFT OUTER JOIN (
+    sales s
+    LEFT OUTER JOIN refunds r ON s.sale_id = r.sale_id
+) ON c.customer_id = s.customer_id;
+```
+
+Результат:
+
+```text
++-------+---------+-----------+---------------+
+| name  | sale_id | refund_id | refund_amount |
++-------+---------+-----------+---------------+
+| Alice |     101 |      NULL |          NULL |
+| Alice |     102 |      9001 |         80.00 |
+| Bob   |     103 |      9002 |         50.00 |
+| Carol |    NULL |      NULL |          NULL |
++-------+---------+-----------+---------------+
+```
+
+При инкрементальном обновлении необходимо вычислять сторону, порождающую NULL, как до, так и после изменения, поэтому чем сложнее эта сторона, тем больше план обновления. Если планирование или обновление становится слишком затратным, сначала создайте для этой стороны IVM нижнего уровня, а текущее материализованное представление постройте поверх него. См. пример цепочки IVM в разделе [UNION ALL и цепочки IVM](#union-all-and-chained-ivm).
+
+</TabItem>
+</Tabs>
+
+#### UNION ALL и цепочки IVM {#union-all-and-chained-ivm}
+
+<Tabs>
+<TabItem value="union-all" label="UNION ALL" default>
+
+Объединяет результаты нескольких запросов без удаления дубликатов. Ветви могут читать разные таблицы, одну и ту же таблицу или содержать строки констант. В следующем примере продажи и возвраты объединяются в единый журнал, в котором суммы возвратов записываются отрицательными числами.
+
+```sql
+CREATE MATERIALIZED VIEW mv_ledger
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT sale_id AS doc_id, 'sale' AS doc_type, amount
+FROM sales
+UNION ALL
+SELECT refund_id, 'refund', -amount
+FROM refunds;
+```
+
+Результат:
+
+```text
++--------+----------+--------+
+| doc_id | doc_type | amount |
++--------+----------+--------+
+|    101 | sale     | 120.00 |
+|    102 | sale     |  80.00 |
+|    103 | sale     | 200.00 |
+|    104 | sale     |  50.00 |
+|   9001 | refund   | -80.00 |
+|   9002 | refund   | -50.00 |
++--------+----------+--------+
+```
+
+</TabItem>
+<TabItem value="chained" label="Цепочка IVM">
+
+Использует одно IVM как базовую таблицу другого, чтобы разделить сложное вычисление на уровни: например, IVM нижнего уровня выполняет соединение, а IVM верхнего уровня выполняет агрегацию. IVM, используемое как базовая таблица, само является таблицей Unique Key Merge-on-Write, поэтому, как и для других базовых таблиц Merge-on-Write, для него необходимо включить changelog и сохранение образа строки до изменения. Иначе IVM верхнего уровня создать нельзя; например, если changelog не включён, создание завершается ошибкой `changelog is not enabled for table`.
+
+```sql
+CREATE MATERIALIZED VIEW mv_sales_city_detail
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
+)
+AS
+SELECT s.sale_id, c.city, s.amount
+FROM sales s
+INNER JOIN customers c ON s.customer_id = c.customer_id;
+
+CREATE MATERIALIZED VIEW mv_city_total
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT city, COUNT(*) AS sale_cnt, SUM(amount) AS total_amount
+FROM mv_sales_city_detail
+GROUP BY city;
+```
+
+IVM верхнего уровня может читать только результаты, уже обновлённые IVM нижнего уровня, поэтому сначала обновите нижний уровень, а затем верхний. После обоих обновлений запрос к `mv_city_total` возвращает:
+
+```text
++----------+----------+--------------+
+| city     | sale_cnt | total_amount |
++----------+----------+--------------+
+| Beijing  |        2 |       200.00 |
+| Shanghai |        1 |       200.00 |
++----------+----------+--------------+
+```
+
+Обычное асинхронное материализованное представление, не являющееся IVM, нельзя использовать как базовую таблицу IVM.
+
+</TabItem>
+</Tabs>
+
+### Поддерживаемые агрегатные функции {#supported-aggregate-functions}
+
+IVM поддерживает следующие агрегатные функции. Их аргументами могут быть столбцы или детерминированные выражения:
+
+- `COUNT(*)`, `COUNT(expr)`
+- `SUM`
+- `AVG`
+- `MIN`
+- `MAX`
+- `BITMAP_UNION`
+- `BITMAP_UNION_COUNT`
+- `ARRAY_AGG`
+- `COLLECT_LIST` (только форма с одним аргументом)
+
+Во всех следующих примерах таблица `sales` группируется по каналу:
+
+<Tabs>
+<TabItem value="count" label="COUNT" default>
+
+`COUNT(*)` подсчитывает строки; `COUNT(expr)` подсчитывает только строки, в которых `expr` не равен `NULL`. Значение `customer_id` заказа 104 из магазина равно `NULL`, поэтому `member_sale_cnt` для канала магазина равно 0.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_count
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       COUNT(*) AS sale_cnt,
+       COUNT(customer_id) AS member_sale_cnt
+FROM sales
+GROUP BY channel;
+```
+
+Результат:
+
+```text
++---------+----------+-----------------+
+| channel | sale_cnt | member_sale_cnt |
++---------+----------+-----------------+
+| app     |        1 |               1 |
+| store   |        1 |               0 |
+| web     |        2 |               2 |
++---------+----------+-----------------+
+```
+
+</TabItem>
+<TabItem value="sum" label="SUM">
+
+Вычисляет сумму. Аргументом может быть столбец или детерминированное выражение, например для суммирования только заказов на сумму 100 и более.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_sum
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       SUM(amount) AS total_amount,
+       SUM(IF(amount >= 100, amount, 0)) AS large_amount
+FROM sales
+GROUP BY channel;
+```
+
+Результат:
+
+```text
++---------+--------------+--------------+
+| channel | total_amount | large_amount |
++---------+--------------+--------------+
+| app     |        80.00 |         0.00 |
+| store   |        50.00 |         0.00 |
+| web     |       320.00 |       320.00 |
++---------+--------------+--------------+
+```
+
+</TabItem>
+<TabItem value="avg" label="AVG">
+
+Вычисляет среднее значение. Doris дополнительно хранит в материализованном представлении скрытые сумму и количество и использует их для пересчёта среднего при инкрементальных обновлениях.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_avg
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel, AVG(amount) AS avg_amount
+FROM sales
+GROUP BY channel;
+```
+
+Результат:
+
+```text
++---------+------------+
+| channel | avg_amount |
++---------+------------+
+| app     |    80.0000 |
+| store   |    50.0000 |
+| web     |   160.0000 |
++---------+------------+
+```
+
+</TabItem>
+<TabItem value="min-max" label="MIN / MAX">
+
+Вычисляет минимум и максимум.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_minmax
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel, MIN(amount) AS min_amount, MAX(amount) AS max_amount
+FROM sales
+GROUP BY channel;
+```
+
+Результат:
+
+```text
++---------+------------+------------+
+| channel | min_amount | max_amount |
++---------+------------+------------+
+| app     |      80.00 |      80.00 |
+| store   |      50.00 |      50.00 |
+| web     |     120.00 |     200.00 |
++---------+------------+------------+
+```
+
+Новое записанное значение можно непосредственно сравнить с текущими минимумом и максимумом. Но если удаляемая или обновляемая строка содержит текущий минимум или максимум, новый результат нельзя вывести из существующего и необходимо заново прочитать все данные. Например, если после создания базового состояния удалить заказ 101 (120.00, текущий минимум веб-канала), строгое обновление `INCREMENTAL` завершится ошибкой со значением `IvmFallbackReason` `MIN_MAX_BOUNDARY_HIT`, а обновление `INCREMENTAL FALLBACK` перейдёт к `COMPLETE`.
+
+</TabItem>
+<TabItem value="bitmap" label="Агрегация Bitmap">
+
+`BITMAP_UNION` объединяет Bitmap группы, а `BITMAP_UNION_COUNT` возвращает количество уникальных значений в объединённом результате; эти функции часто используются для точного подсчёта уникальных значений. В следующем примере подсчитываются уникальные клиенты каждого канала: `customer_bitmap` хранит множество идентификаторов клиентов, а `customer_cnt` содержит количество уникальных клиентов. Заказ 104, у которого `customer_id` равен `NULL`, не учитывается.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_bitmap
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       BITMAP_UNION(TO_BITMAP(customer_id)) AS customer_bitmap,
+       BITMAP_UNION_COUNT(TO_BITMAP(customer_id)) AS customer_cnt
+FROM sales
+GROUP BY channel;
+```
+
+Для просмотра столбцов Bitmap их необходимо преобразовать с помощью `BITMAP_TO_STRING`:
+
+```sql
+SELECT channel, BITMAP_TO_STRING(customer_bitmap) AS customers, customer_cnt
+FROM mv_agg_bitmap
+ORDER BY channel;
+```
+
+```text
++---------+-----------+--------------+
+| channel | customers | customer_cnt |
++---------+-----------+--------------+
+| app     | 1         |            1 |
+| store   |           |            0 |
+| web     | 1,2       |            2 |
++---------+-----------+--------------+
+```
+
+Bitmap хранит только объединённый результат, поэтому из него нельзя вычесть значения, внесённые одной строкой. Если строка, участвующая в агрегации, удаляется или обновляется и в её группе остаются другие строки, необходимо пересчитать весь Bitmap: строгое обновление `INCREMENTAL` завершается ошибкой со значением `IvmFallbackReason` `BITMAP_AGG_DELETE`, а `INCREMENTAL FALLBACK` переходит к `COMPLETE`.
+
+</TabItem>
+<TabItem value="array" label="Агрегация массивов">
+
+`ARRAY_AGG` и `COLLECT_LIST` собирают значения группы в массив. Они по-разному обрабатывают `NULL`: `ARRAY_AGG` сохраняет элементы `NULL`, а `COLLECT_LIST` пропускает `NULL`.
+
+```sql
+CREATE MATERIALIZED VIEW mv_agg_array
+BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT channel,
+       ARRAY_AGG(customer_id) AS customer_ids,
+       COLLECT_LIST(customer_id) AS member_ids
+FROM sales
+GROUP BY channel;
+```
+
+Результат:
+
+```text
++---------+--------------+------------+
+| channel | customer_ids | member_ids |
++---------+--------------+------------+
+| app     | [1]          | [1]        |
+| store   | [null]       | []         |
+| web     | [1, 2]       | [1, 2]     |
++---------+--------------+------------+
+```
+
+Инкрементальные обновления поддерживают массив как неупорядоченное мультимножество, поэтому порядок его элементов не фиксирован. `COLLECT_LIST` поддерживает только форму с одним аргументом; форма `COLLECT_LIST(expr, max_size)` с ограничением максимальной длины не поддерживается. `ARRAY_AGG` не поддерживает элементы JSONB или VARIANT.
+
+</TabItem>
+</Tabs>
+
+Агрегатные функции с `DISTINCT`, например `COUNT(DISTINCT customer_id)`, не поддерживаются. Для точного подсчёта уникальных значений в столбце неотрицательных целых чисел используйте `BITMAP_UNION_COUNT(TO_BITMAP(customer_id))`, но при этом удаления и обновления требуют полного пересчёта Bitmap, как описано ниже.
+
+При удалении строк некоторые агрегатные функции не могут безопасно вычислить новый результат только по текущей дельте. Обновление в таблице Unique Key удаляет старую строку, а затем записывает новую, поэтому обновления также могут приводить к следующим ситуациям:
+
+- Если удаляемое значение может быть текущим `MIN` или `MAX`, необходимо заново прочитать все данные.
+- Если удаление затрагивает результат агрегации Bitmap, необходимо пересчитать весь Bitmap.
+
+Строгое обновление `INCREMENTAL` в этих случаях завершается ошибкой; `INCREMENTAL FALLBACK` переходит к `COMPLETE`.
+
+### Неподдерживаемые формы запросов {#unsupported-query-forms}
+
+Следующие формы не поддерживаются, и при явном указании `REFRESH INCREMENTAL` создание завершается ошибкой:
+
+- `UNION` (то есть `UNION DISTINCT`), `INTERSECT` и `EXCEPT`.
+- `ORDER BY`, `LIMIT` и оконные функции.
+- `HAVING` и агрегации внутри подзапроса `FROM` или входных данных соединения. Агрегация может быть только самой внешней операцией запроса; чтобы отфильтровать результаты агрегации, применяйте фильтр при запросе к материализованному представлению.
+- Подзапросы в `WHERE` или в списке `SELECT`, например `IN (SELECT ...)`, `EXISTS (SELECT ...)` и скалярные подзапросы. Подзапросы `IN` и скалярные подзапросы могут завершаться ошибкой `Multiple columns returned by subquery are not yet supported`; причина также в том, что IVM не поддерживает эти подзапросы.
+- Предложения `WITH` (CTE). Перепишите их в виде подзапросов `FROM`.
+- `LATERAL VIEW`.
+- Использование обычного асинхронного материализованного представления как базовой таблицы. Для сопровождения цепочки представлений материализованное представление нижнего уровня также должно быть IVM.
+- Любые другие операции, не перечисленные в таблице выше.
+
+{/* Knowledge type: Runtime behavior / Failure handling */}
+{/* Use cases: Configuring the refresh strategy / Automatic refresh interval / Diagnosing IVM fallback / Rebuilding the baseline */}
+
+## Обновление и переход к резервным способам {#refresh-and-fallback}
+
+### Выбор стратегии обновления при создании {#choosing-the-refresh-strategy-at-creation-time}
+
+| Определение | Поведение при создании | Поведение последующих обновлений по умолчанию |
+|---|---|---|
+| `REFRESH INCREMENTAL` | Строго проверяет соответствие поддерживаемым возможностям IVM; при отсутствии поддержки создание завершается ошибкой | Пробует только IVM; при ошибке IVM задача завершается ошибкой |
+| `REFRESH INCREMENTAL FALLBACK` | Как в строгом режиме; проверка IVM по-прежнему должна быть пройдена | Сначала пробует IVM, затем переходит к резервному способу в зависимости от причины |
+| `REFRESH AUTO` | Проверяет, поддерживает ли определение IVM; если нет, создаёт обычное асинхронное материализованное представление | Для представлений с поддержкой IVM по очереди пробует IVM, обновление партиций и полное обновление |
+| `REFRESH PARTITIONS [FALLBACK]` | Требует, чтобы в материализованном представлении было определено `PARTITION BY` | Пересчитывает изменённые партиции; при наличии `FALLBACK` может перейти к полному обновлению |
+| `REFRESH COMPLETE` | Не создаёт метаданные IVM | Всегда выполняет полное обновление |
+
+### Настройка интервала автоматического обновления {#setting-the-automatic-refresh-interval}
+
+IVM использует способы запуска асинхронных материализованных представлений и не имеет собственного синтаксиса запуска. Укажите способ запуска в предложении `ON` после `REFRESH INCREMENTAL [FALLBACK]`:
+
+| Способ запуска | Синтаксис | Описание |
+|---|---|---|
+| Вручную | `ON MANUAL` | По умолчанию. Обновление выполняется только при выполнении `REFRESH MATERIALIZED VIEW` |
+| По расписанию | `ON SCHEDULE EVERY <interval> <unit> [STARTS '<start_time>']` | Автоматически выполняет инкрементальное обновление с фиксированным интервалом |
+| При фиксации транзакции | `ON COMMIT` | Автоматически выполняет инкрементальное обновление после фиксации транзакции загрузки в базовой таблице |
+
+Правила задания интервала расписания:
+
+- `<interval>` должен быть положительным целым числом, а `<unit>` может принимать значения `MINUTE`, `HOUR`, `DAY` или `WEEK`.
+- **Минимальный интервал обновления: `EVERY 1 MINUTE`.** Указание `SECOND` приводит к ошибке `interval time unit can not be second`. Параметр FE `enable_job_schedule_second_for_test` разрешает интервалы с точностью до секунд, но предназначен только для тестирования и не должен включаться в рабочей среде.
+- `STARTS` задаёт время первого запуска по расписанию в формате `'yyyy-MM-dd HH:mm:ss'`, которое должно быть позже текущего времени. Если оно не задано, первое обновление выполняется через один интервал после создания материализованного представления. Последующие запуски назначаются на время первого запуска плюс целое число интервалов независимо от времени завершения предыдущей задачи.
+
+В следующем примере инкрементальное обновление выполняется каждые 5 минут с разрешённым переходом к резервному способу, если изменение нельзя обработать инкрементально:
+
+```sql
+CREATE MATERIALIZED VIEW orders_by_status
+BUILD IMMEDIATE
+REFRESH INCREMENTAL FALLBACK ON SCHEDULE EVERY 5 MINUTE
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1"
+)
+AS
+SELECT
+    order_status,
+    COUNT(*) AS order_count,
+    SUM(amount) AS total_amount
+FROM orders
+GROUP BY order_status;
+```
+
+Задачи по расписанию и при фиксации транзакции выполняются со стратегией обновления, заданной при создании материализованного представления: `INCREMENTAL` пробует только IVM, `INCREMENTAL FALLBACK` сначала пробует IVM, а затем переходит к резервному способу в зависимости от причины, а `AUTO` по очереди пробует IVM, обновление партиций и полное обновление. Автоматически запускаемые задачи также имеют следующие особенности:
+
+- **Первое автоматическое обновление самостоятельно создаёт базовое состояние.** Если материализованное представление ещё ни разу не было успешно обновлено (например, оно создано с `BUILD DEFERRED` и пока не обновлялось), первая задача по расписанию или при фиксации транзакции автоматически выполняет `COMPLETE` для создания полного базового состояния; выполнять `COMPLETE` вручную не требуется. Последующие задачи обновляют данные инкрементально.
+- **Задачи обновления одного материализованного представления выполняются последовательно, а лишние события запуска пропускаются.** Сохраняется не более одной выполняемой и одной ожидающей автоматически запущенной задачи. Если интервал короче длительности одного обновления или базовые таблицы фиксируют транзакции очень часто при использовании `ON COMMIT`, новые события запуска пропускаются и метрика FE `async_materialized_view_task_skip_num` увеличивается. Ожидающая задача обрабатывает все накопленные изменения за один запуск, поэтому изменения не теряются, но фактическая задержка обновления превышает настроенный интервал. Выбирайте интервал, за который одно инкрементальное обновление успевает завершиться при обычной нагрузке.
+- **`ON COMMIT` срабатывает только для базовых таблиц, участвующих в инкрементальном сопровождении.** Фиксации транзакций в таблицах, перечисленных в `excluded_trigger_tables`, не запускают обновление. См. раздел [excluded_trigger_tables](#excluded_trigger_tables).
+
+При изменении способа запуска указывайте только предложение `ON` и не повторяйте `INCREMENTAL`. Способ обновления IVM нельзя изменить с помощью `ALTER`, поэтому `ALTER MATERIALIZED VIEW ... REFRESH INCREMENTAL ...` отклоняется; менять только способ запуска разрешено, при этом Doris пересоздаёт задание планировщика с новым способом запуска:
+
+```sql
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON SCHEDULE EVERY 1 MINUTE;
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON COMMIT;
+ALTER MATERIALIZED VIEW orders_by_status REFRESH ON MANUAL;
+```
+
+### Ручное переопределение способа обновления {#overriding-the-refresh-method-manually}
+
+После создания IVM при необходимости можно выполнять любую из следующих команд:
+
+```sql
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL;
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL FALLBACK;
+REFRESH MATERIALIZED VIEW <mv_name> PARTITIONS;
+REFRESH MATERIALIZED VIEW <mv_name> PARTITIONS FALLBACK;
+REFRESH MATERIALIZED VIEW <mv_name> COMPLETE;
+```
+
+IVM не допускает устаревший синтаксис `PARTITION (<partition_name>)` или `PARTITIONS (<partition_name>, ...)` для явного указания обновляемых партиций. Используйте ключевое слово `PARTITIONS`, чтобы Doris определил партиции, требующие обновления, или `COMPLETE` для обновления всех данных.
+
+### Порядок перехода к резервным способам {#fallback-order}
+
+Если запрос разрешает переход к резервным способам, по умолчанию Doris пробует их в следующем порядке:
+
+```text
+IVM -> PARTITIONS -> COMPLETE
+```
+
+Некоторые ошибки означают, что существующее базовое состояние IVM больше нельзя безопасно использовать. В этих случаях Doris пропускает обновление партиций и сразу выполняет `COMPLETE`. Типичные причины:
+
+| `IvmFallbackReason` | Значение | Восстановление |
+|---|---|---|
+| `STREAM_UNSUPPORTED` | Внутренний Stream отсутствует или больше не может использоваться | Полное обновление, которое также пересоздаёт внутренние Stream и повторно согласует позиции потребления |
+| `MIN_MAX_BOUNDARY_HIT` | Удаление может изменить текущий `MIN` или `MAX` | Полностью пересчитать результат агрегации |
+| `BITMAP_AGG_DELETE` | Удаление затрагивает агрегацию Bitmap | Полностью пересчитать Bitmap |
+| `PLAN_SIGNATURE_MISMATCH` | Текущий план запроса не соответствует сохранённой структуре IVM | Полное обновление и создание нового базового состояния |
+| `INCOMPLETE_REFRESH_SNAPSHOT` | Для цепочки резервных способов ещё нет снимка полного обновления | Полное обновление для создания базового состояния |
+
+Строгое обновление `INCREMENTAL` никогда не переходит к резервным способам. Если задача завершается ошибкой, материализованное представление сохраняет данные, которые были в нём до обновления, а позиции потребления внутренних Stream не продвигаются. После исправления ошибки можно снова выполнить инкрементальное обновление или выполнить `COMPLETE` для перестроения базового состояния.
+
+### Первое обновление и перестроение базового состояния {#first-refresh-and-baseline-rebuild}
+
+Инкрементальное обновление может обрабатывать только изменения, сделанные после создания базового состояния. Базовое состояние представляет собой результат последнего полного вычисления материализованного представления вместе с согласованными с ним позициями потребления внутренних Stream. Doris отслеживает действительность базового состояния для каждой партиции материализованного представления: партиции с недействительным базовым состоянием перестраиваются полностью, а остальные продолжают обновляться инкрементально.
+
+**Первое обновление**
+
+Пока материализованное представление не было успешно обновлено, ни у одной его партиции нет базового состояния. Независимо от запрошенного способа первое обновление полностью вычисляет все данные:
+
+| Запрос на обновление | Поведение первого обновления |
+|---|---|
+| `COMPLETE` | Полностью обновляет все данные |
+| `INCREMENTAL` | Сначала перестраивает все партиции, затем обрабатывает дельту |
+| `INCREMENTAL FALLBACK`, `AUTO` | Сразу выполняет `COMPLETE` |
+| Запуск по расписанию или при фиксации транзакции | Выполняет `COMPLETE`, см. раздел [Настройка интервала автоматического обновления](#setting-the-automatic-refresh-interval) |
+
+Значение `RefreshMode` у всех этих задач равно `COMPLETE`, а `IvmFallbackReason` пусто. Поэтому после создания IVM отдельно выполнять `COMPLETE` не требуется; в разделе [Быстрый старт](#quick-start) команда `COMPLETE` выполняется явно только для наглядного выделения этапа создания базового состояния.
+
+**Аннулирование базового состояния отдельных партиций**
+
+Следующие операции с базовыми таблицами изменяют только метаданные и не записывают изменения в changelog, поэтому инкрементальное обновление не может определить по записям изменений, какие строки были удалены или заменены. Партиции материализованного представления, читающие эти партиции базовых таблиц, необходимо перестроить:
+
+- `TRUNCATE TABLE`, включая очистку только отдельных партиций
+- `ALTER TABLE ... DROP PARTITION`
+- `RECOVER PARTITION`
+- `ALTER TABLE ... REPLACE PARTITION` со строгим сопоставлением диапазонов, используемым по умолчанию
+
+Если материализованное представление партиционировано по столбцу партиционирования базовой таблицы, Doris помечает только затронутые партиции материализованного представления. Следующее обновление, включая строгое `INCREMENTAL`, сначала перестраивает эти партиции, а затем инкрементально обновляет остальные. Столбец `IvmRebuiltPartitions` в `tasks("type"="mv")` показывает, сколько дополнительных партиций было перестроено при обновлении. При удалении партиции базовой таблицы соответствующая партиция материализованного представления удаляется во время синхронизации партиций и не требует перестроения.
+
+Если материализованное представление не партиционировано или Doris не может определить затронутые партиции материализованного представления, базовое состояние всего материализованного представления становится недействительным, как описано ниже. Эти операции с базовыми таблицами, перечисленными в `excluded_trigger_tables`, не аннулируют базовое состояние.
+
+**Аннулирование базового состояния всего материализованного представления**
+
+Следующие ситуации аннулируют базовое состояние всего материализованного представления и переводят его в состояние `SCHEMA_CHANGE`, которое можно проверить в столбцах `State` и `SchemaChangeDetail` функции `mv_infos`:
+
+- В базовой таблице выполняется `DROP COLUMN`, `MODIFY COLUMN`, `RENAME COLUMN`, `RENAME` (переименование таблицы) или `REPLACE WITH TABLE`. `ADD COLUMN` не аннулирует базовое состояние. Таблицы с changelog не допускают `MODIFY COLUMN` и `RENAME COLUMN`, см. раздел [Ограничения DDL для changelog](../../../data-operate/incremental/changelog#ddl-restrictions).
+- В базовой таблице выполняется `REPLACE PARTITION` без строгого сопоставления диапазонов либо операцию с партициями из предыдущего списка невозможно сопоставить с конкретными партициями материализованного представления.
+- Изменение свойства расширяет область данных, сопровождаемых материализованным представлением: удаление базовой таблицы из `excluded_trigger_tables`, расширение или снятие ограничения `ivm_partition_window_limit` либо расширение диапазона `partition_sync_limit`.
+
+Пока материализованное представление находится в состоянии `SCHEMA_CHANGE`, следующее обновление `INCREMENTAL`, `INCREMENTAL FALLBACK`, `AUTO`, `COMPLETE` или `PARTITIONS FALLBACK` перестраивает всё материализованное представление, и после успешного завершения состояние возвращается к `NORMAL`. Обновление `PARTITIONS` без `FALLBACK` завершается ошибкой с предложением использовать `COMPLETE`, `AUTO` или `PARTITIONS FALLBACK`.
+
+Если после изменения базовой таблицы SQL определения больше не поддаётся анализу, например из-за удаления столбца, используемого материализованным представлением, каждое обновление завершается ошибкой и материализованное представление необходимо удалить и создать заново.
+
+**Внутренний Stream недоступен**
+
+Если внутренний Stream отсутствует или больше не может использоваться, `INCREMENTAL FALLBACK` и `AUTO` сразу выполняют `COMPLETE` со значением `IvmFallbackReason` `STREAM_UNSUPPORTED`; обновление `COMPLETE` пересоздаёт внутренние Stream и повторно согласует позиции потребления. Строгое обновление `INCREMENTAL` завершается ошибкой, и необходимо один раз выполнить `COMPLETE` или `AUTO`.
+
+{/* Knowledge type: Troubleshooting */}
+{/* Use cases: Verifying the delta plan / Previewing refresh data */}
+
+## Предварительный просмотр и анализ дельта-плана {#previewing-and-explaining-the-delta-plan}
+
+### Просмотр плана обновления с помощью EXPLAIN {#viewing-the-refresh-plan-with-explain}
+
+Следующая команда только формирует план. Она не изменяет данные материализованного представления, позиции внутренних Stream или метаданные IVM:
+
+```sql
+EXPLAIN REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL;
+```
+
+По умолчанию план включает только Stream, в которых сейчас есть ещё не обработанные данные. Для просмотра полной структуры дельта-плана используйте:
+
+```sql
+EXPLAIN REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH ALL STREAMS;
+```
+
+`WITH ALL STREAMS` также добавляет в план Stream, данные которых уже полностью обработаны, что полезно для изучения полной структуры инкрементального вычисления соединения нескольких таблиц. Сохранённое состояние при этом не изменяется.
+
+Также можно посмотреть план полного обновления:
+
+```sql
+EXPLAIN REFRESH MATERIALIZED VIEW <mv_name> COMPLETE;
+```
+
+### Просмотр записываемых строк с помощью DRY RUN {#viewing-the-rows-to-be-written-with-dry-run}
+
+`WITH DRY RUN` выполняет дельта-запрос следующего инкрементального обновления и возвращает результат клиенту, не записывая данные в материализованное представление и не продвигая позиции Stream:
+
+```sql
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH DRY RUN;
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH DRY RUN LIMIT 100;
+REFRESH MATERIALIZED VIEW <mv_name> INCREMENTAL WITH DRY RUN LIMIT 100 OFFSET 200;
+```
+
+Результат содержит строки, которые обновление фактически записало бы, поэтому, помимо бизнес-столбцов, он включает внутренние столбцы, такие как IVM, Sequence и Delete Sign. Пока данные базовых таблиц не меняются, повторные выполнения возвращают одинаковый результат.
+
+`DRY RUN` поддерживает только обновление `INCREMENTAL` для IVM. Его нельзя сочетать с `COMPLETE`, `EXPLAIN` или обновлением партиций.
+
+{/* Knowledge type: Operations */}
+{/* Use cases: Monitoring internal Streams / Lifecycle management */}
+
+## Внутренние Table Stream {#internal-table-streams}
+
+IVM автоматически управляет полным жизненным циклом своих внутренних Table Stream:
+
+- При создании IVM для каждой базовой таблицы, участвующей в инкрементальном сопровождении, создаётся внутренний Stream.
+- При изменении `excluded_trigger_tables` внутренние Stream добавляются или удаляются в соответствии с новым набором базовых таблиц.
+- При удалении IVM внутренние Stream, принадлежащие этому материализованному представлению, удаляются.
+- Во время обновления позиции потребления записываются и продвигаются отдельно для каждой партиции базовой таблицы.
+
+Посмотреть соответствие между базовыми таблицами и внутренними Stream можно непосредственно с помощью `mv_infos`:
+
+```sql
+SELECT Name, IvmBaseTableStreams
+FROM mv_infos("database" = "<database_name>")
+WHERE Name = "<mv_name>";
+```
+
+Также можно проверить состояние Stream и объём необработанных данных по партициям в `information_schema.table_streams` и `information_schema.table_stream_consumption`.
+
+:::warning Не управляйте внутренними Stream вручную
+Имена внутренних Stream начинаются с `__doris_ivm_stream_`, и эти Stream зарезервированы для IVM. Не потребляйте их через `INSERT INTO ... SELECT` и не удаляйте и не пересоздавайте их вручную. Doris отклоняет обычное потребление внутренних Stream через `INSERT INTO`.
+:::
+
+Семантику позиций потребления, снимков и конкурентного доступа Table Stream см. в разделах [Основы Table Stream](../../../data-operate/incremental/table-stream) и [Расширенные возможности Table Stream](../../../data-operate/incremental/table-stream-advanced).
+
+{/* Knowledge type: Configuration parameters */}
+{/* Use cases: IVM key design / Incremental partition window / Refresh resource control */}
+
+## Свойства IVM {#ivm-properties}
+
+Сначала выбирайте свойства с учётом идентификации строк, окна партиций и связей запуска обновления, затем оцените их влияние по разделам ниже.
+
+| Свойство | По умолчанию | Можно изменить | Действие |
+|---|---|---|---|
+| `ivm_use_full_keys` | `false` | Нет | Добавляет ключи идентификации исходных строк в Unique Key материализованного представления, снижая риск коллизий хеша |
+| `ivm_partition_window_limit` | Без ограничений | Да | Сопровождает только последние N партиций указанных базовых таблиц, упорядоченных по значению партиции |
+| `excluded_trigger_tables` | Нет | Да | Базовые таблицы, для которых не создаётся внутренний Stream и которые сами по себе не запускают инкрементальное обновление |
+
+### ivm_use_full_keys {#ivm_use_full_keys}
+
+`ivm_use_full_keys` определяет, включает ли Unique Key материализованного представления также ключи идентификации исходных строк:
+
+| Параметр | Описание |
+|---|---|
+| Тип | Логический |
+| По умолчанию | `false` |
+| Можно изменить | Нет; задаётся только при создании IVM |
+| Действие | Снижает риск коллизий при хешировании составного идентификатора строки |
+| Затраты | Увеличивает ширину ключа и затраты на хранение материализованного представления |
+
+```sql
+PROPERTIES (
+    "ivm_use_full_keys" = "true"
+)
+```
+
+Включайте это свойство, если запрос содержит соединения нескольких таблиц, `UNION ALL` или цепочки IVM и для вашей нагрузки особенно важно избежать коллизий хеша идентификаторов строк. Перед включением убедитесь, что типы и суммарная длина исходных ключей соответствуют ограничениям Unique Key в Doris.
+
+### ivm_partition_window_limit {#ivm_partition_window_limit}
+
+`ivm_partition_window_limit` ограничивает каждое обновление IVM последними N партициями указанных базовых таблиц, упорядоченными по значению партиции. Формат: `<table_name>:<partition_count>`, несколько таблиц разделяются запятыми:
+
+```sql
+PROPERTIES (
+    "ivm_partition_window_limit" = "orders:7,users:1"
+)
+```
+
+Это свойство ограничивает только партиции, читаемые при инкрементальном обновлении IVM. Оно не задаёт политику хранения партиций материализованного представления. `COMPLETE` по-прежнему читает базовые таблицы целиком и строит полный результат. Изменения в старых партициях, исключённых окном, никогда не попадают в последующие результаты IVM, поэтому эта настройка приводит к потере части изменений и подходит только для нагрузок, которым явно нужны лишь последние партиции.
+
+Это свойство можно изменить с помощью `ALTER MATERIALIZED VIEW ... SET`. После расширения окна или снятия ограничения ранее проигнорированные изменения невозможно восстановить из существующих позиций потребления, поэтому базовое состояние материализованного представления становится недействительным и следующее обновление перестраивает всё материализованное представление. См. раздел [Первое обновление и перестроение базового состояния](#first-refresh-and-baseline-rebuild).
+
+### excluded_trigger_tables {#excluded_trigger_tables}
+
+Для базовых таблиц, перечисленных в `excluded_trigger_tables`, не создаётся внутренний Stream, и сами по себе они не запускают инкрементальное обновление. Когда обновление запускается изменениями в других базовых таблицах, Doris всё равно читает текущие данные этих таблиц во время вычислений.
+
+Исключайте только редко меняющиеся таблицы измерений или таблицы, изменения которых могут ждать обновления, запущенного другой базовой таблицей. Если исключить часто меняющуюся таблицу, после её самостоятельного изменения результаты материализованного представления будут оставаться устаревшими.
+
+### Свойства ресурсов и партиций {#resource-and-partition-properties}
+
+- `workload_group`: Workload Group, используемая задачами обновления для ограничения ресурсов CPU и памяти.
+- `partition_sync_limit`, `partition_sync_time_unit`: управляют диапазоном партиций, которые материализованное представление хранит и синхронизирует. Это отличается от окна инкрементального чтения, задаваемого `ivm_partition_window_limit`.
+- `refresh_partition_num`: определяет, сколько партиций обрабатывает один `INSERT` при обновлении партиций и переходе к резервному способу. Не управляет количеством строк в дельте IVM.
+
+Все свойства материализованных представлений описаны в разделе [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
+
+{/* Knowledge type: Limitations */}
+{/* Use cases: Production readiness / Performance risk review */}
+
+## Ограничения и примечания {#limitations-and-notes}
+
+- IVM можно включить только при создании материализованного представления. Нельзя превратить обычное материализованное представление в IVM с помощью `ALTER MATERIALIZED VIEW` или задать для IVM другой способ обновления по умолчанию. Для переключения пересоздайте материализованное представление.
+- Включение changelog увеличивает затраты на запись и хранение. Таблицам Unique Key MoW также требуется читать и хранить значения до каждого обновления. Включайте его только для базовых таблиц, которым действительно нужно IVM, и перед использованием в рабочей среде оцените пропускную способность загрузки на реалистичных нагрузках.
+- IVM по-прежнему обновляется через асинхронные задачи и не обеспечивает согласованность с транзакциями базовых таблиц в реальном времени. Задержка обновления зависит от способа запуска, времени ожидания в очереди и времени выполнения дельта-плана. Минимальный интервал расписания составляет 1 минуту, см. раздел [Настройка интервала автоматического обновления](#setting-the-automatic-refresh-interval).
+- Сложные вложенные внешние соединения увеличивают дельта-план, особенно при сложных поддеревьях на стороне, порождающей NULL. Если планирование или обновление становится слишком затратным, упростите соединения или сначала материализуйте сложное поддерево в виде IVM нижнего уровня.
+- `MIN`, `MAX` и агрегации Bitmap требуют полного пересчёта в некоторых сценариях удаления. В рабочей среде используйте `INCREMENTAL FALLBACK` или `AUTO` и отслеживайте `IvmFallbackReason`.
+- Ограничения changelog по моделям таблиц, типам столбцов, изменениям схемы и удалениям непосредственно применяются к IVM. См. раздел [Поддерживаемые возможности и ограничения changelog](../../../data-operate/incremental/changelog#supported-scope-and-limitations).
+
+{/* Knowledge type: FAQ / Troubleshooting */}
+{/* Use cases: Creation failure / Refresh fallback / Baseline rebuild / Data latency */}
+
+## Частые вопросы {#faq}
+
+Если создание завершается ошибкой, обновление переходит к резервному способу или данные не обновляются, используйте следующую таблицу для поиска причины.
+
+| Проблема | Диагностика и решение |
+|---|---|
+| `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` завершается ошибкой | Убедитесь, что на FE включены `enable_feature_changelog` и `enable_table_stream`, базовые таблицы соответствуют требованиям к модели таблицы и changelog, а SQL определения входит в область поддержки IVM |
+| У строгой задачи инкрементального обновления `RefreshMode` имеет значение `COMPLETE` или `IvmRebuiltPartitions` больше 0 | Это автоматическое перестроение при первом обновлении или после аннулирования базового состояния, а не ошибка. Условия описаны в разделе [Первое обновление и перестроение базового состояния](#first-refresh-and-baseline-rebuild) |
+| Обновление `PARTITIONS` без `FALLBACK` завершается ошибкой `The refresh baseline of MV ... was invalidated` | Базовое состояние всего материализованного представления недействительно. Выполните обновление с `COMPLETE`, `AUTO` или `PARTITIONS FALLBACK` |
+| `ON SCHEDULE EVERY 30 SECOND` завершается ошибкой `interval time unit can not be second` | Минимальный интервал расписания: `EVERY 1 MINUTE`, а единицей может быть только `MINUTE`, `HOUR`, `DAY` или `WEEK`. Для меньшей задержки используйте `ON COMMIT`, см. раздел [Настройка интервала автоматического обновления](#setting-the-automatic-refresh-interval) |
+| Фактическая задержка обновлений по расписанию превышает заданный интервал | Задачи одного материализованного представления выполняются последовательно, а лишние события запуска пропускаются, если одно обновление длится дольше интервала. Проверьте длительность задач в `tasks("type"="mv")` и метрику FE `async_materialized_view_task_skip_num`, затем увеличьте интервал, упростите определение или выделите обновлению больше ресурсов через `workload_group` |
+| Задача обновления переходит к `COMPLETE` | Запросите `IvmFallbackReason` в `tasks("type"="mv")` и примите меры в соответствии с причинами из раздела [Порядок перехода к резервным способам](#fallback-order) |
+| Представление не обновляется после самостоятельного изменения исключённой базовой таблицы | Таблицы в `excluded_trigger_tables` сами по себе не запускают обновления. Дождитесь обновления, запущенного другими базовыми таблицами, или выполните обновление `COMPLETE`. После удаления таблицы из `excluded_trigger_tables` следующее обновление перестроит всё материализованное представление |
+| Можно ли вручную потреблять внутренние Stream или сбрасывать их состояние | Нет. Внутренние Stream зарезервированы для IVM; Doris управляет их жизненным циклом и позициями потребления |
+
+{/* Knowledge type: Best practices */}
+{/* Use cases: Production deployment / Resource planning / Ongoing operations */}
+
+## Рекомендации {#best-practices}
+
+1. **Сначала сравните количество изменённых строк с размером партиции.** Предпочитайте IVM, когда изменения составляют небольшую долю партиции; если они охватывают большую часть партиции, `PARTITIONS` может быть проще.
+2. **В рабочей среде разрешайте безопасный переход к резервным способам.** Используйте `INCREMENTAL FALLBACK` или `AUTO`, чтобы удаления или проблемы с базовым состоянием не приводили к длительным сбоям обновления.
+3. **Выбирайте способ запуска и интервал с учётом длительности обновления.** Минимальный интервал расписания составляет 1 минуту, и интервал должен превышать длительность одного инкрементального обновления при обычной нагрузке; используйте `ON COMMIT`, если нужна меньшая задержка и базовые таблицы фиксируют транзакции не слишком часто.
+4. **Сначала проверьте базовое состояние.** Первое обновление полностью вычисляет все данные; проверьте его результат, прежде чем полагаться на инкрементальные обновления для его сопровождения.
+5. **Используйте Unique Key MoW для нагрузок с обновлениями и удалениями.** Таблицы Duplicate Key подходят только для данных, в которые выполняется лишь добавление.
+6. **Изолируйте ресурсы задач обновления.** Используйте `workload_group`, чтобы сложные дельта-планы не конкурировали с пользовательскими запросами.
+7. **Отслеживайте задачи и необработанные данные Stream.** Совместно наблюдайте за `tasks("type"="mv")`, `mv_infos` и `information_schema.table_stream_consumption`.
+8. **Регулярно анализируйте причины перехода к резервным способам.** Редкие переходы защищают корректность; постоянные переходы указывают на необходимость проверить структуру запроса, непрерывность changelog или базовое состояние.
+
+{/* Knowledge type: Step-by-step guide */}
+{/* Use cases: Cleaning up the example environment */}
+
+## Очистка окружения примера {#cleaning-up-the-example}
+
+```sql
+DROP MATERIALIZED VIEW orders_by_status;
+DROP TABLE orders;
+DROP DATABASE ivm_demo;
+```
+
+При удалении IVM Doris также удаляет его внутренние Table Stream. Отдельная команда `DROP STREAM` не требуется.
+
+{/* Knowledge type: Navigation */}
+
+## См. также {#see-also}
+
+- Общие возможности и сценарии использования асинхронных материализованных представлений: [Обзор асинхронных материализованных представлений](overview)
+- Создание, запросы и сопровождение асинхронных материализованных представлений: [Управление асинхронными материализованными представлениями и запросы к ним](functions-and-demands)
+- Выбор стратегии обновления и планирование ресурсов: [Рекомендации по использованию асинхронных материализованных представлений](use-guide)
+- Включение changelog и его ограничения: [Changelog](../../../data-operate/incremental/changelog)
+- Семантика потребления, позиций и снимков Table Stream: [Основы Table Stream](../../../data-operate/incremental/table-stream)
+- Синтаксис ручного обновления: [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
+- Просмотр соответствия между IVM и его внутренними Stream: [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)
+- Просмотр охвата обновления и причины перехода к резервному способу: [TASKS](../../../sql-manual/sql-functions/table-valued-functions/tasks)

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/damerau_levenshtein_distance",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/damerau_levenshtein_distance.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/damerau_levenshtein_distance.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5af7a9f17e75b7b403a69f151a11a732b2abd78dd411842268526acd9f9c271a",
+    "sourceTechnicalHash": "36c10bee8104baace57b27402daa1a1af9dbe2f7635c4a870146c5af26276d34",
+    "targetHash": "4a77db262aca9dfbf458004e6a09fc1173fd3496ae3e22059fa308ca375a10b5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:43:59.882Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5af7a9f17e75b7b403a69f151a11a732b2abd78dd411842268526acd9f9c271a",
+      "targetHash": "4a77db262aca9dfbf458004e6a09fc1173fd3496ae3e22059fa308ca375a10b5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

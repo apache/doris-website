@@ -1,0 +1,1326 @@
+---
+{
+    "title": "Lance Catalog",
+    "language": "ko",
+    "description": "Apache Doris Lance Catalog 가이드: Filesystem 또는 REST Namespace Catalog를 통해 Lance 데이터셋에 접근하고 병렬 읽기, 조건자 푸시다운, S3/Local TVF, 인덱스 확인, 벡터 검색 및 전문 검색을 사용하는 방법을 설명합니다."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::note
+이 기능은 실험적 기능입니다.
+
+Lance Catalog는 Apache Doris 4.1.4부터 지원됩니다.
+:::
+
+Lance는 분석 및 AI 워크로드를 위해 설계된 열 지향 데이터 형식입니다. Doris는 Lance Catalog를 사용하여 Lance Namespace의 데이터베이스와 테이블을 검색하고, 로컬 파일 시스템, S3 호환 객체 스토리지 또는 Alibaba Cloud OSS에 저장된 Lance 데이터셋을 직접 쿼리할 수 있습니다.
+
+현재 Doris는 Lance에 대한 읽기 전용 접근을 제공합니다. Lance 테이블의 생성, 쓰기, 업데이트 또는 삭제는 지원되지 않습니다.
+
+## 사용 사례 {#use-cases}
+
+| 사용 사례 | 설명 |
+|---|---|
+| Lance 데이터 직접 쿼리 | 데이터를 먼저 마이그레이션하거나 가져오지 않고 기존 Lance 데이터셋을 Doris SQL로 분석합니다. |
+| AI 벡터 검색 | Lance에 이미 있는 벡터 인덱스를 재사용하고 `vector_search()`로 검색을 실행한 뒤, 스칼라 필터링 및 Doris SQL 분석과 결합합니다. |
+| 전문 검색 | Lance에 이미 있는 FTS 역인덱스를 재사용하고 `full_text_search()`로 BM25 검색을 실행한 뒤, 스칼라 필터링 및 Doris SQL 분석과 결합합니다. |
+| 데이터 통합 | 추가 처리, 조인 또는 장기 저장을 위해 Lance 데이터를 Doris 내부 테이블로 읽어 들입니다. |
+| Namespace 관리 | 단순한 디렉터리 기반 구성에는 Filesystem Catalog를 사용합니다. Namespace, 테이블 위치 또는 임시 스토리지 자격 증명을 중앙에서 관리해야 한다면 REST Catalog를 사용합니다. |
+
+## 기능 개요 {#feature-overview}
+
+| 기능 | 지원 내용 |
+|---|---|
+| Filesystem Catalog | 로컬 파일 시스템, `file://`, `s3://` 또는 `oss://`의 warehouse를 지원합니다. |
+| REST Catalog | 인증 없음, Bearer Token, API Key 또는 사용자 지정 HTTP 헤더를 사용하는 Lance REST Namespace를 지원합니다. |
+| 메타데이터 접근 | `SHOW DATABASES`, `SHOW TABLES`, `DESC`, `SHOW INDEX`, `lance_index_entries` TVF를 지원합니다. 마지막 두 기능은 Filesystem Catalog에서만 사용할 수 있습니다. |
+| 시스템 테이블(`table$...`) | 지원되지 않습니다. 인덱스 메타데이터에는 `SHOW INDEX`와 `lance_index_entries` TVF를 사용하세요. |
+| 데이터 쿼리 | 열 가지치기, 병렬 Lance Fragment 스캔, 현재 버전의 스냅샷 일관성 읽기를 지원합니다. |
+| 조건자 푸시다운 | 호환되는 정적 스칼라 조건자와 조인 Runtime Filter를 Lance로 푸시다운할 수 있습니다. |
+| 파일 TVF | `s3()`와 `local()`을 통해 Lance 데이터셋을 직접 쿼리할 수 있습니다. |
+| 벡터 검색 | 단일 벡터 및 다중 벡터 열을 지원하고, 물리적 Lance 인덱스 세그먼트를 병렬 Split으로 사용하며, 인덱스가 적용되지 않은 Fragment는 Flat Search Split으로 유지하고, Doris에서 전역 Top-K 병합을 수행합니다. |
+| 전문 검색 | `full_text_search()`를 통해 기존 Lance FTS 역인덱스를 사용하고, Match OR/AND 및 Phrase 쿼리를 지원하며, Doris에서 전역 Top-K 병합을 수행합니다. |
+| Lance Cache | 각 BE 내에서 인덱스 및 메타데이터 캐시와 로컬 디스크 데이터 캐시를 공유합니다. |
+| 2단계 TopN 읽기 | 벡터 및 전문 검색에서 조건에 맞는 출력 열에 대해 기본적으로 활성화됩니다. `enable_lance_lazy_materialization`으로 독립적으로 제어합니다. |
+| Lance에 쓰기 | 지원되지 않습니다. |
+| Time Travel | REST Namespace가 버전을 관리하는 테이블을 포함하여 `FOR VERSION AS OF`, `FOR TIME AS OF`, `@tag(...)`, `@branch(...)`를 지원합니다. |
+| Hybrid Search | 지원되지 않습니다. |
+
+## Lance 버전 및 호환성 {#lance-version-and-compatibility}
+
+Doris BE 데이터 리더는 `lance-c v0.1.9`에 다중 벡터 검색 지원을 추가하고 내장 Lance Rust crate를 `11.0.0`(커밋 `ab6b5bbe`)으로 업그레이드하는 Doris 패치를 적용해 빌드됩니다. Doris FE는 `org.lance:lance-core:12.0.0`으로 Namespace 및 데이터셋 메타데이터를 읽습니다. FE는 메타데이터만 읽고 데이터셋에 쓰지 않으므로, FE의 더 최신 Lance 릴리스가 BE의 읽기 범위를 바꾸지는 않습니다. 데이터셋은 FE의 메타데이터 로딩과 BE의 데이터 읽기 모두에 호환되어야 합니다. 이러한 구현 버전은 데이터셋에 기록되는 Lance `data_storage_version`과 다릅니다.
+
+다음 표는 이 리더의 파일 형식 호환성을 설명합니다.
+
+| `data_storage_version` | 읽기 지원 | 참고 |
+|---|---|---|
+| `0.1` / `legacy` | 지원 | 원래 Lance 파일 형식입니다. |
+| `2.0`(writer 옵션 별칭 `0.3`) | 지원 | Lance v2 파일 형식의 초기 버전입니다. |
+| `2.1` / `stable` | 지원; 기본 안정 형식 | 내장된 Lance 버전에서 `stable` writer 옵션과 새 데이터셋의 기본 형식은 모두 `2.1`로 결정됩니다. |
+| `2.2` | 지원 | 내장된 Lance 버전에서는 안정적인 형식으로 취급하지만, 기본 writer 형식은 아닙니다. |
+| `2.3` / `next` | 실험적; 보장되지 않음 | 내장된 Lance 버전은 `2.3`을 불안정한 형식으로 표시하며, `next` writer 옵션은 `2.3`으로 결정됩니다. |
+| 이후 버전 또는 알 수 없는 버전 | 지원되지 않음 | 데이터셋을 열거나 스캔할 때 지원되지 않는 스토리지 버전 오류가 발생할 수 있습니다. |
+
+Lance SDK 릴리스 번호와 파일 형식 버전은 서로 독립적입니다. 이전 또는 이후 버전의 Lance SDK로 작성한 데이터셋은 스토리지 형식, 필수 테이블 기능 플래그, 인덱스 형식, Arrow/Lance 데이터 유형을 Doris에 내장된 버전이 모두 이해할 때만 읽을 수 있습니다. 따라서 다음 사항에 유의하세요.
+
+- Doris는 아래에 설명한 유형 제한을 전제로 `0.1`, `2.0`, `2.1`, `2.2` 스토리지 형식으로 작성된 데이터셋을 읽을 수 있을 것으로 예상됩니다.
+- 상위 버전과의 호환성은 보장되지 않습니다. 이후 Lance 릴리스로 작성하거나 수정한 데이터셋이 더 새로운 스토리지 형식, 알 수 없는 필수 manifest 기능, 더 새로운 인덱스 형식 또는 지원되지 않는 확장 유형을 사용하면 읽을 수 없을 수 있습니다.
+- 이 Doris 릴리스에서 계속 읽어야 하는 데이터셋에는 현재 기본 안정 형식인 `2.1`을 사용하고 `next`는 사용하지 마세요. 더 새로운 writer나 선택적 Lance 기능을 도입한다면, 프로덕션에서 사용하기 전에 대상 Doris 릴리스로 결과 데이터셋을 검증하세요.
+
+## Catalog 구성 {#configure-a-catalog}
+
+### 구문 {#syntax}
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "<filesystem|rest>",
+    {CatalogProperties},
+    {StorageProperties},
+    {CommonProperties}
+);
+```
+
+### 공통 속성 {#common-properties}
+
+| 속성 | 필수 | 기본값 | 설명 |
+|---|---|---|---|
+| `type` | 예 | - | `lance`여야 합니다. |
+| `lance.catalog.type` | 아니요 | `filesystem` | Catalog 유형입니다. 유효한 값은 `filesystem`과 `rest`입니다. |
+| `lance.namespace.parent` | 아니요 | 빈 값 | 지정한 Lance Namespace와 그 하위 Namespace로 접근을 제한합니다. 예를 들어 기본 구분자를 사용할 때 `production$analytics`는 2단계 Namespace를 나타냅니다. |
+| `lance.namespace.delimiter` | 아니요 | `$` | `lance.namespace.parent`를 파싱하는 데 사용하는 구분자입니다. REST Namespace 클라이언트에도 전달됩니다. 이 속성은 Doris에서 다단계 Namespace를 표시하는 방식을 변경하지 않습니다. |
+| `lance.namespace.root_database` | 아니요 | `default` | 루트 Lance Namespace가 매핑되는 Doris 데이터베이스 이름입니다. |
+| `lance.table_access_cache_ttl_seconds` | 아니요 | `60` | 음수가 아닌 정수입니다. FE 테이블 접근 캐시의 최대 수명을 초 단위로 지정하며, `0`은 캐시를 비활성화합니다. Filesystem 및 REST Catalog에 적용됩니다. Namespace가 버전을 관리하는 테이블과 제공된 스토리지 옵션이나 자격 증명이 포함된 URI가 있는 결과는 캐시하지 않습니다. [FE 테이블 접근 캐시](#fe-table-access-cache)를 참조하세요. |
+
+### Filesystem Catalog {#filesystem-catalog}
+
+Filesystem Catalog는 warehouse 디렉터리에서 Lance Namespace와 테이블을 직접 검색합니다.
+
+| 속성 | 필수 | 설명 |
+|---|---|---|
+| `warehouse` | 예 | Lance warehouse의 루트 경로입니다. 로컬 절대 경로, `file://` URI, `s3://` URI, `oss://` URI를 지원합니다. |
+
+다음 두 속성은 목적이 다릅니다.
+
+- `fs.s3.support=true`는 S3 구성 파싱을 명시적으로 선택합니다. AWS S3는 일반적으로 속성을 통해 감지할 수 있습니다. MinIO, 사용자 지정 엔드포인트 또는 S3 호환 API를 통해 접근하는 OSS의 경우, 감지 실패나 도메인에 따른 다른 스토리지 유형 선택을 피하려면 이 속성을 명시적으로 설정하세요. 아래의 모든 S3 예제에는 바로 사용할 수 있도록 이 속성이 포함되어 있습니다.
+- `use_path_style`은 요청 URL에서 버킷이 위치할 곳을 제어하며 기본값은 `false`입니다. `true`로 설정하면 `endpoint/bucket/object-path`를 사용하고, `false`로 설정하면 가상 호스트 방식으로 접근합니다. Lance의 현재 기본 S3 클라이언트에서는 명시적으로 구성한 가상 호스트 방식 엔드포인트에 버킷이 포함되어야 합니다. 서비스에서 지원하는 접근 방식에 맞춰 이 속성과 엔드포인트를 함께 설정하세요.
+
+| 접근 시나리오 | 스토리지 유형 설정 | `use_path_style` | 엔드포인트 형식 |
+|---|---|---|---|
+| AWS S3 | 권장: `fs.s3.support=true` | `false`; 생략 가능 | `https://my-bucket.s3.us-east-1.amazonaws.com`처럼 버킷을 포함합니다. |
+| MinIO(서비스 도메인 또는 IP를 통한 접근) | `fs.s3.support=true` 설정 | `true`를 명시적으로 설정 | `http://minio.example.com:9000`처럼 버킷이 없는 서비스 주소를 사용합니다. |
+| OSS S3 호환 API | `fs.s3.support=true` 설정 | `false`; 예제에서는 명시적으로 설정 | `https://my-bucket.oss-cn-beijing.aliyuncs.com`처럼 버킷을 포함합니다. |
+| 네이티브 OSS API | 권장: `fs.oss.support=true`; `fs.s3.support`는 설정하지 않음 | 범용 `use_path_style`을 설정할 필요 없음 | `https://oss-cn-beijing.aliyuncs.com`처럼 버킷이 없는 `oss.endpoint`를 사용합니다. |
+
+이 S3 엔드포인트 규칙은 Lance의 기본 S3 접근 경로에 적용됩니다. 단일 스토리지 유형을 사용하는 Filesystem Catalog에서는 해당하는 `fs.*.support=true`만 설정하세요. “호환성을 활성화”하려고 여러 스토리지 유형을 활성화하지 마세요. 이 속성은 구성 파싱을 선택할 뿐 스토리지 서비스에 프로토콜 지원을 추가하지 않습니다.
+
+warehouse를 호스팅하는 스토리지 시스템에 맞는 예제를 선택하고 버킷, 경로, 주소 및 자격 증명을 바꾸세요.
+
+<Tabs groupId="lance-filesystem-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        CREATE CATALOG lance_fs_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        이 예제는 `use_path_style=false`와 버킷이 포함된 AWS S3 엔드포인트를 사용합니다. 현재 Doris S3 속성 검증에서는 엔드포인트가 필요합니다. 여기에 표시한 `s3://my-bucket/...` URI를 사용할 때 리전만 설정하는 것으로는 충분하지 않습니다. 버킷이나 리전을 변경할 때마다 엔드포인트도 변경하세요.
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO (경로 방식)">
+        ```sql
+        CREATE CATALOG lance_fs_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        이 예제는 버킷마다 하위 도메인이 없어도 되도록 경로 방식 요청을 사용해 서비스 도메인으로 MinIO에 접근합니다. 엔드포인트에 버킷을 넣지 말고 리전을 서비스에 구성된 값으로 바꾸세요. TLS를 활성화했다면 해당 `https://` 엔드포인트를 사용하고 FE와 모든 BE가 접근할 수 있는지 확인하세요.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3 호환 접근)">
+        S3 호환 API를 통해 OSS에 접근하려면 `s3://` warehouse와 `s3.*` 연결 속성을 사용하세요.
+
+        ```sql
+        CREATE CATALOG lance_fs_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        이 예제는 가상 호스트 방식 접근을 위해 `use_path_style=false`를 설정합니다. 현재 Lance의 기본 S3 클라이언트는 명시적으로 구성한 엔드포인트에 버킷을 자동으로 추가하지 않습니다. 따라서 `s3.endpoint`에는 `https://my-bucket.oss-cn-beijing.aliyuncs.com`처럼 버킷을 포함해야 하며, `warehouse`는 `s3://my-bucket/lance`로 유지하세요. 내부 네트워크 접근에는 `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`을 사용하고 FE와 모든 BE가 접근할 수 있는지 확인하세요.
+
+        임시 STS 자격 증명에는 `"s3.session_token" = "<token>"`을 추가하세요. 이 모드는 데이터를 이동하지 않고 S3 호환 API를 통해 기존 OSS 데이터를 읽습니다. 네이티브 OSS 접근은 옆의 네이티브 OSS 예제를 참조하세요.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (네이티브 접근)">
+        ```sql
+        CREATE CATALOG lance_fs_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "oss://my-bucket/lance",
+            "fs.oss.support" = "true",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
+
+        임시 STS 자격 증명에는 `"oss.session_token" = "<token>"`을 추가하세요. 정규화된 형식인 `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance`도 허용되며 버킷 경로로 정규화됩니다. 현재 OSS-HDFS는 지원되지 않습니다.
+    </TabItem>
+
+    <TabItem value="local" label="로컬 파일 시스템">
+        ```sql
+        CREATE CATALOG lance_fs_local PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "/data/lance"
+        );
+        ```
+
+        `warehouse`는 절대 경로여야 합니다. FE와 쿼리를 실행하는 모든 BE가 같은 경로에 접근할 수 있어야 합니다. 다중 노드 배포에서는 관련된 모든 노드에 동일한 공유 디렉터리를 마운트하세요.
+    </TabItem>
+</Tabs>
+
+S3와 OSS의 경우 `warehouse`에는 `s3://bucket/path` 또는 `oss://bucket/path`처럼 버킷이 포함되어야 합니다.
+
+### REST Catalog {#rest-catalog}
+
+REST Catalog는 Lance REST Namespace를 통해 Namespace, 테이블 위치 및 스토리지 접근 매개변수를 가져옵니다. REST Catalog에는 `warehouse` 속성이 필요하지 않으며 허용되지도 않습니다.
+
+| 속성 | 필수 | 기본값 | 설명 |
+|---|---|---|---|
+| `lance.rest.uri` | 예 | - | REST 서비스 URI입니다. `http://` 또는 `https://`를 사용해야 합니다. |
+| `lance.rest.security.type` | 아니요 | `none` | 인증 유형입니다. 유효한 값은 `none`, `bearer`, `api_key`입니다. |
+| `lance.rest.bearer-token` | Bearer 인증 시 예 | - | Bearer Token입니다. |
+| `lance.rest.api-key` | API Key 인증 시 예 | - | `x-api-key` 헤더로 전송되는 API Key입니다. |
+| `lance.rest.header.<header-name>` | 아니요 | - | REST 서비스에 전송할 사용자 지정 HTTP 헤더입니다. 인증 헤더에는 위의 전용 인증 속성을 사용하세요. |
+
+REST 서비스 인증과 객체 스토리지 인증은 별개입니다. `lance.rest.*`는 Namespace 서비스에 연결하고, `s3.*` / `oss.*`는 FE와 BE가 테이블 데이터를 읽을 수 있게 합니다. Namespace가 반환하는 테이블 URI가 접근 경로를 결정합니다. `s3://`는 S3를 사용하고 `oss://`는 네이티브 OSS 접근을 사용합니다. 반환되는 테이블 URI에 따라 기본 스토리지 속성을 선택하세요.
+
+<Tabs groupId="lance-rest-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        CREATE CATALOG lance_rest_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        Namespace가 반환하는 AWS `s3://my-bucket/...` 테이블용입니다. 기본 엔드포인트에 해당 버킷이 포함되고 리전도 일치해야 합니다. 서로 다른 버킷의 테이블에는 아래 설명처럼 일치하는 엔드포인트가 필요합니다.
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO (경로 방식)">
+        ```sql
+        CREATE CATALOG lance_rest_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        Namespace가 반환하는 MinIO `s3://` 테이블용입니다. FE와 BE 모두 접근할 수 있는, 버킷이 없는 서비스 엔드포인트를 사용하세요. `use_path_style=true`는 각 테이블의 버킷을 요청 경로에 넣습니다. 리전은 MinIO 서비스 구성과 일치해야 합니다.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3 호환 접근)">
+        ```sql
+        CREATE CATALOG lance_rest_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        Namespace가 반환하는 `s3://my-bucket/...` 테이블에 OSS의 S3 호환 API를 통해 접근할 때 사용합니다. 엔드포인트에는 같은 버킷이 포함되어야 합니다. 내부 접근에는 `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`을 사용하세요. Namespace는 `s3://` URI를 반환해야 합니다. `fs.s3.support=true`를 설정해도 반환된 `oss://` URI가 S3 접근으로 바뀌지는 않습니다.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (네이티브 접근)">
+        ```sql
+        CREATE CATALOG lance_rest_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.oss.support" = "true",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
+
+        Namespace가 반환하는 `oss://` 테이블에 네이티브 OSS 접근을 사용할 때 적용합니다. `oss.endpoint`에는 버킷을 넣지 마세요. 임시 STS 자격 증명에는 `"oss.session_token" = "<token>"`을 추가하세요.
+    </TabItem>
+</Tabs>
+
+인증 없는 REST 접근에는 `lance.rest.security.type`과 인증 속성을 생략하세요. API Key 인증에는 두 속성을 `"lance.rest.security.type" = "api_key"`와 `"lance.rest.api-key" = "<api-key>"`로 바꾸세요.
+
+REST Namespace가 각 테이블의 `storage_options`에 자격 증명이나 엔드포인트를 제공하면, Doris는 해당 Catalog 기본값을 옵션별로 재정의하고 병합된 구성을 FE와 BE 모두에서 사용합니다. 자격 증명만 제공된다면 Catalog의 엔드포인트와 접근 방식은 그대로 적용됩니다. Namespace가 완전한 접근 구성을 제공하는 경우에만 모든 Catalog 스토리지 속성을 생략할 수 있습니다.
+
+S3의 경우 Namespace는 `aws_endpoint`, `aws_region`, `aws_access_key_id`, `aws_secret_access_key`, `aws_session_token`, `aws_virtual_hosted_style_request`를 사용할 수 있습니다. 마지막 옵션은 Doris의 `use_path_style`과 반대입니다. 가상 호스트 방식 접근은 `aws_virtual_hosted_style_request=true`, 경로 방식 접근은 `false`를 사용합니다. `fs.s3.support`는 Doris Catalog 속성이며 Lance `storage_options` 매개변수가 아닙니다.
+
+네이티브 OSS 접근에서는 Namespace가 `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region`, `oss_security_token` 또는 이에 해당하는 네이티브 이름인 `endpoint`, `access_key_id`, `access_key_secret`, `region`, `security_token`을 제공할 수 있습니다.
+
+테이블이 서로 다른 버킷에 있다면 예제에서 `my-bucket`으로 고정한 S3 가상 호스트 방식 엔드포인트를 공유하지 마세요. Namespace가 테이블마다 일치하는 엔드포인트와 접근 방식을 제공하도록 하거나, 버킷별로 별도 Catalog를 구성하세요. 경로 방식 접근을 지원하는 서비스에서는 버킷이 없는 서비스 엔드포인트와 `use_path_style=true`를 사용해 클라이언트가 각 테이블 URI에서 버킷을 읽도록 할 수도 있습니다.
+
+REST Namespace가 테이블의 버전을 관리한다면(`DescribeTable`의 `managed_versioning = true`), Doris는 Namespace의 버전 API를 통해 최신 버전과 Time Travel 선택자를 확인하고 스토리지에서 해당 manifest를 읽습니다. 자세한 내용과 제한 사항은 [Time Travel](#time-travel)을 참조하세요.
+
+## Namespace 매핑 {#namespace-mapping}
+
+Lance는 다단계 Namespace를 지원하지만, Doris Catalog는 각 Namespace를 데이터베이스 이름으로 나타냅니다.
+
+| Lance Namespace | Doris 데이터베이스 이름 |
+|---|---|
+| 루트 Namespace | `default`; `lance.namespace.root_database`로 구성 가능 |
+| `doris` | `doris` |
+| `doris.analytics` | `doris.analytics` |
+
+Doris는 다단계 Namespace의 각 단계를 `.`으로 연결하여 데이터베이스 이름을 만듭니다. `.`이 포함된 데이터베이스 이름을 참조할 때는 백틱을 사용하세요.
+
+```sql
+SHOW TABLES FROM lance_catalog.`doris.analytics`;
+
+SELECT *
+FROM lance_catalog.`doris.analytics`.user_features;
+```
+
+Catalog의 범위를 Namespace 하위 트리로 제한하려면 `lance.namespace.parent`를 사용하세요. 예를 들면 다음과 같습니다.
+
+```sql
+CREATE CATALOG lance_analytics PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "s3://my-bucket/lance",
+    "lance.namespace.parent" = "production$analytics",
+    "fs.s3.support" = "true",
+    "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+    "use_path_style" = "false",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>"
+);
+```
+
+그러면 Doris는 `production.analytics` 아래의 테이블과 하위 Namespace만 표시합니다.
+
+## Lance 테이블 쿼리 {#query-lance-tables}
+
+Catalog를 만든 후에는 다른 외부 테이블과 같은 방식으로 Lance 테이블을 탐색하고 쿼리할 수 있습니다.
+
+```sql
+SHOW DATABASES FROM lance_catalog;
+
+SHOW TABLES FROM lance_catalog.default;
+
+DESC lance_catalog.default.user_profiles;
+
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles
+WHERE age >= 18
+ORDER BY user_id
+LIMIT 100;
+```
+
+Lance에서 Doris 내부 테이블로 데이터를 적재할 수도 있습니다.
+
+```sql
+INSERT INTO internal.demo.user_profiles
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles;
+```
+
+일반 Catalog 쿼리에서 Doris는 계획 단계에 Lance 데이터셋 버전을 고정하고 Fragment별 스캔 작업을 생성합니다. 따라서 각 Scanner가 전체 데이터셋을 반복해서 스캔하지 않으면서 여러 Scanner가 서로 다른 Fragment를 병렬로 읽고, 쿼리는 일관된 스냅샷을 읽습니다.
+
+## Time Travel {#time-travel}
+
+Lance 데이터셋의 각 커밋은 1부터 번호가 매겨지는 새 버전을 만듭니다. 쿼리는 최신 버전 대신 이전 버전을 읽을 수 있습니다.
+
+```sql
+-- Read version 2 of the table.
+SELECT * FROM lance_catalog.db.tbl FOR VERSION AS OF 2;
+
+-- Read the latest version committed at or before the given time.
+SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
+```
+
+- `FOR VERSION AS OF`에는 양의 정수 버전 또는 Paimon 테이블 및 Iceberg의 태그 이름과 마찬가지로 따옴표로 묶은 태그 이름을 지정합니다(`FOR VERSION AS OF 'v2'`는 `@tag(v2)`와 같습니다).
+- `FOR TIME AS OF`에는 세션 시간대의 타임스탬프를 초 또는 밀리초 정밀도(`yyyy-MM-dd HH:mm:ss` 또는 `yyyy-MM-dd HH:mm:ss.SSS`)로 지정합니다. Doris는 지정한 시각까지 커밋된 버전 중 manifest에 기록된 커밋 시각이 가장 늦은 버전을 선택합니다. 같은 순간에 커밋된 버전 중에서는 더 최신 버전을 선택합니다. Iceberg가 시간으로 스냅샷을 선택할 때와 마찬가지로 커밋 시각은 기록된 값을 기준으로 비교하며, 버전 번호가 커질수록 커밋 시각도 늦어진다고 가정하지 않습니다. Lance는 밀리초 미만의 정밀도로 커밋 시각을 기록하고 Doris는 전체 값을 비교하므로, 요청한 밀리초 안에서 그 시각보다 늦게 커밋된 버전은 선택하지 않습니다. 정리 작업으로 삭제된 버전의 커밋 시각도 함께 사라집니다. 따라서 Iceberg가 만료된 스냅샷 이전의 스냅샷 로그를 제거하는 것처럼 Doris는 가장 최근에 삭제된 버전보다 새로운 버전만 고려합니다. 이들 모두보다 이른 타임스탬프는 오류입니다. 첫 버전보다 이전이거나 정리 작업으로 삭제된 기록에 속하기 때문입니다. 예를 들어 태그가 보존한 버전과 그다음으로 남아 있는 버전 사이의 시점에는 당시 테이블 상태를 알 수 없습니다.
+- 선택한 버전은 문장 전체에 대해 고정됩니다. 스키마, Fragment 계획, 조건자 푸시다운, BE 스캔 모두 해당 버전을 사용합니다. 한 문장에서 같은 테이블을 두 번 참조하면서 서로 다른 버전을 선택할 수 있습니다. `EXPLAIN`은 선택한 버전을 `lanceVersion`으로 표시합니다.
+- Lance의 `cleanup_old_versions`로 제거된 버전은 읽을 수 없으며, 존재한 적 없는 버전과 같은 방식으로 보고됩니다. REST Namespace가 버전을 관리하는 테이블에 대해서는 아래의 REST Namespace 관리형 버전 관리를 참조하세요.
+- `vector_search()`와 `full_text_search()`는 자체 `version`, `timestamp`, `tag`, `branch` 매개변수로 버전, 시각, 태그 또는 브랜치를 선택합니다. [이전 버전 또는 브랜치 검색](#search-a-historical-version-or-branch)을 참조하세요. 두 함수의 `table` 인수에는 `FOR VERSION AS OF`, `@tag`, `@branch`를 사용할 수 없습니다.
+- 인덱스 확인(`SHOW INDEX`, `lance_index_entries()`)은 항상 `main`의 최신 버전을 사용하며, 이전 버전이나 브랜치의 인덱스는 표시하지 않습니다.
+
+Lance 태그와 브랜치는 Iceberg 및 Paimon 테이블과 같은 구문으로 선택합니다.
+
+```sql
+-- Read the version the tag "v2" points at.
+SELECT * FROM lance_catalog.db.tbl@tag(v2);
+
+-- Read the latest version of the branch "dev".
+SELECT * FROM lance_catalog.db.tbl@branch(dev);
+
+-- Read version 2 of the branch "dev".
+SELECT * FROM lance_catalog.db.tbl@branch(dev) FOR VERSION AS OF 2;
+```
+
+- 태그는 브랜치의 한 버전을 가리킵니다. 태그를 읽으면 해당 브랜치의 해당 버전을 선택합니다. `dev`에서 만든 태그는 번호가 같은 `main` 버전이 아니라 `dev`를 읽습니다. `@tag`는 `FOR VERSION AS OF`나 `FOR TIME AS OF`와 함께 사용할 수 없습니다.
+- `@branch(main)`은 `@branch`를 생략했을 때와 동일하게 `main`을 읽습니다.
+- 각 브랜치에는 생성 기반 버전부터 시작하는 자체 버전 순서가 있습니다. `@branch` 뒤의 `FOR VERSION AS OF` / `FOR TIME AS OF`는 해당 브랜치의 버전만 대상으로 선택하므로, 브랜치 생성 전의 타임스탬프는 그 브랜치에서 아무것도 선택하지 않습니다. `@branch(main)`을 포함하여 `@branch` 뒤에서는 태그가 이미 브랜치를 결정하므로 `FOR VERSION AS OF`에 태그 이름을 지정할 수 없습니다.
+- 브랜치는 테이블 위치를 절대 URI로 기록하는 manifest를 가진 테이블의 얕은 복제본으로 `<table>/tree/<branch>/` 아래에 저장됩니다. 따라서 브랜치는 생성된 위치에서만 읽을 수 있습니다. 데이터셋을 다른 곳으로 복사하거나 이동하면 `main`은 계속 읽을 수 있지만 브랜치는 읽을 수 없습니다.
+- 메타데이터가 삭제되었거나 생성이 중간에 중단된 브랜치도 `tree/` 아래 디렉터리를 정리하기 전까지는 `@branch`로 읽을 수 있습니다. Lance SDK는 디렉터리로 브랜치를 체크아웃하기 때문입니다. REST Namespace가 버전을 관리하는 테이블에서는 Namespace가 브랜치 존재 여부를 결정하며, `main`을 읽지 않고 브랜치 디렉터리에서 읽습니다.
+- `EXPLAIN`은 읽은 브랜치를 `lanceBranch`로 표시합니다. 존재하지 않는 태그나 브랜치를 지정하면 오류가 발생합니다.
+
+### REST Namespace 관리형 버전 관리 {#rest-namespace-managed-versioning}
+
+REST Namespace는 테이블 버전을 직접 관리할 수 있습니다(`DescribeTable` 응답의 `managed_versioning = true`). 이러한 테이블에서 어떤 버전이 존재하고 어떤 버전이 최신인지는 Namespace가 결정합니다. 최신 버전과 `FOR VERSION AS OF`는 Namespace의 기록(`ListTableVersions`, `DescribeTableVersion`)을 따릅니다. `FOR TIME AS OF`는 Namespace가 나열한 버전만 대상으로 manifest에 기록된 커밋 시각을 사용해 결정됩니다. 태그는 다른 Lance 테이블과 마찬가지로 데이터셋의 `_refs/tags/`에서 읽으며 Namespace가 기록한 버전을 가리켜야 합니다. 브랜치 버전도 Namespace를 따릅니다. 버전을 선택한 다음에는 다른 Lance 테이블과 마찬가지로 FE와 BE가 테이블 위치와 버전 번호로 스토리지에서 해당 버전을 읽습니다.
+
+- Namespace가 기록하지 않은 버전은 스토리지에 manifest가 남아 있어도 찾을 수 없는 것으로 보고됩니다. 스토리지에 이미 더 새로운 manifest가 있어도 최신 버전은 Namespace의 최신 버전입니다.
+- Namespace가 더 이상 기록하지 않는 버전이 기록된 버전들 사이에 있다면, `FOR TIME AS OF`에서는 정리 작업으로 삭제된 버전처럼 제거된 기록으로 취급합니다. 해당 버전이 포함했을 수 있는 타임스탬프는 이전 버전을 선택하는 대신 오류가 됩니다.
+- Namespace가 버전을 전혀 기록하지 않은 테이블이나 브랜치는 스토리지에 manifest가 있어도 오류가 발생합니다.
+- `EXPLAIN`은 이러한 테이블에 `lanceManagedVersioning=true`를 표시합니다.
+
+제한 사항:
+
+- Doris는 `DescribeTable`이 반환한 `table_uri`의 데이터셋을 읽고, `table_uri`가 없으면 `location`의 데이터셋을 읽습니다. 어느 쪽이든 완전한 스토리지 URI여야 합니다. `location`이 비어 있거나 함께 반환된 `table_uri`가 다른 위치를 가리키면(사전 서명된 자격 증명 같은 쿼리 문자열은 제외) 쿼리가 오류로 실패하고 아무것도 읽지 않습니다. `s3+ddb` URI도 거부됩니다. DynamoDB 커밋 핸들러가 읽는 동안 버전을 기록하고 확정하기 때문입니다. Doris는 관리형 테이블을 캐시하는 대신 읽을 때마다 설명을 가져오며, FE와 BE는 그 응답의 위치와 스토리지 구성으로 읽습니다.
+- Doris는 테이블 디렉터리의 정규 경로 `_versions/<u64::MAX - version>.manifest`(브랜치라면 `tree/<branch>/` 아래) 또는 Lance의 이전 이름 지정 방식인 `_versions/<version>.manifest`에서 버전 번호로 읽습니다. Namespace가 선택한 버전에 대해 기록한 manifest는 해당 경로 또는 그 옆의 스테이징된 manifest(`<canonical path>-<id>`)여야 합니다. `FOR TIME AS OF`의 경우에는 커밋 시각으로 선택하므로 해당 `main` 또는 브랜치에 기록된 모든 버전의 manifest도 이 조건을 만족해야 합니다. 다른 위치에 기록된 버전은 읽을 수 없습니다. 쿼리는 기록된 경로와 정규 경로를 명시하는 오류로 실패합니다. 쿼리 실행 중 Namespace가 테이블을 이동해도 같은 방식으로 실패할 수 있으며, 다시 시도하면 성공합니다.
+- Namespace가 스테이징된 manifest에만 기록하고 정규 manifest가 없는 버전은 읽을 수 없습니다. 커밋이 확정되지 않았거나 정리 작업이 해당 버전을 제거한 것입니다. 쿼리는 두 원인을 모두 명시하며 실패합니다. 해당 `main` 또는 브랜치에서 그 버전이 포함했을 수 있는 모든 타임스탬프에 대한 `FOR TIME AS OF`도 커밋 시각을 알 수 없어 실패합니다. 가장 최신 버전이라면 writer 또는 Namespace를 사용하는 다른 reader가 버전을 확정할 때까지 모든 타임스탬프가 이에 해당합니다. 이 경우 `FOR VERSION AS OF` 없이 테이블을 읽거나 스키마를 로드하는 것도 실패합니다. Lance 자체 Namespace 구현은 버전을 기록하기 전에 확정하므로, 미확정 버전은 중단된 커밋 후 또는 스테이징된 manifest를 기록하는 Namespace에서만 나타납니다. Doris는 읽는 동안 테이블에 쓰지 않습니다.
+
+## Lance 인덱스 확인 {#inspect-lance-indexes}
+
+Filesystem Catalog의 테이블에서 `SHOW INDEX`는 Lance 데이터셋에 기록된 논리적 스칼라 인덱스(FTS 역인덱스 포함)와 벡터 인덱스를 표시합니다. 변형 구문인 `SHOW INDEXES`, `SHOW KEY`, `SHOW KEYS`도 같은 결과를 생성합니다.
+
+```sql
+SHOW INDEX FROM lance_catalog.default.items;
+```
+
+Doris는 실행 시점의 최신 데이터셋 스냅샷에서 인덱스 메타데이터를 읽고 인덱스 이름과 열 위치 순으로 결과를 정렬합니다. Lance가 내부적으로 유지하는 `__lance_frag_reuse`, `__lance_mem_wal` 같은 시스템 인덱스는 표시하지 않습니다. 인덱스가 없는 테이블은 빈 결과를 반환합니다.
+
+`SHOW INDEX`는 표준 13열 결과 집합을 반환합니다. Lance 테이블에서는 다음 열에만 값이 있고 나머지 열은 항상 비어 있습니다.
+
+| 열 | Lance 테이블의 값 |
+|---|---|
+| `Table` | 테이블 이름입니다. |
+| `Key_name` | Lance 논리 인덱스의 이름입니다. |
+| `Seq_in_index` | 인덱스에서 열의 위치이며 `1`부터 시작합니다. 여러 필드에 걸친 인덱스는 필드마다 한 행을 생성합니다. |
+| `Column_name` | 인덱싱된 필드입니다. 중첩 필드의 인덱스는 필드 경로를 `.`으로 연결해 표시하며, 문자, 숫자 및 `_` 이외의 문자가 포함된 경로 부분은 백틱으로 묶습니다. 예: `` attributes.`child.with.dot` ``. |
+| `Index_type` | Lance SDK가 보고한 인덱스 유형입니다. 예: `BTree`, `INVERTED`, `IVF_FLAT`, `IVF_SQ`, `IVF_PQ`, `IVF_HNSW_FLAT`, `IVF_HNSW_SQ`, `IVF_HNSW_PQ`. |
+| `Properties` | 정해진 인덱스 세부 정보 집합을 담은 JSON 객체입니다. 최상위에는 `metric_type`, `target_partition_size`, `compression` 아래에는 `type`, `num_bits`, `num_sub_vectors`, `rotation_type`, `hnsw` 아래에는 `construction_ef`, `max_connections`, `max_level`이 있습니다. 키는 정렬되며, 인덱스 세부 정보에 해당 필드가 없으면 값은 `{}`입니다. |
+
+다음 행은 `IVF_PQ` 벡터 인덱스와 중첩 필드의 `BTree` 인덱스를 보여줍니다.
+
+```text
+Table          Key_name              Seq_in_index  Column_name                  Index_type  Properties
+vs_ivf_pq_f32  embedding_ivf_pq_f32  1             embedding                    IVF_PQ      {"compression":{"num_bits":4,"num_sub_vectors":4,"type":"pq"},"metric_type":"L2"}
+nested_index   nested_label_btree    1             attributes.`child.with.dot`  BTree       {}
+```
+
+`SHOW INDEX`는 기존 인덱스만 확인하며 인덱스를 생성하지 않습니다. Doris 외부에서 Lance SDK나 다른 Lance writer로 Lance 인덱스를 생성하세요. 인덱스가 알 수 없는 필드를 참조하거나 두 인덱스의 이름이 같을 때처럼 기록된 인덱스 메타데이터가 일관되지 않으면, 일부 메타데이터를 반환하는 대신 문장이 실패합니다.
+
+`SHOW INDEX`에는 테이블에 대한 `SHOW` 권한이 필요합니다. REST Catalog에서는 `SHOW INDEX is not supported for Lance REST catalogs` 오류와 함께 거부됩니다.
+
+### lance_index_entries로 물리적 인덱스 항목 나열 {#list-physical-index-entries-with-lance_index_entries}
+
+:::note
+`lance_index_entries`는 Apache Doris 4.1.5부터 지원됩니다.
+:::
+
+`SHOW INDEX`는 고정된 MySQL 방식 13열 결과 집합에서 인덱스 이름, 인덱싱된 열, 인덱스 유형 및 속성과 같은 Lance 테이블 인덱스의 논리적 뷰를 제공합니다. 인덱스 항목의 물리적 식별 정보인 UUID와 데이터셋 버전은 이 고정 스키마에 담을 수 없습니다. 읽기 전용 테이블 값 함수 `lance_index_entries`는 물리적 뷰를 제공합니다. 최신 데이터셋 스냅샷에 기록된 물리적 인덱스 항목마다 한 행을 반환합니다.
+
+```sql
+SELECT *
+FROM lance_index_entries("table" = "lance_catalog.default.vs_ivf_pq_f32");
+```
+
+`table`은 완전히 정규화된 3부분 이름 `catalog.database.table`이어야 합니다. 식별자는 백틱 인용을 지원합니다. 다단계 Namespace가 `.`이 포함된 데이터베이스 이름에 매핑된다면 데이터베이스 부분을 백틱으로 묶으세요.
+
+TVF는 다음과 같은 고정 열을 반환합니다.
+
+| 열 | 유형 | 설명 |
+|---|---|---|
+| `CatalogName` | STRING | Catalog 이름입니다. |
+| `DatabaseName` | STRING | 데이터베이스 이름입니다. |
+| `TableName` | STRING | 테이블 이름입니다. |
+| `IndexName` | STRING | Lance 논리 인덱스의 이름입니다. 하나의 논리 인덱스에 UUID가 서로 다른 물리적 항목이 여러 개 있으면 여러 행을 생성합니다. |
+| `IndexUuid` | STRING | 이 물리적 인덱스 항목의 UUID입니다. |
+| `DatasetVersion` | BIGINT | 이 물리적 인덱스 항목에 기록된 데이터셋 버전, 즉 항목이 작성된 시점의 데이터셋 버전입니다. 같은 논리 인덱스의 물리적 항목에도 서로 다른 데이터셋 버전이 기록될 수 있습니다. 항상 `1` 이상입니다. |
+
+다음 행은 위에 표시한 `IVF_PQ` 인덱스의 결과를 보여줍니다. `IndexUuid`와 `DatasetVersion`은 예시 값입니다.
+
+```text
+CatalogName    DatabaseName  TableName      IndexName             IndexUuid                             DatasetVersion
+lance_catalog  default       vs_ivf_pq_f32  embedding_ivf_pq_f32  3f9c2a1e-7b4d-4e6f-9a1c-2d5e8f0b3a47  12
+```
+
+`lance_index_entries`는 `Dataset.getIndexes()`를 통해 인덱스 메타데이터만 읽습니다. 행 수나 통계는 읽지 않고 데이터셋도 수정하지 않습니다. `WHERE IndexName = ...`처럼 일반 조건자로 결과를 필터링할 수 있습니다. 행은 `(IndexName, IndexUuid)` 순서로 정렬됩니다. 읽기는 완전히 검증되며 전체 성공 또는 전체 오류 방식입니다. 빈 이름이나 너무 긴 이름, 누락된 UUID, 양수가 아닌 `DatasetVersion`, 중복 UUID 또는 원시 항목 수가 16,384개를 초과하면 잘린 결과를 반환하는 대신 쿼리 전체가 실패합니다. Lance가 내부적으로 유지하는 예약된 시스템 인덱스 `__lance_frag_reuse`와 `__lance_mem_wal`은 검증하지만 표시하지 않습니다.
+
+`lance_index_entries`에는 테이블에 대한 `SHOW` 권한이 필요합니다. REST Catalog에서는 `lance_index_entries is not supported for Lance REST catalogs` 오류와 함께 TVF가 거부됩니다.
+
+## 유형 매핑 {#type-mapping}
+
+Doris 4.2의 전체 매핑 표, 정밀도 규칙 및 지원되지 않는 유형은 [Lance에서 Doris로의 데이터 유형 매핑](lance-catalog/doris-type-mapping.md)을 참조하세요.
+
+## 조건자 푸시다운 {#predicate-pushdown}
+
+Doris는 의미상 호환되는 조건자를 Substrait 표현식으로 변환하고, 읽는 동안 평가하도록 Lance에 전달합니다. 전체 조건이 푸시다운되면 Doris BE는 그 조건을 다시 평가하지 않습니다. 안전하게 푸시다운할 수 없는 조건은 Doris에 남습니다.
+
+### 푸시다운이 지원되는 데이터 유형 {#data-types-supported-for-pushdown}
+
+| Lance / Arrow 유형 | 푸시다운 지원 |
+|---|---|
+| `bool` | 동등 비교, NULL 검사 및 논리 연산을 지원합니다. 순서 비교는 지원하지 않습니다. |
+| `int8/16/32/64` | 지원 |
+| `uint8/16/32/64` | 지원 |
+| `float32/64` | 지원 |
+| `decimal128` | Precision 1~38, Scale 0~Precision |
+| `utf8`, `large_utf8` | 지원 |
+| `date32(day)` | 지원 |
+| 시간대 정보가 없는 `timestamp(s/ms/us)` | 지원 |
+| `list<utf8>` | `NULL`이 아닌 문자열 리터럴을 사용하는 내장 `array_contains`를 지원합니다. [배열 레이블 조건자](#array-label-predicates)를 참조하세요. |
+
+`float16`, `decimal256`, Binary, `date64`, Time, 나노초 Timestamp, 시간대 정보가 있는 Timestamp 및 위의 배열 포함 사례 이외의 복합 유형을 포함한 다른 읽기 가능한 유형의 조건자는 현재 Doris에 남습니다.
+
+### 푸시다운이 지원되는 연산자 {#operators-supported-for-pushdown}
+
+| SQL 조건자 | 푸시다운 조건 |
+|---|---|
+| `=`, `!=`, `<>`, `<`, `<=`, `>`, `>=` | 열과 상수의 직접 비교입니다. 상수가 왼쪽에 있어도 됩니다. |
+| `<=>` | 열과 상수의 직접 NULL 안전 동등 비교입니다. `NOT`, `AND`, `OR` 안에서도 `NULL`이 아닌 2값 결과를 유지합니다. |
+| `IN`, `NOT IN` | `NULL`을 포함하지 않는 비어 있지 않은 상수 목록입니다. |
+| `IS NULL`, `IS NOT NULL` | 열을 직접 참조합니다. |
+| Boolean 열, `NOT` Boolean 열 | Boolean 열을 직접 참조합니다. |
+| `LIKE`, `NOT LIKE` | 직접 참조한 `utf8` 또는 `large_utf8` 열과 문자열 리터럴 패턴을 사용하며, 역슬래시 이스케이프, 명시적 `ESCAPE` 절 또는 포함된 NUL 문자가 없어야 합니다. |
+| `starts_with`, `ends_with` | 직접 참조한 `utf8` 또는 `large_utf8` 열과 문자열 리터럴을 사용하는 내장 함수입니다. |
+| `array_contains(labels, 'red')` | 직접 참조한 `list<utf8>` 열과 `NULL`이 아닌 문자열 리터럴입니다. |
+| `AND` | 최상위 결합 조건을 각각 독립적으로 푸시다운하고, 지원되지 않는 결합 조건은 Doris에 남길 수 있습니다. |
+| `OR` | 두 분기 모두 완전히 변환할 수 있어야 합니다. |
+| `NOT` | 피연산자를 완전히 변환할 수 있어야 합니다. |
+
+일반적으로 다음 형식은 푸시다운되지 않습니다.
+
+- 지원되는 내장 문자열 및 배열 포함 함수 이외의 함수 또는 열에 적용한 산술 표현식. `like`, `starts_with`, `ends_with`, `array_contains`라는 이름의 사용자 정의 함수는 해당 내장 함수로 취급하지 않습니다.
+- 패턴에 NUL 문자가 포함된 문자열 조건자. 역슬래시 이스케이프나 명시적 `ESCAPE` 절을 사용하는 `LIKE`와 `NOT LIKE` 패턴도 Doris에 남습니다.
+- 빈 `IN` 목록 또는 `NULL`을 포함한 `IN` 목록.
+- 표현식의 일부만 변환할 수 있는 `OR` 또는 `NOT` 표현식.
+- 손실 없이 Lance로 변환할 수 없는 데이터 유형이나 상수 값.
+
+실제로 푸시다운된 조건은 `EXPLAIN`의 `lancePushdownPredicate`에서 확인하세요.
+
+```sql
+EXPLAIN
+SELECT user_id
+FROM lance_catalog.default.user_profiles
+WHERE active
+  AND starts_with(name, 'A')
+  AND country LIKE 'C%';
+```
+
+### 배열 레이블 조건자 {#array-label-predicates}
+
+Apache Doris 4.1.5부터 배열 레이블 푸시다운은 직접 참조한 Lance `list<utf8>` 열과 `NULL`이 아닌 문자열 리터럴을 사용하는 `array_contains`를 지원합니다. 이전 빌드에서는 이런 조건이 Doris에 남을 수 있으므로, 이 최적화에 의존하기 전에 `EXPLAIN`을 확인하세요. `NULL` 배열은 여전히 `NULL`을 반환하고, 빈 배열은 일치하지 않으며, 중복 레이블이 결과 행을 중복시키지는 않습니다.
+
+`id` 열과 `list<utf8>` 유형의 `labels` 열이 있는 Lance 테이블의 경우:
+
+```sql
+EXPLAIN
+SELECT id
+FROM lance_catalog.default.items
+WHERE array_contains(labels, 'red')
+  AND array_contains(labels, 'blue');
+```
+
+이는 순서나 인접 여부와 관계없이 두 레이블을 모두 포함하는 배열과 일치합니다. `AND`를 `OR`로 바꾸면 어느 한 레이블과 일치합니다. `NOT (array_contains(labels, 'red'))`도 변환할 수 있으며 SQL `NULL` 의미 체계를 유지합니다. 이 예제는 일반 테이블 스캔에 적용되며 검색 TVF의 `filter` 매개변수와 외부 `WHERE` 조건의 차이를 바꾸지는 않습니다.
+
+다음은 Doris에 남는 잔여 조건자입니다.
+
+- `array_contains(labels, NULL)`: Doris는 `NULL` 요소와 일치시킬 수 있지만, Lance의 포함 함수는 `NULL` 검색값에 다른 의미 체계를 적용합니다.
+- `array_contains_all(labels, ['red', 'blue'])`: Doris는 순서가 있고 연속된 부분 시퀀스를 검사합니다. Lance의 집합 포함 함수나 독립적인 두 포함 조건자로 대체할 수 없습니다.
+- 동적 검색값, 배열 열을 감싼 표현식이나 캐스트, 그리고 `large_list`, 고정 크기 목록, `list<large_utf8>`를 포함한 다른 배열 요소 또는 컨테이너 유형.
+
+### 조건자 푸시다운과 스칼라 인덱스 사용 {#predicate-pushdown-and-scalar-index-use}
+
+조건자 푸시다운은 Lance가 조건을 평가한다는 뜻이며 인덱스 사용을 보장하지는 않습니다. 일반 스캔에서는 Doris가 각 스캔 작업에 물리적 BTree, Bitmap 또는 LabelList 세그먼트를 할당할 수 있습니다. Lance가 전체 표현식을 지원하는 경우 같은 열의 `IN`, `AND`, `OR`, `NOT` 조합에 선택한 인덱스를 사용할 수 있습니다. `OR`에는 두 분기 모두에서 안전한 후보가 필요하고, `NOT`은 완전히 평가되지 않은 하위 트리를 부정할 수 없습니다. 지원되지 않는 인덱스 표현식은 할당된 Fragment 범위 내의 스캔으로 대체됩니다.
+
+각 작업은 **하나의 논리적 스칼라 인덱스**를 선택합니다. 레이블, 카테고리 및 숫자 조건자를 결합한 쿼리가 Doris가 세 인덱스를 모두 교집합 처리한다는 뜻은 아닙니다. 스캔 제한을 적용하기 전에 푸시다운된 전체 조건을 다시 검사하며, 인덱스 적용 범위 밖의 Fragment도 읽습니다. 사용 가능한 인덱스가 없어도 호환되는 조건자를 푸시다운하여 Lance 스캔에서 평가할 수 있습니다.
+
+다음 증거를 함께 사용하세요.
+
+| 증거 | 의미 |
+|---|---|
+| `EXPLAIN`의 `lancePushdownPredicate` | Lance로 전송된 조건입니다. 남아 있는 `predicates:` 조건은 Doris가 평가합니다. |
+| `EXPLAIN`의 `lanceScalarIndexScan=SEGMENT` 및 `lanceGroupingIndex` | 스칼라 세그먼트 스캔이 계획되었으며 선택한 논리 인덱스를 나타냅니다. 이것만으로 실행 시 인덱스 사용이 입증되지는 않습니다. |
+| Profile의 `LanceScalarIndexSegmentsSearched` | 계측된 스칼라 세그먼트 경로에서 실제 수행한 검색입니다. |
+| Profile의 `LanceScalarIndexCandidateRows` | 해당 경로가 보고한 후보 행이며, 반드시 최종 결과 행은 아닙니다. 일부 `NOT` 표현식 같은 보수 마스크는 후보 수를 보고하지 않을 수 있습니다. |
+| Profile의 `LanceScalarIndexSegmentFallbacks` | 계획된 스칼라 세그먼트 경로에서 대체 경로로 전환한 작업입니다. |
+
+이 카운터를 확인하려면 `enable_profile`을 활성화하세요. 최적화를 측정할 때는 동일한 SQL, 프로젝션, 데이터셋 버전 및 캐시 상태를 비교하세요. 이 카운터는 일반 스칼라 세그먼트 스캔을 설명하며, 이것만으로 ANN 또는 전문 검색의 사전 필터링에서 스칼라 인덱스 사용 여부를 추론해서는 안 됩니다.
+
+### Runtime Filter 푸시다운 {#runtime-filter-pushdown}
+
+일반 Lance 테이블이 조인에 참여하면 Doris는 조인의 빌드 측에서 생성한 일부 Runtime Filter를 Lance SQL 조건으로 변환해 Lance가 데이터를 읽는 동안 적용할 수 있습니다. 특히 큰 테이블을 선택도가 높은 빌드 측 테이블과 조인할 때 Doris에 반환되는 데이터 양을 줄일 수 있습니다.
+
+```sql
+SELECT l.user_id, l.name
+FROM lance_catalog.default.user_profiles l
+JOIN internal.demo.allowed_users a
+  ON l.user_id = a.user_id;
+```
+
+현재 다음 Runtime Filter를 푸시다운할 수 있습니다.
+
+| Runtime Filter | Lance로 푸시다운하는 형식 |
+|---|---|
+| IN Filter | `column IN (...)` |
+| Min/Max Filter | `column >= min_value`, `column <= max_value` 또는 둘 다 |
+
+Runtime Filter의 열과 값은 Lance SQL이 지원하는 스칼라 유형으로 안전하게 변환할 수 있어야 합니다. 다른 Runtime Filter 유형, `NULL`을 포함한 IN Filter, 안전하게 변환할 수 없는 데이터 유형이나 값은 푸시다운되지 않습니다. Doris는 푸시다운되지 않은 Runtime Filter도 계속 평가하므로 쿼리 결과의 정확성은 유지됩니다. 다만 Lance에서 조기에 필터링하는 성능상 이점은 얻지 못합니다.
+
+Lance Scanner가 생성되기 전에 준비된 Runtime Filter만 해당 Scanner의 푸시다운 조건에 포함될 수 있습니다. 나중에 도착한 Runtime Filter도 Doris가 평가하지만, 이미 생성된 Scanner에는 푸시다운되지 않을 수 있습니다.
+
+Runtime Filter 조건은 일반 SQL 조건자로부터 생성한 Substrait 조건과 결합되며, 어느 한쪽이 다른 쪽을 대체하지 않습니다. `EXPLAIN`의 `runtime filters` 항목에는 계획된 Runtime Filter가 표시됩니다. Runtime Filter가 하나라도 푸시다운되면 Runtime Profile의 `LanceRuntimeFilterPushedIds`와 `LanceRuntimeFilterSkippedIds`에서 푸시다운되거나 건너뛴 Filter ID를 확인할 수 있습니다.
+
+현재 Runtime Filter 푸시다운은 일반 Lance 테이블 스캔에만 적용됩니다. `vector_search()` 또는 전문 검색이 후보를 생성하는 동안에는 사용되지 않습니다.
+
+## 파일 TVF로 Lance 쿼리 {#query-lance-with-file-tvfs}
+
+알려진 경로에 있는 Lance 데이터셋만 읽으면 된다면 Catalog를 만들지 않고 `s3()` 또는 `local()` TVF를 사용할 수 있습니다. `uri` 또는 `file_path`는 내부 데이터 파일이 아닌 Lance 데이터셋의 루트 디렉터리를 가리켜야 합니다.
+
+### S3 TVF {#s3-tvf}
+
+`s3()` TVF는 S3 호환 API를 사용합니다. OSS에는 `s3.*` 속성과 버킷이 포함된 가상 호스트 방식 엔드포인트를 사용하세요. 네이티브 OSS 접근에는 위의 OSS Catalog 예제를 사용하세요. 다음 SQL은 예제 데이터셋의 처음 10개 행을 읽습니다. 실행 전에 주소, 자격 증명 및 열 이름을 바꾸세요.
+
+<Tabs groupId="lance-s3-tvf-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        AWS S3에도 엔드포인트를 명시적으로 설정하세요. 이 예제는 가상 호스트 방식 접근을 사용합니다. 엔드포인트의 버킷 및 리전이 URI 및 `s3.region`과 일치해야 합니다.
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO (경로 방식)">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        버킷이 없는 MinIO 서비스 엔드포인트를 사용하고 `use_path_style=true`를 설정하세요. 쿼리를 실행하는 FE와 BE 모두 서비스에 접근할 수 있어야 합니다. FE 호스트에서만 접근할 수 있는 주소는 피하세요.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3 호환 접근)">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        이 예제는 Filesystem Catalog와 동일한 OSS S3 호환 설정을 사용하지만, `uri`는 특정 `.lance` 데이터셋을 가리키고 `warehouse`는 데이터셋이 들어 있는 디렉터리를 가리킵니다. `fs.s3.support=true`와 `use_path_style=false`를 유지하고 엔드포인트의 버킷이 URI와 일치하는지 확인하세요.
+    </TabItem>
+</Tabs>
+
+OSS에서는 동일한 `s3.*` 속성과 `fs.s3.support=true`를 유지하면서 예제의 `uri`를 `oss://my-bucket/lance/user_profiles.lance`로 작성할 수도 있습니다. TVF는 URI를 `s3://`로 정규화하며 네이티브 OSS 제공자로 전환하지 않습니다. 네이티브 OSS Catalog의 `oss.*` 구성을 그대로 복사하지 마세요. 버킷이 없는 엔드포인트와 가상 호스트 방식 접근을 결합하면 데이터셋이 존재하지 않는다는 오류가 발생할 수 있고, 경로 방식 접근으로 전환하면 OSS가 `SecondLevelDomainForbidden`으로 거부할 수 있습니다.
+
+S3 TVF에서 FE는 Schema, 현재 버전 및 Fragment 목록을 가져옵니다. Doris는 그 버전을 고정하고 Fragment를 병렬로 스캔합니다. `EXPLAIN`에는 `VTVF_SCAN_NODE`가 표시됩니다. 여러 Split이 데이터셋 URI를 공유할 수 있으며 Fragment ID로 구분됩니다. `totalFileSize=0` 또는 `length=0`은 Lance Split의 자리 표시자이며, 데이터셋이 비었거나 각 Split이 전체 테이블을 반복 스캔한다는 뜻이 아닙니다.
+
+### 로컬 TVF {#local-tvf}
+
+```sql
+SELECT user_id, name
+FROM local(
+    "file_path" = "/data/lance/user_profiles.lance",
+    "backend_id" = "10001",
+    "format" = "lance"
+);
+```
+
+`file_path`는 작성한 그대로 대상 BE의 Lance Reader에 전달됩니다. Doris는 `user_files_secure_path`를 앞에 붙이거나 이 경로를 Glob으로 확장하지 않습니다. 따라서 대상 BE가 접근할 수 있는 단일 Lance 데이터셋의 루트 디렉터리를 직접 가리켜야 합니다. 절대 경로를 권장합니다.
+
+로컬 TVF는 Schema 검색과 실행 때 각각 최신 데이터셋 버전을 독립적으로 엽니다. 현재는 Schema 검색 중 확인한 버전이 이후 스캔에 고정되지 않습니다. 쿼리 분석과 실행 사이에 데이터셋이 변경되면 검색된 Schema와 스캔한 스냅샷이 달라질 수 있습니다. 로컬 TVF 쿼리를 분석하고 실행하는 동안 데이터셋을 수정하지 마세요. 현재 로컬 Lance TVF는 Scanner 하나를 사용합니다.
+
+Lance 파일 TVF에는 다음과 같은 추가 제한 사항이 있습니다.
+
+- `s3()`와 `local()`만 지원합니다. HDFS 및 HTTP 같은 다른 파일 TVF는 현재 지원되지 않습니다.
+- `path_partition_keys`는 지원되지 않습니다.
+- 하나의 TVF 경로는 하나의 Lance 데이터셋만 나타낼 수 있습니다.
+- `DESC FUNCTION`은 지원되지 않는 유형을 포함한 Schema를 표시할 수 있지만, SQL은 지원되지 않는 열을 프로젝션할 수 없습니다.
+
+## 벡터 검색 {#vector-search}
+
+`vector_search()`는 Lance 테이블의 벡터 열에서 Top-K 검색을 수행하는 관계형 TVF입니다. 기존 Lance 벡터 인덱스를 사용하거나 Flat Search를 수행할 수 있습니다.
+
+### 구문 및 예제 {#syntax-and-example}
+
+```sql
+SELECT user_id, label, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "offset" = "3",
+    "metric" = "l2",
+    "nprobes" = "20",
+    "refine_factor" = "10",
+    "prefilter" = "true",
+    "filter" = "category = 'book'",
+    "use_index" = "true"
+)
+ORDER BY _distance ASC, user_id;
+```
+
+`vector_search()`의 관계 스키마에는 Lance 원본 테이블의 모든 열과 최근접 이웃 쿼리를 위해 Lance Scanner가 생성한 `_distance` 열이 포함됩니다. 최종 SQL 결과에는 `SELECT`가 프로젝션한 열만 포함됩니다. Doris는 `_distance`를 `FLOAT`로 노출합니다. 이는 일반적인 유사도 점수가 아니라 거리이며, 값이 낮을수록 두 벡터가 가깝습니다. 원본 테이블에 이미 `_distance`라는 열이 있으면 안 됩니다. SQL 관계는 최종 표시 순서를 보장하지 않으므로, 결정적인 최근접 이웃 순서가 필요하면 `ORDER BY _distance ASC`를 명시하세요. 거리가 같은 행에는 고유한 열을 동점 결정 기준으로 추가하는 것이 좋습니다.
+
+`table`은 정확히 3부분인 `catalog.database.table` 이름으로 파싱되어야 합니다. 다단계 Lance Namespace는 `.`이 포함된 하나의 Doris 데이터베이스 이름에 매핑되므로 데이터베이스 부분을 백틱으로 묶으세요. 예를 들어 Namespace `doris.analytics`의 `items` 테이블에는 다음 값을 사용합니다.
+
+```sql
+"table" = "lance_catalog.`doris.analytics`.items"
+```
+
+따옴표로 묶지 않은 `lance_catalog.doris.analytics.items` 형식은 사용하지 마세요. 4부분 이름으로 파싱되어 거부됩니다. 테이블 이름만 지정하거나 `database.table` 이름을 지정해도 거부됩니다.
+
+### 매개변수 {#parameters}
+
+| 매개변수 | 필수 | 기본값 | 설명 |
+|---|---|---|---|
+| `table` | 예 | - | 완전히 정규화된 3부분 이름 `catalog.database.table`입니다. 다단계 Namespace가 `.`이 포함된 데이터베이스 이름에 매핑된다면 데이터베이스 부분을 백틱으로 묶으세요. Lance Catalog의 테이블을 가리켜야 하며 사용자에게 테이블의 `SELECT` 권한이 있어야 합니다. |
+| `column` | 예 | - | 벡터 열 이름입니다. 단일 벡터 `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` 및 다중 벡터 `list<fixed_size_list<float16\|float32\|float64, D>>` 열을 지원합니다. [다중 벡터 검색](#multi-vector-search)을 참조하세요. |
+| `query_vector` | 예 | - | 단일 벡터 열에는 JSON 숫자 배열, 다중 벡터 열에는 비어 있지 않은 JSON 행렬을 지정합니다. 각 하위 벡터의 차원은 열과 일치해야 하며 각 값은 유한하고 요소 유형으로 표현 가능해야 합니다. |
+| `top_k` | 아니요 | `10` | `offset`만큼 건너뛴 후 반환할 결과 수입니다. 양의 정수여야 합니다. |
+| `offset` | 아니요 | `0` | 벡터 검색 내부에서 건너뛸 최근접 이웃 수입니다. 음수가 아닌 정수여야 합니다. `top_k + offset`은 부호 없는 32비트 정수의 최댓값을 초과할 수 없습니다. |
+| `metric` | 아니요 | `l2` | 거리 측정 방식: `l2`, `cosine`, `dot`, `hamming`. `dot_product`는 `dot`의 별칭입니다. `uint8` 벡터는 `hamming`만 지원하고, 현재 지원되는 다른 벡터 요소 유형은 `l2`, `cosine`, `dot`을 지원합니다. `cosine`, `dot`, `hamming` 인덱스를 쿼리할 때는 `metric`을 명시적으로 설정하세요. 정수 다중 벡터 열과 다중 벡터 `hamming`은 지원되지 않습니다. |
+| `distance_lower_bound` | 아니요 | 제한 없음 | 단일 벡터 검색의 포함 하한 거리입니다. 유한한 `FLOAT`여야 합니다. |
+| `distance_upper_bound` | 아니요 | 제한 없음 | 단일 벡터 검색의 제외 상한 거리입니다. 유한한 `FLOAT`여야 합니다. 두 경계를 모두 설정하면 `FLOAT`로 변환한 후 하한이 상한보다 작아야 합니다. |
+| `filter` | 아니요 | - | Lance가 평가하는 Lance SQL 조건입니다. 실행 시점은 `prefilter`가 제어합니다. |
+| `prefilter` | 아니요 | `false` | TVF `filter`가 실행되는 시점을 제어합니다. `true`는 벡터 후보를 생성하기 전에 필터링합니다. 기본값인 `false`는 후보 생성 후에 필터링하므로 결과 행 수가 `top_k`보다 적을 수 있습니다. 이 매개변수는 외부 Doris `WHERE`에 영향을 주지 않습니다. |
+| `nprobes` | 아니요 | 최소 `1`, 최댓값 없음 | 탐색할 IVF 인덱스 파티션 수입니다. 양의 정수여야 합니다. 설정하지 않으면 Lance는 파티션 하나로 시작하고, `prefilter=true`로 후보가 너무 적게 남으면 추가 파티션을 탐색할 수 있습니다. `N`으로 명시하면 최소 및 최대 탐색 수가 모두 `N`으로 고정됩니다. |
+| `refine_factor` | 아니요 | 단일 벡터: 비활성화; 다중 벡터: `1` | 후보 정제 배수입니다. 양의 정수여야 합니다. 단일 벡터 검색에서 설정하지 않으면 Lance는 원래 벡터로 거리를 다시 계산하지 않으므로, 양자화 인덱스의 `_distance`는 근삿값일 수 있습니다. `N`으로 설정하면 Lance는 먼저 `(top_k + offset) × N`개 후보를 가져오고 원래 벡터로 정확한 거리를 다시 계산한 뒤 재정렬합니다. **정제 과정은 이러한 후보의 원래 벡터 데이터를 읽습니다. `N`이 커질수록 더 많은 후보를 읽고 평가하므로 I/O가 크게 늘고 쿼리 성능이 저하될 수 있습니다.** 단일 벡터 검색에서는 `1`로 설정해도 정제가 활성화되며, 설정하지 않은 경우와 다릅니다. 다중 벡터 검색은 기본 배수 `1`을 사용해 항상 원래 값으로 후보를 정제합니다. |
+| `ef` | 아니요 | `floor(1.5 × (top_k + offset))` | HNSW 그래프 검색 중 유지하는 후보 폭입니다. 양의 정수여야 합니다. `refine_factor`도 설정했다면 기본값은 `floor(1.5 × (top_k + offset) × refine_factor)`입니다. HNSW가 아닌 인덱스에는 영향을 주지 않습니다. |
+| `use_index` | 아니요 | `true` | `true`이면 Doris가 벡터 열 및 거리 측정 방식과 호환되는 Lance 벡터 인덱스를 우선 사용하고, 사용 가능한 인덱스가 없으면 자동으로 Flat Search를 사용합니다. `false`이면 Doris가 벡터 인덱스를 사용하지 않고 데이터에 대해 Flat Search를 수행합니다. |
+| `version`, `timestamp`, `tag`, `branch` | 아니요 | - | `main`의 최신 버전 대신 이전 버전, 특정 시점의 버전, 태그 또는 브랜치를 검색합니다. [이전 버전 또는 브랜치 검색](#search-a-historical-version-or-branch)을 참조하세요. |
+
+`metric`을 생략하면 인덱스 검색과 Flat Search 모두 `l2`를 선택합니다. `uint8` 열에는 `"metric" = "hamming"`을 명시적으로 설정하세요. 기본값 `l2`는 지원되지 않습니다. 다중 벡터 검색에는 아래에 설명한 [후보 예산](#multi-vector-search)도 적용됩니다.
+
+### 반경 및 범위 검색 {#radius-and-range-search}
+
+반경 쿼리에는 `distance_upper_bound`를 설정하고, 구간 `[lower, upper)`에는 두 경계를 함께 설정하세요. 생략한 경계에는 제한이 없습니다. 거리는 선택한 측정 방식을 따릅니다. `l2`는 **유클리드 거리의 제곱**이므로 기하학적 반경 `r`에 해당하는 상한은 `r * r`입니다. `dot` 같은 측정 방식에 유용한 음수 경계도 허용됩니다. 저장된 벡터가 Float64를 사용하더라도 경계는 `FLOAT` 정밀도를 사용합니다. 유한하지 않은 경계, 오버플로, 같은 경계 및 역순 구간은 거부됩니다.
+
+예를 들어 `user_id`와 3차원 Float32 `embedding` 열이 있는 기존 Lance Catalog 테이블 `lance_catalog.default.items`가 다음과 같다고 가정합니다.
+
+| user_id | embedding | `[0, 0, 0]`까지의 L2 거리 제곱 |
+|---|---|---|
+| 1 | `[0, 0, 0]` | 0 |
+| 2 | `[1, 0, 0]` | 1 |
+| 3 | `[2, 0, 0]` | 4 |
+
+```sql
+SELECT user_id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0, 0, 0]",
+    "metric" = "l2",
+    "top_k" = "10",
+    "use_index" = "false",
+    "distance_lower_bound" = "1",
+    "distance_upper_bound" = "4"
+)
+ORDER BY _distance;
+```
+
+```text
++---------+-----------+
+| user_id | _distance |
++---------+-----------+
+|       2 |         1 |
++---------+-----------+
+```
+
+하한을 제거하면 행 1도 반환됩니다. 상한 `0`만 사용하면 반환되는 행이 없습니다. `prefilter=true`에서는 벡터 검색 전에 `filter`가 후보를 제한하며, 기본값 `prefilter=false`에서는 후보 생성 후 필터링합니다. `offset`은 거리 범위를 적용한 후 결과를 건너뜁니다. 출력 스키마는 변경되지 않습니다. 테이블 열과 `FLOAT` 유형의 `_distance`가 포함됩니다. `EXPLAIN`은 `lanceDistanceRange=[1.0, 4.0)`을 표시합니다.
+
+거리 경계에는 준비된 문장의 `?` 매개변수를 사용할 수 있습니다. 각 실행은 자체 경계 값을 검증하고 사용하며 NULL 경계는 거부됩니다. 해당 방향을 제한하지 않으려면 속성을 생략하세요.
+
+이 쿼리는 반경 안의 모든 행을 반환하는 API가 아니라 **Top-K 쿼리**입니다. 결과는 `top_k`로 제한되며 행 수가 더 적을 수 있습니다.
+
+범위 쿼리에서 Doris는 두 경계가 모두 제공되고 선택한 인덱스가 명시적으로 IVF_FLAT으로 식별된 경우에만 인덱스 검색을 사용합니다. 한쪽 경계만 있는 범위, 양자화 인덱스 및 하위 유형을 알 수 없는 인덱스는 `use_index=true`여도 정확한 Flat Search로 전환됩니다. 범위 안전성 때문에 인덱스를 선택하지 못하면 `EXPLAIN`은 `lanceVectorIndexStatus=DISTANCE_RANGE_FALLBACK`을 표시합니다. 이 대체 경로는 스캔 비용을 늘릴 수 있습니다.
+
+인덱스를 사용하는 IVF_FLAT 쿼리는 여전히 `nprobes`가 선택한 파티션에 의존합니다. 모든 후보를 평가하려면 `use_index=false`를 사용하세요. 인덱싱되지 않은 추가 데이터는 Flat Search로 검색합니다. 다중 벡터 열은 거리 경계를 지원하지 않습니다.
+
+### 지원되는 벡터 인덱스 유형 {#supported-vector-index-types}
+
+단일 벡터 열에 대해 Doris는 다음 Lance 벡터 인덱스 조합을 지원합니다. 다중 벡터 인덱스 제한은 [다중 벡터 검색](#multi-vector-search)에 설명되어 있습니다.
+
+| 인덱스 유형 | 설명 | 주요 쿼리 매개변수 |
+|---|---|---|
+| `IVF_FLAT` | 각 파티션 내부에서 원래 벡터로 거리를 계산하는 IVF 파티션 | `nprobes` |
+| `IVF_SQ` | Scalar Quantization을 사용하는 IVF | `nprobes`, `refine_factor` |
+| `IVF_PQ` | Product Quantization을 사용하는 IVF | `nprobes`, `refine_factor` |
+| `IVF_HNSW_FLAT` | 그래프 노드에 원래 벡터를 유지하는 HNSW를 사용하는 IVF | `nprobes`, `ef` |
+| `IVF_HNSW_SQ` | Scalar Quantization을 사용하는 IVF 및 HNSW | `nprobes`, `ef`, `refine_factor` |
+| `IVF_HNSW_PQ` | Product Quantization을 사용하는 IVF 및 HNSW | `nprobes`, `ef`, `refine_factor` |
+
+`vector_search()`는 Lance에 이미 존재하는 벡터 인덱스만 사용합니다. 인덱스를 생성하거나 사용자가 인덱스 유형 또는 이름을 지정하게 하지는 않습니다. `use_index=true`이면 Doris는 벡터 열과 거리 측정 방식에 호환되는 인덱스를 자동으로 선택합니다. 선택한 인덱스의 적용 범위 밖 데이터를 포함하여 사용 가능한 인덱스가 없는 데이터에는 자동으로 Flat Search를 적용하며 누락하지 않습니다. `use_index=false`이면 모든 데이터에 Flat Search를 적용합니다.
+
+해당 열에 호환되는 인덱스가 여러 개 있으면 Doris는 쿼리마다 이름순 첫 인덱스 하나를 선택합니다. 그 인덱스가 적용되지 않는 Fragment는 다른 인덱스가 적용되더라도 Flat Search를 사용하므로, 실행 시에는 항상 `EXPLAIN`이 보고한 인덱스 적용 범위를 따릅니다. Doris가 계획에 사용할 수 없는 인덱스는 전혀 사용되지 않으며 전체 검색이 Flat Search로 실행됩니다. 예를 들면 Fragment 적용 범위 메타데이터가 없는 인덱스(`lanceVectorIndexStatus=UNKNOWN_COVERAGE`), 기록된 측정 방식이 없는 인덱스(`METRIC_MISMATCH`), Lance가 파일에서 세부 정보를 추론할 수 없어 Doris가 건너뛰는 이전 인덱스(`NO_MATCH`)가 이에 해당합니다. Lance가 세부 정보를 추론할 수 있는 이전 인덱스는 평소처럼 사용됩니다.
+
+### 지원되는 벡터 요소 유형 및 거리 측정 방식 {#supported-vector-element-types-and-distance-metrics}
+
+단일 벡터 열에서 벡터 인덱스가 지원하는 거리 측정 방식은 벡터 요소 유형에 따라 달라집니다. 다음 표에서 지원되는 조합을 선택하세요. 지원되지 않는 조합에는 벡터 인덱스를 사용할 수 없습니다.
+
+| 벡터 요소 유형 | `l2` | `cosine` | `dot` | `hamming` |
+|---|---|---|---|---|
+| `float16` | 지원 [1] | 지원 | 지원 | 지원되지 않음 |
+| `float32` | 지원 | 지원 | 지원 | 지원되지 않음 |
+| `float64` | 지원 | 지원 | 지원 | 지원되지 않음 |
+| `uint8` | 지원되지 않음 | 지원되지 않음 | 지원되지 않음 | `IVF_FLAT` 및 `IVF_HNSW_FLAT`만 지원 [2] |
+| `int8` | Flat Search만 지원 [3] | Flat Search만 지원 [3] | Flat Search만 지원 [3] | 지원되지 않음 |
+
+각주에 다른 설명이 없으면 “지원”은 위의 인덱스 유형 6가지 모두에서 조합이 동작한다는 뜻입니다. “Flat Search만 지원”은 벡터를 쿼리할 수 있지만 벡터 인덱스는 사용하지 않는다는 뜻입니다.
+
+1. 값이 큰 `float16` 데이터로 `l2` 인덱스를 빌드하면 시간이 너무 오래 걸리거나 실패할 수 있습니다. 벡터 값을 관리 가능한 범위로 유지하세요. 인덱스 생성에 실패하면 Flat Search를 사용하거나 애플리케이션에 적합한 경우 `cosine`을 사용하세요.
+2. Lance는 `uint8` 벡터를 이진 벡터로 취급하고 `hamming` 측정 방식만 지원합니다. Product Quantization과 Scalar Quantization은 `uint8`을 지원하지 않으므로 `IVF_FLAT`과 `IVF_HNSW_FLAT`만 사용할 수 있습니다.
+3. 현재 `int8` 벡터에는 벡터 인덱스를 사용할 수 없으며 Flat Search로 제한됩니다.
+
+#### 쿼리 측정 방식은 인덱스 측정 방식과 일치해야 함 {#the-query-metric-must-match-the-index-metric}
+
+쿼리의 `metric`은 인덱스를 빌드할 때 사용한 측정 방식과 일치해야 합니다. 그렇지 않으면 요청한 측정 방식이 열 유형에 지원되는 경우 Doris는 Flat Search를 사용합니다. 결과는 정확하게 유지되지만 벡터를 직접 스캔해야 하므로 일반적으로 성능이 낮아집니다.
+
+`metric`을 생략하면 Doris는 인덱스를 선택할 때 `l2`로 취급합니다. 따라서 `cosine`, `dot`, `hamming`으로 빌드한 인덱스를 사용할 때는 `metric`을 명시적으로 설정하세요. 예를 들어 `uint8` 벡터 인덱스에는 `"metric" = "hamming"`이 필요합니다. 생략하면 쿼리가 지원되지 않는 `l2`를 사용해 실패합니다.
+
+인덱스 사용 여부는 `EXPLAIN`으로 확인하세요. `lanceSearchIndexSegments` 값이 `0`보다 크면 인덱스 검색, `0`이면 Flat Search입니다.
+
+Doris는 벡터 열마다 벡터 인덱스 하나만 고려합니다. 서로 다른 측정 방식으로 빌드한 인덱스 중 모호하게 선택되는 일을 피하려면 벡터 열마다 인덱스를 최대 하나만 유지하세요.
+
+### 다중 벡터 검색 {#multi-vector-search}
+
+다중 벡터 열은 문서의 토큰 임베딩처럼 테이블의 각 행에 여러 하위 벡터를 저장합니다. 쿼리 행렬은 순위가 매겨진 하나의 테이블 행 집합을 생성합니다. 독립적인 벡터 검색 여러 개를 일괄 실행하거나 여러 열을 검색하는 기능이 아닙니다.
+
+#### 데이터 준비 및 쿼리 실행 {#prepare-data-and-run-a-query}
+
+위의 AWS S3 Filesystem Catalog 예제에서 Catalog `lance_fs_s3`와 warehouse `s3://my-bucket/lance`를 사용하세요. writer 환경에 Lance Python SDK(`pylance`)와 `pyarrow`를 설치하세요. 예를 들어 `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`을 통해 S3 자격 증명과 리전을 구성합니다. writer에는 쓰기 권한이, Doris에는 같은 위치의 읽기 권한이 필요합니다. 사용자 지정 엔드포인트나 다른 인증 방식은 SDK의 [객체 스토어 옵션](https://lance.org/guide/object_store/)을 Catalog와 일치하도록 구성하세요.
+
+Doris가 `lance_fs_s3.default.documents`로 검색할 수 있도록 `documents.lance`를 warehouse 바로 아래에 생성하세요. Catalog와 Python 예제 모두에서 버킷을 바꾸고 새 데이터셋 위치를 사용하세요.
+
+```python
+import lance
+import pyarrow as pa
+
+vector_type = pa.list_(pa.float32(), 2)
+schema = pa.schema([
+    pa.field("id", pa.int64()),
+    pa.field("embeddings", pa.list_(
+        pa.field("item", vector_type, nullable=False)
+    )),
+])
+data = pa.Table.from_pylist([
+    {"id": 1, "embeddings": [[1.0, 0.0], [0.0, 1.0]]},
+    {"id": 2, "embeddings": [[1.0, 0.0]]},
+    {"id": 3, "embeddings": []},
+    {"id": 4, "embeddings": None},
+], schema=schema)
+lance.write_dataset(
+    data,
+    "s3://my-bucket/lance/documents.lance",
+    data_storage_version="2.1",
+)
+```
+
+외부 목록을 사용하면 행마다 하위 벡터 수가 달라도 됩니다. 내부의 `nullable=False`는 필수입니다. 하위 벡터 자체는 null일 수 없습니다. 2차원 JSON 배열로 테이블을 쿼리하세요.
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_fs_s3.default.documents",
+    "column" = "embeddings",
+    "query_vector" = "[[1,0],[0,1]]",
+    "top_k" = "2",
+    "metric" = "l2",
+    "use_index" = "false"
+)
+ORDER BY _distance, id;
+```
+
+예상 결과:
+
+| id | _distance |
+|---|---|
+| 1 | 0.0 |
+| 2 | 2.0 |
+
+행 1에는 각 쿼리 하위 벡터에 완전히 일치하는 값이 있습니다. 행 2는 첫 번째 쿼리 하위 벡터와의 거리가 `0`이고, 두 번째와의 L2 거리 제곱은 `2`입니다. 비어 있거나 null인 외부 목록은 순위에 포함되지 않습니다. `"offset" = "1"`을 추가하고 `"top_k" = "1"`로 변경하면 행 2만 반환합니다. `"filter" = "id > 1"`을 추가하고 `"prefilter" = "true"`를 설정하면 일치하는 행으로 후보 검색을 제한하며, 이 데이터셋에서는 역시 행 2만 반환합니다.
+
+#### 행 단위 점수 계산 {#row-level-scoring}
+
+쿼리 하위 벡터 `Q`와 행에 저장된 하위 벡터 `V`에 대해:
+
+```text
+_distance = sum(q in Q, min(v in V, distance(q, v)))
+```
+
+| `metric` | 두 하위 벡터 사이의 거리 |
+|---|---|
+| `l2`(기본값) | 유클리드 거리의 제곱 |
+| `cosine` | `1 - cosine_similarity` |
+| `dot` 또는 `dot_product` | `1 - dot_product`; 값이 음수일 수 있음 |
+
+`_distance`가 작을수록 더 좋습니다. 각 쿼리 하위 벡터는 한 번씩 기여하고, 저장된 하나의 하위 벡터가 여러 쿼리 하위 벡터와 일치할 수 있습니다. 점수는 평균이 아니라 합계이므로 쿼리 하위 벡터를 반복하면 기여도 반복됩니다. Float64 입력을 포함하여 `_distance`의 Doris 유형은 `FLOAT`입니다. `top_k`와 `offset`은 하위 벡터가 아닌 테이블 행을 셉니다. Top-K 경계에서 동점인 행은 포함 여부나 순서가 보장되지 않습니다. 외부 `ORDER BY`는 반환된 행만 정렬합니다.
+
+#### 유형, 차원 및 Null 값 {#types-dimensions-and-null-values}
+
+| 항목 | 요구 사항 |
+|---|---|
+| Lance 열 | `list<fixed_size_list<T, D>>`. 여기서 `D > 0`이고 `T`는 `float16`, `float32`, `float64` 중 하나입니다. |
+| Doris 유형 | Float16/Float32에는 `ARRAY<ARRAY<FLOAT>>`, Float64에는 `ARRAY<ARRAY<DOUBLE>>` |
+| 쿼리 형태 | 비어 있지 않은 JSON 행렬이며 모든 내부 배열에는 정확히 `D`개의 요소가 있어야 합니다. 쿼리 하위 벡터가 하나여도 `[[...]]`로 작성해야 합니다. 일반 단일 벡터 열은 계속 `[...]`를 사용합니다. |
+| 쿼리 값 | `T`로 표현할 수 있는 유한한 숫자입니다. 빈 행렬, 일치하지 않는 차원, null, 숫자가 아닌 요소 및 범위를 벗어난 값은 거부됩니다. |
+| 저장된 값 | 하위 벡터는 null 불가로 선언되어야 하며 유한한 null 아닌 요소를 포함해야 합니다. 점수 계산 경로는 실제 null 또는 유한하지 않은 요소를 발견하면 거부합니다. *요소* 스키마 플래그가 null을 허용하는 것만으로는 문제가 되지 않습니다. |
+| 비어 있거나 null인 행 | null인 외부 목록이나 `[]`에는 일치하는 하위 벡터가 없으므로 결과에서 제외됩니다. |
+| Cosine 영 노름 | 영 노름 쌍의 cosine 거리는 정의되지 않아 일치할 수 없습니다. 쿼리 하위 벡터 중 하나라도 정의된 일치 항목이 없으면 그 행은 제외됩니다. 따라서 영 노름 쿼리 하위 벡터는 결과를 생성하지 않습니다. |
+| 지원되지 않는 형태 및 유형 | 외부 `large_list` 또는 `fixed_size_list`, 길이가 가변인 내부 목록, 정수 다중 벡터 요소, 확장/사전 인코딩 및 `hamming` 다중 벡터 검색은 지원되지 않습니다. |
+
+#### 매개변수 제한 {#parameter-limits}
+
+`M`은 쿼리 하위 벡터 수, `K = top_k`, `O = offset`, `R = refine_factor`(다중 벡터 검색의 기본값 `1`)라고 하겠습니다.
+
+| 제약 | 제한 |
+|---|---|
+| 쿼리 하위 벡터 수 | `1 <= M <= 128` |
+| 결과 수 및 오프셋 | `K > 0`, `O >= 0` |
+| 쿼리 후보 예산 | `M × (K + O) <= 100000` |
+| 정제 후보 예산 | `R × (K + O) <= 100000`, `R > 0` |
+| 명시적인 `nprobes`, `ef`, `refine_factor` | 양의 32비트 부호 있는 정수로 최대 `2147483647`이며, 후보 예산이 `refine_factor`를 추가로 제한합니다. |
+
+두 후보 예산은 `use_index=false`일 때도 각각 독립적으로 적용됩니다. 예를 들어 `M=128, K=1000, O=0`은 쿼리 후보 예산을 초과해 거부됩니다. `M=4, K=1000, O=0, R=10`은 두 예산을 모두 충족합니다. 이러한 제한은 후보 처리량을 제한하지만 특정 메모리 사용량이나 쿼리 지연 시간을 보장하지는 않습니다.
+
+#### 인덱스 사용 및 정제 {#index-usage-and-refinement}
+
+통합된 Lance 버전은 **cosine** 측정 방식의 다중 벡터 인덱스를 지원합니다. cosine `IVF_FLAT` 또는 `IVF_PQ` 인덱스처럼 기존의 호환 인덱스를 사용하려면 `"metric" = "cosine"`을 설정하고 `use_index=true`를 유지하세요. `metric`을 생략하면 `l2`가 선택됩니다. 호환 인덱스가 없으면 L2 및 dot 검색은 Flat Search를 사용합니다. Doris는 이 함수를 통해 인덱스를 생성하지 않습니다. 인덱스 메타데이터는 `SHOW INDEX`(Filesystem Catalog만 지원)로 확인하고, `lanceSearchIndexSegments > 0`인지 `EXPLAIN`으로 확인하세요.
+
+인덱스 검색에서는 후보 선택이 근사적입니다. 다중 벡터 후보는 `refine_factor`를 생략하거나 `1`로 설정해도 **항상 원래 벡터로 정제**하므로, 인덱스가 있는 행과 없는 행에 동일한 행 단위 점수를 사용합니다. `refine_factor`를 늘리면 추가 벡터 읽기 및 계산과 함께 후보 풀이 확대되지만 완전한 재현율을 보장하지는 않습니다. `nprobes`는 IVF 탐색을 제어하고 `ef`는 HNSW 인덱스에 적용됩니다. 재현율과 지연 시간을 측정한 후에 조정하세요. 인덱스 생성 후 추가된 행은 Flat Search를 통해 포함됩니다.
+
+선택한 행에 대해 빠짐없이 점수를 계산하려면 `"use_index" = "false"`를 사용하세요. 검색 전에 후보를 제한하려면 TVF `filter`를 `prefilter=true`와 함께 사용하세요. 기본값 `prefilter=false`는 후보 생성 후에 조건을 적용합니다. 외부 SQL `WHERE`는 생성된 후보에 대해 항상 Doris가 평가하며 Split의 결과를 보충하지 않습니다. 다음 절의 필터링 규칙은 단일 벡터와 다중 벡터 검색 모두에 적용됩니다.
+
+### Prefilter 및 Post-filter {#prefilter-and-post-filter}
+
+Prefilter와 Post-filter는 같은 쿼리에서 사용할 수 있습니다.
+
+```sql
+SELECT user_id, category, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "prefilter" = "true",
+    "filter" = "category = 'book'"
+)
+WHERE user_id > 100
+ORDER BY _distance ASC, user_id;
+```
+
+| 필터 유형 | 조건 예제 | 실행 시점 | 결과에 미치는 영향 |
+|---|---|---|---|
+| TVF Prefilter | TVF 매개변수 `"filter" = "category = 'book'"` 및 `"prefilter" = "true"` | Lance가 벡터 후보를 생성하기 전 | `category = 'book'`인 행 중에서만 최근접 이웃을 검색합니다. |
+| TVF Post-filter | TVF 매개변수 `"filter" = "category = 'book'"`, `prefilter` 생략 또는 `false` 설정 | Lance가 후보를 생성한 후 | 생성된 후보에서 일치하지 않는 행을 제거합니다. 후보를 보충하지 않으므로 결과 행이 `top_k`보다 적을 수 있습니다. |
+| Doris Scan Post-filter | 외부 `WHERE user_id > 100` | Lance가 후보를 생성한 후, Doris가 최종 TopN을 적용하기 전 | 생성된 후보에서 일치하지 않는 행을 제거합니다. 후보를 보충하지 않으므로 최종 결과가 `top_k`보다 적을 수 있습니다. |
+
+`user_id > 100`도 후보 생성에 참여해야 한다면 TVF `filter`에 포함하고 `prefilter=true`를 설정하세요. 예: `"filter" = "category = 'book' AND user_id > 100"`. 기본값 `prefilter=false`에서는 이 조건이 후보 생성 후에 적용됩니다. 옵티마이저가 외부 `WHERE`를 Doris Lance Scan으로 옮기더라도 Doris Scan Post-filter로 남으며 Lance Prefilter로 변환되지 않습니다.
+
+Lance는 `filter`에서만 참조하는 열을 내부적으로 읽고 평가합니다. 해당 열을 `SELECT` 또는 다른 Doris 표현식에서 참조하지 않으면 Doris에 반환할 필요가 없습니다.
+
+## FE 테이블 접근 캐시 {#fe-table-access-cache}
+
+이 설정에는 [테이블 접근 캐시 변경 사항](https://github.com/apache/doris/pull/68305)이 포함된 Doris 빌드가 필요합니다.
+
+각 FE는 Catalog 내에서 테이블의 확인된 Dataset URI와 접근 옵션을 캐시할 수 있으므로 쿼리 계획 중 파일 시스템 검색이나 REST `describeTable` 요청을 반복하지 않아도 됩니다. 각 Catalog 클라이언트는 최대 10,000개 항목을 보유합니다. `lance.table_access_cache_ttl_seconds`의 기본값은 `60`이며, 캐시 적중으로 수명이 연장되지는 않습니다. 이 캐시에는 Dataset 버전을 저장하지 않습니다. 읽을 때마다 Dataset을 열어 스냅샷을 선택합니다.
+
+Namespace 관리형 버전 관리를 사용하는 테이블은 읽을 때마다 다시 확인하므로 두 reader 모두 해당 읽기에 대해 Namespace가 반환한 위치와 스토리지 옵션을 사용합니다. 제공된 스토리지 옵션이 포함된 응답은 `expires_at_millis`를 보고해도 읽을 때마다 다시 확인합니다. 사용자 정보, 쿼리 매개변수(사전 서명된 자격 증명 또는 SAS 자격 증명 포함) 또는 Fragment가 포함된 URI도 캐시하지 않습니다. 고정된 자격 증명 만료 여유 시간만으로는 스캔 중 자격 증명이 계속 유효할지 보장할 수 없고, BE는 스캔 중 자격 증명을 갱신할 수 없습니다. 이러한 응답 필드가 없는 REST Catalog에서는 캐시를 사용할 수 있습니다.
+
+명시적인 테이블 또는 데이터베이스 새로 고침은 해당 Catalog의 모든 테이블 접근 항목을 지웁니다. 대응하는 로컬 데이터베이스/테이블 객체가 제거되어 새로 고침을 재생하는 follower FE에서도 마찬가지입니다. 일반적인 로컬 데이터베이스 객체 제거는 접근 캐시를 지우지 않습니다. 캐시 무효화를 포함한 Catalog 새로 고침, Namespace 제거 또는 Catalog 구성 변경도 접근 항목을 무효화합니다. 인덱스 확인과 인덱스 작업 대상 검증은 항상 접근 정보를 새로 확인합니다.
+
+원격 테이블 URI나 접근 구성이 변경되었다면 TTL 만료를 기다리지 않도록 명시적으로 새로 고치세요. 기존 테이블 `example_lance.default.items`의 경우:
+
+```sql
+REFRESH TABLE example_lance.default.items;
+```
+
+다음 읽기에서는 테이블 접근 정보를 다시 확인합니다. 이 작업은 네이티브 Lance Session 캐시를 지우지 않습니다. 같은 URI의 Dataset을 교체했다면 캐시 무효화를 포함한 Catalog 새로 고침을 사용하세요. 이 새로 고침은 FE의 Lance Session만 지우며 BE의 캐시는 지우지 않습니다. [이전 버전 또는 브랜치 검색](#search-a-historical-version-or-branch)을 참조하세요.
+
+기존 Catalog에서 테이블 접근 캐시를 비활성화하려면:
+
+```sql
+ALTER CATALOG example_lance SET PROPERTIES (
+    "lance.table_access_cache_ttl_seconds" = "0"
+);
+```
+
+이후 읽기에서는 매번 테이블 접근 정보를 확인합니다. 아래의 BE 캐시는 독립적으로 구성됩니다.
+
+## Lance Cache {#lance-cache}
+
+Lance Cache는 인덱스, 메타데이터 및 데이터 파일 내용을 재사용해 반복 읽기를 줄입니다. 각 BE는 그 BE의 Lance 쿼리가 공유하는 자체 캐시를 관리합니다. 캐시 용량과 내용은 BE 간에 공유되지 않습니다. 일반 스캔, 벡터 검색, 전문 검색 및 2단계 가져오기는 추가 `CREATE CATALOG` 속성 없이 해당 캐시를 재사용할 수 있습니다.
+
+### 캐시 유형 및 범위 {#cache-types-and-scope}
+
+| 캐시 | 저장 위치 | 캐시되는 내용 |
+|---|---|---|
+| 인덱스 캐시 | BE 메모리 | 로드된 Lance 인덱스 내용으로, 반복적인 인덱스 로드를 줄입니다. |
+| 메타데이터 캐시 | BE 메모리 | Lance 리더가 사용하는 메타데이터로, 반복 읽기와 파싱을 줄입니다. |
+| 데이터 캐시 | BE 로컬 디스크, 읽기 블록 하나 크기의 메모리 계층 포함 | Dataset의 `data/` 디렉터리 바로 아래에서 `.lance`로 끝나는 파일에서 읽은 데이터를 블록 단위로 캐시합니다. |
+
+데이터 캐시는 Lance 리더 내에서 Foyer를 사용하며, 아래의 `lance_*` BE 매개변수로 자체 디렉터리와 용량을 구성합니다. Doris의 일반 File Cache 디렉터리나 용량 설정은 사용하지 않습니다. 인덱스 파일, manifest 및 삭제 파일은 이 디스크 데이터 캐시를 거치지 않고 Lance의 기존 읽기 및 캐시 경로를 계속 사용합니다.
+
+데이터 캐시는 전체 Dataset을 미리 다운로드하지 않고 필요할 때 채워집니다. 캐시 누락 시 원본 스토리지에서 읽고 백그라운드 디스크 캐시 쓰기를 위해 데이터를 큐에 넣습니다. 첫 읽기에서는 여전히 원본 I/O와 캐시 채우기 오버헤드가 발생합니다. 캐시 적중은 이후 원본 읽기를 줄일 수 있지만 디코딩, 필터링 또는 정렬 비용까지 없애지는 않습니다.
+
+### BE 구성 {#be-configuration}
+
+아래 매개변수는 모두 선택 사항입니다. 각 BE의 `be.conf`에 설정하고 해당 BE를 재시작해야 변경 사항이 적용됩니다. 용량은 BE별로 적용되며 단위는 바이트입니다.
+
+| 매개변수 | 유형 | 기본값 | 설명 |
+|---|---|---|---|
+| `lance_index_cache_size_bytes` | Int64 | `10737418240` (10 GiB) | 인덱스 메모리 캐시 용량입니다. 용량을 없애려면 `0`으로 설정하세요. |
+| `lance_metadata_cache_size_bytes` | Int64 | `1073741824` (1 GiB) | 메타데이터 메모리 캐시 용량입니다. 용량을 없애려면 `0`으로 설정하세요. |
+| `enable_lance_data_cache` | Boolean | `true` | 디스크 데이터 캐시를 활성화합니다. 비활성화해도 인덱스 및 메타데이터 캐시는 유지됩니다. |
+| `lance_data_cache_path` | String | `${DORIS_HOME}/lance_data_cache` | 데이터 캐시 디렉터리입니다. BE 프로세스에 디렉터리 생성 및 파일 읽기/쓰기 권한이 필요합니다. 서로 다른 BE 프로세스에는 별도 디렉터리를 사용하세요. |
+| `lance_data_cache_disk_capacity_bytes` | Int64 | `107374182400` (100 GiB) | 디스크 캐시 용량입니다. `4096`의 배수이고 읽기 블록 크기의 최소 두 배여야 합니다. |
+| `lance_data_cache_read_block_size_bytes` | Int64 | `1048576` (1 MiB) | 데이터 캐시 읽기 블록 크기입니다. 양수이면서 `4096`의 배수여야 합니다. 데이터 캐시의 메모리 계층 용량도 설정합니다. |
+
+예를 들어 기본 용량을 명시적으로 설정하고 캐시를 별도의 로컬 디스크 디렉터리에 배치하려면:
+
+```properties
+lance_index_cache_size_bytes = 10737418240
+lance_metadata_cache_size_bytes = 1073741824
+enable_lance_data_cache = true
+lance_data_cache_path = /mnt/ssd/lance_data_cache
+lance_data_cache_disk_capacity_bytes = 107374182400
+lance_data_cache_read_block_size_bytes = 1048576
+```
+
+BE가 재시작된 후 첫 Lance Dataset을 열 때 공유 캐시가 초기화됩니다. 데이터 캐시가 활성화된 상태에서 디렉터리를 사용할 수 없거나 용량 또는 블록 크기가 유효하지 않으면 초기화가 실패하고 Lance 쿼리가 오류를 보고합니다. 데이터 캐시 없이 실행하도록 자동으로 전환되지는 않습니다. 디스크 데이터 캐시를 비활성화하려면 `enable_lance_data_cache`를 `false`로 설정하고 BE를 재시작하세요.
+
+쿼리 작업 메모리를 고려해 인덱스 및 메타데이터 캐시의 용량을 계획하세요. 이 용량은 전체 Lance 쿼리 메모리나 BE 프로세스 메모리를 제한하지 않습니다. 디스크 캐시는 로컬 디스크 공간과 파일 디스크립터도 소비합니다. 읽기 블록을 키우면 블록 수는 줄지만 작은 읽기에서는 추가 I/O가 늘 수 있습니다. 읽기 블록 크기나 디스크 배치를 변경할 때는 새 캐시 디렉터리를 사용하세요.
+
+워크로드별 크기 산정 공식, 구성 예제, 공유 캐시 경합 및 인덱스 세그먼트 단위는 [Lance 쿼리 모범 사례](../best-practices/doris-lance.mdx)를 참조하세요. 필터링과 검색을 함께 사용하는 방법은 [Lance Hybrid Search 성능 모범 사례](../best-practices/lance-hybrid-search.mdx)를 참조하세요.
+
+### 캐시 효과 확인 {#checking-cache-effectiveness}
+
+완료된 쿼리 Profile에서 `LanceReader` → `LanceIndex` 아래의 인덱스 캐시 카운터와 `LanceReader` → `LanceDataCache` 아래의 데이터 파일 캐시 카운터를 확인하세요.
+
+| 카운터 | 의미 |
+|---|---|
+| `LanceIndexCacheHits`, `LanceIndexCacheMisses` | 이 실행에서 계측된 인덱스 경로가 보고한 캐시 조회 수입니다. BE 전체 Session 메트릭과는 별개입니다. |
+| `LanceIndexObjectLoads`, `LanceIndexComponentsLoaded` | 로드된 최상위 인덱스 객체 및 내부 구성 요소입니다. 어느 쪽도 캐시 누락 수와 동일하게 볼 수 없습니다. |
+| `LanceDataCacheBytesReadFromCache` | 이 Dataset 핸들에 대해 데이터 파일 캐시가 제공한 논리적 요청 바이트 수입니다. |
+| `LanceDataCacheBytesReadFromRemote` | 캐시 누락 또는 대체 경로 이후 원본 스토리지가 제공한 논리적 요청 바이트 수입니다. 원본이 로컬 파일일 수도 있습니다. |
+
+두 데이터 캐시 바이트 카운터는 블록 읽기 증폭과 인덱스 및 manifest 읽기처럼 데이터 캐시를 우회하는 I/O를 제외합니다. 따라서 완전한 원격 트래픽 카운터가 아니며 합계가 `LanceIOReadBytes`와 같을 필요도 없습니다. 데이터 캐시가 비활성화되면 둘 다 `0`이지만 원본 읽기가 없었다는 뜻은 아닙니다. Doris는 Dataset 핸들을 닫기 전에 누적 스냅샷을 기록합니다. 2단계 가져오기에는 별도의 리더 통계가 있으며 Row ID Fetch/Materialization Profile 정보로도 내보냅니다. 스캔 카운터만으로는 전체 쿼리의 가져오기 I/O를 다룰 수 없습니다. 수집 시점과 메트릭 범위는 [Lance 쿼리 Profile 참조](../best-practices/lance-query-profile.md)를 참조하세요.
+
+BE의 `/metrics` 엔드포인트에도 `doris_be_lance_session_index_cache_` 및 `doris_be_lance_session_metadata_cache_` 접두사가 붙은 메트릭이 노출됩니다. 접미사 `capacity_bytes`, `usage_bytes`, `entries`, `hits_total`, `misses_total`은 각각 구성된 용량, 현재 사용량, 항목 수, 누적 적중 및 누적 누락을 나타냅니다. 이 메트릭은 공유 Lance Session 초기화 후 등록되며 개별 쿼리가 아닌 BE 전체 캐시를 설명합니다.
+
+캐시 효과를 비교할 때는 같은 Dataset 버전과 쿼리 매개변수를 사용하고, 실제로 같은 BE에서 쿼리가 실행되는지 확인하며, 첫 읽기와 반복 읽기의 지연 시간, 캐시 카운터 및 원본 I/O를 기록하세요. 총 지연 시간만으로는 캐시 이점과 인덱스 검색, 디코딩 또는 2단계 가져오기 비용을 구분할 수 없습니다.
+
+## 2단계 TopN 읽기 및 지연 구체화 {#two-phase-topn-read-and-lazy-materialization}
+
+`vector_search()`와 `full_text_search()`는 보통 최종 `top_k`보다 많은 후보 행을 생성합니다. 검색 중 `title`이나 `payload` 같은 폭이 넓은 출력 열을 읽으면 대부분의 후보 행이 TopN에서 버려지므로 작업이 낭비됩니다. 2단계 읽기는 이러한 열의 읽기를 미룹니다. 1단계는 필터링, 정렬 및 TopN에 필요한 열만 읽고, 전역 TopN 후 2단계에서 남은 행에 대해서만 나머지 출력 열을 읽습니다.
+
+이 방식은 스토리지 I/O, 네트워크 전송 및 메모리 사용량을 줄입니다. 일반적으로 `top_k`가 작거나 검색에서 후보가 많이 생성되거나 쿼리가 폭이 넓은 문자열, JSON 또는 유사한 열을 반환할 때 이점이 가장 큽니다.
+
+| 단계 | 읽는 데이터 |
+|---|---|
+| 1단계 | 검색 내부에서 사용하는 열, `_distance` 또는 `_score`, Post-filter나 정렬에 필요한 열, 내부 Row Location입니다. |
+| 2단계 | 최종 프로젝션에서만 사용하는 최상위 열을 전역 TopN에서 남은 행에 대해서만 읽습니다. |
+
+### 적용 조건 {#trigger-conditions}
+
+Doris는 다음 조건을 모두 충족할 때만 2단계 읽기를 사용합니다.
+
+1. 쿼리가 `vector_search()` 또는 `full_text_search()`를 통해 Lance를 읽고, 계획에 지연 구체화가 가능한 TopN이 포함되어야 합니다. 현재 이 스위치는 일반 Lance 테이블 스캔이나 Lance 파일 TVF에는 적용되지 않습니다.
+2. Boolean 세션 변수 `enable_lance_lazy_materialization`이 기본값인 `true`여야 합니다.
+3. 읽기를 미룰 수 있는 최상위 열이 하나 이상 있어야 합니다. 최종 `SELECT` 프로젝션에서만 사용하는 열은 미룰 수 있습니다. TopN 이전의 Post-filter, `ORDER BY` 또는 다른 표현식에서 사용하는 열은 1단계에서 읽어야 합니다. 현재 중첩 하위 열은 미룰 수 없습니다.
+
+`enable_lance_lazy_materialization`은 `topn_lazy_materialization_threshold`와 독립적입니다. 후자가 `-1`이거나 `top_k`가 임계값을 초과해도 Lance는 2단계 읽기를 사용할 수 있습니다. 지연 구체화를 지원하는 다른 테이블은 계속 일반 임계값을 따릅니다. 스위치를 활성화하면 최적화를 허용하지만, 실제 적용 여부는 계획 구조와 조건에 맞는 열에 따라 결정됩니다.
+
+다음 쿼리에서 `category`는 Post-filter를 위해 1단계에서 읽어야 하지만, `user_id`, `title`, `payload`는 TopN 후에 가져올 수 있습니다.
+
+```sql
+SET enable_lance_lazy_materialization = true;
+
+SELECT user_id, title, payload, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "offset" = "3"
+)
+WHERE category = 'book';
+```
+
+TVF `filter`에서 참조하는 열은 Lance가 내부적으로 사용합니다. `filter` 문자열에만 나타난다는 이유로 Doris에 반환되는 1단계 결과 열이 되지는 않습니다. `prefilter`는 후보 생성에 대해 조건을 적용하는 시점만 변경합니다.
+
+### 계획 확인 {#verifying-the-plan}
+
+위 쿼리 앞에 `EXPLAIN VERBOSE`를 붙이세요. 2단계 읽기가 활성화되면 계획에 `VMaterializeNode`가 포함되고, 해당 `column_descs_lists`에 2단계에서 가져오는 열이 나열됩니다. 스위치를 비활성화하고 같은 단순 검색 쿼리에 다시 `EXPLAIN VERBOSE`를 실행하면 해당 구체화 노드가 사라져야 합니다. 스위치를 활성화해도 노드가 없다면 출력 열이 TopN 전에 필터링, 정렬 또는 다른 계산에 사용되는지, 그리고 계획이 이 최적화를 지원하는지 확인하세요.
+
+### 2단계 읽기 비활성화 {#disabling-two-phase-reading}
+
+다음 세션 설정으로 2단계 읽기를 비활성화하세요.
+
+```sql
+SET enable_lance_lazy_materialization = false;
+```
+
+미룰 수 있는 열이 없거나 계획이 최적화를 지원하지 않으면 Doris는 단일 단계 읽기를 사용합니다. `top_k`가 크다는 이유만으로 Lance의 2단계 읽기가 자동 비활성화되지는 않습니다. 다음 경우에는 비활성화한 뒤 성능을 비교해 보세요.
+
+- `top_k`가 커서 2단계에서도 후보 행 대부분을 읽는 경우.
+- 쿼리가 폭이 좁은 열 몇 개만 반환해 2단계 읽기로 절약할 I/O가 적은 경우.
+- 기본 스토리지에서 무작위 Row-ID 읽기의 지연 시간이 높아 추가 2단계 Fetch 비용이 읽기를 미뤄 절약하는 비용보다 큰 경우.
+
+이 최적화를 비활성화하면 출력 열을 읽는 시점만 바뀝니다. 벡터 또는 FTS 인덱스를 비활성화하거나 Prefilter, Post-filter, TopN 의미 체계를 변경하지는 않습니다. 대표적인 쿼리와 스토리지 조건에서 두 설정을 비교하세요.
+
+## 전문 검색 {#full-text-search}
+
+`full_text_search()`는 Lance 테이블에 있는 기존 FTS 역인덱스를 통해 BM25 검색을 수행하는 관계형 TVF입니다. 분석된 쿼리 용어를 OR 또는 AND로 결합하고 Phrase 쿼리로 용어의 순서와 거리를 맞출 수 있습니다. Doris는 물리적 인덱스 세그먼트의 후보를 전역 Top-K로 병합하고 원본 열에 `_score`를 추가합니다. 점수가 높을수록 관련성이 높습니다.
+
+TVF를 사용하기 전에 Lance SDK나 다른 Lance writer로 대상 문자열 열에 FTS 역인덱스를 생성하세요. Phrase 쿼리에는 인덱스 생성 시 토큰 위치도 활성화해야 합니다. 예를 들어 Lance 인덱스 매개변수에 `with_position=true`를 설정합니다. Doris는 이 인덱스를 생성하지 않으며, FTS 인덱스가 없을 때 행 단위 전문 스캔으로 대체하지도 않습니다.
+
+### 구문 및 예제 {#syntax-and-example-1}
+
+다음 쿼리는 카테고리가 `storage`인 문서에서 `lance database`를 검색한 다음, `published = true`를 Doris Post-filter로 적용합니다.
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance database",
+    "query_type" = "match",
+    "operator" = "and",
+    "top_k" = "10",
+    "offset" = "0",
+    "prefilter" = "true",
+    "filter" = "category = 'storage'",
+    "coverage_mode" = "strict"
+)
+WHERE published = true
+ORDER BY _score DESC, document_id;
+```
+
+이 예제는 Match AND를 사용하므로 문서에 분석된 용어 `lance`와 `database`가 모두 있어야 합니다. `prefilter=true`이면 Lance는 FTS 후보를 생성하기 전에 `filter`를 평가합니다. `prefilter`를 생략하면 기본값 `false`가 적용되어 Lance가 후보 생성 후 `filter`를 적용하므로 결과 행 수가 `top_k`보다 적을 수 있습니다. 외부 `WHERE`는 Doris Post-filter이며 제거된 후보를 보충하지 않습니다. `published = true`가 후보 생성에 영향을 줘야 한다면 `filter`에 포함하고 `prefilter=true`를 설정하세요.
+
+다음 Phrase 쿼리는 인접한 쿼리 용어 사이에 최대 하나의 다른 토큰을 허용합니다. 예를 들어 `lance search engine`과 일치할 수 있습니다.
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance engine",
+    "query_type" = "phrase",
+    "slop" = "1",
+    "top_k" = "10"
+)
+ORDER BY _score DESC, document_id;
+```
+
+반환되는 관계에는 원본 Lance 테이블의 모든 열과 `_score`라는 nullable `FLOAT` 열이 포함됩니다. 원본 테이블에 같은 이름의 열이 있으면 안 됩니다. TVF는 `_score` 내림차순으로 Top-K를 선택하지만 SQL 관계는 최종 표시 순서를 보장하지 않습니다. 안정적인 순서가 필요하다면 `ORDER BY _score DESC`를 명시하고 같은 점수에는 고유한 동점 결정 기준을 추가하세요.
+
+### 매개변수 {#parameters-1}
+
+| 매개변수 | 필수 | 기본값 | 설명 |
+|---|---|---|---|
+| `table` | 예 | - | Lance Catalog의 테이블을 가리키는 완전히 정규화된 3부분 이름 `catalog.database.table`입니다. 다단계 Namespace가 `.`이 포함된 데이터베이스 이름에 매핑되면 데이터베이스 부분을 백틱으로 묶으세요. 사용자에게 테이블의 `SELECT` 권한이 있어야 합니다. |
+| `column` | 예 | - | FTS 역인덱스가 있는 문자열 열입니다. Doris `TEXT`에 매핑되는 Arrow `utf8`과 `large_utf8`을 지원합니다. |
+| `query` | 예 | - | 비어 있지 않은 검색 텍스트입니다. FTS 인덱스 생성 시 구성한 tokenizer로 처리합니다. |
+| `query_type` | 아니요 | `match` | 쿼리 유형입니다. 유효한 값은 `match`와 `phrase`입니다. |
+| `operator` | 아니요 | `or` | Match 쿼리 전용입니다. `or`는 쿼리 용어 중 하나 이상, `and`는 모든 용어가 일치해야 합니다. Phrase 쿼리에는 이 매개변수를 설정할 수 없습니다. |
+| `slop` | 아니요 | `0` | Phrase 쿼리 전용입니다. `0`부터 `2147483647`까지의 정수여야 합니다. `0`은 정확한 구문 일치를 요구하고 양수는 인접한 쿼리 용어 사이에 허용되는 최대 토큰 수입니다. Match 쿼리에는 이 매개변수를 설정할 수 없습니다. |
+| `top_k` | 아니요 | `10` | `offset`만큼 건너뛴 후 반환할 결과 수입니다. 양의 정수여야 합니다. |
+| `offset` | 아니요 | `0` | 관련성 순서에서 건너뛸 결과 수입니다. 음수가 아닌 정수여야 하며 `top_k + offset`은 부호 없는 32비트 정수의 최댓값을 초과할 수 없습니다. |
+| `filter` | 아니요 | - | Lance SQL 조건입니다. 실행 시점은 `prefilter`가 제어합니다. |
+| `prefilter` | 아니요 | `false` | TVF `filter`가 실행되는 시점을 제어합니다. `true`는 전문 검색 후보 생성 전에 필터링하고 기본값인 `false`는 후보 생성 후 필터링하므로 결과 행 수가 `top_k`보다 적을 수 있습니다. 외부 Doris `WHERE`에는 영향을 주지 않습니다. |
+| `coverage_mode` | 아니요 | `strict` | FTS 인덱스가 현재 스냅샷의 모든 Fragment를 포괄하지 않을 때의 동작입니다. 유효한 값은 `strict`와 `index_only`입니다. |
+| `version`, `timestamp`, `tag`, `branch` | 아니요 | - | `main`의 최신 버전 대신 이전 버전, 특정 시점의 버전, 태그 또는 브랜치를 검색합니다. [이전 버전 또는 브랜치 검색](#search-a-historical-version-or-branch)을 참조하세요. |
+
+### 쿼리 유형 {#query-types}
+
+| 쿼리 유형 | 일치 동작 | 관련 매개변수 | 인덱스 요구 사항 |
+|---|---|---|---|
+| Match OR | 분석된 쿼리 용어 하나 이상과 일치합니다. 기본값입니다. | `query_type=match`, `operator=or` | 표준 FTS 역인덱스입니다. |
+| Match AND | 분석된 모든 쿼리 용어와 일치합니다. | `query_type=match`, `operator=and` | 표준 FTS 역인덱스입니다. |
+| Phrase | 분석된 쿼리 용어의 순서를 유지하고 `slop`으로 지정한 거리를 적용합니다. | `query_type=phrase`, `slop=N` | FTS 인덱스가 토큰 위치를 저장해야 합니다. |
+
+현재 Boolean, Boost, Prefix, Wildcard, Regex 및 필드 간 복합 FTS 쿼리는 지원되지 않습니다.
+
+### 인덱스 적용 범위 모드 {#index-coverage-modes}
+
+| 모드 | 동작 | 사용 시점 |
+|---|---|---|
+| `strict` | 선택한 FTS 인덱스가 고정된 쿼리 스냅샷의 모든 Fragment를 포괄해야 합니다. 포괄하지 않는 Fragment가 있으면 쿼리가 실패합니다. | 데이터 누락이 없어야 한다면 기본값이자 권장 모드입니다. 데이터를 추가한 뒤에는 쿼리하기 전에 FTS 인덱스를 업데이트하거나 다시 빌드하세요. |
+| `index_only` | FTS 인덱스가 포괄하는 Fragment만 검색하고 포괄하지 않는 데이터는 무시합니다. | 불완전한 결과가 허용되고 인덱스 업데이트를 기다리는 동안 검색을 계속 제공해야 할 때만 사용하세요. |
+
+두 모드 모두 대상 열에 완전한 적용 범위 메타데이터가 있는 커밋된 FTS 인덱스가 필요합니다. 사용 가능한 인덱스가 없으면 쿼리가 실패합니다. 열마다 논리적 FTS 인덱스를 하나만 유지하세요. 일치하는 인덱스가 여러 개라면 Doris는 모호함 없이 선택할 수 없어 쿼리를 거부합니다.
+
+실행은 `EXPLAIN`으로 확인하세요. `lanceFtsQueryType`은 Match 또는 Phrase, `lanceFtsMatchOperator`는 Match OR/AND 연산자, `lanceFtsPhraseSlop`은 Phrase 거리를 표시합니다. `lanceFtsCoverageMode`는 적용 범위 모드, `lanceSearchIndexSegments`는 사용된 물리적 FTS 인덱스 세그먼트 수, `lanceSearchUnindexedFragments`는 현재 스냅샷에서 인덱스가 포괄하지 않는 Fragment 수를 표시합니다.
+
+## 이전 버전 또는 브랜치 검색 {#search-a-historical-version-or-branch}
+
+기본적으로 `vector_search()`와 `full_text_search()`는 `main`의 최신 버전을 검색합니다. 다음 선택적 매개변수 4개로 다른 스냅샷을 선택할 수 있으며, 의미는 테이블의 [Time Travel](#time-travel) 구문과 같습니다.
+
+| 매개변수 | 값 | 대응되는 테이블 구문 | 함께 사용할 수 있는 매개변수 |
+|---|---|---|---|
+| `version` | 양의 정수 버전 | `FOR VERSION AS OF N` | `branch` |
+| `timestamp` | 세션 시간대의 `yyyy-MM-dd HH:mm:ss` 또는 `yyyy-MM-dd HH:mm:ss.SSS` | `FOR TIME AS OF '...'` | `branch` |
+| `tag` | 태그 이름 | `@tag(name)` | 없음 |
+| `branch` | 브랜치 이름. `main`은 기본 체인입니다. | `@branch(name)` | `version` 또는 `timestamp` |
+
+```sql
+-- Search version 3.
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3]",
+    "version" = "3")
+ORDER BY _distance;
+
+-- Search the branch "dev" as it was at a point in time.
+SELECT id, _score
+FROM full_text_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "content",
+    "query" = "database",
+    "branch" = "dev",
+    "timestamp" = "2026-09-20 12:00:00")
+ORDER BY _score DESC;
+```
+
+- 스냅샷은 브랜치를 가리키는 태그와 REST Namespace가 버전을 관리하는 테이블을 포함하여 테이블 구문과 같은 규칙으로 선택됩니다. `version`에는 버전 번호만 지정할 수 있습니다. `FOR VERSION AS OF`와 달리 태그 이름은 허용하지 않습니다. `tag`가 모호하지 않게 태그를 지정하기 때문입니다. 이름이 `123`인 태그는 `"tag" = "123"`으로 선택합니다.
+- `version`과 `timestamp`는 함께 사용할 수 없고, `tag`는 다른 세 매개변수 중 어느 것과도 함께 사용할 수 없습니다. 빈 값으로 설정한 매개변수는 무시되지 않고 오류가 발생합니다.
+- 출력 스키마, 검색 열, 벡터 인덱스 및 FTS 인덱스 메타데이터, Fragment는 모두 선택한 스냅샷에서 가져옵니다. 후보 생성, 필터링, Top-K 및 2단계 읽기도 해당 스냅샷을 읽습니다. 이전 버전은 그 버전에서 커밋된 인덱스를 사용합니다. 벡터 인덱스 생성 전 버전은 Flat Search를 사용하고, FTS 인덱스 생성 전 버전은 `full_text_search()`로 검색할 수 없으며, `coverage_mode`는 해당 버전의 Fragment를 검사합니다.
+- 선택할 수 없거나 인덱스 파일이 없는 스냅샷은 오류가 발생합니다. 검색은 최신 버전으로 대체되지 않습니다. Lance 정리 작업으로 제거된 버전은 찾을 수 없는 것으로 보고됩니다. 태그가 보존한 버전은 정리 작업 후에도 인덱스 파일을 유지합니다. 다른 방식으로 인덱스 파일을 삭제했다면 실행 중 실패하며 오류에 데이터셋 버전이 명시됩니다.
+- 준비된 문장의 각 `EXECUTE`를 포함하여 실행할 때마다 스냅샷을 다시 선택합니다. 따라서 최신 버전, 미래 시점, 브랜치 또는 이동한 태그가 매번 다른 버전을 선택할 수 있습니다. 네 매개변수는 상수여야 합니다. 준비된 문장에서 `vector_search()`는 `query_vector`, `top_k`, `offset`, `filter`에만 자리 표시자(`?`)를 허용하고 `full_text_search()`는 허용하지 않습니다.
+- 각 검색 관계는 자체 스냅샷을 선택합니다. 한 문장에서 같은 테이블의 두 관계를 사용할 때, 예를 들어 `vector_search()`를 원본 테이블과 조인할 때 그 사이에 새 버전이 커밋되면 서로 다른 버전을 읽을 수 있습니다. 동일한 버전을 읽으려면 검색 함수에는 `version`, 테이블에는 `FOR VERSION AS OF`를 지정해 둘 다 고정하세요.
+- `CREATE TABLE AS SELECT`는 새 테이블 스키마와 행을 위해 쿼리를 두 번 계획하므로, 실행 시점에 따라 달라지는 선택자가 매번 다른 버전을 선택할 수 있습니다. 한 버전을 정확히 복사하려면 `version`을 설정하세요.
+- `EXPLAIN`에는 선택한 버전이 `lanceVersion`, 브랜치가 `lanceBranch`, REST Namespace의 버전 관리 여부가 `lanceManagedVersioning`으로 표시됩니다. `EXPLAIN`도 스냅샷을 다시 선택하므로 쿼리 Profile에서 실제 실행이 읽은 내용을 확인하세요. `LanceDatasetVersion`과 `LanceDatasetUri`가 `LanceSearchType` 같은 다른 Lance Scanner 정보와 함께 표시됩니다. URI에는 브랜치 디렉터리가 포함되지만 쿼리 문자열과 암호는 생략됩니다.
+- 다른 브랜치나 얕은 복제본에서 생성된 브랜치는 상속받은 인덱스 파일을 찾지 못할 수 있습니다. 버전 13 이전의 Lance writer가 이를 중간 브랜치 아래에 기록하기 때문입니다. 이 경우 검색은 오류로 실패하며 브랜치 자체 인덱스에는 영향이 없습니다.
+- 브랜치를 삭제한 후 같은 이름으로 다시 만들거나 같은 URI의 Dataset을 교체하면 새 데이터가 이전 버전 번호를 재사용합니다. BE는 캐시 항목이 제거되거나 BE가 재시작될 때까지 해당 버전 번호에 캐시한 내용을 계속 사용할 수 있습니다. 안정적인 행 ID가 있는 Dataset에서는 벡터 및 전문 검색이 이전 데이터의 살아 있는 행을 기준으로 필터링해, 새 데이터에서 삭제된 행을 결과에 포함하거나 살아 있는 행을 누락할 수 있습니다. manifest가 Lance의 이전 이름 지정 방식(`_versions/<version>.manifest`)을 사용하거나 객체 스토어가 ETag를 반환하지 않으면 BE와 FE도 이전 인덱스 메타데이터를 사용할 수 있습니다. FE는 Catalog를 새로 고친 후 이전 메타데이터 사용을 중단합니다. 다시 만든 브랜치에는 새 이름을 부여하거나 BE를 재시작하세요. Catalog 새로 고침은 이러한 BE 캐시를 지우지 않습니다.
+- 토큰 위치 없이 빌드한 FTS 인덱스는 Phrase 쿼리를 실행할 수 없습니다. 이전 writer가 빌드한 인덱스는 이전 버전에서 계속 사용할 수 있지만 토큰 위치가 없는 경우가 많습니다.
+
+## 현재 실행 모델 {#current-execution-model}
+
+`vector_search()`와 `full_text_search()`의 실행 순서는 다음과 같습니다.
+
+```text
+Dataset snapshot selected by version / timestamp / tag / branch, or the latest version of main
+  -> FE search Split planning
+       -> Vector search: physical vector Index Segments + Flat Search for uncovered Fragments
+       -> Full-text search: physical FTS Index Segments (coverage checked by coverage_mode)
+  -> Per Split: vector/full-text search; the TVF `filter` runs before candidate generation when `prefilter=true`, and after candidate generation when `prefilter` is omitted or `false`
+       -> at most K+n candidates
+  -> Doris Scan Post-filter
+  -> Doris local TopN
+  -> Exchange
+  -> Doris global TopN (applies offset=n and limit=K)
+  -> Optional lazy-materialization Fetch
+```
+
+## 쿼리 Profile {#query-profile}
+
+Profile 수집 및 확인 방법은 [쿼리 Profile 분석 가이드](../../query-acceleration/query-profile.md)를 참조하세요. Lance 전용 그룹, 카운터, 시간 측정 범위 및 2단계 가져오기 통계는 [Lance 쿼리 Profile 참조](../best-practices/lance-query-profile.md)를 참조하세요.
+
+## 현재 제한 사항 및 권장 사항 {#current-limitations-and-recommendations}
+
+- Lance Catalog와 Lance TVF는 읽기 전용입니다. `CREATE TABLE`, `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE` 및 Lance로 데이터 다시 쓰기는 지원되지 않습니다.
+- 지원되지 않는 열 유형이 있는 테이블은 `SELECT *`로 해당 열까지 프로젝션하지 말고 읽을 열을 명시적으로 나열하세요.
+- 일반 스캔에서는 `EXPLAIN`의 `lancePushdownPredicate`를 확인해 어떤 조건이 푸시다운되었는지 검증하세요.
+- 인덱스 벡터 검색을 실행하기 전에 의도한 쿼리와 일치하는 벡터 인덱스를 Lance에 생성하세요. 작은 데이터셋이나 검증 작업에는 `"use_index" = "false"`를 설정해 Flat Search를 수행하세요.
+- 전문 검색 전에 Lance에 FTS 역인덱스를 생성하세요. 기본 `strict` 모드는 인덱스가 현재 스냅샷의 모든 Fragment를 포괄하지 않으면 쿼리를 거부합니다. 누락된 데이터가 허용될 때만 `index_only`를 사용하세요.
+- Phrase 쿼리에는 FTS 인덱스가 토큰 위치를 저장해야 합니다. Phrase 쿼리가 필요하다면 인덱스를 생성할 때 `with_position=true`를 설정하세요.
+- Filesystem Catalog 테이블에서는 `SHOW INDEX`로 논리적 Lance 인덱스를 확인하세요. 예를 들어 벡터 또는 전문 검색 전에 인덱스 이름, 유형 및 인덱싱된 필드를 검증할 수 있습니다. REST Catalog는 `SHOW INDEX`를 지원하지 않습니다.
+- 벡터 결과의 결정적인 순서가 필요하면 `ORDER BY _distance ASC`를 명시하고 고유한 동점 결정 기준을 추가하세요.
+- 전문 검색 결과의 결정적인 순서가 필요하면 `ORDER BY _score DESC`를 명시하고 고유한 동점 결정 기준을 추가하세요.
+- 벡터 또는 전문 검색 후보를 생성하기 전에 필터링하려면 TVF `filter`를 지정하고 `prefilter=true`를 설정하세요. 기본값 `prefilter=false`에서는 TVF `filter`가 후보 생성 후 적용됩니다. 외부 `WHERE`는 전역 TopN 전에 각 검색 Split이 생성한 후보를 대상으로 Doris가 평가하므로 최종 결과 행 수가 `top_k`보다 적을 수 있습니다.
+- `EXPLAIN`으로 `lanceSearchFragments`와 `lanceSearchIndexSegments`를 확인하세요. 전자는 고정된 스냅샷에서 보이는 Fragment 수이고, 후자는 FE가 선택한 물리적 Index Segment Split 수입니다. 벡터 검색에는 대체 경로인 Flat Search Fragment Split도 포함될 수 있지만, 전문 검색은 Flat Search로 대체되지 않습니다.

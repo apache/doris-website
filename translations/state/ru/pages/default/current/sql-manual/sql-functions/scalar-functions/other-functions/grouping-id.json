@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/other-functions/grouping-id",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/other-functions/grouping-id.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/other-functions/grouping-id.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7128e42f3604f9db791b26f369f84d0a72425d4af72a14e41efad1f6d97ab711",
+    "sourceTechnicalHash": "d6c20426601c5c3caf61224eb6e7fc529dacfd3df852b7098a8bc449b731ec4f",
+    "targetHash": "101e5f5342a722abdd961afc41ed28f21f4c4941d91f957408bfec8b70145ca9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:34:51.617Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7128e42f3604f9db791b26f369f84d0a72425d4af72a14e41efad1f6d97ab711",
+      "targetHash": "101e5f5342a722abdd961afc41ed28f21f4c4941d91f957408bfec8b70145ca9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

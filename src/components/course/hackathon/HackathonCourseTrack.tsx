@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { JSX, KeyboardEvent, RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -95,15 +96,15 @@ export function CourseTrackSwitch({ track, onSelect }: CourseTrackSwitchProps): 
     });
 
     return (
-        <div className="hk-switch" role="tablist" aria-label="Choose a track">
+        <div className="hk-switch" role="tablist" aria-label={translate({id: "landing.HackathonCourseTrack.001", message: "Choose a track"})}>
             <button {...tabProps('course', 0)}>
-                <strong>Doris 101</strong>
-                <small>Free course</small>
+                <strong>{translate({id: "landing.HackathonCourseTrack.002", message: "Doris 101"})}</strong>
+                <small>{translate({id: "landing.HackathonCourseTrack.003", message: "Free course"})}</small>
             </button>
             <button {...tabProps('hackathon', 1)}>
-                <strong>Hackathon</strong>
+                <strong>{translate({id: "landing.HackathonCourseTrack.004", message: "Hackathon"})}</strong>
                 <small>
-                    Open tasks · <span className="hk-nw">start anytime</span>
+                    {translate({id: "landing.HackathonCourseTrack.005", message: "Open tasks ·"})} <span className="hk-nw">{translate({id: "landing.HackathonCourseTrack.006", message: "start anytime"})}</span>
                 </small>
             </button>
         </div>
@@ -122,16 +123,15 @@ export function HackathonTrackPanel({ hidden }: { hidden: boolean }): JSX.Elemen
             hidden={hidden}
         >
             <div className="hk-track__event">
-                <p className="hk-track__kicker">Apache Doris Hackathon</p>
-                <h3 className="hk-track__headline">Build something real on Apache Doris — at your own pace.</h3>
+                <p className="hk-track__kicker">{translate({id: "landing.HackathonCourseTrack.007", message: "Apache Doris Hackathon"})}</p>
+                <h3 className="hk-track__headline">{translate({id: "landing.HackathonCourseTrack.008", message: "Build something real on Apache Doris — at your own pace."})}</h3>
                 <p className="hk-track__sub">
-                    Start any time and work at your own pace: one sitting or a few evenings. No Doris experience
-                    needed.
+                    {translate({id: "landing.HackathonCourseTrack.009", message: "Start any time and work at your own pace: one sitting or a few evenings. No Doris experience needed."})}
                 </p>
             </div>
             <div className="hk-track__head">
-                <h4>Track A · Build on Doris</h4>
-                <span>{HACKATHON_TASKS.length} tasks</span>
+                <h4>{translate({id: "landing.HackathonCourseTrack.010", message: "Track A · Build on Doris"})}</h4>
+                <span>{HACKATHON_TASKS.length} {translate({id: "landing.HackathonCourseTrack.011", message: "tasks"})}</span>
             </div>
             <ol className="hk-track__pads">
                 {HACKATHON_TASKS.map(task => (
@@ -151,15 +151,14 @@ export function HackathonTrackPanel({ hidden }: { hidden: boolean }): JSX.Elemen
                     B
                 </span>
                 <span>
-                    Track B · {HACKATHON_TRACK_B.title}: add a step-by-step demo to a docs page, with a pull request.{' '}
-                    <span className="hk-nw">Open the brief →</span>
+                    {translate({id: "landing.HackathonCourseTrack.013", message: "Track B ·"})} {HACKATHON_TRACK_B.title}{translate({id: "landing.HackathonCourseTrack.014", message: ": add a step-by-step demo to a docs page, with a pull request."})}{' '}
+                    <span className="hk-nw">{translate({id: "landing.HackathonCourseTrack.015", message: "Open the brief →"})}</span>
                 </span>
             </Link>
             <div className="hk-track__badge">
-                <img src={badgeUrl} alt="Apache Doris Contributor badge" width="52" height="52" />
+                <img src={badgeUrl} alt={translate({id: "landing.HackathonCourseTrack.016", message: "Apache Doris Contributor badge"})} width="52" height="52" />
                 <p>
-                    Take part in a task, share it in <code>{HACKATHON_EVENT.slackChannel}</code> on Slack, collect your
-                    Contributor badge.
+                    {translate({id: "landing.HackathonCourseTrack.017", message: "Take part in a task, share it in"})} <code>{HACKATHON_EVENT.slackChannel}</code> {translate({id: "landing.HackathonCourseTrack.018", message: "on Slack, collect your Contributor badge."})}
                 </p>
             </div>
         </section>

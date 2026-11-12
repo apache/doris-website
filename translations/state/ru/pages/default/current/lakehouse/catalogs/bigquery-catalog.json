@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/bigquery-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/bigquery-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/bigquery-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "1335118b58ba841b70db9e30cc29f78dd403bf9836da1381a692feeafb8ce848",
+    "sourceTechnicalHash": "9862365cda1d4c28e9db920bac6180036dd92dd74aee7af46882b9297edd190a",
+    "targetHash": "e1086dcd20e2afef13c129c45de7855849835772443f2066c0eaad317723566b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:54:26.015Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1335118b58ba841b70db9e30cc29f78dd403bf9836da1381a692feeafb8ce848",
+      "targetHash": "e1086dcd20e2afef13c129c45de7855849835772443f2066c0eaad317723566b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

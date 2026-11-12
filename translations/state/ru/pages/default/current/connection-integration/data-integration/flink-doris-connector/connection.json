@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/connection",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/connection.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/connection.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "3ea1434584b50c97f3c22aec773d1bb77070521b1f5df4915795404cc5b5f1c3",
+    "sourceTechnicalHash": "c923422429f312ce810d7e2cb8da3776fddbcd9535bb623bb565382134a17df9",
+    "targetHash": "2a8d8ff91ccb1d6f622688cf5d9658f2e82d79965a6b4cf145c2d990c7a21d67",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:02:09.096Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3ea1434584b50c97f3c22aec773d1bb77070521b1f5df4915795404cc5b5f1c3",
+      "targetHash": "2a8d8ff91ccb1d6f622688cf5d9658f2e82d79965a6b4cf145c2d990c7a21d67",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

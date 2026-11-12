@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-add",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-add.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-add.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b4ee46b1777371b60f4753f5c33144c0b094af571dbc9014bf4abb15850a2f82",
+    "sourceTechnicalHash": "3369858095dc206c55cce56d8458f0374b32b8ccfae38c2ed2f5d06e0350c8c2",
+    "targetHash": "8722f91b0cb84dfa87472b112493d9a0d350610d441a3d06af1cc65eebd6f153",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:04:50.187Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b4ee46b1777371b60f4753f5c33144c0b094af571dbc9014bf4abb15850a2f82",
+      "targetHash": "8722f91b0cb84dfa87472b112493d9a0d350610d441a3d06af1cc65eebd6f153",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

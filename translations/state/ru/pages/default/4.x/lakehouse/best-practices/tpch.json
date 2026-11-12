@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/tpch",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/tpch.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/tpch.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "01f110c83b5757a16d095ff711d4edacbbfc57d88f7437ee95711c113b34e8cf",
+    "sourceTechnicalHash": "8bbc83bda50d95d0d350fe7a4d577f05fa3e2fc4d59c0cd367a4d297ed6675ab",
+    "targetHash": "5e8bceb295f6130bf504c519cecfd5a53294470cae07838b6101ae0155067ff3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:19.109Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "01f110c83b5757a16d095ff711d4edacbbfc57d88f7437ee95711c113b34e8cf",
+      "targetHash": "5e8bceb295f6130bf504c519cecfd5a53294470cae07838b6101ae0155067ff3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/best-practices/tpch",
+        "sourcePath": "docs/lakehouse/best-practices/tpch.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/tpch.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "01f110c83b5757a16d095ff711d4edacbbfc57d88f7437ee95711c113b34e8cf",
+        "targetHash": "5e8bceb295f6130bf504c519cecfd5a53294470cae07838b6101ae0155067ff3",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

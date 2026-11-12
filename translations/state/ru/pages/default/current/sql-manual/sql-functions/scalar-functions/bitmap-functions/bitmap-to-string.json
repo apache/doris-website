@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-string",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-string.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-to-string.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f812df9b1d04639c7127295dea8684e1104ebf2fe242785ccbbfd209f575cb27",
+    "sourceTechnicalHash": "2e2720dceafcbc950aff79d61b416ffe15f685c4a6e8235b12bc7089e11c0b29",
+    "targetHash": "a0fa7a111a04f83f6e32f4b4d300c3b42d4706f4015dd66b8783dfa0fa969780",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:47:59.408Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f812df9b1d04639c7127295dea8684e1104ebf2fe242785ccbbfd209f575cb27",
+      "targetHash": "a0fa7a111a04f83f6e32f4b4d300c3b42d4706f4015dd66b8783dfa0fa969780",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

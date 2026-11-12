@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "aebe6117548d85ebb44d5c443c27ea3e64ecd54a3c742669119b77cf50a23018",
-    "sourceTechnicalHash": "f950fb076dd5a6e16f724a16fcc1826ae5c7ba299aa1edf31594111667b79f01",
-    "targetHash": "c12d54c397247588aadd713b5039ddd450d4bb65d5f02c4a2d1217e0adab72a6",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "31fc5830faa5bc52291dbe8f8d567722c317fda249d6432ffa4be978f737d367",
+    "sourceTechnicalHash": "92385438e4456bc4198ee3513d8745e288232d3935fe4bd32d468a6bf062516c",
+    "targetHash": "ab3e1247cc3acea51b225038001b656a7b105763f20d4c77c51c92697afa3589",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:46:39.009Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T16:43:12.081Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "31fc5830faa5bc52291dbe8f8d567722c317fda249d6432ffa4be978f737d367",
+      "targetHash": "ab3e1247cc3acea51b225038001b656a7b105763f20d4c77c51c92697afa3589",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 46: expected [\"inlineCode\",null,null,\"min_delta\"]; received [\"inlineCode\",null,null,\"orders\"]\nprotected node 47: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"min_delta\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"etl\"]; received [\"inlineCode\",null,null,\"ods\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"4\",\"5.0.0\"]; received [\"1\",\"1\",\"2\",\"2\",\"2\",\"3\",\"4\",\"5.0.0\"]\nprotected node 46: expected [\"inlineCode\",null,null,\"min_delta\"]; received [\"inlineCode\",null,null,\"orders\"]\nprotected node 47: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"min_delta\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 51: expected [\"inlineCode\",null,null,\"etl\"]; received [\"inlineCode\",null,null,\"ods\"]\nprotected node 52: expected [\"inlineCode\",null,null,\"ods\"]; received [\"inlineCode\",null,null,\"etl\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 46: expected [\"inlineCode\",null,null,\"min_delta\"]; received [\"inlineCode\",null,null,\"orders\"]\nprotected node 47: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"min_delta\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"etl\"]; received [\"inlineCode\",null,null,\"ods\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

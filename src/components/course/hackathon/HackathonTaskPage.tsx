@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { JSX, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
@@ -102,7 +103,7 @@ interface StepDef {
 }
 
 export const START_SNIPPET: CodeSnippet = {
-    label: 'Start Doris',
+    label: translate({id: "landing.HackathonTaskPage.001", message: "Start Doris"}),
     file: 'terminal',
     language: 'bash',
     code: [
@@ -114,10 +115,10 @@ export const START_SNIPPET: CodeSnippet = {
 };
 
 const CONNECTION = [
-    { label: 'Host', value: '127.0.0.1' },
-    { label: 'Port', value: '9030' },
-    { label: 'User', value: 'root', note: 'no password' },
-    { label: 'Database', value: 'hackathon' },
+    { id: 'host', label: translate({id: "landing.HackathonTaskPage.002", message: "Host"}), value: '127.0.0.1' },
+    { id: 'port', label: translate({id: "landing.HackathonTaskPage.003", message: "Port"}), value: '9030' },
+    { id: 'user', label: translate({id: "landing.HackathonTaskPage.004", message: "User"}), value: 'root', note: translate({id: "landing.HackathonTaskPage.005", message: "no password"}) },
+    { id: 'database', label: translate({id: "landing.HackathonTaskPage.006", message: "Database"}), value: 'hackathon' },
 ];
 
 const milestoneId = (milestone: HackathonMilestone) => milestone.code.toLowerCase();
@@ -126,7 +127,7 @@ const snippetsOf = (blocks?: HackathonBlock[]) => (blocks ?? []).filter(isCodeSn
 
 /** Dashed chip for a value that is not decided yet. */
 export function HackathonTba({ name, onDark = false }: { name: string; onDark?: boolean }): JSX.Element {
-    return <span className={clsx('hk-task__tba', onDark && 'hk-task__tba--code')}>{name} · TBA</span>;
+    return <span className={clsx('hk-task__tba', onDark && 'hk-task__tba--code')}>{name} {translate({id: "landing.HackathonTaskPage.007", message: "· TBA"})}</span>;
 }
 
 export function HackathonStarterKit({ onDark = false }: { onDark?: boolean }): JSX.Element {
@@ -206,9 +207,9 @@ export function RowsTable({ head, rows }: { head: [string, string]; rows: Hackat
 function useTaskModel(content: HackathonTaskContent) {
     return useMemo(() => {
         const dataSnippets = snippetsOf(content.data);
-        const views: PanelView[] = [{ id: 'start', tab: 'Start', anchor: 'before', snippets: [START_SNIPPET] }];
+        const views: PanelView[] = [{ id: 'start', tab: translate({id: "landing.HackathonTaskPage.008", message: "Start"}), anchor: 'before', snippets: [START_SNIPPET] }];
         if (dataSnippets.length) {
-            views.push({ id: 'table', tab: 'Table', anchor: 'data', snippets: dataSnippets });
+            views.push({ id: 'table', tab: translate({id: "landing.HackathonTaskPage.009", message: "Table"}), anchor: 'data', snippets: dataSnippets });
         }
         content.milestones.forEach(milestone => {
             const snippets = snippetsOf(milestone.blocks);
@@ -221,7 +222,7 @@ function useTaskModel(content: HackathonTaskContent) {
                 });
             }
         });
-        views.push({ id: 'prompt', tab: 'Prompt', anchor: 'ai', snippets: [content.ai.prompt] });
+        views.push({ id: 'prompt', tab: translate({id: "landing.HackathonTaskPage.010", message: "Prompt"}), anchor: 'ai', snippets: [content.ai.prompt] });
 
         const withCode = content.milestones.filter(milestone => snippetsOf(milestone.blocks).length > 0);
         const last = withCode[withCode.length - 1];
@@ -318,7 +319,7 @@ function TaskTiles({ current }: { current: string }): JSX.Element {
                                 <strong className="hk-task__tile-name">{task.title}</strong>
                             </span>
                             <span className="hk-task__tile-go">
-                                <span>{isCurrent ? 'You are here' : 'Open the brief'}</span>
+                                <span>{isCurrent ? translate({id: "landing.HackathonTaskPage.011", message: "You are here"}) : translate({id: "landing.HackathonTaskPage.012", message: "Open the brief"})}</span>
                                 {isCurrent ? <IconChevronUp /> : <IconArrowRight />}
                             </span>
                         </Link>
@@ -348,12 +349,12 @@ function CodePanel({ content, views, activeStep, pinnedLine }: PanelProps): JSX.
     return (
         <aside
             className={clsx('hk-task__panel', !sketchOpen && 'is-sketch-min', activeStep.sketch && 'is-sketch-focus')}
-            aria-label="Code for the step you are reading"
+            aria-label={translate({id: "landing.HackathonTaskPage.013", message: "Code for the step you are reading"})}
         >
             <div className="hk-sketch">
                 <div className="hk-sketch__head">
-                    <span className="hk-sketch__tag">Sketch</span>
-                    <span className="hk-sketch__title">What you'll build · wireframe, not a screenshot</span>
+                    <span className="hk-sketch__tag">{translate({id: "landing.HackathonTaskPage.014", message: "Sketch"})}</span>
+                    <span className="hk-sketch__title">{translate({id: "landing.HackathonTaskPage.015", message: "What you'll build · wireframe, not a screenshot"})}</span>
                     <button
                         type="button"
                         className="hk-sketch__toggle"
@@ -361,12 +362,12 @@ function CodePanel({ content, views, activeStep, pinnedLine }: PanelProps): JSX.
                         onClick={() => setSketchOpen(open => !open)}
                     >
                         <IconChevronUp />
-                        <span>{sketchOpen ? 'Hide' : 'Show'}</span>
+                        <span>{sketchOpen ? translate({id: "landing.HackathonTaskPage.016", message: "Hide"}) : translate({id: "landing.HackathonTaskPage.017", message: "Show"})}</span>
                     </button>
                 </div>
                 {sketchOpen && <Sketch view={activeStep.view} />}
             </div>
-            <nav className="hk-task__panel-tabs" aria-label="Code views">
+            <nav className="hk-task__panel-tabs" aria-label={translate({id: "landing.HackathonTaskPage.018", message: "Code views"})}>
                 {views.map((view, index) => (
                     <React.Fragment key={view.id}>
                         {(view.id.startsWith('m') && !views[index - 1]?.id.startsWith('m')) || view.id === 'prompt' ? (
@@ -418,11 +419,11 @@ export function ConnectionCard({
     inline?: boolean;
     database?: string;
 }): JSX.Element {
-    const items = CONNECTION.map(item => (item.label === 'Database' ? { ...item, value: database } : item));
+    const items = CONNECTION.map(item => (item.id === 'database' ? { ...item, value: database } : item));
     return (
         <dl className={clsx('hk-task__conn', inline && 'hk-task__conn--inline')}>
             {items.map(item => (
-                <div key={item.label}>
+                <div key={item.id}>
                     <dt>{item.label}</dt>
                     <dd>
                         {item.value}
@@ -439,15 +440,15 @@ function StartExtras({ content }: { content: HackathonTaskContent }): JSX.Elemen
         <>
             <ConnectionCard />
             <p className="hk-task__kitline">
-                <b>Starter kit</b>
-                <span>download</span>
+                <b>{translate({id: "landing.HackathonTaskPage.019", message: "Starter kit"})}</b>
+                <span>{translate({id: "landing.HackathonTaskPage.020", message: "download"})}</span>
                 <HackathonStarterKit onDark />
             </p>
             <div className="hk-task__route">
                 <p className="hk-task__route-label">
-                    <b>Route</b>
+                    <b>{translate({id: "landing.HackathonTaskPage.021", message: "Route"})}</b>
                     {content.task.duration} · {content.milestones[0].code} →{' '}
-                    {content.milestones[content.milestones.length - 1].code} → done
+                    {content.milestones[content.milestones.length - 1].code} {translate({id: "landing.HackathonTaskPage.024", message: "→ done"})}
                 </p>
                 <ol
                     className="hk-task__route-list"
@@ -465,8 +466,8 @@ function StartExtras({ content }: { content: HackathonTaskContent }): JSX.Elemen
                     <li>
                         <a className="hk-task__route-step" href="#done">
                             <b>DoD</b>
-                            <span>Done</span>
-                            <i>→ submit</i>
+                            <span>{translate({id: "landing.HackathonTaskPage.025", message: "Done"})}</span>
+                            <i>{translate({id: "landing.HackathonTaskPage.026", message: "→ submit"})}</i>
                         </a>
                     </li>
                 </ol>
@@ -491,11 +492,11 @@ export function HackathonTopBar(): JSX.Element {
             <div className="hk-task__wrap hk-task__bar-in">
                 <Link className="hk-task__back" to="/course">
                     <IconArrowLeft />
-                    <span>Course</span>
+                    <span>{translate({id: "landing.HackathonTaskPage.027", message: "Course"})}</span>
                 </Link>
                 <span className="hk-task__tag">{HACKATHON_EVENT.name}</span>
                 <span className="hk-task__event">
-                    <span>Self-paced tasks · start anytime · no sign-up</span>
+                    <span>{translate({id: "landing.HackathonTaskPage.028", message: "Self-paced tasks · start anytime · no sign-up"})}</span>
                 </span>
             </div>
         </div>
@@ -505,12 +506,12 @@ export function HackathonTopBar(): JSX.Element {
 /** Switch between the Track A tasks and the Track B page. */
 export function HackathonTaskSwitch({ current }: { current: string }): JSX.Element {
     return (
-        <nav className="hk-task__switch" aria-label="Hackathon tasks">
+        <nav className="hk-task__switch" aria-label={translate({id: "landing.HackathonTaskPage.029", message: "Hackathon tasks"})}>
             <div className="hk-task__wrap hk-task__switch-in">
                 <span className="hk-task__label hk-task__switch-label">
-                    Hackathon
+                    {translate({id: "landing.HackathonTaskPage.030", message: "Hackathon"})}
                     <br />
-                    tasks
+                    {translate({id: "landing.HackathonTaskPage.031", message: "tasks"})}
                 </span>
                 {HACKATHON_PAGE_LINKS.map(item => (
                     <Link
@@ -533,9 +534,8 @@ export function HackathonTaskSwitch({ current }: { current: string }): JSX.Eleme
 export function HackathonHelpLine(): JSX.Element {
     return (
         <p className="hk-task__help">
-            <b>Stuck?</b> Ask in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
-            <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>. Maintainers and other participants are there to
-            help.
+            <b>{translate({id: "landing.HackathonTaskPage.032", message: "Stuck?"})}</b> {translate({id: "landing.HackathonTaskPage.033", message: "Ask in"})} <code>{HACKATHON_EVENT.slackChannel}</code> {translate({id: "landing.HackathonTaskPage.034", message: "on the"})}{' '}
+            <a href={HACKATHON_SLACK_URL}>{translate({id: "landing.HackathonTaskPage.035", message: "Apache Doris Slack"})}</a>{translate({id: "landing.HackathonTaskPage.036", message: ". Maintainers and other participants are there to help."})}
         </p>
     );
 }
@@ -543,13 +543,12 @@ export function HackathonHelpLine(): JSX.Element {
 /** The Track A submission: a GitHub-ID folder in the submission repo. */
 export const TRACK_A_SUBMIT_STEPS: ReactNode[] = [
     <>
-        Put your work in a folder named after <strong>your GitHub ID</strong>: the code, plus a README with what it
-        does, how to run it, one screenshot or GIF, and the Doris features you used.
+        {translate({id: "landing.HackathonTaskPage.037", message: "Put your work in a folder named after"})} <strong>{translate({id: "landing.HackathonTaskPage.038", message: "your GitHub ID"})}</strong>{translate({id: "landing.HackathonTaskPage.039", message: ": the code, plus a README with what it does, how to run it, one screenshot or GIF, and the Doris features you used."})}
     </>,
     <>
-        <strong>Open a pull request</strong> that adds it to <SubmitTarget /> as{' '}
-        <code>{HACKATHON_EVENT.starterKitFolder}/&lt;your-github-id&gt;/</code>. Fork and push, or use GitHub&apos;s{' '}
-        <em>Add file → Upload files</em>. Nothing else to fill in.
+        <strong>{translate({id: "landing.HackathonTaskPage.040", message: "Open a pull request"})}</strong> {translate({id: "landing.HackathonTaskPage.041", message: "that adds it to"})} <SubmitTarget /> {translate({id: "landing.HackathonTaskPage.042", message: "as"})}{' '}
+        <code>{HACKATHON_EVENT.starterKitFolder}/&lt;your-github-id&gt;/</code>{translate({id: "landing.HackathonTaskPage.043", message: ". Fork and push, or use GitHub's"})}{' '}
+        <em>{translate({id: "landing.HackathonTaskPage.044", message: "Add file → Upload files"})}</em>{translate({id: "landing.HackathonTaskPage.045", message: ". Nothing else to fill in."})}
     </>,
 ];
 
@@ -560,7 +559,7 @@ export const TRACK_A_SUBMIT_STEPS: ReactNode[] = [
 export function HackathonSubmit({
     className,
     steps,
-    membersIn = 'the README',
+    membersIn = translate({id: "landing.HackathonTaskPage.046", message: "the README"}),
 }: {
     className?: string;
     steps: ReactNode[];
@@ -570,9 +569,9 @@ export function HackathonSubmit({
     const badgeUrl = useBaseUrl('/images/community-badges/badge-contributor.png');
     return (
         <section className={className} id="submit">
-            <h3>Submit &amp; get your badge</h3>
+            <h3>{translate({id: "landing.HackathonTaskPage.047", message: "Submit & get your badge"})}</h3>
             <div className="hk-task__submit">
-                <p className="hk-task__lead">Take part → submit → get your badge.</p>
+                <p className="hk-task__lead">{translate({id: "landing.HackathonTaskPage.048", message: "Take part → submit → get your badge."})}</p>
                 <ol className="hk-task__steps">
                     {steps.map((step, index) => (
                         <li key={index}>
@@ -581,23 +580,19 @@ export function HackathonSubmit({
                     ))}
                     <li>
                         <p>
-                            <strong>Share it</strong> in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
-                            <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>: a link to your pull request or
-                            repository, plus a screenshot or a short demo. Questions, submissions and badges are all
-                            handled there.
+                            <strong>{translate({id: "landing.HackathonTaskPage.049", message: "Share it"})}</strong> {translate({id: "landing.HackathonTaskPage.050", message: "in"})} <code>{HACKATHON_EVENT.slackChannel}</code> {translate({id: "landing.HackathonTaskPage.051", message: "on the"})}{' '}
+                            <a href={HACKATHON_SLACK_URL}>{translate({id: "landing.HackathonTaskPage.052", message: "Apache Doris Slack"})}</a>{translate({id: "landing.HackathonTaskPage.053", message: ": a link to your pull request or repository, plus a screenshot or a short demo. Questions, submissions and badges are all handled there."})}
                         </p>
                     </li>
                 </ol>
                 <p className="hk-task__late">
-                    Everyone who takes part in a task gets the <strong>Apache Doris Contributor badge</strong>: no
-                    merged pull request to Doris needed. There is no deadline, so take as long as you need. Teams are
-                    fine, but not needed: list every member&apos;s GitHub ID in {membersIn}.
+                    {translate({id: "landing.HackathonTaskPage.054", message: "Everyone who takes part in a task gets the"})} <strong>{translate({id: "landing.HackathonTaskPage.055", message: "Apache Doris Contributor badge"})}</strong>{translate({id: "landing.HackathonTaskPage.056", message: ": no merged pull request to Doris needed. There is no deadline, so take as long as you need. Teams are fine, but not needed: list every member's GitHub ID in"})} {membersIn}.
                 </p>
                 <div className="hk-task__submit-badge">
                     <Link to="/community/how-to-contribute/community-badges">
-                        <img src={badgeUrl} alt="Apache Doris Contributor badge" width="150" height="150" />
+                        <img src={badgeUrl} alt={translate({id: "landing.HackathonTaskPage.057", message: "Apache Doris Contributor badge"})} width="150" height="150" />
                     </Link>
-                    <Link to="/community/how-to-contribute/community-badges">About the Contributor badge</Link>
+                    <Link to="/community/how-to-contribute/community-badges">{translate({id: "landing.HackathonTaskPage.058", message: "About the Contributor badge"})}</Link>
                 </div>
             </div>
         </section>
@@ -611,11 +606,11 @@ export function HackathonAllTasks({ current }: { current: string }): JSX.Element
             <div className="hk-task__more-head">
                 <div>
                     <p className="hk-task__label">{HACKATHON_EVENT.name}</p>
-                    <h2 id="hk-task-more-title">All tasks</h2>
+                    <h2 id="hk-task-more-title">{translate({id: "landing.HackathonTaskPage.059", message: "All tasks"})}</h2>
                 </div>
                 <Link className="hk-task__btn hk-task__btn--sm" to="/course">
                     <IconArrowLeft />
-                    <span>Back to the course</span>
+                    <span>{translate({id: "landing.HackathonTaskPage.060", message: "Back to the course"})}</span>
                 </Link>
             </div>
             <TaskTiles current={current} />
@@ -635,8 +630,8 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
 
     return (
         <LayoutNext
-            title={`${task.title} · Doris Hackathon`}
-            description={`${content.hook} A Track A task in the ${HACKATHON_EVENT.name}: self-paced, with a starter kit and a runnable local Doris.`}
+            title={`${task.title}${translate({id: "landing.HackathonTaskPage.061", message: " · Doris Hackathon"})}`}
+            description={`${content.hook}${translate({id: "landing.HackathonTaskPage.062", message: " A Track A task in the "})}${HACKATHON_EVENT.name}${translate({id: "landing.HackathonTaskPage.063", message: ": self-paced, with a starter kit and a runnable local Doris."})}`}
         >
             <div className="hk-task">
                 <HackathonTopBar />
@@ -645,12 +640,12 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                 <div className="hk-task__wrap hk-task__grid">
                     <div className="hk-task__main">
                         <header className="hk-task__hero" id="top">
-                            <p className="hk-task__eyebrow">Track A · Task {task.code}</p>
+                            <p className="hk-task__eyebrow">{translate({id: "landing.HackathonTaskPage.064", message: "Track A · Task"})} {task.code}</p>
                             <h1>
                                 {content.titleLead} <span>{content.titleTail}</span>
                             </h1>
                             <p className="hk-task__hook">{content.hook}</p>
-                            <ul className="hk-task__chips" aria-label="At a glance">
+                            <ul className="hk-task__chips" aria-label={translate({id: "landing.HackathonTaskPage.065", message: "At a glance"})}>
                                 {content.chips.map(chip => (
                                     <li key={chip}>{chip}</li>
                                 ))}
@@ -658,15 +653,15 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                             <div className="hk-task__actions">
                                 {HACKATHON_EVENT.starterKitUrl ? (
                                     <a className="hk-task__btn" href={HACKATHON_EVENT.starterKitUrl}>
-                                        Get the starter kit
+                                        {translate({id: "landing.HackathonTaskPage.066", message: "Get the starter kit"})}
                                     </a>
                                 ) : (
                                     <span className="hk-task__btn hk-task__btn--tba" aria-disabled="true">
-                                        Get the starter kit <HackathonTba name="STARTER_KIT" />
+                                        {translate({id: "landing.HackathonTaskPage.067", message: "Get the starter kit"})} <HackathonTba name="STARTER_KIT" />
                                     </span>
                                 )}
                                 <a className="hk-task__btn hk-task__btn--primary" href="#before">
-                                    Start Doris <IconArrowDown />
+                                    {translate({id: "landing.HackathonTaskPage.068", message: "Start Doris"})} <IconArrowDown />
                                 </a>
                             </div>
                             <HackathonHelpLine />
@@ -674,30 +669,30 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
 
                         <div className="hk-task__part" id="part-1">
                             <span className="hk-task__part-n">1</span>
-                            <h2>Get set up</h2>
-                            <p>What you are building, why Doris makes it simple, and a running cluster.</p>
+                            <h2>{translate({id: "landing.HackathonTaskPage.069", message: "Get set up"})}</h2>
+                            <p>{translate({id: "landing.HackathonTaskPage.070", message: "What you are building, why Doris makes it simple, and a running cluster."})}</p>
                         </div>
 
                         <section className={cardClass('build')} id="build">
-                            <h3>What you&apos;ll build</h3>
+                            <h3>{translate({id: "landing.HackathonTaskPage.071", message: "What you'll build"})}</h3>
                             <p className="hk-task__lead">{content.build.lead}</p>
                             {content.build.body}
                             <div className="hk-task__inline hk-task__inline-sketch">
                                 <div className="hk-sketch">
                                     <div className="hk-sketch__head">
-                                        <span className="hk-sketch__tag">Sketch</span>
+                                        <span className="hk-sketch__tag">{translate({id: "landing.HackathonTaskPage.072", message: "Sketch"})}</span>
                                         <span className="hk-sketch__title">
-                                            What you&apos;ll build · wireframe, not a screenshot
+                                            {translate({id: "landing.HackathonTaskPage.073", message: "What you'll build · wireframe, not a screenshot"})}
                                         </span>
                                     </div>
                                     <Sketch view={lastView} />
                                 </div>
                             </div>
-                            <PanelNote>The sketch sits at the top of the code panel</PanelNote>
+                            <PanelNote>{translate({id: "landing.HackathonTaskPage.074", message: "The sketch sits at the top of the code panel"})}</PanelNote>
                         </section>
 
                         <section className={cardClass('why')} id="why">
-                            <h3>Why it&apos;s interesting on Doris</h3>
+                            <h3>{translate({id: "landing.HackathonTaskPage.075", message: "Why it's interesting on Doris"})}</h3>
                             <ul className="hk-task__points">
                                 {content.why.map((point, index) => (
                                     <li key={index}>
@@ -706,12 +701,12 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                 ))}
                             </ul>
                             {hasData && content.whyHighlight && (
-                                <PanelNote>Panel: the index lines of the table definition</PanelNote>
+                                <PanelNote>{translate({id: "landing.HackathonTaskPage.076", message: "Panel: the index lines of the table definition"})}</PanelNote>
                             )}
                         </section>
 
                         <section className={cardClass('before')} id="before">
-                            <h3>Before you start</h3>
+                            <h3>{translate({id: "landing.HackathonTaskPage.077", message: "Before you start"})}</h3>
                             <ul className="hk-task__checklist">
                                 {content.before.map((item, index) => (
                                     <li key={index}>
@@ -727,7 +722,7 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                                 <CopyButton
                                                     className="hk-task__copy"
                                                     text={item.command}
-                                                    ariaLabel="Copy command"
+                                                    ariaLabel={translate({id: "landing.HackathonTaskPage.078", message: "Copy command"})}
                                                 />
                                             </div>
                                         )}
@@ -741,14 +736,14 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
 
                         {content.data && (
                             <section className={cardClass('data')} id="data">
-                                <h3>The data</h3>
+                                <h3>{translate({id: "landing.HackathonTaskPage.079", message: "The data"})}</h3>
                                 <Blocks blocks={content.data} />
-                                <PanelNote>Panel → Table: the full table definition</PanelNote>
+                                <PanelNote>{translate({id: "landing.HackathonTaskPage.080", message: "Panel → Table: the full table definition"})}</PanelNote>
                             </section>
                         )}
 
                         <section className={cardClass('ai')} id="ai">
-                            <h3>Build with AI</h3>
+                            <h3>{translate({id: "landing.HackathonTaskPage.081", message: "Build with AI"})}</h3>
                             {content.ai.intro}
                             {content.ai.steps.length > 0 && (
                                 <ol className="hk-task__steps">
@@ -763,24 +758,24 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                 <CopyButton
                                     className="hk-task__btn hk-task__btn--primary"
                                     text={content.ai.prompt.code}
-                                    label={`Copy the ${content.ai.prompt.label.toLowerCase()}`}
+                                    label={`${translate({id: "landing.HackathonTaskPage.082", message: "Copy the "})}${content.ai.prompt.label.toLowerCase()}`}
                                 />
                             </p>
                             <div className="hk-task__inline">
                                 <HackathonCodeBlock snippet={content.ai.prompt} />
                             </div>
                             <h4 className="hk-task__subhead hk-task__label">
-                                Doris traps your agent will probably fall into
+                                {translate({id: "landing.HackathonTaskPage.083", message: "Doris traps your agent will probably fall into"})}
                             </h4>
                             <RowsTable head={['Trap', 'What to do instead']} rows={content.ai.traps} />
                         </section>
 
                         <div className="hk-task__part" id="part-2">
                             <span className="hk-task__part-n">2</span>
-                            <h2>Build it</h2>
+                            <h2>{translate({id: "landing.HackathonTaskPage.084", message: "Build it"})}</h2>
                             <p>
-                                {content.milestones.length} milestones, {content.milestones[0].code} →{' '}
-                                {lastMilestone.code}. The panel follows the step you are reading.
+                                {content.milestones.length} {translate({id: "landing.HackathonTaskPage.085", message: "milestones,"})} {content.milestones[0].code} →{' '}
+                                {lastMilestone.code}{translate({id: "landing.HackathonTaskPage.087", message: ". The panel follows the step you are reading."})}
                             </p>
                         </div>
 
@@ -795,14 +790,14 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                         <div className="hk-task__ms-body">
                                             <p className="hk-task__ms-meta">
                                                 <span className="hk-task__label">
-                                                    Milestone {milestone.code.slice(1)}
+                                                    {translate({id: "landing.HackathonTaskPage.088", message: "Milestone"})} {milestone.code.slice(1)}
                                                 </span>
                                                 {milestone.time && <span>{milestone.time}</span>}
                                             </p>
                                             <h3>{milestone.title}</h3>
                                             <Blocks blocks={milestone.blocks} />
                                             {milestone.legend && (
-                                                <ul className="hk-task__legend" aria-label="The clauses that matter">
+                                                <ul className="hk-task__legend" aria-label={translate({id: "landing.HackathonTaskPage.089", message: "The clauses that matter"})}>
                                                     {milestone.legend.map(entry => (
                                                         <li
                                                             key={entry.line}
@@ -812,7 +807,7 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                                             onFocus={() => setPinnedLine(entry.line)}
                                                             onBlur={() => setPinnedLine(null)}
                                                         >
-                                                            <b>L{entry.line}</b>
+                                                            <b>{translate({id: "landing.HackathonTaskPage.090", message: "L"})}{entry.line}</b>
                                                             <span>
                                                                 <code>{entry.code}</code>
                                                                 <em>{entry.note}</em>
@@ -824,7 +819,7 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                                             {milestone.after}
                                             {milestone.checkpoint && (
                                                 <div className="hk-task__check">
-                                                    <b>Checkpoint</b>
+                                                    <b>{translate({id: "landing.HackathonTaskPage.091", message: "Checkpoint"})}</b>
                                                     <p>{milestone.checkpoint}</p>
                                                 </div>
                                             )}
@@ -836,14 +831,14 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
 
                         <div className="hk-task__part" id="part-3">
                             <span className="hk-task__part-n">3</span>
-                            <h2>Ship it</h2>
-                            <p>Check it off, show it, collect your badge.</p>
+                            <h2>{translate({id: "landing.HackathonTaskPage.092", message: "Ship it"})}</h2>
+                            <p>{translate({id: "landing.HackathonTaskPage.093", message: "Check it off, show it, collect your badge."})}</p>
                         </div>
 
                         <section className={cardClass('done', 'hk-task__dod')} id="done">
                             <div className="hk-task__dod-top">
-                                <h3>Definition of Done</h3>
-                                <span className="hk-task__dod-count">Your checklist</span>
+                                <h3>{translate({id: "landing.HackathonTaskPage.094", message: "Definition of Done"})}</h3>
+                                <span className="hk-task__dod-count">{translate({id: "landing.HackathonTaskPage.095", message: "Your checklist"})}</span>
                             </div>
                             <ul className="hk-task__checklist">
                                 {content.done.map((item, index) => (
@@ -860,7 +855,7 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                         <HackathonSubmit className={cardClass('submit')} steps={TRACK_A_SUBMIT_STEPS} />
 
                         <section className={cardClass('stretch')} id="stretch">
-                            <h3>Stretch goals</h3>
+                            <h3>{translate({id: "landing.HackathonTaskPage.096", message: "Stretch goals"})}</h3>
                             <ul className="hk-task__next">
                                 {content.stretch.map((item, index) => (
                                     <li key={index}>
@@ -871,10 +866,10 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
                         </section>
 
                         <section className={cardClass('help')} id="help">
-                            <h3>Troubleshooting &amp; references</h3>
+                            <h3>{translate({id: "landing.HackathonTaskPage.097", message: "Troubleshooting & references"})}</h3>
                             <RowsTable head={['Symptom', 'Fix']} rows={content.troubleshooting} />
                             <h4 className="hk-task__subhead hk-task__label" id="references">
-                                References
+                                {translate({id: "landing.HackathonTaskPage.098", message: "References"})}
                             </h4>
                             <p className="hk-task__refs">
                                 {content.references.map(reference => (

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/hints/leading-hint",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/hints/leading-hint.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/hints/leading-hint.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f96fc4d71ac53793f0bf27eca12d58e9eb96cd392106c6f459cf360aa13e78ea",
+    "sourceTechnicalHash": "086a3e325b82ced90ccc7d497cc46ac9b9c3e5383960857ffdb5b8785adfce40",
+    "targetHash": "4b84430902a78554d00b445ac3d37fd65fddd749120e916777b683d3f57ac743",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:30:54.982Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f96fc4d71ac53793f0bf27eca12d58e9eb96cd392106c6f459cf360aa13e78ea",
+      "targetHash": "4b84430902a78554d00b445ac3d37fd65fddd749120e916777b683d3f57ac743",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

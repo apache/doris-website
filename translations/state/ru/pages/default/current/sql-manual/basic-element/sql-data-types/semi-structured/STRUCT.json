@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/STRUCT",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "35a5f0ae6370dd0fe26b4b15e8eecf57dd4119ad33c5babd08f216a98f18aa58",
+    "sourceTechnicalHash": "1e464e6631824f8bbeadf172b911381ae02f506c3355268f7cb5463f450d8a54",
+    "targetHash": "ee95dbd3bead96e32637caa51c73981e70d69d3f399c89f88e5705bdf6262a58",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:54:27.674Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "35a5f0ae6370dd0fe26b4b15e8eecf57dd4119ad33c5babd08f216a98f18aa58",
+      "targetHash": "ee95dbd3bead96e32637caa51c73981e70d69d3f399c89f88e5705bdf6262a58",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,9 +1,9 @@
 ---
 {
-    "title": "SQL マッピングを使用した MySQL CDC",
+    "title": "SQL マッピングによる MySQL CDC",
     "language": "ja",
     "sidebar_label": "SQL マッピング同期",
-    "description": "Doris Streaming Job と CDC Stream TVF を使用し、SQL マッピング、全量および増分の開始位置、SSL、削除処理に対応して MySQL テーブルを同期する方法を説明します。",
+    "description": "Doris Streaming Job と CDC Stream TVF を使用して、SQL マッピング、全量および増分オフセット、SSL、削除処理に対応した MySQL テーブル同期を行います。",
     "keywords": [
         "MySQL から Doris への同期",
         "SQL マッピング同期",
@@ -17,38 +17,42 @@
 }
 ---
 
+:::caution 実験的機能
+
+Doris の継続データロードは実験的機能であり、Doris 4.1.5 以降でサポートされています。
+
+:::
+
 <!-- Knowledge type: Operation steps / Configuration parameters -->
 <!-- Applicable scenario: Real-time sync of a single MySQL table to Doris with column mapping or data transformation -->
 
-SQL マッピング同期は、ジョブと [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) を組み合わせ、**既存の** Doris テーブルを同期先として実装します（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`）。Doris SQL の表現力を利用して、同期処理中にカラムのマッピング、フィルタリング、データ変換を行えます。データ処理が必要なリアルタイム同期に適しています。
+SQL マッピング同期は Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) によって実装され、**既存の** Doris テーブルを対象とします（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`）。Doris SQL の表現力を利用して、同期パイプライン内で列マッピング、フィルタリング、データ変換を実行できます。データ処理が必要なリアルタイム同期シナリオに適しています。
 
-> SQL マッピング同期はバージョン 4.1.0 以降でサポートされています。
+[Flink CDC](https://github.com/apache/flink-cdc) の読み取り機能を統合することで、Doris は MySQL から変更ログ（Binlog）を読み取り、ソーステーブルからターゲットテーブルへの**全量 + 増分**同期を完了します。Doris に下流テーブルを自動作成させ、データベース単位でテーブル群を同期する場合は、[MySQL CDC による自動テーブル作成同期](./continuous-load-mysql-database.md)を参照してください。
 
-Doris は [Flink CDC](https://github.com/apache/flink-cdc) の読み取り機能を統合することで、MySQL の変更ログ（Binlog）を読み取り、ソーステーブルからターゲットテーブルへの**全量 + 増分**同期を実行します。Doris で同期先テーブルを自動作成し、データベース単位で複数のテーブルを同期する場合は、[テーブル自動作成を使用した MySQL CDC](./continuous-load-mysql-database.md) を参照してください。
+### 適用シナリオ {#applicable-scenarios}
 
-### 適用シナリオ
+- MySQL の単一テーブルを Doris に継続同期し、ターゲットテーブルのスキーマがあらかじめ計画されている
+- 同期中に列の削除、列マッピング、フィールド名の変更、またはデータ変換が必要
+- エンドツーエンドの exactly-once セマンティクスを必要とするリアルタイムデータ統合
 
-- ターゲットテーブルのスキーマがすでに設計されている、単一の MySQL テーブルから Doris への継続的な同期
-- 同期中にカラムの選択、カラムのマッピング、フィールド名の変更、またはデータ変換が必要な場合
-- エンドツーエンドの exactly-once セマンティクスが必要なリアルタイムのデータ統合
-
-### 前提条件
+### 前提条件 {#prerequisites}
 
 | 項目 | 説明 |
 | ------ | ---- |
-| Doris のバージョン | 4.1.0 以降 |
-| テーブルの種類 | 上流のソーステーブルにはプライマリキーが必要であり、Doris のターゲットテーブルには Unique Key モデルを使用する必要があります。 |
-| ユーザー権限 | `Load` 権限が必要です。 |
-| MySQL の設定 | MySQL 側で Binlog を有効にする必要があります。[設定ガイド](./continuous-load-overview.md#supported-data-sources-and-sync-modes) を参照してください。 |
-| セマンティクスの保証 | exactly-once セマンティクスをサポートします。 |
+| Doris バージョン | 4.1.5 以上 |
+| テーブルタイプ | アップストリームのソーステーブルには主キーが必要です。Doris のターゲットテーブルは Unique Key モデルを使用する必要があります |
+| ユーザー権限 | `Load` 権限が必要です |
+| MySQL 構成 | MySQL 側で Binlog を有効にする必要があります。[構成ガイド](./continuous-load-overview.md#supported-data-sources-and-sync-modes)を参照してください |
+| セマンティクス保証 | exactly-once セマンティクスをサポートします |
 
-## クイックスタート
+## クイックスタート {#quick-start}
 
-次の最小限の実行可能な例では、ジョブを作成してから状態を確認するまでの一連の流れを示します。
+次の最小限の実行可能な例では、ジョブを作成してからステータスを確認する完全なフローを示します。
 
-### ステップ 1: インポートジョブを作成する
+### 手順 1: インポートジョブを作成する {#step-1-create-the-import-job}
 
-[CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) を使用して、継続的なインポートジョブを作成します。
+[CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) を使用して継続インポートジョブを作成します。
 
 ```sql
 CREATE JOB mysql_single_sync
@@ -68,42 +72,42 @@ SELECT * FROM cdc_stream(
 )
 ```
 
-### ステップ 2: インポート状態を確認する
+### 手順 2: インポートステータスを確認する {#step-2-check-the-import-status}
 
 ```sql
 select * from jobs("type"="insert") where ExecuteType = "STREAMING";
 ```
 
-### ステップ 3: ジョブを操作する
+### 手順 3: ジョブの操作 {#step-3-job-operations}
 
-一時停止、再開、削除、タスクの表示など、一般的な操作については、[継続的なインポートの概要](./continuous-load-overview.md) を参照してください。
+一時停止、再開、削除、タスクの表示など、一般的な操作については、[継続インポートの概要](./continuous-load-overview.md)を参照してください。
 
-## パラメータリファレンス
+## パラメータリファレンス {#parameter-reference}
 
-### データソースのパラメータ
+### データソースパラメータ {#data-source-parameters}
 
 CDC Stream TVF は、次の MySQL データソースパラメータをサポートします。
 
 | パラメータ | 必須 | デフォルト | 説明 |
 | --- | --- | --- | --- |
-| `type` | はい | - | データソースの種類。`mysql` に設定します。 |
+| `type` | はい | - | データソースタイプ。`mysql` に設定します。 |
 | `jdbc_url` | はい | - | MySQL JDBC 接続文字列。 |
-| `driver_url` | はい | - | JDBC ドライバーの jar ファイルのパス。ファイル名、ローカルの絶対パス、HTTP URL を指定できます。詳細は [JDBC Catalog の概要](../../../../lakehouse/catalogs/jdbc-catalog-overview.md) を参照してください。 |
-| `driver_class` | はい | - | JDBC ドライバーのクラス名。例: `com.mysql.cj.jdbc.Driver`。 |
-| `user` | はい | - | データベースのユーザー名。 |
-| `password` | はい | - | データベースのパスワード。 |
+| `driver_url` | はい | - | JDBC ドライバー jar のパス。ファイル名、ローカル絶対パス、または HTTP URL をサポートします。詳細は [JDBC Catalog の概要](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)を参照してください。 |
+| `driver_class` | はい | - | JDBC ドライバークラス名。例: `com.mysql.cj.jdbc.Driver`。 |
+| `user` | はい | - | データベースユーザー名。 |
+| `password` | はい | - | データベースパスワード。 |
 | `database` | はい | - | MySQL データベース名。 |
-| `table` | はい | - | 同期するテーブル名。各 SQL マッピングジョブで指定できるソーステーブルは単一のテーブルです。 |
-| `offset` | はい | - | 開始位置。`initial`: 全量および増分同期。`snapshot`: 全量同期のみ。`earliest`: 利用可能な最も古い Binlog の位置から開始。`latest`: ジョブ開始後の変更のみを同期。`{"file":"binlog.000001","pos":"154"}` や `{"gtids":"<gtid_set>"}` のように、正確な位置を JSON で指定することもできます。 |
-| `snapshot_split_size` | いいえ | `40960`（4.1.4 より前は `8096`） | 分割単位の行数。全量同期中、テーブルは複数の分割単位に分けられます。正の整数を指定する必要があります。 |
-| `snapshot_parallelism` | いいえ | `1` | 全量同期フェーズの並列度。つまり、単一の Task が同時にスケジュールする分割単位の最大数です。正の整数を指定する必要があります。 |
-| `skip_snapshot_backfill` | いいえ | `false` | スナップショット中に Binlog のバックフィルをスキップするかどうか。`true` に設定すると、at-least-once セマンティクスが適用されます。 |
-| `server_id` | いいえ | 自動生成 | MySQL CDC リーダーの Server ID。`5400` のような単一の値、または `5400-5408` のような両端を含む範囲を指定できます。範囲の幅は `snapshot_parallelism` 以上である必要があります。 |
+| `table` | はい | - | 同期するテーブル名。各 SQL マッピングジョブでサポートされるソーステーブルは単一です。 |
+| `offset` | はい | - | 起動オフセット。`initial`: 全量および増分同期、`snapshot`: 全量同期のみ、`earliest`: 利用可能な最も早い Binlog オフセットから開始、`latest`: ジョブ開始後の変更のみ同期します。`{"file":"binlog.000001","pos":"154"}` や `{"gtids":"<gtid_set>"}` のように、正確な JSON オフセットを指定することもできます。 |
+| `snapshot_split_size` | いいえ | `40960` | 分割サイズ（行数）。全量同期中、テーブルは複数の split に分割されます。正の整数である必要があります。 |
+| `snapshot_parallelism` | いいえ | `1` | 全量同期フェーズの並列度。つまり、Task によって同時にスケジュールされる split の最大数です。正の整数である必要があります。 |
+| `skip_snapshot_backfill` | いいえ | `false` | スナップショット中に Binlog のバックフィルをスキップするかどうか。`true` に設定すると、at-least-once セマンティクスが使用されます。 |
+| `server_id` | いいえ | 自動生成 | MySQL CDC リーダーのサーバー ID。`5400` のような単一値、または `5400-5408` のような閉区間をサポートします。範囲幅は `snapshot_parallelism` 以上である必要があります。 |
 | `ssl_mode` | いいえ | `disable` | SSL モード。有効な値は `disable`、`require`、`verify-ca` です。 |
-| `ssl_rootcert` | 条件付きで必須 | - | `FILE:<file_name>` 形式の CA 証明書ファイル。`ssl_mode` が `verify-ca` の場合に必要です。先に [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md) を使用してファイルをアップロードしてください。 |
-| `include_delete_sign` | いいえ | `false` | TVF が `__DORIS_DELETE_SIGN__` カラムも出力するかどうか。上流の DELETE 操作を Doris のプライマリキーテーブルで削除として同期するには、`true` に設定します。 |
+| `ssl_rootcert` | 条件付きで必須 | - | `FILE:<file_name>` 形式の CA 証明書ファイル。`ssl_mode` が `verify-ca` の場合に必要です。まず [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md) を使用してファイルをアップロードしてください。 |
+| `include_delete_sign` | いいえ | `false` | TVF が `__DORIS_DELETE_SIGN__` 列を追加で出力するかどうか。上流の DELETE 操作を Doris 主キー テーブルの削除として同期するには `true` に設定します。 |
 
-`include_delete_sign` を有効にする場合、ターゲットテーブルは Merge-on-Write の Unique Key テーブルである必要があります。また、INSERT のターゲットカラムリストと SELECT リストの両方に `__DORIS_DELETE_SIGN__` を明示的に指定する必要があります。
+`include_delete_sign` を有効にすると、ターゲットテーブルは Merge-on-Write Unique Key テーブルである必要があり、INSERT のターゲット列リストと SELECT リストの両方で `__DORIS_DELETE_SIGN__` を明示的にマッピングする必要があります。
 
 ```sql
 CREATE JOB mysql_cdc_with_delete
@@ -125,46 +129,46 @@ FROM cdc_stream(
 );
 ```
 
-### ジョブ設定パラメータ
+### ジョブ構成パラメータ {#job-configuration-parameters}
 
-次のパラメータは `CREATE JOB ... PROPERTIES (...)` で設定します。
+次のパラメータを `CREATE JOB ... PROPERTIES (...)` で設定します。
 
 | パラメータ | デフォルト | 説明 |
 | --- | --- | --- |
-| `max_interval` | `10` | 上流に新しいデータがない場合の、アイドル時のスケジュール間隔（秒）。1 以上の整数を指定する必要があります。 |
-| `compute_group` | 現在のセッションまたはユーザーのデフォルトのコンピュートグループ | コンピュートとストレージを分離したモードでのみサポートされます。ジョブを実行するコンピュートグループを指定します。ユーザーには、そのコンピュートグループに対する USAGE 権限が必要です。 |
-| `session.<variable_name>` | 対応するセッション変数のデフォルト値 | INSERT タスクに適用するセッション変数を設定します。ロードに関する変数については、[Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#import-configuration-parameters) を参照してください。 |
+| `max_interval` | `10` | 上流に新しいデータがない場合のアイドルスケジューリング間隔（秒）。1 以上の整数である必要があります。 |
+| `compute_group` | 現在のセッションまたはユーザーのデフォルトコンピュートグループ | コンピュートとストレージの分離モードでのみサポートされます。ジョブを実行するコンピュートグループを指定します。ユーザーはそのコンピュートグループに対する USAGE 権限を持っている必要があります。 |
+| `session.<variable_name>` | 対応するセッション変数のデフォルト値 | INSERT タスクのセッション変数を設定します。ロード変数については、[Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#import-configuration-parameters)を参照してください。 |
 
-ジョブプロパティ `offset` を `ALTER JOB` で使用して CDC の位置をリセットする際の制約については、[ジョブの共通ロード設定パラメータ](./continuous-load-overview.md#job-common-load-configuration-parameters) を参照してください。新しいジョブの開始位置は `cdc_stream(...)` で設定する必要があります。
+`ALTER JOB` で CDC 位置をリセットするために使用する Job Property `offset` とその完全な制約については、[ジョブ共通データロード構成パラメータ](./continuous-load-overview.md#job-common-load-configuration-parameters)を参照してください。新しいジョブの初期位置は `cdc_stream(...)` で設定する必要があります。
 
-## よくある質問
+## FAQ {#faq}
 
-**Q1: SQL マッピング同期とテーブル自動作成同期の違いは何ですか？**
+**Q1: SQL マッピング同期と自動テーブル作成同期の違いは何ですか？**
 
-- SQL マッピング同期: Doris のターゲットテーブルを**事前に作成**する必要があります。カラムのマッピングとデータ変換をサポートし、きめ細かな処理が必要なシナリオに適しています。
-- テーブル自動作成同期: Doris が同期先テーブルを**自動作成**し、データベース単位でまとめて同期します。詳細は [テーブル自動作成を使用した MySQL CDC](./continuous-load-mysql-database.md) を参照してください。
+- SQL マッピング同期: ターゲット Doris テーブルを**あらかじめ作成しておく必要があります**。列マッピングとデータ変換をサポートし、きめ細かな処理が必要なシナリオに適しています。
+- 自動テーブル作成同期: Doris が下流テーブルを**自動的に作成**し、データベース単位で全体を同期します。詳細は [MySQL CDC による自動テーブル作成同期](./continuous-load-mysql-database.md)を参照してください。
 
-**Q2: プライマリキーのないテーブルをターゲットテーブルとして使用できますか？**
+**Q2: 主キーを持たないテーブルをターゲットテーブルとしてサポートしますか？**
 
-上流のソーステーブルにはプライマリキーが必要であり、Doris のターゲットテーブルには現在 Unique Key モデルを使用する必要があります。
+アップストリームのソーステーブルには主キーが必要で、Doris のターゲットテーブルは現在 Unique Key モデルのみを使用できます。
 
-**Q3: 過去の全量データを含めず、増分データのみを同期するにはどうすればよいですか？**
+**Q3: 履歴の全量データを含めず、増分データのみを同期するにはどうすればよいですか？**
 
-`offset` パラメータを `latest` に設定します。ジョブは全量同期フェーズをスキップし、Binlog の増分データのみを同期します。
+`offset` パラメータを `latest` に設定します。ジョブは全量同期ステージをスキップし、Binlog の増分データのみを同期します。
 
-**Q4: 全量同期が遅すぎる場合、どう最適化すればよいですか？**
+**Q4: 全量同期が遅すぎる場合、どのように最適化できますか？**
 
-全量同期フェーズのスループットを向上させるには、次の二つのパラメータを調整できます。
+全量同期ステージのスループットを向上させるには、次の 2 つのパラメータを調整できます。
 
-- `snapshot_split_size`: 分割単位あたりの行数を増やします。
-- `snapshot_parallelism`: Task がスケジュールする分割単位の並列度を上げます。
+- `snapshot_split_size`: split あたりの行数を増やします。
+- `snapshot_parallelism`: Task ごとにスケジュールされる split の並列度を高めます。
 
-`snapshot_parallelism` を調整する際に `server_id` の範囲も設定している場合は、その範囲の幅が並列度以上であることを確認してください。
+`snapshot_parallelism` を調整する際に `server_id` の範囲も設定している場合は、範囲内の ID 数が並列度以上であることを確認してください。
 
-## 関連ドキュメント
+## 関連ドキュメント {#related-documents}
 
-- [継続的なインポートの概要](./continuous-load-overview.md)
-- [テーブル自動作成を使用した MySQL CDC](./continuous-load-mysql-database.md)
+- [継続インポートの概要](./continuous-load-overview.md)
+- [MySQL CDC による自動テーブル作成同期](./continuous-load-mysql-database.md)
 - [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md)
 - [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
 - [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md)

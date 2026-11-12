@@ -1,0 +1,237 @@
+---
+title: Apache Doris 数据操作指南
+description: 通过七个循序渐进的流程单元，了解如何选择 Apache Doris 的数据导入、更新、删除和导出方式。
+slug: /101/04-apache-doris-data-operations-guide
+sidebar_position: 4
+keywords:
+  - Apache Doris 101
+  - 数据导入
+  - 数据更新
+  - 数据删除
+  - 数据导出
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={4}
+    title="Apache Doris 数据操作指南"
+    readingTime="12–18 分钟"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/data-operate/import/load-manual"
+>
+    <CourseLessonUnit
+        id="data-lifecycle"
+        label="操作概览"
+        title={<>从 <em>数据生命周期中选择合适的操作</em>.</>}
+        summary="导入、更新、删除和导出对正确性及吞吐量的要求各不相同。先明确希望数据发生什么变化。"
+        coachTitle="根据工作负载选择方法。"
+        coach={<p>选择命令或 API 前，先明确数据来源、批次大小、延迟目标、重试方式、表模型语义和输出位置。</p>}
+        calloutTitle="先考虑原子性"
+        callout={<p>了解每种导入方式的事务边界和标签行为，避免重试时悄然产生重复数据或仅写入部分数据。</p>}
+        check={{
+            question: "选择导入方式前，应该明确哪些要求？",
+            options: ["数据来源、数据量、延迟和重试要求", "随意选择一个 API 端点"],
+            correctIndex: 0,
+            correctFeedback: "正确，工作负载的约束决定了适合采用哪种操作。",
+            incorrectFeedback: "端点是实现细节，不能用来定义工作负载。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 数据操作生命周期"
+            focusIndex={0}
+            items={[
+                { title: "导入", description: "将数据写入系统" },
+                { title: "更新", description: "修改逻辑行" },
+                { title: "删除", description: "移除指定范围的数据" },
+                { title: "导出", description: "将结果输出" },
+                { title: "监控", description: "核查每个作业" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-load-method"
+        label="选择导入方式"
+        title={<>根据数据来源和延迟要求选择 <em>导入路径</em>.</>}
+        summary="Doris 支持同步 HTTP 导入、持续消费 Kafka 数据、基于 SQL 的导入，以及异步批处理流程。"
+        coachTitle="优先选择满足需求且适用范围最明确的方式。"
+        coach={<p>文件或 HTTP 流使用 Stream Load，持续消费 Kafka 使用 Routine Load，SQL 转换和外部数据源使用 INSERT INTO SELECT，频繁的小批量写入使用 Group Commit。</p>}
+        calloutTitle="旧版批量导入方式"
+        callout={<p>对于对象存储或 HDFS，适用时优先采用当前的 Catalog 或表值函数流程。将 Broker Load 视为旧版方式，并查看对应版本的使用建议。</p>}
+        check={{
+            question: "哪种方式适合持续导入 Kafka 数据？",
+            options: ["Routine Load", "TRUNCATE TABLE"],
+            correctIndex: 0,
+            correctFeedback: "正确，Routine Load 负责管理长期运行的 Kafka 消费作业。",
+            incorrectFeedback: "TRUNCATE 用于删除数据，不能导入数据流。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 导入方式概览"
+            columns={3}
+            items={[
+                { tag: 'HTTP', title: "Stream Load", description: "同步导入文件或数据流，并立即获得作业结果。" },
+                { tag: 'KFK', title: "Routine Load", description: "持续消费 Kafka 数据，并由系统管理消费进度。" },
+                { tag: 'SQL', title: "INSERT SELECT", description: "从表、Catalog 或文件 TVF 转换并导入数据。" },
+                { tag: 'JDBC', title: "INSERT VALUES", description: "适用于更看重简便性而非批量吞吐量的小规模 SQL 写入。" },
+                { tag: 'GC', title: "Group Commit", description: "将高频小批量写入合并为高效的提交操作。" },
+                { tag: 'ASYNC', title: "批处理作业", description: "通过标签和状态跟踪较大的异步作业。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="reliable-loading"
+        label="可靠导入"
+        title={<>让每次导入都 <em>可观测、可重试</em>.</>}
+        summary="标签、质量阈值、错误样本、作业状态和数据源偏移量，使导入从单次请求变成可管理的流程。"
+        coachTitle="作业已提交，不代表作业已成功。"
+        coach={<p>在支持的情况下分配稳定的标签，检查已接收和已过滤的行数，保留数据源检查点，并在作业暂停或失败时发出告警。明确指定数据格式、列映射和过滤设置。</p>}
+        calloutTitle="数据质量"
+        callout={<p>应有意识地设置过滤容忍度。阈值过高可能掩盖格式错误的输入；阈值过低可能使本可恢复的批次停止处理。</p>}
+        check={{
+            question: "怎样让导入重试更安全？",
+            options: ["使用稳定的作业标签，并记录数据源位置", "每次重试都更改表结构"],
+            correctIndex: 0,
+            correctFeedback: "正确，作业标识和检查点有助于发现或防止重复处理。",
+            incorrectFeedback: "未经规划的表结构变更会让重试更难排查。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="可靠的 Apache Doris 导入流程"
+            focusIndex={2}
+            items={[
+                { title: "描述", description: "格式 + 映射" },
+                { title: "标识", description: "标签 + 数据源范围" },
+                { title: "提交", description: "原子事务" },
+                { title: "监控", description: "行数 + 错误 + 状态" },
+                { title: "重试", description: "审慎地恢复处理" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="update-data"
+        label="更新"
+        title={<>让表模型决定 <em>更新语义</em>.</>}
+        summary="Unique Key 表支持 UPSERT 行为和 SQL UPDATE；Aggregate Key 表则通过声明的聚合函数更新数据。"
+        coachTitle="整行更新和部分列更新的开销不同。"
+        coach={<p>整行 UPSERT 会提供完整的逻辑行。部分列更新可以减少宽表记录需要提供的字段，但要求表和导入设置支持，且可能增加读取或合并开销。</p>}
+        calloutTitle="表结构约定"
+        callout={<p>整行 UPSERT 中未提供的值可能变为默认值或 NULL。只有预期语义和表实现都支持时，才使用部分列更新模式。</p>}
+        check={{
+            question: "哪种表模型适合表示 CDC 行的最新状态？",
+            options: ["Unique Key", "Duplicate Key"],
+            correctIndex: 0,
+            correctFeedback: "正确，Unique Key 按键应用 UPSERT 语义。",
+            incorrectFeedback: "Duplicate Key 会保留每个版本，而不是只保留当前的逻辑行。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="整行更新与部分列更新"
+            leftTitle="整行 UPSERT"
+            leftLead="写入完整的新逻辑行。"
+            leftItems={["语义更简单", "基础吞吐量最佳", "需要谨慎处理未提供的值"]}
+            rightTitle="部分列更新"
+            rightLead="仅写入宽表行中选定的字段。"
+            rightItems={["客户端传输的数据更少", "需要使用受支持的模式", "额外的合并开销"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="delete-data"
+        label="删除"
+        title={<>选择最小且安全的 <em>删除范围</em>.</>}
+        summary="条件 DELETE 可按支持的行过滤条件删除数据，基于导入的删除标记可处理批量删除，TRUNCATE 则可快速清空表或分区。"
+        coachTitle="删除范围决定了速度和风险。"
+        coach={<p>使用条件删除时，须遵守对应表模型的限制。对于大量键值，通过受控批次导入删除标记。只有需要清除整个分区或表时，才执行相应的清空操作。</p>}
+        calloutTitle="可恢复性"
+        callout={<p>确认目标版本是否支持从回收站恢复。除非明确需要永久删除，否则应避免使用 FORCE 操作。</p>}
+        check={{
+            question: "要移除整个旧时间分区，应使用哪种操作？",
+            options: ["TRUNCATE 或删除该分区", "更新一个无关的值列"],
+            correctIndex: 0,
+            correctFeedback: "正确，按分区删除直接对应所需的操作范围。",
+            incorrectFeedback: "更新值不会移除分区。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 删除方式"
+            columns={3}
+            items={[
+                { tag: 'WHERE', title: "条件 DELETE", description: "删除符合受支持的限定条件的行。" },
+                { tag: 'BATCH', title: "导入删除标记", description: "通过数据导入，按键批量执行删除。" },
+                { tag: 'ALL', title: "TRUNCATE", description: "不按行过滤，直接清空整个表或分区。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="export-data"
+        label="导出"
+        title={<>让输出形式匹配 <em>数据使用方</em>.</>}
+        summary="SELECT INTO OUTFILE 可导出经过转换的查询结果，EXPORT 可运行较大的异步提取作业，mysqldump 可导出表结构或少量逻辑数据。"
+        coachTitle="格式和目标位置也是约定的一部分。"
+        coach={<p>面向分析系统可选择 Parquet 或 ORC，追求广泛兼容性可选择 CSV；访问对象存储或 HDFS 时应妥善保护凭据。还要根据下游读取需求规划文件数量和并行度。</p>}
+        calloutTitle="同步与异步"
+        callout={<p>OUTFILE 与查询关联，使用灵活。对于较大的后台作业，EXPORT 更便于跟踪。两者都不能替代经过验证的备份和恢复方案。</p>}
+        check={{
+            question: "哪种方式支持对导出结果进行 SQL 转换？",
+            options: ["SELECT INTO OUTFILE", "SHOW BACKENDS"],
+            correctIndex: 0,
+            correctFeedback: "正确，SELECT 会在 OUTFILE 写出数据前确定结果的形式。",
+            incorrectFeedback: "SHOW BACKENDS 用于查看集群中的节点，不是导出方式。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 导出方式"
+            columns={3}
+            items={[
+                { tag: 'SQL', title: "SELECT OUTFILE", description: "将可转换的结果同步导出为 CSV、Parquet 或 ORC 格式。" },
+                { tag: 'JOB', title: "EXPORT", description: "对较大的表或分区范围进行异步数据提取。" },
+                { tag: 'DDL', title: "mysqldump", description: "通过 MySQL 工具导出表结构并进行小规模逻辑备份。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="operations-recap"
+        label="操作回顾"
+        title={<>将数据流转视为 <em>受控的状态转换</em>.</>}
+        summary="可靠的操作应有明确的范围、正确性边界、可观测的结果、重试策略和下游验证。"
+        coachTitle="顺利执行只是设计的一部分。"
+        coach={<p>记录责任人、凭据、标签、数据源位置、质量策略、告警和清理行为。演练部分失败的情况，并在操作完成后核对行数或业务层面的不变量。</p>}
+        calloutTitle="下一课之前"
+        callout={<p>有了可信的数据，下一模块将介绍如何表达分析需求，以及如何选择 Doris 能高效执行的查询结构。</p>}
+        check={{
+            question: "操作成功后，还需要做什么才能完成闭环？",
+            options: ["核实数据是否达到预期状态", "立即丢弃所有作业元数据"],
+            correctIndex: 0,
+            correctFeedback: "正确，按照预期状态核对生成的行、分区或文件。",
+            incorrectFeedback: "作业元数据是审计和故障诊断的重要依据。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 操作控制闭环"
+            focusIndex={4}
+            items={[
+                { title: "确定范围", description: "明确要改变的数据状态" },
+                { title: "执行", description: "采用合适的方式" },
+                { title: "监控", description: "跟踪状态 + 质量" },
+                { title: "恢复", description: "重试或补偿" },
+                { title: "验证", description: "确认结果符合预期" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

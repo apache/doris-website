@@ -8,13 +8,75 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/query-data/asof-join.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/asof-join.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "4888e84ec080206ae4f4ed4ca1ac5ba8451446dce5ca1969d85566c6f151148c",
-    "sourceTechnicalHash": "6726f54556518e8a2c993ec1c7360fefec195b60216862339a428baacfb11bfe",
-    "targetHash": "f461b75f488133bc5b5e54f6219503d668395418b44ba988c9afa64eb9113520",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
+    "sourceHash": "313e2183eaea5f732cdb8658ab43381ba58979a832d35ebfee906dc965b3ca08",
+    "sourceTechnicalHash": "884d2da3d10b140ff1a759e82f5fabb8b449dae28ce4cc78f6094aa04ec53403",
+    "targetHash": "9f2ba6d14cc190aac5bed9e5fd44a267fa76d9d0eb5752c2af9579b48f3605b0",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.708Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T18:59:21.624Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "313e2183eaea5f732cdb8658ab43381ba58979a832d35ebfee906dc965b3ca08",
+      "targetHash": "9f2ba6d14cc190aac5bed9e5fd44a267fa76d9d0eb5752c2af9579b48f3605b0",
+      "warnings": [
+        {
+          "check": "frontmatter",
+          "message": "Restore front matter field: title"
+        },
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\ntechnical front matter: expected {}; received {\"\\\\u0022description\\\\u0022\":\"\\\\u0022ASOF JOIN は時系列データで最近傍マッチングを実行します。左テーブルの各行について、指定した方向に沿って時間的に最も近い右テーブルの行を検索します。ウィンドウ関数は必要ありません。\\\\u0022\",\"\\\\u0022keywords\\\\u0022\":[\"\\\\u0022ASOF JOIN\\\\u0022\",\"\\\\u0022時系列 JOIN\\\\u0022\",\"\\\\u0022最近傍マッチング\\\\u0022\",\"\\\\u0022MATCH_CONDITION\\\\u0022\",\"\\\\u0022ポイントインタイムクエリ\\\\u0022\",\"\\\\u0022Doris 時系列クエリ\\\\u0022\",\"\\\\u0022as of join\\\\u0022\"],\"\\\\u0022language\\\\u0022\":\"\\\\u0022ja\\\\u0022\",\"\\\\u0022title\\\\u0022\":\"\\\\u0022ASOF JOIN による時系列最近傍マッチング\\\\u0022\"}\nnumeric values: expected [\"00\",\"00\",\"00\",\"00\",\"05\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"2\",\"2\",\"25\",\"3\",\"3\",\"4\",\"4.1.5\",\"5\",\"6\",\"6\",\"7\",\"8\",\"9\"]; received [\"00\",\"00\",\"00\",\"00\",\"05\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"25\",\"3\",\"3\",\"4\",\"4.1.5\",\"5\",\"6\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 52: expected [\"inlineCode\",null,null,\"=\"]; received [\"inlineCode\",null,null,\"AND\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"00\",\"00\",\"00\",\"05\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"2\",\"2\",\"25\",\"3\",\"3\",\"4\",\"4.1.5\",\"5\",\"6\",\"6\",\"7\",\"8\",\"9\"]; received [\"00\",\"00\",\"00\",\"00\",\"05\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"25\",\"3\",\"3\",\"4\",\"4.1.5\",\"5\",\"6\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Capability definition + Operational example -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 機能定義 + 運用例 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Time-series data analysis / Quote-trade matching / Event snapshot alignment -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: 時系列データ分析 / 相場と取引のマッチング / イベントスナップショットの整合 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 52: expected [\"inlineCode\",null,null,\"=\"]; received [\"inlineCode\",null,null,\"AND\"]\nprotected node 53: expected [\"inlineCode\",null,null,\"AND\"]; received [\"inlineCode\",null,null,\"=\"]\nprotected node 64: expected [\"inlineCode\",null,null,\"trades\"]; received [\"inlineCode\",null,null,\"symbol\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "frontmatter",
+              "message": "Restore front matter field: title"
+            },
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\ntechnical front matter: expected {}; received {\"\\\\u0022description\\\\u0022\":\"\\\\u0022ASOF JOIN は時系列データで最近傍マッチングを実行します。左テーブルの各行について、指定した方向に沿って時間的に最も近い右テーブルの行を検索します。ウィンドウ関数は必要ありません。\\\\u0022\",\"\\\\u0022keywords\\\\u0022\":[\"\\\\u0022ASOF JOIN\\\\u0022\",\"\\\\u0022時系列 JOIN\\\\u0022\",\"\\\\u0022最近傍マッチング\\\\u0022\",\"\\\\u0022MATCH_CONDITION\\\\u0022\",\"\\\\u0022ポイントインタイムクエリ\\\\u0022\",\"\\\\u0022Doris 時系列クエリ\\\\u0022\",\"\\\\u0022as of join\\\\u0022\"],\"\\\\u0022language\\\\u0022\":\"\\\\u0022ja\\\\u0022\",\"\\\\u0022title\\\\u0022\":\"\\\\u0022ASOF JOIN による時系列最近傍マッチング\\\\u0022\"}\nnumeric values: expected [\"00\",\"00\",\"00\",\"00\",\"05\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"2\",\"2\",\"25\",\"3\",\"3\",\"4\",\"4.1.5\",\"5\",\"6\",\"6\",\"7\",\"8\",\"9\"]; received [\"00\",\"00\",\"00\",\"00\",\"05\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"25\",\"3\",\"3\",\"4\",\"4.1.5\",\"5\",\"6\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 52: expected [\"inlineCode\",null,null,\"=\"]; received [\"inlineCode\",null,null,\"AND\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/query-data/asof-join.md",
+        "blob": "573a3a5a5df17b9560b8d734f5e49cb0e5e1b7f2"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/query-data/asof-join.md",
+        "blob": "3d8aec13b93fc6ae74b7610dd0a47c72a22b0857"
+      }
+    }
   }
 }

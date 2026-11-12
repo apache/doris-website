@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/access-cluster",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/access-cluster.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/access-cluster.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "790c3171d1814b4a393b1d064572f7402f9e984c99b1bef26a9d94ae3005e266",
+    "sourceTechnicalHash": "ef9222a75b122b7da289384f9142c42e37389c8e9dc5a34369e24482ae2b2d8b",
+    "targetHash": "9406c8ca9e7f15fc392fffbedcd6910b8d140da919bde666598a54f089591352",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:32:49.913Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "790c3171d1814b4a393b1d064572f7402f9e984c99b1bef26a9d94ae3005e266",
+      "targetHash": "9406c8ca9e7f15fc392fffbedcd6910b8d140da919bde666598a54f089591352",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

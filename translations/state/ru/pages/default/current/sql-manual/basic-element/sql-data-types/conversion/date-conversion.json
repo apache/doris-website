@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/date-conversion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/date-conversion.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "1a83c2a98f5011ac242041e0e9018d90c50616ac1875282e65be3d90e4fcc9ef",
+    "sourceTechnicalHash": "0efdb5bcc08b8109f889cc9301b754a7d8591d0d784c6901d3ecde0ce77f9ba7",
+    "targetHash": "d699a7840d73e81fc733b13d5ca5fbcd5e959d118b58221a2873241d10c95757",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:51:40.722Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1a83c2a98f5011ac242041e0e9018d90c50616ac1875282e65be3d90e4fcc9ef",
+      "targetHash": "d699a7840d73e81fc733b13d5ca5fbcd5e959d118b58221a2873241d10c95757",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "enabled": true,
+  "regionSource": "browser-time-zone",
+  "preference": {
+    "key": "doris.localePreference",
+    "maxAgeDays": 180
+  },
+  "sessionKey": "doris.localeEntryAttempt",
+  "loopParameter": "__doris_locale_entry",
+  "countries": {
+    "RU": {
+      "locale": "ru",
+      "timeZones": [
+        "Europe/Kaliningrad",
+        "Europe/Moscow",
+        "Europe/Kirov",
+        "Europe/Volgograd",
+        "Europe/Astrakhan",
+        "Europe/Saratov",
+        "Europe/Ulyanovsk",
+        "Europe/Samara",
+        "Asia/Yekaterinburg",
+        "Asia/Omsk",
+        "Asia/Novosibirsk",
+        "Asia/Barnaul",
+        "Asia/Tomsk",
+        "Asia/Novokuznetsk",
+        "Asia/Krasnoyarsk",
+        "Asia/Irkutsk",
+        "Asia/Chita",
+        "Asia/Yakutsk",
+        "Asia/Khandyga",
+        "Asia/Vladivostok",
+        "Asia/Ust-Nera",
+        "Asia/Magadan",
+        "Asia/Sakhalin",
+        "Asia/Srednekolymsk",
+        "Asia/Kamchatka",
+        "Asia/Anadyr"
+      ]
+    },
+    "BY": {
+      "locale": "ru",
+      "timeZones": [
+        "Europe/Minsk"
+      ]
+    },
+    "KZ": {
+      "locale": "ru",
+      "timeZones": [
+        "Asia/Almaty",
+        "Asia/Qyzylorda",
+        "Asia/Qostanay",
+        "Asia/Aqtobe",
+        "Asia/Aqtau",
+        "Asia/Atyrau",
+        "Asia/Oral"
+      ]
+    },
+    "KG": {
+      "locale": "ru",
+      "timeZones": [
+        "Asia/Bishkek"
+      ]
+    },
+    "TJ": {
+      "locale": "ru",
+      "timeZones": [
+        "Asia/Dushanbe"
+      ]
+    },
+    "TM": {
+      "locale": "ru",
+      "timeZones": [
+        "Asia/Ashgabat"
+      ]
+    },
+    "UZ": {
+      "locale": "ru",
+      "timeZones": [
+        "Asia/Samarkand",
+        "Asia/Tashkent"
+      ]
+    },
+    "CN": {
+      "locale": "zh-CN",
+      "timeZones": [
+        "Asia/Shanghai",
+        "Asia/Urumqi"
+      ]
+    },
+    "JP": {
+      "locale": "ja",
+      "timeZones": [
+        "Asia/Tokyo"
+      ]
+    },
+    "KR": {
+      "locale": "ko",
+      "timeZones": [
+        "Asia/Seoul"
+      ]
+    },
+    "KP": {
+      "locale": "ko",
+      "timeZones": [
+        "Asia/Pyongyang"
+      ]
+    }
+  },
+  "aliases": {
+    "Asia/Ashkhabad": "Asia/Ashgabat",
+    "Asia/Chongqing": "Asia/Shanghai",
+    "Asia/Chungking": "Asia/Shanghai",
+    "Asia/Harbin": "Asia/Shanghai",
+    "Asia/Kashgar": "Asia/Urumqi",
+    "Japan": "Asia/Tokyo",
+    "PRC": "Asia/Shanghai",
+    "ROK": "Asia/Seoul",
+    "W-SU": "Europe/Moscow"
+  },
+  "source": {
+    "tzdbVersion": "2026e",
+    "zoneTable": "https://data.iana.org/time-zones/tzdb/zone.tab",
+    "aliasTable": "https://data.iana.org/time-zones/tzdb/backward",
+    "sha256": {
+      "zone.tab": "e2e8e31c4e10f44576c79345e76060591dbb3eef6ce14e006afc8a373caa9593",
+      "backward": "b8296b9ef1ece72d813878132c0f17e2c52b26af6004eeb9c37d049b64cd9401"
+    }
+  }
+}

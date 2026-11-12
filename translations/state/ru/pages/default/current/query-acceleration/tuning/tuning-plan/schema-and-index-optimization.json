@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-plan/schema-and-index-optimization",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-plan/schema-and-index-optimization.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/schema-and-index-optimization.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "3b8e8dfb05437d761256cc9900e7957cd20044d054363674bda82fe287f6e090",
+    "sourceTechnicalHash": "0f0fe18a09686266eecfedcd50e36f80cbf54d3f923c1c96d97b91bfa23faafb",
+    "targetHash": "a462a8f2c1fceec630a656b7b5acf58481d24881cd30f29a4da2d468870b9522",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:37:05.435Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3b8e8dfb05437d761256cc9900e7957cd20044d054363674bda82fe287f6e090",
+      "targetHash": "a462a8f2c1fceec630a656b7b5acf58481d24881cd30f29a4da2d468870b9522",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

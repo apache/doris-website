@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "5f5109a4bf51e5f5a006f2f64a971c4d7baf4b501f827f37f42c4a172fa8ead4",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "00dced33a07461db52fc488a69081433c6480c24e29d7bb6b0d8363e2651824f",
     "sourceTechnicalHash": "a83e48e03a70fd0e65434690842fcb00fb4e8823019376e821a36f49e0349f10",
-    "targetHash": "d71085d54081038b2817b60a16ee2d5ccb1f47312d247ad79410aad8def12b6c",
+    "targetHash": "0fa0628953e6098d5f79c9e6c75bcd1f019477ce73667da40ea2c6c25f172d27",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:46:39.010Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T04:58:41.189Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "00dced33a07461db52fc488a69081433c6480c24e29d7bb6b0d8363e2651824f",
+      "targetHash": "0fa0628953e6098d5f79c9e6c75bcd1f019477ce73667da40ea2c6c25f172d27",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"CREATE MATERIALIZED VIEW \\n[ IF NOT EXISTS ] <materialized_view_name>\\n    [ (<columns_definition>) ] \\n    [ BUILD <build_mode> ]\\n    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]\\n    [ [DUPLICATE] KEY (<key_cols>) ]\\n    [ COMMENT '<table_comment>' ]\\n    [ PARTITION BY (\\n        { <partition_col> \\n            | DATE_TRUNC(<partition_col>, <partition_unit>) }\\n        )]\\n    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }\\n        [ BUCKETS { <bucket_count> | AUTO } ]\\n    ]               \\n    [ PROPERTIES (\\n          -- Table property\\n          <table_property>\\n          -- Additional table properties\\n          [ , ... ]) \\n    ]\\n    AS <query>\"]; received [\"code\",\"sql\",null,\"CREATE MATERIALIZED VIEW\\n[ IF NOT EXISTS ] <materialized_view_name>\\n    [ (<columns_definition>) ]\\n    [ BUILD <build_mode> ]\\n    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]\\n    [ [DUPLICATE] KEY (<key_cols>) ]\\n    [ COMMENT '<table_comment>' ]\\n    [ PARTITION BY (\\n        { <partition_col>\\n            | DATE_TRUNC(<partition_col>, <partition_unit>) }\\n        )]\\n    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }\\n        [ BUCKETS { <bucket_count> | AUTO } ]\\n    ]\\n    [ PROPERTIES (\\n          -- Table property\\n          <table_property>\\n          -- Additional table properties\\n          [ , ... ])\\n    ]\\n    AS <query>\"]\nprotected node 2: expected [\"code\",\"sql\",null,\"columns_definition\\n  : -- Column definition\\n    <col_name> \\n      [ COMMENT '<col_comment>' ]\\nrefresh_trigger\\n  : ON MANUAL\\n  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']\\n  | ON COMMIT\\nrefresh_method\\n  : COMPLETE\\n  | AUTO\\n  | INCREMENTAL\\n  | PARTITIONS\"]; received [\"code\",\"sql\",null,\"columns_definition\\n  : -- Column definition\\n    <col_name>\\n      [ COMMENT '<col_comment>' ]\\nrefresh_trigger\\n  : ON MANUAL\\n  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']\\n  | ON COMMIT\\nrefresh_method\\n  : COMPLETE\\n  | AUTO\\n  | INCREMENTAL\\n  | PARTITIONS\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"FALLBACK\"]; received [\"inlineCode\",null,null,\"INCREMENTAL\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"08\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"15\",\"15\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.10\",\"2.1.10\",\"2.1.10\",\"3\",\"3\",\"3.0.6\",\"4\",\"4\",\"4\",\"5\",\"5.0.0\",\"6\",\"7\",\"8\",\"9\"]; received [\"00\",\"08\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"15\",\"15\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.10\",\"2.1.10\",\"2.1.10\",\"3\",\"3\",\"3.0.6\",\"4\",\"4\",\"4\",\"5\",\"5.0.0\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 1: expected [\"code\",\"sql\",null,\"CREATE MATERIALIZED VIEW \\n[ IF NOT EXISTS ] <materialized_view_name>\\n    [ (<columns_definition>) ] \\n    [ BUILD <build_mode> ]\\n    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]\\n    [ [DUPLICATE] KEY (<key_cols>) ]\\n    [ COMMENT '<table_comment>' ]\\n    [ PARTITION BY (\\n        { <partition_col> \\n            | DATE_TRUNC(<partition_col>, <partition_unit>) }\\n        )]\\n    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }\\n        [ BUCKETS { <bucket_count> | AUTO } ]\\n    ]               \\n    [ PROPERTIES (\\n          -- Table property\\n          <table_property>\\n          -- Additional table properties\\n          [ , ... ]) \\n    ]\\n    AS <query>\"]; received [\"code\",\"sql\",null,\"CREATE MATERIALIZED VIEW\\n[ IF NOT EXISTS ] <materialized_view_name>\\n    [ (<columns_definition>) ]\\n    [ BUILD <build_mode> ]\\n    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]\\n    [ [DUPLICATE] KEY (<key_cols>) ]\\n    [ COMMENT '<table_comment>' ]\\n    [ PARTITION BY (\\n        { <partition_col>\\n            | DATE_TRUNC(<partition_col>, <partition_unit>) }\\n        )]\\n    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }\\n        [ BUCKETS { <bucket_count> | AUTO } ]\\n    ]\\n    [ PROPERTIES (\\n          -- Table property\\n          <table_property>\\n          -- Additional table properties\\n          [ , ... ])\\n    ]\\n    AS <query>\"]\nprotected node 2: expected [\"code\",\"sql\",null,\"columns_definition\\n  : -- Column definition\\n    <col_name> \\n      [ COMMENT '<col_comment>' ]\\nrefresh_trigger\\n  : ON MANUAL\\n  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']\\n  | ON COMMIT\\nrefresh_method\\n  : COMPLETE\\n  | AUTO\\n  | INCREMENTAL\\n  | PARTITIONS\"]; received [\"code\",\"sql\",null,\"columns_definition\\n  : -- Column definition\\n    <col_name>\\n      [ COMMENT '<col_comment>' ]\\nrefresh_trigger\\n  : ON MANUAL\\n  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']\\n  | ON COMMIT\\nrefresh_method\\n  : COMPLETE\\n  | AUTO\\n  | INCREMENTAL\\n  | PARTITIONS\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"08\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"15\",\"15\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.10\",\"2.1.10\",\"2.1.10\",\"3\",\"3\",\"3.0.6\",\"4\",\"4\",\"4\",\"5\",\"5.0.0\",\"6\",\"7\",\"8\",\"9\"]; received [\"00\",\"08\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"15\",\"15\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.10\",\"2.1.10\",\"2.1.10\",\"3\",\"3\",\"3.0.6\",\"4\",\"4\",\"4\",\"5\",\"5.0.0\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 1: expected [\"code\",\"sql\",null,\"CREATE MATERIALIZED VIEW \\n[ IF NOT EXISTS ] <materialized_view_name>\\n    [ (<columns_definition>) ] \\n    [ BUILD <build_mode> ]\\n    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]\\n    [ [DUPLICATE] KEY (<key_cols>) ]\\n    [ COMMENT '<table_comment>' ]\\n    [ PARTITION BY (\\n        { <partition_col> \\n            | DATE_TRUNC(<partition_col>, <partition_unit>) }\\n        )]\\n    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }\\n        [ BUCKETS { <bucket_count> | AUTO } ]\\n    ]               \\n    [ PROPERTIES (\\n          -- Table property\\n          <table_property>\\n          -- Additional table properties\\n          [ , ... ]) \\n    ]\\n    AS <query>\"]; received [\"code\",\"sql\",null,\"CREATE MATERIALIZED VIEW\\n[ IF NOT EXISTS ] <materialized_view_name>\\n    [ (<columns_definition>) ]\\n    [ BUILD <build_mode> ]\\n    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]\\n    [ [DUPLICATE] KEY (<key_cols>) ]\\n    [ COMMENT '<table_comment>' ]\\n    [ PARTITION BY (\\n        { <partition_col>\\n            | DATE_TRUNC(<partition_col>, <partition_unit>) }\\n        )]\\n    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }\\n        [ BUCKETS { <bucket_count> | AUTO } ]\\n    ]\\n    [ PROPERTIES (\\n          -- Table property\\n          <table_property>\\n          -- Additional table properties\\n          [ , ... ])\\n    ]\\n    AS <query>\"]\nprotected node 2: expected [\"code\",\"sql\",null,\"columns_definition\\n  : -- Column definition\\n    <col_name> \\n      [ COMMENT '<col_comment>' ]\\nrefresh_trigger\\n  : ON MANUAL\\n  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']\\n  | ON COMMIT\\nrefresh_method\\n  : COMPLETE\\n  | AUTO\\n  | INCREMENTAL\\n  | PARTITIONS\"]; received [\"code\",\"sql\",null,\"columns_definition\\n  : -- Column definition\\n    <col_name>\\n      [ COMMENT '<col_comment>' ]\\nrefresh_trigger\\n  : ON MANUAL\\n  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']\\n  | ON COMMIT\\nrefresh_method\\n  : COMPLETE\\n  | AUTO\\n  | INCREMENTAL\\n  | PARTITIONS\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"CREATE MATERIALIZED VIEW \\n[ IF NOT EXISTS ] <materialized_view_name>\\n    [ (<columns_definition>) ] \\n    [ BUILD <build_mode> ]\\n    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]\\n    [ [DUPLICATE] KEY (<key_cols>) ]\\n    [ COMMENT '<table_comment>' ]\\n    [ PARTITION BY (\\n        { <partition_col> \\n            | DATE_TRUNC(<partition_col>, <partition_unit>) }\\n        )]\\n    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }\\n        [ BUCKETS { <bucket_count> | AUTO } ]\\n    ]               \\n    [ PROPERTIES (\\n          -- Table property\\n          <table_property>\\n          -- Additional table properties\\n          [ , ... ]) \\n    ]\\n    AS <query>\"]; received [\"code\",\"sql\",null,\"CREATE MATERIALIZED VIEW\\n[ IF NOT EXISTS ] <materialized_view_name>\\n    [ (<columns_definition>) ]\\n    [ BUILD <build_mode> ]\\n    [ REFRESH <refresh_method> [FALLBACK] [<refresh_trigger>]]\\n    [ [DUPLICATE] KEY (<key_cols>) ]\\n    [ COMMENT '<table_comment>' ]\\n    [ PARTITION BY (\\n        { <partition_col>\\n            | DATE_TRUNC(<partition_col>, <partition_unit>) }\\n        )]\\n    [ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }\\n        [ BUCKETS { <bucket_count> | AUTO } ]\\n    ]\\n    [ PROPERTIES (\\n          -- Table property\\n          <table_property>\\n          -- Additional table properties\\n          [ , ... ])\\n    ]\\n    AS <query>\"]\nprotected node 2: expected [\"code\",\"sql\",null,\"columns_definition\\n  : -- Column definition\\n    <col_name> \\n      [ COMMENT '<col_comment>' ]\\nrefresh_trigger\\n  : ON MANUAL\\n  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']\\n  | ON COMMIT\\nrefresh_method\\n  : COMPLETE\\n  | AUTO\\n  | INCREMENTAL\\n  | PARTITIONS\"]; received [\"code\",\"sql\",null,\"columns_definition\\n  : -- Column definition\\n    <col_name>\\n      [ COMMENT '<col_comment>' ]\\nrefresh_trigger\\n  : ON MANUAL\\n  | ON SCHEDULE EVERY <int_value> <refresh_unit> [ STARTS '<start_time>']\\n  | ON COMMIT\\nrefresh_method\\n  : COMPLETE\\n  | AUTO\\n  | INCREMENTAL\\n  | PARTITIONS\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"FALLBACK\"]; received [\"inlineCode\",null,null,\"INCREMENTAL\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

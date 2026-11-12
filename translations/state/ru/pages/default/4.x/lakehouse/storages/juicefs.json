@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/juicefs",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/juicefs.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/juicefs.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "fb2c69dc58ea2fa8814ecdf996502fa6b5bc345329d98b7e7835ee2bae8880a3",
+    "sourceTechnicalHash": "1a467d7ba92e5f8f12f0bf0f1948ded3372158e7756043e79d8475fb667a6ec9",
+    "targetHash": "09dcd45e0e81e5df8511838b17885eb75527693fcd38bd567109983be7a7bab4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:22.828Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fb2c69dc58ea2fa8814ecdf996502fa6b5bc345329d98b7e7835ee2bae8880a3",
+      "targetHash": "09dcd45e0e81e5df8511838b17885eb75527693fcd38bd567109983be7a7bab4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/storages/juicefs",
+        "sourcePath": "docs/lakehouse/storages/juicefs.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/juicefs.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "fb2c69dc58ea2fa8814ecdf996502fa6b5bc345329d98b7e7835ee2bae8880a3",
+        "targetHash": "09dcd45e0e81e5df8511838b17885eb75527693fcd38bd567109983be7a7bab4",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/aws-msk",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/aws-msk.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/aws-msk.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "534acfea1668d3ea8891aade8e8a9c1b43014ef245a65140f15476797b6db323",
+    "sourceTechnicalHash": "5afb1859c21db458a26feedd8db129b1d95c734fac7cbd7c72217eed13162469",
+    "targetHash": "313932c7001c8a787b5b346c4976558c6e7de8cb8c551dc4c1964d3ce208f626",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:11:34.929Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "534acfea1668d3ea8891aade8e8a9c1b43014ef245a65140f15476797b6db323",
+      "targetHash": "313932c7001c8a787b5b346c4976558c6e7de8cb8c551dc4c1964d3ce208f626",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

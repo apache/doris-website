@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/review-and-ci",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/review-and-ci.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/how-to-contribute/review-and-ci.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bf5837b2b202c767dea45e9378f8bdde135e89eacc69f4c96c5762a844493616",
+    "sourceTechnicalHash": "d3aae0f09ebdb50e4a890f3f97229e868c6cf61e6fd3721892175882517dbc86",
+    "targetHash": "7e54737d0b0848756e16000bb5581440b9469691fce2d2c173350050d7f17ab6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:32:59.157Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bf5837b2b202c767dea45e9378f8bdde135e89eacc69f4c96c5762a844493616",
+      "targetHash": "7e54737d0b0848756e16000bb5581440b9469691fce2d2c173350050d7f17ab6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

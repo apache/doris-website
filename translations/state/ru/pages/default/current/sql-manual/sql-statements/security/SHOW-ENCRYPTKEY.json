@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/SHOW-ENCRYPTKEY",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/SHOW-ENCRYPTKEY.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/SHOW-ENCRYPTKEY.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2365dd65665f0232b867063dab9838d4ac5533d077df0c6e386008996609641a",
+    "sourceTechnicalHash": "690eeffb01300cd30d912f5082c0e5ceb5f255304ff1f61b2fe9352ae1f08087",
+    "targetHash": "e815d289b7864d63dcc86a87b47126a7b3c6563164cf4782ba697ec2928352b9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:34:50.567Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2365dd65665f0232b867063dab9838d4ac5533d077df0c6e386008996609641a",
+      "targetHash": "e815d289b7864d63dcc86a87b47126a7b3c6563164cf4782ba697ec2928352b9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

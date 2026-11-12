@@ -4,7 +4,8 @@ import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { normalizePathname } from '@site/src/utils/locale';
 import { isTranslatedLocale } from '@site/src/utils/localization';
-import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
+import { buildCommunityEntryUrl, getCommunityName } from '@site/src/components/slack-redirect/slack-attribution.logic';
+import { TelegramIcon } from '@site/src/components/Icons/telegram';
 import {
     allowsSlackNudgeAutoOpen,
     computeMascotPupilOffset,
@@ -80,7 +81,9 @@ export function SlackCommunityNudge(): JSX.Element {
     // The provider outlives client-side navigation, so the timer checks the page it fires on.
     const autoOpenAllowedRef = useRef(true);
     autoOpenAllowedRef.current = allowsSlackNudgeAutoOpen(normalizedPathname);
-    const slackUrl = buildSlackEntryUrl({
+    const communityName = getCommunityName(currentLocale);
+    const communityUrl = buildCommunityEntryUrl({
+        locale: currentLocale,
         medium: showDocsFeedback ? 'docs' : 'website',
         content: 'mascot_nudge',
     });
@@ -262,7 +265,7 @@ export function SlackCommunityNudge(): JSX.Element {
                 <p className="slack-community-nudge__copy">
                     {translate({ id: "homepage.slackcommunitynudge.010", message: "Join Slack for setup help, performance tips, and answers from Apache Doris users and maintainers." })}</p>
                 <ul className="slack-community-nudge__benefits">
-                    {(isTranslatedLocale(currentLocale) ? localizedBenefits : getSlackNudgeBenefits()).map(benefit => (
+                    {localizedBenefits.map(benefit => (
                         <li className="slack-community-nudge__benefit" key={benefit}>
                             {benefit}
                         </li>
@@ -270,13 +273,13 @@ export function SlackCommunityNudge(): JSX.Element {
                 </ul>
                 <a
                     className="slack-community-nudge__cta"
-                    href={slackUrl}
+                    href={communityUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={handleJoin}
                     tabIndex={isOpen ? undefined : -1}
                 >
-                    <SlackGlyph />
+                    {communityName === 'Telegram' ? <TelegramIcon width="16" height="16" /> : <SlackGlyph />}
                     {translate({ id: "homepage.slackcommunitynudge.011", message: "Join Slack" })}</a>
                 <section
                     className="slack-community-nudge__summit"

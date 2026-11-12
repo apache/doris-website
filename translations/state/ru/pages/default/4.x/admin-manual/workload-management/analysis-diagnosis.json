@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/analysis-diagnosis",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/analysis-diagnosis.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/analysis-diagnosis.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "592e609505451698c8040d3d946e5bb4b2ae215d2a56572bfb99f20401ebe0db",
+    "sourceTechnicalHash": "3fa616c63f32f14754edde91575d7d8996d789ea820d7dadf8e46f61216f6081",
+    "targetHash": "5d7801263f44fcea12cea4c9d80808193c9f1b5686ebb1bc79165b88075949ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:57.758Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "592e609505451698c8040d3d946e5bb4b2ae215d2a56572bfb99f20401ebe0db",
+      "targetHash": "5d7801263f44fcea12cea4c9d80808193c9f1b5686ebb1bc79165b88075949ae",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/workload-management/analysis-diagnosis",
+        "sourcePath": "docs/admin-manual/workload-management/analysis-diagnosis.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/analysis-diagnosis.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "592e609505451698c8040d3d946e5bb4b2ae215d2a56572bfb99f20401ebe0db",
+        "targetHash": "5d7801263f44fcea12cea4c9d80808193c9f1b5686ebb1bc79165b88075949ae",
+        "commit": "8046b263706ddcdf890bf51f6efec7f3ea77bf66",
+        "pr": "https://github.com/apache/doris-website/pull/4433"
+      }
+    }
+  }
+}

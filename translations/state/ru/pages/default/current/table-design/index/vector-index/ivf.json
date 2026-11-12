@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/ivf",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/ivf.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/vector-index/ivf.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "8d7110283bc5ca00a42f6ecdfef16850d0afbd50c65a43e2faff5a49f4e3ec38",
+    "sourceTechnicalHash": "416dbd8643dbb6d73e0de1c7c0b592e30b7fe6a5cd7fa9440a582dc03bace556",
+    "targetHash": "2053a61b1cbee2b58b46abf52ada79518d3e2672857c0d2cb0cb0652fb6d6285",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:02:13.407Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8d7110283bc5ca00a42f6ecdfef16850d0afbd50c65a43e2faff5a49f4e3ec38",
+      "targetHash": "2053a61b1cbee2b58b46abf52ada79518d3e2672857c0d2cb0cb0652fb6d6285",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/async-materialized-view/DROP-ASYNC-MATERIALIZED-VIEW.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4ed48ff94566cb2d84a3f91f5a699e1c74688efa4d56989def0fc7a37a79d4ae",
+    "sourceTechnicalHash": "6c28de439f5cfe206fc07b20f8231db749e82f0b88f187c6c931f53f7f73f350",
+    "targetHash": "67d9ece8c4299fa1c399b15b6bd7f2b42fb9136fba7e6edd80c0b6f1922c6bcc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:37:37.981Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ed48ff94566cb2d84a3f91f5a699e1c74688efa4d56989def0fc7a37a79d4ae",
+      "targetHash": "67d9ece8c4299fa1c399b15b6bd7f2b42fb9136fba7e6edd80c0b6f1922c6bcc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

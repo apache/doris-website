@@ -6,6 +6,14 @@ Matomo instance and then forwards the visitor to the real invite link kept in
 `docusaurus.config.js` under `customFields.slackInviteUrl`. When the invite
 link is rotated, change it there and nothing else.
 
+Russian community entry points use `https://doris.apache.org/telegram` with
+the same UTM parameters and redirect behavior. Its destination is configured
+once in `customFields.telegramInviteUrl` in `docusaurus.config.js`. Change
+that field when the Telegram link changes. These clicks use the same
+`Community Acquisition` category with the separate action `Telegram Click`.
+Locale-aware components use `buildCommunityEntryUrl()` so Russian visitors
+reach Telegram and other locales continue to use Slack.
+
 Every channel keeps linking to `/slack`; what differs per channel is the UTM
 query string. Use these four standard parameters and nothing else:
 

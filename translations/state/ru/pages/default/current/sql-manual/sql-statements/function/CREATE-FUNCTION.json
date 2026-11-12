@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/function/CREATE-FUNCTION",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/function/CREATE-FUNCTION.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/function/CREATE-FUNCTION.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "24d46cfc4001c15baff27ca85c9fbc03b312e8b5ea7322123171740ae52f1921",
+    "sourceTechnicalHash": "d97e801935f2e16a460f3bcf72f206ecb61b7e2885c4f5d907b09c5afcafdf81",
+    "targetHash": "0ca990c5f30566a9ba1f7bc7ff4c591757e4ce37ee1e33160d975954aacd063c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:06:22.771Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "24d46cfc4001c15baff27ca85c9fbc03b312e8b5ea7322123171740ae52f1921",
+      "targetHash": "0ca990c5f30566a9ba1f7bc7ff4c591757e4ce37ee1e33160d975954aacd063c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

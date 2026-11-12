@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "6f2f5999a08e8df547ddf5952874e964db39edcafebd0787daf10eb847e7b5f9",
-    "sourceTechnicalHash": "2b5d236b1a71c38186a6e125735b9e4d71cb8e79213953890a1dbbd205e9b11e",
-    "targetHash": "63c0d247e766ba80bdcccaf35d691d36d013e4bce5c080589d84f843e58c3227",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "62a6f1f322ac332e99cfa7824b2349830284bfd4161fbab610a2402fd0948c46",
+    "sourceTechnicalHash": "17b67eef11d79259c25cf93a8e21580d793553db0fc45b7863b5ae62142f2d85",
+    "targetHash": "8aa2cb45262ffcf6fbb2f8292e42310fa587534f920a2aa293a5d9d4ac1c28d9",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:50:40.610Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T04:48:35.591Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "62a6f1f322ac332e99cfa7824b2349830284bfd4161fbab610a2402fd0948c46",
+      "targetHash": "8aa2cb45262ffcf6fbb2f8292e42310fa587534f920a2aa293a5d9d4ac1c28d9",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 14: expected [\"code\",\"sql\",null,\"    WARM UP COMPUTE GROUP destination_group WITH \\n        TABLE sales_data \\n        AND TABLE customer_info \\n        AND TABLE orders PARTITION q1_2024;\\n\"]; received [\"code\",\"sql\",null,\"    WARM UP COMPUTE GROUP destination_group WITH\\n        TABLE sales_data\\n        AND TABLE customer_info\\n        AND TABLE orders PARTITION q1_2024;\\n\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 14: expected [\"code\",\"sql\",null,\"    WARM UP COMPUTE GROUP destination_group WITH \\n        TABLE sales_data \\n        AND TABLE customer_info \\n        AND TABLE orders PARTITION q1_2024;\\n\"]; received [\"code\",\"sql\",null,\"    WARM UP COMPUTE GROUP destination_group WITH\\n        TABLE sales_data\\n        AND TABLE customer_info\\n        AND TABLE orders PARTITION q1_2024;\\n\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 14: expected [\"code\",\"sql\",null,\"    WARM UP COMPUTE GROUP destination_group WITH \\n        TABLE sales_data \\n        AND TABLE customer_info \\n        AND TABLE orders PARTITION q1_2024;\\n\"]; received [\"code\",\"sql\",null,\"    WARM UP COMPUTE GROUP destination_group WITH\\n        TABLE sales_data\\n        AND TABLE customer_info\\n        AND TABLE orders PARTITION q1_2024;\\n\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 14: expected [\"code\",\"sql\",null,\"    WARM UP COMPUTE GROUP destination_group WITH \\n        TABLE sales_data \\n        AND TABLE customer_info \\n        AND TABLE orders PARTITION q1_2024;\\n\"]; received [\"code\",\"sql\",null,\"    WARM UP COMPUTE GROUP destination_group WITH\\n        TABLE sales_data\\n        AND TABLE customer_info\\n        AND TABLE orders PARTITION q1_2024;\\n\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

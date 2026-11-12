@@ -1,5 +1,23 @@
 # Documentation translation state
 
+The [operations runbook](OPERATIONS.md) covers version upgrades and retirement,
+source lifecycle, consistent reporting, ownership, pause/resume and recovery.
+The [root language-entry policy](LOCALE_ENTRY.md) documents manual preference,
+browser language order, the regional fallback table and detection rollback.
+
+The [manual blog contract](BLOG.md) covers per-article fallback, indexing,
+aggregates, feeds and the initial four-article/four-language pilot. It is separate
+from scheduled documentation generation.
+
+## Supported documentation versions
+
+Dev and 4.x remain eligible for managed ja/ko/ru documentation translation.
+Version 3.x and 2.1 documentation provides English and Chinese prose only.
+Other site locales keep their URLs and navigation with complete English prose,
+English canonical/noindex and no fictitious translated alternate. These versions
+are excluded from automatic translation and required-translation backlogs;
+configuration validation rejects accidentally adding them to a managed scope.
+
 A locale under translation stays opt-in. `DORIS_ENABLE_LOCALES` lists the ones a
 build should serve, and a developer can switch a single one on with its own
 `DORIS_ENABLE_<LANG>` flag instead. Both are read by `config/i18n.js`, which is
@@ -15,7 +33,7 @@ the default source. A `sourceOverrides` entry identifies `pluginId`, `version`,
 registered by the English docs plugin. A Chinese-only file is reported as
 `unsupported_source_route`; setting an override does not create its route.
 `searchContextLabels` maps a search context path (`docs/dev`, `docs/4.x`,
-`community`) to the label that locale's search page shows; a locale without it
+`community`, `course`) to the label that locale's search page shows; a locale without it
 shows the raw context path.
 
 The translation workflow's `validate` mode selects one exact source page for a
@@ -33,9 +51,81 @@ build; the scoped website build and static-page verification run afterward.
 Russian is an optional, docs-first locale. Enable it with `DORIS_ENABLE_RU=true`
 or use `DORIS_ENABLE_LOCALES=ja,ko,ru` for all managed languages. The deployment
 workflows explicitly enable all three; default local builds still serve English
-and Chinese. Ordinary Russian pages link to English until individually registered.
-Russian generation has a manual-only workflow, described below. Product landing
-pages and a Russian generation schedule remain outside this launch.
+and Chinese. Ordinary Russian pages retain Russian URLs and navigation; missing manual prose falls back to English.
+Russian translation runs twice daily and on manual dispatch, as described below.
+
+The ja/ko/ru scopes explicitly enable DEV, 4X, COMMUNITY, COURSE and RELEASES in
+`automaticGroups`. Course bodies use the same source hashes, per-page state,
+manual-edit protection, open-PR reservations and incremental maintenance as the
+other documentation plugins. Existing valid targets are reused. Chinese course
+bodies remain manually maintained; their page records retain machine review
+status and human ownership, without enabling a Chinese translation workflow.
+Course search uses its own localized context and indexes current targets only.
+
+RELEASES uses the new-only policy below; supplemental page groups remain outside
+automatic generation. Historical release-note files and existing translations
+stay unchanged. React landing pages
+and weekly reports use their manual page/entry state. Existing candidates from
+earlier expanded runs remain separate pending reviews, not merged coverage.
+The audit's `automaticCounts` and discovery summary report the effective
+required/current/pending totals. Additional registered groups remain in the
+raw census and `deferredAutomaticGroups`; their old-channel missing files do
+not become required translation backlog or override manual page/report state.
+
+### New-only Release Notes maintenance
+
+`translations/release-notes-baseline.json` freezes the English native identities,
+source hashes and historical paths at commit
+`b207a93551a3705652bc261639e3eec7fd738c7a`: 83 registered notes and 83 source
+files, including the existing release index. Each managed RELEASES group names
+this file through `sourcePolicy: {mode: "new-only", baseline:
+"translations/release-notes-baseline.json"}`. Chinese remains manually maintained.
+
+The inventory and audit classify historical identities as `historical_excluded`.
+They remain in the census, with their ordinary native content/fallback state,
+but do not enter required/pending translation totals, update/deletion tasks or
+automatic generation. Existing targets and records are preserved; native stale
+checks and English fallback continue to apply. Publication does not depend on
+the automation policy.
+
+Raw sidebar label status remains visible. `automaticLabels` and
+`--fail-on-pending` use only enabled automatic groups and eligible note labels;
+historical release categories and version navigation remain manual native
+labels. They do not create an automatic missing-label backlog.
+
+Newly registered notes must have a genuinely new source identity committed after
+the cutoff. Their later source updates use the existing incremental workflow,
+open-PR reservations, ownership protection, batch limits, shared lock and normal
+PR/CI process. Current real translated notes have a `releases` search context;
+untranslated or stale English-fallback pages do not enter a managed locale's
+search index.
+
+Git lineage prevents a historical rename, move or re-registration from becoming
+a new translation task. Exact copies and ambiguous delete/add histories are
+excluded or reported as `policy_review` for manual identity reconciliation.
+These cases are not sent to a model. The generator independently checks the
+committed policy and eligibility before reading a task for translation, so a
+forced task or stale plan cannot bypass the cutoff.
+
+Do not regenerate the baseline or move its source commit forward to hide
+pending work. Configuration validation checks the policy format; CI also runs
+`check-configuration.cjs --all --release-history` to verify its Git census,
+hashes and ancestry without a site build. Inventory and generation independently
+check the same evidence. A baseline
+or pipeline change during generation invalidates the batch.
+
+For a read-only check, use the existing locale workflow's `dry-run` mode or:
+
+```bash
+I18N_LOCALE=ru node scripts/i18n/plan-translations.cjs --source-ref HEAD \
+  --plugin releases --output /tmp/release-plan.json --audit-output /tmp/release-audit.json
+```
+
+If no new eligible note exists, selected tasks stay empty and the workflow does
+not call a model or open a translation PR. Do not manufacture a note or source
+drift for acceptance. Record the first real future note's generation, merge and
+public result when it occurs. To pause RELEASES, remove it from the affected
+locale's `automaticGroups`; retain the fixed policy, existing content and URLs.
 
 The [initial Russian inventory](inventory/ru/2026-10-20/batches.md) records 1,674 Dev,
 1,619 4.x and 51 community documents, excluding two drafts. Four launch samples
@@ -73,10 +163,21 @@ rebuild through the existing process; retain source translations and state.
 
 `.github/workflows/russian-translation.yml` calls the existing
 `translation-run.yml` with `locale: ru` and the `russian-translation` workspace.
-It only accepts manual dispatch and defaults to `dry-run`, which discovers
-pending work without calling a model. Japanese, Korean and Russian runs share
-the whole-run `docs-translation` lock, including discovery and validation.
-Japanese and Korean schedules keep their existing behavior.
+It runs at 05:03 and 17:03 UTC daily, twenty minutes after Korean discovery, and
+also accepts manual dispatch. Scheduled runs and default manual runs use
+`generate`. Select `dry-run` explicitly to discover pending work without calling
+a model. Japanese, Korean and Russian runs share the whole-run
+`docs-translation` lock, including discovery and validation.
+
+The separate `russian-coverage-audit.yml` is a read-only weekly report at
+05:49 UTC on Mondays and supports manual dispatch. It has only `contents: read`,
+uses no model/publishing credentials, and uploads native coverage for the checked
+out SHA. It does not run for pull requests or hold the generation lock.
+
+Transient GitHub PR-list/file-list failures (429/5xx and connection errors)
+retry the complete paginated read at most twice, after one and two seconds.
+Authentication errors and exhausted retries still stop discovery. Partial API
+output must never be used to remove an active candidate from deduplication.
 
 The shared workflow runs only on Apache `master` and checks out `master` again
 before generation. Merge the Russian configuration and workflow before running
@@ -557,10 +658,13 @@ review are recommended before running batch generation.
 and on manual dispatch; `.github/workflows/korean-translation.yml` runs twenty
 minutes later. Each sets only its triggers, manual defaults and the lock, then
 calls `.github/workflows/translation-run.yml` with its locale and artifact
-prefix. The manual-only Russian wrapper uses the same steps and lock. None has
-a push trigger. The description below uses Japanese; the other languages differ
-in locale, label, artifact names, triggers and manual default. Every run first recounts
-the current native Dev, 4.x and community documents, reads every open master
+prefix. Russian runs another twenty minutes later, at 05:03 and 17:03 UTC, using
+the same steps and lock. All three support manual dispatch and default to
+`generate`; select `dry-run` explicitly for a read-only scan. None has a push
+trigger. The description below uses Japanese; the other languages differ in
+locale, label, artifact names and scheduled times. Every run first recounts
+the current configured translation scope, including Dev, 4.x, community,
+courses, release notes and reports, reads every open master
 PR's changed files, and checks Japanese target files against that PR's state
 records. Each run uploads `plan.json`, `coverage.json`,
 `active-candidates.json` and `open-pr-reconciliation.json` and writes a short

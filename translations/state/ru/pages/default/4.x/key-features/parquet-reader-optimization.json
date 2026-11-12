@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/parquet-reader-optimization",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/parquet-reader-optimization.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/parquet-reader-optimization.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0ed0057c0e1d007529971cbe9bf2023e0d9e10fbb1d759fc1c54b6ec013ca3af",
+    "sourceTechnicalHash": "0025fc46eedf7f942534854251f275a61105923a43752b1356c75bf57a52dace",
+    "targetHash": "d132e235cb58c1030b9cc273370bbb6ee66355491e2f4fb2de5c5bc829e8c06e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:32.731Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0ed0057c0e1d007529971cbe9bf2023e0d9e10fbb1d759fc1c54b6ec013ca3af",
+      "targetHash": "d132e235cb58c1030b9cc273370bbb6ee66355491e2f4fb2de5c5bc829e8c06e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/parquet-reader-optimization",
+        "sourcePath": "docs/key-features/parquet-reader-optimization.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/parquet-reader-optimization.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "0ed0057c0e1d007529971cbe9bf2023e0d9e10fbb1d759fc1c54b6ec013ca3af",
+        "targetHash": "d132e235cb58c1030b9cc273370bbb6ee66355491e2f4fb2de5c5bc829e8c06e",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

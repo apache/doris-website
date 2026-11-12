@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/data-partitioning/dynamic-partitioning.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-partitioning/dynamic-partitioning.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "c4e8d163833d8edb857a13bffd7d7df2dfa1f793646b8809ec21fde6f5e31418",
-    "sourceTechnicalHash": "b9bd607570798e40f6fe8db9aa21d8ce03bea86c0c3445592650d61964cdcfb9",
-    "targetHash": "66645fad45d5308dd05607e25bd2c0cc7bb6386f7426d701cd48a61db3bf3154",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "97b1719f92fc23d6fec091b541e1c492920c5b40f42be67afa2755cd34bf5a6e",
+    "sourceTechnicalHash": "76afb9d30effd2eae91f1777685a859194a340db704c39e87ac203df2ae07d7e",
+    "targetHash": "4a09a3698a23f10ffb21775ec9c41cfaa5e3f33e565170ca1e16c5a853ec2459",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T14:05:28.126Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T16:54:37.460Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "97b1719f92fc23d6fec091b541e1c492920c5b40f42be67afa2755cd34bf5a6e",
+      "targetHash": "4a09a3698a23f10ffb21775ec9c41cfaa5e3f33e565170ca1e16c5a853ec2459",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"11\",\"2\",\"2\",\"2024\",\"28\",\"28\",\"28\",\"29\",\"3\",\"3\",\"3\",\"3\",\"30\",\"31\",\"5\",\"500\",\"600\",\"7\",\"7\",\"7\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"11\",\"2\",\"2\",\"2\",\"2024\",\"28\",\"28\",\"28\",\"29\",\"3\",\"3\",\"3\",\"3\",\"30\",\"31\",\"4\",\"5\",\"500\",\"600\",\"7\",\"7\",\"7\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

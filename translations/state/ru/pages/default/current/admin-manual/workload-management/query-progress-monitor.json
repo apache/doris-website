@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/query-progress-monitor",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/query-progress-monitor.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/query-progress-monitor.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "8a0481f9b2988c16a8e3730b309fc76e82cabc1bbfdf66c0ee477548cc264563",
+    "sourceTechnicalHash": "65b3c42c1ada9f444b1e80435ef6c5b8b8f626e41e59ea543ad06a436be12238",
+    "targetHash": "6455c3250b7d270f8c40a1906f8935d645ef4e9021c001f82f4f52472706db3e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:49:20.873Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8a0481f9b2988c16a8e3730b309fc76e82cabc1bbfdf66c0ee477548cc264563",
+      "targetHash": "6455c3250b7d270f8c40a1906f8935d645ef4e9021c001f82f4f52472706db3e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

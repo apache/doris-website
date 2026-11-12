@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hour",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6ec0816a6421c2872b9f7fe0eb3eefc416bd9ecd25464eb7437a2ee5cb2468ac",
+    "sourceTechnicalHash": "53985b32f4e73576133d2ed10a56dc0de077876810c6f50616ee10bb68544f21",
+    "targetHash": "554fd68b9c8388c22eb3a9ba914207dd97f9f7a764f7a44b527bf610b5dd5fdc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:26:19.799Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6ec0816a6421c2872b9f7fe0eb3eefc416bd9ecd25464eb7437a2ee5cb2468ac",
+      "targetHash": "554fd68b9c8388c22eb3a9ba914207dd97f9f7a764f7a44b527bf610b5dd5fdc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

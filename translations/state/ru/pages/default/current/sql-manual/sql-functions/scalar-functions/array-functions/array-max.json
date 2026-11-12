@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-max",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-max.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-max.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7b530b5536ff59d22e0229718158d3e6d5dd60f64000a1493f4e88b90c7d8c29",
+    "sourceTechnicalHash": "3db5a9134ce79bba9c13163375f942617f1bfc7f14ee79a6c48343a25d83660e",
+    "targetHash": "b90d469cbf22dc8539708380d9aa4b51cff1e5f691cac7b2dda026f1071337eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:46:12.391Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7b530b5536ff59d22e0229718158d3e6d5dd60f64000a1493f4e88b90c7d8c29",
+      "targetHash": "b90d469cbf22dc8539708380d9aa4b51cff1e5f691cac7b2dda026f1071337eb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/statistics",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/statistics.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/statistics.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c9e78d2f5b5f2c8097d35686f7f73d10a7f7f23b822316947dd45f57d723e888",
+    "sourceTechnicalHash": "497f73b41c6634e1d44364ddaf75db413876fd3ce5fc4691393fce0591d86323",
+    "targetHash": "20f8da39b655573a0bc57f97f5115bb769a6481107139613afbabf3e6c6bf4ed",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:42:37.909Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c9e78d2f5b5f2c8097d35686f7f73d10a7f7f23b822316947dd45f57d723e888",
+      "targetHash": "20f8da39b655573a0bc57f97f5115bb769a6481107139613afbabf3e6c6bf4ed",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

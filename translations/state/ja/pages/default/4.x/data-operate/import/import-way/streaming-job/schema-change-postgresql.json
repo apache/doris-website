@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "f6fc4c7247836367cfd29e7f77537494f837b530c841071cf07057138953ebc6",
-    "sourceTechnicalHash": "2dd18f0b441af5acf43a5a4cf1088e5b91a92e6b433e71cd337cf9d7077e4348",
-    "targetHash": "7bc4a4d60885f5b09e72ae614e6c53ab5c8e9b3c84ac65288f7edff99b3661ca",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "8e3b23ea433ad9ba0a97b1149978dc4b7f71f00333c34a55272b295cf6b452a5",
+    "sourceTechnicalHash": "2e25de7d0526383aa311f8fd109fb86bfee270cd20a862e3eb900fdc5143a97e",
+    "targetHash": "ba0de8869cf74c18eb6d17d180989f083ae0d3bfad7f0d237b82edade6582e0e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-05T19:11:07.242Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8e3b23ea433ad9ba0a97b1149978dc4b7f71f00333c34a55272b295cf6b452a5",
+      "targetHash": "ba0de8869cf74c18eb6d17d180989f083ae0d3bfad7f0d237b82edade6582e0e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.1\",\"4.1.5\"]; received [\"1\",\"4.1\",\"4.1.5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during PostgreSQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: PostgreSQL の自動テーブル作成による同期中に発生する上流のスキーマ変更 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "9de74ae1a5f449b56e4b04f651204fc5978ca3c1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "94637264873b46048b7d943ec363e1f23499211d"
+      }
+    }
   }
 }

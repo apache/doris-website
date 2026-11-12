@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitand",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitand.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitand.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1787ebc04adc6a285d92019926f845ec67df8ae1c848f0b2a92cc909324d03cf",
+    "sourceTechnicalHash": "435657667cf72aaa8701fa1dff1b8b607e49d7b84ddb73a8deb6d34cc812d4cf",
+    "targetHash": "957379347f395c9c4bea13a44d1b87af272386e262878b0e3f99d0cc0b1c13ef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:48:56.542Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1787ebc04adc6a285d92019926f845ec67df8ae1c848f0b2a92cc909324d03cf",
+      "targetHash": "957379347f395c9c4bea13a44d1b87af272386e262878b0e3f99d0cc0b1c13ef",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

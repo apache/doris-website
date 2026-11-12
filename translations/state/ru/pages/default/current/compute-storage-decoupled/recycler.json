@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/recycler",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/recycler.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/compute-storage-decoupled/recycler.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c0d64589777c333a4051a55010a1f86287fbaff5a666c193fabc678271a5470e",
+    "sourceTechnicalHash": "9587c7ac742347a701c413f9c3bde0fe0e035e2d8f9a44340dd6ec6aa2597c03",
+    "targetHash": "1f5c179e0dbf669f5d566b98d54ce2aa348a4075a07464d51658707dcb1155a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:04:17.046Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c0d64589777c333a4051a55010a1f86287fbaff5a666c193fabc678271a5470e",
+      "targetHash": "1f5c179e0dbf669f5d566b98d54ce2aa348a4075a07464d51658707dcb1155a7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "headings",
+              "message": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 2, column 83:\n     ... вычислений и хранения (Recycler): принципы, конфигурация и настройка\n                                         ^"
+            },
+            {
+              "check": "syntax",
+              "message": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 2, column 83:\n     ... вычислений и хранения (Recycler): принципы, конфигурация и настройка\n                                         ^"
+            },
+            {
+              "check": "frontmatter",
+              "message": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 2, column 83:\n     ... вычислений и хранения (Recycler): принципы, конфигурация и настройка\n                                         ^"
+            },
+            {
+              "check": "protected-content",
+              "message": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 2, column 83:\n     ... вычислений и хранения (Recycler): принципы, конфигурация и настройка\n                                         ^"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

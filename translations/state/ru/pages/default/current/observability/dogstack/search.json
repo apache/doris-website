@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "observability/dogstack/search",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/observability/dogstack/search.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/observability/dogstack/search.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "8ec1a30970ab94883c55836aff861cbd338f234b3ab22e77c601c0525b4ceb7f",
+    "sourceTechnicalHash": "ddda46e7f5c746a7ecd83c01c35958c5cb1bcd057fd2f235c271bf38d0edf0f8",
+    "targetHash": "ed64761b841a011094fd209f7666fc51e2d73f4d3cc835944a1bed09427da27c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:37:33.369Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8ec1a30970ab94883c55836aff861cbd338f234b3ab22e77c601c0525b4ceb7f",
+      "targetHash": "ed64761b841a011094fd209f7666fc51e2d73f4d3cc835944a1bed09427da27c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: ETIMEDOUT"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

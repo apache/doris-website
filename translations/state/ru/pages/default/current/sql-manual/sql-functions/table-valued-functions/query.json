@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/query",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/query.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/query.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e7278e658b46d3a85af1e120462814f339613baa628c8ffd792ca677d14d9d39",
+    "sourceTechnicalHash": "2f7116f2f3758b4706bc42cacdda98309696759102736f615539973409c42280",
+    "targetHash": "48b8839f2fdb8101f9da174aa95a3199a249306606ad97b73fa6c96463deaf85",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:33:46.911Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e7278e658b46d3a85af1e120462814f339613baa628c8ffd792ca677d14d9d39",
+      "targetHash": "48b8839f2fdb8101f9da174aa95a3199a249306606ad97b73fa6c96463deaf85",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

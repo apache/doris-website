@@ -2,15 +2,15 @@
 {
     "title": "CREATE REPOSITORY",
     "language": "ja",
-    "description": "この文はリポジトリを作成します。リポジトリはバックアップまたは復元に使用します。"
+    "description": "この文はリポジトリの作成に使用します。リポジトリはバックアップや復元に使用します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-この文はリポジトリを作成します。リポジトリはバックアップまたは復元に使用します。
+この文はリポジトリの作成に使用します。リポジトリはバックアップや復元に使用します。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 CREATE [READ ONLY] REPOSITORY <repo_name>
@@ -23,48 +23,48 @@ CREATE [READ ONLY] REPOSITORY <repo_name>
     )
 ```
 
-## 必須パラメータ
+## 必須パラメータ {#required-parameters}
 **<repo_name>**
 > リポジトリの一意の名前。
 
 **<repo_location>**
-> リポジトリのストレージパス。
+> リポジトリの保存先パス。
 
 **<storage_property>**
-> リポジトリのプロパティ。ストレージに S3 と HDFS のどちらを選ぶかに応じて、対応するパラメータを指定します。
+> リポジトリのプロパティ。ストレージとして S3 と HDFS のどちらを選択するかに応じて、該当するパラメータを指定します。
 
-**<storage_property>** で使用できるオプションのパラメータは次のとおりです。実際の環境に応じて、ほかのパラメータも追加できます。
+**<storage_property>** 任意のパラメータは次のとおりです。実際の環境に応じて、ほかのパラメータも追加できます。
 
-| パラメータ              | 説明                                              |
-|-------------------------|---------------------------------------------------|
-| **s3.endpoint**         | S3 サービスのエンドポイント                        |
-| **s3.access_key**       | S3 アクセスキー                                    |
-| **s3.secret_key**       | S3 シークレットキー                                |
-| **s3.region**           | S3 リージョン                                      |
+| パラメータ               | 説明                            |
+|-------------------------|------------------------------------|
+| **s3.endpoint**         | S3 サービスのエンドポイント                    |
+| **s3.access_key**       | S3 アクセスキー                          |
+| **s3.secret_key**       | S3 シークレットキー                          |
+| **s3.region**           | S3 リージョン                              |
 | **use_path_style**      | S3 でパス形式のアクセスを使用するかどうか（MinIO に適用） |
-| **fs.defaultFS**        | Hadoop のデフォルトファイルシステム URI            |
-| **hadoop.username**     | Hadoop のユーザー名                                |
+| **fs.defaultFS**        | Hadoop のデフォルトファイルシステムの URI        |
+| **hadoop.username**     | Hadoop のユーザー名                       |
 
-**注：&#x20;**
+**注記:&#x20;**
 
-Doris は、AWS S3 リポジトリの作成時に `AWS Assume Role` もサポートします。詳しくは [AWS 連携](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)を参照してください。
+Doris は AWS S3 リポジトリの作成時に `AWS Assume Role` もサポートしています。詳しくは [AWS 連携](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)を参照してください。
 
-## アクセス制御要件
+## アクセス制御の要件 {#access-control-requirements}
 
-| 権限               | オブジェクト                         | 備考                                               |
-|:-------------------|:-------------------------------------|:---------------------------------------------------|
-| ADMIN_PRIV         | クラスター全体の管理権限             | リポジトリを作成できるのは root またはスーパーユーザーのみ |
-
-
-## 使用上の注意
-- 読み取り専用リポジトリでは、復元のみ実行できます。それ以外のリポジトリでは、バックアップと復元の両方を実行できます。
-- プロパティ（PROPERTIES）は S3 と HDFS で異なります。以下の例を参照してください。
-- S3 の場合、ON LOCATION には S3 バケット名を指定します。
-- データを移行する場合、移行元クラスターと移行先クラスターの両方で同じリポジトリを作成する必要があります。これにより、移行先クラスターから移行元クラスターのバックアップに含まれるデータスナップショットを参照できます。
-- 作成済みのリポジトリは、どのユーザーも [SHOW REPOSITORIES](./SHOW-REPOSITORIES) コマンドで確認できます。
+| 権限               | 対象                         | 備考                                               |
+|:-------------------|:-----------------------------|:----------------------------------------------------|
+| ADMIN_PRIV         | クラスター全体の管理権限 | リポジトリを作成できるのは root またはスーパーユーザーのみです  |
 
 
-## 例
+## 使用上の注意 {#usage-notes}
+- 読み取り専用のリポジトリでは、復元のみ実行できます。それ以外のリポジトリでは、バックアップと復元の両方を実行できます。
+- プロパティ（PROPERTIES）は、S3 と HDFS のどちらを使用するかによって異なります。例を参照してください。
+- S3 を使用する場合、ON LOCATION には S3 バケット名を指定します。
+- データ移行を行う場合は、移行先クラスターが移行元クラスターのバックアップからデータスナップショットを参照できるように、移行元と移行先の両方のクラスターに同じリポジトリを作成する必要があります。
+- 作成済みのリポジトリは、どのユーザーでも [SHOW REPOSITORIES](./SHOW-REPOSITORIES) コマンドで確認できます。
+
+
+## 例 {#examples}
 
 s3_repo という名前のリポジトリを作成します。
 
@@ -80,9 +80,9 @@ PROPERTIES
     "s3.secret_key"="AWS_SECRET_KEY"
 );
 ```
-**注：&#x20;**
+**注記:&#x20;**
 
-Doris は、AWS S3 リポジトリの作成時に `AWS Assume Role` もサポートします。詳しくは [AWS 連携](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)を参照してください。
+Doris は AWS S3 リポジトリの作成時に `AWS Assume Role` もサポートしています。詳しくは [AWS 連携](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)を参照してください。
 
 hdfs_repo という名前のリポジトリを作成します。
 
@@ -97,7 +97,7 @@ PROPERTIES
 );
 ```
 
-S3 プロトコルを介して MinIO ストレージに直接接続する minio_repo という名前のリポジトリを作成します。
+S3 プロトコルで MinIO ストレージに直接接続する minio_repo という名前のリポジトリを作成します。
 
 ```sql
 CREATE REPOSITORY `minio_repo`
@@ -120,7 +120,7 @@ CREATE REPOSITORY `minio_repo`
 WITH S3
 ON LOCATION "s3://minio_repo"
 PROPERTIES
-( 
+(
     "s3.endpoint" = "AWS_ENDPOINT",
     "s3.access_key" = "AWS_TEMP_ACCESS_KEY",
     "s3.secret_key" = "AWS_TEMP_SECRET_KEY",

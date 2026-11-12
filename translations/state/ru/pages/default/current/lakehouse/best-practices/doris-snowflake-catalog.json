@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-snowflake-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-snowflake-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-snowflake-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "7347ecf695e1e8ba3bb26418d59f49d9ab8379ad657cd2b0bc1882334930fa3b",
+    "sourceTechnicalHash": "4f87606ecff71c306e47066f2fa9872c50c0defe8354048b8922b574c77f5491",
+    "targetHash": "e7f8104b32ea7ec5389846bd652d6648f3cd52933b4ee363ca843599a6f14f53",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:54:22.363Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7347ecf695e1e8ba3bb26418d59f49d9ab8379ad657cd2b0bc1882334930fa3b",
+      "targetHash": "e7f8104b32ea7ec5389846bd652d6648f3cd52933b4ee363ca843599a6f14f53",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

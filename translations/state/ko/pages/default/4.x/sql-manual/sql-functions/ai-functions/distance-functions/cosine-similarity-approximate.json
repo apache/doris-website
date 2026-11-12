@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity-approximate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity-approximate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity-approximate.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "f83e51c758e6a3f68b8e38191b75ac98688ed81b426b9e0a813fa436dddc67f2",
+    "sourceTechnicalHash": "e66d2dc9a4e359eae00c2757258716b9d358a5df185fa370b886c52be1d69b77",
+    "targetHash": "9d51c2412e2406af00fc0fc36e06493f38cc818037b7019f419835f5e793c3a0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T17:49:23.512Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f83e51c758e6a3f68b8e38191b75ac98688ed81b426b9e0a813fa436dddc67f2",
+      "targetHash": "9d51c2412e2406af00fc0fc36e06493f38cc818037b7019f419835f5e793c3a0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"4.2\"]; received [\"0\",\"0\",\"4.2\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

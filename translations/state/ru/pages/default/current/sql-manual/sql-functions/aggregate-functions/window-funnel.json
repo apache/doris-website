@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/window-funnel",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/window-funnel.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/window-funnel.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d72f84aab169b57da369fa38edd8bc103e9167f20383823309118bf02fc0f881",
+    "sourceTechnicalHash": "47c676dcb0a2851026bd7b51a04f56b2d14353ef6e33a24bec6902d8f590f1f4",
+    "targetHash": "4d0b52c1f190f24bca9ab2f83c4cd2796991183341959b1767af966b861bdf02",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:28:28.062Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d72f84aab169b57da369fa38edd8bc103e9167f20383823309118bf02fc0f881",
+      "targetHash": "4d0b52c1f190f24bca9ab2f83c4cd2796991183341959b1767af966b861bdf02",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

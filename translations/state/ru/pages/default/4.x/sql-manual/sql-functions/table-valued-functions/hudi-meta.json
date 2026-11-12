@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/hudi-meta",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/hudi-meta.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/hudi-meta.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "adcef4cbccb0205841440f5636598dc2e8652fa03f2478ce20f8fc72a1ecc745",
+    "sourceTechnicalHash": "fd02c1e7ef30070b0d8528d1c765cd6a74df71a237cf8e8dade8cd6e3ce5857d",
+    "targetHash": "9aab93b076a758c406a88e944b498a42d194bf5b155f38b42fe455f24b7b2789",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:57:07.576Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "adcef4cbccb0205841440f5636598dc2e8652fa03f2478ce20f8fc72a1ecc745",
+      "targetHash": "9aab93b076a758c406a88e944b498a42d194bf5b155f38b42fe455f24b7b2789",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/table-valued-functions/hudi-meta",
+        "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/hudi-meta.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/hudi-meta.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "adcef4cbccb0205841440f5636598dc2e8652fa03f2478ce20f8fc72a1ecc745",
+        "targetHash": "9aab93b076a758c406a88e944b498a42d194bf5b155f38b42fe455f24b7b2789",
+        "commit": "069e0e3bb176c7bb849b0d1de5db70877753e1bc",
+        "pr": "https://github.com/apache/doris-website/pull/4454"
+      }
+    }
+  }
+}

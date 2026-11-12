@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-STATUS",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-STATUS.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-STATUS.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d5365bf43f31d16726f0444e9e8ae402392023b429c34d09ac809be56096e2da",
+    "sourceTechnicalHash": "12158f88b19e35f11f075a6f2d1abc46c95bbfbf1ff8155ef223e1fcf4fa402e",
+    "targetHash": "3941e8edb3d743156cad28c18c27426943e6fe67db2eb937ec7a015a85dfa35d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:51:53.100Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d5365bf43f31d16726f0444e9e8ae402392023b429c34d09ac809be56096e2da",
+      "targetHash": "3941e8edb3d743156cad28c18c27426943e6fe67db2eb937ec7a015a85dfa35d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-STATUS",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-STATUS.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-STATUS.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "d5365bf43f31d16726f0444e9e8ae402392023b429c34d09ac809be56096e2da",
+        "targetHash": "3941e8edb3d743156cad28c18c27426943e6fe67db2eb937ec7a015a85dfa35d",
+        "commit": "ce24bd33dc04ac6b20bee9fd337ed9e8b6433ad0",
+        "pr": "https://github.com/apache/doris-website/pull/4456"
+      }
+    }
+  }
+}

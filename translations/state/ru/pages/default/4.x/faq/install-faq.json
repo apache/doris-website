@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "faq/install-faq",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/faq/install-faq.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/faq/install-faq.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "90fb6c11e2ec0ae6ac973761434fccb6d0112a8c3ff7160fc288b39f3847bb3a",
+    "sourceTechnicalHash": "c48e9e8176c8c36a85a7900e8fd43251223c16d591915a6b30c59baa3dc6cb3e",
+    "targetHash": "5e35d8075e4b0a54c38c357e797a9fc538703b96c65a29312e8231d8aa4b9301",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:26.327Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "90fb6c11e2ec0ae6ac973761434fccb6d0112a8c3ff7160fc288b39f3847bb3a",
+      "targetHash": "5e35d8075e4b0a54c38c357e797a9fc538703b96c65a29312e8231d8aa4b9301",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "faq/install-faq",
+        "sourcePath": "docs/faq/install-faq.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/faq/install-faq.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "90fb6c11e2ec0ae6ac973761434fccb6d0112a8c3ff7160fc288b39f3847bb3a",
+        "targetHash": "5e35d8075e4b0a54c38c357e797a9fc538703b96c65a29312e8231d8aa4b9301",
+        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
+        "pr": "https://github.com/apache/doris-website/pull/4436"
+      }
+    }
+  }
+}

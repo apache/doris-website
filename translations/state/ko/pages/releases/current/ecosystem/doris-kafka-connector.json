@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-kafka-connector",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-kafka-connector.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-kafka-connector.md",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "4ef58f5761af434718b93275b8785320eeaf20e86fa79e2785b590ff65ec894f",
+    "sourceTechnicalHash": "391b0fee26d9081868ea4c33ed5266dfebee7648373984bf0177a2be205549d3",
+    "targetHash": "cd549a4904123b1cfc4e789b3dfe17622478bd0166c3230edddd4639aabc36ab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T05:22:17.115Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ef58f5761af434718b93275b8785320eeaf20e86fa79e2785b590ff65ec894f",
+      "targetHash": "cd549a4904123b1cfc4e789b3dfe17622478bd0166c3230edddd4639aabc36ab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"100\",\"101\",\"19\",\"25.0.0\",\"25.0.0\",\"26.0.0\",\"26.0.0\",\"26.1.0\",\"26.1.0\",\"3\",\"61\",\"62\",\"64\",\"65\",\"67\",\"68\",\"69\",\"70\",\"72\",\"73\",\"74\",\"75\",\"77\",\"79\",\"80\",\"83\",\"84\",\"85\",\"86\",\"94\",\"95\",\"99\"]; received [\"0\",\"1\",\"1\",\"100\",\"101\",\"19\",\"25.0.0\",\"25.0.0\",\"26.0.0\",\"26.0.0\",\"26.1.0\",\"26.1.0\",\"3\",\"61\",\"62\",\"64\",\"65\",\"67\",\"68\",\"69\",\"70\",\"72\",\"73\",\"74\",\"75\",\"77\",\"79\",\"80\",\"83\",\"84\",\"85\",\"86\",\"94\",\"95\",\"99\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

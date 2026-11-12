@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+    "sourceTechnicalHash": "bd9349cced7e8176c85251bae8f76cb1ec3c20c3bfb7bea18c2c7e35a8428029",
+    "targetHash": "a5f380c688844470db7d979cce34e9cd5c91797a64202daf8ec4d9df720414b0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:34:22.783Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+      "targetHash": "a5f380c688844470db7d979cce34e9cd5c91797a64202daf8ec4d9df720414b0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+        "targetHash": "a5f380c688844470db7d979cce34e9cd5c91797a64202daf8ec4d9df720414b0",
+        "commit": "0fe6c204567e14dcccd04b15a6522fe8311d1745",
+        "pr": "https://github.com/apache/doris-website/pull/4450"
+      }
+    }
+  }
+}

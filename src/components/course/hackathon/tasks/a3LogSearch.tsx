@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React from 'react';
 import Link from '@docusaurus/Link';
 import { HackathonTaskContent } from '../HackathonTaskPage';
@@ -7,67 +8,61 @@ import { dorisLoad, getHackathonTask } from '../hackathonEvent';
 
 export const A3_LOG_SEARCH: HackathonTaskContent = {
     task: getHackathonTask('A3'),
-    titleLead: 'Log Search',
-    titleTail: 'Explorer',
-    hook: 'A mini Kibana where everything is SQL — then use it to find what broke checkout at 11:40.',
-    chips: ['60–120 min', 'Beginner-friendly', 'Any language · CLI or web', 'AI tools welcome'],
+    titleLead: translate({id: "landing.a3LogSearch.001", message: "Log Search"}),
+    titleTail: translate({id: "landing.a3LogSearch.002", message: "Explorer"}),
+    hook: translate({id: "landing.a3LogSearch.003", message: "A mini Kibana where everything is SQL — then use it to find what broke checkout at 11:40."}),
+    chips: [translate({id: "landing.courseExtra.a3LogSearch.010", message: "60–120 min"}), translate({id: "landing.courseExtra.a3LogSearch.011", message: "Beginner-friendly"}), translate({id: "landing.courseExtra.a3LogSearch.012", message: "Any language · CLI or web"}), translate({id: "landing.courseExtra.a3LogSearch.013", message: "AI tools welcome"})],
     build: {
-        lead: 'Build a log explorer. Then solve an outage with it.',
+        lead: translate({id: "landing.a3LogSearch.004", message: "Build a log explorer. Then solve an outage with it."}),
         body: (
             <>
                 <p>
-                    200,000 log lines, six services, one bad morning. Search them by keyword with BM25 ranking, slice
-                    them by service, level and time, and count everything as you go — all in plain SQL on one Doris
-                    table.
+                    {translate({id: "landing.a3LogSearch.005", message: "200,000 log lines, six services, one bad morning. Search them by keyword with BM25 ranking, slice them by service, level and time, and count everything as you go — all in plain SQL on one Doris table."})}
                 </p>
-                <p>A small log explorer with:</p>
+                <p>{translate({id: "landing.a3LogSearch.006", message: "A small log explorer with:"})}</p>
                 <ul className="hk-task__bullets">
                     <li>
-                        a <strong>search box</strong> (keywords, phrases) with relevance ranking,
+                        {translate({id: "landing.a3LogSearch.007", message: "a"})} <strong>{translate({id: "landing.a3LogSearch.008", message: "search box"})}</strong> {translate({id: "landing.a3LogSearch.009", message: "(keywords, phrases) with relevance ranking,"})}
                     </li>
                     <li>
-                        <strong>filters</strong> for service, level and time range,
+                        <strong>{translate({id: "landing.a3LogSearch.010", message: "filters"})}</strong> {translate({id: "landing.a3LogSearch.011", message: "for service, level and time range,"})}
                     </li>
                     <li>
-                        <strong>facet counts</strong> next to the results (hits per service / level),
+                        <strong>{translate({id: "landing.a3LogSearch.012", message: "facet counts"})}</strong> {translate({id: "landing.a3LogSearch.013", message: "next to the results (hits per service / level),"})}
                     </li>
                     <li>
-                        optionally a <strong>timeline</strong> of errors per 5 minutes.
+                        {translate({id: "landing.a3LogSearch.014", message: "optionally a"})} <strong>{translate({id: "landing.a3LogSearch.015", message: "timeline"})}</strong> {translate({id: "landing.a3LogSearch.016", message: "of errors per 5 minutes."})}
                     </li>
                 </ul>
                 <p>
-                    Then the real test:{' '}
+                    {translate({id: "landing.a3LogSearch.017", message: "Then the real test:"})}{' '}
                     <strong>
-                        at 11:40 checkout started failing. Which service caused it, and when did the trouble really
-                        start?
+                        {translate({id: "landing.a3LogSearch.018", message: "at 11:40 checkout started failing. Which service caused it, and when did the trouble really start?"})}
                     </strong>{' '}
-                    Your explorer should make the answer obvious.
+                    {translate({id: "landing.a3LogSearch.019", message: "Your explorer should make the answer obvious."})}
                 </p>
             </>
         ),
     },
     why: [
         <>
-            <strong>Search and analytics on the same table.</strong> The inverted index answers the keyword query; the
-            same <code>WHERE</code> clause feeds a <code>GROUP BY</code> for facets. No second system to keep in sync.
+            <strong>{translate({id: "landing.a3LogSearch.020", message: "Search and analytics on the same table."})}</strong> {translate({id: "landing.a3LogSearch.021", message: "The inverted index answers the keyword query; the same"})} <code>WHERE</code> {translate({id: "landing.a3LogSearch.022", message: "clause feeds a"})} <code>GROUP BY</code> {translate({id: "landing.a3LogSearch.023", message: "for facets. No second system to keep in sync."})}
         </>,
         <>
-            <strong>Real ranking.</strong> <code>score()</code> sorts hits by BM25, so the most relevant lines come
-            first, not just the newest.
+            <strong>{translate({id: "landing.a3LogSearch.024", message: "Real ranking."})}</strong> <code>score()</code> {translate({id: "landing.a3LogSearch.025", message: "sorts hits by BM25, so the most relevant lines come first, not just the newest."})}
         </>,
         <>
-            <strong>Filters are cheap.</strong> <code>service</code> and <code>level</code> have their own inverted
-            indexes; time ranges prune by the sort key.
+            <strong>{translate({id: "landing.a3LogSearch.026", message: "Filters are cheap."})}</strong> <code>service</code> {translate({id: "landing.a3LogSearch.027", message: "and"})} <code>level</code> {translate({id: "landing.a3LogSearch.028", message: "have their own inverted indexes; time ranges prune by the sort key."})}
         </>,
     ],
     whyHighlight: '10-12',
     before: COMMON_BEFORE,
     data: [
         <p key="intro">
-            <code>hackathon.app_logs</code> — one table for all six services:
+            <code>hackathon.app_logs</code> {translate({id: "landing.a3LogSearch.029", message: "— one table for all six services:"})}
         </p>,
         {
-            label: 'Table',
+            label: translate({id: "landing.a3LogSearch.030", message: "Table"}),
             file: 'hackathon.app_logs · sql',
             language: 'sql',
             code: `CREATE TABLE app_logs (
@@ -88,17 +83,16 @@ DISTRIBUTED BY HASH(trace_id) BUCKETS 1
 PROPERTIES ("replication_num" = "1");`,
         },
         <p key="seed">
-            <code>seed/a3_app_logs.sql</code> generates <strong>200,000 lines for 13 October 2026</strong> with a single{' '}
-            <code>INSERT … SELECT … FROM numbers(&quot;number&quot; = &quot;200000&quot;)</code> — no download needed.
-            Somewhere in there is the outage.
+            <code>seed/a3_app_logs.sql</code> {translate({id: "landing.a3LogSearch.032", message: "generates"})} <strong>{translate({id: "landing.a3LogSearch.033", message: "200,000 lines for 13 October 2026"})}</strong> {translate({id: "landing.a3LogSearch.034", message: "with a single"})}{' '}
+            <code>INSERT … SELECT … FROM numbers(&quot;number&quot; = &quot;200000&quot;)</code> {translate({id: "landing.a3LogSearch.035", message: "— no download needed. Somewhere in there is the outage."})}
         </p>,
     ],
     ai: {
         intro: AI_INTRO,
         steps: AI_STEPS,
         prompt: {
-            label: 'Context prompt',
-            file: 'paste into your agent',
+            label: translate({id: "landing.a3LogSearch.036", message: "Context prompt"}),
+            file: translate({id: "landing.a3LogSearch.037", message: "paste into your agent"}),
             language: 'text',
             wrap: true,
             code: `I'm building a log search explorer on Apache Doris 4.1 for a hackathon.
@@ -126,12 +120,12 @@ Run every SQL statement against the live cluster first.`,
     milestones: [
         {
             code: 'M0',
-            title: 'Generate the logs',
-            time: '5 min',
+            title: translate({id: "landing.a3LogSearch.038", message: "Generate the logs"}),
+            time: translate({id: "landing.courseExtra.a3LogSearch.001", message: "5 min"}),
             blocks: [
-                <p key="where">From inside the starter-kit folder:</p>,
+                <p key="where">{translate({id: "landing.a3LogSearch.039", message: "From inside the starter-kit folder:"})}</p>,
                 {
-                    label: 'M0 · Generate the logs',
+                    label: translate({id: "landing.a3LogSearch.040", message: "M0 · Generate the logs"}),
                     file: 'bash',
                     language: 'bash',
                     code: dorisLoad('seed/a3_app_logs.sql'),
@@ -139,19 +133,19 @@ Run every SQL statement against the live cluster first.`,
             ],
             checkpoint: (
                 <>
-                    A few seconds later: <strong>200,000</strong> log lines, from <code>00:00:00</code> to{' '}
-                    <code>23:59:59</code> on 13 October.
+                    {translate({id: "landing.a3LogSearch.041", message: "A few seconds later:"})} <strong>200,000</strong> {translate({id: "landing.a3LogSearch.042", message: "log lines, from"})} <code>00:00:00</code> {translate({id: "landing.a3LogSearch.043", message: "to"})}{' '}
+                    <code>23:59:59</code> {translate({id: "landing.a3LogSearch.044", message: "on 13 October."})}
                 </>
             ),
         },
         {
             code: 'M1',
-            title: 'Keyword search with BM25',
-            short: 'Keyword search',
-            time: '15 min',
+            title: translate({id: "landing.a3LogSearch.045", message: "Keyword search with BM25"}),
+            short: translate({id: "landing.a3LogSearch.046", message: "Keyword search"}),
+            time: translate({id: "landing.courseExtra.a3LogSearch.002", message: "15 min"}),
             blocks: [
                 {
-                    label: 'M1 · Keyword search with BM25',
+                    label: translate({id: "landing.a3LogSearch.047", message: "M1 · Keyword search with BM25"}),
                     file: 'sql',
                     language: 'sql',
                     code: `USE hackathon;
@@ -163,25 +157,25 @@ ORDER BY relevance DESC
 LIMIT 20;`,
                 },
                 <p key="wire">
-                    Wire it to a search box. Pass the user&apos;s text as a driver parameter (<code>MATCH_ANY %s</code>
-                    ); <code>a3/starter.py</code> in the starter kit does exactly this.
+                    {translate({id: "landing.a3LogSearch.048", message: "Wire it to a search box. Pass the user's text as a driver parameter ("})}<code>MATCH_ANY %s</code>
+                    ); <code>a3/starter.py</code> {translate({id: "landing.a3LogSearch.049", message: "in the starter kit does exactly this."})}
                 </p>,
             ],
             checkpoint: (
                 <>
-                    All 20 hits are <code>connection refused</code> lines. BM25 weighs rare terms more: <em>refused</em>{' '}
-                    appears in 68 lines, <em>timeout</em> in 347. Search <code>timeout</code> alone to see the others.
+                    {translate({id: "landing.a3LogSearch.050", message: "All 20 hits are"})} <code>connection refused</code> {translate({id: "landing.a3LogSearch.051", message: "lines. BM25 weighs rare terms more:"})} <em>refused</em>{' '}
+                    {translate({id: "landing.a3LogSearch.053", message: "appears in 68 lines,"})} <em>timeout</em> {translate({id: "landing.a3LogSearch.055", message: "in 347. Search"})} <code>timeout</code> {translate({id: "landing.a3LogSearch.056", message: "alone to see the others."})}
                 </>
             ),
         },
         {
             code: 'M2',
-            title: 'Filters',
-            time: '15 min',
+            title: translate({id: "landing.a3LogSearch.057", message: "Filters"}),
+            time: translate({id: "landing.courseExtra.a3LogSearch.003", message: "15 min"}),
             highlight: '4-6',
             blocks: [
                 {
-                    label: 'M2 · Filters',
+                    label: translate({id: "landing.a3LogSearch.058", message: "M2 · Filters"}),
                     file: 'sql',
                     language: 'sql',
                     code: `SELECT ts, service, level, message, score() AS relevance
@@ -194,19 +188,19 @@ ORDER BY relevance DESC
 LIMIT 20;`,
                 },
             ],
-            checkpoint: 'Every hit is an ERROR line that mentions a timeout. Only one of the two services shows up.',
+            checkpoint: translate({id: "landing.a3LogSearch.059", message: "Every hit is an ERROR line that mentions a timeout. Only one of the two services shows up."}),
         },
         {
             code: 'M3',
-            title: 'Facet counts',
-            time: '15 min',
+            title: translate({id: "landing.a3LogSearch.060", message: "Facet counts"}),
+            time: translate({id: "landing.courseExtra.a3LogSearch.004", message: "15 min"}),
             highlight: '1, 5',
             blocks: [
                 <p key="why">
-                    <code>score()</code> can&apos;t be aggregated, so facets reuse the same filter without it:
+                    <code>score()</code> {translate({id: "landing.a3LogSearch.061", message: "can't be aggregated, so facets reuse the same filter without it:"})}
                 </p>,
                 {
-                    label: 'M3 · Facet counts',
+                    label: translate({id: "landing.a3LogSearch.062", message: "M3 · Facet counts"}),
                     file: 'sql',
                     language: 'sql',
                     code: `SELECT service, level, COUNT(*) AS hits
@@ -219,20 +213,19 @@ ORDER BY hits DESC;`,
             ],
             checkpoint: (
                 <>
-                    163 matching lines in that window, all <code>ERROR</code>. The counts must add up to the same search
-                    without <code>GROUP BY</code>: check with <code>SELECT COUNT(*)</code> and the same{' '}
+                    {translate({id: "landing.a3LogSearch.063", message: "163 matching lines in that window, all"})} <code>ERROR</code>{translate({id: "landing.a3LogSearch.064", message: ". The counts must add up to the same search without"})} <code>GROUP BY</code>{translate({id: "landing.a3LogSearch.065", message: ": check with"})} <code>SELECT COUNT(*)</code> {translate({id: "landing.a3LogSearch.066", message: "and the same"})}{' '}
                     <code>WHERE</code>.
                 </>
             ),
         },
         {
             code: 'M4',
-            title: 'Error timeline',
-            time: '15 min',
+            title: translate({id: "landing.a3LogSearch.067", message: "Error timeline"}),
+            time: translate({id: "landing.courseExtra.a3LogSearch.005", message: "15 min"}),
             highlight: '1, 5',
             blocks: [
                 {
-                    label: 'M4 · Error timeline',
+                    label: translate({id: "landing.a3LogSearch.068", message: "M4 · Error timeline"}),
                     file: 'sql',
                     language: 'sql',
                     code: `SELECT minute_floor(ts, 5) AS bucket, service, COUNT(*) AS errors
@@ -244,58 +237,56 @@ ORDER BY bucket, service;`,
                 },
             ],
             checkpoint:
-                'Two services jump between 11:35 and 12:00. For the rest of the day no service logs more than 4 errors in a 5-minute bucket.',
+                translate({id: "landing.a3LogSearch.069", message: "Two services jump between 11:35 and 12:00. For the rest of the day no service logs more than 4 errors in a 5-minute bucket."}),
         },
         {
             code: 'M5',
-            title: 'Solve the outage',
+            title: translate({id: "landing.a3LogSearch.070", message: "Solve the outage"}),
             panelView: 'm4',
             blocks: [
                 <p key="answer">
-                    Use your explorer to answer:{' '}
-                    <em>Which service caused the checkout failures, and at what minute did it start?</em> Put the answer
-                    — and the query that proves it — in your README.
+                    {translate({id: "landing.a3LogSearch.071", message: "Use your explorer to answer:"})}{' '}
+                    <em>{translate({id: "landing.a3LogSearch.072", message: "Which service caused the checkout failures, and at what minute did it start?"})}</em> {translate({id: "landing.a3LogSearch.073", message: "Put the answer — and the query that proves it — in your README."})}
                 </p>,
             ],
         },
     ],
     done: [
         <>
-            Keyword search with BM25 ranking (<code>score()</code>).
+            {translate({id: "landing.a3LogSearch.074", message: "Keyword search with BM25 ranking ("})}<code>score()</code>).
         </>,
-        'At least two structured filters (service, level) plus a time range.',
-        'Facet counts that follow the current search.',
-        'The outage solved: root-cause service + start time, with the supporting query.',
-        'Submitted as a pull request: your GitHub-ID folder with the code and a README (how to run + one screenshot).',
+        translate({id: "landing.courseExtra.a3LogSearch.006", message: "At least two structured filters (service, level) plus a time range."}),
+        translate({id: "landing.courseExtra.a3LogSearch.007", message: "Facet counts that follow the current search."}),
+        translate({id: "landing.courseExtra.a3LogSearch.008", message: "The outage solved: root-cause service + start time, with the supporting query."}),
+        translate({id: "landing.courseExtra.a3LogSearch.009", message: "Submitted as a pull request: your GitHub-ID folder with the code and a README (how to run + one screenshot)."}),
     ],
     stretch: [
         <>
-            <strong>Phrase and type-ahead</strong>: <code>MATCH_PHRASE &apos;connection refused&apos;</code>,{' '}
-            <code>MATCH_PHRASE_PREFIX</code> for search-as-you-type.
+            <strong>{translate({id: "landing.a3LogSearch.075", message: "Phrase and type-ahead"})}</strong>: <code>MATCH_PHRASE &apos;connection refused&apos;</code>,{' '}
+            <code>MATCH_PHRASE_PREFIX</code> {translate({id: "landing.a3LogSearch.076", message: "for search-as-you-type."})}
         </>,
         <>
-            <strong>Trace view</strong>: click a line to show every log with the same <code>trace_id</code>, in time
-            order.
+            <strong>{translate({id: "landing.a3LogSearch.077", message: "Trace view"})}</strong>{translate({id: "landing.a3LogSearch.078", message: ": click a line to show every log with the same"})} <code>trace_id</code>{translate({id: "landing.a3LogSearch.079", message: ", in time order."})}
         </>,
         <>
-            <strong>Query-string search</strong>: try the <code>SEARCH()</code> DSL (Lucene-style{' '}
-            <code>field:term AND …</code>) — see{' '}
-            <Link to="/docs/4.x/table-design/index/inverted-index/search-function">SEARCH Function</Link>.
+            <strong>{translate({id: "landing.a3LogSearch.080", message: "Query-string search"})}</strong>{translate({id: "landing.a3LogSearch.081", message: ": try the"})} <code>SEARCH()</code> {translate({id: "landing.a3LogSearch.082", message: "DSL (Lucene-style"})}{' '}
+            <code>field:term AND …</code>{translate({id: "landing.a3LogSearch.083", message: ") — see"})}{' '}
+            <Link to="/docs/4.x/table-design/index/inverted-index/search-function">{translate({id: "landing.a3LogSearch.084", message: "SEARCH Function"})}</Link>.
         </>,
         <>
-            <strong>Live tail</strong>: insert a few new rows every second and auto-refresh.
+            <strong>{translate({id: "landing.a3LogSearch.085", message: "Live tail"})}</strong>{translate({id: "landing.a3LogSearch.086", message: ": insert a few new rows every second and auto-refresh."})}
         </>,
         <>
-            <strong>Index vs. no index</strong>: compare <code>MATCH_ANY</code> with{' '}
-            <code>LIKE &apos;%timeout%&apos;</code> on the full table and show the timing.
+            <strong>{translate({id: "landing.a3LogSearch.087", message: "Index vs. no index"})}</strong>{translate({id: "landing.a3LogSearch.088", message: ": compare"})} <code>MATCH_ANY</code> {translate({id: "landing.a3LogSearch.089", message: "with"})}{' '}
+            <code>LIKE &apos;%timeout%&apos;</code> {translate({id: "landing.a3LogSearch.090", message: "on the full table and show the timing."})}
         </>,
     ],
     troubleshooting: COMMON_TROUBLESHOOTING,
     references: [
-        { label: 'Full-text Search', to: '/docs/4.x/key-features/full-text-search' },
-        { label: 'BM25', to: '/docs/4.x/key-features/bm25' },
-        { label: 'Inverted Index', to: '/docs/4.x/key-features/inverted-index' },
-        { label: 'SEARCH Function', to: '/docs/4.x/table-design/index/inverted-index/search-function' },
+        { label: translate({id: "landing.a3LogSearch.091", message: "Full-text Search"}), to: '/docs/4.x/key-features/full-text-search' },
+        { label: translate({id: "landing.a3LogSearch.092", message: "BM25"}), to: '/docs/4.x/key-features/bm25' },
+        { label: translate({id: "landing.a3LogSearch.093", message: "Inverted Index"}), to: '/docs/4.x/key-features/inverted-index' },
+        { label: translate({id: "landing.a3LogSearch.094", message: "SEARCH Function"}), to: '/docs/4.x/table-design/index/inverted-index/search-function' },
     ],
     Sketch: LogSearchSketch,
 };

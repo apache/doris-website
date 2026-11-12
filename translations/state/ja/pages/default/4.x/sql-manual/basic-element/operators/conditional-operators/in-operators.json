@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/in-operators.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/in-operators.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "3978d283c30f3877a83bbeb95a332715553d9572944bdba48de8bbcf4de2738c",
-    "sourceTechnicalHash": "01ce510e13230e0c5687f7fe2cb5cf7b14e20ef14bfbec6cd8070ce05a0fc970",
-    "targetHash": "3eb34c5a7a4d7d0a828c8c1f02a2e5495d9c03d04f2db86bc394d1c62f20955e",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
+    "sourceHash": "7cd21a797ac8d462b23323eba91edc9dc617219dab394d7261e6395f4cf0cb1d",
+    "sourceTechnicalHash": "7c778bf8f925b119c156d57102ff8c69506d37aa1285c16142e59da0092e45aa",
+    "targetHash": "2be7c09ed3414e545fe17a318a1970625ad3c2e7d89405420d916d18d549e778",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.671Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T19:13:22.143Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7cd21a797ac8d462b23323eba91edc9dc617219dab394d7261e6395f4cf0cb1d",
+      "targetHash": "2be7c09ed3414e545fe17a318a1970625ad3c2e7d89405420d916d18d549e778",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/in-operators.md",
+        "blob": "e30f93fe012f1c10821cdeb212de74ddfe329c8d"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/in-operators.md",
+        "blob": "2bb5f6b7ea380adeba003a5b9635acfede245190"
+      }
+    }
   }
 }

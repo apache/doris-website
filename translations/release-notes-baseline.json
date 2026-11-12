@@ -1,0 +1,594 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+  "pluginId": "releases",
+  "version": "current",
+  "sourceRoot": "releasenotes",
+  "documents": [
+    {
+      "docId": "all-release",
+      "sourcePath": "releasenotes/all-release.md",
+      "sourceHash": "392f3af162a087eca7416af910e10a045896765271d5bbe443fc20d33d3410dc"
+    },
+    {
+      "docId": "core",
+      "sourcePath": "releasenotes/core.md",
+      "sourceHash": "d744120104a6512d9f24a74268135a15c9c116079581001142537f5fc6cb10cf"
+    },
+    {
+      "docId": "ecosystem/doris-cli",
+      "sourcePath": "releasenotes/ecosystem/doris-cli.md",
+      "sourceHash": "282dc69d1690e92a24b0930eefb808c77bd6e9f60a6116cce58c6996cc88aa26"
+    },
+    {
+      "docId": "ecosystem/doris-flink-connector",
+      "sourcePath": "releasenotes/ecosystem/doris-flink-connector.md",
+      "sourceHash": "ab235970b433a4f1e0ef05761020c1515aa6c36eab134b7e1231490c9b18c913"
+    },
+    {
+      "docId": "ecosystem/doris-kafka-connector",
+      "sourcePath": "releasenotes/ecosystem/doris-kafka-connector.md",
+      "sourceHash": "4ef58f5761af434718b93275b8785320eeaf20e86fa79e2785b590ff65ec894f"
+    },
+    {
+      "docId": "ecosystem/doris-mcp-server",
+      "sourcePath": "releasenotes/ecosystem/doris-mcp-server.md",
+      "sourceHash": "26de2dd77c7b09d00aed7d7f525cf253c47393c14aaf446fecc710970784ceb1"
+    },
+    {
+      "docId": "ecosystem/doris-operator",
+      "sourcePath": "releasenotes/ecosystem/doris-operator.md",
+      "sourceHash": "c5038d3c275542480cefa8dcb535afb6c61072071b255b09adef78266aaf7b90"
+    },
+    {
+      "docId": "ecosystem/doris-skills",
+      "sourcePath": "releasenotes/ecosystem/doris-skills.md",
+      "sourceHash": "0e7d43ffc650a706c774ef8129b2035b571dc86dad621f287efc57e48a106839"
+    },
+    {
+      "docId": "ecosystem/doris-spark-connector",
+      "sourcePath": "releasenotes/ecosystem/doris-spark-connector.md",
+      "sourceHash": "89aeb845646272d599b9b9ca5f4fa469d06591a0e7227d10d8da48da0f62ff67"
+    },
+    {
+      "docId": "ecosystem/doris-streamloader",
+      "sourcePath": "releasenotes/ecosystem/doris-streamloader.md",
+      "sourceHash": "dd5ac0749629e2b676a658181aa07410df80f8bc8f6024c632f04a3d4ba8bda4"
+    },
+    {
+      "docId": "v1.1/release-1.1.0",
+      "sourcePath": "releasenotes/v1.1/release-1.1.0.md",
+      "sourceHash": "258d418c0d7e93e2c7326e584c2cca370c873e37cae5bf993fc56778873df9bc"
+    },
+    {
+      "docId": "v1.1/release-1.1.1",
+      "sourcePath": "releasenotes/v1.1/release-1.1.1.md",
+      "sourceHash": "0609e6b8a674c67cfda7ff819183144348b4a8626cf7b29a89af8b77ab59a142"
+    },
+    {
+      "docId": "v1.1/release-1.1.2",
+      "sourcePath": "releasenotes/v1.1/release-1.1.2.md",
+      "sourceHash": "8e82ee174e086d7d0eb645581209041aa25934f2c0d47f06a8e9fdd4d931ff77"
+    },
+    {
+      "docId": "v1.1/release-1.1.3",
+      "sourcePath": "releasenotes/v1.1/release-1.1.3.md",
+      "sourceHash": "f5a4510f8a4c659de1ed06b38f2d51af77b62d4214a5f92ebba07a448ab786af"
+    },
+    {
+      "docId": "v1.1/release-1.1.4",
+      "sourcePath": "releasenotes/v1.1/release-1.1.4.md",
+      "sourceHash": "669fa10d9852af0f2e23e114633edb74163df8f1f5c8ba9eeeb8d5df9f40d94b"
+    },
+    {
+      "docId": "v1.1/release-1.1.5",
+      "sourcePath": "releasenotes/v1.1/release-1.1.5.md",
+      "sourceHash": "c62c676fede523ffeed0d928a24bfe1ed02c3bf831c27ff96580b51de656e40a"
+    },
+    {
+      "docId": "v1.2/release-1.2.0",
+      "sourcePath": "releasenotes/v1.2/release-1.2.0.md",
+      "sourceHash": "7753839430aaaf7f0333df91fde807cbd729a9caf83de2938352cad9a4418427"
+    },
+    {
+      "docId": "v1.2/release-1.2.1",
+      "sourcePath": "releasenotes/v1.2/release-1.2.1.md",
+      "sourceHash": "08376473f8c1a45ad07a8da04be70eb1874faede274b1dd074fbb482596ec749"
+    },
+    {
+      "docId": "v1.2/release-1.2.2",
+      "sourcePath": "releasenotes/v1.2/release-1.2.2.md",
+      "sourceHash": "733723b493a62f8684f9f6f0c1dff75b2788b9e0b69a78eb56db2c8f86b5118b"
+    },
+    {
+      "docId": "v1.2/release-1.2.3",
+      "sourcePath": "releasenotes/v1.2/release-1.2.3.md",
+      "sourceHash": "f8066c4e30bcf1d77ac184b9ddffe4bd0ed1465fab5e118bce6610d65bca4d38"
+    },
+    {
+      "docId": "v1.2/release-1.2.4",
+      "sourcePath": "releasenotes/v1.2/release-1.2.4.md",
+      "sourceHash": "ccd81744c6cc257a2b99a34da362c8e88e7d58b05c4a0381ae63c5975a810225"
+    },
+    {
+      "docId": "v1.2/release-1.2.5",
+      "sourcePath": "releasenotes/v1.2/release-1.2.5.md",
+      "sourceHash": "bf9487b04132700d6db0ed1be42047cf3bbee06efd62220f653379e44be29b09"
+    },
+    {
+      "docId": "v1.2/release-1.2.6",
+      "sourcePath": "releasenotes/v1.2/release-1.2.6.md",
+      "sourceHash": "8ac327d956f0e56c025d795abe48878b7fe917e5e95ccb754493923757915d68"
+    },
+    {
+      "docId": "v1.2/release-1.2.7",
+      "sourcePath": "releasenotes/v1.2/release-1.2.7.md",
+      "sourceHash": "1df6eaf88b34e7fc4ced08d18859b6891a52f4b02c8a0ab7da8d04333d822d1e"
+    },
+    {
+      "docId": "v1.2/release-1.2.8",
+      "sourcePath": "releasenotes/v1.2/release-1.2.8.md",
+      "sourceHash": "be475325e33ae1e27884b58fb983eca076f8bf268ed09562dbd9e47e4f5cea1b"
+    },
+    {
+      "docId": "v2.0/release-2.0.0",
+      "sourcePath": "releasenotes/v2.0/release-2.0.0.md",
+      "sourceHash": "5714e0bb902451809eb0c8a8150be7e423db1a95a9b7b7ce8376e020556caa28"
+    },
+    {
+      "docId": "v2.0/release-2.0.1",
+      "sourcePath": "releasenotes/v2.0/release-2.0.1.md",
+      "sourceHash": "9643e05d30d2fa86844882efbe65e6747118db4dcdac175dd9042ddfc6c14570"
+    },
+    {
+      "docId": "v2.0/release-2.0.10",
+      "sourcePath": "releasenotes/v2.0/release-2.0.10.md",
+      "sourceHash": "f94b574439f8ca7b85d3b6bf3c8fbea12d211fa918e60c0233d1c3f35e998c18"
+    },
+    {
+      "docId": "v2.0/release-2.0.11",
+      "sourcePath": "releasenotes/v2.0/release-2.0.11.md",
+      "sourceHash": "bb0d97ebcb34d440aeedf06b1316f37cd6e4d21cea84e6fac578275d35648e85"
+    },
+    {
+      "docId": "v2.0/release-2.0.12",
+      "sourcePath": "releasenotes/v2.0/release-2.0.12.md",
+      "sourceHash": "4855df1592d495b233d3e61bf9d9071ad564fe85a25275c38ff1752a10f16b1e"
+    },
+    {
+      "docId": "v2.0/release-2.0.13",
+      "sourcePath": "releasenotes/v2.0/release-2.0.13.md",
+      "sourceHash": "4748d3af8414fec9bafefc1ecc9349165d72f382d1b0e9888ec91cdc1560f5fe"
+    },
+    {
+      "docId": "v2.0/release-2.0.14",
+      "sourcePath": "releasenotes/v2.0/release-2.0.14.md",
+      "sourceHash": "d4f83609d816fd0d0dc867b13f766c7adb2bc5452634c2b1dfc5e1d8e0addd14"
+    },
+    {
+      "docId": "v2.0/release-2.0.15",
+      "sourcePath": "releasenotes/v2.0/release-2.0.15.md",
+      "sourceHash": "8d824f2faf0cd199a8eb5e682b550d18e097390de05a04b97ab60994ff3e346a"
+    },
+    {
+      "docId": "v2.0/release-2.0.2",
+      "sourcePath": "releasenotes/v2.0/release-2.0.2.md",
+      "sourceHash": "a6ef57e3ecbb9b519d785138113e6bd4440fd92e5ff14ef5e29db19116494b0c"
+    },
+    {
+      "docId": "v2.0/release-2.0.3",
+      "sourcePath": "releasenotes/v2.0/release-2.0.3.md",
+      "sourceHash": "39f2c50cc80c5e5fbc0780ede2cc0dfd6d19670dd5a1ff12c82590cf3f6083b8"
+    },
+    {
+      "docId": "v2.0/release-2.0.4",
+      "sourcePath": "releasenotes/v2.0/release-2.0.4.md",
+      "sourceHash": "bfbc06bbf43e14fa06f2b66871cb1741b925030972c95f99600c25ba92dbd4ab"
+    },
+    {
+      "docId": "v2.0/release-2.0.5",
+      "sourcePath": "releasenotes/v2.0/release-2.0.5.md",
+      "sourceHash": "323ebef54b8aa7c59595f8e251f9efa35c082e90e22c864f4bdfb2e83b402c5e"
+    },
+    {
+      "docId": "v2.0/release-2.0.6",
+      "sourcePath": "releasenotes/v2.0/release-2.0.6.md",
+      "sourceHash": "f26798750b09dab6c3e4eae510c58045e6bff2ca806cb557e383063ae5186075"
+    },
+    {
+      "docId": "v2.0/release-2.0.7",
+      "sourcePath": "releasenotes/v2.0/release-2.0.7.md",
+      "sourceHash": "09ec0b145fe543754bf1a63ae35ab2a0757e51fea2387b257540a0c92b1e5039"
+    },
+    {
+      "docId": "v2.0/release-2.0.8",
+      "sourcePath": "releasenotes/v2.0/release-2.0.8.md",
+      "sourceHash": "e1951e12a66efc185c3122c5d337c6787478c58ba11b6273188f9a9cbab4e4b2"
+    },
+    {
+      "docId": "v2.0/release-2.0.9",
+      "sourcePath": "releasenotes/v2.0/release-2.0.9.md",
+      "sourceHash": "a4644fb253b6ea4bd497c08d4da7f3cae84f6737bb5f50a9b6561d019cb1ed93"
+    },
+    {
+      "docId": "v2.1/release-2.1.0",
+      "sourcePath": "releasenotes/v2.1/release-2.1.0.md",
+      "sourceHash": "9510af3cc26eba327ad96e1a4ca619ca0bf2b1a748f91cc844f7f5c07aff987c"
+    },
+    {
+      "docId": "v2.1/release-2.1.1",
+      "sourcePath": "releasenotes/v2.1/release-2.1.1.md",
+      "sourceHash": "55d7946e87ce4c5522ff7f786a9f17ec3d00369657c3bd988158b4af356aff6a"
+    },
+    {
+      "docId": "v2.1/release-2.1.10",
+      "sourcePath": "releasenotes/v2.1/release-2.1.10.md",
+      "sourceHash": "5adffc245c59f5378ae2c65a7486c7b67c2a2f456f4172601148ee2b9775f178"
+    },
+    {
+      "docId": "v2.1/release-2.1.11",
+      "sourcePath": "releasenotes/v2.1/release-2.1.11.md",
+      "sourceHash": "01a26efab9251e3471432d24210ce824496dd2073f4a1d2a79c2bf5f5ad33457"
+    },
+    {
+      "docId": "v2.1/release-2.1.2",
+      "sourcePath": "releasenotes/v2.1/release-2.1.2.md",
+      "sourceHash": "f4d4fb5f1d3eb59d4df2569ba5ea6496d0825c7b91d96ec9b88d448b9c918961"
+    },
+    {
+      "docId": "v2.1/release-2.1.3",
+      "sourcePath": "releasenotes/v2.1/release-2.1.3.md",
+      "sourceHash": "d54d3252d42244047993b90cd20fe3098052a5653922b6d96fcb521a2e281314"
+    },
+    {
+      "docId": "v2.1/release-2.1.4",
+      "sourcePath": "releasenotes/v2.1/release-2.1.4.md",
+      "sourceHash": "ce21a04e3dd6cfd51bec00d815b83c98f6a6f39983e1b529414fb570f4bff2d2"
+    },
+    {
+      "docId": "v2.1/release-2.1.5",
+      "sourcePath": "releasenotes/v2.1/release-2.1.5.md",
+      "sourceHash": "02a22e10fcb4bb236a1e2711af5eb6e7903bd9d2e905f59914121eb592e43e9a"
+    },
+    {
+      "docId": "v2.1/release-2.1.6",
+      "sourcePath": "releasenotes/v2.1/release-2.1.6.md",
+      "sourceHash": "36fd06bf7bac7c67128778d05dfbfb1405bc80b3bc80e541b560b3ec599c82a8"
+    },
+    {
+      "docId": "v2.1/release-2.1.7",
+      "sourcePath": "releasenotes/v2.1/release-2.1.7.md",
+      "sourceHash": "81d9da477b72199c956134ef29ddaecc5c39bf4edcd460a16ab59163bd4ac8d8"
+    },
+    {
+      "docId": "v2.1/release-2.1.8",
+      "sourcePath": "releasenotes/v2.1/release-2.1.8.md",
+      "sourceHash": "dda4268a8c304eaa01477ef9ff34f5f46298a02d1bad547529f646645d404ead"
+    },
+    {
+      "docId": "v2.1/release-2.1.9",
+      "sourcePath": "releasenotes/v2.1/release-2.1.9.md",
+      "sourceHash": "9a073bfaf6d5789efb8fbf42b52c8ca28f531ffe15179b6d140bf93fbd847ddb"
+    },
+    {
+      "docId": "v3.0/release-3.0.0",
+      "sourcePath": "releasenotes/v3.0/release-3.0.0.md",
+      "sourceHash": "346191397c7e8bba4cb5e41cce17863e2545ab6106e973dd99d3b0399b905269"
+    },
+    {
+      "docId": "v3.0/release-3.0.1",
+      "sourcePath": "releasenotes/v3.0/release-3.0.1.md",
+      "sourceHash": "086c5693948c48cc547392c4c9f63ecfbb66c917f3ab1af39076c9643647697e"
+    },
+    {
+      "docId": "v3.0/release-3.0.2",
+      "sourcePath": "releasenotes/v3.0/release-3.0.2.md",
+      "sourceHash": "18abdab8852acf2c751a46d5e0fbcdff355cfeaf22bfd167dfb9da286d1b30c4"
+    },
+    {
+      "docId": "v3.0/release-3.0.3",
+      "sourcePath": "releasenotes/v3.0/release-3.0.3.md",
+      "sourceHash": "e399289eaab25a1bd406b8c76783b74e0d5b359c91a7d2d25e0b8b94a82a1da7"
+    },
+    {
+      "docId": "v3.0/release-3.0.4",
+      "sourcePath": "releasenotes/v3.0/release-3.0.4.md",
+      "sourceHash": "e08e7b3aa3f9331b77e4043ff0b2ab27b96a5317b6cd1a8e4c499a193cfb3886"
+    },
+    {
+      "docId": "v3.0/release-3.0.5",
+      "sourcePath": "releasenotes/v3.0/release-3.0.5.md",
+      "sourceHash": "6bd2333765efb92cd6aa14d2dfe3505e0b12c3aab8addedce1f3c001ce575768"
+    },
+    {
+      "docId": "v3.0/release-3.0.6",
+      "sourcePath": "releasenotes/v3.0/release-3.0.6.md",
+      "sourceHash": "ed4d69ddade3800aeba77746aabfe35cbf9bf9492f4fcef7b334307348822bb8"
+    },
+    {
+      "docId": "v3.0/release-3.0.7",
+      "sourcePath": "releasenotes/v3.0/release-3.0.7.md",
+      "sourceHash": "8f42f8eabd9659cbb1e994df13ee15ec57ad1fb2c0893ab850d2b5242812e598"
+    },
+    {
+      "docId": "v3.0/release-3.0.8",
+      "sourcePath": "releasenotes/v3.0/release-3.0.8.md",
+      "sourceHash": "1513ddf8bc9c2283568eab5ca08f4a14bad896db1458a5b0b72c4fc6d0fe72d4"
+    },
+    {
+      "docId": "v3.1/release-3.1.0",
+      "sourcePath": "releasenotes/v3.1/release-3.1.0.md",
+      "sourceHash": "54fc225e329e341f1b28566d7ce74b420a7ecb1fcdd5f57779d17a1bc7646847"
+    },
+    {
+      "docId": "v3.1/release-3.1.1",
+      "sourcePath": "releasenotes/v3.1/release-3.1.1.md",
+      "sourceHash": "e5809a67ec4977a6203d5db6384d6ea6383261727fd579721c47bad9c99a8e47"
+    },
+    {
+      "docId": "v3.1/release-3.1.2",
+      "sourcePath": "releasenotes/v3.1/release-3.1.2.md",
+      "sourceHash": "cc93666eeb50039d2fb563940a1fb6e434ccc7fbe741f714453066f0a3b6e020"
+    },
+    {
+      "docId": "v3.1/release-3.1.3",
+      "sourcePath": "releasenotes/v3.1/release-3.1.3.md",
+      "sourceHash": "3fbf7fdb1bf5c3264bb5304be8db79edc1691d0fc5b984bf74bb9844595bb6ce"
+    },
+    {
+      "docId": "v3.1/release-3.1.4",
+      "sourcePath": "releasenotes/v3.1/release-3.1.4.md",
+      "sourceHash": "1153ef38791c75651067427cb63115bb6b7ee86a9206935d3746501bd21c2326"
+    },
+    {
+      "docId": "v4.0/release-4.0.0",
+      "sourcePath": "releasenotes/v4.0/release-4.0.0.md",
+      "sourceHash": "a0c6bd68abc36e2ff8f59dedd8574de502a86d5d9ea73d5c07fbcffc3756c17d"
+    },
+    {
+      "docId": "v4.0/release-4.0.1",
+      "sourcePath": "releasenotes/v4.0/release-4.0.1.md",
+      "sourceHash": "2b6cf112245ac12e131065e44829e6ebe8acf7785b65a82cead70cbd8dbfc2f6"
+    },
+    {
+      "docId": "v4.0/release-4.0.2",
+      "sourcePath": "releasenotes/v4.0/release-4.0.2.md",
+      "sourceHash": "6c681f7ce1c71a08bb792f50ef11cf34a68e18692d8e8f202f71d9620ef192c4"
+    },
+    {
+      "docId": "v4.0/release-4.0.3",
+      "sourcePath": "releasenotes/v4.0/release-4.0.3.md",
+      "sourceHash": "1acaf4e8f8b0b4e9aed9fa3f550f91aa4d7dff7b8f50e47342f1102e90e0880b"
+    },
+    {
+      "docId": "v4.0/release-4.0.4",
+      "sourcePath": "releasenotes/v4.0/release-4.0.4.md",
+      "sourceHash": "c8a725af3fd77a73d37efc370501506b71619debe58676f68311ae7aa34fcd30"
+    },
+    {
+      "docId": "v4.0/release-4.0.5",
+      "sourcePath": "releasenotes/v4.0/release-4.0.5.md",
+      "sourceHash": "c4000459fb999fdc33c8efad7d7de2cd1f6093b5b0f38bc0727feac678613cbd"
+    },
+    {
+      "docId": "v4.0/release-4.0.6",
+      "sourcePath": "releasenotes/v4.0/release-4.0.6.md",
+      "sourceHash": "643fa678a51dadf09bdd9af190e13d2568e1277d25334e51bb2f523794892515"
+    },
+    {
+      "docId": "v4.0/release-4.0.7",
+      "sourcePath": "releasenotes/v4.0/release-4.0.7.md",
+      "sourceHash": "096052ed0e7d93f03a6c73270470c42f6e680bdb75814e9b0578fbe3d04a39b4"
+    },
+    {
+      "docId": "v4.0/release-4.0.8",
+      "sourcePath": "releasenotes/v4.0/release-4.0.8.md",
+      "sourceHash": "794469ab16e546baa6627ab1c978579e6ffa44a8e3b93cfeb332c39753efffbb"
+    },
+    {
+      "docId": "v4.1/release-4.1.0",
+      "sourcePath": "releasenotes/v4.1/release-4.1.0.md",
+      "sourceHash": "82bd7d1d958c98220464d45a7ed43c25ca59f90f82bdacae5f2133affa760292"
+    },
+    {
+      "docId": "v4.1/release-4.1.1",
+      "sourcePath": "releasenotes/v4.1/release-4.1.1.md",
+      "sourceHash": "5546a2af12f0d1f8d12813dbb0a2092c61c5dca04a4aedf25053cf092fe4b718"
+    },
+    {
+      "docId": "v4.1/release-4.1.2",
+      "sourcePath": "releasenotes/v4.1/release-4.1.2.md",
+      "sourceHash": "817c126dd9b3546cf4cad63edf20a93ebe7b56394fcc986d20b888fb7b16ffca"
+    },
+    {
+      "docId": "v4.1/release-4.1.3",
+      "sourcePath": "releasenotes/v4.1/release-4.1.3.md",
+      "sourceHash": "1b26109c975a9e5cbbbd09b27fad032bc74e520ddf291ae87f057d9d1d541b05"
+    },
+    {
+      "docId": "v4.1/release-4.1.4",
+      "sourcePath": "releasenotes/v4.1/release-4.1.4.md",
+      "sourceHash": "5beeb0e25d86cd57f1ca39e70f4fbef352b65d4869d2135555ed27d0d7573105"
+    },
+    {
+      "docId": "v4.1/release-4.1.4.1",
+      "sourcePath": "releasenotes/v4.1/release-4.1.4.1.md",
+      "sourceHash": "fe55d5c11b933ae46798ef59ba3f4ce8a13cb819c1becbea15a3395c755df244"
+    },
+    {
+      "docId": "v4.1/release-4.1.5",
+      "sourcePath": "releasenotes/v4.1/release-4.1.5.md",
+      "sourceHash": "908effe8089816fb8ca499104daa5394507d2b7bbfa5423c330ad92d3aeb1044"
+    }
+  ],
+  "sourceFiles": [
+    "releasenotes/all-release.md",
+    "releasenotes/core.md",
+    "releasenotes/ecosystem/doris-cli.md",
+    "releasenotes/ecosystem/doris-flink-connector.md",
+    "releasenotes/ecosystem/doris-kafka-connector.md",
+    "releasenotes/ecosystem/doris-mcp-server.md",
+    "releasenotes/ecosystem/doris-operator.md",
+    "releasenotes/ecosystem/doris-skills.md",
+    "releasenotes/ecosystem/doris-spark-connector.md",
+    "releasenotes/ecosystem/doris-streamloader.md",
+    "releasenotes/v1.1/release-1.1.0.md",
+    "releasenotes/v1.1/release-1.1.1.md",
+    "releasenotes/v1.1/release-1.1.2.md",
+    "releasenotes/v1.1/release-1.1.3.md",
+    "releasenotes/v1.1/release-1.1.4.md",
+    "releasenotes/v1.1/release-1.1.5.md",
+    "releasenotes/v1.2/release-1.2.0.md",
+    "releasenotes/v1.2/release-1.2.1.md",
+    "releasenotes/v1.2/release-1.2.2.md",
+    "releasenotes/v1.2/release-1.2.3.md",
+    "releasenotes/v1.2/release-1.2.4.md",
+    "releasenotes/v1.2/release-1.2.5.md",
+    "releasenotes/v1.2/release-1.2.6.md",
+    "releasenotes/v1.2/release-1.2.7.md",
+    "releasenotes/v1.2/release-1.2.8.md",
+    "releasenotes/v2.0/release-2.0.0.md",
+    "releasenotes/v2.0/release-2.0.1.md",
+    "releasenotes/v2.0/release-2.0.10.md",
+    "releasenotes/v2.0/release-2.0.11.md",
+    "releasenotes/v2.0/release-2.0.12.md",
+    "releasenotes/v2.0/release-2.0.13.md",
+    "releasenotes/v2.0/release-2.0.14.md",
+    "releasenotes/v2.0/release-2.0.15.md",
+    "releasenotes/v2.0/release-2.0.2.md",
+    "releasenotes/v2.0/release-2.0.3.md",
+    "releasenotes/v2.0/release-2.0.4.md",
+    "releasenotes/v2.0/release-2.0.5.md",
+    "releasenotes/v2.0/release-2.0.6.md",
+    "releasenotes/v2.0/release-2.0.7.md",
+    "releasenotes/v2.0/release-2.0.8.md",
+    "releasenotes/v2.0/release-2.0.9.md",
+    "releasenotes/v2.1/release-2.1.0.md",
+    "releasenotes/v2.1/release-2.1.1.md",
+    "releasenotes/v2.1/release-2.1.10.md",
+    "releasenotes/v2.1/release-2.1.11.md",
+    "releasenotes/v2.1/release-2.1.2.md",
+    "releasenotes/v2.1/release-2.1.3.md",
+    "releasenotes/v2.1/release-2.1.4.md",
+    "releasenotes/v2.1/release-2.1.5.md",
+    "releasenotes/v2.1/release-2.1.6.md",
+    "releasenotes/v2.1/release-2.1.7.md",
+    "releasenotes/v2.1/release-2.1.8.md",
+    "releasenotes/v2.1/release-2.1.9.md",
+    "releasenotes/v3.0/release-3.0.0.md",
+    "releasenotes/v3.0/release-3.0.1.md",
+    "releasenotes/v3.0/release-3.0.2.md",
+    "releasenotes/v3.0/release-3.0.3.md",
+    "releasenotes/v3.0/release-3.0.4.md",
+    "releasenotes/v3.0/release-3.0.5.md",
+    "releasenotes/v3.0/release-3.0.6.md",
+    "releasenotes/v3.0/release-3.0.7.md",
+    "releasenotes/v3.0/release-3.0.8.md",
+    "releasenotes/v3.1/release-3.1.0.md",
+    "releasenotes/v3.1/release-3.1.1.md",
+    "releasenotes/v3.1/release-3.1.2.md",
+    "releasenotes/v3.1/release-3.1.3.md",
+    "releasenotes/v3.1/release-3.1.4.md",
+    "releasenotes/v4.0/release-4.0.0.md",
+    "releasenotes/v4.0/release-4.0.1.md",
+    "releasenotes/v4.0/release-4.0.2.md",
+    "releasenotes/v4.0/release-4.0.3.md",
+    "releasenotes/v4.0/release-4.0.4.md",
+    "releasenotes/v4.0/release-4.0.5.md",
+    "releasenotes/v4.0/release-4.0.6.md",
+    "releasenotes/v4.0/release-4.0.7.md",
+    "releasenotes/v4.0/release-4.0.8.md",
+    "releasenotes/v4.1/release-4.1.0.md",
+    "releasenotes/v4.1/release-4.1.1.md",
+    "releasenotes/v4.1/release-4.1.2.md",
+    "releasenotes/v4.1/release-4.1.3.md",
+    "releasenotes/v4.1/release-4.1.4.1.md",
+    "releasenotes/v4.1/release-4.1.4.md",
+    "releasenotes/v4.1/release-4.1.5.md"
+  ],
+  "historicalPaths": [
+    "releasenotes/all-release.md",
+    "releasenotes/core.md",
+    "releasenotes/ecosystem/doris-cli.md",
+    "releasenotes/ecosystem/doris-flink-connector.md",
+    "releasenotes/ecosystem/doris-kafka-connector.md",
+    "releasenotes/ecosystem/doris-mcp-server.md",
+    "releasenotes/ecosystem/doris-operator.md",
+    "releasenotes/ecosystem/doris-skills.md",
+    "releasenotes/ecosystem/doris-spark-connector.md",
+    "releasenotes/ecosystem/doris-streamloader.md",
+    "releasenotes/v1.1/release-1.1.0.md",
+    "releasenotes/v1.1/release-1.1.1.md",
+    "releasenotes/v1.1/release-1.1.2.md",
+    "releasenotes/v1.1/release-1.1.3.md",
+    "releasenotes/v1.1/release-1.1.4.md",
+    "releasenotes/v1.1/release-1.1.5.md",
+    "releasenotes/v1.2/release-1.2.0.md",
+    "releasenotes/v1.2/release-1.2.1.md",
+    "releasenotes/v1.2/release-1.2.2.md",
+    "releasenotes/v1.2/release-1.2.3.md",
+    "releasenotes/v1.2/release-1.2.4.md",
+    "releasenotes/v1.2/release-1.2.5.md",
+    "releasenotes/v1.2/release-1.2.6.md",
+    "releasenotes/v1.2/release-1.2.7.md",
+    "releasenotes/v1.2/release-1.2.8.md",
+    "releasenotes/v2.0/release-2.0.0.md",
+    "releasenotes/v2.0/release-2.0.1.md",
+    "releasenotes/v2.0/release-2.0.10.md",
+    "releasenotes/v2.0/release-2.0.11.md",
+    "releasenotes/v2.0/release-2.0.12.md",
+    "releasenotes/v2.0/release-2.0.13.md",
+    "releasenotes/v2.0/release-2.0.14.md",
+    "releasenotes/v2.0/release-2.0.15.md",
+    "releasenotes/v2.0/release-2.0.2.md",
+    "releasenotes/v2.0/release-2.0.3.md",
+    "releasenotes/v2.0/release-2.0.4.md",
+    "releasenotes/v2.0/release-2.0.5.md",
+    "releasenotes/v2.0/release-2.0.6.md",
+    "releasenotes/v2.0/release-2.0.7.md",
+    "releasenotes/v2.0/release-2.0.8.md",
+    "releasenotes/v2.0/release-2.0.9.md",
+    "releasenotes/v2.1/release-2.1.0.md",
+    "releasenotes/v2.1/release-2.1.1.md",
+    "releasenotes/v2.1/release-2.1.10.md",
+    "releasenotes/v2.1/release-2.1.11.md",
+    "releasenotes/v2.1/release-2.1.2.md",
+    "releasenotes/v2.1/release-2.1.3.md",
+    "releasenotes/v2.1/release-2.1.4.md",
+    "releasenotes/v2.1/release-2.1.5.md",
+    "releasenotes/v2.1/release-2.1.6.md",
+    "releasenotes/v2.1/release-2.1.7.md",
+    "releasenotes/v2.1/release-2.1.8.md",
+    "releasenotes/v2.1/release-2.1.9.md",
+    "releasenotes/v3.0/release-3.0.0.md",
+    "releasenotes/v3.0/release-3.0.1.md",
+    "releasenotes/v3.0/release-3.0.2.md",
+    "releasenotes/v3.0/release-3.0.3.md",
+    "releasenotes/v3.0/release-3.0.4.md",
+    "releasenotes/v3.0/release-3.0.5.md",
+    "releasenotes/v3.0/release-3.0.6.md",
+    "releasenotes/v3.0/release-3.0.7.md",
+    "releasenotes/v3.0/release-3.0.8.md",
+    "releasenotes/v3.1/release-3.1.0.md",
+    "releasenotes/v3.1/release-3.1.1.md",
+    "releasenotes/v3.1/release-3.1.2.md",
+    "releasenotes/v3.1/release-3.1.3.md",
+    "releasenotes/v3.1/release-3.1.4.md",
+    "releasenotes/v4.0/release-4.0.0.md",
+    "releasenotes/v4.0/release-4.0.1.md",
+    "releasenotes/v4.0/release-4.0.2.md",
+    "releasenotes/v4.0/release-4.0.3.md",
+    "releasenotes/v4.0/release-4.0.4.md",
+    "releasenotes/v4.0/release-4.0.5.md",
+    "releasenotes/v4.0/release-4.0.6.md",
+    "releasenotes/v4.0/release-4.0.7.md",
+    "releasenotes/v4.0/release-4.0.8.md",
+    "releasenotes/v4.1/release-4.1.0.md",
+    "releasenotes/v4.1/release-4.1.1.md",
+    "releasenotes/v4.1/release-4.1.2.md",
+    "releasenotes/v4.1/release-4.1.3.md",
+    "releasenotes/v4.1/release-4.1.4.1.md",
+    "releasenotes/v4.1/release-4.1.4.md",
+    "releasenotes/v4.1/release-4.1.5.md"
+  ]
+}

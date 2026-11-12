@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/CREATE-USER",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/CREATE-USER.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/CREATE-USER.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9769a6aa60807fad11a30784db8e32c7f8bc1e5b46872be306930f5913bb9345",
+    "sourceTechnicalHash": "68d92993cd9c1b9e126c3b320df3e1c7861f23a96cbd1e2f2ba34646c58860e5",
+    "targetHash": "490af567248a46c2970a45520485386deee229c3c2b7f684500e979af31b8f96",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:18:57.332Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9769a6aa60807fad11a30784db8e32c7f8bc1e5b46872be306930f5913bb9345",
+      "targetHash": "490af567248a46c2970a45520485386deee229c3c2b7f684500e979af31b8f96",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

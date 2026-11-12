@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-distinct",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-distinct.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-distinct.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b400b4e2df3270a2918d18b65140752079dacb055c799a2895c705054bdc74ad",
+    "sourceTechnicalHash": "89557400757e518771141a6bc12ffae6afed0457cb9bbd47b83422531ce949ec",
+    "targetHash": "6b58f418d3a9d7960829d27c786899ecedb595a00e40e228bf6a30f3d85be30e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:57:13.417Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b400b4e2df3270a2918d18b65140752079dacb055c799a2895c705054bdc74ad",
+      "targetHash": "6b58f418d3a9d7960829d27c786899ecedb595a00e40e228bf6a30f3d85be30e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

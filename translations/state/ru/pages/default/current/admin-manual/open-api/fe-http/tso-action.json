@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/tso-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/tso-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/tso-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "02c3f5260f6bdf50b6e55f97251083c6a8497693bf28529b316b0ebe8630a091",
+    "sourceTechnicalHash": "c3692279acd7a56ef295b331915184ee0991405f0caf313408ae1cac1629cf22",
+    "targetHash": "4ce7db6d560f5e0efed66275ce87dbfb553a9103f5812315e0aec942dbf23d63",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:39:20.236Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "02c3f5260f6bdf50b6e55f97251083c6a8497693bf28529b316b0ebe8630a091",
+      "targetHash": "4ce7db6d560f5e0efed66275ce87dbfb553a9103f5812315e0aec942dbf23d63",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

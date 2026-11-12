@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/ARRAY",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "17ec32b4be83df1a72b30501d29caae15773ae9c6e0f946fb2e0c9a8811d4027",
+    "sourceTechnicalHash": "397ff853d315a0f60653f1d491e4aa232699218da51f231e61d1e0c4acb637c1",
+    "targetHash": "dfde4275c1fe97fdfe3a3f050d9aa5a6867a5e3bb2cb12b5b3d535f67bd59a6a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:55:08.393Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "17ec32b4be83df1a72b30501d29caae15773ae9c6e0f946fb2e0c9a8811d4027",
+      "targetHash": "dfde4275c1fe97fdfe3a3f050d9aa5a6867a5e3bb2cb12b5b3d535f67bd59a6a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

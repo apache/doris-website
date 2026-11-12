@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authorization/ranger",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authorization/ranger.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authorization/ranger.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "edc920bd4a6a15e8575f2f3f40efd5e2771dd50caff194ec908ce13da35e210a",
+    "sourceTechnicalHash": "c1404ac49dd74b937abec990e0a43b325e4613d35e276b6d709255ec6bd3674a",
+    "targetHash": "8c6d14c6c020133fa7ab61b53aea6316f92a3fd8625c5b07e136c69c25ad0c30",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:51:36.758Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "edc920bd4a6a15e8575f2f3f40efd5e2771dd50caff194ec908ce13da35e210a",
+      "targetHash": "8c6d14c6c020133fa7ab61b53aea6316f92a3fd8625c5b07e136c69c25ad0c30",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/auth/authorization/ranger",
+        "sourcePath": "docs/admin-manual/auth/authorization/ranger.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/authorization/ranger.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "edc920bd4a6a15e8575f2f3f40efd5e2771dd50caff194ec908ce13da35e210a",
+        "targetHash": "8c6d14c6c020133fa7ab61b53aea6316f92a3fd8625c5b07e136c69c25ad0c30",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

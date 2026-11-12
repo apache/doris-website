@@ -2,6 +2,7 @@ import React, { JSX, useEffect } from 'react';
 import Head from '@docusaurus/Head';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { SlackIcon } from '@site/src/components/Icons/slack';
+import { TelegramIcon } from '@site/src/components/Icons/telegram';
 import {
     SLACK_EVENT_ACTION,
     SLACK_EVENT_CATEGORY,
@@ -48,19 +49,21 @@ function hasScriptElement(url: string): boolean {
     return Array.from(document.scripts).some(script => script.src === url);
 }
 
-function readSlackInviteUrl(customFields: Record<string, unknown> | undefined): string {
-    const value = customFields?.slackInviteUrl;
+function readCommunityInviteUrl(customFields: Record<string, unknown> | undefined, channel: 'Slack' | 'Telegram'): string {
+    const field = channel === 'Telegram' ? 'telegramInviteUrl' : 'slackInviteUrl';
+    const value = customFields?.[field];
     if (typeof value !== 'string' || value === '') {
         throw new Error(
-            'customFields.slackInviteUrl is missing from docusaurus.config.js; /slack cannot forward visitors without it.',
+            `customFields.${field} is missing from docusaurus.config.js; /${channel.toLowerCase()} cannot forward visitors without it.`,
         );
     }
     return value;
 }
 
-export default function SlackRedirect(): JSX.Element {
+export default function CommunityRedirect({ channel = 'Slack' }: { channel?: 'Slack' | 'Telegram' }): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
-    const slackInviteUrl = readSlackInviteUrl(siteConfig.customFields);
+    const inviteUrl = readCommunityInviteUrl(siteConfig.customFields, channel);
+    const eventAction = channel === 'Telegram' ? 'Telegram Click' : SLACK_EVENT_ACTION;
     const trackerScriptUrl = getMatomoScriptUrl(siteConfig.themeConfig.matomo as MatomoThemeConfig | undefined);
 
     useEffect(() => {
@@ -80,13 +83,13 @@ export default function SlackRedirect(): JSX.Element {
             }
             redirected = true;
             timers.forEach(id => window.clearTimeout(id));
-            window.location.replace(slackInviteUrl);
+            window.location.replace(inviteUrl);
         };
 
         if (process.env.NODE_ENV !== 'production') {
             // docusaurus-plugin-matomo only injects the tracker in production
             // builds, so surface what would have been sent.
-            console.info('[slack-redirect] Matomo event:', SLACK_EVENT_CATEGORY, SLACK_EVENT_ACTION, eventName);
+            console.info(`[${channel.toLowerCase()}-redirect] Matomo event:`, SLACK_EVENT_CATEGORY, eventAction, eventName);
         }
 
         const queue = matomoWindow._paq || (matomoWindow._paq = []);
@@ -96,7 +99,7 @@ export default function SlackRedirect(): JSX.Element {
         queue.push([
             'trackEvent',
             SLACK_EVENT_CATEGORY,
-            SLACK_EVENT_ACTION,
+            eventAction,
             eventName,
             undefined, // value
             undefined, // customData
@@ -126,31 +129,31 @@ export default function SlackRedirect(): JSX.Element {
         timers.push(window.setTimeout(redirect, REDIRECT_MAX_WAIT_MS));
 
         return () => timers.forEach(id => window.clearTimeout(id));
-    }, [slackInviteUrl, trackerScriptUrl]);
+    }, [inviteUrl, trackerScriptUrl, eventAction, channel]);
 
     return (
         <>
             <Head>
-                <title>Join the Apache Doris Slack community</title>
+                <title>{`Join the Apache Doris ${channel} community`}</title>
                 <meta name="robots" content="noindex, nofollow" />
-                <meta name="description" content="Forwarding you to the Apache Doris community Slack workspace." />
+                <meta name="description" content={`Forwarding you to the Apache Doris ${channel} community.`} />
             </Head>
             <main className="slack-redirect">
                 {/* Browsers without JavaScript never run the effect above; the
                     server-rendered meta refresh forwards them straight away. */}
                 <noscript>
-                    <meta httpEquiv="refresh" content={`0;url=${slackInviteUrl}`} />
+                    <meta httpEquiv="refresh" content={`0;url=${inviteUrl}`} />
                 </noscript>
                 <div className="slack-redirect__card" role="status" aria-live="polite">
                     <div className="slack-redirect__icon" aria-hidden="true">
-                        <SlackIcon />
+                        {channel === 'Telegram' ? <TelegramIcon /> : <SlackIcon />}
                     </div>
                     <p className="slack-redirect__eyebrow">Apache Doris Community</p>
-                    <h1 className="slack-redirect__title">Taking you to Slack…</h1>
+                    <h1 className="slack-redirect__title">Taking you to {channel}…</h1>
                     <p className="slack-redirect__copy">
                         If nothing happens within a few seconds,{' '}
-                        <a className="slack-redirect__link" href={slackInviteUrl}>
-                            open the Slack invite
+                        <a className="slack-redirect__link" href={inviteUrl}>
+                            open the {channel} invite
                         </a>{' '}
                         directly.
                     </p>

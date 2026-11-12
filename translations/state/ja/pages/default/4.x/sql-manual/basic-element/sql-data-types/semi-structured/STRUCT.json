@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "dd09845dc643de42dd1ec54196b6d3fdf62cf048ac474656e9d04700f21204f8",
-    "sourceTechnicalHash": "b59bb36bac8b8f86e8e8615935bbcdf9e6b95bb6928a4b9e488ef371d63cca6f",
-    "targetHash": "688f123d3b6c9d65e8c22b1c969c829d7006e6e9a7c33b90bbdbc2da98caeab9",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "2a6db68e5853ebd806b66b693948aaa0f31b569b17dbbd44813f4bf2eac7e268",
+    "sourceTechnicalHash": "35d4655f936b36334b8f4147c0b87d5ee24d8509e4021e11c001155fd91eae4b",
+    "targetHash": "992ee469bd7d019c255a229d4969d0d3c3cfdb6fe656b54776a5e23844547640",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.668Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T05:37:18.285Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2a6db68e5853ebd806b66b693948aaa0f31b569b17dbbd44813f4bf2eac7e268",
+      "targetHash": "992ee469bd7d019c255a229d4969d0d3c3cfdb6fe656b54776a5e23844547640",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"4.1.3\",\"9\"]; received [\"1\",\"1\",\"1\",\"4.1.3\",\"9\"]\nprotected node 33: expected [\"code\",\"SQL\",null,\"  CREATE TABLE struct_table (\\n      `k` INT NOT NULL,\\n      `struct_varchar` STRUCT<name: VARCHAR(10), age: INT>\\n  ) ENGINE=OLAP\\n  DUPLICATE KEY(`k`)\\n  DISTRIBUTED BY HASH(`k`) BUCKETS 1\\n  PROPERTIES (\\n      \\\"replication_num\\\" = \\\"1\\\"\\n  );\\n\\n  -- Add a subcolumn at the end\\n  ALTER TABLE struct_table MODIFY COLUMN struct_varchar STRUCT<name: VARCHAR(10), age: INT, id: INT>;\"]; received [\"code\",\"SQL\",null,\"  CREATE TABLE struct_table (\\n      `k` INT NOT NULL,\\n      `struct_varchar` STRUCT<name: VARCHAR(10), age: INT>\\n  ) ENGINE=OLAP\\n  DUPLICATE KEY(`k`)\\n  DISTRIBUTED BY HASH(`k`) BUCKETS 1\\n  PROPERTIES (\\n      \\\"replication_num\\\" = \\\"1\\\"\\n  );\\n\\n  -- サブカラムを末尾に追加\\n  ALTER TABLE struct_table MODIFY COLUMN struct_varchar STRUCT<name: VARCHAR(10), age: INT, id: INT>;\"]\nprotected node 48: expected [\"code\",\"SQL\",null,\"-- Table with a STRUCT column: s STRUCT<a: INT, b: DOUBLE>\\nSELECT s.a, s.b FROM struct_table;\\n\\n-- Nested STRUCT column: s STRUCT<s: STRUCT<s: STRUCT<s: INT>>>\\nSELECT s.s.s.s FROM nested_struct_table;\"]; received [\"code\",\"SQL\",null,\"-- STRUCT 列を持つテーブル：s STRUCT<a: INT, b: DOUBLE>\\nSELECT s.a, s.b FROM struct_table;\\n\\n-- ネストした STRUCT 列：s STRUCT<s: STRUCT<s: STRUCT<s: INT>>>\\nSELECT s.s.s.s FROM nested_struct_table;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"4.1.3\",\"9\"]; received [\"1\",\"1\",\"1\",\"4.1.3\",\"9\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md",
+        "blob": "d6d79167d3d0df59c1274e9a7a49744272c06193"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md",
+        "blob": "3f6b6f346cd6eb28d7879866b1a24573f39f5822"
+      }
+    }
   }
 }

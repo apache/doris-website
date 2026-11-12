@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/hive-catalog/doris-type-mapping",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/hive-catalog/doris-type-mapping.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hive-catalog/doris-type-mapping.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "cf102ddfeaf2c88817c3b16a1db1387e7a3e148a5f034fe282dfc6ef156b0d66",
+    "sourceTechnicalHash": "748b106e7178b222ca8093abc016e385cf8bfe94fd0bae4937ed127f129ffffc",
+    "targetHash": "ef4632cf9fb5ea6982d6398f9a2fe79c0176a1d0d9edeb36d9a314f3d3b1294e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:55:30.376Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cf102ddfeaf2c88817c3b16a1db1387e7a3e148a5f034fe282dfc6ef156b0d66",
+      "targetHash": "ef4632cf9fb5ea6982d6398f9a2fe79c0176a1d0d9edeb36d9a314f3d3b1294e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

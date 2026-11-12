@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c32be7cdea3c5906280001ba1f50457cf147894354d6759022d0c884e84365c8",
+    "sourceTechnicalHash": "b4ebe210555bfdf23b515860edfe0478fedb9c94460dfd0a93fa3245c5e087ca",
+    "targetHash": "f94ca02fd81d5c46257fccfc4fb4bacd776c7f557f39215bdd70dfdc437a5a3f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:00:07.901Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c32be7cdea3c5906280001ba1f50457cf147894354d6759022d0c884e84365c8",
+      "targetHash": "f94ca02fd81d5c46257fccfc4fb4bacd776c7f557f39215bdd70dfdc437a5a3f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

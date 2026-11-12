@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/aws-kinesis",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/aws-kinesis.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/aws-kinesis.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "3f8a12984de24ff2a17615892aedb1f6348fa7fa9bc3c8ffa07df60541d2ccfa",
+    "sourceTechnicalHash": "30efcd9ac5ca0ae37dc04c379cbc3972f95095ac4bf311ebfb042ee206bde4e7",
+    "targetHash": "d4809483ebe7002ed90b2aef09973d8d5e87d4592c1604ef855df52b46ef51cc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:12:18.536Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3f8a12984de24ff2a17615892aedb1f6348fa7fa9bc3c8ffa07df60541d2ccfa",
+      "targetHash": "d4809483ebe7002ed90b2aef09973d8d5e87d4592c1604ef855df52b46ef51cc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

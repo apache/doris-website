@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/reciprocal-rank-fusion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/reciprocal-rank-fusion.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/reciprocal-rank-fusion.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0a30652b953d5c2fb2c9a45251bfed8bfd659f1b39fb845ca4b09eac6344ad04",
+    "sourceTechnicalHash": "652f0f77792e568278aa057a5595894fee3bfeff69c514e4cfc83f33847408d9",
+    "targetHash": "310bf3902d6b65e98f8e890fe448fc7e0e71a5442a65ef64bd60f08490eec53e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:33.402Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0a30652b953d5c2fb2c9a45251bfed8bfd659f1b39fb845ca4b09eac6344ad04",
+      "targetHash": "310bf3902d6b65e98f8e890fe448fc7e0e71a5442a65ef64bd60f08490eec53e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/reciprocal-rank-fusion",
+        "sourcePath": "docs/key-features/reciprocal-rank-fusion.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/reciprocal-rank-fusion.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "0a30652b953d5c2fb2c9a45251bfed8bfd659f1b39fb845ca4b09eac6344ad04",
+        "targetHash": "310bf3902d6b65e98f8e890fe448fc7e0e71a5442a65ef64bd60f08490eec53e",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

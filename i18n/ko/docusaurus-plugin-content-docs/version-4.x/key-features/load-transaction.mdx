@@ -107,7 +107,7 @@ Query OK, 2 rows affected
 - [Stream Load](./stream-load): 2PC 방식도 지원하는 동기식 HTTP 데이터 적재 방식입니다.
 - [Group Commit](./group-commit): 명시적인 `BEGIN ... COMMIT`이 필요하지 않은 빈번한 소량 삽입에 적합한 도구입니다.
 - [Kafka 및 CDC 통합](./kafka-cdc-integration): Routine Load와 Flink CDC가 이 트랜잭션 모델을 기반으로 exactly-once를 구현하는 방식을 설명합니다.
-- [Binlog Table Stream](./binlog-table-stream): 커밋된 행이 보이게 되면 생성되는 변경 피드입니다.
+- [Changelog / Table Stream](./changelog-table-stream): 커밋된 행이 보이게 되면 생성되는 변경 피드입니다.
 - [트랜잭션, 격리 및 Label 보존](https://doris.apache.org/docs/data-operate/transaction/)
 - [Stream Load 2PC 단계별 안내](https://doris.apache.org/docs/data-operate/import/import-way/stream-load-manual/)
 - [Flink의 Doris 실시간 쓰기가 속도와 exactly-once를 모두 보장하는 방식](https://doris.apache.org/blog/Flink-realtime-write/)

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9633d80a678a1c64dd7dae5a3c5786a690753de2b01eb9b5cebbeb333be36d77",
+    "sourceTechnicalHash": "c6c48ddea6ad53842325e4ac5f8a62125042646d99ba06403440a6fc8f566f5a",
+    "targetHash": "0e3e5afb9116ba1f85dc0c1752d2103a84087eed97fe3f893a719ddd307282ca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:00:23.454Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9633d80a678a1c64dd7dae5a3c5786a690753de2b01eb9b5cebbeb333be36d77",
+      "targetHash": "0e3e5afb9116ba1f85dc0c1752d2103a84087eed97fe3f893a719ddd307282ca",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

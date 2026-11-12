@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "5734be5af146436dca0457e25274d8ad05f5e88b62f3bec14c2fbd5c3320c3bd",
-    "sourceTechnicalHash": "2f352daa1e588ba8d99cef42ee5bd98efd764cc5937cd2d25ef0e35505c789e5",
-    "targetHash": "71652abe4019dd02f317e8bbf9a03d213b9b51e1115cd468853676f2448bf018",
+    "sourceCommit": "bba406979506208850ce2b3aacee2f93085e355a",
+    "sourceHash": "ccd1541653c84c090804fd2f82a42c05762971f06c76533bce50be6b588e6cbb",
+    "sourceTechnicalHash": "935500781e04a1d7192f1e855d36b13926a200a42d7682beb8acad644b0770d0",
+    "targetHash": "6e847a3554997a305ac99e0701f92a22ee426a56afbe61eb0b2798b7654644c5",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T09:35:18.351Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-02T05:29:42.796Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ccd1541653c84c090804fd2f82a42c05762971f06c76533bce50be6b588e6cbb",
+      "targetHash": "6e847a3554997a305ac99e0701f92a22ee426a56afbe61eb0b2798b7654644c5",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 3: expected [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`, \\n  [ , ... ]\\n);\"]; received [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`,\\n  [ , ... ]\\n);\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`, \\n  [ , ... ]\\n);\"]; received [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`,\\n  [ , ... ]\\n);\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<value>\"]; received [\"inlineCode\",null,null,\"<key>\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"<key>\"]; received [\"inlineCode\",null,null,\"<value>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`, \\n  [ , ... ]\\n);\"]; received [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`,\\n  [ , ... ]\\n);\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<value>\"]; received [\"inlineCode\",null,null,\"<key>\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"<key>\"]; received [\"inlineCode\",null,null,\"<value>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`, \\n  [ , ... ]\\n);\"]; received [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`,\\n  [ , ... ]\\n);\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
+        "blob": "86a2a5ccb70f442b7c21201d003c5c078b978d34"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
+        "blob": "42392f083bed9213859eeaf70d69c43b1163c0dd"
+      }
+    }
   }
 }

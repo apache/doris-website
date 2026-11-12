@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "design/metadata-design",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/design/metadata-design.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/design/metadata-design.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e9c7809d3224997d9344624c487911ff23a33af21577503a2ae9a604eaed22ed",
+    "sourceTechnicalHash": "470198a9a4b4ff79b9fe7fdc2d7d050efd4e8643c56d2c49d2a07a27212f0b5a",
+    "targetHash": "f71a3943a18293c15baaf94c9e9ae470e3af5eb1ed3886e96440a0f2e90f3931",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:06:58.638Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e9c7809d3224997d9344624c487911ff23a33af21577503a2ae9a604eaed22ed",
+      "targetHash": "f71a3943a18293c15baaf94c9e9ae470e3af5eb1ed3886e96440a0f2e90f3931",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

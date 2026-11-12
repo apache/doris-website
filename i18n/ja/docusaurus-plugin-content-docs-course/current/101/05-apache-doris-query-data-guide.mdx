@@ -1,0 +1,263 @@
+---
+title: Apache Doris クエリデータガイド
+description: 結合、サブクエリ、分析処理、UDF、複合型、マテリアライズドビューを学びながら、Apache Doris の分析クエリを組み立て、高速化する方法を学びます。
+slug: /101/05-apache-doris-query-data-guide
+sidebar_position: 5
+keywords:
+  - Apache Doris 101
+  - 分析 SQL
+  - 結合の最適化
+  - ウィンドウ関数
+  - マテリアライズドビュー
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={5}
+    title="Apache Doris クエリデータガイド"
+    readingTime="15–20 分"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/query-data/querying-overview"
+>
+    <CourseLessonUnit
+        id="query-toolkit"
+        label="クエリの道具箱"
+        title={<>SQLの構造は <em>問いに合わせて選ぶ</em>.</>}
+        summary="結合はエンティティ同士を関連付け、サブクエリとCTEはロジックを組み立て、分析演算子は周辺の行を踏まえた値を計算し、マテリアライズドビューは処理の繰り返しを減らします。"
+        coachTitle="ヒントより先に、正しい構造を選びましょう。"
+        coach={<p>まず、正しい結果を返す最も単純なリレーショナル式を書き、実行計画を確認して、コストの高いデータ移動やスキャンを最適化します。Doris は、不透明な手続き型ロジックよりも、明快な SQL を効果的に書き換えて分散実行できます。</p>}
+        calloutTitle="根拠を確かめる流れ"
+        callout={<p>実行計画の構造は EXPLAIN で、実行時の状況はクエリプロファイルで確認します。SQL の長さだけで性能を判断しないでください。</p>}
+        check={{
+            question: "最初にクエリを書き換える際、何を判断材料にすべきですか？",
+            options: ["実行計画とプロファイルの情報", "クエリの行数"],
+            correctIndex: 0,
+            correctFeedback: "正解です。実行計画の構造と実行時のコストを見れば、有効な書き換えが分かります。",
+            incorrectFeedback: "短い SQL でも、膨大なデータの移動やスキャンが発生することがあります。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris の分析クエリに使う機能"
+            columns={4}
+            items={[
+                { tag: 'JOIN', title: "関係", description: "一致するエンティティを結合、確認、または除外します。" },
+                { tag: 'CTE', title: "クエリの組み立て", description: "中間ロジックに名前を付け、複雑なクエリを整理します。" },
+                { tag: 'WIN', title: "分析", description: "順位、累積値、同じ並び順の値を持つ行を考慮した値を計算します。" },
+                { tag: 'MV', title: "高速化", description: "透過的なクエリ書き換えによって、保存済みの結果を再利用します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="join-semantics"
+        label="結合の意味"
+        title={<>どの行を <em>残すかを選ぶ</em>.</>}
+        summary="内部結合、外部結合、セミ結合、アンチ結合、クロス結合は、同じ結合キーを使っていても、それぞれ異なる問いに答えます。"
+        coachTitle="結果に残る行の集合として考えましょう。"
+        coach={<p>INNER は一致した行を残します。LEFT、RIGHT、FULL は指定した側の一致しない行も残します。SEMI は相手側の行を返さずに一致の有無を調べます。ANTI は一致しない行を残します。CROSS はすべての行の組み合わせを作ります。</p>}
+        calloutTitle="物理的な実行方式"
+        callout={<p>等価結合では通常、Hash Join を使用できます。非等価条件や直積を伴う処理では Nested Loop Join が必要になることがあり、行数の見積もりにいっそう注意が必要です。</p>}
+        check={{
+            question: "一致する注文がない顧客を返す結合はどれですか？",
+            options: ["LEFT ANTI JOIN", "INNER JOIN"],
+            correctIndex: 0,
+            correctFeedback: "正解です。LEFT ANTI は、右側に一致する行がない左側の行を残します。",
+            incorrectFeedback: "INNER JOIN は、一致する注文がある顧客だけを残します。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris の結合の種類"
+            columns={3}
+            items={[
+                { tag: 'MATCH', title: "内部結合", description: "結合条件を満たす行の組だけを残します。" },
+                { tag: 'KEEP', title: "外部結合", description: "片側または両側の一致しない行も残します。" },
+                { tag: 'EXIST', title: "セミ結合", description: "一致する行が少なくとも一つあれば、片側の行を返します。" },
+                { tag: 'MISS', title: "アンチ結合", description: "一致する行がない場合に限り、片側の行を返します。" },
+                { tag: 'PAIR', title: "クロス結合", description: "両方の入力の直積を生成します。" },
+                { tag: 'COND', title: "非等価結合", description: "範囲条件や不等号を使って結合します。多くの場合、ネストしたループで処理します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="join-distribution"
+        label="結合時のデータ分散"
+        title={<>ネットワークをまたぐデータ量を <em>減らす</em>.</>}
+        summary="Broadcast、Shuffle、Bucket Shuffle、Colocate は、データ配置に対する条件が順に厳しくなる代わりに、データ移動を抑えられる戦略です。"
+        coachTitle="テーブルのサイズと分散方法によって、データの移動パターンが決まります。"
+        coach={<p>Broadcast は小さいビルド側を各ノードに複製します。Shuffle は両側を再分散します。結合キーが相手側のテーブルの分散キーと合っていれば、Bucket Shuffle では片側だけを移動できます。両方のテーブルが互換性のある配置を共有していれば、Colocate ではデータ移動を避けられます。</p>}
+        calloutTitle="並列度も重要です"
+        callout={<p>バケット数が少ないと、並列処理が制限され、効率的に見える Colocate や Bucket Shuffle の実行計画でも遅くなることがあります。</p>}
+        check={{
+            question: "非常に小さいディメンションテーブルには、どの戦略が適していますか？",
+            options: ["Broadcast", "大きい両方の入力を Shuffle する"],
+            correctIndex: 0,
+            correctFeedback: "正解です。十分に小さいビルド側を Broadcast すれば、大きい側の再分散を避けられます。",
+            incorrectFeedback: "この場合、両側を Shuffle すると、通常は移動するデータ量が増えます。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris の結合時のデータ移動"
+            focusIndex={0}
+            items={[
+                { title: "Broadcast", description: "小さい右側を複製" },
+                { title: "Shuffle", description: "両側を移動" },
+                { title: "Bucket Shuffle", description: "片側を移動" },
+                { title: "Colocate", description: "結合時の Shuffle なし" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="subqueries-and-ctes"
+        label="サブクエリと CTE"
+        title={<>中間ロジックを <em>見える形にする</em>.</>}
+        summary="サブクエリはリレーショナルな問いをクエリに埋め込みます。CTE は中間結果の集合に名前を付け、再帰的な階層も表現できます。"
+        coachTitle="相関の有無によって、実行方法の自由度が変わります。"
+        coach={<p>非相関サブクエリは単独で成立し、広くサポートされています。相関サブクエリは外側のクエリの現在の行に依存し、使える形に制約があります。CTE は処理の段階を明確にできますが、必ず実体化されるわけではありません。</p>}
+        calloutTitle="参照範囲を局所的に保つ"
+        callout={<p>複数の階層をまたぐ深い相関は避けましょう。依存関係を最適化しやすく、確認しやすくなるなら、明示的な結合や名前を付けた段階を使います。</p>}
+        check={{
+            question: "サブクエリが相関サブクエリになる条件は何ですか？",
+            options: ["外側のクエリのカラムを参照する", "ORDER BY を含む"],
+            correctIndex: 0,
+            correctFeedback: "正解です。結果が外側のクエリの現在の行や参照範囲に依存します。",
+            incorrectFeedback: "ORDER BY があるだけでは、相関は生じません。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="サブクエリと CTE の役割"
+            leftTitle="サブクエリ"
+            leftLead="値、集合、またはリレーションを別の式の中に入れます。"
+            leftItems={["スカラー結果または複数行の結果", "相関あり、または独立", "存在確認に役立つ"]}
+            rightTitle="CTE"
+            rightLead="メインのステートメントの前に、クエリの段階に名前を付けます。"
+            rightItems={["読みやすさが向上する", "再利用できる論理的な段階", "再帰を表現できる"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="multidimensional-analysis"
+        label="多次元 SQL"
+        title={<>複数の集計レベルを <em>一つのステートメントで計算する</em>.</>}
+        summary="GROUPING SETS は指定したグループ化を選び、ROLLUP は階層に沿った小計を追加し、CUBE はすべての組み合わせを生成します。"
+        coachTitle="組み合わせが増えるほど、処理量も増えます。"
+        coach={<p>必要な集計レベルが決まっている場合は GROUPING SETS、年から月、日へと掘り下げる階層には ROLLUP を使います。CUBE は、すべてのディメンションの組み合わせが必要な場合にだけ使います。</p>}
+        calloutTitle="小計によって生じた NULL を見分ける"
+        callout={<p>GROUPING または GROUPING_ID を使うと、集計によって生じた NULL と、元データに存在した NULL を区別できます。</p>}
+        check={{
+            question: "年 → 月 → 日という階層に最適な演算子はどれですか？",
+            options: ["ROLLUP", "CROSS JOIN"],
+            correctIndex: 0,
+            correctFeedback: "正解です。ROLLUP は階層に沿った小計レベルを自然に表現できます。",
+            incorrectFeedback: "CROSS JOIN は行の組を作るもので、集計レベルは定義しません。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris の多次元集計演算子"
+            columns={3}
+            items={[
+                { tag: 'SET', title: "GROUPING SETS", description: "明示的に指定したグループ化の組み合わせだけを計算します。" },
+                { tag: 'TREE', title: "ROLLUP", description: "順序のあるディメンション階層に沿って小計を追加します。" },
+                { tag: 'ALL', title: "CUBE", description: "ディメンション間のグループ化の組み合わせをすべて計算します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="window-functions"
+        label="ウィンドウ関数"
+        title={<>行をまとめずに <em>近傍の行を分析する</em>.</>}
+        summary="ウィンドウ関数は行ごとの詳細を保ちながら、順位、オフセット、累積集計、同じ並び順の値を持つ行を考慮した計算結果を追加します。"
+        coachTitle="パーティション、並び順、フレームは、それぞれ異なる範囲や順序を定めます。"
+        coach={<p>PARTITION BY は計算するグループを区切り、ORDER BY は順序と同じ並び順の値を持つ行を定め、フレームは現在の結果の計算に含める行を定義します。</p>}
+        calloutTitle="ROWS と RANGE"
+        callout={<p>ROWS は物理的な行の位置を基準にします。RANGE は並び順の値が同じ行をまとめるため、値が重複すると予想以上の行が含まれることがあります。</p>}
+        check={{
+            question: "累積合計の計算順序を定める句はどれですか？",
+            options: ["ウィンドウ内の ORDER BY", "テーブルのコメント"],
+            correctIndex: 0,
+            correctFeedback: "正解です。ウィンドウ内の並び順が計算順序を定めます。",
+            incorrectFeedback: "テーブルのコメントは、分析処理の並び順に影響しません。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="ウィンドウ関数の定義"
+            focusIndex={2}
+            items={[
+                { title: "パーティション", description: "グループごとに計算を開始" },
+                { title: "並び順", description: "同じ並び順の値を持つ行と順序を定義" },
+                { title: "フレーム", description: "計算に含める行を選択" },
+                { title: "関数", description: "順位付け、オフセット、集計" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="extensibility-and-types"
+        label="関数と型"
+        title={<>SQL を拡張するのは、組み込み関数で表現できない <em>ロジックがあるときだけ</em>.</>}
+        summary="エイリアス関数は移行を簡単にし、Java と Python の UDF は独自の計算を追加します。複合型を使えば、入れ子になった値もクエリできます。"
+        coachTitle="拡張機能を使うほど、運用上の責任も増えます。"
+        coach={<p>最適化と移植性を考え、まず組み込み関数を使います。使い慣れた関数のシグネチャを対応付けるにはエイリアス関数、管理可能な独自処理には Java、実行時のコストに見合うエコシステムの利点がある場合には Python を使います。ARRAY、MAP、STRUCT、JSON のデータ構造は、用途を考えて設計しましょう。</p>}
+        calloutTitle="本番運用のチェックリスト"
+        callout={<p>ユーザーコードのバージョンを管理し、安全性を確保し、テストと監視を行います。型の対応、NULL の扱い、決定性、リソース制限、関連するすべてのノードで利用できることを確認してください。</p>}
+        check={{
+            question: "サポートされている変換には、通常まず何を選びますか？",
+            options: ["Doris の組み込み関数", "新しい外部 UDF"],
+            correctIndex: 0,
+            correctFeedback: "正解です。組み込み関数なら、最適化しやすく、運用も分かりやすくなります。",
+            incorrectFeedback: "UDF にはデプロイと実行時の管理が伴います。必要な機能がない場合に使いましょう。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris の拡張方法"
+            columns={4}
+            items={[
+                { tag: 'AKA', title: "エイリアス関数", description: "互換性のある名前や再利用可能な式に対応付けます。" },
+                { tag: 'JVM', title: "Java UDF", description: "スカラー、集計、ウィンドウ、テーブルのロジックを実装します。" },
+                { tag: 'PY', title: "Python UDF", description: "エコシステムの利点が処理のオーバーヘッドに見合う場合に、Python のロジックを使います。" },
+                { tag: 'NEST', title: "複合型", description: "配列、マップ、構造体、JSON を、先に平坦化せずにクエリします。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="materialized-views"
+        label="マテリアライズドビュー"
+        title={<>クエリで <em>頻繁に繰り返す処理を事前計算する</em>.</>}
+        summary="同期マテリアライズドビューは、強い一貫性を保ちながら単一テーブルのクエリを高速化します。非同期マテリアライズドビューは、更新を管理しながら、複数テーブルを使う複雑な結果に対応します。"
+        coachTitle="求めるデータの鮮度とクエリの複雑さに応じて、ビューの種類を選びます。"
+        coach={<p>ベーステーブルへの書き込みに追従する必要がある、サポート対象の射影や集計には同期マテリアライズドビューを使います。定期更新やオンデマンド更新でよい結合、スタースキーマ、コストの高い変換には非同期マテリアライズドビューを使います。</p>}
+        calloutTitle="透過的なクエリ書き換え"
+        callout={<p>アプリケーションはベーステーブルをクエリし続けられます。オプティマイザが互換性のあるマテリアライズドビューを選択します。EXPLAIN で書き換えの動作を確認してください。</p>}
+        check={{
+            question: "複数テーブルを使うスタースキーマのロールアップには、どの種類のビューが適していますか？",
+            options: ["非同期マテリアライズドビュー", "単一テーブルの同期ビュー"],
+            correctIndex: 0,
+            correctFeedback: "正解です。非同期マテリアライズドビューは、複数テーブルを使う複雑な定義に対応します。",
+            incorrectFeedback: "同期マテリアライズドビューで使えるのは、サポート対象の単一テーブルを使うクエリの形に限られます。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="同期マテリアライズドビューと非同期マテリアライズドビュー"
+            leftTitle="同期 MV"
+            leftLead="ベースデータとともに維持される、単一テーブルのクエリの高速化。"
+            leftItems={["強い一貫性", "透過的なクエリ書き換え", "使えるクエリの形に制限がある"]}
+            rightTitle="非同期 MV"
+            rightLead="設定した更新方針に従って更新される、柔軟な保存済みの結果。"
+            rightItems={["複数テーブルを使う定義", "定期更新または手動更新", "データの鮮度を管理する必要がある"]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

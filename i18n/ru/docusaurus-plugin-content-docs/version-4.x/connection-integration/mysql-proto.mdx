@@ -1,0 +1,171 @@
+---
+{
+    "title": "Подключение по протоколу MySQL",
+    "language": "ru",
+    "description": "Описывает совместимость Apache Doris с сетевым протоколом MySQL и приводит примеры подключения через MySQL CLI и из программ на популярных языках, таких как Java, Go, Rust, Python и C++."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Apache Doris полностью совместим с **сетевым протоколом обмена данными MySQL**. Поэтому все клиентские инструменты, инструменты визуализации, а также драйверы / библиотеки MySQL для популярных языков программирования, поддерживающие этот протокол, могут подключаться к Doris напрямую, **без установки специального драйвера для Doris**.
+
+> Doris FE по умолчанию предоставляет службу протокола MySQL на порту `9030`, который соответствует параметру `query_port` в `fe.conf`.
+
+## Типичные сценарии использования {#typical-use-cases}
+
+В зависимости от цели использования можно выделить два типичных сценария подключения по протоколу MySQL:
+
+| Сценарий | Типичное применение | Рекомендуемый способ |
+| --- | --- | --- |
+| Доступ из командной строки / скриптов | Диагностика проблем при эксплуатации, разовые запросы, скрипты автоматизации | MySQL CLI |
+| Интеграция с приложениями | Серверные службы, программы обработки данных, задания ETL | Драйверы MySQL для соответствующего языка (Java / Go / Rust / Python / C++ и т. д.) |
+
+## Подготовка к подключению {#preparation-before-connecting}
+
+Перед установлением соединения уточните следующие сведения:
+
+| Параметр | Описание | Пример |
+| --- | --- | --- |
+| `FE_IP` | IP-адрес или имя хоста узла Doris FE | `172.20.63.118` |
+| `FE_QUERY_PORT` | Порт службы протокола MySQL на FE, соответствующий параметру `query_port` в `fe.conf` | `9030` |
+| `USER` | Учётная запись для входа | `root` |
+| `PASSWORD` | Пароль для входа (у учётной записи `root` по умолчанию пароль пустой) | - |
+
+> Чтобы изменить порт, укажите нужное значение параметра `query_port` в `fe.conf` на узле FE и перезапустите FE.
+
+## Примеры подключения {#connection-examples}
+
+Ниже приведены минимальные примеры подключения для различных клиентов MySQL / драйверов языков программирования. Переключайтесь между ними с помощью вкладок:
+
+<Tabs groupId="mysql-client">
+
+<TabItem value="mysql-cli" label="MySQL CLI" default>
+
+Подходит для работы из командной строки, выполнения разовых запросов и вызовов из скриптов.
+
+### 1. Скачивание и распаковка клиента MySQL {#1-download-and-extract-the-mysql-client}
+
+Скачайте клиент MySQL с [официального сайта MySQL](https://dev.mysql.com/downloads/mysql/). Doris совместим с клиентами **MySQL версии 5.7 и новее**.
+
+После распаковки инструмент командной строки `mysql` находится в каталоге `bin/`.
+
+### 2. Подключение к Doris {#2-connect-to-doris}
+
+Для подключения к Doris выполните следующую команду:
+
+```shell
+mysql -h FE_IP -P FE_QUERY_PORT -u USER -p
+```
+
+После нажатия Enter введите пароль (у учётной записи `root` по умолчанию нет пароля, поэтому достаточно нажать Enter).
+
+### 3. Проверка входа {#3-verify-login}
+
+После успешного входа появится следующее сообщение:
+
+```text
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 236
+Server version: 5.7.99 Doris version doris-2.0.3-rc06-37d31a5
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+
+</TabItem>
+
+<TabItem value="java" label="Java">
+
+Подходит для интеграции приложений Java с Doris. Для подключения Doris рекомендует использовать **MySQL JDBC Connector**.
+
+### 1. Добавление драйвера JDBC {#1-add-the-jdbc-driver}
+
+Добавьте в проект зависимость MySQL JDBC Connector (рекомендуется MySQL версии 5.1.49 или новее).
+
+### 2. Написание кода подключения {#2-write-the-connection-code}
+
+```java
+String user = "user_name";
+String password = "user_password";
+String url = "jdbc:mysql://FE_IP:FE_QUERY_PORT/demo"
+        + "?useUnicode=true"
+        + "&characterEncoding=utf8"
+        + "&useTimezone=true"
+        + "&serverTimezone=Asia/Shanghai"
+        + "&useSSL=false"
+        + "&allowPublicKeyRetrieval=true";
+
+try (Connection conn = DriverManager.getConnection(url, user, password);
+     Statement stmt = conn.createStatement();
+     ResultSet rs = stmt.executeQuery("show databases")) {
+
+    ResultSetMetaData metaData = rs.getMetaData();
+    int columnCount = metaData.getColumnCount();
+    while (rs.next()) {
+        for (int i = 1; i <= columnCount; i++) {
+            System.out.println(rs.getObject(i));
+        }
+    }
+} catch (SQLException e) {
+    log.error("get JDBC connection exception.", e);
+}
+```
+
+### 3. Основные параметры URL JDBC {#3-common-jdbc-url-parameters}
+
+| Параметр | Значение | Рекомендуемое значение / пример | Обязательный |
+| --- | --- | --- | --- |
+| `useUnicode` | Использовать ли набор символов Unicode | `true` | Нет |
+| `characterEncoding` | Кодировка символов | `utf8` | Нет |
+| `useTimezone` | Включать ли преобразование часовых поясов | `true` | Нет |
+| `serverTimezone` | Часовой пояс сервера | `Asia/Shanghai` | Нет |
+| `useSSL` | Использовать ли SSL для подключения | `false` | Нет |
+| `allowPublicKeyRetrieval` | Разрешать ли получение открытого ключа с сервера (обычно требуется драйверу MySQL 8) | `true` | Нет |
+| `sessionVariables` | Переменные сеанса, инициализируемые при установлении соединения | `key1=val1,key2=val2` | Нет |
+
+### 4. Инициализация переменных сеанса (необязательно) {#4-initialize-session-variables-optional}
+
+Если при установлении соединения требуется инициализировать переменные сеанса, используйте следующий формат URL:
+
+```text
+jdbc:mysql://FE_IP:FE_QUERY_PORT/demo?sessionVariables=key1=val1,key2=val2
+```
+
+</TabItem>
+
+<TabItem value="go" label="Go">
+
+:::info Будет добавлено позже
+Пример подключения к Doris из Go с помощью драйвера MySQL будет добавлен в одном из следующих выпусков.
+:::
+
+</TabItem>
+
+<TabItem value="rust" label="Rust">
+
+:::info Будет добавлено позже
+Пример подключения к Doris из Rust с помощью драйвера MySQL будет добавлен в одном из следующих выпусков.
+:::
+
+</TabItem>
+
+<TabItem value="python" label="Python">
+
+:::info Будет добавлено позже
+Пример подключения к Doris из Python с помощью драйвера MySQL будет добавлен в одном из следующих выпусков.
+:::
+
+</TabItem>
+
+<TabItem value="cpp" label="C++">
+
+:::info Будет добавлено позже
+Пример подключения к Doris из C++ с помощью MySQL Connector будет добавлен в одном из следующих выпусков.
+:::
+
+</TabItem>
+
+</Tabs>

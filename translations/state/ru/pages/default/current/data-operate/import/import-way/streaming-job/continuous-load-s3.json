@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "e5c89eadbfe0b2709080a7b51d51cab5155fbec0f79876ad6456ab26bd70425a",
+    "sourceTechnicalHash": "a9ca2611ca188e7b37eb2049a948e4ff249441596b31fa147f726c4ba840e6d9",
+    "targetHash": "99895e2d42d6e76846d0300d76e379096a86f0ed9be856e1452a65c1909d1ca7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-03T22:42:57.273Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5c89eadbfe0b2709080a7b51d51cab5155fbec0f79876ad6456ab26bd70425a",
+      "targetHash": "99895e2d42d6e76846d0300d76e379096a86f0ed9be856e1452a65c1909d1ca7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+        "blob": "936d05dce30d54c265d1a99b4a41f418f65d4235"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+        "blob": "de5481bb4fed8a0824ed879ceb801a3529e4b855"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-PROPERTY",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/SHOW-PROPERTY.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-PROPERTY.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "20b800cb7ae470ffa27a96bc1ecb4549cb5c369d7f95c232c600dddd721bf8ca",
+    "sourceTechnicalHash": "115de433678226887a2050840f11e7a794d6891763746b81f69b8e8707deb18d",
+    "targetHash": "50d59fc3c41f44361e0d1f4abf5bcc3ba10a4f393d27bc9c44f325e0c91ad8d2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:33:46.977Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "20b800cb7ae470ffa27a96bc1ecb4549cb5c369d7f95c232c600dddd721bf8ca",
+      "targetHash": "50d59fc3c41f44361e0d1f4abf5bcc3ba10a4f393d27bc9c44f325e0c91ad8d2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

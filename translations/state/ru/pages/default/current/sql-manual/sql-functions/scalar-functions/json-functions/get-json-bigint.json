@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/get-json-bigint",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/get-json-bigint.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/get-json-bigint.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6bbe796ecb280ebc05a4ab5375e73d445a6d8742b8c615c119bfacceb64bf8a3",
+    "sourceTechnicalHash": "3960c6c3e8d49792bf717344fc3b0b2f7c999f271efdd7ddce731f79686b6a67",
+    "targetHash": "4d3bc3d5df359bab291be50aca0f603d148577df30083a4038607a6ce9c02ccd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:18:35.919Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6bbe796ecb280ebc05a4ab5375e73d445a6d8742b8c615c119bfacceb64bf8a3",
+      "targetHash": "4d3bc3d5df359bab291be50aca0f603d148577df30083a4038607a6ce9c02ccd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/lookup-join",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/lookup-join.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/lookup-join.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "60713f831ece50b43f30ceb4a0a643c013334e16dd1ec5ade5c63e7baea6f233",
+    "sourceTechnicalHash": "bfdaa832d3a7ef2fa9d0a1882616b991b967bf4ffbd96d129a371c7669195523",
+    "targetHash": "8d95096ae621608a1d927172e6be50f3e45cde32245520dd393c0d06ca112298",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:03:21.003Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "60713f831ece50b43f30ceb4a0a643c013334e16dd1ec5ade5c63e7baea6f233",
+      "targetHash": "8d95096ae621608a1d927172e6be50f3e45cde32245520dd393c0d06ca112298",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

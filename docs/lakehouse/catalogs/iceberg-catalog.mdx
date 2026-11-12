@@ -222,6 +222,8 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 | Iceberg Rest Catalog   | ✅          | ✅         | Depends on the service provider | Depends on the service provider | Depends on the service provider      |
 | FileSystem             | ✅          | ✅         | ✅                            | ✅                            | ✅                                   |
 
+The `labels` system table is supported since version 5.0.0 and is available only for Iceberg REST Catalogs. See [labels](#labels) below.
+
 ## Supported Storage Systems
 
 * [HDFS](../storages/hdfs.md)
@@ -1725,6 +1727,8 @@ SELECT * FROM iceberg_table$history;
 > The `all_manifests` system table is supported starting from version 4.0.4.
 >
 > The `position_deletes` system table is supported starting from version 4.1.4.
+>
+> The `labels` system table is supported starting from version 5.0.0 and is available only for Iceberg REST Catalogs.
 
 :::caution Behavior Change (4.1.4)
 
@@ -1818,6 +1822,86 @@ Result:
 | 2025-06-12 22:29:39.922000 | 4890031351138056789 | 1851184769713369003 |                   1 |
 +----------------------------+---------------------+---------------------+---------------------+
 ```
+
+### labels
+
+> This feature is supported starting from version 5.0.0
+
+Shows the table-level (`object`) and field-level (`field`) labels that a REST Catalog provides for an Iceberg table, with one row per label key-value pair. Use it to inspect information such as table ownership and field data classifications.
+
+This system table is available only when `iceberg.catalog.type` is `rest`. No additional Doris configuration is required. The REST Catalog service returns labels when loading the table; create and modify labels through the service provider. These labels describe tables or fields and are distinct from the snapshot Tags shown in [refs](#refs).
+
+**Fields:**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `scope` | `TEXT` | Label scope: `object` for a table-level label or `field` for a field-level label. |
+| `field_id` | `INT` | Iceberg field ID. `NULL` for table-level labels. |
+| `field_name` | `TEXT` | Field name resolved against the current table schema. Nested fields use the full path, such as `address.city`. `NULL` for table-level labels or when the field ID does not exist in the current schema. |
+| `key` | `TEXT` | Label key. Since `key` is a reserved word in Doris, enclose it in backticks when explicitly referencing this column in SQL. |
+| `value` | `TEXT` | Label value. |
+
+**Query examples:**
+
+The following examples assume that you have configured the `iceberg_ctl` catalog as described in [Iceberg REST Catalog](#iceberg-rest-catalog), that the table `iceberg_db.iceberg_tbl` exists, and that the current user has permission to query it. The REST Catalog service has configured and returns these labels:
+
+- Table-level label: `owner=team-a`.
+- Label on the `email` field (field ID `2`): `classification=pii`.
+- Label on the nested field `address.city` (field ID `5`): `classification=location`.
+
+Query all labels, ordered by scope, field ID, and label key:
+
+```sql
+SELECT * FROM iceberg_ctl.iceberg_db.iceberg_tbl$labels
+ORDER BY scope, field_id, `key`;
+```
+
+Result:
+
+```text
++--------+----------+--------------+----------------+----------+
+| scope  | field_id | field_name   | key            | value    |
++--------+----------+--------------+----------------+----------+
+| field  |        2 | email        | classification | pii      |
+| field  |        5 | address.city | classification | location |
+| object |     NULL | NULL         | owner          | team-a   |
++--------+----------+--------------+----------------+----------+
+```
+
+Find fields classified as `pii`:
+
+```sql
+SELECT field_name, `key`, value
+FROM iceberg_ctl.iceberg_db.iceberg_tbl$labels
+WHERE scope = 'field' AND `key` = 'classification' AND value = 'pii';
+```
+
+Result:
+
+```text
++------------+----------------+-------+
+| field_name | key            | value |
++------------+----------------+-------+
+| email      | classification | pii   |
++------------+----------------+-------+
+```
+
+**Caching and refresh:**
+
+Labels are cached with the table metadata and follow the `meta.cache.iceberg.table.ttl-second` setting. After changing labels on the service, refresh the base table before querying `$labels` to retrieve the updated labels:
+
+```sql
+REFRESH TABLE iceberg_ctl.iceberg_db.iceberg_tbl;
+```
+
+After the refresh, the next `$labels` query reloads the table and reads the labels returned by the service. Set `meta.cache.iceberg.table.ttl-second` to `0` to disable the table metadata cache and reload labels for each query. See [Metadata Cache](#meta-cache) for cache settings.
+
+**Notes:**
+
+- If the REST Catalog service returns no labels, the query result is empty. A table without any snapshots can still return labels if the service provides them. `COUNT(*)` counts label key-value pairs, rather than data rows in the base table.
+- Labels are not versioned with snapshots. Using `FOR VERSION AS OF` on `$labels` does not retrieve historical labels: the query still returns labels from the current table load, and field names are resolved against the current schema.
+- Field labels are associated with field IDs. After a field is renamed, `field_name` shows its new name. If a field is dropped and the service still returns its labels, `field_id` is retained and `field_name` is `NULL`.
+- Non-REST Catalogs do not support `$labels`; querying it returns an `Unknown sys table` error. REST Catalogs that require server-side scan planning also do not support this system table.
 
 ### manifests
 

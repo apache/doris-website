@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/key-features/kafka-cdc-integration.mdx",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/kafka-cdc-integration.mdx",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "069040d369e31122d3f64af3d83bd5241c1ebdf55dd13623131c42446b93e145",
-    "sourceTechnicalHash": "8ac814551f9c096eb40eaa2a034475becc58b29ca9cc85a4565fcdd3db47743a",
-    "targetHash": "ee7129dc59209a21108fb54a2dd4ed60003ff0e412025d226e97097fc18f5d6a",
+    "sourceCommit": "e3ba202a890e362eee5e4aafa507ffb4750c0078",
+    "sourceHash": "3704001c4488039942bd25e09cdd3306a66effc9d37cf2c12236d8a4841b3237",
+    "sourceTechnicalHash": "ac921bf44f460496e176d3500e5c41175ec120c874f9c36d7227f72331af3040",
+    "targetHash": "dffce14998813af23c65ea795b81566dac0c00b182b829e78d2f76eb20d5eb1b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:50:40.614Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-23T07:04:27.331Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "3704001c4488039942bd25e09cdd3306a66effc9d37cf2c12236d8a4841b3237",
+      "targetHash": "dffce14998813af23c65ea795b81566dac0c00b182b829e78d2f76eb20d5eb1b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 9: expected [\"inlineCode\",null,null,\"PRECOMMITTED\"]; received [\"inlineCode\",null,null,\"txn_operation: commit\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"txn_operation: commit\"]; received [\"inlineCode\",null,null,\"txn_operation: abort\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"txn_operation: abort\"]; received [\"inlineCode\",null,null,\"PRECOMMITTED\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"100000\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"2022\",\"24\",\"25\",\"30\",\"60\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"100000\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"2000\",\"2022\",\"24\",\"25\",\"3\",\"30\",\"5\",\"5\",\"60\",\"7\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"PRECOMMITTED\"]; received [\"inlineCode\",null,null,\"txn_operation: commit\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"txn_operation: commit\"]; received [\"inlineCode\",null,null,\"txn_operation: abort\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"100000\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"2022\",\"24\",\"25\",\"30\",\"60\"]; received [\"0\",\"1\",\"100000\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"2022\",\"24\",\"25\",\"30\",\"60\",\"7\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"PRECOMMITTED\"]; received [\"inlineCode\",null,null,\"txn_operation: commit\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"txn_operation: commit\"]; received [\"inlineCode\",null,null,\"txn_operation: abort\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"inlineCode\",null,null,\"PRECOMMITTED\"]; received [\"inlineCode\",null,null,\"txn_operation: commit\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"txn_operation: commit\"]; received [\"inlineCode\",null,null,\"txn_operation: abort\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"txn_operation: abort\"]; received [\"inlineCode\",null,null,\"PRECOMMITTED\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

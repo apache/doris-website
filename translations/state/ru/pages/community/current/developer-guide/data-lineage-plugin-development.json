@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/data-lineage-plugin-development",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/data-lineage-plugin-development.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/data-lineage-plugin-development.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "8343125666e24bdfd0d25a1ad11206b968ded264e4b95c1be99895bad7d32aaf",
+    "sourceTechnicalHash": "ef501b52e03a55fb17ac9c0f1c57d011a4c1527035b205705a80f88efefa20af",
+    "targetHash": "1241cc635b61e080346d52019bb1e69e52226a1a55efc05647db8c80f1262163",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:12:22.787Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8343125666e24bdfd0d25a1ad11206b968ded264e4b95c1be99895bad7d32aaf",
+      "targetHash": "1241cc635b61e080346d52019bb1e69e52226a1a55efc05647db8c80f1262163",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

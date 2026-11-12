@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/lance-query-profile",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/lance-query-profile.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/lance-query-profile.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c0d80a3593fe1ba0c2e2e87d3c23c68369561303cbcf0678af44e41de7f448a2",
+    "sourceTechnicalHash": "82eab4a5109f26e49d07fe14dc271ce92f2dca13f427f7e1372a4f8532274d47",
+    "targetHash": "5a2a243b0cc95db008efd2211b9fdd05a30201827aa1f558931895e9e8086f8f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T14:39:01.457Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c0d80a3593fe1ba0c2e2e87d3c23c68369561303cbcf0678af44e41de7f448a2",
+      "targetHash": "5a2a243b0cc95db008efd2211b9fdd05a30201827aa1f558931895e9e8086f8f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

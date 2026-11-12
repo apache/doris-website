@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/changelog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/changelog.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/changelog.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "e3aec0b15d3db0a7521b27ffe2c0f8b0c0eb685ae965ead0c724d2712fa041c0",
+    "sourceTechnicalHash": "7f9199cc1019e1c3b9265d9c8d2ea9814e40ec8b3aaf779f28edc028901d6de1",
+    "targetHash": "e3d02fd15cef7496cae65baa426c1b56837048f0955b3387d1cb1272a4d0f969",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T17:45:29.729Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e3aec0b15d3db0a7521b27ffe2c0f8b0c0eb685ae965ead0c724d2712fa041c0",
+      "targetHash": "e3d02fd15cef7496cae65baa426c1b56837048f0955b3387d1cb1272a4d0f969",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

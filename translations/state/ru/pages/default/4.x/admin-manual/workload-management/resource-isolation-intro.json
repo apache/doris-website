@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/resource-isolation-intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/resource-isolation-intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/resource-isolation-intro.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+    "sourceTechnicalHash": "a8daf870cd195736992f02abfd2e2d58405140e5f6658652c5d54164681e61d2",
+    "targetHash": "a96ab39b9f8046019340f07d05a3189da5081ce31540295be558d9d7e5c878dd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:58.374Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+      "targetHash": "a96ab39b9f8046019340f07d05a3189da5081ce31540295be558d9d7e5c878dd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/workload-management/resource-isolation-intro",
+        "sourcePath": "docs/admin-manual/workload-management/resource-isolation-intro.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/resource-isolation-intro.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+        "targetHash": "a96ab39b9f8046019340f07d05a3189da5081ce31540295be558d9d7e5c878dd",
+        "commit": "8046b263706ddcdf890bf51f6efec7f3ea77bf66",
+        "pr": "https://github.com/apache/doris-website/pull/4433"
+      }
+    }
+  }
+}

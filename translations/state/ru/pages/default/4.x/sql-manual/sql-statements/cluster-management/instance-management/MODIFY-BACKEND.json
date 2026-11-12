@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0739c1625bcb2004aab14fa63341b1b2217d3713435af07fed93d1acec7336d1",
+    "sourceTechnicalHash": "751644f2b356444746408a839fcd1b80b59d5cdebe883c6a8f760b55ac37048b",
+    "targetHash": "4090efd35128840f5173d6517d6ef11995cf399b84ae37feef9b087236671457",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:06:04.857Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0739c1625bcb2004aab14fa63341b1b2217d3713435af07fed93d1acec7336d1",
+      "targetHash": "4090efd35128840f5173d6517d6ef11995cf399b84ae37feef9b087236671457",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "0739c1625bcb2004aab14fa63341b1b2217d3713435af07fed93d1acec7336d1",
+        "targetHash": "4090efd35128840f5173d6517d6ef11995cf399b84ae37feef9b087236671457",
+        "commit": "d5ac930e1a15d171738ddccbd717b10b31ba98d3",
+        "pr": "https://github.com/apache/doris-website/pull/4455"
+      }
+    }
+  }
+}

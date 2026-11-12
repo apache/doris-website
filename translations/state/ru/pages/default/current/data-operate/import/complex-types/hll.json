@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/complex-types/hll",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/complex-types/hll.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/complex-types/hll.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b4fba5973bc58d67e4ff65cc6863951597fc25fd7b1cb1d5ea35412b926f9111",
+    "sourceTechnicalHash": "840f8f9b2a3ee2bce1e8adee06b6317a18ca29cfb650d74fc6ce20813b252d88",
+    "targetHash": "1169255de69b5ccd90f7b4897d172a03b8dc74215cf99a4fa946d31e0f98b778",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:09:26.545Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b4fba5973bc58d67e4ff65cc6863951597fc25fd7b1cb1d5ea35412b926f9111",
+      "targetHash": "1169255de69b5ccd90f7b4897d172a03b8dc74215cf99a4fa946d31e0f98b778",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

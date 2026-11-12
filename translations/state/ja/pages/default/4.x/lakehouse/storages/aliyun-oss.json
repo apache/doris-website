@@ -8,13 +8,29 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/aliyun-oss.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/aliyun-oss.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "149d9afba2be5de5f69f6d53531cb522bc15651691d9d7a04dfb2f8bba456327",
-    "sourceTechnicalHash": "411eca3db88041e79aa5a3e405b5d4ee7f2744e25668c8d456f62c682342d290",
-    "targetHash": "3bc4b616c0f441ec747d777b88c0582d8a19180772179f296fc4faa144905e1d",
+    "sourceCommit": "759a81aadfe5c9649e8b7eef8dab84dd6ee913d3",
+    "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
+    "sourceTechnicalHash": "14194a30d59d401728ab85c5a31af341d62e67cfe49834dcb097ba5d139b32e7",
+    "targetHash": "dd0e26429084bf40f3f9b7d2842b85b82fe23ea4ee0c6cdbec90373d4ff17d25",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:38:46.108Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T17:49:20.359Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
+      "targetHash": "dd0e26429084bf40f3f9b7d2842b85b82fe23ea4ee0c6cdbec90373d4ff17d25",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }

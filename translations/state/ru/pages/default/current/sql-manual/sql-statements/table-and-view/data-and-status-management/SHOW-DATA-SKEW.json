@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-DATA-SKEW",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-DATA-SKEW.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-DATA-SKEW.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9ee725a13fb8ac2240c6f5fe4e15864ba5f248f9922bd0fa6bd24be89156eb6b",
+    "sourceTechnicalHash": "ebf22e0265f5ccb17923be8a9199206518e20af32807dadcf3bf1cbfb8e9e612",
+    "targetHash": "04cccd847925836bff0a57cd68b40e3708f6de9e443c98b6f3172c8859c5f495",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:40:35.178Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9ee725a13fb8ac2240c6f5fe4e15864ba5f248f9922bd0fa6bd24be89156eb6b",
+      "targetHash": "04cccd847925836bff0a57cd68b40e3708f6de9e443c98b6f3172c8859c5f495",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

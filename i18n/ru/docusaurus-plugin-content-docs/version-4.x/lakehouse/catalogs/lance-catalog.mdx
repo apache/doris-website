@@ -1,0 +1,1405 @@
+---
+{
+    "title": "Lance Catalog",
+    "language": "ru",
+    "description": "Запрос наборов данных Lance с помощью Apache Doris: настройка каталогов, использование нативного векторного поиска и поиска BM25, а также понимание автоматической передачи SQL и совместимости типов."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::note
+Это экспериментальная функция.
+
+Lance Catalog поддерживается начиная с Apache Doris 4.1.4.
+:::
+
+Lance — это колоночный формат данных, предназначенный для аналитических нагрузок и задач AI. Doris может использовать Lance Catalog для обнаружения баз данных и таблиц в Lance Namespace и напрямую запрашивать наборы данных Lance, хранящиеся в локальной файловой системе, объектном хранилище, совместимом с S3, или Alibaba Cloud OSS.
+
+В настоящее время Doris предоставляет для Lance доступ только на чтение. Создание, запись, обновление и удаление таблиц Lance не поддерживаются.
+
+## Варианты использования {#use-cases}
+
+| Вариант использования | Описание |
+|---|---|
+| Прямой запрос данных Lance | Анализ существующих наборов данных Lance с помощью SQL Doris без предварительной миграции или импорта данных. |
+| Векторный поиск AI | Повторное использование векторных индексов, уже имеющихся в Lance, выполнение поиска через `vector_search()` и сочетание его со скалярной фильтрацией и аналитикой SQL Doris. |
+| Полнотекстовый поиск | Повторное использование инвертированных FTS-индексов, уже имеющихся в Lance, выполнение поиска BM25 через `full_text_search()` и сочетание его со скалярной фильтрацией и аналитикой SQL Doris. |
+| Интеграция данных | Чтение данных Lance во внутренние таблицы Doris для дальнейшей обработки, соединений или долговременного хранения. |
+| Управление Namespace | Для простой структуры каталогов используйте Filesystem Catalog. REST Catalog используйте, когда требуется централизованно управлять Namespace, расположением таблиц или временными учётными данными хранилища. |
+
+## Обзор функций {#feature-overview}
+
+| Функция | Поддержка |
+|---|---|
+| Filesystem Catalog | Поддерживает хранилища в локальной файловой системе, `file://`, `s3://` или `oss://` |
+| REST Catalog | Поддерживает Lance REST Namespace без аутентификации, с Bearer Token, API Key или пользовательскими HTTP-заголовками |
+| Доступ к метаданным | Поддерживает `SHOW DATABASES`, `SHOW TABLES`, `DESC`, `SHOW INDEX` и TVF `lance_index_entries` (последние два — только для Filesystem Catalog) |
+| Системные таблицы (`table$...`) | Не поддерживаются; для метаданных индексов используйте `SHOW INDEX` и TVF `lance_index_entries` |
+| Запросы данных | Поддерживает отсечение столбцов, параллельное сканирование Lance Fragment и чтение согласованного снимка текущей версии |
+| Передача предикатов | Поддерживает передачу совместимых статических скалярных предикатов и Runtime Filter соединения в Lance |
+| Файловые TVF | Поддерживает прямые запросы наборов данных Lance через `s3()` и `local()` |
+| Векторный поиск | Поддерживает столбцы с одним и несколькими векторами, использует физические сегменты индекса Lance как параллельные split, сохраняет Flat Search split для непокрытых Fragment и выполняет глобальное объединение Top-K в Doris |
+| Полнотекстовый поиск | Использует существующие инвертированные FTS-индексы Lance через `full_text_search()`, поддерживает запросы Match OR/AND и Phrase и выполняет глобальное объединение Top-K в Doris |
+| Lance Cache | Совместно использует кэши индексов и метаданных, а также локальный дисковый кэш данных внутри каждого BE |
+| Двухфазное чтение TopN | По умолчанию включено для подходящих выходных столбцов при векторном и полнотекстовом поиске; независимо управляется параметром `enable_lance_lazy_materialization` |
+| Запись в Lance | Не поддерживается |
+| Time Travel | Поддерживает `FOR VERSION AS OF`, `FOR TIME AS OF`, `@tag(...)` и `@branch(...)`, включая таблицы, версии которых управляются REST Namespace |
+| Hybrid Search | Не поддерживается |
+
+## Версия Lance и совместимость {#lance-version-and-compatibility}
+
+Средство чтения данных Doris BE собрано с `lance-c v0.1.9` и патчами Doris, которые добавляют поддержку поиска по нескольким векторам и обновляют встроенные Rust crates Lance до `11.0.0` (commit `ab6b5bbe`). Doris FE читает метаданные Namespace и наборов данных с помощью `org.lance:lance-core:12.0.0`; FE читает только метаданные и никогда не записывает набор данных, поэтому более новый выпуск Lance на FE не меняет диапазон данных, которые может читать BE. Dataset должен быть совместим одновременно с загрузкой метаданных FE и чтением данных BE. Эти версии реализации отличаются от `data_storage_version` Lance, записанной в наборе данных.
+
+Следующая таблица описывает совместимость формата файлов этого средства чтения:
+
+| `data_storage_version` | Поддержка чтения | Примечания |
+|---|---|---|
+| `0.1` / `legacy` | Поддерживается | Исходный формат файлов Lance. |
+| `2.0` (псевдоним параметра записи `0.3`) | Поддерживается | Более ранняя версия формата файлов Lance v2. |
+| `2.1` / `stable` | Поддерживается; стабильный формат по умолчанию | Во встроенной версии Lance параметр записи `stable` и формат по умолчанию для новых наборов данных оба разрешаются в `2.1`. |
+| `2.2` | Поддерживается | Встроенная версия Lance рассматривает его как стабильный формат, но это не формат записи по умолчанию. |
+| `2.3` / `next` | Экспериментальный; гарантий нет | Встроенная версия Lance помечает `2.3` как нестабильный, а параметр записи `next` разрешается в `2.3`. |
+| Более поздняя или неизвестная версия | Не поддерживается | Открытие или сканирование набора данных может завершиться ошибкой неподдерживаемой версии хранилища. |
+
+Номера выпусков Lance SDK и версии формата файлов независимы. Набор данных, записанный более старым или более новым Lance SDK, читается только тогда, когда его формат хранения, требуемые флаги функций таблицы, формат индекса и типы данных Arrow/Lance понятны версиям, встроенным в Doris. Поэтому:
+
+- Ожидается, что Doris сможет читать наборы данных, записанные в форматах хранения `0.1`, `2.0`, `2.1` и `2.2`, с учётом ограничений типов, описанных ниже.
+- Обратная совместимость вперёд не гарантируется. Набор данных, записанный или изменённый более новым выпуском Lance, может быть нечитаемым, если он использует новый формат хранения, неизвестную обязательную функцию manifest, новый формат индекса или неподдерживаемый extension type.
+- Для наборов данных, которые должны оставаться читаемыми этим выпуском Doris, используйте текущий стабильный формат по умолчанию `2.1` и не используйте `next`. После появления нового средства записи или необязательной функции Lance проверьте полученный набор данных целевым выпуском Doris перед использованием в production.
+
+## Настройка Catalog {#configure-a-catalog}
+
+### Синтаксис {#syntax}
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "<filesystem|rest>",
+    {CatalogProperties},
+    {StorageProperties},
+    {CommonProperties}
+);
+```
+
+### Общие свойства {#common-properties}
+
+| Свойство | Обязательно | По умолчанию | Описание |
+|---|---|---|---|
+| `type` | Да | - | Должно быть `lance`. |
+| `lance.catalog.type` | Нет | `filesystem` | Тип Catalog. Допустимые значения: `filesystem` и `rest`. |
+| `lance.namespace.parent` | Нет | Пусто | Ограничивает доступ указанным Lance Namespace и его дочерними Namespace. Например, при разделителе по умолчанию `production$analytics` представляет Namespace из двух уровней. |
+| `lance.namespace.delimiter` | Нет | `$` | Разделитель для разбора `lance.namespace.parent`. Он также передаётся клиенту REST Namespace. Это свойство не изменяет отображение многоуровневых Namespace в Doris. |
+| `lance.namespace.root_database` | Нет | `default` | Имя базы данных Doris, в которую отображается корневой Lance Namespace. |
+| `lance.table_access_cache_ttl_seconds` | Нет | `60` | Неотрицательное целое. Максимальное время жизни кэша доступа к таблицам FE в секундах; `0` отключает его. Применяется к Filesystem и REST Catalog. Таблицы с управляемым Namespace версионированием и результаты с выданными параметрами хранилища или URI, содержащими учётные данные, не кэшируются; см. [Кэш доступа FE к таблицам](#fe-table-access-cache). |
+
+### Filesystem Catalog {#filesystem-catalog}
+
+Filesystem Catalog обнаруживает Lance Namespace и таблицы непосредственно из каталога warehouse.
+
+| Свойство | Обязательно | Описание |
+|---|---|---|
+| `warehouse` | Да | Корневой путь warehouse Lance. Поддерживаются локальные абсолютные пути, URI `file://`, URI `s3://` и URI `oss://`. |
+
+Эти два свойства служат разным целям:
+
+- `fs.s3.support=true` явно выбирает разбор конфигурации S3. AWS S3 обычно можно определить по свойствам. Для MinIO, пользовательских endpoint или OSS, доступного через его S3-совместимый API, задайте свойство явно, чтобы избежать ошибки определения или выбора другого типа хранилища по домену. Все примеры S3 ниже включают это свойство для непосредственного использования.
+- `use_path_style` управляет расположением bucket в URL запросов и по умолчанию имеет значение `false`. Значение `true` использует `endpoint/bucket/object-path`; значение `false` использует доступ в стиле virtual-hosted. В текущем клиенте S3 по умолчанию в Lance явно заданный endpoint в стиле virtual-hosted должен содержать bucket. Устанавливайте это свойство вместе с endpoint в соответствии со стилем доступа, поддерживаемым сервисом.
+
+| Сценарий доступа | Настройка типа хранилища | `use_path_style` | Формат endpoint |
+|---|---|---|---|
+| AWS S3 | Рекомендуется: `fs.s3.support=true` | `false`; можно опустить | Включает bucket, например `https://my-bucket.s3.us-east-1.amazonaws.com`. |
+| MinIO (доступ через домен сервиса или IP) | Задайте `fs.s3.support=true` | Явно задайте `true` | Адрес сервиса без bucket, например `http://minio.example.com:9000`. |
+| S3-совместимый API OSS | Задайте `fs.s3.support=true` | `false`; в примере задан явно | Включает bucket, например `https://my-bucket.oss-cn-beijing.aliyuncs.com`. |
+| Нативный API OSS | Рекомендуется: `fs.oss.support=true`; не задавайте `fs.s3.support` | Общий `use_path_style` задавать не нужно | Используйте `oss.endpoint` без bucket, например `https://oss-cn-beijing.aliyuncs.com`. |
+
+Эти правила endpoint S3 применяются к пути доступа S3 по умолчанию в Lance. Для Filesystem Catalog с одним типом хранилища задавайте только соответствующий `fs.*.support=true`; не включайте несколько типов хранилища, чтобы «включить совместимость». Это свойство выбирает разбор конфигурации, но не добавляет сервису хранилища поддержку протокола.
+
+Выберите пример, соответствующий системе хранения warehouse, и замените bucket, путь, адрес и учётные данные:
+
+<Tabs groupId="lance-filesystem-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        CREATE CATALOG lance_fs_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        В этом примере используется endpoint AWS S3, содержащий bucket, с `use_path_style=false`. Текущая проверка свойств S3 в Doris требует endpoint; при использовании показанного URI `s3://my-bucket/...` указать только region недостаточно. При изменении bucket или region обновляйте endpoint.
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        CREATE CATALOG lance_fs_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        В этом примере доступ к MinIO осуществляется через домен сервиса с запросами в стиле path, без отдельного поддомена для каждого bucket. Не включайте bucket в endpoint и замените region значением, настроенным для сервиса. Если включён TLS, используйте соответствующий endpoint `https://` и убедитесь, что FE и все BE могут его достичь.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        Для доступа к OSS через его S3-совместимый API используйте warehouse `s3://` и свойства подключения `s3.*`:
+
+        ```sql
+        CREATE CATALOG lance_fs_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "s3://my-bucket/lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        В этом примере задано `use_path_style=false` для доступа в стиле virtual-hosted. Текущий клиент S3 по умолчанию в Lance не добавляет bucket автоматически к явно заданному endpoint, поэтому `s3.endpoint` должен содержать bucket, например `https://my-bucket.oss-cn-beijing.aliyuncs.com`; `warehouse` оставьте как `s3://my-bucket/lance`. Для доступа через внутреннюю сеть используйте `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com` и убедитесь, что FE и BE могут его достичь.
+
+        Для временных учётных данных STS добавьте `"s3.session_token" = "<token>"`. Этот режим читает существующие данные OSS через S3-совместимый API без перемещения данных. Для нативного доступа OSS см. соседний пример нативного OSS.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (Native Access)">
+        ```sql
+        CREATE CATALOG lance_fs_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "oss://my-bucket/lance",
+            "fs.oss.support" = "true",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
+
+        Для временных учётных данных STS добавьте `"oss.session_token" = "<token>"`. Квалифицированная форма `oss://my-bucket.oss-cn-beijing.aliyuncs.com/lance` также принимается и нормализуется к пути bucket. OSS-HDFS в настоящее время не поддерживается.
+    </TabItem>
+
+    <TabItem value="local" label="Local File System">
+        ```sql
+        CREATE CATALOG lance_fs_local PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "filesystem",
+            "warehouse" = "/data/lance"
+        );
+        ```
+
+        `warehouse` должен быть абсолютным путём. FE и каждый BE, выполняющий запрос, должны обращаться к одному и тому же пути. В мног узловом развёртывании подключите один общий каталог на всех соответствующих узлах.
+    </TabItem>
+</Tabs>
+
+Для S3 и OSS `warehouse` должен содержать bucket, например `s3://bucket/path` или `oss://bucket/path`.
+
+### REST Catalog {#rest-catalog}
+
+REST Catalog получает Namespace, расположение таблиц и параметры доступа к хранилищу через Lance REST Namespace. REST Catalog не требует и не допускает свойство `warehouse`.
+
+| Свойство | Обязательно | По умолчанию | Описание |
+|---|---|---|---|
+| `lance.rest.uri` | Да | - | URI REST-сервиса. Должен использовать `http://` или `https://`. |
+| `lance.rest.security.type` | Нет | `none` | Тип аутентификации. Допустимые значения: `none`, `bearer` и `api_key`. |
+| `lance.rest.bearer-token` | Да для Bearer-аутентификации | - | Bearer Token. |
+| `lance.rest.api-key` | Да для аутентификации API Key | - | API Key, отправляемый в заголовке `x-api-key`. |
+| `lance.rest.header.<header-name>` | Нет | - | Пользовательский HTTP-заголовок, отправляемый REST-сервису. Для заголовков аутентификации используйте специальные свойства аутентификации выше. |
+
+Аутентификация REST-сервиса и аутентификация объектного хранилища разделены: `lance.rest.*` подключает сервис Namespace, а `s3.*` / `oss.*` позволяют FE и BE читать данные таблиц. Путь доступа определяется URI таблицы, возвращённым Namespace: `s3://` использует S3, а `oss://` — нативный доступ OSS. Выберите свойства хранилища по умолчанию в соответствии с возвращаемыми URI таблиц:
+
+<Tabs groupId="lance-rest-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        CREATE CATALOG lance_rest_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        Для таблиц AWS `s3://my-bucket/...`, возвращаемых Namespace. Endpoint по умолчанию должен содержать этот bucket и соответствовать region. Таблицам в разных bucket нужны соответствующие endpoint, как описано ниже.
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        CREATE CATALOG lance_rest_minio PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        Для таблиц MinIO `s3://`, возвращаемых Namespace. Используйте endpoint сервиса, доступный и FE, и BE, без bucket. `use_path_style=true` помещает bucket каждой таблицы в путь запроса. Region должен соответствовать конфигурации сервиса MinIO.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        ```sql
+        CREATE CATALOG lance_rest_oss_s3 PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        );
+        ```
+
+        Для таблиц `s3://my-bucket/...`, возвращаемых Namespace, с доступом к OSS через его S3-совместимый API. Endpoint должен содержать тот же bucket; для внутреннего доступа используйте `https://my-bucket.oss-cn-beijing-internal.aliyuncs.com`. Namespace должен возвращать URI `s3://`: установка `fs.s3.support=true` не переключает возвращённый URI `oss://` на доступ через S3.
+    </TabItem>
+
+    <TabItem value="oss" label="Alibaba Cloud OSS (Native Access)">
+        ```sql
+        CREATE CATALOG lance_rest_oss PROPERTIES (
+            "type" = "lance",
+            "lance.catalog.type" = "rest",
+            "lance.rest.uri" = "https://lance.example.com",
+            "lance.rest.security.type" = "bearer",
+            "lance.rest.bearer-token" = "<token>",
+            "fs.oss.support" = "true",
+            "oss.endpoint" = "https://oss-cn-beijing.aliyuncs.com",
+            "oss.region" = "cn-beijing",
+            "oss.access_key" = "<ak>",
+            "oss.secret_key" = "<sk>"
+        );
+        ```
+
+        Для таблиц `oss://`, возвращаемых Namespace, с нативным доступом OSS. Не включайте bucket в `oss.endpoint`. Для временных учётных данных STS добавьте `"oss.session_token" = "<token>"`.
+    </TabItem>
+</Tabs>
+
+Для REST-доступа без аутентификации опустите `lance.rest.security.type` и свойство аутентификации. Для аутентификации API Key замените их на `"lance.rest.security.type" = "api_key"` и `"lance.rest.api-key" = "<api-key>"`.
+
+Если REST Namespace выдаёт учётные данные или endpoint в `storage_options` каждой таблицы, Doris переопределяет соответствующие значения Catalog по отдельности и использует объединённую конфигурацию и в FE, и в BE. Если выдаются только учётные данные, endpoint и стиль доступа Catalog всё равно применяются. Все свойства хранилища Catalog можно опустить только тогда, когда Namespace предоставляет полную конфигурацию доступа.
+
+Для S3 Namespace может использовать `aws_endpoint`, `aws_region`, `aws_access_key_id`, `aws_secret_access_key`, `aws_session_token` и `aws_virtual_hosted_style_request`. Последняя опция обратна `use_path_style` в Doris: доступ в стиле virtual-hosted использует `aws_virtual_hosted_style_request=true`, а доступ в стиле path — `false`. `fs.s3.support` — это свойство Catalog Doris, а не параметр `storage_options` Lance.
+
+Для нативного доступа OSS Namespace может выдавать `oss_endpoint`, `oss_access_key_id`, `oss_secret_access_key`, `oss_region` и `oss_security_token` либо соответствующие нативные имена `endpoint`, `access_key_id`, `access_key_secret`, `region` и `security_token`.
+
+Если таблицы находятся в разных bucket, не используйте для них общий endpoint S3 в стиле virtual-hosted, зафиксированный на `my-bucket` в примере. Пусть Namespace выдаёт для каждой таблицы соответствующие endpoint и стиль доступа либо настройте отдельные Catalog для разных bucket. Для сервисов, поддерживающих стиль path, можно также использовать endpoint сервиса без bucket и задать `use_path_style=true`, чтобы клиент читал bucket из URI каждой таблицы.
+
+Если REST Namespace управляет версиями таблицы (`managed_versioning = true` в `DescribeTable`), Doris разрешает последнюю версию и любой селектор time travel через API версий Namespace и читает соответствующий manifest из хранилища. Подробности см. в разделе [Time Travel](#time-travel).
+
+## Отображение Namespace {#namespace-mapping}
+
+Lance поддерживает многоуровневые Namespace, тогда как Catalog Doris представляет каждый Namespace как имя базы данных:
+
+| Lance Namespace | Имя базы данных Doris |
+|---|---|
+| Корневой Namespace | `default`; настраивается через `lance.namespace.root_database` |
+| `doris` | `doris` |
+| `doris.analytics` | `doris.analytics` |
+
+Doris объединяет уровни многоуровневого Namespace с помощью `.` и формирует имя базы данных. При обращении к имени базы данных, содержащему `.`, используйте обратные кавычки:
+
+```sql
+SHOW TABLES FROM lance_catalog.`doris.analytics`;
+
+SELECT *
+FROM lance_catalog.`doris.analytics`.user_features;
+```
+
+Используйте `lance.namespace.parent`, чтобы ограничить Catalog поддеревом Namespace. Например:
+
+```sql
+CREATE CATALOG lance_analytics PROPERTIES (
+    "type" = "lance",
+    "lance.catalog.type" = "filesystem",
+    "warehouse" = "s3://my-bucket/lance",
+    "lance.namespace.parent" = "production$analytics",
+    "fs.s3.support" = "true",
+    "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+    "use_path_style" = "false",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>"
+);
+```
+
+После этого Doris отображает только таблицы и дочерние Namespace ниже `production.analytics`.
+
+## Запрос таблиц Lance {#query-lance-tables}
+
+После создания Catalog можно просматривать и запрашивать таблицы Lance так же, как другие внешние таблицы:
+
+```sql
+SHOW DATABASES FROM lance_catalog;
+
+SHOW TABLES FROM lance_catalog.default;
+
+DESC lance_catalog.default.user_profiles;
+
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles
+WHERE age >= 18
+ORDER BY user_id
+LIMIT 100;
+```
+
+Также можно загрузить данные из Lance во внутреннюю таблицу Doris:
+
+```sql
+INSERT INTO internal.demo.user_profiles
+SELECT user_id, name, age
+FROM lance_catalog.default.user_profiles;
+```
+
+Для обычного запроса Catalog Doris фиксирует версию набора данных Lance на этапе планирования и создаёт задачи сканирования по Fragment. Поэтому запрос читает согласованный снимок, а несколько Scanner могут параллельно читать разные Fragment, не сканируя каждый раз весь набор данных.
+
+## Time Travel {#time-travel}
+
+Каждая фиксация набора данных Lance создаёт новую версию, нумерация начинается с 1. Запрос может читать историческую версию вместо последней:
+
+```sql
+-- Read version 2 of the table.
+SELECT * FROM lance_catalog.db.tbl FOR VERSION AS OF 2;
+
+-- Read the latest version committed at or before the given time.
+SELECT * FROM lance_catalog.db.tbl FOR TIME AS OF '2026-09-19 13:06:10';
+```
+
+- `FOR VERSION AS OF` принимает положительное целое — номер версии или, как для таблиц Paimon и имён tag в Iceberg, имя tag в кавычках (`FOR VERSION AS OF 'v2'` эквивалентно `@tag(v2)`).
+- `FOR TIME AS OF` принимает timestamp в часовом поясе сеанса с точностью до секунды или миллисекунды (`yyyy-MM-dd HH:mm:ss` или `yyyy-MM-dd HH:mm:ss.SSS`). Среди версий, зафиксированных не позднее timestamp, Doris выбирает версию с самым поздним временем фиксации, записанным в её manifest (если версии зафиксированы в один момент, выбирается более новая). Как и при выборе снимка по времени в Iceberg, сравниваются записанные времена фиксации; не предполагается, что они растут вместе с номерами версий. Lance записывает время фиксации с точностью меньше миллисекунды и сравнивает его полностью: версия, зафиксированная позже в пределах запрошенной миллисекунды, не выбирается. Версия, удалённая очисткой, удаляет и своё время фиксации, поэтому Doris, как Iceberg при удалении журнала снимков перед просроченным снимком, рассматривает только версии новее последней удалённой. Timestamp, более ранний, чем все такие версии, вызывает ошибку: он может быть раньше первой версии или находиться в истории, удалённой очисткой (например, между версией, сохранённой tag, и следующей оставшейся версией), где состояние таблицы неизвестно.
+- Выбранная версия фиксируется для всего оператора: schema, планирование Fragment, передача предикатов и сканирование BE используют её. Две ссылки на одну таблицу в одном операторе могут выбрать разные версии. `EXPLAIN` показывает выбранную версию как `lanceVersion`.
+- Версии, удалённые `cleanup_old_versions` Lance, нельзя читать; они сообщаются так же, как версии, которых никогда не существовало. Для таблицы, версии которой управляются REST Namespace, см. раздел ниже.
+- `vector_search()` и `full_text_search()` выбирают версию, время, tag или branch собственными параметрами `version`, `timestamp`, `tag` и `branch`; см. [Поиск исторической версии или branch](#search-a-historical-version-or-branch). Аргумент `table` не может содержать `FOR VERSION AS OF`, `@tag` или `@branch`.
+- Проверка индексов (`SHOW INDEX`, `lance_index_entries()`) всегда использует последнюю версию `main` и не показывает индексы исторической версии или branch.
+
+Tag и branch Lance выбираются тем же синтаксисом, что и для таблиц Iceberg и Paimon:
+
+```sql
+-- Read the version the tag "v2" points at.
+SELECT * FROM lance_catalog.db.tbl@tag(v2);
+
+-- Read the latest version of the branch "dev".
+SELECT * FROM lance_catalog.db.tbl@branch(dev);
+
+-- Read version 2 of the branch "dev".
+SELECT * FROM lance_catalog.db.tbl@branch(dev) FOR VERSION AS OF 2;
+```
+
+- Tag указывает на версию в branch, и чтение tag выбирает эту версию branch: tag, созданный в `dev`, читает `dev`, а не версию с тем же номером в `main`. `@tag` нельзя сочетать с `FOR VERSION AS OF` или `FOR TIME AS OF`.
+- `@branch(main)` читает `main`, то же самое, что отсутствие `@branch`.
+- Каждый branch имеет собственную последовательность версий, начиная с версии, от которой он создан. `FOR VERSION AS OF` / `FOR TIME AS OF` после `@branch` выбирают только среди версий этого branch, поэтому timestamp до создания branch не выбирает на нём ничего. После `@branch`, включая `@branch(main)`, `FOR VERSION AS OF` не может задавать tag, поскольку tag уже определяет branch.
+- Branch хранится в `<table>/tree/<branch>/` как shallow clone таблицы, manifest которой записывает расположение таблицы как абсолютный URI. Поэтому branch читается только в месте, где он был создан: после копирования или перемещения набора данных `main` остаётся читаемым, а branch — нет.
+- Branch с удалёнными метаданными или прерванным созданием остаётся читаемым через `@branch`, пока его каталог под `tree/` не очищен, потому что Lance SDK проверяет branch по его каталогу. Для таблицы с версиями, управляемыми REST Namespace, существование branch определяет Namespace, а branch читается из собственного каталога без чтения `main`.
+- `EXPLAIN` показывает читаемый branch как `lanceBranch`. Несуществующий tag или branch вызывает ошибку.
+
+### Версионирование, управляемое REST Namespace {#rest-namespace-managed-versioning}
+
+REST Namespace может самостоятельно управлять версиями таблицы (`managed_versioning = true` в ответе `DescribeTable`). Для такой таблицы Namespace определяет существующие версии и последнюю версию: последняя версия и `FOR VERSION AS OF` следуют записям Namespace (`ListTableVersions`, `DescribeTableVersion`), `FOR TIME AS OF` разрешается по временам фиксации, записанным manifest, и выбирается только среди версий, перечисленных Namespace, tag читается из `_refs/tags/` набора данных как для любой таблицы Lance и должен указывать на версию, записанную Namespace, а версии branch также следуют Namespace. После выбора версии FE и BE читают её из хранилища по расположению таблицы и номеру версии, как для любой другой таблицы Lance.
+
+- Версия, не записанная Namespace, считается отсутствующей, даже если её manifest всё ещё существует в хранилище; последняя версия — это последняя версия Namespace, даже если в хранилище уже есть более новый manifest.
+- Версия, которую Namespace больше не записывает, но между ней есть записанные версии, считается удалённой историей для `FOR TIME AS OF`, как версия, удалённая очисткой: timestamp, который может относиться к этой версии, вызывает ошибку вместо выбора более старой версии.
+- Таблица или branch, для которых Namespace не записывает ни одной версии, вызывают ошибку, даже если в хранилище существуют manifest.
+- Для таких таблиц `EXPLAIN` показывает `lanceManagedVersioning=true`.
+
+Ограничения:
+
+- Doris читает набор данных по `table_uri`, возвращённому `DescribeTable`, или по `location`, если `table_uri` отсутствует; любое из них должно быть полным URI хранилища. Если `location` пуст, либо возвращённый вместе с ним `table_uri` указывает в другое место (за исключением строки запроса, например подписанных учётных данных), запрос завершается ошибкой и ничего не читает. URI `s3+ddb` также отклоняется: его обработчик фиксаций DynamoDB записывал бы и завершал версии при чтении. Doris описывает управляемую таблицу при каждом чтении вместо кэширования, а FE и BE читают с расположением и конфигурацией хранилища, возвращёнными этим описанием.
+- Doris читает версию по её номеру по каноническому пути `_versions/<u64::MAX - version>.manifest` в каталоге таблицы (или в `tree/<branch>/` для branch), либо по `_versions/<version>.manifest` в старой схеме именования Lance. Manifest, который Namespace записывает для выбранной версии, должен находиться по этому пути или быть staged manifest рядом с ним (`<canonical path>-<id>`); при `FOR TIME AS OF` manifest каждой версии, записанной на `main` или branch, также должен соответствовать этому правилу, поскольку времена фиксации определяют выбор. Версию, записанную в другом месте, прочитать нельзя: запрос завершается ошибкой с указанием записанного и канонического путей. Если Namespace перемещает таблицу во время выполнения запроса, запрос может завершиться такой же ошибкой и пройти после повторной попытки.
+- Версия, которую Namespace записывает только в staged manifest, когда канонический manifest отсутствует, не читается: фиксация не завершена либо очистка удалила версию. Запрос завершается ошибкой и называет обе причины. `FOR TIME AS OF` на этом `main` или branch завершается ошибкой для любого timestamp, который может охватывать версию, поскольку её время фиксации неизвестно; для самой новой версии это любой timestamp до тех пор, пока writer или другой reader, использующий Namespace, не завершит её. Чтение таблицы без `FOR VERSION AS OF` и загрузка её schema также завершаются ошибкой. Собственные реализации Namespace Lance завершают версию до её записи, поэтому незавершённая версия появляется только после прерванной фиксации или в Namespace, записывающем staged manifest. Doris никогда не записывает таблицу при чтении.
+
+## Проверка индексов Lance {#inspect-lance-indexes}
+
+Для таблицы в Filesystem Catalog `SHOW INDEX` отображает логические скалярные индексы (включая инвертированные FTS-индексы) и векторные индексы, записанные в наборе данных Lance. Варианты `SHOW INDEXES`, `SHOW KEY` и `SHOW KEYS` дают тот же результат:
+
+```sql
+SHOW INDEX FROM lance_catalog.default.items;
+```
+
+Doris читает метаданные индексов из последнего снимка набора данных во время выполнения и сортирует результат по имени индекса и позиции столбца. Системные индексы, которые Lance поддерживает внутри, например `__lance_frag_reuse` и `__lance_mem_wal`, не отображаются. Таблица без индексов возвращает пустой результат.
+
+`SHOW INDEX` возвращает стандартный набор из 13 столбцов. Для таблицы Lance значения имеют только следующие столбцы; остальные всегда пусты:
+
+| Столбец | Значение для таблицы Lance |
+|---|---|
+| `Table` | Имя таблицы. |
+| `Key_name` | Имя логического индекса Lance. |
+| `Seq_in_index` | Позиция столбца в индексе, начиная с `1`. Индекс по нескольким полям даёт одну строку для каждого поля. |
+| `Column_name` | Индексируемое поле. Индекс вложенного поля отображает путь, соединённый через `.`, а сегмент пути с символами, отличными от букв, цифр и `_`, заключает в обратные кавычки, например `` attributes.`child.with.dot` ``. |
+| `Index_type` | Тип индекса, сообщённый Lance SDK, например `BTree`, `INVERTED`, `IVF_FLAT`, `IVF_SQ`, `IVF_PQ`, `IVF_HNSW_FLAT`, `IVF_HNSW_SQ` или `IVF_HNSW_PQ`. |
+| `Properties` | JSON-объект с фиксированным набором сведений об индексе: на верхнем уровне `metric_type` и `target_partition_size`, внутри `compression` — `type`, `num_bits`, `num_sub_vectors` и `rotation_type`, внутри `hnsw` — `construction_ef`, `max_connections` и `max_level`. Ключи отсортированы; значение равно `{}`, если сведения об индексе не содержат ни одного из этих полей. |
+
+Следующие строки показывают векторный индекс `IVF_PQ` и индекс `BTree` по вложенному полю:
+
+```text
+Table          Key_name              Seq_in_index  Column_name                  Index_type  Properties
+vs_ivf_pq_f32  embedding_ivf_pq_f32  1             embedding                    IVF_PQ      {"compression":{"num_bits":4,"num_sub_vectors":4,"type":"pq"},"metric_type":"L2"}
+nested_index   nested_label_btree    1             attributes.`child.with.dot`  BTree       {}
+```
+
+`SHOW INDEX` только проверяет существующие индексы и не создаёт их. Создавайте индексы Lance с помощью Lance SDK или другого writer Lance вне Doris. Если записанные метаданные индекса противоречивы, например индекс ссылается на неизвестное поле или два индекса имеют одинаковое имя, оператор завершается ошибкой вместо возврата частичных метаданных.
+
+Для `SHOW INDEX` требуется привилегия `SHOW` на таблицу. Для REST Catalog оператор отклоняется с ошибкой `SHOW INDEX is not supported for Lance REST catalogs`.
+
+### Список физических записей индекса с помощью lance_index_entries {#list-physical-index-entries-with-lance_index_entries}
+
+:::note
+`lance_index_entries` поддерживается начиная с Apache Doris 4.1.5.
+:::
+
+`SHOW INDEX` предоставляет логическое представление индексов таблицы Lance: имя индекса, индексируемые столбцы, тип индекса и свойства в фиксированном 13-столбцовом наборе результатов в стиле MySQL. Физическая идентичность записи индекса, её UUID и версия набора данных не помещаются в эту фиксированную схему. Только читаемая табличная функция `lance_index_entries` предоставляет это физическое представление. Она возвращает одну строку для каждой физической записи индекса, записанной в последнем снимке набора данных:
+
+```sql
+SELECT *
+FROM lance_index_entries("table" = "lance_catalog.default.vs_ivf_pq_f32");
+```
+
+`table` должен быть полным трёхчастным именем `catalog.database.table`. Идентификаторы поддерживают обратные кавычки; если многоуровневый Namespace отображается в имя базы данных с `.`, заключите часть базы данных в обратные кавычки.
+
+TVF возвращает следующие фиксированные столбцы:
+
+| Столбец | Тип | Описание |
+|---|---|---|
+| `CatalogName` | STRING | Имя Catalog. |
+| `DatabaseName` | STRING | Имя базы данных. |
+| `TableName` | STRING | Имя таблицы. |
+| `IndexName` | STRING | Имя логического индекса Lance. Один логический индекс создаёт несколько строк, если у него есть несколько физических записей с разными UUID. |
+| `IndexUuid` | STRING | UUID этой физической записи индекса. |
+| `DatasetVersion` | BIGINT | Версия набора данных, записанная в этой физической записи индекса, то есть версия набора данных, при которой запись была создана. Физические записи одного логического индекса могут иметь разные версии набора данных. Всегда равна `1` или больше. |
+
+Следующая строка показывает результат для описанного выше индекса `IVF_PQ`. `IndexUuid` и `DatasetVersion` являются иллюстративными значениями:
+
+```text
+CatalogName    DatabaseName  TableName      IndexName             IndexUuid                             DatasetVersion
+lance_catalog  default       vs_ivf_pq_f32  embedding_ivf_pq_f32  3f9c2a1e-7b4d-4e6f-9a1c-2d5e8f0b3a47  12
+```
+
+`lance_index_entries` читает метаданные индексов только через `Dataset.getIndexes()`. Она не читает количество строк или статистику и не изменяет набор данных. Результат можно фильтровать обычными предикатами, например `WHERE IndexName = ...`. Строки сортируются по `(IndexName, IndexUuid)`. Чтение полностью проверяется по принципу all-or-error: пустое или слишком длинное имя, отсутствующий UUID, неположительное `DatasetVersion`, дублирующийся UUID или количество необработанных записей более 16,384 приводят к сбою всего запроса вместо усечённого результата. Зарезервированные системные индексы Lance `__lance_frag_reuse` и `__lance_mem_wal` проверяются, но не отображаются.
+
+Для `lance_index_entries` требуется привилегия `SHOW` на таблицу. Для REST Catalog TVF отклоняется с ошибкой `lance_index_entries is not supported for Lance REST catalogs`.
+
+## Сопоставление типов {#type-mapping}
+
+Полную таблицу сопоставления Doris 4.2, правила точности и неподдерживаемые типы см. в разделе [Сопоставление типов данных Lance и Doris](lance-catalog/doris-type-mapping.md).
+
+## Передача предикатов {#predicate-pushdown}
+
+Doris преобразует семантически совместимые предикаты в выражения Substrait и передаёт их Lance для вычисления во время чтения. BE Doris не вычисляет условие повторно после полной передачи. Условия, которые нельзя безопасно передать, остаются в Doris.
+
+### Типы данных, поддерживаемые для передачи {#data-types-supported-for-pushdown}
+
+| Тип Lance / Arrow | Поддержка передачи |
+|---|---|
+| `bool` | Равенство, проверки NULL и логические операции; сравнения порядка не поддерживаются |
+| `int8/16/32/64` | Поддерживается |
+| `uint8/16/32/64` | Поддерживается |
+| `float32/64` | Поддерживается |
+| `decimal128` | Precision от 1 до 38, Scale от 0 до Precision |
+| `utf8`, `large_utf8` | Поддерживается |
+| `date32(day)` | Поддерживается |
+| Timestamp без часового пояса `timestamp(s/ms/us)` | Поддерживается |
+| `list<utf8>` | Встроенный `array_contains` с не-`NULL` строковым литералом; см. [Предикаты меток массивов](#array-label-predicates) |
+
+Предикаты по другим читаемым типам, включая `float16`, `decimal256`, Binary, `date64`, Time, Timestamp с наносекундной точностью, Timestamp с часовым поясом и сложные типы, кроме указанного выше случая проверки принадлежности массива, в настоящее время остаются в Doris.
+
+### Операторы, поддерживаемые для передачи {#operators-supported-for-pushdown}
+
+| SQL-предикат | Условие передачи |
+|---|---|
+| `=`, `!=`, `<>`, `<`, `<=`, `>`, `>=` | Прямое сравнение столбца с константой. Константа может находиться слева. |
+| `<=>` | Прямое null-safe сравнение равенства столбца с константой; сохраняет не-`NULL` двузначный результат внутри `NOT`, `AND` или `OR` |
+| `IN`, `NOT IN` | Непустой список констант без `NULL` |
+| `IS NULL`, `IS NOT NULL` | Прямая ссылка на столбец |
+| Логический столбец, `NOT` логического столбца | Прямая ссылка на логический столбец |
+| `LIKE`, `NOT LIKE` | Прямой столбец `utf8` или `large_utf8` и строковый шаблон без обратных слешей, явной конструкции `ESCAPE` или встроенного NUL |
+| `starts_with`, `ends_with` | Встроенная функция с прямым столбцом `utf8` или `large_utf8` и строковым литералом |
+| `array_contains(labels, 'red')` | Прямой столбец `list<utf8>` и не-`NULL` строковый литерал |
+| `AND` | Конъюнкты верхнего уровня можно передавать независимо, а неподдерживаемые конъюнкты сохраняются в Doris |
+| `OR` | Обе ветви должны полностью преобразовываться |
+| `NOT` | Операнд должен полностью преобразовываться |
+
+Следующие формы обычно не передаются:
+
+- Функции, отличные от поддерживаемых встроенных функций строк и проверки принадлежности массива, либо арифметические выражения над столбцом. Пользовательская функция с именем `like`, `starts_with`, `ends_with` или `array_contains` не считается соответствующей встроенной функцией.
+- Строковые предикаты, шаблон которых содержит встроенный NUL. Шаблоны `LIKE` и `NOT LIKE` с экранированием обратным слешем или явной конструкцией `ESCAPE` также остаются в Doris.
+- Пустой список `IN` или список `IN`, содержащий `NULL`.
+- Выражение `OR` или `NOT`, в котором преобразуется только часть выражения.
+- Тип данных или значение константы, которое нельзя преобразовать в Lance без потерь.
+
+Используйте `lancePushdownPredicate` в `EXPLAIN`, чтобы проверить реально переданные условия:
+
+```sql
+EXPLAIN
+SELECT user_id
+FROM lance_catalog.default.user_profiles
+WHERE active
+  AND starts_with(name, 'A')
+  AND country LIKE 'C%';
+```
+
+### Предикаты меток массивов {#array-label-predicates}
+
+Начиная с Apache Doris 4.1.5 передача меток массива поддерживает `array_contains` для прямого столбца Lance `list<utf8>` с не-`NULL` строковым литералом. Более старые сборки могут оставить эти условия в Doris; перед использованием оптимизации проверьте `EXPLAIN`. `NULL`-массив по-прежнему даёт `NULL`, пустой массив не соответствует, а повторяющиеся метки не дублируют строки результата.
+
+Для таблицы Lance со столбцом `id` и столбцом `labels` типа `list<utf8>`:
+
+```sql
+EXPLAIN
+SELECT id
+FROM lance_catalog.default.items
+WHERE array_contains(labels, 'red')
+  AND array_contains(labels, 'blue');
+```
+
+Это соответствует массивам, содержащим обе метки, независимо от порядка и соседства. Замена `AND` на `OR` соответствует любой из меток. `NOT (array_contains(labels, 'red'))` также преобразуется и сохраняет семантику SQL `NULL`. Эти примеры относятся к обычному сканированию таблицы и не изменяют различие между параметром `filter` поисковой TVF и внешним условием `WHERE`.
+
+Следующие условия остаются остаточными предикатами Doris:
+
+- `array_contains(labels, NULL)`: Doris может сопоставить элемент массива `NULL`; функция проверки принадлежности Lance имеет другую семантику `NULL`-needle.
+- `array_contains_all(labels, ['red', 'blue'])`: Doris проверяет упорядоченную непрерывную подпоследовательность. Её нельзя заменить функцией проверки включения множества Lance или двумя независимыми предикатами принадлежности.
+- Динамические needle, выражения или приведения вокруг столбца массива и другие типы элементов/контейнеров массивов, включая `large_list`, списки фиксированного размера и `list<large_utf8>`.
+
+### Передача предикатов и использование скалярного индекса {#predicate-pushdown-and-scalar-index-use}
+
+Передача предиката означает, что условие вычисляет Lance; она не гарантирует использование индекса. Для обычных сканирований Doris может назначить каждому заданию физический сегмент BTree, Bitmap или LabelList. Комбинации `IN`, `AND`, `OR` и `NOT` для одного столбца могут использовать выбранный индекс, если Lance поддерживает полное выражение. Для `OR` нужны безопасные кандидаты из обеих ветвей; `NOT` не может инвертировать частично вычисленное поддерево. Неподдерживаемые индексные выражения возвращаются к сканированию внутри назначенного домена Fragment.
+
+Каждая задача выбирает **один логический скалярный индекс**. Запрос, объединяющий условия по метке, категории и числу, не означает, что Doris пересечёт все три индекса. Полное переданное условие перепроверяется до применения ограничения сканирования, а Fragment вне покрытия индекса всё равно читаются. Без пригодного индекса совместимые предикаты всё равно могут быть переданы и вычислены сканированием Lance.
+
+Используйте вместе следующие признаки:
+
+| Признак | Значение |
+|---|---|
+| `lancePushdownPredicate` в `EXPLAIN` | Условия, отправленные в Lance. Оставшиеся условия `predicates:` вычисляет Doris. |
+| `lanceScalarIndexScan=SEGMENT` и `lanceGroupingIndex` в `EXPLAIN` | Спланировано сканирование скалярного сегмента и указан выбранный логический индекс. Само по себе это не доказывает использование индекса во время выполнения. |
+| `LanceScalarIndexSegmentsSearched` в Profile | Фактические поиски на инструментированном пути скалярного сегмента. |
+| `LanceScalarIndexCandidateRows` в Profile | Кандидатные строки, сообщённые этим путём, не обязательно конечные строки результата. Маски дополнения, например некоторые выражения `NOT`, могут не сообщать количество кандидатов. |
+| `LanceScalarIndexSegmentFallbacks` в Profile | Задачи, перешедшие с запланированного пути скалярного сегмента на резервный. |
+
+Включите `enable_profile`, чтобы просматривать эти счётчики. При измерении оптимизации сравнивайте один и тот же SQL, проекцию, версию набора данных и состояние кэша. Эти счётчики описывают обычные сканирования скалярных сегментов и не должны использоваться отдельно для вывода об использовании скалярного индекса внутри предварительной фильтрации ANN или полнотекстового поиска.
+
+### Передача Runtime Filter {#runtime-filter-pushdown}
+
+Когда обычная таблица Lance участвует в соединении, Doris может преобразовать некоторые Runtime Filter, созданные на стороне построения соединения, в условия SQL Lance и применять их во время чтения данных Lance. Это может уменьшить объём данных, возвращаемых Doris, особенно при соединении большой таблицы с таблицей стороны построения с высокой селективностью.
+
+```sql
+SELECT l.user_id, l.name
+FROM lance_catalog.default.user_profiles l
+JOIN internal.demo.allowed_users a
+  ON l.user_id = a.user_id;
+```
+
+В настоящее время могут передаваться следующие Runtime Filter:
+
+| Runtime Filter | Форма, передаваемая в Lance |
+|---|---|
+| IN Filter | `column IN (...)` |
+| Min/Max Filter | `column >= min_value`, `column <= max_value` или оба условия |
+
+Столбец и значения Runtime Filter должны безопасно преобразовываться в скалярные типы, поддерживаемые SQL Lance. Другие типы Runtime Filter, IN Filter с `NULL` и типы или значения, которые нельзя безопасно преобразовать, не передаются. Doris по-прежнему вычисляет Runtime Filter, который не был передан, поэтому корректность запроса сохраняется; теряется только выигрыш ранней фильтрации в Lance.
+
+Только Runtime Filter, готовый до создания Lance Scanner, может быть включён в условия, переданные этому Scanner. Runtime Filter, прибывший позже, всё равно вычисляется Doris, но может не попасть в уже созданный Scanner.
+
+Условия Runtime Filter объединяются с условиями Substrait, созданными из обычных SQL-предикатов; одно не заменяет другое. Запись `runtime filters` в `EXPLAIN` показывает запланированные Runtime Filter. Когда передан хотя бы один Runtime Filter, `LanceRuntimeFilterPushedIds` и `LanceRuntimeFilterSkippedIds` в Runtime Profile показывают идентификаторы переданных и пропущенных Filter.
+
+Передача Runtime Filter применяется только к сканированию обычных таблиц Lance. Она не используется при генерации кандидатов `vector_search()` или полнотекстового поиска.
+
+## Запрос Lance с файловыми TVF {#query-lance-with-file-tvfs}
+
+Если нужно только прочитать набор данных Lance по известному пути, можно использовать TVF `s3()` или `local()` без создания Catalog. `uri` или `file_path` должны указывать на корневой каталог набора данных Lance, а не на внутренний файл данных.
+
+### S3 TVF {#s3-tvf}
+
+TVF `s3()` использует S3-совместимый API. Для OSS используйте свойства `s3.*` и endpoint в стиле virtual-hosted, содержащий bucket. Для нативного доступа OSS используйте пример OSS Catalog выше. Следующий SQL читает первые 10 строк примерного набора данных; перед выполнением замените адрес, учётные данные и имена столбцов:
+
+<Tabs groupId="lance-s3-tvf-storage">
+    <TabItem value="s3" label="AWS S3" default>
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "use_path_style" = "false",
+            "s3.endpoint" = "https://my-bucket.s3.us-east-1.amazonaws.com",
+            "s3.region" = "us-east-1",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        Явно задайте endpoint также для AWS S3. В этом примере используется доступ в стиле virtual-hosted; bucket и region в endpoint должны соответствовать URI и `s3.region`.
+    </TabItem>
+
+    <TabItem value="minio" label="MinIO (Path Style)">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "http://minio.example.com:9000",
+            "s3.region" = "us-east-1",
+            "use_path_style" = "true",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        Используйте endpoint сервиса MinIO без bucket и задайте `use_path_style=true`. И FE, и BE, выполняющие запрос, должны иметь доступ к сервису; не используйте адрес, доступный только с хоста FE.
+    </TabItem>
+
+    <TabItem value="oss-s3" label="Alibaba Cloud OSS (S3-Compatible Access)">
+        ```sql
+        SELECT user_id, name
+        FROM s3(
+            "uri" = "s3://my-bucket/lance/user_profiles.lance",
+            "format" = "lance",
+            "fs.s3.support" = "true",
+            "s3.endpoint" = "https://my-bucket.oss-cn-beijing.aliyuncs.com",
+            "s3.region" = "cn-beijing",
+            "use_path_style" = "false",
+            "s3.access_key" = "<ak>",
+            "s3.secret_key" = "<sk>"
+        )
+        ORDER BY user_id
+        LIMIT 10;
+        ```
+
+        В этом примере используются те же настройки S3-совместимого OSS, что и для Filesystem Catalog, но `uri` указывает на конкретный набор данных `.lance`, тогда как `warehouse` указывает на каталог с наборами данных. Сохраните `fs.s3.support=true` и `use_path_style=false` и убедитесь, что bucket endpoint соответствует URI.
+    </TabItem>
+</Tabs>
+
+Для OSS `uri` из примера также можно записать как `oss://my-bucket/lance/user_profiles.lance`, сохранив те же свойства `s3.*` и `fs.s3.support=true`. TVF нормализует URI в `s3://` и не переключается на нативный провайдер OSS. Не копируйте напрямую конфигурацию `oss.*` из нативного Catalog OSS: endpoint без bucket в сочетании с доступом virtual-hosted может сообщить, что набор данных не существует, а переход к стилю path может быть отклонён OSS с ошибкой `SecondLevelDomainForbidden`.
+
+Для S3 TVF FE получает Schema, текущую версию и список Fragment. Doris фиксирует эту версию и параллельно сканирует её Fragment. `EXPLAIN` показывает `VTVF_SCAN_NODE`; несколько split могут совместно использовать URI набора данных и различаются идентификаторами Fragment. `totalFileSize=0` или `length=0` — это заполнитель для split Lance, а не признак пустого набора данных или повторного сканирования всей таблицы каждым split.
+
+### Local TVF {#local-tvf}
+
+```sql
+SELECT user_id, name
+FROM local(
+    "file_path" = "/data/lance/user_profiles.lance",
+    "backend_id" = "10001",
+    "format" = "lance"
+);
+```
+
+`file_path` передаётся в Lance Reader на целевом BE без изменений. Doris не добавляет `user_files_secure_path` и не раскрывает этот путь как Glob, поэтому он должен напрямую указывать на корневой каталог одного набора данных Lance, доступный целевому BE. Рекомендуется использовать абсолютный путь.
+
+Обнаружение Schema и выполнение Local TVF независимо открывают последнюю версию набора данных. Версия, разрешённая при обнаружении Schema, в настоящее время не фиксируется для последующего сканирования. Если набор данных изменится между анализом и выполнением запроса, обнаруженная Schema и сканируемый снимок могут различаться. Не изменяйте набор данных во время анализа и выполнения запроса Local TVF. Текущий Local Lance TVF использует один Scanner.
+
+Файловые TVF Lance имеют следующие дополнительные ограничения:
+
+- Поддерживаются только `s3()` и `local()`. Другие файловые TVF, такие как HDFS и HTTP, в настоящее время не поддерживаются.
+- `path_partition_keys` не поддерживается.
+- Один путь TVF может представлять только один набор данных Lance.
+- `DESC FUNCTION` может показать Schema с неподдерживаемыми типами, но SQL не может проецировать неподдерживаемые столбцы.
+
+## Векторный поиск {#vector-search}
+
+В сборках с автоматическим поиском Lance Doris 4.2 подходящий обычный SQL также может использовать нативный векторный Top-N и поиск MATCH/BM25. Пять приближённых функций, преобразование метрик, семантика входных данных и границы JOIN/EXISTS описаны в разделе [Автоматический поиск из обычного SQL](../best-practices/lance-hybrid-search.mdx#automatic-search). Приведённые ниже TVF остаются интерфейсом для явной настройки поиска и поддерживаемых форм, не охватываемых автоматической переписью.
+
+`vector_search()` — реляционная TVF, выполняющая поиск Top-K по векторному столбцу таблицы Lance. Она может использовать существующий векторный индекс Lance или выполнять Flat Search.
+
+### Синтаксис и пример {#syntax-and-example}
+
+```sql
+SELECT user_id, label, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "offset" = "3",
+    "metric" = "l2",
+    "nprobes" = "20",
+    "refine_factor" = "10",
+    "prefilter" = "true",
+    "filter" = "category = 'book'",
+    "use_index" = "true"
+)
+ORDER BY _distance ASC, user_id;
+```
+
+Схема отношения `vector_search()` содержит все столбцы исходной таблицы Lance и столбец `_distance`, созданный Lance Scanner для запроса ближайших соседей. Конечный SQL-результат содержит только столбцы, выбранные в `SELECT`. Doris предоставляет `_distance` как `FLOAT`. Это расстояние, а не общий показатель сходства: меньшее значение означает большую близость векторов. Исходная таблица не должна уже содержать столбец `_distance`. SQL-отношение не гарантирует порядок отображения, поэтому для детерминированного порядка ближайших соседей явно задавайте `ORDER BY _distance ASC`. Для строк с одинаковым расстоянием рекомендуется добавить уникальный столбец как tie-breaker.
+
+`table` должен разбираться ровно как три части имени `catalog.database.table`. Многоуровневый Lance Namespace отображается в одно имя базы данных Doris, содержащее `.`, поэтому часть базы данных заключайте в обратные кавычки. Например, для таблицы `items` в Namespace `doris.analytics` используйте:
+
+```sql
+"table" = "lance_catalog.`doris.analytics`.items"
+```
+
+Не используйте форму без кавычек `lance_catalog.doris.analytics.items`: она разбирается как четыре части имени и отклоняется. Имя только таблицы или имя `database.table` также отклоняется.
+
+### Параметры {#parameters}
+
+| Параметр | Обязательно | По умолчанию | Описание |
+|---|---|---|---|
+| `table` | Да | - | Полное трёхчастное имя `catalog.database.table`. Если многоуровневый Namespace отображается в имя базы данных с `.`, заключите часть базы данных в обратные кавычки. Оно должно обозначать таблицу в Lance Catalog, а у пользователя должна быть привилегия `SELECT` на таблицу. |
+| `column` | Да | - | Имя векторного столбца. Поддерживает столбцы с одним вектором `fixed_size_list<float16\|float32\|float64\|uint8\|int8>` и несколькими векторами `list<fixed_size_list<float16\|float32\|float64, D>>`. См. [Поиск по нескольким векторам](#multi-vector-search). |
+| `query_vector` | Да | - | JSON-массив чисел для столбца с одним вектором или непустая JSON-матрица для столбца с несколькими векторами. Размерность каждого подвектора должна соответствовать столбцу, а каждое значение должно быть конечным и представимым типом элемента. |
+| `top_k` | Нет | `10` | Число результатов после пропуска `offset`. Должно быть положительным целым. |
+| `offset` | Нет | `0` | Число пропускаемых ближайших соседей внутри векторного поиска. Должно быть неотрицательным целым. `top_k + offset` не может превышать максимальное беззнаковое 32-битное целое. |
+| `metric` | Нет | `l2` | Метрика расстояния: `l2`, `cosine`, `dot` или `hamming`. `dot_product` — псевдоним `dot`. Векторы `uint8` поддерживают только `hamming`; остальные поддерживаемые типы элементов поддерживают `l2`, `cosine` и `dot`. Явно задавайте `metric` при запросе индекса `cosine`, `dot` или `hamming`. Целочисленные столбцы с несколькими векторами и многовекторный `hamming` не поддерживаются. |
+| `distance_lower_bound` | Нет | Без ограничения | Включительная нижняя граница расстояния для поиска по одному вектору. Должна быть конечным `FLOAT`. |
+| `distance_upper_bound` | Нет | Без ограничения | Исключительная верхняя граница расстояния для поиска по одному вектору. Должна быть конечным `FLOAT`. Если заданы обе границы, нижняя после преобразования в `FLOAT` должна быть меньше верхней. |
+| `filter` | Нет | - | Условие SQL Lance, вычисляемое Lance. Время выполнения управляется `prefilter`. |
+| `prefilter` | Нет | `false` | Управляет моментом выполнения TVF `filter`. `true` фильтрует до генерации векторных кандидатов; `false` (по умолчанию) — после генерации кандидатов, поэтому результат может содержать меньше `top_k` строк. Этот параметр не влияет на внешнее `WHERE` Doris. |
+| `nprobes` | Нет | Минимум `1`, без максимума | Число разделов индекса IVF для проверки. Должно быть положительным целым. Если не задано, Lance начинает с одного раздела и может проверять дополнительные, когда `prefilter=true` оставляет слишком мало кандидатов. Явная установка `N` фиксирует и минимальное, и максимальное число проверок равным `N`. |
+| `refine_factor` | Нет | Один вектор: отключено; несколько векторов: `1` | Множитель уточнения кандидатов. Должен быть положительным целым. Для поиска по одному вектору при отсутствии параметра Lance не пересчитывает расстояния по исходным векторам, поэтому `_distance` квантованного индекса может быть приближённым. При значении `N` Lance сначала получает `(top_k + offset) × N` кандидатов, вычисляет для них точные расстояния по исходным векторам и переупорядочивает их. **Уточнение читает исходные векторные данные для этих кандидатов. При увеличении `N` читается и вычисляется больше кандидатов, что может значительно увеличить I/O и снизить производительность запроса.** Для поиска по одному вектору значение `1` включает уточнение и отличается от отсутствия параметра. Поиск по нескольким векторам всегда уточняет кандидатов по исходным значениям с множителем по умолчанию `1`. |
+| `ef` | Нет | `floor(1.5 × (top_k + offset))` | Ширина кандидатов, сохраняемая при поиске по графу HNSW. Должна быть положительным целым. Если задан `refine_factor`, значение по умолчанию — `floor(1.5 × (top_k + offset) × refine_factor)`. Не влияет на индексы, отличные от HNSW. |
+| `approx_mode` | Нет | Нативное значение по умолчанию, сейчас `normal` | Строковая политика приближённого поиска: `fast`, `normal` или `accurate`; регистр и внешние пробелы игнорируются. Другие значения, включая числовые строки, отклоняются. Применяется к запросам с одним и несколькими векторами. См. [Выбор режима приближения](#vector-approx-mode). |
+| `use_index` | Нет | `true` | При `true` Doris предпочитает векторный индекс Lance, совместимый с векторным столбцом и метрикой расстояния, и автоматически использует Flat Search, если пригодного индекса нет. При `false` векторные индексы отключаются и выполняется Flat Search по данным. |
+| `version`, `timestamp`, `tag`, `branch` | Нет | - | Поиск исторической версии, версии на момент времени, tag или branch вместо последней версии `main`. См. [Поиск исторической версии или branch](#search-a-historical-version-or-branch). |
+
+Если `metric` не задана, для индексированного пути и Flat Search выбирается `l2`. Для столбцов `uint8` явно задавайте `"metric" = "hamming"`; значение `l2` по умолчанию не поддерживается. Поиск по нескольким векторам также подчиняется описанным ниже [бюджетам кандидатов](#multi-vector-search).
+
+### Выбор режима приближения {#vector-approx-mode}
+
+Начните с `normal` как базовой линии. `approx_mode` изменяет политику нативного алгоритма поиска; эффект зависит от выбранного индекса и пути выполнения. Он не изменяет `nprobes`, `ef`, `refine_factor`, сохранённый индекс или план split. Если параметр опущен, сохраняется значение Lance по умолчанию, сейчас `normal`.
+
+:::note
+Эта опция требует сборки Doris, содержащей [реализацию режима приближения](https://github.com/apache/doris/pull/69852). Подробности ниже описывают нативную ревизию Lance, использованную этой реализацией. Более старые FE отклоняют свойство, а более старые BE игнорируют необязательное поле. Во время плавного обновления FE отклоняет явно заданные `fast` или `accurate`, если любой BE в пуле кандидатов запроса помечен как старый источник обновления, предотвращая использование разных политик в разных split. Ошибка указывает BE и запрошенный режим. Завершите обновление этих BE либо опустите параметр/используйте `normal`; отсутствие параметра и явное `normal` сохраняют нативное значение по умолчанию и совместимы с такими источниками обновления. Перед использованием режимов, отличных от значения по умолчанию, обновите все участвующие FE и BE; эта проверка не обнаруживает произвольные старые сборки, не помеченные как источники плавного обновления.
+:::
+
+#### Различия между режимами {#differences-between-modes}
+
+| Путь поиска | `fast` | `normal` | `accurate` |
+|---|---|---|---|
+| Оценка расстояния RabitQ raw-query | Использует однобитовые оценки даже для многобитного индекса, пропуская вычисление дополнительных битов и соответствующую проверку нижней границы. | Использует стандартную таблицу поиска квантованного расстояния 8-bit и вычисление дополнительных битов, если доступно. | Использует более точную таблицу поиска расстояния 16-bit и вычисление дополнительных битов, если доступно. |
+| HNSW с предварительной фильтрацией | Включает обход ACORN, когда позволяют указанные ниже условия выполнения. | Использует обычный обход отфильтрованного графа. | Использует ту же политику обхода, что и `normal`; вычисление квантованного расстояния всё ещё может отличаться. |
+| IVF_FLAT или исчерпывающий Flat Search | Изменений квантования, специфичных для режима, нет. | Та же политика оценки. | Та же политика оценки. |
+
+Значения 8-bit и 16-bit описывают **таблицу поиска расстояния во время запроса**, а не число бит, хранящихся на измерение в индексе. Например, в индексе RabitQ с 5-bit на пути raw-query `fast` использует однобитовые оценки; другие режимы могут использовать дополнительные четыре бита. Другие пути RabitQ, включая оценку residual-query, могут вести себя иначе. Описание режима не расширяет поддерживаемые комбинации типов векторов или метрик.
+
+`accurate` по-прежнему является приближённым поиском. Он не гарантирует точный Top-K, исчерпывающую оценку кандидатов или исходный `_distance` на квантованном индексе. `refine_factor` управляет повторным ранжированием по исходным векторам; его увеличение может улучшить оценки и recall, но не возвращает всех кандидатов, пропущенных ранее. Для многовекторных запросов сохраняется обязательное уточнение по исходным векторам.
+
+#### Когда использовать каждый режим {#when-to-use-each-mode}
+
+| Нагрузка | Начальный выбор | Что проверить |
+|---|---|---|
+| Общие нагрузки или неизвестное узкое место | `normal` | Сначала установите recall и задержку, затем меняйте политику. |
+| HNSW_FLAT с эффективной предварительной фильтрацией, когда важна задержка | Сравнить `fast` с `normal` | ACORN может сократить бесполезные вычисления расстояния. Проверьте recall, количество результатов, медианную задержку и p95; ускорение не гарантируется. |
+| Многобитный RabitQ, когда важен recall | `normal` | `fast` может отбросить полезную информацию кодирования и существенно снизить recall. Используйте его только если репрезентативные запросы по-прежнему соответствуют целевому качеству. |
+| RabitQ без повторного ранжирования по исходным векторам, когда важна ошибка приближённой оценки | Сравнить `accurate` с `normal` | Измерьте ошибку оценки и качество ранжирования относительно расстояний исходных векторов, а также дополнительную задержку. Более точная оценка не гарантирует больший recall. |
+| RabitQ уже использует повторное ранжирование по исходным векторам | `normal` | Дополнительная польза `accurate` для итоговой оценки может быть меньше; выбор кандидатов всё ещё может отличаться, поэтому отдельно проверьте recall. |
+| IVF_FLAT или HNSW_FLAT без эффективной предварительной фильтрации | Оставить `normal` | Текущая реализация не даёт соответствующей выгоды от квантования или ACORN при смене режима. Recall IVF_FLAT по-прежнему зависит от проверенных разделов. |
+
+Для совместимого **индекса HNSW на основе RabitQ** `fast` может одновременно включить обход ACORN и упростить оценку расстояния RabitQ на применимом пути raw-query. Эти эффекты связаны одной опцией. Не делайте вывод о recall по тесту HNSW_FLAT; проверяйте комбинированный индекс отдельно. `normal` и `accurate` используют одну политику обхода HNSW, но их оценки RabitQ могут различаться.
+
+Рекомендуемый порядок настройки:
+
+1. Зафиксируйте один и тот же снимок набора данных, набор запросов, metric, фильтры и покрытие индекса. Используйте `use_index=false`, чтобы получить точный Top-K по тем же подходящим строкам; условия отбора поместите в `filter` TVF и задайте `prefilter=true`.
+2. Установите базовую линию `normal`. Измерьте Recall@K, количество результатов, ошибку оценки при необходимости и медианную задержку/p95.
+3. Если recall недостаточен, настройте IVF `nprobes` и HNSW `ef`. Если нужны оценки по исходным векторам или больше кандидатов для переранжирования, задайте `refine_factor`, учитывая дополнительные чтения и вычисления.
+4. Зафиксировав остальные параметры, сравните `fast` для отфильтрованного HNSW или `accurate` для точности оценки RabitQ. Выбирайте режим только при достижении целевого качества и измеримой полезной выгоде. Отдельно измеряйте холодный и тёплый кэш.
+
+#### Включение ACORN для отфильтрованного HNSW {#enable-acorn-for-filtered-hnsw}
+
+Выбранный совместимый индекс должен содержать граф HNSW. Задайте `approx_mode="fast"` и поместите предикат внутрь TVF с `prefilter="true"`. Внешнее `WHERE` Doris не обеспечивает такую предварительную фильтрацию, а одного `use_index=true` недостаточно для принудительного выбора индекса HNSW.
+
+Для четырёхмерного `embedding`, `user_id` и строкового `category` из примера синтаксиса, при существующем совместимом индексе L2 HNSW и привилегии `SELECT`:
+
+```sql
+SELECT user_id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1,0.2,0.3,0.4]",
+    "metric" = "l2",
+    "top_k" = "10",
+    "filter" = "category = 'book'",
+    "prefilter" = "true",
+    "use_index" = "true",
+    "approx_mode" = "fast",
+    "ef" = "64"
+)
+ORDER BY _distance, user_id;
+```
+
+Этот запрос возвращает до 10 подходящих строк, ранжированных по расстоянию; фактические ID и recall зависят от данных и ANN-поиска. Выполнение `EXPLAIN` для запроса включает `lanceApproxMode=FAST`, подтверждая запрошенную политику. Это не доказывает, что каждый подындекс выполнил ACORN.
+
+Текущая нативная реализация отдельно выбирает путь внутри каждого подындекса HNSW (раздела IVF), используя число узлов, прошедших предварительную фильтрацию:
+
+| Условие выполнения | Путь |
+|---|---|
+| Нет эффективной предварительной фильтрации или проходят все узлы | Обычный обход HNSW. |
+| Проходит менее примерно 10% узлов | Плоская оценка оставшихся узлов. |
+| Фильтр частичный, и правило разреженного фильтра не применяется | `fast` использует ACORN; `normal` и `accurate` — обычный обход отфильтрованного графа. |
+| ACORN возвращает слишком мало требуемых кандидатов, и запрос не имеет границ расстояния | Повтор с обычным обходом отфильтрованного графа. |
+
+Порог применяется внутри каждого подындекса, а не ко всей таблице. В этом интерфейсе нет отдельного свойства принудительного ACORN. В Doris правила безопасности диапазона расстояния также могут выбрать Flat Search до нативного обхода графа; см. [Радиусный и диапазонный поиск](#radius-and-range-search).
+
+### Радиусный и диапазонный поиск {#radius-and-range-search}
+
+Задайте `distance_upper_bound` для радиусного запроса или обе границы для интервала `[lower, upper)`. Пропущенные границы не ограничивают расстояние. Значение зависит от выбранной метрики: `l2` — это **квадрат евклидова расстояния**, поэтому геометрическому радиусу `r` соответствует верхняя граница `r * r`. Допускаются отрицательные границы, что полезно для метрик вроде `dot`. Границы используют точность `FLOAT`, даже если сохранённые векторы имеют Float64; не конечные значения, переполнение, равные и обратные границы отклоняются.
+
+Например, для существующей таблицы Lance Catalog `lance_catalog.default.items` со столбцами `user_id` и трёхмерным `embedding` Float32:
+
+| user_id | embedding | Квадрат расстояния L2 до `[0, 0, 0]` |
+|---|---|---|
+| 1 | `[0, 0, 0]` | 0 |
+| 2 | `[1, 0, 0]` | 1 |
+| 3 | `[2, 0, 0]` | 4 |
+
+```sql
+SELECT user_id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0, 0, 0]",
+    "metric" = "l2",
+    "top_k" = "10",
+    "use_index" = "false",
+    "distance_lower_bound" = "1",
+    "distance_upper_bound" = "4"
+)
+ORDER BY _distance;
+```
+
+```text
++---------+-----------+
+| user_id | _distance |
++---------+-----------+
+|       2 |         1 |
++---------+-----------+
+```
+
+Удаление нижней границы также возвращает строку 1. Использование только верхней границы `0` возвращает пустой результат. При `prefilter=true` `filter` ограничивает кандидатов до векторного поиска; при значении по умолчанию `prefilter=false` он фильтрует после генерации кандидатов. `offset` пропускает результаты после применения диапазона расстояния. Схема результата не меняется: столбцы таблицы плюс `_distance` типа `FLOAT`. `EXPLAIN` показывает `lanceDistanceRange=[1.0, 4.0)`.
+
+Границы расстояния поддерживают параметры `?` в подготовленных операторах. Каждое выполнение проверяет и использует собственные значения границ; NULL-границы отклоняются. Чтобы оставить сторону неограниченной, опустите соответствующее свойство.
+
+Это по-прежнему **запрос Top-K**, а не API для возврата всех строк в радиусе: результаты ограничены `top_k` и могут содержать меньше строк.
+
+Для диапазонных запросов Doris использует поиск по индексу только тогда, когда заданы обе границы и выбранный индекс явно определён как IVF_FLAT. Односторонние диапазоны, квантованные индексы и индексы с неизвестными подтипами переходят к точному Flat Search даже при `use_index=true`. `EXPLAIN` сообщает `lanceVectorIndexStatus=DISTANCE_RANGE_FALLBACK`, если безопасность диапазона препятствует выбору индекса. Такой переход может увеличить стоимость сканирования.
+
+Запросы по индексированному IVF_FLAT зависят от разделов, выбранных `nprobes`; для исчерпывающей оценки кандидатов используйте `use_index=false`. Данные, добавленные вне покрытия индекса, ищутся через Flat Search. Столбцы с несколькими векторами не поддерживают границы расстояния.
+
+### Поддерживаемые типы векторных индексов {#supported-vector-index-types}
+
+Для столбцов с одним вектором Doris поддерживает следующие комбинации векторных индексов Lance. Ограничения для нескольких векторов описаны в разделе [Поиск по нескольким векторам](#multi-vector-search).
+
+| Тип индекса | Описание | Основные параметры запроса |
+|---|---|---|
+| `IVF_FLAT` | Разделы IVF с вычислением расстояния по исходным векторам внутри каждого раздела | `nprobes` |
+| `IVF_SQ` | IVF со Scalar Quantization | `nprobes`, `refine_factor` |
+| `IVF_PQ` | IVF с Product Quantization | `nprobes`, `refine_factor` |
+| `IVF_HNSW_FLAT` | IVF с HNSW, узлы графа хранят исходные векторы | `nprobes`, `ef` |
+| `IVF_HNSW_SQ` | IVF и HNSW со Scalar Quantization | `nprobes`, `ef`, `refine_factor` |
+| `IVF_HNSW_PQ` | IVF и HNSW с Product Quantization | `nprobes`, `ef`, `refine_factor` |
+
+`vector_search()` использует только уже существующие в Lance векторные индексы. Он не создаёт индексы и не позволяет задавать тип или имя индекса. При `use_index=true` Doris автоматически выбирает индекс, совместимый с векторным столбцом и метрикой расстояния. Данные без пригодного индекса, включая данные вне покрытия выбранного индекса, автоматически используют Flat Search и не исключаются. При `use_index=false` все данные используют Flat Search.
+
+Если совместимы несколько индексов столбца, Doris выбирает один за запрос, первый по имени индекса. Fragment, которые этот индекс не покрывает, используют Flat Search, даже если их покрывает другой индекс, поэтому выполнение всегда соответствует покрытию индекса, показанному `EXPLAIN`. Индекс, который Doris не может спланировать, например без метаданных покрытия Fragment (`lanceVectorIndexStatus=UNKNOWN_COVERAGE`), без записанной метрики (`METRIC_MISMATCH`) или старый индекс без сведений, которые Lance не может вывести из файлов, пропускается (`NO_MATCH`) и вообще не используется; весь поиск выполняется как Flat Search. Старый индекс, сведения о котором Lance может вывести, используется обычным образом.
+
+### Поддерживаемые типы элементов вектора и метрики расстояния {#supported-vector-element-types-and-distance-metrics}
+
+Для столбцов с одним вектором поддерживаемые векторным индексом метрики зависят от типа элемента вектора. Выберите поддерживаемую комбинацию из таблицы; неподдерживаемые комбинации не могут использовать векторный индекс.
+
+| Тип элемента вектора | `l2` | `cosine` | `dot` | `hamming` |
+|---|---|---|---|---|
+| `float16` | Поддерживается [1] | Поддерживается | Поддерживается | Не поддерживается |
+| `float32` | Поддерживается | Поддерживается | Поддерживается | Не поддерживается |
+| `float64` | Поддерживается | Поддерживается | Поддерживается | Не поддерживается |
+| `uint8` | Не поддерживается | Не поддерживается | Не поддерживается | Только `IVF_FLAT` и `IVF_HNSW_FLAT` [2] |
+| `int8` | Только Flat Search [3] | Только Flat Search [3] | Только Flat Search [3] | Не поддерживается |
+
+Если сноска не говорит иное, «поддерживается» означает работу со всеми шестью типами индексов выше. «Только Flat Search» означает, что векторы можно запрашивать, но векторный индекс не используется.
+
+1. Построение индекса `l2` по данным `float16` с большими значениями может быть слишком долгим или завершиться ошибкой. Держите значения векторов в контролируемом диапазоне. Если создание индекса завершается ошибкой, используйте Flat Search или, если это подходит приложению, `cosine`.
+2. Lance трактует векторы `uint8` как бинарные и поддерживает только метрику `hamming`. Product Quantization и Scalar Quantization не поддерживают `uint8`, поэтому доступны только `IVF_FLAT` и `IVF_HNSW_FLAT`.
+3. Векторы `int8` в настоящее время не могут использовать векторный индекс и ограничены Flat Search.
+
+#### Метрика запроса должна соответствовать метрике индекса {#the-query-metric-must-match-the-index-metric}
+
+Метрика `metric` запроса должна совпадать с метрикой, использованной при построении индекса. В противном случае, если запрошенная метрика поддерживается типом столбца, Doris использует Flat Search. Результаты остаются корректными, но производительность обычно ниже, поскольку векторы сканируются напрямую.
+
+Если `metric` опущена, Doris учитывает `l2` при выборе индекса. Поэтому явно задавайте `metric` при использовании индекса, построенного с `cosine`, `dot` или `hamming`. Например, для индекса векторов `uint8` требуется `"metric" = "hamming"`; иначе запрос использует неподдерживаемую метрику `l2` и завершается ошибкой.
+
+Используйте `EXPLAIN` для подтверждения использования индекса. Значение `lanceSearchIndexSegments`, большее `0`, означает индексированный поиск, а `0` — Flat Search.
+
+Doris учитывает только один векторный индекс на столбец. Храните не более одного векторного индекса на каждом столбце, чтобы избежать неоднозначного выбора между индексами с разными метриками.
+
+### Поиск по нескольким векторам {#multi-vector-search}
+
+Столбец с несколькими векторами хранит несколько подвекторов в каждой строке таблицы, например embeddings токенов документа. Матрица запроса создаёт один ранжированный набор строк таблицы. Это не пакет независимых векторных поисков и не поиск по нескольким столбцам.
+
+#### Подготовка данных и выполнение запроса {#prepare-data-and-run-a-query}
+
+Используйте приведённый выше пример AWS S3 Filesystem Catalog с Catalog `lance_fs_s3` и warehouse `s3://my-bucket/lance`. Установите Lance Python SDK (`pylance`) и `pyarrow` в среде записи. Настройте учётные данные и region S3, например через `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` и `AWS_DEFAULT_REGION`. Writer нужен доступ на запись, а Doris — доступ на чтение в том же месте. Для пользовательских endpoint или других способов аутентификации настройте [опции object-store](https://lance.org/guide/object_store/) SDK в соответствии с Catalog.
+
+Создайте `documents.lance` непосредственно под warehouse, чтобы Doris обнаружил его как `lance_fs_s3.default.documents`. Замените bucket и в Catalog, и в примере Python. Используйте новое расположение набора данных:
+
+```python
+import lance
+import pyarrow as pa
+
+vector_type = pa.list_(pa.float32(), 2)
+schema = pa.schema([
+    pa.field("id", pa.int64()),
+    pa.field("embeddings", pa.list_(
+        pa.field("item", vector_type, nullable=False)
+    )),
+])
+data = pa.Table.from_pylist([
+    {"id": 1, "embeddings": [[1.0, 0.0], [0.0, 1.0]]},
+    {"id": 2, "embeddings": [[1.0, 0.0]]},
+    {"id": 3, "embeddings": []},
+    {"id": 4, "embeddings": None},
+], schema=schema)
+lance.write_dataset(
+    data,
+    "s3://my-bucket/lance/documents.lance",
+    data_storage_version="2.1",
+)
+```
+
+Внешний список позволяет каждой строке иметь разное число подвекторов. Внутренний `nullable=False` обязателен: сам подвектор не может быть null. Выполните запрос к таблице с двумерным JSON-массивом:
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_fs_s3.default.documents",
+    "column" = "embeddings",
+    "query_vector" = "[[1,0],[0,1]]",
+    "top_k" = "2",
+    "metric" = "l2",
+    "use_index" = "false"
+)
+ORDER BY _distance, id;
+```
+
+Ожидаемый результат:
+
+| id | _distance |
+|---|---|
+| 1 | 0.0 |
+| 2 | 2.0 |
+
+Строка 1 содержит идеальное совпадение для каждого подвектора запроса. Строка 2 совпадает с первым подвектором запроса с расстоянием `0`, а со вторым имеет квадрат расстояния L2 `2`. Пустые и null-внешние списки не ранжируются. Добавление `"offset" = "1"` и изменение `"top_k" = "1"` возвращает только строку 2. Добавление `"filter" = "id > 1"` и установка `"prefilter" = "true"` ограничивает поиск кандидатов подходящими строками и для этого набора данных также возвращает только строку 2.
+
+#### Оценка на уровне строки {#row-level-scoring}
+
+Для подвекторов запроса `Q` и сохранённых подвекторов строки `V`:
+
+```text
+_distance = sum(q in Q, min(v in V, distance(q, v)))
+```
+
+| `metric` | Расстояние между двумя подвекторами |
+|---|---|
+| `l2` (по умолчанию) | Квадрат евклидова расстояния |
+| `cosine` | `1 - cosine_similarity` |
+| `dot` или `dot_product` | `1 - dot_product`; значение может быть отрицательным |
+
+Меньшее `_distance` лучше. Каждый подвектор запроса вносит вклад один раз, а один сохранённый подвектор может сопоставляться с несколькими подвекторами запроса. Оценки суммируются, а не усредняются; повтор подвектора запроса повторяет его вклад. Тип `_distance` в Doris — `FLOAT`, в том числе для входа Float64. `top_k` и `offset` считают строки таблицы, а не подвекторы. Строки с одинаковыми значениями на границе Top-K не имеют гарантированного включения или порядка; внешнее `ORDER BY` упорядочивает только возвращённые строки.
+
+#### Типы, размерности и значения null {#types-dimensions-and-null-values}
+
+| Элемент | Требование |
+|---|---|
+| Столбец Lance | `list<fixed_size_list<T, D>>`, где `D > 0`, а `T` — `float16`, `float32` или `float64` |
+| Тип Doris | `ARRAY<ARRAY<FLOAT>>` для Float16/Float32; `ARRAY<ARRAY<DOUBLE>>` для Float64 |
+| Форма запроса | Непустая JSON-матрица; каждый внутренний массив содержит ровно `D` элементов. Даже один подвектор запроса должен быть записан как `[[...]]`. Обычные столбцы с одним вектором по-прежнему требуют `[...]`. |
+| Значения запроса | Конечные числа, представимые типом `T`. Пустые матрицы, разные размерности, null, нечисловые элементы и значения вне диапазона отклоняются. |
+| Сохранённые значения | Подвекторы должны быть объявлены как не допускающие null и содержать конечные ненулевые элементы. Путь оценки отклоняет фактические null или не конечные элементы при обнаружении; одного флага nullable в schema элемента достаточно и он допускается. |
+| Пустые или null-строки | Null-внешний список или `[]` не имеет сопоставимого подвектора и исключается из результатов. |
+| Нулевые нормы cosine | Пара с нулевой нормой имеет неопределённое cosine-расстояние и не может сопоставляться. Строка исключается, если для любого подвектора запроса нет определённого совпадения. Поэтому подвектор запроса с нулевой нормой не даёт результатов. |
+| Неподдерживаемые формы и типы | Не поддерживаются внешний `large_list` или `fixed_size_list`, внутренние списки переменной длины, целочисленные элементы многовекторных столбцов, extension/dictionary-кодировки и многовекторный поиск `hamming`. |
+
+#### Ограничения параметров {#parameter-limits}
+
+Пусть `M` — число подвекторов запроса, `K = top_k`, `O = offset`, а `R = refine_factor` (по умолчанию `1` для многовекторного поиска).
+
+| Ограничение | Лимит |
+|---|---|
+| Число подвекторов запроса | `1 <= M <= 128` |
+| Число результатов и смещение | `K > 0`, `O >= 0` |
+| Бюджет кандидатов запроса | `M × (K + O) <= 100000` |
+| Бюджет кандидатов уточнения | `R × (K + O) <= 100000`, при `R > 0` |
+| Явные `nprobes`, `ef` или `refine_factor` | Положительное 32-битное целое со знаком, не более `2147483647`; на `refine_factor` дополнительно распространяются бюджеты кандидатов |
+
+Оба бюджета кандидатов применяются независимо, в том числе при `use_index=false`. Например, `M=128, K=1000, O=0` отклоняется из-за превышения бюджета кандидатов запроса. `M=4, K=1000, O=0, R=10` удовлетворяет обоим бюджетам. Эти лимиты ограничивают объём работы с кандидатами, но не гарантируют определённое использование памяти или задержку запроса.
+
+#### Использование индекса и уточнение {#index-usage-and-refinement}
+
+Интегрированная версия Lance поддерживает многовекторные индексы с метрикой **cosine**. Для использования существующего совместимого индекса, например cosine `IVF_FLAT` или `IVF_PQ`, задайте `"metric" = "cosine"` и оставьте `use_index=true`. Если `metric` опущена, выбирается `l2`; запросы L2 и dot используют Flat Search, когда совместимого индекса нет. Doris не создаёт индексы через эту функцию. Используйте `SHOW INDEX` (только Filesystem Catalog) для проверки метаданных индекса и `EXPLAIN`, чтобы убедиться, что `lanceSearchIndexSegments > 0`.
+
+При индексированном поиске выбор кандидатов приближённый. Кандидаты многовекторного поиска **всегда уточняются по исходным векторам**, включая случаи, когда `refine_factor` опущен или равен `1`, поэтому индексированные и неиндексированные строки используют одинаковую оценку на уровне строки. Увеличение `refine_factor` расширяет пул кандидатов, добавляя чтение и вычисления; исчерпывающий recall не гарантируется. `nprobes` управляет проверкой IVF, а `ef` применяется к индексам HNSW. Настраивайте их только после измерения recall и задержки. Строки, добавленные после создания индекса, включаются через Flat Search.
+
+Для исчерпывающей оценки выбранных строк используйте `"use_index" = "false"`. Чтобы ограничить кандидатов до поиска, используйте `filter` TVF с `prefilter=true`; по умолчанию `prefilter=false` применяет условие после генерации кандидатов. Внешнее SQL `WHERE` всегда вычисляет Doris по сгенерированным кандидатам и не пополняет результаты split. Правила фильтрации следующего раздела применяются к поиску и по одному, и по нескольким векторам.
+
+### Prefilter и Post-filter {#prefilter-and-post-filter}
+
+Prefilter и Post-filter можно использовать в одном запросе:
+
+```sql
+SELECT user_id, category, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "prefilter" = "true",
+    "filter" = "category = 'book'"
+)
+WHERE user_id > 100
+ORDER BY _distance ASC, user_id;
+```
+
+| Тип фильтра | Условие примера | Когда выполняется | Влияние на результаты |
+|---|---|---|---|
+| TVF Prefilter | Параметры TVF `"filter" = "category = 'book'"` и `"prefilter" = "true"` | До генерации Lance векторных кандидатов | Ближайшие соседи ищутся только среди строк, где `category = 'book'`. |
+| TVF Post-filter | Параметр TVF `"filter" = "category = 'book'"`, при опущенном `prefilter` или значении `false` | После генерации Lance кандидатов | Удаляет неподходящие строки из сгенерированных кандидатов. Кандидаты не пополняются, поэтому результат может содержать меньше `top_k` строк. |
+| Doris Scan Post-filter | Внешнее `WHERE user_id > 100` | После генерации Lance кандидатов и до применения Doris финального TopN | Удаляет неподходящие строки из сгенерированных кандидатов. Кандидаты не пополняются, поэтому результат может содержать меньше `top_k` строк. |
+
+Если `user_id > 100` также должно участвовать в генерации кандидатов, включите его в `filter` TVF и задайте `prefilter=true`, например `"filter" = "category = 'book' AND user_id > 100"`. При значении `prefilter=false` по умолчанию условие применяется после генерации кандидатов. Даже если оптимизатор переместит внешнее `WHERE` в Doris Lance Scan, оно остаётся Doris Scan Post-filter и не преобразуется в Lance Prefilter.
+
+Lance внутренне читает и вычисляет столбцы, на которые ссылается только `filter`. Если такой столбец не используется в `SELECT` или другом выражении Doris, возвращать его в Doris не нужно.
+
+## Кэш доступа FE к таблицам {#fe-table-access-cache}
+
+Для этой настройки требуется сборка Doris, содержащая [изменение кэша доступа к таблицам](https://github.com/apache/doris/pull/68305).
+
+Каждый FE может кэшировать разрешённый URI Dataset и параметры доступа к таблице внутри Catalog, избегая повторного обнаружения файловой системы или запросов REST `describeTable` при планировании. Каждый клиент Catalog хранит не более 10,000 записей. `lance.table_access_cache_ttl_seconds` по умолчанию равен `60`; попадания в кэш не продлевают срок жизни. Этот кэш не хранит версии Dataset: каждое чтение по-прежнему открывает Dataset и выбирает его снимок.
+
+Таблица с версионированием, управляемым Namespace, разрешается заново при каждом чтении, поэтому оба reader используют расположение и параметры хранилища, которые Namespace возвращает для этого чтения. Ответ с выданными параметрами хранилища также разрешается заново при каждом чтении, даже если содержит `expires_at_millis`. URI с userinfo, параметрами запроса (включая presigned/SAS-учётные данные) или fragment также не кэшируются. Фиксированный запас до истечения учётных данных не гарантирует их действительность на протяжении всего сканирования, а BE не может обновить эти учётные данные во время сканирования. REST Catalog без этих полей ответа может использовать кэш.
+
+Явное обновление таблицы или базы данных очищает все записи доступа к таблицам в этом Catalog, включая follower FE, воспроизводящие обновление после вытеснения соответствующего локального объекта базы данных/таблицы. Обычное вытеснение локального объекта базы данных не очищает кэш доступа. Обновление Catalog с инвалидированием кэша, удаление Namespace или изменение конфигурации Catalog также инвалидируют записи доступа. Проверка индекса и проверка цели задания индекса всегда заново разрешают доступ.
+
+После изменения удалённого URI таблицы или конфигурации доступа используйте явное обновление, чтобы не ждать истечения TTL. Для существующей таблицы `example_lance.default.items`:
+
+```sql
+REFRESH TABLE example_lance.default.items;
+```
+
+Следующее чтение снова разрешит доступ к таблице. Это не очищает нативный кэш Lance Session; после замены Dataset по тому же URI выполните обновление Catalog с инвалидированием кэша. Оно очищает только Lance Session FE, но не кэши BE; см. [Поиск исторической версии или branch](#search-a-historical-version-or-branch).
+
+Чтобы отключить кэш доступа к таблицам для существующего Catalog:
+
+```sql
+ALTER CATALOG example_lance SET PROPERTIES (
+    "lance.table_access_cache_ttl_seconds" = "0"
+);
+```
+
+Последующие чтения каждый раз разрешают доступ заново. Кэши BE, описанные ниже, настраиваются независимо.
+
+## Lance Cache {#lance-cache}
+
+Lance Cache повторно использует содержимое индексов, метаданных и файлов данных, чтобы уменьшить повторные чтения. Каждый BE управляет собственным кэшем, которым пользуются запросы Lance на этом BE. Ёмкость и содержимое кэша между BE не разделяются. Обычные сканирования, векторный поиск, полнотекстовый поиск и выборка второй фазы могут повторно использовать соответствующие кэши без дополнительных свойств `CREATE CATALOG`.
+
+### Типы и область кэша {#cache-types-and-scope}
+
+| Кэш | Хранилище | Кэшируемое содержимое |
+|---|---|---|
+| Кэш индексов | Память BE | Загруженное содержимое индексов Lance, уменьшающее повторные загрузки. |
+| Кэш метаданных | Память BE | Метаданные, используемые reader Lance, уменьшающие повторное чтение и разбор. |
+| Кэш данных | Локальный диск BE с in-memory уровнем размером с один блок чтения | Данные из файлов, оканчивающихся на `.lance`, непосредственно под каталогом `data/` Dataset, кэшируемые блоками. |
+
+Кэш данных использует Foyer внутри reader Lance, с отдельным каталогом и ёмкостью, настроенными параметрами BE `lance_*` ниже. Он не использует общий каталог или настройки ёмкости File Cache Doris. Файлы индексов, manifest и файлов удаления обходят этот дисковый кэш данных и продолжают использовать существующие пути чтения и кэширования Lance.
+
+Кэш данных заполняется по требованию и не загружает весь Dataset заранее. При промахе он читает исходное хранилище и ставит данные в очередь фоновой записи дискового кэша. Первое чтение всё равно несёт I/O исходного хранилища и накладные расходы заполнения. Попадания в кэш могут уменьшить последующие чтения источника, но не устраняют затраты на декодирование, фильтрацию или сортировку.
+
+### Конфигурация BE {#be-configuration}
+
+Все параметры ниже необязательны. Задайте их в `be.conf` каждого BE и перезапустите этот BE для применения изменений. Ёмкости относятся к одному BE и выражаются в байтах.
+
+| Параметр | Тип | По умолчанию | Описание |
+|---|---|---|---|
+| `lance_index_cache_size_bytes` | Int64 | `10737418240` (10 GiB) | Ёмкость кэша индексов в памяти. Задайте `0` для нулевой ёмкости. |
+| `lance_metadata_cache_size_bytes` | Int64 | `1073741824` (1 GiB) | Ёмкость кэша метаданных в памяти. Задайте `0` для нулевой ёмкости. |
+| `enable_lance_data_cache` | Boolean | `true` | Включает дисковый кэш данных. Отключение сохраняет кэши индексов и метаданных. |
+| `lance_data_cache_path` | String | `${DORIS_HOME}/lance_data_cache` | Каталог кэша данных. Процесс BE должен иметь права создавать каталог и читать/записывать файлы. Для разных процессов BE используйте разные каталоги. |
+| `lance_data_cache_disk_capacity_bytes` | Int64 | `107374182400` (100 GiB) | Ёмкость дискового кэша. Должна быть кратна `4096` и не меньше удвоенного размера блока чтения. |
+| `lance_data_cache_read_block_size_bytes` | Int64 | `1048576` (1 MiB) | Размер блока чтения кэша данных. Должен быть положительным и кратным `4096`. Он также задаёт ёмкость in-memory уровня кэша данных. |
+
+Например, явно настройте ёмкости по умолчанию и разместите кэш в отдельном каталоге локального диска:
+
+```properties
+lance_index_cache_size_bytes = 10737418240
+lance_metadata_cache_size_bytes = 1073741824
+enable_lance_data_cache = true
+lance_data_cache_path = /mnt/ssd/lance_data_cache
+lance_data_cache_disk_capacity_bytes = 107374182400
+lance_data_cache_read_block_size_bytes = 1048576
+```
+
+После перезапуска BE общий кэш инициализируется при первом открытии Dataset Lance. При включённом кэше данных недоступный каталог или недопустимая ёмкость/размер блока приводят к сбою инициализации и ошибке запросов Lance. Автоматического перехода к работе без кэша данных нет. Чтобы отключить дисковый кэш данных, задайте `enable_lance_data_cache=false` и перезапустите BE.
+
+Планируйте ёмкость кэшей индексов и метаданных вместе с рабочей памятью запросов. Эти ёмкости не ограничивают общую память запроса Lance или память процесса BE. Дисковый кэш также использует локальное дисковое пространство и файловые дескрипторы. Большие блоки чтения уменьшают число блоков, но могут увеличить лишний I/O для малых чтений. При изменении размера блока чтения или схемы диска используйте новый каталог кэша.
+
+Формулы размера для конкретных нагрузок, примеры конфигурации, конкуренцию за общий кэш и гранулярность сегментов индексов см. в разделе [Лучшие практики запросов Lance](../best-practices/doris-lance.mdx). Для совместной фильтрации и извлечения см. [Лучшие практики производительности гибридного поиска Lance](../best-practices/lance-hybrid-search.mdx).
+
+### Проверка эффективности кэша {#checking-cache-effectiveness}
+
+В завершённом Profile запроса счётчики кэша индексов находятся в `LanceReader` → `LanceIndex`, а счётчики кэша файлов данных — в `LanceReader` → `LanceDataCache`:
+
+| Счётчик | Значение |
+|---|---|
+| `LanceIndexCacheHits`, `LanceIndexCacheMisses` | Обращения к кэшу, сообщённые инструментированными путями индексов для этого выполнения. Они отличаются от общих метрик Session BE. |
+| `LanceIndexObjectLoads`, `LanceIndexComponentsLoaded` | Загруженные объекты индексов верхнего уровня и внутренние компоненты. Ни один из них не взаимозаменяем с промахами кэша. |
+| `LanceDataCacheBytesReadFromCache` | Логические байты запросов, предоставленные кэшем файлов данных для этого handle Dataset. |
+| `LanceDataCacheBytesReadFromRemote` | Логические байты запросов, предоставленные исходным хранилищем после промахов или перехода на резервный путь. Источником также может быть локальный файл. |
+
+Два счётчика байтов кэша данных не включают увеличение объёма блочного чтения и I/O, обходящий кэш данных, например чтение индексов и manifest. Они не являются полными счётчиками удалённого трафика, и их сумма не обязана равняться `LanceIOReadBytes`. При отключённом кэше данных оба значения равны `0`, что не означает отсутствия чтений источника. Doris записывает накопительный снимок handle Dataset перед его закрытием. Выборка второй фазы имеет отдельную статистику reader, также экспортируемую в сведения Row ID Fetch/Materialization Profile; одни только счётчики сканирования не охватывают весь I/O выборки запроса. Время сбора и границы метрик см. в разделе [Справочник профиля запросов Lance](../best-practices/lance-query-profile.md).
+
+Endpoint BE `/metrics` также предоставляет метрики с префиксами `doris_be_lance_session_index_cache_` и `doris_be_lance_session_metadata_cache_`. Суффиксы `capacity_bytes`, `usage_bytes`, `entries`, `hits_total` и `misses_total` обозначают настроенную ёмкость, текущее использование, число записей, накопленные попадания и накопленные промахи. Эти метрики регистрируются после инициализации общего Lance Session и описывают кэш всего BE, а не отдельный запрос.
+
+Для сравнения эффективности кэша используйте одну и ту же версию Dataset и параметры запроса, убедитесь, что запросы фактически выполняются на тех же BE, и записывайте задержку первого и повторного чтения, счётчики кэша и I/O источника. Общая задержка сама по себе не различает эффект кэша, поиск индекса, декодирование и стоимость выборки второй фазы.
+
+## Двухфазное чтение TopN и отложенная материализация {#two-phase-topn-read-and-lazy-materialization}
+
+`vector_search()` и `full_text_search()` обычно создают больше строк-кандидатов, чем конечный `top_k`. Чтение широких выходных столбцов, таких как `title` или `payload`, во время поиска тратит ресурсы, поскольку большинство кандидатов отбрасывается TopN. Двухфазное чтение откладывает эти столбцы: фаза 1 читает только столбцы, необходимые для фильтрации, сортировки и TopN; после глобального TopN фаза 2 читает остальные выходные столбцы только для сохранённых строк.
+
+Это уменьшает I/O хранилища, сетевую передачу и использование памяти. Выгода обычно максимальна при небольшом `top_k`, большом числе кандидатов или широких строковых, JSON и подобных столбцах.
+
+| Фаза | Читаемые данные |
+|---|---|
+| Фаза 1 | Столбцы, используемые поиском внутри, `_distance` или `_score`, столбцы для Post-filter или сортировки и внутреннее расположение строки. |
+| Фаза 2 | Столбцы верхнего уровня, используемые только конечной проекцией, читаются лишь для строк, оставленных глобальным TopN. |
+
+### Условия запуска {#trigger-conditions}
+
+Doris использует двухфазное чтение только при выполнении всех условий:
+
+1. Запрос читает Lance через `vector_search()` или `full_text_search()`, а план содержит TopN, подходящий для отложенной материализации. Обычный SQL, переписанный в эти поисковые TVF, также может соответствовать; незаменённые скалярные сканирования таблиц и файловые TVF Lance не подходят.
+2. Логическая переменная сеанса `enable_lance_lazy_materialization` равна `true`, значению по умолчанию.
+3. Хотя бы один столбец верхнего уровня можно отложить. Можно отложить столбец, используемый только в конечной проекции `SELECT`. Столбец, используемый Post-filter, `ORDER BY` или другим выражением до TopN, должен читаться в фазе 1. Вложенные подстолбцы пока отложить нельзя.
+
+`enable_lance_lazy_materialization` независим от `topn_lazy_materialization_threshold`: Lance может использовать двухфазное чтение, даже если последний равен `-1` или `top_k` превышает этот порог. Другие таблицы, поддерживающие ленивую материализацию, по-прежнему следуют общему порогу. Включение переключателя разрешает оптимизацию; структура плана и подходящие столбцы всё ещё определяют её применение.
+
+В следующем запросе `category` нужно прочитать в фазе 1 для Post-filter, тогда как `user_id`, `title` и `payload` можно получить после TopN:
+
+```sql
+SET enable_lance_lazy_materialization = true;
+
+SELECT user_id, title, payload, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3, 0.4]",
+    "top_k" = "10",
+    "offset" = "3"
+)
+WHERE category = 'book';
+```
+
+Столбцы, указанные в `filter` TVF, используются внутри Lance. Одного присутствия столбца в строке `filter` недостаточно, чтобы он стал выходным столбцом фазы 1, возвращаемым Doris; `prefilter` лишь меняет момент применения условия относительно генерации кандидатов.
+
+### Проверка плана {#verifying-the-plan}
+
+Добавьте `EXPLAIN VERBOSE` перед запросом выше. При активном двухфазном чтении план содержит `VMaterializeNode`, а его `column_descs_lists` перечисляет столбцы, извлечённые во фазе 2. Отключите переключатель и снова выполните `EXPLAIN VERBOSE` для того же простого поискового запроса; соответствующий узел материализации должен исчезнуть. Если при включённом переключателе его нет, проверьте, используются ли выходные столбцы в фильтрации, сортировке или других вычислениях до TopN и поддерживает ли план эту оптимизацию.
+
+### Отключение двухфазного чтения {#disabling-two-phase-reading}
+
+Используйте следующую настройку сеанса:
+
+```sql
+SET enable_lance_lazy_materialization = false;
+```
+
+Doris использует однофазное чтение, если нельзя отложить ни один столбец или план не поддерживает оптимизацию. Большой `top_k` сам по себе не отключает двухфазное чтение Lance. Рассмотрите отключение и сравнение производительности в случаях:
+
+- `top_k` велик, поэтому фаза 2 всё равно читает большую часть строк-кандидатов.
+- Запрос возвращает только несколько узких столбцов, и двухфазное чтение экономит мало I/O.
+- Случайные чтения по Row-ID на базовом хранилище имеют высокую задержку, и дополнительные затраты Fetch фазы 2 превышают выгоду от отложенного чтения.
+
+Отключение этой оптимизации меняет только момент чтения выходных столбцов. Оно не отключает векторные или FTS-индексы и не меняет семантику Prefilter, Post-filter или TopN. Сравнивайте обе настройки на репрезентативных запросах и в реальных условиях хранилища.
+
+## Полнотекстовый поиск {#full-text-search}
+
+`full_text_search()` — реляционная TVF, выполняющая извлечение BM25 через существующий инвертированный FTS-индекс таблицы Lance. Она поддерживает объединение анализированных терминов запроса через OR или AND, а также сопоставление их порядка и расстояния запросами Phrase. Doris объединяет кандидатов физических сегментов индекса в глобальный Top-K и добавляет `_score` к исходным столбцам. Больший score означает большую релевантность.
+
+Перед использованием TVF создайте инвертированный FTS-индекс по целевому строковому столбцу с помощью Lance SDK или другого writer Lance. Запросы Phrase также требуют включённых позиций токенов при создании индекса, например `with_position=true` в параметрах индекса Lance. Doris не создаёт индекс и не переходит к построчному полнотекстовому сканированию, если FTS-индекса нет.
+
+### Синтаксис и пример {#syntax-and-example-1}
+
+Следующий запрос ищет `lance database` среди документов категории `storage`, а затем применяет `published = true` как Doris Post-filter:
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance database",
+    "query_type" = "match",
+    "operator" = "and",
+    "top_k" = "10",
+    "offset" = "0",
+    "prefilter" = "true",
+    "filter" = "category = 'storage'",
+    "coverage_mode" = "strict"
+)
+WHERE published = true
+ORDER BY _score DESC, document_id;
+```
+
+В этом примере используется Match AND, поэтому документ должен содержать оба анализированных термина: `lance` и `database`. При `prefilter=true` Lance вычисляет `filter` до генерации FTS-кандидатов. Если `prefilter` опущен, значение по умолчанию — `false`, и Lance применяет `filter` после генерации кандидатов; результат может содержать меньше `top_k` строк. Внешнее `WHERE` — это Doris Post-filter, он не пополняет удалённые кандидаты. Если `published = true` должно влиять на генерацию кандидатов, включите его в `filter` и задайте `prefilter=true`.
+
+Следующий запрос Phrase допускает не более одного промежуточного токена между соседними терминами. Например, он может сопоставить `lance search engine`:
+
+```sql
+SELECT document_id, title, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.documents",
+    "column" = "body",
+    "query" = "lance engine",
+    "query_type" = "phrase",
+    "slop" = "1",
+    "top_k" = "10"
+)
+ORDER BY _score DESC, document_id;
+```
+
+Возвращаемое отношение содержит каждый столбец исходной таблицы Lance и nullable-столбец `FLOAT` с именем `_score`. Исходная таблица не должна уже содержать столбец с этим именем. TVF выбирает Top-K по убыванию `_score`, но SQL-отношение не гарантирует порядок отображения. Для стабильного порядка явно задавайте `ORDER BY _score DESC` и добавляйте уникальный tie-breaker для одинаковых score.
+
+### Параметры {#parameters-1}
+
+| Параметр | Обязательно | По умолчанию | Описание |
+|---|---|---|---|
+| `table` | Да | - | Полное трёхчастное имя `catalog.database.table`, обозначающее таблицу в Lance Catalog. Если многоуровневый Namespace отображается в имя базы данных с `.`, заключите часть базы данных в обратные кавычки. Пользователь должен иметь привилегию `SELECT` на таблицу. |
+| `column` | Да | - | Строковый столбец с инвертированным FTS-индексом. Поддерживаются Arrow `utf8` и `large_utf8`, отображаемые в Doris как `TEXT`. |
+| `query` | Да | - | Непустой текст поиска. Он обрабатывается токенизатором, настроенным при создании FTS-индекса. |
+| `query_type` | Нет | `match` | Тип запроса. Допустимые значения: `match` и `phrase`. |
+| `operator` | Нет | `or` | Только для Match. `or` требует совпадения хотя бы одного термина запроса; `and` — каждого термина. Для Phrase этот параметр задавать нельзя. |
+| `slop` | Нет | `0` | Только для Phrase. Должен быть целым от `0` до `2147483647`. `0` требует точной фразы; положительное значение — максимальное число промежуточных токенов между соседними терминами. Для Match этот параметр задавать нельзя. |
+| `top_k` | Нет | `10` | Число результатов после пропуска `offset`. Должно быть положительным целым. |
+| `offset` | Нет | `0` | Число результатов, пропускаемых по релевантности. Должно быть неотрицательным целым, а `top_k + offset` не может превышать максимальное беззнаковое 32-битное целое. |
+| `filter` | Нет | - | Условие SQL Lance. Время выполнения контролирует `prefilter`. |
+| `prefilter` | Нет | `false` | Управляет моментом выполнения TVF `filter`. `true` фильтрует до генерации полнотекстовых кандидатов; `false` (по умолчанию) — после генерации, поэтому результат может содержать меньше `top_k` строк. Этот параметр не влияет на внешнее `WHERE` Doris. |
+| `coverage_mode` | Нет | `strict` | Поведение, когда FTS-индекс не покрывает каждый Fragment текущего снимка. Допустимые значения: `strict` и `index_only`. |
+| `version`, `timestamp`, `tag`, `branch` | Нет | - | Поиск исторической версии, версии на момент времени, tag или branch вместо последней версии `main`. См. [Поиск исторической версии или branch](#search-a-historical-version-or-branch). |
+
+### Типы запросов {#query-types}
+
+| Тип запроса | Поведение сопоставления | Связанные параметры | Требование к индексу |
+|---|---|---|---|
+| Match OR | Совпадает хотя бы с одним анализированным термином запроса. Это значение по умолчанию. | `query_type=match`, `operator=or` | Стандартный инвертированный FTS-индекс. |
+| Match AND | Совпадает со всеми анализированными терминами запроса. | `query_type=match`, `operator=and` | Стандартный инвертированный FTS-индекс. |
+| Phrase | Сохраняет порядок анализированных терминов и применяет расстояние, заданное `slop`. | `query_type=phrase`, `slop=N` | FTS-индекс должен хранить позиции токенов. |
+
+Запросы FTS Boolean, Boost, Prefix, Wildcard, Regex и составные запросы по нескольким полям в настоящее время не поддерживаются.
+
+### Режимы покрытия индекса {#index-coverage-modes}
+
+| Режим | Поведение | Когда использовать |
+|---|---|---|
+| `strict` | Требует, чтобы выбранный FTS-индекс покрывал каждый Fragment в зафиксированном снимке запроса. Если какой-либо Fragment не покрыт, запрос завершается ошибкой. | Значение по умолчанию и рекомендуемый режим, когда нельзя пропускать данные. После добавления данных обновите или перестройте FTS-индекс перед запросом. |
+| `index_only` | Ищет только Fragment, покрытые FTS-индексом, и игнорирует непокрытые данные. | Используйте только если неполные результаты допустимы и поиск должен оставаться доступным во время ожидания обновления индекса. |
+
+Оба режима требуют зафиксированного FTS-индекса с полными метаданными покрытия целевого столбца. Если пригодного индекса нет, запрос завершается ошибкой. Оставляйте только один логический FTS-индекс на столбец; при нескольких совпадающих индексах Doris не может однозначно выбрать один и отклоняет запрос.
+
+Используйте `EXPLAIN`: `lanceFtsQueryType` показывает Match или Phrase, `lanceFtsMatchOperator` — оператор OR/AND Match, а `lanceFtsPhraseSlop` — расстояние Phrase. `lanceFtsCoverageMode` показывает режим покрытия, `lanceSearchIndexSegments` — число использованных физических сегментов FTS-индекса, а `lanceSearchUnindexedFragments` — число Fragment текущего снимка, не покрытых индексом.
+
+## Поиск исторической версии или branch {#search-a-historical-version-or-branch}
+
+По умолчанию `vector_search()` и `full_text_search()` ищут последнюю версию `main`. Четыре необязательных параметра выбирают другой снимок с тем же смыслом, что и синтаксис таблицы [Time Travel](#time-travel):
+
+| Параметр | Значение | Эквивалентный синтаксис таблицы | Можно сочетать с |
+|---|---|---|---|
+| `version` | Положительное целое — версия | `FOR VERSION AS OF N` | `branch` |
+| `timestamp` | `yyyy-MM-dd HH:mm:ss` или `yyyy-MM-dd HH:mm:ss.SSS` в часовом поясе сеанса | `FOR TIME AS OF '...'` | `branch` |
+| `tag` | Имя tag | `@tag(name)` | Ни с чем |
+| `branch` | Имя branch; `main` — основная цепочка | `@branch(name)` | `version` или `timestamp` |
+
+```sql
+-- Search version 3.
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "embedding",
+    "query_vector" = "[0.1, 0.2, 0.3]",
+    "version" = "3")
+ORDER BY _distance;
+
+-- Search the branch "dev" as it was at a point in time.
+SELECT id, _score
+FROM full_text_search(
+    "table" = "lance_catalog.db.documents",
+    "column" = "content",
+    "query" = "database",
+    "branch" = "dev",
+    "timestamp" = "2026-09-20 12:00:00")
+ORDER BY _score DESC;
+```
+
+- Снимок выбирается по тем же правилам, что и синтаксис таблицы, включая tag, указывающие в branch, и таблицы с версиями, управляемыми REST Namespace. `version` принимает только номер версии. В отличие от `FOR VERSION AS OF`, он не принимает имя tag, потому что `tag` однозначно обозначает tag: tag с именем `123` выбирается как `"tag" = "123"`.
+- `version` и `timestamp` нельзя сочетать, а `tag` нельзя сочетать с любым из остальных трёх. Пустое значение параметра является ошибкой, а не игнорируется.
+- Выходная schema, столбец поиска, метаданные векторного и FTS-индексов и Fragment берутся из выбранного снимка. Генерация кандидатов, фильтрация, Top-K и двухфазное чтение также используют этот снимок. Историческая версия использует индексы, зафиксированные в ней: версия до создания векторного индекса использует Flat Search, версия до создания FTS-индекса не может использоваться с `full_text_search()`, а `coverage_mode` проверяет Fragment этой версии.
+- Невыбираемый снимок или отсутствующие файлы индекса вызывают ошибку. Поиск никогда не переключается на последнюю версию. Версия, удалённая очисткой Lance, сообщается как отсутствующая. Версия, сохранённая tag, сохраняет файлы индекса при очистке; если файлы индекса удалены другим способом, ошибка возникает при выполнении и содержит версию Dataset.
+- Снимок выбирается заново при каждом выполнении, включая каждое `EXECUTE` подготовленного оператора, поэтому последняя версия, время в будущем, branch и перемещённый tag могут каждый раз выбирать другую версию. Эти четыре параметра должны быть константами: в подготовленном операторе `vector_search()` допускает placeholders (`?`) только для `query_vector`, `top_k`, `offset` и `filter`, а `full_text_search()` не допускает их ни для одного параметра.
+- Каждое поисковое отношение выбирает собственный снимок. Два отношения одной таблицы в одном операторе, например `vector_search()` и сама таблица, могут читать разные версии, если между ними зафиксирована новая версия. Чтобы читать одну и ту же, зафиксируйте обе: `version` в поисковой функции и `FOR VERSION AS OF` в таблице.
+- `CREATE TABLE AS SELECT` планирует запрос дважды: один раз для schema новой таблицы и один раз для строк, поэтому изменяющийся селектор может каждый раз выбрать другую версию. Для точного копирования одной версии задайте `version`.
+- `EXPLAIN` показывает выбранную версию как `lanceVersion`, branch как `lanceBranch`, а управление версиями REST Namespace — как `lanceManagedVersioning`. Поскольку `EXPLAIN` выбирает снимок заново, Profile выполнения записывает фактически прочитанное: `LanceDatasetVersion` и `LanceDatasetUri` вместе с другой информацией Lance scanner, например `LanceSearchType`. URI включает каталог branch и не содержит строки запроса или пароля.
+- Branch, созданный из другого branch или shallow clone, может не найти унаследованные файлы индекса, потому что writers Lance до версии 13 записывали их в промежуточный branch. Поиск завершается ошибкой, а собственные индексы branch не затрагиваются.
+- После удаления и повторного создания branch с тем же именем или замены Dataset по тому же URI новые данные повторно используют старые номера версий. BE может продолжать использовать кэш для этих номеров до вытеснения записей или перезапуска BE. В Dataset со стабильными row ID векторный и полнотекстовый поиск может фильтровать по живым строкам старых данных, поэтому результаты могут содержать строки, удалённые в новых данных, или пропускать живые строки. Если manifest использует старое именование Lance (`_versions/<version>.manifest`) или объектное хранилище не возвращает ETag, BE и FE также могут использовать старые метаданные индексов; FE прекращает это после обновления Catalog. Дайте пересозданному branch новое имя либо перезапустите BE. Обновление Catalog не очищает эти кэши BE.
+- FTS-индекс, созданный без позиций токенов, не может выполнять запросы Phrase. Индексам, созданным старыми writers, которые может использовать историческая версия, часто не хватает позиций.
+
+## Текущая модель выполнения {#current-execution-model}
+
+Порядок выполнения `vector_search()` и `full_text_search()`:
+
+```text
+Dataset snapshot selected by version / timestamp / tag / branch, or the latest version of main
+  -> FE search Split planning
+       -> Vector search: physical vector Index Segments + Flat Search for uncovered Fragments
+       -> Full-text search: physical FTS Index Segments (coverage checked by coverage_mode)
+  -> Per Split: vector/full-text search; the TVF `filter` runs before candidate generation when `prefilter=true`, and after candidate generation when `prefilter` is omitted or `false`
+       -> at most K+n candidates
+  -> Doris Scan Post-filter
+  -> Doris local TopN
+  -> Exchange
+  -> Doris global TopN (applies offset=n and limit=K)
+  -> Optional lazy-materialization Fetch
+```
+
+## Профиль запроса {#query-profile}
+
+О сборе и просмотре Profile см. [Руководство по анализу Query Profile](../../query-acceleration/query-profile.md). Специальные группы Lance, счётчики, границы времени и статистику выборки второй фазы см. в [Справочнике профиля запросов Lance](../best-practices/lance-query-profile.md).
+
+## Текущие ограничения и рекомендации {#current-limitations-and-recommendations}
+
+- Lance Catalog и Lance TVF доступны только для чтения. `CREATE TABLE`, `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE` и запись данных обратно в Lance не поддерживаются.
+- Для таблиц с неподдерживаемыми типами столбцов явно перечисляйте читаемые столбцы вместо проекции неподдерживаемых столбцов через `SELECT *`.
+- Для обычных сканирований проверяйте в `EXPLAIN` `lancePushdownPredicate`, чтобы убедиться, какие условия переданы.
+- Перед индексированным векторным поиском создайте в Lance векторный индекс, соответствующий предполагаемому запросу. Для небольших наборов данных или проверки задайте `"use_index" = "false"`, чтобы выполнить Flat Search.
+- Перед полнотекстовым поиском создайте в Lance инвертированный FTS-индекс. Режим `strict` по умолчанию отклоняет запрос, если индекс не покрывает каждый Fragment текущего снимка; используйте `index_only` только когда пропуск данных приемлем.
+- Запросы Phrase требуют, чтобы FTS-индекс хранил позиции токенов. Если нужны запросы Phrase, задайте `with_position=true` при создании индекса.
+- Используйте `SHOW INDEX` для таблицы Filesystem Catalog, чтобы проверить логические индексы Lance, например имя, тип и индексируемые поля перед векторным или полнотекстовым поиском. REST Catalog не поддерживает `SHOW INDEX`.
+- Для детерминированного порядка результатов векторного поиска явно используйте `ORDER BY _distance ASC` и добавьте уникальный tie-breaker.
+- Для детерминированного порядка результатов полнотекстового поиска явно используйте `ORDER BY _score DESC` и добавьте уникальный tie-breaker.
+- Чтобы фильтровать до генерации кандидатов векторного или полнотекстового поиска, задайте `filter` TVF и `prefilter=true`; при `prefilter=false` по умолчанию TVF `filter` применяется после генерации кандидатов. Внешнее `WHERE` вычисляется Doris по кандидатам, созданным каждым поисковым Split, до глобального TopN, поэтому итоговый результат может содержать меньше `top_k` строк.
+- Используйте `EXPLAIN` для проверки `lanceSearchFragments` и `lanceSearchIndexSegments`. Первое — число видимых Fragment в зафиксированном снимке, второе — число физических split Index Segment, выбранных FE. Векторный поиск также может включать резервные Flat Search Fragment split; полнотекстовый поиск никогда не переходит к Flat Search.

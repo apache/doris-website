@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/regr-r2",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/regr-r2.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/regr-r2.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3efbc3cedbb4c91554533dbe8e1d5fd1e8466092e7553ea4d845abc23ece3763",
+    "sourceTechnicalHash": "9ba63af53f3d7d94cbf8dbcea2d84deaa9491e2f4831a8a840cf78885c082e31",
+    "targetHash": "90f040c08e8e6fa29756d76dafa4293d65d14248e3140702c283af41b380a3d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:25:00.422Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3efbc3cedbb4c91554533dbe8e1d5fd1e8466092e7553ea4d845abc23ece3763",
+      "targetHash": "90f040c08e8e6fa29756d76dafa4293d65d14248e3140702c283af41b380a3d6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

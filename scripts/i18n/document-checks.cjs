@@ -64,6 +64,7 @@ function checkLinks({root, targetPath, target}) {
 
 async function checkSyntax(target, extension) {
     const parsed = await structure(target, extension);
+    if (parsed.format === 'code') return;
     if (parsed.format === 'mdx') {
         const {compile} = await import('@mdx-js/mdx');
         const {escapeMarkdownHeadingIds} = require('@docusaurus/utils');

@@ -2,51 +2,51 @@
 {
     "title": "DROP STREAM",
     "language": "ja",
-    "description": "テーブルストリームを削除します。"
+    "description": "Table Stream を削除します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-テーブルストリームを削除します。ストリームを削除しても、ベーステーブルとその Row Binlog には影響しません。
+Table Stream を削除します。Stream を削除しても、ベーステーブルやその変更ログには影響しません。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 DROP STREAM [IF EXISTS] [<db_name>.]<stream_name> [FORCE]
 ```
 
-## 必須パラメータ
+## 必須パラメータ {#required-parameters}
 
 **1. `<stream_name>`**
-> 削除するストリーム。
+> 削除する Stream。
 
-## 任意パラメータ
+## オプションパラメータ {#optional-parameters}
 
 **1. `<db_name>`**
-> ストリームが属するデータベース。省略すると現在のデータベースが使用されます。
+> Stream が属するデータベース。省略した場合は現在のデータベースが使用されます。
 
 **2. `IF EXISTS`**
-> ストリームが存在しない場合もエラーを報告しません。
+> Stream が存在しない場合もエラーを報告しません。
 
 **3. `FORCE`**
-> ごみ箱を経由せずに直接削除します。ベーステーブルが削除されたストリームを削除するには `FORCE` が必要です。コンピュートとストレージを分離したモードでは `FORCE` の指定が必須です。
+> ごみ箱を経由せずに直接削除します。ベーステーブルが削除された Stream を削除するには `FORCE` が必要です。コンピュートとストレージを分離したモードでは、`FORCE` の指定が必須です。
 
-## 必要な権限
+## アクセス権限の要件 {#access-control-requirements}
 
 この SQL コマンドを実行するユーザーには、少なくとも次の権限が必要です。
 
-| 権限 | 対象 | 備考 |
+| 権限 | オブジェクト | 備考 |
 | :-------- | :----- | :---- |
-| DROP_PRIV | ストリーム | |
+| DROP_PRIV | Stream | |
 
-## 使用上の注意
+## 使用上の注意 {#usage-notes}
 
-- ストリームに対して `DROP TABLE` を実行すると失敗し、`DROP STREAM` を使用するよう案内されます。
+- Stream に対して `DROP TABLE` を実行すると失敗し、`DROP STREAM` を使用するよう案内されます。
 - コンピュートとストレージを分離したモードで `FORCE` を省略すると、`Cloud Table Stream only supports DROP STREAM ... FORCE` というエラーが発生します。
-- ストリームを削除すると、読み取りオフセットも削除されます。同じ名前でストリームを再作成した場合は、再作成時点から読み取りを開始します。
+- Stream とともに消費オフセットも削除されます。同じ名前で Stream を再作成した場合は、再作成した時点から消費を開始します。
 
-## 例
+## 例 {#examples}
 
 ```sql
 DROP STREAM IF EXISTS orders_stream;

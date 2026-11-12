@@ -1,3 +1,5 @@
+import {translate} from '@docusaurus/Translate';
+import {localizeProfileMessage} from './profile-analysis.messages';
 import React, { ChangeEvent, DragEvent, JSX, useRef, useState } from 'react';
 import { MAX_RAW_BYTES, prepareProfileFile } from './profile-analysis.file';
 
@@ -83,15 +85,13 @@ export function ProfileUploader({ file, disabled, onFileChange }: ProfileUploade
 
     return (
         <section className="profile-analysis__uploader" aria-labelledby="profile-analysis-upload-title">
-            <h2 id="profile-analysis-upload-title">Choose a Query Profile</h2>
+            <h2 id="profile-analysis-upload-title">{translate({id: "landing.ProfileUploader.001", message: "Choose a Query Profile"})}</h2>
             <p id="profile-analysis-file-help" className="profile-analysis__help">
-                Choose one UTF-8 .txt file up to 100 MiB. Files over 10 MiB are reduced to their aggregated
-                Profile sections before local visualization or AI upload.
+                {translate({id: "landing.ProfileUploader.002", message: "Choose one UTF-8 .txt file up to 100 MiB. Files over 10 MiB are reduced to their aggregated Profile sections before local visualization or AI upload."})}
             </p>
 
             <div className="profile-analysis__version-notice" role="note">
-                Use a Profile produced by Apache Doris 4.1 or later. Profiles from earlier versions may fail to
-                parse.
+                {translate({id: "landing.ProfileUploader.003", message: "Use a Profile produced by Apache Doris 4.1 or later. Profiles from earlier versions may fail to parse."})}
             </div>
 
             <label
@@ -101,13 +101,13 @@ export function ProfileUploader({ file, disabled, onFileChange }: ProfileUploade
                 onDragOver={event => event.preventDefault()}
                 onDrop={handleDrop}
             >
-                <span className="profile-analysis__drop-zone-title">Choose a file or drag it here</span>
-                <span className="profile-analysis__drop-zone-note">Apache Doris Query Profile in .txt format</span>
+                <span className="profile-analysis__drop-zone-title">{translate({id: "landing.ProfileUploader.004", message: "Choose a file or drag it here"})}</span>
+                <span className="profile-analysis__drop-zone-note">{translate({id: "landing.ProfileUploader.005", message: "Apache Doris Query Profile in .txt format"})}</span>
                 <input
                     className="profile-analysis__file-input"
                     type="file"
                     accept=".txt,text/plain"
-                    aria-label="Choose an Apache Doris Query Profile file"
+                    aria-label={translate({id: "landing.ProfileUploader.006", message: "Choose an Apache Doris Query Profile file"})}
                     aria-describedby="profile-analysis-file-help"
                     disabled={disabled}
                     onChange={handleInputChange}
@@ -116,7 +116,7 @@ export function ProfileUploader({ file, disabled, onFileChange }: ProfileUploade
 
             {validationError && (
                 <div className="profile-analysis__validation-error" role="alert">
-                    {validationError}
+                    {localizeProfileMessage(validationError)}
                 </div>
             )}
 

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/map-from-entries",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/map-from-entries.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/map-from-entries.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b44aee62f39a9196a5db8a5d38017a39406214dcb130e07c680a7bd8235f903c",
+    "sourceTechnicalHash": "f003ab4dd2c15d8af69fa9129206e54da66d738a36ea80c594e4fbb3055a852a",
+    "targetHash": "564a0ff9b08914598ddf69d0e99d515136383f85a55b830ed28c8db03ec2ede1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:24:15.210Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b44aee62f39a9196a5db8a5d38017a39406214dcb130e07c680a7bd8235f903c",
+      "targetHash": "564a0ff9b08914598ddf69d0e99d515136383f85a55b830ed28c8db03ec2ede1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

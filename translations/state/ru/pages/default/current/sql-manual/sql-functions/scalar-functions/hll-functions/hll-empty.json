@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/hll-functions/hll-empty",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/hll-functions/hll-empty.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/hll-functions/hll-empty.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ee0927c2ae95de8bae4925972e000914fe412c3e61789f18c0bfe70adbb01cda",
+    "sourceTechnicalHash": "f71a8ae59287cc2f072a8dfb39344214abc286636891b7b345d80d62943562d1",
+    "targetHash": "ae2457a1e0fd9b2bf0cfc3fe9b5695370db799aee6f40fe1105d2ebcbc788c9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:15:30.849Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ee0927c2ae95de8bae4925972e000914fe412c3e61789f18c0bfe70adbb01cda",
+      "targetHash": "ae2457a1e0fd9b2bf0cfc3fe9b5695370db799aee6f40fe1105d2ebcbc788c9c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

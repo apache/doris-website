@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-oceanbase-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-oceanbase-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-oceanbase-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "de6f8fbc51673e5154e5d489571df1bd2a8ea81bd91dd162fc859d8bd0d1b99f",
+    "sourceTechnicalHash": "2b0a89f9a9a672bf0c0761cfb3516a7b9ff81970dbfe9731ec803d3ec94784aa",
+    "targetHash": "c46b5e589e1638f29932bd30e26e160d3ff134899ba135e67784aed9a9fc0021",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:56:30.614Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "de6f8fbc51673e5154e5d489571df1bd2a8ea81bd91dd162fc859d8bd0d1b99f",
+      "targetHash": "c46b5e589e1638f29932bd30e26e160d3ff134899ba135e67784aed9a9fc0021",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

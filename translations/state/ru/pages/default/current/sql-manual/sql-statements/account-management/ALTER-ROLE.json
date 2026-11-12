@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/ALTER-ROLE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/ALTER-ROLE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/ALTER-ROLE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "85e2f87aa4f6cf6bb40a87303b9af1043cfa861e963087449e6dfd845c321283",
+    "sourceTechnicalHash": "52f7309f43efac2747923cda9c1f92a56f8f945ab4aa095aa572558e25ac1855",
+    "targetHash": "fa4bebc716856f3c95b3058469cb46197fdf1211d51194fe5157ca0d2d77e5ad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:30:20.709Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-final-output-recovery",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "85e2f87aa4f6cf6bb40a87303b9af1043cfa861e963087449e6dfd845c321283",
+      "targetHash": "fa4bebc716856f3c95b3058469cb46197fdf1211d51194fe5157ca0d2d77e5ad",
+      "warnings": [
+        {
+          "check": "request",
+          "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        }
+      ],
+      "recoveredOutput": {
+        "sourceAttempt": 3,
+        "finalAttempt": 3,
+        "path": "attempt-3-captured-cli.json",
+        "rawTargetHash": "1134d9b23a0ee9d03c72a39c06ca20fe4b37ce9286770f4d9ac5b1a3ed353f71",
+        "protocolFailure": true
+      },
+      "localCorrections": [
+        {
+          "at": "2026-10-22T12:30:20.709Z",
+          "sourceAttempt": 3,
+          "kind": "captured-final-output-recovery",
+          "beforeTargetHash": "1134d9b23a0ee9d03c72a39c06ca20fe4b37ce9286770f4d9ac5b1a3ed353f71",
+          "afterTargetHash": "fa4bebc716856f3c95b3058469cb46197fdf1211d51194fe5157ca0d2d77e5ad",
+          "reason": "Recovered the complete translation emitted by the third CLI request after the adapter rejected the request result. Preserved the exact third output and all request diagnostics; applied the usual source heading and code whitespace alignment and passed content, Markdown, metadata, protection, glossary and link checks. No additional model call."
+        }
+      ]
+    }
+  }
+}

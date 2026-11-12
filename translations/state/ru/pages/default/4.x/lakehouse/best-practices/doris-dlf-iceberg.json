@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-dlf-iceberg",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-dlf-iceberg.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-dlf-iceberg.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "fed4821ef70d0e5f9021f5c91207a2451268e06dfede2656400f0a87e743704e",
+    "sourceTechnicalHash": "0f6fec4c7b79731344606f01ebbdb9617d764924ef2b6c4a949091398ff8555a",
+    "targetHash": "dce36653c89cfcfe4c85364bf38f283b94330d2171b8c2a0fe6bf4fd2c88f03b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:34.216Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fed4821ef70d0e5f9021f5c91207a2451268e06dfede2656400f0a87e743704e",
+      "targetHash": "dce36653c89cfcfe4c85364bf38f283b94330d2171b8c2a0fe6bf4fd2c88f03b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/best-practices/doris-dlf-iceberg",
+        "sourcePath": "docs/lakehouse/best-practices/doris-dlf-iceberg.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-dlf-iceberg.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "fed4821ef70d0e5f9021f5c91207a2451268e06dfede2656400f0a87e743704e",
+        "targetHash": "dce36653c89cfcfe4c85364bf38f283b94330d2171b8c2a0fe6bf4fd2c88f03b",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

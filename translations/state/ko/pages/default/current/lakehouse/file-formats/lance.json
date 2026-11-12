@@ -8,42 +8,33 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/lance.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/file-formats/lance.md",
-    "sourceCommit": "82ccae858254f24b1b3a85f181ec289e386d33ae",
-    "sourceHash": "296e29297ad1a69894c710d489a6d5bc4e881cb8fcce8e885ff4b85a7711e87f",
-    "sourceTechnicalHash": "6edfbb409e9d1fd2daad98998a2d97cf9707972c7c82db0312d0d9dcf9be7e3f",
-    "targetHash": "24c5e6056e461b6a22a5a6a8405a1dc5e2b87b158c821f7ac9932158f8205db8",
+    "sourceCommit": "fe9ae60e37c3fbfd2aa15819a6db04c140a96c02",
+    "sourceHash": "78b429633dbe2bcfad9e6a7230d527d53e32a9abc770214aec567f165a5de55d",
+    "sourceTechnicalHash": "bdbfe245ed3baf2f8e8a27efa0b07007c38e042be49bf5fbdfcbcfc943e16d21",
+    "targetHash": "5ba6fb1f92aa03858cfde7b20e8445123ed5ff159f71b18a3d44b7f71806ae68",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-20T20:42:47.304Z",
+    "translatedAt": "2026-10-23T22:29:48.032Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "previousSourceHash": "01bcd9061851878058f0884db5a2d14b5c383d5f681b118887c33b3e0e07abbc",
-      "previousTargetHash": "547ecb7ed0809f6acd471f9fc8bea63abacb46f60683300cc505965a6fda7191",
+      "previousSourceHash": "296e29297ad1a69894c710d489a6d5bc4e881cb8fcce8e885ff4b85a7711e87f",
+      "previousTargetHash": "24c5e6056e461b6a22a5a6a8405a1dc5e2b87b158c821f7ac9932158f8205db8",
       "mode": "incremental",
       "reason": "source-change-within-30-percent",
       "sourceChange": {
-        "changedLines": 4,
+        "changedLines": 6,
         "totalLines": 54,
-        "ratio": 0.07407407407407407
+        "ratio": 0.1111111111111111
       },
-      "attempts": 2,
+      "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "296e29297ad1a69894c710d489a6d5bc4e881cb8fcce8e885ff4b85a7711e87f",
-      "targetHash": "24c5e6056e461b6a22a5a6a8405a1dc5e2b87b158c821f7ac9932158f8205db8",
+      "sourceHash": "78b429633dbe2bcfad9e6a7230d527d53e32a9abc770214aec567f165a5de55d",
+      "targetHash": "5ba6fb1f92aa03858cfde7b20e8445123ed5ff159f71b18a3d44b7f71806ae68",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 8: expected [\"html\",null,null,\"<!-- The full Lance Catalog guide is currently available only in the 4.x documentation tree. -->\"]; received [\"html\",null,null,\"<!-- 전체 Lance Catalog 가이드는 현재 4.x 문서에서만 제공됩니다. -->\"]"
-            }
-          ]
-        },
-        {
-          "attempt": 2,
           "issues": []
         }
       ]

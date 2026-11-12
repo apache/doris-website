@@ -9,23 +9,30 @@ const {allowGeneration} = require('../workflow-generate.cjs');
 const workflows = path.resolve(__dirname, '../../../.github/workflows');
 const load = name => yaml.load(fs.readFileSync(path.join(workflows, name), 'utf8'));
 const shared = load('translation-run.yml');
-const callers = {ja: load('japanese-translation.yml'), ko: load('korean-translation.yml')};
-const russian = load('russian-translation.yml');
+const callers = {ja: load('japanese-translation.yml'), ko: load('korean-translation.yml'), ru: load('russian-translation.yml')};
+const russian = callers.ru;
+test('Russian coverage is a separate read-only scheduled report with no PR or model permissions',()=>{
+    const audit=load('russian-coverage-audit.yml');
+    assert.deepEqual(Object.keys(audit.on),['workflow_dispatch','schedule']);
+    assert.deepEqual(audit.permissions,{contents:'read'});assert.equal(audit.jobs.audit.env.I18N_LOCALE,'ru');
+    assert(audit.jobs.audit.steps.some(step=>/audit-coverage\.cjs --source-ref HEAD/.test(step.run??'')));
+    assert(!JSON.stringify(audit).includes('secrets.'));assert(!JSON.stringify(audit).includes('workflow-generate'));
+});
 
-test('Russian discovery is manual only and uses the shared run, lock and explicit secrets', () => {
-    assert.deepEqual(Object.keys(russian.on), ['workflow_dispatch']);
+test('Russian scheduled and manual generation use the shared run, lock and explicit secrets', () => {
+    assert.deepEqual(Object.keys(russian.on), ['workflow_dispatch', 'schedule']);
     const inputs = russian.on.workflow_dispatch.inputs;
     const koreanInputs = callers.ko.on.workflow_dispatch.inputs;
-    assert.deepEqual(inputs, {...koreanInputs, mode: {...koreanInputs.mode, default: 'dry-run'}});
+    assert.deepEqual(inputs, koreanInputs);
     assert.deepEqual(russian.permissions, shared.permissions);
     for (const workflow of Object.values(callers)) assert.deepEqual(russian.concurrency, workflow.concurrency);
     assert.deepEqual(Object.keys(russian.jobs), ['translation']);
     const job = russian.jobs.translation;
     assert.equal(job.uses, './.github/workflows/translation-run.yml');
     assert.deepEqual(job.with, {...callers.ko.jobs.translation.with, locale: 'ru', workspace: 'russian-translation',
-        mode: "${{ inputs.mode || 'dry-run' }}"});
+        mode: "${{ inputs.mode || 'generate' }}"});
     assert.deepEqual(job.secrets, callers.ko.jobs.translation.secrets);
-    assert.equal(allowGeneration({I18N_MODE: inputs.mode.default, GITHUB_EVENT_NAME: 'workflow_dispatch'}), false);
+    assert.equal(allowGeneration({I18N_MODE: inputs.mode.default, GITHUB_EVENT_NAME: 'workflow_dispatch'}), true);
     assert.equal(allowGeneration({I18N_MODE: 'validate', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '1',
         I18N_PATH: 'community/how-to-contribute/how-to-share-blogs.md'}), true);
     assert.equal(allowGeneration({I18N_MODE: 'generate', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), true);
@@ -48,6 +55,8 @@ test('each language workflow passes one fixed locale to the shared run under one
         ja: {workspace: 'japanese-translation', cron: '23 4,16 * * *'},
         // Twenty minutes later; the shared lock queues it behind a Japanese run.
         ko: {workspace: 'korean-translation', cron: '43 4,16 * * *'},
+        // Another twenty minutes later, including the hour rollover.
+        ru: {workspace: 'russian-translation', cron: '3 5,17 * * *'},
     };
     for (const [locale, workflow] of Object.entries(callers)) {
         assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch', 'schedule']);
@@ -130,28 +139,38 @@ test('discovery and generation exchange artifacts in the caller workspace', () =
     assert(scripts.every(step => step.run.endsWith(' "$RUNNER_TEMP/$TRANSLATION_WORKSPACE"')));
     const index = name => generate.findIndex(step => step.name === name);
     assert(index('Reconcile again immediately before model calls') < index('Replan exact source and open PRs'));
-    assert(index('Replan exact source and open PRs') < index('Verify the PR label before model calls'));
+    assert(index('Replan exact source and open PRs') < index('Verify the PR labels before model calls'));
     assert.equal(generate.find(step => step.id === 'translation').env.I18N_CODEX_MODEL,
         "${{ vars.I18N_CODEX_MODEL || 'gpt-6-sol' }}");
 });
 
-test('the label check runs before auth loading and fails for a missing locale label', t => {
+test('the label check runs before auth loading and requires both PR labels for every language', t => {
     const steps = shared.jobs.generate.steps;
-    const label = steps.findIndex(step => step.name === 'Verify the PR label before model calls');
+    const label = steps.findIndex(step => step.name === 'Verify the PR labels before model calls');
     const auth = steps.findIndex(step => step.id === 'auth');
     assert(label >= 0 && label < auth);
     assert.equal(steps[label].if, "steps.fresh.outputs.can_generate == 'true'");
     assert.equal(steps[label].env.GH_TOKEN, '${{ github.token }}');
     const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-label-'));
     t.after(() => fs.rmSync(bin, {recursive: true, force: true}));
-    // The mock answers like the labels API: the name, or nothing when missing.
-    fs.writeFileSync(path.join(bin, 'gh'), '#!/bin/sh\ncase "$2" in */labels/translate-ja) echo translate-ja;; */labels/translate-ru) echo translate-ru;; esac\n',
-        {mode: 0o755});
-    const run = locale => spawnSync('bash', ['-e', '-c', steps[label].run],
-        {env: {...process.env, PATH: `${bin}:${process.env.PATH}`, I18N_LOCALE: locale}}).status;
-    assert.equal(run('ja'), 0);
-    assert.equal(run('ru'), 0);
-    assert.notEqual(run('ko'), 0);
+    // The mock answers like the labels API, including a failed request for a missing label.
+    fs.writeFileSync(path.join(bin, 'gh'), `#!/bin/sh
+case "$2" in
+  */labels/translate-ja|*/labels/translate-ko|*/labels/translate-ru|*/labels/ai-translate)
+    label="\${2##*/}";;
+  *) exit 1;;
+esac
+test "$label" != "$TEST_MISSING_LABEL" || exit 1
+echo "$label"
+`, {mode: 0o755});
+    const run = (locale, missing = '') => spawnSync('bash', ['-e', '-c', steps[label].run],
+        {env: {...process.env, PATH: `${bin}:${process.env.PATH}`, I18N_LOCALE: locale,
+            TEST_MISSING_LABEL: missing}}).status;
+    for (const locale of Object.keys(callers)) {
+        assert.equal(run(locale), 0, locale);
+        assert.notEqual(run(locale, `translate-${locale}`), 0, `${locale}: missing language label`);
+        assert.notEqual(run(locale, 'ai-translate'), 0, `${locale}: missing shared label`);
+    }
 });
 
 test('publication preserves the verified runtime and refresh path', () => {

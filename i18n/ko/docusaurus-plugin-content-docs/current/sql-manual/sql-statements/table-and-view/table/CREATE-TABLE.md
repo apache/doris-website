@@ -373,9 +373,9 @@ rollup으로 동기식 구체화된 뷰를 생성하는 기능은 제약이 있�
 | enable_mow_light_delete | Mow를 사용하는 Unique 테이블에서 Delete 문으로 Delete predicate를 쓰는 기능을 활성화할지 여부입니다. 활성화하면 Delete 문의 성능이 개선되지만, Delete 이후 부분 열 업데이트를 수행하면 일부 데이터 오류가 발생할 수 있습니다. 비활성화하면 정확성을 보장하기 위해 Delete 문의 성능이 저하됩니다. 이 속성의 기본값은 `false`입니다. 이 속성은 Unique Merge-on-Write 테이블에서만 활성화할 수 있습니다. |
 | 동적 파티셔닝 관련 속성 | 동적 파티셔닝에 대해서는 [데이터 파티셔닝 - 동적 파티셔닝](../../../../table-design/data-partitioning/dynamic-partitioning)을 참조하세요. |
 | enable_unique_key_skip_bitmap_column | Unique Merge-on-Write 테이블에서 [유연한 열 업데이트 기능](../../../../data-operate/update/partial-column-update.md#flexible-column-update)을 활성화할지 여부입니다. 이 속성은 Unique Merge-on-Write 테이블에서만 활성화할 수 있습니다. |
-| binlog.enable | `binlog.format = "ROW"`와 함께 테이블에서 [Row Binlog](../../../../data-operate/incremental/row-binlog)를 활성화하여, Table Stream에서 소비하고 `@incr` 증분 쿼리에서 사용할 행 단위 변경 사항을 기록합니다. 테이블 생성 시에만 활성화할 수 있으며, 이후에는 비활성화할 수 없습니다. 5.0.0부터 사용할 수 있습니다. |
-| binlog.format | `ROW`(대소문자 구분)는 행 단위 변경 사항을 기록한다는 의미입니다. Duplicate Key 테이블과 Unique Key Merge-on-Write 테이블(cluster key가 없는 경우)만 지원합니다. 생성 후에는 변경할 수 없습니다. |
-| binlog.need_historical_value | Row Binlog에서 변경 전 값(before image)을 기록할지 여부이며, 기본값은 `false`입니다. Unique Key Merge-on-Write 테이블에서만 `true`로 설정할 수 있습니다. `min_delta` / `detail` Table Stream은 이 속성에 의존합니다. 생성 후에는 변경할 수 없습니다. |
+| changelog.enable | 테이블에서 [changelog](../../../../data-operate/incremental/changelog)를 활성화하여 Table Stream에서 소비하고 `@incr` 증분 쿼리에서 사용할 행 단위 변경 사항을 기록합니다. Duplicate Key 테이블과 Unique Key Merge-on-Write 테이블(cluster key가 없는 경우)만 지원합니다. 테이블 생성 시에만 활성화할 수 있으며 이후에는 비활성화할 수 없습니다. `binlog.enable`(CCR)과 함께 사용할 수 없습니다. FE에서 `enable_feature_changelog = true`로 설정해야 합니다. 5.0.0부터 사용할 수 있습니다. |
+| changelog.need_historical_value | changelog에서 변경 전 값(before image)을 기록할지 여부이며, 기본값은 `false`입니다. Unique Key Merge-on-Write 테이블에서만 `true`로 설정할 수 있습니다. `min_delta` / `detail` Table Stream은 이 속성에 의존합니다. 생성 후에는 변경할 수 없습니다. |
+| changelog.ttl_seconds | 변경 기록의 보존 기간을 초 단위로 설정합니다. 기본값은 `86400`(하루)이며 `0`보다 커야 합니다. `ALTER TABLE`로 변경할 수 있습니다. |
 
 ## 접근 제어 요구 사항 {#access-control-requirements}
 

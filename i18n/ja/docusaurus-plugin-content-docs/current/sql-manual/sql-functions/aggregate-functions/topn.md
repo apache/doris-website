@@ -2,33 +2,33 @@
 {
     "title": "TOPN",
     "language": "ja",
-    "description": "TOPN 関数は、指定した列で出現頻度の高い上位 N 個の値を返します。"
+    "description": "TOPN 関数は、指定したカラムで出現頻度が最も高い N 個の値を返します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-TOPN 関数は、指定した列で出現頻度の高い上位 N 個の値を返します。これは近似計算関数であり、出現回数の降順に並べた結果を返します。
+TOPN 関数は、指定したカラムで出現頻度が最も高い N 個の値を返します。これは近似計算関数で、結果を出現回数の降順で返します。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 TOPN(<expr>, <top_num> [, <space_expand_rate>])
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 | パラメータ | 説明 |
 | -- | -- |
-| `<expr>` | 出現回数を数える対象の列または式。対応する型: TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、IPV4、IPV6、UUID、String。 |
-| `<top_num>` | 返す値の個数。正の整数を指定する必要があります。対応する型: Integer。 |
-| `<space_expand_rate>` | 省略可能。Space-Saving アルゴリズムで使用するカウンターの数を `counter_numbers = top_num * space_expand_rate` として設定します。値が大きいほど結果の精度が高くなります。デフォルトは 50 です。対応する型: Integer。 |
+| `<expr>` | 出現回数を集計するカラムまたは式。サポートされる型: TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、IPV4、IPV6、UUID、String。 |
+| `<top_num>` | 返す値の数。正の INT 定数を指定する必要があります。 |
+| `<space_expand_rate>` | 省略可能な INT 定数で、デフォルトは 50 です。正の値を指定すると、中間状態をシリアライズする際に保持する候補は最大 `top_num * space_expand_rate` 個になります。一般に、値を大きくすると精度が向上します。これはローカル集約のメモリ使用量に対する厳密な上限ではありません。Doris 4.1 系列の 4.1.5 以降では、0 以下の値を指定するとすべての中間候補を保持しますが、最終結果に含まれる値は最大 `top_num` 個です。このモードではメモリ使用量が増える場合があり、クエリのメモリ制限も適用されます。 |
 
-## 戻り値
+## 戻り値 {#return-value}
 
 値とその出現回数を含む JSON 文字列を返します。
-グループ内に有効なデータがない場合は NULL を返します。
+グループ内に有効なデータがない場合は、NULL を返します。
 
-## 例
+## 例 {#example}
 ```sql
 -- setup
 CREATE TABLE page_visits (
@@ -55,7 +55,7 @@ SELECT TOPN(page_id, 3) as top_pages
 FROM page_visits;
 ```
 
-アクセス回数の多いページを上位 3 件取得します。
+訪問回数が多い上位 3 ページを求めます。
 
 ```text
 +---------------------+
@@ -76,4 +76,15 @@ FROM page_visits where page_id is null;
 +-----------+
 | NULL      |
 +-----------+
+```
+
+すべての中間候補を保持し、出現頻度が最も高い値だけを返します。
+
+```sql
+SELECT TOPN(s, 1, 0)
+FROM (SELECT 'a' AS s UNION ALL SELECT 'b' UNION ALL SELECT 'a') t;
+```
+
+```text
+{"a":2}
 ```

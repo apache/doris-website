@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/database/ALTER-DATABASE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/database/ALTER-DATABASE.md",
-    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
-    "sourceHash": "c18426fc5374af5b67eedce528caddcb35cc2f3264ed1f944b4969bfca28764c",
-    "sourceTechnicalHash": "759d18bab855e8ffdd75e39bb3b7d29344333d3b3f2726df97b1f8426b29fc58",
-    "targetHash": "01dbc7aa7ed0130a6e775ef82648d38e822c9c9bfc8c53e98a98f8d9b182eca7",
+    "sourceCommit": "d96999b7523c0017b3cb53954507efb41ddbf922",
+    "sourceHash": "490b086658a5794e05609dc9f83c841856cc7f77c5975c63bb24401cc3dae42e",
+    "sourceTechnicalHash": "291b7710b79594bea608ed879208e0eb548d276fb5053e2ce10a85da475781f7",
+    "targetHash": "da9af1f8478304112042d2bba177441f18c0c13b55dd1fd385308bb2918b5786",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T08:18:55.553Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-02T17:28:55.062Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "490b086658a5794e05609dc9f83c841856cc7f77c5975c63bb24401cc3dae42e",
+      "targetHash": "da9af1f8478304112042d2bba177441f18c0c13b55dd1fd385308bb2918b5786",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/database/ALTER-DATABASE.md",
+        "blob": "33409aa02bd976c62c40ecc8095264aadd6eb8bd"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/database/ALTER-DATABASE.md",
+        "blob": "38ced93b770c720eefc4f51f4635d316941ccd26"
+      }
+    }
   }
 }

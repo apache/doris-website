@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-sub.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9631d6cab67480fc89b464807797ab7538cc4322c253e99ced6c53e649969d7d",
+    "sourceTechnicalHash": "daae66d577161330c0a4e25881e0bfa34c9f0517d89d5a85e7d5b1f96b7d529d",
+    "targetHash": "9857de486d32f4f5d8e5be6b6dfa52f3e2483390a3b4cce6e724b4cd686e1e82",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:35:35.403Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9631d6cab67480fc89b464807797ab7538cc4322c253e99ced6c53e649969d7d",
+      "targetHash": "9857de486d32f4f5d8e5be6b6dfa52f3e2483390a3b4cce6e724b4cd686e1e82",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/regexp",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d04c3ede27f2f7f4a9c313c9008a457989e7eead493fcaa614ce1e85b7584934",
+    "sourceTechnicalHash": "7bc16e38638c962a7f6de0064a0e4da4d4487997df434d6d10f6b9738c88d6fa",
+    "targetHash": "a8cad4d6bc1426de2d8383083357ee830559322dc044d2e61edd9b03cd652b06",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:54:55.028Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d04c3ede27f2f7f4a9c313c9008a457989e7eead493fcaa614ce1e85b7584934",
+      "targetHash": "a8cad4d6bc1426de2d8383083357ee830559322dc044d2e61edd9b03cd652b06",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/other-functions/esquery",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/other-functions/esquery.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/other-functions/esquery.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b6b56e7f09490b15a711d52df479a213213cd68855efabc7eb173d433b0e9525",
+    "sourceTechnicalHash": "1bd614a428635458a983db44a025ad7220ec0191f51f44755c0fbf6a476c8fe4",
+    "targetHash": "3bdca628f633c56532811181a95a4f52b94b64b38aeec4c9c20526f5c0cfbc5d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:34:18.306Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b6b56e7f09490b15a711d52df479a213213cd68855efabc7eb173d433b0e9525",
+      "targetHash": "3bdca628f633c56532811181a95a4f52b94b64b38aeec4c9c20526f5c0cfbc5d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/internal_schema/partition_statistics",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/internal_schema/partition_statistics.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/internal_schema/partition_statistics.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "89684a9b8d4ce6287d6f1b3dbc659781dbe6a94c68e496ff321f7650c547a180",
+    "sourceTechnicalHash": "0016f09ad73a2012cf2ede49c9e0eaa0e2d6dab806c51b234e0674052754404a",
+    "targetHash": "f2aee1c0bbecb784945d23203e9c7e0d38b3f080ad75836abf6c62a5d97de439",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:44:47.765Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "89684a9b8d4ce6287d6f1b3dbc659781dbe6a94c68e496ff321f7650c547a180",
+      "targetHash": "f2aee1c0bbecb784945d23203e9c7e0d38b3f080ad75836abf6c62a5d97de439",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

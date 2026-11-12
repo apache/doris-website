@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Doris build content manifest v1",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "sourceSha",
+    "snapshotHash",
+    "locale",
+    "enabledLocales",
+    "pages",
+    "reports"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "sourceSha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "snapshotHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "enabledLocales": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "contentId",
+          "kind",
+          "siteLocale",
+          "contentLocale",
+          "state",
+          "route",
+          "englishRoute",
+          "fallback",
+          "indexable",
+          "sourceSha",
+          "navigationRoutes",
+          "availableTranslations",
+          "updatePolicy",
+          "renderIntegrated"
+        ],
+        "properties": {
+          "contentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "docs",
+              "page",
+              "blog",
+              "utility"
+            ]
+          },
+          "siteLocale": {
+            "type": "string"
+          },
+          "contentLocale": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string",
+            "pattern": "^/(?!/)"
+          },
+          "englishRoute": {
+            "type": "string",
+            "pattern": "^/(?!/)"
+          },
+          "fallback": {
+            "type": "boolean"
+          },
+          "indexable": {
+            "type": "boolean"
+          },
+          "sourceSha": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40}$"
+          },
+          "navigationRoutes": {
+            "type": "object",
+            "required": [
+              "en"
+            ],
+            "additionalProperties": {
+              "type": "string",
+              "pattern": "^/(?!/)"
+            }
+          },
+          "availableTranslations": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "updatePolicy": {
+            "enum": [
+              "automatic-docs",
+              "native-manual-docs",
+              "manual"
+            ]
+          },
+          "renderIntegrated": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

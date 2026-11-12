@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/data-cache",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/data-cache.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/data-cache.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "88f16654885ff4f70746f99dc25255dadeba02752d74bdc4325c10414b16d88f",
+    "sourceTechnicalHash": "b7856b205e5860441d4be5c753d0cb5b168a654b25c75eb0d5a172af70ba2bd3",
+    "targetHash": "e400a33adb9c35373160a8a81995abeacd8340fc6cd3b352d9ce93c9f9fee043",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T18:03:08.574Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "88f16654885ff4f70746f99dc25255dadeba02752d74bdc4325c10414b16d88f",
+      "targetHash": "e400a33adb9c35373160a8a81995abeacd8340fc6cd3b352d9ce93c9f9fee043",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

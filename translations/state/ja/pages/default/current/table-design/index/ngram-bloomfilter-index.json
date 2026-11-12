@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/ngram-bloomfilter-index.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/ngram-bloomfilter-index.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "02238d2ae99d46939d108e17e8a3199ab266a159a8bce6337a74057d790106e9",
-    "sourceTechnicalHash": "88595fd2217f6ebb7958ea9ad1063af643e48cc4a62bf1e1c8a66cde5279aa12",
-    "targetHash": "efc63bb372f51c0beb12fb099bad1373872ec57b70cae2f468b6a79e3780489f",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "5c1482e6ee811a464be458c52dc186a1292a1ce6c654c687f33486da5e25b883",
+    "sourceTechnicalHash": "13b57a6d71e6fd5520ea8691f9f6261f4cd5127afc9dd167e61bcfafcfcc3078",
+    "targetHash": "93ecb70f82a87f9bebf29c7684e75b0a1186330f397df8d17c3dfcbff075bbb8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T14:05:28.127Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T17:10:50.031Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "5c1482e6ee811a464be458c52dc186a1292a1ce6c654c687f33486da5e25b883",
+      "targetHash": "93ecb70f82a87f9bebf29c7684e75b0a1186330f397df8d17c3dfcbff075bbb8",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 15: expected [\"inlineCode\",null,null,\"pattern\"]; received [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]; received [\"inlineCode\",null,null,\"pattern\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"idx_\"]; received [\"inlineCode\",null,null,\"idx_review_body\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0.93\",\"0.93\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"7.60\",\"7.60\",\"8\",\"8\"]; received [\"0.93\",\"0.93\",\"1\",\"1\",\"1\",\"10\",\"10\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"7.60\",\"7.60\",\"8\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature description + Operation steps -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 機能説明 + 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Acceleration of LIKE fuzzy queries on string columns -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: 文字列カラムに対する LIKE あいまい検索の高速化 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"inlineCode\",null,null,\"'This is a simple ngram example'\"]; received [\"inlineCode\",null,null,\"N = 3\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"N = 3\"]; received [\"inlineCode\",null,null,\"'This is a simple ngram example'\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"pattern\"]; received [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 15: expected [\"inlineCode\",null,null,\"pattern\"]; received [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]; received [\"inlineCode\",null,null,\"pattern\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"idx_\"]; received [\"inlineCode\",null,null,\"idx_review_body\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

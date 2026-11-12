@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/materialized-view/async-materialized-view/overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/materialized-view/async-materialized-view/overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/materialized-view/async-materialized-view/overview.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c6b8befb97032ee09b0daf7b9241d591a7992170afbb33090abf430c4f7cb026",
+    "sourceTechnicalHash": "37f14df09e9688565b0ea0e674c038ea1ae56a3642cdac1d0192edc514ee6f7d",
+    "targetHash": "943761244f5a84d2acf696d13af831b9f00ea7cc37f9102cb49aeb5a280984ac",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:25:20.207Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c6b8befb97032ee09b0daf7b9241d591a7992170afbb33090abf430c4f7cb026",
+      "targetHash": "943761244f5a84d2acf696d13af831b9f00ea7cc37f9102cb49aeb5a280984ac",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

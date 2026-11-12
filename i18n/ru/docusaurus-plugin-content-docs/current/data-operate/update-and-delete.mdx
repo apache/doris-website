@@ -1,0 +1,33 @@
+---
+{
+    "title": "Обновление и удаление данных",
+    "language": "ru",
+    "description": "Обновление и удаление данных в Apache Doris и управление операциями записи с помощью транзакций."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Обновление и удаление данных {#data-update-and-delete}
+
+Apache Doris предоставляет гибкие механизмы обновления и удаления данных, а поддержка транзакций обеспечивает надёжность и согласованность операций записи.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Обновление данных"
+    description="Обновляйте существующие данные с помощью SQL UPDATE, частичного обновления столбцов и Upsert в модели Unique Key"
+    link="./update/update-overview"
+/>
+
+<GettingStartedCard
+    title="Удаление данных"
+    description="Удаляйте данные с помощью DELETE, пакетного удаления, TRUNCATE, атомарной перезаписи и временных разделов"
+    link="./delete/delete-overview"
+/>
+
+<GettingStartedCard
+    title="Транзакция"
+    description="Используйте явные и неявные транзакции, чтобы объединять несколько операций записи в единый атомарный блок"
+    link="./transaction"
+/>
+</div>

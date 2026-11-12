@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "c9d5ff33bd0e34d99db5f874671fba89581b0d099422ed39c28b79b9ef59b6ac",
+    "sourceTechnicalHash": "a7c93a4eea42e3639409532ec8e531f43371e5473d67a9cb9f43d8fe9986b7cd",
+    "targetHash": "dca7aa6fc9ae27314997091944a8c52cb6d690fddef99b86cdb0023639a5a972",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-05T13:33:17.651Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c9d5ff33bd0e34d99db5f874671fba89581b0d099422ed39c28b79b9ef59b6ac",
+      "targetHash": "dca7aa6fc9ae27314997091944a8c52cb6d690fddef99b86cdb0023639a5a972",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Environment preparation -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: проверка перед развертыванием / подготовка среды -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+        "blob": "9dfa2f7f565395f502e0ab9103498d7037469829"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+        "blob": "7b53c9012900ccc16b7dc151290e2868f60cbe3a"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/cosh",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/cosh.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/cosh.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "05da784af4aaf3c3b93e4823f5c7d3050f38deb0f343aa1766ebd1433efb5818",
+    "sourceTechnicalHash": "e45445dd01234d687d76bf93eda4e50c123de7e091dc3ef8f6d9d78089cc98e3",
+    "targetHash": "28c000d11f4763a059ddeca2b1425be634d5d5ab51b7cb15457f4da8cf767be6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:29:25.012Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "05da784af4aaf3c3b93e4823f5c7d3050f38deb0f343aa1766ebd1433efb5818",
+      "targetHash": "28c000d11f4763a059ddeca2b1425be634d5d5ab51b7cb15457f4da8cf767be6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

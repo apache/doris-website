@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/async-materialized-view/ALTER-ASYNC-MATERIALIZED-VIEW.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f5d01fbbe1f462a56a4f7b75004dd28bd3f2dc34b1d6ea8f8d1139cc5818bc99",
+    "sourceTechnicalHash": "96de36e9de768028d1f3ce652a62ce75467c61eeb9c31fb36071566c08a567f7",
+    "targetHash": "f561a24b4c275f84f650586cbe241c9db1d1230edec92e5ee3fdf631b357e634",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:53:07.208Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f5d01fbbe1f462a56a4f7b75004dd28bd3f2dc34b1d6ea8f8d1139cc5818bc99",
+      "targetHash": "f561a24b4c275f84f650586cbe241c9db1d1230edec92e5ee3fdf631b357e634",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

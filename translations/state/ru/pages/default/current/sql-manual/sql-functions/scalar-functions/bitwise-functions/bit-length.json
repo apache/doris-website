@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitwise-functions/bit-length.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d8c24f26095fb2394b6a517b0d1dea9f8a59f2dcddd080c60a088e3b22f8e557",
+    "sourceTechnicalHash": "27eba7044475ad9445d5c7e3d5eebf040eae1637275058836ae159f1e2ad579b",
+    "targetHash": "ece562cf0edd0a63f17acbbed70c5531a8f48eaea4099b3420084f3754bfaa1e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:48:26.161Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d8c24f26095fb2394b6a517b0d1dea9f8a59f2dcddd080c60a088e3b22f8e557",
+      "targetHash": "ece562cf0edd0a63f17acbbed70c5531a8f48eaea4099b3420084f3754bfaa1e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

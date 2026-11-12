@@ -74,14 +74,16 @@ The output is generated in the `build/` directory.
 ├── docs/                         # Current (dev) version docs (English)
 ├── versioned_docs/
 │   ├── version-4.x/              # 4.x version docs (English)
-│   ├── version-3.x/              # 3.x version docs (English)
-│   └── version-2.1/              # 2.1 version docs (English)
+│   └── version-3.x/              # 3.x version docs (English)
 ├── i18n/zh-CN/
 │   └── docusaurus-plugin-content-docs/
 │       ├── current/              # Current (dev) version docs (Chinese)
 │       ├── version-4.x/          # 4.x version docs (Chinese)
-│       ├── version-3.x/          # 3.x version docs (Chinese)
-│       └── version-2.1/          # 2.1 version docs (Chinese)
+│       └── version-3.x/          # 3.x version docs (Chinese)
+├── archived_docs/                # Frozen 2.1, 2.0, and 1.2 sources
+│   ├── versioned_docs/          # Archived English docs
+│   ├── i18n/zh-CN/             # Archived Chinese docs and translation metadata
+│   └── versioned_sidebars/     # Archived sidebars
 ├── blog/                         # Blog posts
 ├── community/                    # Community docs
 ├── src/                          # React components and pages
@@ -89,8 +91,7 @@ The output is generated in the `build/` directory.
 ├── sidebars.ts                   # Sidebar for current (dev) docs
 ├── versioned_sidebars/           # Sidebar files per version
 │   ├── version-4.x-sidebars.json
-│   ├── version-3.x-sidebars.json
-│   └── version-2.1-sidebars.json
+│   └── version-3.x-sidebars.json
 ├── sidebarsCommunity.json        # Sidebar for community docs
 ├── versions.json                 # Active doc versions
 ├── docusaurus.config.js          # Docusaurus configuration
@@ -114,7 +115,13 @@ When modifying docs, you typically need to update **both the English and Chinese
 | Current (dev) | `docs/` | `i18n/zh-CN/.../current/` | `sidebars.ts` |
 | 4.x | `versioned_docs/version-4.x/` | `i18n/zh-CN/.../version-4.x/` | `versioned_sidebars/version-4.x-sidebars.json` |
 | 3.x | `versioned_docs/version-3.x/` | `i18n/zh-CN/.../version-3.x/` | `versioned_sidebars/version-3.x-sidebars.json` |
-| 2.1 | `versioned_docs/version-2.1/` | `i18n/zh-CN/.../version-2.1/` | `versioned_sidebars/version-2.1-sidebars.json` |
+
+Versions **2.1, 2.0, and 1.2 are archived and no longer maintained**. Their
+sources and sidebar metadata are kept in [archived_docs/](archived_docs/README.md)
+for historical reference, redirects, and PDF exports. Make documentation updates
+only in the active versions above; do not restore the archived version directories
+to the active documentation trees. Published PDFs remain available at
+[/archived-docs](https://doris.apache.org/archived-docs/).
 
 > **Note:** When adding a new page, you must also add its path to the corresponding sidebar file, otherwise it will not appear in the navigation.
 

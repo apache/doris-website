@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "eb7ba4c67a7a5051526b671b216c5f35c048ad518888df9e0e37a586e0139460",
+    "sourceTechnicalHash": "ffd7f07e4d1059141097ad632faa07690a2ba2f18a863eb2f13678da4818aba6",
+    "targetHash": "9832215ad026558632934f1fc7ba09afcf237254e4c5090a4ea19fff46062bdb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-05T13:03:37.630Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "eb7ba4c67a7a5051526b671b216c5f35c048ad518888df9e0e37a586e0139460",
+      "targetHash": "9832215ad026558632934f1fc7ba09afcf237254e4c5090a4ea19fff46062bdb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: справочная информация / сопоставление типов данных -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+        "blob": "6d449674101f25f59135aea5296f737b3e40238f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+        "blob": "42c5859718c6c014c810756a8060d5cce02bfd29"
+      }
+    }
+  }
+}

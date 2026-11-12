@@ -12,7 +12,7 @@ export default function NotFound() {
                     id: 'theme.NotFound.title',
                     message: 'Page Not Found',
                 })}
-            />
+            ><meta name="robots" content="noindex, follow" /></PageMetadata>
             <Layout>
                 <NotFoundContent />
             </Layout>

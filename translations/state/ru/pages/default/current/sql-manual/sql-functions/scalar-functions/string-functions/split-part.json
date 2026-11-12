@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/split-part",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/split-part.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/split-part.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "790482792b02b1c5fa073157f1fc38a95b61b968ee020e446791e4fa5e89dd22",
+    "sourceTechnicalHash": "2413ef19afa43f89519223130ed58eb3e9779b9d2bb71fe638b0fa7623988533",
+    "targetHash": "96fbd18c88d8ec246389eb032486d98d40d81ef6512e6dc5addf3ea52d3ef03b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:50:05.539Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "790482792b02b1c5fa073157f1fc38a95b61b968ee020e446791e4fa5e89dd22",
+      "targetHash": "96fbd18c88d8ec246389eb032486d98d40d81ef6512e6dc5addf3ea52d3ef03b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

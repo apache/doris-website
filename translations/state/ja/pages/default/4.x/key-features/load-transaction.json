@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/key-features/load-transaction.mdx",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/load-transaction.mdx",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "7b5601c86d1ce2a2bfc3c2290bc2854fc642599a92c4101c161a5d5628e41d26",
-    "sourceTechnicalHash": "71023aabc3388ec189105bbb98fae42a33dde9f03512efe2a2e80fb2531f8a26",
-    "targetHash": "fc3359f8039d96c10eb116ada45475e6df9b2258934653df441c9652a2cc014c",
+    "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+    "sourceHash": "8c21786c3e63c05e675f946208bb336cddbaaa33af25423cd8e168828be424bf",
+    "sourceTechnicalHash": "46ad6af05e7e430f36a653b754db1c77778ef7e032896af0598c6d1c5f3ec2fb",
+    "targetHash": "80e3fb2f4f9c33eb18780dd9ea964cdc9df34e6488e898dc369d7119081f4e9f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T11:20:55.866Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T18:19:27.491Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8c21786c3e63c05e675f946208bb336cddbaaa33af25423cd8e168828be424bf",
+      "targetHash": "80e3fb2f4f9c33eb18780dd9ea964cdc9df34e6488e898dc369d7119081f4e9f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"2\",\"2\",\"2\",\"2000\",\"3\"]; received [\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2000\",\"3\",\"3\",\"5\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"Implicit transaction\"]; received [\"inlineCode\",null,null,\"暗黙的トランザクション\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"Explicit transaction\"]; received [\"inlineCode\",null,null,\"明示的トランザクション\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

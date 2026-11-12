@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { useEffect, useState } from 'react';
 import { Form, message } from 'antd';
 import { DownloadTypeEnum, Option } from '@site/src/constant/download.data';
@@ -5,6 +6,7 @@ import FormSelect from '../form-select/form-select';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import * as semver from 'semver';
 import copy from 'copy-to-clipboard';
+import {DOWNLOAD_TYPE_LABELS} from './download-labels';
 
 interface DownloadFormProps {
     versions: Option[];
@@ -74,6 +76,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
 
     const formBody = (
         <Form
+            validateMessages={{required: translate({id: 'landing.download.required', message: 'Select an option.'})}}
             form={form}
             onFinish={val => {
                 const url = getDownloadLinkByCard({
@@ -93,8 +96,8 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
         >
             <Form.Item name="version" rules={[{ required: true }]}>
                 <FormSelect
-                    placeholder="Version"
-                    label="Version"
+                    placeholder={translate({id: "landing.downloadformallrelease.001", message: "Version"})}
+                    label={translate({id: "landing.downloadformallrelease.002", message: "Version"})}
                     isCascader={true}
                     popupExtraClass={popupExtraClass}
                     displayRender={label => {
@@ -108,8 +111,8 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                     {({ getFieldValue }) => (
                         <Form.Item name="architecture" rules={[{ required: true }]}>
                             <FormSelect
-                                placeholder="Architecture"
-                                label="Architecture"
+                                placeholder={translate({id: "landing.downloadformallrelease.003", message: "Architecture"})}
+                                label={translate({id: "landing.downloadformallrelease.004", message: "Architecture"})}
                                 isCascader={false}
                                 popupExtraClass={popupExtraClass}
                                 options={getOptions(getFieldValue('version'))}
@@ -123,17 +126,17 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                     {({ getFieldValue }) => (
                         <Form.Item name="tarBall" rules={[{ required: true }]}>
                             <FormSelect
-                                placeholder="Tarball"
-                                label="Tarball"
+                                placeholder={translate({id: "landing.downloadformallrelease.005", message: "Tarball"})}
+                                label={translate({id: "landing.downloadformallrelease.006", message: "Tarball"})}
                                 isCascader={false}
                                 popupExtraClass={popupExtraClass}
                                 options={[
                                     {
-                                        label: DownloadTypeEnum.Binary,
+                                        label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Binary],
                                         value: DownloadTypeEnum.Binary,
                                     },
                                     {
-                                        label: DownloadTypeEnum.Source,
+                                        label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Source],
                                         value: DownloadTypeEnum.Source,
                                     },
                                 ]}
@@ -148,13 +151,13 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                     type="submit"
                     className={`w-full text-lg ${isArchive ? 'download-next__archive-button' : 'button-primary'}`}
                 >
-                    Download
+                    {translate({id: "landing.downloadformallrelease.007", message: "Download"})}
                 </button>
             </Form.Item>
             {Array.isArray(version) && showArch(version[1]) && (
                 <>
-                    <div
-                        className="flex cursor-pointer text-primary items-center mt-4 justify-center"
+                    <button type="button"
+                        className="flex w-full cursor-pointer text-primary items-center mt-4 justify-center"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
                                 version: version,
@@ -163,10 +166,10 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 type: 'gz',
                             });
                             copy(url);
-                            message.success('Copy Successfully!');
+                            message.success(translate({id: 'landing.download.copied', message: 'Copied'}));
                         }}
                     >
-                        <span className="mr-2">Copy link</span>
+                        <span className="mr-2">{translate({id: "landing.downloadformallrelease.008", message: "Copy link"})}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <rect
                                 x="2.5"
@@ -184,9 +187,9 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 fill="var(--brand-primary)"
                             />
                         </svg>
-                    </div>
+                    </button>
                     <div className="flex justify-center mt-4">
-                        <div
+                        <button type="button"
                             className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
                             onClick={() => {
                                 const url = getDownloadLinkByCard({
@@ -199,8 +202,8 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                             }}
                         >
                             ASC
-                        </div>
-                        <div
+                        </button>
+                        <button type="button"
                             className="inline-flex items-center ml-4 text-[#8592A6] hover:text-primary cursor-pointer hover:underline"
                             onClick={() => {
                                 const url = getDownloadLinkByCard({
@@ -213,7 +216,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                             }}
                         >
                             SHA-512
-                        </div>
+                        </button>
                     </div>
                 </>
             )}
@@ -224,7 +227,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
 
     return (
         <div className="rounded-lg border border-b-[0.375rem] border-primary px-8 pt-[3.125rem] pb-[2.1875rem]">
-            <div className="mb-8 text-xl font-medium text-left">Downloads</div>
+            <div className="mb-8 text-xl font-medium text-left">{translate({id: "landing.downloadformallrelease.009", message: "Downloads"})}</div>
             {formBody}
         </div>
     );

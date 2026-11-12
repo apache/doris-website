@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/debug-tool",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/debug-tool.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/debug-tool.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1833713dcf3f1d0f7c0a74680f00a6623c1dcf52c7696b8f237c9030711bf64b",
+    "sourceTechnicalHash": "b4282e6dee51884f6482184fb05af57f4e550afdc7081786ff1dae65564de46c",
+    "targetHash": "209f9abf8abd5da6d0feca1c517d62387aa8a4951efbd53c6a08eba5a1ba8bdb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:44:28.348Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1833713dcf3f1d0f7c0a74680f00a6623c1dcf52c7696b8f237c9030711bf64b",
+      "targetHash": "209f9abf8abd5da6d0feca1c517d62387aa8a4951efbd53c6a08eba5a1ba8bdb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 65: expected [\"inlineCode\",null,null,\"jeprof\"]; received [\"inlineCode\",null,null,\"be/bin\"]\nprotected node 66: expected [\"inlineCode\",null,null,\"be/bin\"]; received [\"inlineCode\",null,null,\"jeprof\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 112: expected [\"code\",\"text\",null,\"Using local file lib/doris_be.\\nUsing local file /tmp/doris_be.hprof.0012.heap.\\nTotal: 668.6 MB\\n   610.6  91.3%  91.3%    610.6  91.3% doris::SystemAllocator::allocate_via_malloc (inline)\\n    18.1   2.7%  94.0%     18.1   2.7% _objalloc_alloc\\n     5.6   0.8%  94.9%     63.4   9.5% doris::RowBatch::RowBatch\\n     5.1   0.8%  95.6%      7.1   1.1% butil::ResourcePool::add_block (inline)\\n     3.7   0.5%  96.2%      3.7   0.5% butil::iobuf::create_block (inline)\\n     3.4   0.5%  96.7%      3.4   0.5% butil::FlatMap::init\\n     3.2   0.5%  97.2%      5.2   0.8% butil::ObjectPool::add_block (inline)\\n     2.6   0.4%  97.6%      2.6   0.4% __gnu_cxx::new_allocator::allocate (inline)\\n     2.0   0.3%  97.9%      2.0   0.3% butil::ObjectPool::add_block_group (inline)\\n     2.0   0.3%  98.2%      2.0   0.3% butil::ResourcePool::add_block_group (inline)\\n     1.7   0.3%  98.4%      1.7   0.3% doris::SegmentReader::_load_index\"]; received [\"code\",\"text\",null,\"Using local file lib/doris_be.\\nUsing local file /tmp/doris_be.hprof.0012.heap.\\nTotal: 668.6 MB\\n   610.6  91.3%  91.3%    610.6  91.3% doris::SystemAllocator::allocate_via_malloc (inline)\\n    18.1   2.7%  94.0%     18.1   2.7% _objalloc_alloc\\n     5.6   0.8%  94.9%     63.4   9.5% doris::RowBatch::RowBatch\\n     5.1   0.8%  95.6%      7.1   1.1% butil::ResourcePool::add_block (inline)\\n     3.7   0.5%  96.2%      3.7   0.5% butil::iobuf::create_block (inline)\\n     3.4   0.5%  96.7%      3.4   0.5% butil::FlatMap::init\\n     3.2   0.5%  97.2%      5.2   0.8% butil::ObjectPool::add_block (inline)\\n     2.6   0.4%  97.6%      2.6   0.4% __gnu_cxx::new_allocator::allocate (inline)\\n     2.0   0.3%  97.9%      2.0   0.3% butil::ObjectPool::add_block (inline)\\n     2.0   0.3%  98.2%      2.0   0.3% butil::ResourcePool::add_block_group (inline)\\n     1.7   0.3%  98.4%      1.7   0.3% doris::SegmentReader::_load_index\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

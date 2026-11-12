@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/statistics",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/statistics.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/statistics.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ec30c737a92c9263279a76c9f919b39ff23fd569cb5e370e1a5a2750f2e84fd1",
+    "sourceTechnicalHash": "97add7416bd3eb69e9275929967c15539606fcdb75b7bbbc2d53728c143acb4a",
+    "targetHash": "f2a8d7c3dc49f41185942c903691e4054f9c82b6650e42c2cd9fa67e9384cb34",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:22.291Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ec30c737a92c9263279a76c9f919b39ff23fd569cb5e370e1a5a2750f2e84fd1",
+      "targetHash": "f2a8d7c3dc49f41185942c903691e4054f9c82b6650e42c2cd9fa67e9384cb34",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/statistics",
+        "sourcePath": "docs/lakehouse/statistics.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/statistics.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "ec30c737a92c9263279a76c9f919b39ff23fd569cb5e370e1a5a2750f2e84fd1",
+        "targetHash": "f2a8d7c3dc49f41185942c903691e4054f9c82b6650e42c2cd9fa67e9384cb34",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

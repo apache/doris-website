@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/partitions",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/partitions.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/partitions.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "5606cf9ee8db088beae428cf913c717d8ad21612a90c039b594298242e5bbe93",
+    "sourceTechnicalHash": "bbdda070e346d7df42f68fb049468abf2cc720ebbbdfab5dc10e7e89f156c9bb",
+    "targetHash": "43848d0a71f09b4dafccf6548e9b19ede289dc66bfc9c962e6bbb2ae137beb05",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:42:12.481Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5606cf9ee8db088beae428cf913c717d8ad21612a90c039b594298242e5bbe93",
+      "targetHash": "43848d0a71f09b4dafccf6548e9b19ede289dc66bfc9c962e6bbb2ae137beb05",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

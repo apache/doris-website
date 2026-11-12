@@ -11,6 +11,7 @@ import ErrorPageContent from '@theme/ErrorPageContent';
 import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
 import { NavbarNext } from '@site/src/components/home-next/NavbarNext';
+import {PageContent, PageFallbackNotice} from '@site/src/components/home-next/PageContent';
 
 export default function Layout(props: Props): JSX.Element {
     const {
@@ -59,12 +60,13 @@ export default function Layout(props: Props): JSX.Element {
 
             <SkipToContent />
             <NavbarNext />
+            <PageFallbackNotice />
 
             <div
                 id={SkipToContentFallbackId}
                 className={clsx(ThemeClassNames.wrapper.main, styles.mainWrapper, wrapperClassName)}
             >
-                <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}>{children}</ErrorBoundary>
+                <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}><PageContent>{children}</PageContent></ErrorBoundary>
             </div>
 
             {!noFooter && <Footer />}

@@ -19,6 +19,12 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: 将 PostgreSQL 整库数据持续同步到 Doris -->
 
@@ -96,16 +102,16 @@ PostgreSQL 源端参数用于配置 JDBC 连接、同步范围以及全量切片
 | `schema` | 是 | - | Schema 名称。 |
 | `include_tables` | 否 | - | 需要同步的表名，多个表用逗号分隔；不设置时同步 Schema 中的所有表。 |
 | `exclude_tables` | 否 | - | 不同步的表名，多个表用逗号分隔。仅当未设置 `include_tables` 时生效。 |
-| `table.<table_name>.target_table` | 否 | 源表名 | 自 4.1.0 版本起支持。为指定源表设置 Doris 目标表名，`<table_name>` 使用源表名。 |
-| `table.<table_name>.exclude_columns` | 否 | - | 自 4.1.0 版本起支持。指定源表中不同步的列，多个列用逗号分隔。列必须存在，且不能排除主键列。 |
-| `offset` | 否 | `latest` | 启动位点。`initial`：全量 + 增量同步；`latest`：仅同步作业启动后的增量；也可设置 JSON 精确位点，例如 `{"lsn":"12345678"}`。自 4.1.0 版本起支持 `snapshot`，表示仅全量同步。PostgreSQL 不支持 `earliest`。 |
+| `table.<table_name>.target_table` | 否 | 源表名 | 为指定源表设置 Doris 目标表名，`<table_name>` 使用源表名。 |
+| `table.<table_name>.exclude_columns` | 否 | - | 指定源表中不同步的列，多个列用逗号分隔。列必须存在，且不能排除主键列。 |
+| `offset` | 否 | `latest` | 启动位点。`initial`：全量 + 增量同步；`latest`：仅同步作业启动后的增量；也可设置 JSON 精确位点，例如 `{"lsn":"12345678"}`。支持 `snapshot`，表示仅全量同步。PostgreSQL 不支持 `earliest`。 |
 | `schema_change_behavior` | 否 | `evolve` | 字符串，不区分大小写。`evolve` 自动同步支持的列变更，`ignore` 关闭结构同步。可暂停后通过 `ALTER JOB` 修改；支持范围及暂停处理见 [Schema Change 同步](./schema-change-postgresql.md)。 |
-| `snapshot_split_size` | 否 | `40960`（4.1.4 之前为 `8096`） | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
+| `snapshot_split_size` | 否 | `40960` | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
 | `snapshot_parallelism` | 否 | `1` | 全量阶段的并行度，即单次 Task 最多调度的 split 数量。必须为正整数。 |
-| `slot_name` | 否 | `doris_cdc_<job_id>` | 自 4.1.0 版本起支持。逻辑复制槽名称。名称只能包含小写字母、数字和下划线，不能以数字开头，最长 63 个字符。自定义复制槽必须预先创建，且不会由 Doris 删除。 |
-| `publication_name` | 否 | `doris_pub_<job_id>` | 自 4.1.0 版本起支持。发布名称，命名规则与 `slot_name` 相同。自定义发布必须预先创建并包含所有同步表，且不会由 Doris 删除。 |
-| `ssl_mode` | 否 | `disable` | 自 4.1.0 版本起支持。SSL 模式，可选值为 `disable`、`require`、`verify-ca`。 |
-| `ssl_rootcert` | 条件必填 | - | 自 4.1.0 版本起支持。CA 证书文件，格式为 `FILE:<file_name>`。`ssl_mode` 为 `verify-ca` 时必填；文件需先通过 [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md) 上传。 |
+| `slot_name` | 否 | `doris_cdc_<job_id>` | 逻辑复制槽名称。名称只能包含小写字母、数字和下划线，不能以数字开头，最长 63 个字符。自定义复制槽必须预先创建，且不会由 Doris 删除。 |
+| `publication_name` | 否 | `doris_pub_<job_id>` | 发布名称，命名规则与 `slot_name` 相同。自定义发布必须预先创建并包含所有同步表，且不会由 Doris 删除。 |
+| `ssl_mode` | 否 | `disable` | SSL 模式，可选值为 `disable`、`require`、`verify-ca`。 |
+| `ssl_rootcert` | 条件必填 | - | CA 证书文件，格式为 `FILE:<file_name>`。`ssl_mode` 为 `verify-ca` 时必填；文件需先通过 [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md) 上传。 |
 
 如果同时设置 `include_tables` 和 `exclude_tables`，以 `include_tables` 为准。以下 `FROM POSTGRES` 参数片段同步 `orders` 和 `customers`，将 `orders` 写入 `ods_orders` 并排除非主键列 `internal_note`，同时使用预先创建的逻辑复制资源和 CA 校验：
 

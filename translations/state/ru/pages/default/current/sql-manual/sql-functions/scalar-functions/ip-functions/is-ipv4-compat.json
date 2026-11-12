@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-compat",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-compat.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-compat.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6dda1ac60066d767b20564fa9c73ac2a24db176381bb85f5af71bfc3d7fc91f1",
+    "sourceTechnicalHash": "4190d4922eff043e08fbb2aed672cfcefb3a3f94aace5d5aa6775facdde5a0ad",
+    "targetHash": "bf4a649a7f07ab16a50da2dc2a5a076f14c283a5e437cfe04fb0569761749e27",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:17:50.822Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6dda1ac60066d767b20564fa9c73ac2a24db176381bb85f5af71bfc3d7fc91f1",
+      "targetHash": "bf4a649a7f07ab16a50da2dc2a5a076f14c283a5e437cfe04fb0569761749e27",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

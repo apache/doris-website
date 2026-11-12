@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "thanks",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/thanks.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/thanks.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "97f74f922996e57d3a87a457ac823a40ec03b32903744c9e8bb83fe92a76c0ba",
+    "sourceTechnicalHash": "7eb317893fbe99462cf63643c4f2025f87aa9672778f67fc06c59132f7f02b98",
+    "targetHash": "c8366e2ca3e211fd1ff7ed7aff7c757e0b7a651fcaf42cd48d07ff782727e9b8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T14:35:10.588Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "97f74f922996e57d3a87a457ac823a40ec03b32903744c9e8bb83fe92a76c0ba",
+      "targetHash": "c8366e2ca3e211fd1ff7ed7aff7c757e0b7a651fcaf42cd48d07ff782727e9b8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nЭтот файл предоставлен Apache Software Foundation (ASF) на условиях одного\\nили нескольких лицензионных соглашений с участниками. Дополнительные\\nсведения об обладателях авторских прав см. в файле NOTICE,\\nраспространяемом вместе с этой работой. ASF предоставляет вам этот файл\\nна условиях Apache License, Version 2.0 (далее —\\n«Лицензия»); вы можете использовать этот файл только при соблюдении\\nусловий Лицензии. Копию Лицензии можно получить по адресу:\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nЕсли иное не предусмотрено применимым законодательством или письменным соглашением,\\nпрограммное обеспечение, распространяемое на условиях Лицензии, предоставляется\\n«КАК ЕСТЬ», БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ ИЛИ УСЛОВИЙ,\\nявных или подразумеваемых. Конкретные положения,\\nрегулирующие разрешения и ограничения в рамках Лицензии,\\nприведены в её тексте.\\n-->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "406f52c620405f3eff61b0dc5df8eb4caa5bcf31fabdaae6a843d153a639d0f1",
-    "sourceTechnicalHash": "315812bfff67d5b167dbeb20d0d1cbf3543af66212d8dda53f1999d6e2212488",
-    "targetHash": "492de970cfeb4a87eaf41684ea2124d5074ae602447d449c7040c955aae83271",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "35563b72149e1959be24a87bc44c43301f80490d7b95b2f0b6c06bc4e5e2b607",
+    "sourceTechnicalHash": "219218cc66180908c38416dab0f4b532a3b1530a7a0640135c3f78cb2a68f9a6",
+    "targetHash": "e51c218f8d46bde9d9bf4872f414d792861c4e5e069d4fbe59910127a5aed0ab",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T19:01:49.808Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T04:53:25.669Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "35563b72149e1959be24a87bc44c43301f80490d7b95b2f0b6c06bc4e5e2b607",
+      "targetHash": "e51c218f8d46bde9d9bf4872f414d792861c4e5e069d4fbe59910127a5aed0ab",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"TINYINT\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"1\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"0\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"NULL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"0\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"NULL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"TINYINT\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"1\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

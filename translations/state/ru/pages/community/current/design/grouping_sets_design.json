@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "design/grouping_sets_design",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/design/grouping_sets_design.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/design/grouping_sets_design.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e53b3bc1330298ec54014a6abc5dd83b8c919b2e2e26ac73572e16b35055a499",
+    "sourceTechnicalHash": "00648433222547a38ae34bbb43d53d6528d68381f567b217db215da65e1f6e98",
+    "targetHash": "d4f0d5c2a34823949d989f44a78fcf6b761ac9b295a2a549c78b3a334bbcc3ce",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:08:28.758Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e53b3bc1330298ec54014a6abc5dd83b8c919b2e2e26ac73572e16b35055a499",
+      "targetHash": "d4f0d5c2a34823949d989f44a78fcf6b761ac9b295a2a549c78b3a334bbcc3ce",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

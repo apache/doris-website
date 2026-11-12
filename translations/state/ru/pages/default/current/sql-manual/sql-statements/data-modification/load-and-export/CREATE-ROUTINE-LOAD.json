@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c8b3adee00f02b03fcc80a2cff5a0d0ae627bbc93a444ae78ad833c2f7c657e8",
+    "sourceTechnicalHash": "eeeef574b568e4246fe4a405549f0cf011e8a9b12c88c3284204837345070716",
+    "targetHash": "b3a2f3f898c735c2d0e6d48f5efc849612257f43fdfe51f83bb4fa5a58f23a8a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:08:08.019Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c8b3adee00f02b03fcc80a2cff5a0d0ae627bbc93a444ae78ad833c2f7c657e8",
+      "targetHash": "b3a2f3f898c735c2d0e6d48f5efc849612257f43fdfe51f83bb4fa5a58f23a8a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 83: expected [\"code\",null,null,\"```text\\n\\\"property.security.protocol\\\" = \\\"ssl\\\",\\n\\\"property.ssl.ca.location\\\" = \\\"FILE:ca.pem\\\",\\n\\\"property.ssl.certificate.location\\\" = \\\"FILE:client.pem\\\",\\n\\\"property.ssl.key.location\\\" = \\\"FILE:client.key\\\",\\n\\\"property.ssl.key.password\\\" = \\\"abcdefg\\\"\\n```\\n\\nAmong them:\\n\\n`property.security.protocol` and `property.ssl.ca.location` are required, used to specify the connection method as SSL and the location of the CA certificate.\\n\\nIf client authentication is enabled on the Kafka server side, the following also need to be set:\\n\\n```text\\n\\\"property.ssl.certificate.location\\\"\\n\\\"property.ssl.key.location\\\"\\n\\\"property.ssl.key.password\\\"\\n```\\n\\nUsed to specify the client's public key, private key, and private key password respectively.\"]; received [\"code\",null,null,\"```text\\n\\\"property.security.protocol\\\" = \\\"ssl\\\",\\n\\\"property.ssl.ca.location\\\" = \\\"FILE:ca.pem\\\",\\n\\\"property.ssl.certificate.location\\\" = \\\"FILE:client.pem\\\",\\n\\\"property.ssl.key.location\\\" = \\\"FILE:client.key\\\",\\n\\\"property.ssl.key.password\\\" = \\\"abcdefg\\\"\\n```\\n\\nИз них:\\n\\n`property.security.protocol` и `property.ssl.ca.location` обязательны: они задают подключение по SSL и расположение сертификата CA.\\n\\nЕсли на стороне сервера Kafka включена аутентификация клиента, необходимо также задать:\\n\\n```text\\n\\\"property.ssl.certificate.location\\\"\\n\\\"property.ssl.key.location\\\"\\n\\\"property.ssl.key.password\\\"\\n```\\n\\nОни указывают открытый ключ клиента, закрытый ключ и пароль закрытого ключа соответственно.\"]\nprotected node 89: expected [\"code\",null,null,\"Comment information for the routine load task.\"]; received [\"code\",null,null,\"Комментарий к задаче регулярной загрузки.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

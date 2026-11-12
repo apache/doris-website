@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/cluster-management/upgrade",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/cluster-management/upgrade.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/upgrade.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "5492ebed1bac98f8a0c763da3af1f2b27d9cc0fe6ddc87e7a8c277b0d3f92948",
+    "sourceTechnicalHash": "c3a36aa67c38c09064a93aa5801ba82dd2c6d0b612bb26709db9fafa5f30c83a",
+    "targetHash": "f3d31c57cd8581fb9f4a52785a3e38b481b358f3275dc35e87aad3d5df073c2c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:17:47.108Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5492ebed1bac98f8a0c763da3af1f2b27d9cc0fe6ddc87e7a8c277b0d3f92948",
+      "targetHash": "f3d31c57cd8581fb9f4a52785a3e38b481b358f3275dc35e87aad3d5df073c2c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 33: expected [\"inlineCode\",null,null,\"cluster_id\"]; received [\"inlineCode\",null,null,\"VERSION\"]\nprotected node 34: expected [\"inlineCode\",null,null,\"VERSION\"]; received [\"inlineCode\",null,null,\"cluster_id\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

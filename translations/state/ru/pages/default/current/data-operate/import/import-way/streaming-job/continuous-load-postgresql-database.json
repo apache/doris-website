@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-postgresql-database",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "c76b1b7c0922ddd7f44b523e8715e82b545d89264372882947bc84ebcea6574c",
+    "sourceTechnicalHash": "1ba8824150c8bb53053a0409379af7ec4604a0c9fcf2471ee36f5ac2349e6e50",
+    "targetHash": "60cc8f82e9f33fa3ad6647660e64286d255dd55bfd0a35179a437cdb0f3a5a94",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-03T22:24:20.613Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c76b1b7c0922ddd7f44b523e8715e82b545d89264372882947bc84ebcea6574c",
+      "targetHash": "60cc8f82e9f33fa3ad6647660e64286d255dd55bfd0a35179a437cdb0f3a5a94",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operating procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: операционная процедура -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Continuously sync an entire PostgreSQL database to Doris -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: непрерывная синхронизация всей базы данных PostgreSQL с Doris -->\"]\nprotected node 7: expected [\"html\",null,null,\"<!-- Knowledge type: Operating procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: операционная процедура -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+        "blob": "9f8d379708f35ab263551a4b8bf052de3d1ca635"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+        "blob": "80cab6e69f71ceb40b4a914b958d2bd265b7319d"
+      }
+    }
+  }
+}

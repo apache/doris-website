@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/compute-group",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/compute-group.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/compute-group.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ad3936df194dc496cb4a505e8980836b5cf2586715debf46d949364770bfa1af",
+    "sourceTechnicalHash": "f31bd3eb64b0c8a1f5303256408fb35806f44dfed272756fbad4d6bbf83fb13c",
+    "targetHash": "321864f140c3f2d3f1953e02248fbb78d905548028adff744b935f9c12166471",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:30.800Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ad3936df194dc496cb4a505e8980836b5cf2586715debf46d949364770bfa1af",
+      "targetHash": "321864f140c3f2d3f1953e02248fbb78d905548028adff744b935f9c12166471",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/compute-group",
+        "sourcePath": "docs/key-features/compute-group.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/compute-group.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "ad3936df194dc496cb4a505e8980836b5cf2586715debf46d949364770bfa1af",
+        "targetHash": "321864f140c3f2d3f1953e02248fbb78d905548028adff744b935f9c12166471",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

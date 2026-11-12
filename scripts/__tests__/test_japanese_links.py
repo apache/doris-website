@@ -6,6 +6,21 @@ from scripts.check_md_links_single import resolve_internal
 
 
 class JapaneseLinkResolution(unittest.TestCase):
+    def test_blog_relative_links_and_media_use_english_sources(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'static').mkdir()
+            base = root / 'i18n/ja/docusaurus-plugin-content-blog'
+            base.mkdir(parents=True)
+            source = root / 'blog/_parts/diagram.svg'
+            source.parent.mkdir(parents=True)
+            source.write_text('<svg/>')
+            peer = root / 'blog/peer.mdx'
+            peer.write_text('# Peer\n')
+            self.assertEqual(resolve_internal(str(base), './_parts/diagram.svg'), str(source))
+            self.assertEqual(resolve_internal(str(base), './peer.mdx#usage'), str(peer))
+            self.assertIsNone(resolve_internal(str(base), './missing.mdx'))
+
     def test_absolute_doc_routes_use_their_own_version_and_locale(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

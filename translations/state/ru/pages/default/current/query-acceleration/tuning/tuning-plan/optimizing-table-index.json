@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-plan/optimizing-table-index",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-plan/optimizing-table-index.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/optimizing-table-index.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e2645b3c98f0a872aeb1e1306247097d44b07c7da82313dc22c97153c40789b0",
+    "sourceTechnicalHash": "f1a496184b7170c450e85f4527dbc1eb4a70f665bc09b996cde50d63f5eaac9f",
+    "targetHash": "94376f92c8322454c305b10b43d3f04f0e905f662a143915d54d1ae8062fd77a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:36:16.391Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e2645b3c98f0a872aeb1e1306247097d44b07c7da82313dc22c97153c40789b0",
+      "targetHash": "94376f92c8322454c305b10b43d3f04f0e905f662a143915d54d1ae8062fd77a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

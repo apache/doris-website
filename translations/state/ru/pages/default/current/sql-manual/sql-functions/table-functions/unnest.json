@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/unnest",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/unnest.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/unnest.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "31d2f1d648be1c556e37f5e4adcd989b21a55317071ec202cd7c1cbf9aad3d10",
+    "sourceTechnicalHash": "8ce44e7280e058c5c336298ac79a721ea7a2d9a9bed37c515d4d84351eecdc79",
+    "targetHash": "0190d855e96d053237fcf1e11fd5d365ce88dfd81334f64b211fcfd935db7ce3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:04:01.933Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "31d2f1d648be1c556e37f5e4adcd989b21a55317071ec202cd7c1cbf9aad3d10",
+      "targetHash": "0190d855e96d053237fcf1e11fd5d365ce88dfd81334f64b211fcfd935db7ce3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

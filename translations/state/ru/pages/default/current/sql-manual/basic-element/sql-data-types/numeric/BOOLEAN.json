@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/BOOLEAN",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/BOOLEAN.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/BOOLEAN.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ed80a13ba056c04f52ad0f00c62405cf260253e88c4992678214f02309ea7cd8",
+    "sourceTechnicalHash": "3de0165591e3ff9ba1a406b4c4d4fe42218f8b5eb19b6417dae93e61a6ec49e1",
+    "targetHash": "79e432f041fe41c8ed3d5ebcffb748f4e77df8017e3789fe16ac56bedca2380b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:51:10.578Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed80a13ba056c04f52ad0f00c62405cf260253e88c4992678214f02309ea7cd8",
+      "targetHash": "79e432f041fe41c8ed3d5ebcffb748f4e77df8017e3789fe16ac56bedca2380b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

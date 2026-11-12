@@ -10,6 +10,13 @@ const root = path.resolve(__dirname,'../..');
 const fixture = path.join(root,'.i18n-build/publish-fixture');
 const locales = ['en','zh-CN','ja','ko','ru'];
 const hash = content => createHash('sha256').update(content).digest('hex');
+// Status/header probes still need to finish their response body so Undici can
+// reuse the connection. Otherwise a long Apache probe can exhaust its workers.
+async function probe(url, options) {
+    const response = await fetch(url, options);
+    await response.arrayBuffer();
+    return response;
+}
 
 async function main() {
     const verifyOnly = process.argv.includes('--verify-existing');
@@ -22,8 +29,9 @@ async function main() {
     };
     write('package.json','{"name":"publish-fixture","private":true}');
     fs.symlinkSync(path.join(root,'node_modules'),path.join(fixture,'node_modules'));
-    for (const name of ['brand-theme-bootstrap','course-rail-bootstrap']) write(`static/js/${name}.js`,
+    for (const name of ['brand-theme-bootstrap','course-rail-bootstrap','locale-entry-bootstrap']) write(`static/js/${name}.js`,
         fs.readFileSync(path.join(root,`static/js/${name}.js`)));
+    for (const file of ['config/i18n.js','config/locale-entry.json']) write(file,fs.readFileSync(path.join(root,file)));
     write('static/.htaccess',fs.readFileSync(path.join(root,'static/.htaccess')));
     write('static/images/shared.png',image);
     write('static/pdf/reference.pdf','%PDF-1.4\nFixture reference document\n');
@@ -48,7 +56,7 @@ module.exports = {title:'Publish fixture',url:'https://doris.apache.org',baseUrl
 future:{experimental_faster:${!process.argv.includes('--webpack')}},
 i18n:{defaultLocale:'en',locales:${JSON.stringify(locales)}},
 ...require(${JSON.stringify(path.join(root,'config/ssrTemplate.js'))}),
-headTags:shared.enabled()?scripts(__dirname).map(s=>({tagName:'script',attributes:{src:'/'+s.file}})):[],
+headTags:shared.enabled()?scripts(__dirname,{locales:${JSON.stringify(locales)}}).map(s=>({tagName:'script',attributes:{src:'/'+s.file}})):[],
 presets:[['classic',{docs:{path:'docs',sidebarPath:false},blog:false,theme:{customCss:'./static/fixture.css'}}]],
 plugins:[${JSON.stringify(path.join(root,'config/custom-docusaurus-plugin.js'))},
 ['@docusaurus/plugin-client-redirects',{fromExtensions:['html','htm'],redirects:[{from:'/legacy',to:'/docs/intro/'}]}]],
@@ -81,7 +89,7 @@ themes:[['@yang1666204/docusaurus-search-local',{hashed:true,language:['en'],doc
         for (const origin of [previewOrigin,...(apache ? [apache.origin] : [])]) {
             const manifest = JSON.parse(fs.readFileSync(path.join(site,'.publish/redirects.json'),'utf8'));
             for (const [from,to,preserveQuery,status = 301] of manifest.redirects) {
-                const response = await fetch(origin+from+'?probe=1',{redirect:'manual'});
+                const response = await probe(origin+from+'?probe=1',{redirect:'manual'});
                 assert.equal(response.status,status,`${origin}${from}`);
                 const location = new URL(response.headers.get('location'),origin);
                 const expected = new URL(to,origin);
@@ -95,10 +103,10 @@ themes:[['@yang1666204/docusaurus-search-local',{hashed:true,language:['en'],doc
                 const $ = require('cheerio').load(html);
                 const urls = $('script[src],link[rel="stylesheet"],img[src]').map((_,node) => $(node).attr('src') ?? $(node).attr('href')).get();
                 for (const resource of urls.filter(value => !value.startsWith('data:'))) {
-                    const response = await fetch(new URL(resource,origin));
+                    const response = await probe(new URL(resource,origin));
                     assert.equal(response.status,200,resource);
                 }
-                assert.equal((await fetch(origin+prefix+'/not-a-page')).status,404);
+                assert.equal((await probe(origin+prefix+'/not-a-page')).status,404);
             }
         }
         let browser;

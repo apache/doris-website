@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-partitioning/basic-concepts",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/basic-concepts.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/basic-concepts.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "985f03c49b82b3bd2887486f7875960386941a8b985bef9dfb2706272c4c1931",
+    "sourceTechnicalHash": "d4344c1240e7db221d8814c6195722bddc20d2aee6e49298d0941137e0194df7",
+    "targetHash": "ae1d6fbc915440482681ea2b9df31d8ade830abfa9665062945525687f5a11d8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:04:06.821Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "985f03c49b82b3bd2887486f7875960386941a8b985bef9dfb2706272c4c1931",
+      "targetHash": "ae1d6fbc915440482681ea2b9df31d8ade830abfa9665062945525687f5a11d8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "table-design/data-partitioning/basic-concepts",
+        "sourcePath": "docs/table-design/data-partitioning/basic-concepts.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/data-partitioning/basic-concepts.mdx",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "985f03c49b82b3bd2887486f7875960386941a8b985bef9dfb2706272c4c1931",
+        "targetHash": "ae1d6fbc915440482681ea2b9df31d8ade830abfa9665062945525687f5a11d8",
+        "commit": "aa2a9993a3f68b04675dba12f6054562b5817c76",
+        "pr": "https://github.com/apache/doris-website/pull/4457"
+      }
+    }
+  }
+}

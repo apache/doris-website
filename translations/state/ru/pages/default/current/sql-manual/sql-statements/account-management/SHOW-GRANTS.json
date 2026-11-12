@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-GRANTS",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
+    "sourceTechnicalHash": "95a0b9d880040f6c5df1829657ef4e7ee05b731bce2a5c9af8c0c15ef51fdd1d",
+    "targetHash": "53116ff2d94362631d90328adb3f47835fd7b4cc15e3265d74963419f45154f5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:33:47.040Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
+      "targetHash": "53116ff2d94362631d90328adb3f47835fd7b4cc15e3265d74963419f45154f5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

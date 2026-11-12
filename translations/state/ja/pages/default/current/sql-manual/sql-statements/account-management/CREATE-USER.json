@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/account-management/CREATE-USER.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/CREATE-USER.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "9769a6aa60807fad11a30784db8e32c7f8bc1e5b46872be306930f5913bb9345",
     "sourceTechnicalHash": "68d92993cd9c1b9e126c3b320df3e1c7861f23a96cbd1e2f2ba34646c58860e5",
-    "targetHash": "c3937e495ec3bc59744f4c3ccdfef3a6d315a0effb895e8297bcc4bd23268642",
+    "targetHash": "1192571fc3c55f65e872c0a68682db6cd13f24ceebd558b5f16d13ce4ce31eee",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:26:58.628Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T05:17:31.146Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "9769a6aa60807fad11a30784db8e32c7f8bc1e5b46872be306930f5913bb9345",
+      "targetHash": "1192571fc3c55f65e872c0a68682db6cd13f24ceebd558b5f16d13ce4ce31eee",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]\\n[DEFAULT ROLE <role_name>]\\n[<password_policy>]\\n[<comment>]  \\n\\npassword_policy:\\n    1. PASSWORD_HISTORY { <n> | DEFAULT }\\n    2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}\\n    3. FAILED_LOGIN_ATTEMPTS <n>\\n    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}\"]; received [\"code\",\"sql\",null,\"CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]\\n[DEFAULT ROLE <role_name>]\\n[<password_policy>]\\n[<comment>]\\n\\npassword_policy:\\n    1. PASSWORD_HISTORY { <n> | DEFAULT }\\n    2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}\\n    3. FAILED_LOGIN_ATTEMPTS <n>\\n    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"10\",\"10\",\"10\",\"172.10.1.10\",\"192.168\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"8\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"172.10.1.10\",\"192.168\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"8\"]\nprotected node 2: expected [\"code\",\"sql\",null,\"CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]\\n[DEFAULT ROLE <role_name>]\\n[<password_policy>]\\n[<comment>]  \\n\\npassword_policy:\\n    1. PASSWORD_HISTORY { <n> | DEFAULT }\\n    2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}\\n    3. FAILED_LOGIN_ATTEMPTS <n>\\n    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}\"]; received [\"code\",\"sql\",null,\"CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]\\n[DEFAULT ROLE <role_name>]\\n[<password_policy>]\\n[<comment>]\\n\\npassword_policy:\\n    1. PASSWORD_HISTORY { <n> | DEFAULT }\\n    2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}\\n    3. FAILED_LOGIN_ATTEMPTS <n>\\n    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"<password>\"]; received [\"inlineCode\",null,null,\"'user_name'@'host'\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]\\n[DEFAULT ROLE <role_name>]\\n[<password_policy>]\\n[<comment>]  \\n\\npassword_policy:\\n    1. PASSWORD_HISTORY { <n> | DEFAULT }\\n    2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}\\n    3. FAILED_LOGIN_ATTEMPTS <n>\\n    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}\"]; received [\"code\",\"sql\",null,\"CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]\\n[DEFAULT ROLE <role_name>]\\n[<password_policy>]\\n[<comment>]\\n\\npassword_policy:\\n    1. PASSWORD_HISTORY { <n> | DEFAULT }\\n    2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}\\n    3. FAILED_LOGIN_ATTEMPTS <n>\\n    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]\\n[DEFAULT ROLE <role_name>]\\n[<password_policy>]\\n[<comment>]  \\n\\npassword_policy:\\n    1. PASSWORD_HISTORY { <n> | DEFAULT }\\n    2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}\\n    3. FAILED_LOGIN_ATTEMPTS <n>\\n    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}\"]; received [\"code\",\"sql\",null,\"CREATE USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]\\n[DEFAULT ROLE <role_name>]\\n[<password_policy>]\\n[<comment>]\\n\\npassword_policy:\\n    1. PASSWORD_HISTORY { <n> | DEFAULT }\\n    2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}\\n    3. FAILED_LOGIN_ATTEMPTS <n>\\n    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/account-management/CREATE-USER.md",
+        "blob": "93c19133b993529422f9d68306092fb1ea45f344"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/CREATE-USER.md",
+        "blob": "125296b02d3ba7b6413bd20cb5dd37e9cff49e98"
+      }
+    }
   }
 }

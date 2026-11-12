@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "contentId": "blog:why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+    "locale": "ja",
+    "state": "ready",
+    "sourceFiles": [
+      "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+      "src/components/blogs/components/blog-link.tsx",
+      "src/components/blogs/components/see-more.tsx"
+    ],
+    "targetFiles": [
+      "i18n/ja/docusaurus-plugin-content-blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx"
+    ],
+    "sourceHash": "8900bb6b34a20e01815fead2baa8359937b6643d7160f2d7aa3c07450c57f95f",
+    "targetHash": "9a2cbb813276befe0529fac8f9a200358fcad3b8fc6a6599d453e649b566beef",
+    "reviewStatus": "machine",
+    "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+  }
+}

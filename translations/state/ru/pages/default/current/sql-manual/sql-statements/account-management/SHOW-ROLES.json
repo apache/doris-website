@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-ROLES",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/SHOW-ROLES.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-ROLES.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "08a00b91e2f2dadecdf5f2ae98ee2717beb4f9524e026eddaa42b3748c12acb9",
+    "sourceTechnicalHash": "9766bd932a4700e8c9579adfeb46e92a78a7dcef14ff99c4ef3e67269d0b723e",
+    "targetHash": "b4426d6c8edccbebbea082c1fe305da14111e3de9a19f7562dd0f48f9efe3eec",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:33:46.923Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "08a00b91e2f2dadecdf5f2ae98ee2717beb4f9524e026eddaa42b3748c12acb9",
+      "targetHash": "b4426d6c8edccbebbea082c1fe305da14111e3de9a19f7562dd0f48f9efe3eec",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

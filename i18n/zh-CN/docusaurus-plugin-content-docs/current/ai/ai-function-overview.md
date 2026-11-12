@@ -48,6 +48,8 @@ Doris 通过 [资源（Resource）机制](../sql-manual/sql-statements/cluster-m
 
 ### 资源参数
 
+资源至少需要一组完整的连接配置：通用 `ai.*`、文本 embedding 的 `ai.embed.*` 或多模态 embedding 的 `ai.embed.mm.*`。每个配置组都需要 `provider_type`、`endpoint` 和 `model_name`；该组 provider 为 `LOCAL` 时可以省略 `api_key`，其他情况必须填写。下表连接字段的必填要求适用于通用配置组。标量 AI 函数和 `AI_AGG` 需要完整的通用配置组。
+
 | 参数                    | 是否必填                                | 说明                                                                                                          |
 | ----------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `type`                  | 必填                                    | 必须为 `ai`，作为 AI 资源的类型标识。                                                                         |
@@ -59,6 +61,39 @@ Doris 通过 [资源（Resource）机制](../sql-manual/sql-statements/cluster-m
 | `ai.max_tokens`         | 可选                                    | 限制生成内容的最大 token 数。默认 `-1` 表示不设置该参数；Anthropic 默认值为 `2048`。                          |
 | `ai.max_retries`        | 可选                                    | 单次请求的最大重试次数。默认值 `3`。                                                                          |
 | `ai.retry_delay_second` | 可选                                    | 重试的延迟时间（秒）。默认值 `0`。                                                                            |
+| `ai.enable_structured_output` | 可选 | Boolean 类型，默认 `true`。Doris 将标量 AI 函数的多行输入收集成批发送。开启该选项会附加 provider 对应的格式约束字段，以提高返回格式的稳定性。Doris 不检查所配置模型是否支持这些字段；LOCAL 和 MiniMax 省略这些字段。如果模型或 endpoint 拒绝这些字段，请设置为 `false`。关闭后仍然批量发送，通过系统提示词规定格式，并校验返回结果。该选项不适用于 `AI_AGG` 和 `EMBED`。 |
+| `ai.effort` | 可选 | 字符串类型，控制生成请求的推理强度，默认不设置。Doris 对 OpenAI 兼容 provider 接受 `none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`；对 Anthropic 接受 `low`、`medium`、`high`、`xhigh`、`max`；对 Gemini 接受 `minimal`、`low`、`medium`、`high`。配置的模型必须支持所选值。通过 `ALTER RESOURCE` 将该属性设为空字符串可以取消设置。 |
+
+### Embedding 专用配置
+
+以下属性均为字符串类型，没有默认值。填写某组配置时需要填写完整，缺失字段不会从其他配置组补充。
+
+| 参数 | 说明 |
+| --- | --- |
+| `ai.embed.provider_type` | 文本 embedding 的 provider。 |
+| `ai.embed.endpoint` | 文本 embedding 的 API endpoint。 |
+| `ai.embed.model_name` | 文本 embedding 的模型名称。 |
+| `ai.embed.api_key` | 文本 embedding 的 API Key；`LOCAL` 可以省略。 |
+| `ai.embed.mm.provider_type` | 多模态 embedding 的 provider。 |
+| `ai.embed.mm.endpoint` | 多模态 embedding 的 API endpoint。 |
+| `ai.embed.mm.model_name` | 多模态 embedding 的模型名称。 |
+| `ai.embed.mm.api_key` | 多模态 embedding 的 API Key；`LOCAL` 可以省略。 |
+
+文本输入的 `EMBED` 优先选择完整的 `ai.embed.*`，其次选择通用配置组。多模态输入依次选择 `ai.embed.mm.*`、`ai.embed.*`、通用配置组。选择以完整配置组为单位，选中的 provider 和模型必须支持输入类型。三组 API Key 在 `SHOW RESOURCES` 中均会隐藏。`ai.dimensions` 和重试设置等参数由各组共用。
+
+例如，创建仅用于文本 embedding 的资源：
+
+```sql
+CREATE RESOURCE 'text_embedding' PROPERTIES (
+    'type' = 'ai',
+    'ai.embed.provider_type' = 'QWEN',
+    'ai.embed.endpoint' = 'https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings',
+    'ai.embed.model_name' = 'text-embedding-v4',
+    'ai.embed.api_key' = '<api-key>'
+);
+```
+
+将 `<api-key>` 替换为有效密钥后，可以通过 `EMBED('text_embedding', 'example text')` 使用该资源。补充完整的通用配置组后，同一个资源也可以用于标量 AI 函数和 `AI_AGG`。
 
 :::caution 鉴权方式说明
 当前仅支持静态 API Key 方式进行鉴权（通过请求头直接携带凭证）。需要通过私钥签名并交换临时访问令牌的鉴权机制（如 OAuth、Service Account 等）暂不支持。

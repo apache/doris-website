@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/backends",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/backends.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/backends.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c65ac0d8c3d778b24daab83bd09a369377a2a41bca1612e93c60226616384c0a",
+    "sourceTechnicalHash": "54b5390936eff63c9bc358230fd88b5d676bd2fb5417ba66154b795002346531",
+    "targetHash": "f94282a78299da69d98b9c53b2fcb3bc3d1a77150db8919a150d9b211f77ad9a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:57:07.104Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c65ac0d8c3d778b24daab83bd09a369377a2a41bca1612e93c60226616384c0a",
+      "targetHash": "f94282a78299da69d98b9c53b2fcb3bc3d1a77150db8919a150d9b211f77ad9a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/table-valued-functions/backends",
+        "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/backends.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/backends.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "c65ac0d8c3d778b24daab83bd09a369377a2a41bca1612e93c60226616384c0a",
+        "targetHash": "f94282a78299da69d98b9c53b2fcb3bc3d1a77150db8919a150d9b211f77ad9a",
+        "commit": "069e0e3bb176c7bb849b0d1de5db70877753e1bc",
+        "pr": "https://github.com/apache/doris-website/pull/4454"
+      }
+    }
+  }
+}

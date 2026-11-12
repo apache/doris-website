@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/lance-hybrid-search.mdx",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/lance-hybrid-search.mdx",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
-    "sourceTechnicalHash": "3f05cc51c538369f5d60fe1dfc25e6d30d7e027759d221c3bb25664d9257b9ac",
-    "targetHash": "7f7f5b8b66a0c5dded17f8a00f7eb9ec0e0f3aa086bbd32711273a418f97b7d7",
+    "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+    "sourceHash": "051522d5a18a979d89bb4b76192f2f12aaebe05f39f9a1f6101e274c03412a04",
+    "sourceTechnicalHash": "651cdfd11c3ec404925c24990eeb1227c0728bb66130a28120d7a7119d7bd88e",
+    "targetHash": "ff97fadddb1959ca56ee7a22cc7f888b2e2e8900e24845653f231a5763755871",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:38:46.109Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T18:25:38.705Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "051522d5a18a979d89bb4b76192f2f12aaebe05f39f9a1f6101e274c03412a04",
+      "targetHash": "ff97fadddb1959ca56ee7a22cc7f888b2e2e8900e24845653f231a5763755871",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"15\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"24\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"32\",\"32\",\"32\",\"32\",\"4\",\"4.2\",\"4.2\",\"5\",\"50\",\"6\",\"64\",\"65536\",\"8\",\"8\",\"8\",\"8\",\"95\",\"95\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"15\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"24\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"4\",\"4\",\"4\",\"4.2\",\"4.2\",\"5\",\"50\",\"6\",\"64\",\"65536\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"95\",\"95\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"15\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"24\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"32\",\"32\",\"32\",\"32\",\"4\",\"4.2\",\"4.2\",\"5\",\"50\",\"6\",\"64\",\"65536\",\"8\",\"8\",\"8\",\"8\",\"95\",\"95\"]; received [\"0\",\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"15\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"24\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"4\",\"4\",\"4\",\"4\",\"4.2\",\"4.2\",\"5\",\"50\",\"6\",\"64\",\"65536\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"95\",\"95\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"score()\"]; received [\"inlineCode\",null,null,\"MATCH_ANY\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"MATCH_ANY\"]; received [\"inlineCode\",null,null,\"MATCH_ALL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 59: expected [\"inlineCode\",null,null,\"externalSearchType=VECTOR\"]; received [\"inlineCode\",null,null,\"lanceMetric=l2|dot|cosine|hamming\"]\nprotected node 60: expected [\"inlineCode\",null,null,\"lanceMetric=l2|dot|cosine|hamming\"]; received [\"inlineCode\",null,null,\"externalSearchType=VECTOR\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"15\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"24\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"32\",\"32\",\"32\",\"32\",\"4\",\"4.2\",\"4.2\",\"5\",\"50\",\"6\",\"64\",\"65536\",\"8\",\"8\",\"8\",\"8\",\"95\",\"95\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"15\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"24\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"4\",\"4\",\"4\",\"4.2\",\"4.2\",\"5\",\"50\",\"6\",\"64\",\"65536\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"95\",\"95\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

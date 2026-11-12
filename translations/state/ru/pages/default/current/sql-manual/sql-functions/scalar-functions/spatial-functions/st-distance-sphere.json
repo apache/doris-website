@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4c3e13b650538aab9369e4990df02de4d4d16c7287d361b39d8a1925109d028c",
+    "sourceTechnicalHash": "cc8bd59fdac545299b6cb121d4c5ae56c388c6cd9317b8ec6bae86019c4a19c8",
+    "targetHash": "616bf8cf70b14a3df73a61591c1e5a44c03a587bbc9681a13ec4247d1dd93fb3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:36:38.039Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4c3e13b650538aab9369e4990df02de4d4d16c7287d361b39d8a1925109d028c",
+      "targetHash": "616bf8cf70b14a3df73a61591c1e5a44c03a587bbc9681a13ec4247d1dd93fb3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

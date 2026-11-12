@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/dogstack/alert",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/dogstack/alert.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/observability/dogstack/alert.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9dc4f3b9f999bd9c97a8d7452f2e8355bde83c32a49d2ced4367138874ff59c5",
+    "sourceTechnicalHash": "6ca7b932a2f641d97edc3d1be6817e586239b842d64242b8a4ea9c95e5081507",
+    "targetHash": "a7d8bc89db4a6edb5bd30a8aa95234dd789489430860cfbaa14f29ef5e59b326",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:23.388Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9dc4f3b9f999bd9c97a8d7452f2e8355bde83c32a49d2ced4367138874ff59c5",
+      "targetHash": "a7d8bc89db4a6edb5bd30a8aa95234dd789489430860cfbaa14f29ef5e59b326",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "observability/dogstack/alert",
+        "sourcePath": "docs/observability/dogstack/alert.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/observability/dogstack/alert.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "9dc4f3b9f999bd9c97a8d7452f2e8355bde83c32a49d2ced4367138874ff59c5",
+        "targetHash": "a7d8bc89db4a6edb5bd30a8aa95234dd789489430860cfbaa14f29ef5e59b326",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

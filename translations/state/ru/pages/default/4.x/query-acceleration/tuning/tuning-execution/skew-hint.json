@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-execution/skew-hint",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-execution/skew-hint.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-execution/skew-hint.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "352a07f2d8c9dc983de777cdbb26b3c256d8bee3e39e42ea50ba735e3e7374b6",
+    "sourceTechnicalHash": "bab4be616ec6f2cde7eebcdba626cc4b24bcde06701a2c9efff272e8bb782443",
+    "targetHash": "5657d4228342798efaa4264b7e12a247155fb4ac0a591469e19b56d5187649bb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:32.788Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "352a07f2d8c9dc983de777cdbb26b3c256d8bee3e39e42ea50ba735e3e7374b6",
+      "targetHash": "5657d4228342798efaa4264b7e12a247155fb4ac0a591469e19b56d5187649bb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/tuning/tuning-execution/skew-hint",
+        "sourcePath": "docs/query-acceleration/tuning/tuning-execution/skew-hint.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-execution/skew-hint.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "352a07f2d8c9dc983de777cdbb26b3c256d8bee3e39e42ea50ba735e3e7374b6",
+        "targetHash": "5657d4228342798efaa4264b7e12a247155fb4ac0a591469e19b56d5187649bb",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "750fcb96fc1a78617f626f46b26276930409f135aa6a430f4eca5cf79f2e9dfc",
+    "sourceTechnicalHash": "63ed87ed0674487416f9e5e7e8fd98f1439db1fe950690a2417abb30327a9827",
+    "targetHash": "6694fd09b88bb5863195ed436bf2625871ca6e831e65e612c6df8be537708e7f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:56.502Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "750fcb96fc1a78617f626f46b26276930409f135aa6a430f4eca5cf79f2e9dfc",
+      "targetHash": "6694fd09b88bb5863195ed436bf2625871ca6e831e65e612c6df8be537708e7f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis",
+        "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "750fcb96fc1a78617f626f46b26276930409f135aa6a430f4eca5cf79f2e9dfc",
+        "targetHash": "6694fd09b88bb5863195ed436bf2625871ca6e831e65e612c6df8be537708e7f",
+        "commit": "8046b263706ddcdf890bf51f6efec7f3ea77bf66",
+        "pr": "https://github.com/apache/doris-website/pull/4433"
+      }
+    }
+  }
+}

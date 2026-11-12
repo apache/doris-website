@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/quantile-union",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/quantile-union.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/quantile-union.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4fa605d33bbd4971b7a9dcbc875a976806f2cdc456dd8053bb10c4e57935835c",
+    "sourceTechnicalHash": "4928cd8f5e5f90c530d9ed29532f6a1ab1e74a3a904622bf1fb5e17ebea4dd0e",
+    "targetHash": "883f5486d58b2b4414817882b33258d0a8cc4da1be84c982ab4cb6a9d4c93be7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:14.359Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4fa605d33bbd4971b7a9dcbc875a976806f2cdc456dd8053bb10c4e57935835c",
+      "targetHash": "883f5486d58b2b4414817882b33258d0a8cc4da1be84c982ab4cb6a9d4c93be7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/quantile-union",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/quantile-union.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/quantile-union.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "4fa605d33bbd4971b7a9dcbc875a976806f2cdc456dd8053bb10c4e57935835c",
+        "targetHash": "883f5486d58b2b4414817882b33258d0a8cc4da1be84c982ab4cb6a9d4c93be7",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

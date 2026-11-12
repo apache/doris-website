@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "114e51a4a15ae74358e7887d18bef7f472c715a884b413b73d2a2aaa642e73e3",
-    "sourceTechnicalHash": "82dae752a6ace72d210035fe7471669c8327210aa2a5b53650a626f217611c11",
-    "targetHash": "76b71d074be196b71d10de408b530a212a780c168827f85397805ac5980f86aa",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "c2d7b80090020e2b2b5e927bc649cace844a29232623020fef93401fa2a94ee4",
+    "sourceTechnicalHash": "ef45743857fb604d9437140171f9a44f1fb10082ac44b81b313dd8560e14ed97",
+    "targetHash": "da8e865bb86500dd422c4b6496e1e5e4e80a4beb7e54233200e6b4dc5873542a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T17:40:42.250Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c2d7b80090020e2b2b5e927bc649cace844a29232623020fef93401fa2a94ee4",
+      "targetHash": "da8e865bb86500dd422c4b6496e1e5e4e80a4beb7e54233200e6b4dc5873542a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during MySQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: MySQL 自動テーブル作成同期中の上流スキーマ変更 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+        "blob": "9575d2f49d7fc930b2e15d798a44813caff0a2e0"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+        "blob": "fad68e62e75cb0aff754362434220fd54aaf8422"
+      }
+    }
   }
 }

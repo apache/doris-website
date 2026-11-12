@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
 const assert = require('node:assert/strict');
+const {maxLineBytes,validateApacheControls} = require('./apache-controls.cjs');
 
 const binary = /\.(?:png|jpe?g|gif|webp|avif|svg|ico|ttf|otf|woff2?|eot|pdf|zip|docx?|xlsx?|mp[34]|webm|wav|ogg)$/i;
 const begin = '# BEGIN DORIS PUBLISH OPTIMIZATION';
@@ -24,6 +25,7 @@ function inventory(root) {
 }
 
 function optimize({site, locales, reportFile}) {
+    assert(!fs.existsSync(path.join(site,'.ci-validation.json')), 'Sample validation artifacts must not be published');
     site = path.resolve(site);
     const before = inventory(site);
     const prefixes = locales.filter(locale => locale.directory !== '.').map(locale => locale.directory);
@@ -48,6 +50,14 @@ function optimize({site, locales, reportFile}) {
         redirects.set(from, {to, preserveQuery,status});
     };
     let sharedFiles = 0, redirectPages = 0;
+
+    // Cached clients may still request the old query-versioned index URL.
+    // Preserve it with a temporary alias, without duplicating the large JSON.
+    for (const item of before) {
+        if (!/(?:^|\/)search-index(?:-[a-z0-9-]+)?-[a-f0-9]{16}\.json$/.test(item.relative)) continue;
+        const legacy = item.relative.replace(/-[a-f0-9]{16}\.json$/, '.json');
+        add(url(legacy), url(item.relative), true, 302);
+    }
 
     // All webpack runtimes already reference the root pool, including lazy
     // chunks and same-origin search workers. Never rewrite a hashed bundle.
@@ -229,13 +239,27 @@ function writeApache({site,locales,redirects,replaceExisting = false}) {
         // Quote and escape config syntax, while leaving the already encoded
         // redirect target intact (NE avoids double encoding it).
         const target = item.to.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\$/g,'\\$').replace(/%/g,'\\%');
-        const pattern = from.map(value => escapeRegex(value.path)
-            + (value.directory ? '(?:/index\\.html|/)?' : '')).join('|').replace(/"/g,'\\"');
-        const rule = `RewriteRule "^(?:${pattern})$" "${target}" [R=${item.status},L,NE${item.preserveQuery ? '' : ',QSD'}${item.status === 302 ? ',E=DORIS_ASSET_REDIRECT:1' : ''}]`;
-        if (directory) {
-            if (!assetRules.has(directory)) assetRules.set(directory,[]);
-            assetRules.get(directory).push(rule);
-        } else rules.push(rule);
+        const prefix = 'RewriteRule "^(?:';
+        const suffix = `)$" "${target}" [R=${item.status},L,NE${item.preserveQuery ? '' : ',QSD'}${item.status === 302 ? ',E=DORIS_ASSET_REDIRECT:1' : ''}]`;
+        const overhead = Buffer.byteLength(prefix+suffix);
+        if (directory && !assetRules.has(directory)) assetRules.set(directory,[]);
+        const output = directory ? assetRules.get(directory) : rules;
+        let patterns = [], bytes = overhead;
+        for (const value of from) {
+            const pattern = (escapeRegex(value.path)
+                + (value.directory ? '(?:/index\\.html|/)?' : '')).replace(/"/g,'\\"');
+            const size = Buffer.byteLength(pattern);
+            assert(overhead+size <= maxLineBytes,
+                `Publication redirect cannot fit in an Apache control line of ${maxLineBytes} bytes`);
+            if (bytes+size+(patterns.length ? 1 : 0) > maxLineBytes) {
+                output.push(prefix+patterns.join('|')+suffix);
+                patterns = [];
+                bytes = overhead;
+            }
+            bytes += size+(patterns.length ? 1 : 0);
+            patterns.push(pattern);
+        }
+        if (patterns.length) output.push(prefix+patterns.join('|')+suffix);
     }
     rules.push('</IfModule>','<IfModule mod_headers.c>',
         'Header always set Cache-Control "no-store" env=DORIS_ASSET_REDIRECT','</IfModule>',end);
@@ -246,14 +270,18 @@ function writeApache({site,locales,redirects,replaceExisting = false}) {
         assert(finish >= end.length, 'Incomplete publication controls');
         original = original.slice(0,original.indexOf(begin))+original.slice(finish).replace(/^\n+/,'');
     }
-    fs.writeFileSync(controls,rules.join('\n')+'\n\n'+original);
+    const content = rules.join('\n')+'\n\n'+original;
+    validateApacheControls(content,controls);
+    fs.writeFileSync(controls,content);
     for (const [directory,lines] of assetRules) {
         const file = path.join(site,directory,'.htaccess');
         assert(!fs.existsSync(file) || (replaceExisting && fs.readFileSync(file,'utf8').startsWith(begin)),
             `Cannot replace existing asset controls: ${directory}`);
         fs.mkdirSync(path.dirname(file),{recursive:true});
-        fs.writeFileSync(file,[begin,'<IfModule mod_rewrite.c>','RewriteEngine On',
-            'RewriteOptions IgnoreInherit',...lines,'</IfModule>',end,''].join('\n'));
+        const content = [begin,'<IfModule mod_rewrite.c>','RewriteEngine On',
+            'RewriteOptions IgnoreInherit',...lines,'</IfModule>',end,''].join('\n');
+        validateApacheControls(content,file);
+        fs.writeFileSync(file,content);
     }
     return {root:rules.filter(line => line.startsWith('RewriteRule')).length,
         total:rules.filter(line => line.startsWith('RewriteRule')).length

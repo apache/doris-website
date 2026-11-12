@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/multi-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/multi-catalog.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/multi-catalog.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "918853b9add6586228bbfc8fa1e504c581f78eafe93d5d08785f9ba93b03e1de",
+    "sourceTechnicalHash": "71e02d34a64d9e660e412f32e936d9a1dabf803ee008813e8b8e492990847119",
+    "targetHash": "656e600b65a335590f1d181f8b8abe73a1b6a740b06190ef69e427c7e9b4deab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:49:24.802Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "918853b9add6586228bbfc8fa1e504c581f78eafe93d5d08785f9ba93b03e1de",
+      "targetHash": "656e600b65a335590f1d181f8b8abe73a1b6a740b06190ef69e427c7e9b4deab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

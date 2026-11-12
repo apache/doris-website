@@ -14,18 +14,20 @@ function repositoryUrl(repository = process.env.GITHUB_REPOSITORY || 'apache/dor
 }
 
 function batchWide(locale) {
-    const files = new Set(['translations/config.json', 'config/i18n.js', 'docusaurus.config.js', 'versions.json',
+    const files = new Set(['translations/config.json', 'translations/release-notes-baseline.json', 'translations/blog-baseline.json', 'config/i18n.js', 'docusaurus.config.js', 'versions.json',
+        'src/constant/version.ts', 'config/versions-plugin.js',
+        'sidebars.ts', 'sidebarsCommunity.json', 'sidebarsCourse.ts', 'sidebarsReleases.json',
         `translations/scope/${locale}.json`, `translations/glossary/${locale}.json`,
         `translations/protection-exceptions/${locale}.json`]);
     // Top-level state files: the legacy ledger, resolved deletions and the shard schema.
     const state = new RegExp(`^translations/state/${locale}/[^/]+$`);
-    return file => files.has(file) || state.test(file) || file.startsWith('scripts/i18n/')
+    return file => files.has(file) || state.test(file) || file.startsWith('versioned_sidebars/') || file.startsWith('scripts/i18n/')
         || file.startsWith(`translations/inventory/${locale}/`);
 }
 
 // Every file one page of a batch reads or writes.
 function pageFiles(task, locale) {
-    return [task.sourcePath, task.targetPath, stateFileFor({...task, locale})];
+    return [task.sourcePath, task.targetPath, task.targetPath.replace(`i18n/${locale}/`,'i18n/zh-CN/'),stateFileFor({...task, locale})];
 }
 
 // `pages` maps a task or candidate ID to its page files.

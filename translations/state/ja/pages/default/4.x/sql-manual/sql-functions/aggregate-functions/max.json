@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max.md",
-    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
-    "sourceHash": "a516191fc093af9b05a62b060b62aac1291daa1601ee070952c37d87610ba1c2",
-    "sourceTechnicalHash": "272e0ba6e2788aec7c7979d4384de0158c65c2c3a0ba9ceb97e8fd3bf003403a",
-    "targetHash": "c3c95cc28269eded635c765e1efe81ffd0a1b3bfa4cbeb131df6e9db33d02dbc",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "56248684c4dfe7dfede52aae8e4521ddafdc06f7ef0eb39a60c688224fec629d",
+    "sourceTechnicalHash": "583d7830e9f7e51ed1b6b61ea6f01dccabb64c2255409dcd92ec182a5099e7e8",
+    "targetHash": "fdf209f69ae7b7533ed4aa4cbe51a7edcad2f0820f1a016782fc543031028d62",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T05:12:57.465Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T17:12:03.387Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "56248684c4dfe7dfede52aae8e4521ddafdc06f7ef0eb39a60c688224fec629d",
+      "targetHash": "fdf209f69ae7b7533ed4aa4cbe51a7edcad2f0820f1a016782fc543031028d62",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"code\",\"sql\",null,\"MAX(<expr>)\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr>\"]; received [\"code\",\"sql\",null,\"MAX(<expr>)\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"[10, 20, NULL]\"]; received [\"inlineCode\",null,null,\"<expr>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]\nprotected node 10: expected [\"code\",\"text\",null,\"Table created and data inserted successfully.\"]; received [\"code\",\"text\",null,\"テーブルの作成とデータの挿入に成功しました。\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max.md",
+        "blob": "c3273a10d515ecfb3bacdfd18be177160c2f0291"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max.md",
+        "blob": "d812025fae279fc3ad06866539e4d69f26ade8d5"
+      }
+    }
   }
 }

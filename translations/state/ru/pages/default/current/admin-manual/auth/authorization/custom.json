@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/authorization/custom",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/authorization/custom.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/authorization/custom.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "a028c6e5ed15c65bb9d596e6aa87cc257dd95d80d8cbdc227ee35929b4e0aec2",
+    "sourceTechnicalHash": "6fc7eade9c0391901e9dd3c644f08373106b7c6fe307dcc682cc180138d9b3a5",
+    "targetHash": "1882678a896b07434908c1e422103c82bc55e09d8bbb9a174aa3de7a609d1c7b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:08:30.682Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a028c6e5ed15c65bb9d596e6aa87cc257dd95d80d8cbdc227ee35929b4e0aec2",
+      "targetHash": "1882678a896b07434908c1e422103c82bc55e09d8bbb9a174aa3de7a609d1c7b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

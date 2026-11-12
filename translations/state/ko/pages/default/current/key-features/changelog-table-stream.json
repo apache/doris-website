@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/changelog-table-stream",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/changelog-table-stream.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/changelog-table-stream.mdx",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "cfa01eccc5aeb2a80c364625a63a6e36e56b2bd16c9dc63e05e9cda97543a344",
+    "sourceTechnicalHash": "c9484d5243b9f81e0f49d5e2f8ac94b7c4683f2d10aa78d3649d52a91c648bb7",
+    "targetHash": "03c8d1778c87d7531ec3eb8eed53ab025717e3d8decde8e7a44e95bac8e46fc4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T17:17:27.446Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cfa01eccc5aeb2a80c364625a63a6e36e56b2bd16c9dc63e05e9cda97543a344",
+      "targetHash": "03c8d1778c87d7531ec3eb8eed53ab025717e3d8decde8e7a44e95bac8e46fc4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

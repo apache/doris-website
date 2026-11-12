@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
-    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
-    "sourceHash": "f02c0c3cc608cc4a6bff781a4e365dd45e89fd5f2f25390496cc9686cda3253b",
-    "sourceTechnicalHash": "c0577ab6b324d36aae0633b2f937a6d875c4707bba3c389f26ee6e4cf79ce3c0",
-    "targetHash": "36aabf1b9f2c6873d6eb620d09ed362e838f6788bea7e0f39f29bb511124c418",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "88c0b72b8baf173a34d2d742bebd69bd5f417c6e53872ff099cac46a2d551d9b",
+    "sourceTechnicalHash": "fe0ecc5d81114d8848c2a2c21b79c1c0cc4c8c6eb45f32dc8c3b9fe8997a32d1",
+    "targetHash": "121f07de04eb6b3961a3f072761a84dac6e166f2ebc0b1d87d87303ece4b99d8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-13T19:30:24.920Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T17:02:46.047Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "88c0b72b8baf173a34d2d742bebd69bd5f417c6e53872ff099cac46a2d551d9b",
+      "targetHash": "121f07de04eb6b3961a3f072761a84dac6e166f2ebc0b1d87d87303ece4b99d8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"128\",\"2\",\"4.1.5\"]; received [\"1\",\"1\",\"128\",\"2\",\"4.1.5\"]\nprotected node 14: expected [\"code\",\"sql\",null,\"SET default_ai_resource = 'ai_resource_name';\\nSELECT\\n    product_id,\\n    AI_AGG(\\n        comment,\\n        '请把多条用户评价总结成一句话，突出买家最关心的优点和缺点，控制在50字以内。'\\n    ) AS 评价摘要\\nFROM product_reviews\\nGROUP BY product_id;\"]; received [\"inlineCode\",null,null,\"AI_AGG\"]\nprotected node 15: expected [\"code\",\"text\",null,\"+------------+--------------------------------------------------------------------------------------------------------------+\\n| product_id | 评价摘要                                                                                                     |\\n+------------+--------------------------------------------------------------------------------------------------------------+\\n|       1003 | 该产品面料透气、防晒效果好且颜色美观，但拉链使用不顺畅。                                                     |\\n|       1004 | 用户评价该产品降噪效果好，续航能力强，一周充一次电。                                                         |\\n|       1001 | 买家普遍认为鞋子穿着舒适、外观好看且物流快，但鞋底偏硬且有轻微胶味。                                         |\\n|       1002 | 买家认为该榨汁杯小巧便携、出汁快且易清洗，但电池续航短且售后换货流程慢。                                     |\\n+------------+--------------------------------------------------------------------------------------------------------------+\"]; received [\"code\",\"sql\",null,\"SET default_ai_resource = 'ai_resource_name';\\nSELECT\\n    product_id,\\n    AI_AGG(\\n        comment,\\n        '请把多条用户评价总结成一句话，突出买家最关心的优点和缺点，控制在50字以内。'\\n    ) AS 评价摘要\\nFROM product_reviews\\nGROUP BY product_id;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
+        "blob": "f63df252c41ad6788f72fb0dc749dc1f484b759d"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
+        "blob": "004ea28a76923308db7d72c27f49daf601d0abee"
+      }
+    }
   }
 }

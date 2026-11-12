@@ -194,7 +194,7 @@ Apache Doris 2.1.10/3.0.6 이전에는 excluded_trigger_tables 속성에 기본 
 
 - IVM 생성 조건
 
-  `REFRESH INCREMENTAL`을 사용하려면 기본 테이블에서 Row Binlog가 활성화되어 있어야 하며 구체화된 뷰 정의 SQL이 IVM 지원 범위에 포함되어야 합니다. `INCREMENTAL`을 명시적으로 지정한 경우 지원되지 않는 정의를 사용하면 생성이 실패합니다. 기본 테이블 모델과 FE 스위치에 대해서는 [IVM 사전 요구 사항](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#prerequisites)을, 쿼리 연산자와 집계 함수에 대해서는 [IVM 지원 쿼리](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#supported-queries)를 참조하세요.
+  `REFRESH INCREMENTAL`을 사용하려면 기본 테이블에서 changelog가 활성화되어 있어야 하며 구체화된 뷰 정의 SQL이 IVM 지원 범위에 포함되어야 합니다. `INCREMENTAL`을 명시적으로 지정한 경우 지원되지 않는 정의를 사용하면 생성이 실패합니다. 기본 테이블 모델과 FE 스위치에 대해서는 [IVM 사전 요구 사항](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#prerequisites)을, 쿼리 연산자와 집계 함수에 대해서는 [IVM 지원 쿼리](../../../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view#supported-queries)를 참조하세요.
 
 ## 예제 {#examples}
 

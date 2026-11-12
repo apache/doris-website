@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/compaction",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/compaction.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/compaction.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "826ef04eba975382da32eedb057f880d0897b40dcff4bc33afa857b507d9cb04",
+    "sourceTechnicalHash": "e45add6e503594b1f8004ccba2359d6bc269ef564a7b2aaba48d5ca48c1ec3a8",
+    "targetHash": "805c4a7adcf21eb04f4e0f767bec8ca9b5e3a0101ebc5a99def3194d027ca106",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-04T21:42:14.479Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "826ef04eba975382da32eedb057f880d0897b40dcff4bc33afa857b507d9cb04",
+      "targetHash": "805c4a7adcf21eb04f4e0f767bec8ca9b5e3a0101ebc5a99def3194d027ca106",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32\",\"4\",\"5\",\"8\",\"8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/admin-manual/trouble-shooting/compaction.md",
+        "blob": "5dfc0e312d02d64c51c7a479f7ea399525c844d6"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/compaction.md",
+        "blob": "b435655c7139b4c1d7d8f4b3dee3aa9a1cdbb69d"
+      }
+    }
+  }
+}

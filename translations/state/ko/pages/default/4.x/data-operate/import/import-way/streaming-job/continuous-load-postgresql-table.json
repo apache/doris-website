@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "9d1878589b264c2e101f07c8b3ae3af91d74b37a40af06704e4c56ef89ac48ea",
-    "sourceTechnicalHash": "83a156a58ee48063812a4ac076ecdc409cca9e605bfbb17d21a8ba265f319678",
-    "targetHash": "977550293cacb8716ff430a3177a8f6114313260720cda9880064c3ef04da222",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "53c31c6cc369a430a6a088dc148b9181788d8fccd53bc46ae93a1757327a7cb2",
+    "sourceTechnicalHash": "9f12578199423d87f366b43d79094cd67d9793ba253f7d7b6230b81a8ceea484",
+    "targetHash": "20bd1553291b4ba6ce9cc8230d1799d05aaf455746a940527b3ceb8e7f5004d8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:18:19.846Z",
+    "translatedAt": "2026-11-05T09:37:09.125Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "9d1878589b264c2e101f07c8b3ae3af91d74b37a40af06704e4c56ef89ac48ea",
-      "targetHash": "977550293cacb8716ff430a3177a8f6114313260720cda9880064c3ef04da222",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "53c31c6cc369a430a6a088dc148b9181788d8fccd53bc46ae93a1757327a7cb2",
+      "targetHash": "20bd1553291b4ba6ce9cc8230d1799d05aaf455746a940527b3ceb8e7f5004d8",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 절차 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: PostgreSQL real-time data sync / single-table CDC ingestion with SQL mapping -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: PostgreSQL 실시간 데이터 동기화 / SQL 매핑을 사용한 단일 테이블 CDC 수집 -->\"]\nprotected node 18: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 구성 매개변수 -->\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 절차 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: PostgreSQL real-time data sync / single-table CDC ingestion with SQL mapping -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: PostgreSQL 실시간 데이터 동기화 / SQL 매핑을 사용한 단일 테이블 CDC 수집 -->\"]\nprotected node 18: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 구성 매개변수 -->\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+        "blob": "3f7ecec80ea7ac650eaa46a63970b799390baa90"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+        "blob": "7e0a7a318f5f834e1593b49738ff55ca357a98e6"
+      }
     }
   }
 }

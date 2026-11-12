@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3-one-time",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "3489926bd2b49fedecb945092c22d851bbce873727283730e1d704752db533cb",
+    "sourceTechnicalHash": "46059895ce2aef612ed46e485db08dae9d282078e9e48c5f319a45c35fca8f26",
+    "targetHash": "b013af89b930335c434651b64d6c57373eb897262d8b9b89b18683c1a941b09c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-03T22:37:05.186Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3489926bd2b49fedecb945092c22d851bbce873727283730e1d704752db533cb",
+      "targetHash": "b013af89b930335c434651b64d6c57373eb897262d8b9b89b18683c1a941b09c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md",
+        "blob": "4f330a4724c132288b992e6f877817de82079b91"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md",
+        "blob": "b055a779656259e5e37b3370247932f12b7bfac9"
+      }
+    }
+  }
+}

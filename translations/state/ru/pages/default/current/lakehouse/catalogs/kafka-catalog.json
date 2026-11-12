@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/kafka-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/kafka-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/kafka-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6d2e02d9d0849d016e7ec0f7cbb75200a060e118ecd405d28e63a3c7a13319ae",
+    "sourceTechnicalHash": "4766fe8abc22ac04e8f293f6d30c63a089cde39ceaf6037a5d1c49f67651ab8c",
+    "targetHash": "bb4c5d8d2ac9348197d456c34307b8240d0b180757f0e8c20b150b43e4ca67f3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:58:57.261Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6d2e02d9d0849d016e7ec0f7cbb75200a060e118ecd405d28e63a3c7a13319ae",
+      "targetHash": "bb4c5d8d2ac9348197d456c34307b8240d0b180757f0e8c20b150b43e4ca67f3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

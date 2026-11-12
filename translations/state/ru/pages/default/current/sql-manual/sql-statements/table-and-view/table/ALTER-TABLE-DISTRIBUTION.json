@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f78fbb4477b6958d6ac201f2b755b88bd767303a0267ecec4a0f401b5171e67a",
+    "sourceTechnicalHash": "a42f3e67df8f11c58c4c279aa203a76fbd82278562c8f6f80f867895c917d248",
+    "targetHash": "42ef3a8bd31a932c5db26bf75da8ad31efd7d7752f08c8bd212e0b0bab9b40c7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:43:37.414Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f78fbb4477b6958d6ac201f2b755b88bd767303a0267ecec4a0f401b5171e67a",
+      "targetHash": "42ef3a8bd31a932c5db26bf75da8ad31efd7d7752f08c8bd212e0b0bab9b40c7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

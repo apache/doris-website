@@ -2,46 +2,50 @@
 {
     "title": "TIMESTAMPTZ",
     "language": "ja",
-    "description": "TIMESTAMPTZ は、タイムゾーンを考慮した日時情報を格納するために Doris で使用するデータ型です。"
+    "description": "TIMESTAMPTZ は、タイムゾーンを認識して日付と時刻の情報を格納するために Doris で使用されるデータ型です。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-TIMESTAMPTZ は、タイムゾーンを考慮した日時情報を格納するために Doris で使用するデータ型で、標準 SQL の TIMESTAMP WITH TIME ZONE に相当します。
+TIMESTAMPTZ は、タイムゾーンを認識して日付と時刻の情報を格納するために Doris で使用されるデータ型であり、標準 SQL の TIMESTAMP WITH TIME ZONE に対応します。
 
-データベースシステムによって、タイムゾーンを考慮したタイムスタンプ型の名称は異なります。
-- PostgreSQL と Oracle では TIMESTAMP WITH TIME ZONE を使用します。
-- SQL Server では DATETIMEOFFSET を使用します。
-- その他の一部のデータベースでは TIMESTAMP WITH LOCAL TIME ZONE を使用します。
+データベースシステムによって、タイムゾーン対応のタイムスタンプ型にはさまざまな命名規則があります。
+- PostgreSQL と Oracle は TIMESTAMP WITH TIME ZONE を使用します
+- SQL Server は DATETIMEOFFSET を使用します
+- その他の一部のデータベースは TIMESTAMP WITH LOCAL TIME ZONE を使用します
 
-SQL 標準によれば、単独の TIMESTAMP 型はタイムゾーン情報を持たないものとされています（TIMESTAMP WITHOUT TIME ZONE と同等です）。Doris では、ユーザーの習慣と使いやすさを考慮して、タイムゾーン付きのタイムスタンプ型を表す簡潔な名前として TIMESTAMPTZ を採用しました。現在、Doris には独立した TIMESTAMP 型がありません。時刻情報の格納には DATETIME を使用できます。
+SQL 標準では、単独の TIMESTAMP 型にタイムゾーン情報を付けるべきではありません（TIMESTAMP WITHOUT TIME ZONE と同等です）。ユーザーの慣習と使いやすさを考慮し、Doris では、タイムゾーン付きのタイムスタンプ型を表す名前として、より簡潔な TIMESTAMPTZ を採用しています。現在、Doris には独立した TIMESTAMP 型がないことに注意してください。ユーザーは DATETIME を使用して時刻情報を実質的に格納できます。
 
 TIMESTAMPTZ の範囲は DATETIME と同じで、`[0000-01-01 00:00:00.000000, 9999-12-31 23:59:59.999999]` です。
-TIMESTAMPTZ は TIMESTAMPTZ(p) の形式で精度を指定できます。`p` は精度を表し、範囲は `[0, 6]`、デフォルト値は 0 です。つまり、TIMESTAMPTZ は TIMESTAMPTZ(0) と同等です。デフォルトの出力形式は `'yyyy-MM-dd HH:mm:ss.SSSSSS +XX:XX'` で、`+XX:XX` はタイムゾーンのオフセットを表します（`SSSSSS` の桁数は精度 `p` によって決まります）。
+TIMESTAMPTZ では、TIMESTAMPTZ(p) 形式で精度を指定できます。`p` は精度を表し、範囲は `[0, 6]`、デフォルト値は 0 です。つまり、TIMESTAMPTZ は TIMESTAMPTZ(0) と同等です。デフォルトの出力形式は `'yyyy-MM-dd HH:mm:ss.SSSSSS +XX:XX'` です。ここで、`+XX:XX` はタイムゾーンオフセットを表します（`SSSSSS` の桁数は精度 `p` によって決まります）。
 
 TIMESTAMPTZ 型は、主キー、パーティション列、バケット列として使用できます。
 
-### 動作の仕組み
+### 動作原理 {#working-principle}
 
-TIMESTAMPTZ の実装では、データの各行にタイムゾーン情報を保存しません。代わりに、次の仕組みを使用します。
-1. 保存時：入力されたすべての時刻値を UTC（協定世界時）に変換します。
-2. クエリ時：セッションのタイムゾーン設定（`time_zone` 変数で指定）に基づき、表示用に UTC の時刻を該当するタイムゾーンに自動変換します。
+TIMESTAMPTZ の実装では、各データ行にタイムゾーン情報を格納せず、次の仕組みを採用しています。
+1. 保存時：入力された時刻値を UTC（協定世界時）に変換します。
+2. クエリ時：セッションのタイムゾーン設定（`time_zone` 変数で指定）に基づいて、UTC 時刻を表示用の対応するタイムゾーンへ自動的に変換します。
 
-したがって、TIMESTAMPTZ はタイムゾーン変換機能を持つ DATETIME 型と捉えることができます。Doris が内部でタイムゾーン変換を自動的に処理します。
+したがって、TIMESTAMPTZ はタイムゾーン変換機能を備えた DATETIME 型と考えることができ、Doris が内部でタイムゾーン変換を自動的に処理します。
 
-### タイムゾーンの処理規則
+### タイムゾーン処理ルール {#time-zone-handling-rules}
 
-- 入力文字列にタイムゾーン情報が含まれる場合（例：`"2020-01-01 00:00:00 +03:00"`）、Doris はそのタイムゾーン情報を変換に使用します。
-- 入力文字列にタイムゾーン情報が含まれない場合（例：`"2020-01-01 00:00:00"`）、Doris は現在のセッションのタイムゾーン設定を変換に使用します。
+- 入力文字列にタイムゾーン情報（例：`"2020-01-01 00:00:00 +03:00"`）が含まれている場合、Doris はそのタイムゾーン情報を使用して変換します。
+- 入力文字列にタイムゾーン情報（例：`"2020-01-01 00:00:00"`）が含まれていない場合、Doris は現在のセッションのタイムゾーン設定を使用して変換します。
 
-### 保存と使用
+4.1.5 以降、出力では、秒精度を持つ過去の IANA タイムゾーンオフセットが `+HH:MM:SS` として保持されます。入力タイムスタンプの数値オフセットには、固定セッションオフセットとは異なる制約があります。入力値の時は `24` 未満、分と秒は `60` 未満でなければなりません。固定セッションオフセットは引き続き `-12:00` から `+14:00` に制限されます。変換後のローカル年が `0` から `9999` の範囲外になる場合、セッションタイムゾーンへの変換は失敗します。
 
-Doris では、TIMESTAMPTZ 型のフィールドは 8 バイトのストレージ容量を使用します。
+4.1.5 以降、Catalog は外部のタイムゾーン対応タイムスタンプ型を常に `TIMESTAMPTZ` にマッピングします。互換性プロパティ `enable.mapping.timestamp_tz=false` を設定しても、以前の `DATETIME` マッピングには戻せません。Arrow Flight SQL は、タイムゾーン注釈付きの Arrow Timestamp 値として時点を伝送します。クエリスキーマではセッションタイムゾーンを使用します（`Z` は `UTC` に正規化されます）。`DATETIME` ではタイムゾーン注釈のない Timestamp を使用します。
 
-TIMESTAMPTZ 型と DATETIME 型は相互に変換でき、変換時には適切なタイムゾーン調整が行われます。TIMESTAMPTZ は DATETIME への暗黙的な変換に対応しているため、TIMESTAMPTZ を直接サポートしていない関数でもこの型のデータを処理できます。
+### ストレージと使用方法 {#storage-and-usage}
 
-## 例
+Doris では、TIMESTAMPTZ 型のフィールドは 8 バイトのストレージ領域を使用します。
+
+TIMESTAMPTZ 型と DATETIME 型は相互変換をサポートし、変換中にタイムゾーンに応じた適切な調整が行われます。TIMESTAMPTZ は DATETIME への暗黙的な変換をサポートするため、TIMESTAMPTZ を直接サポートしていない関数でもこの種類のデータを処理できます。
+
+## 例 {#examples}
 
 ```sql
 -- Using the current time zone (assuming +08:00) to convert a time string without time zone information

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/aliyun-oss",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/aliyun-oss.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/aliyun-oss.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
+    "sourceTechnicalHash": "14194a30d59d401728ab85c5a31af341d62e67cfe49834dcb097ba5d139b32e7",
+    "targetHash": "86d4aafc73233687d5c37f514b4b3038a0639855a52ce30591ba16ebd7ded022",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:13:49.440Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
+      "targetHash": "86d4aafc73233687d5c37f514b4b3038a0639855a52ce30591ba16ebd7ded022",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

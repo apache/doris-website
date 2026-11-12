@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/export/outfile",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/export/outfile.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/export/outfile.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4077bdabd00d4dc50ba6d9730817110ee7cf0746067efacda8911f43eaf59e96",
+    "sourceTechnicalHash": "1a5efe67ab5387d98b1bece5fdc556a57b621d4d1f5a64abe2def9fcc036ee42",
+    "targetHash": "df0b3d8c7a465be142057c826c5fd59deda75bdc0a85bfa7533ad388654075cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:29:39.150Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4077bdabd00d4dc50ba6d9730817110ee7cf0746067efacda8911f43eaf59e96",
+      "targetHash": "df0b3d8c7a465be142057c826c5fd59deda75bdc0a85bfa7533ad388654075cf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "data-operate/export/outfile",
+        "sourcePath": "docs/data-operate/export/outfile.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/export/outfile.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "4077bdabd00d4dc50ba6d9730817110ee7cf0746067efacda8911f43eaf59e96",
+        "targetHash": "df0b3d8c7a465be142057c826c5fd59deda75bdc0a85bfa7533ad388654075cf",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5424899f9ed0590360a73c03389486e72f1049df057007288f6f6efbd079d48e",
+    "sourceTechnicalHash": "67b36c7c9b02c1e20ef24eda6b08d2fbc70f72e1b4791c8333e011d7b7d53aa0",
+    "targetHash": "05f3be0e4c698253d924477abef836f06458d9feff57e5eeb5dabafb83e39b63",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:06:07.103Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5424899f9ed0590360a73c03389486e72f1049df057007288f6f6efbd079d48e",
+      "targetHash": "05f3be0e4c698253d924477abef836f06458d9feff57e5eeb5dabafb83e39b63",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP",
+        "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/BACKUP.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "5424899f9ed0590360a73c03389486e72f1049df057007288f6f6efbd079d48e",
+        "targetHash": "05f3be0e4c698253d924477abef836f06458d9feff57e5eeb5dabafb83e39b63",
+        "commit": "d5ac930e1a15d171738ddccbd717b10b31ba98d3",
+        "pr": "https://github.com/apache/doris-website/pull/4455"
+      }
+    }
+  }
+}

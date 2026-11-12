@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-sub",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-sub.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-sub.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "22731e77063b248d43dd9a139942eb5ebc66b72bfc720a18bb6bdd3b15e67213",
+    "sourceTechnicalHash": "5818ea25d0ba19f3087cede2fe88a0af5e529609e9888d98841ae2fa93c2c5c8",
+    "targetHash": "fb4981c2444cf73836abaec3869844def61a4bfd8d85747bc821ee199fab65ac",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:02:41.123Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "22731e77063b248d43dd9a139942eb5ebc66b72bfc720a18bb6bdd3b15e67213",
+      "targetHash": "fb4981c2444cf73836abaec3869844def61a4bfd8d85747bc821ee199fab65ac",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

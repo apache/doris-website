@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9660f3e2e6ec8d97761e6e322d16f76781fdf9417bfb861953ad366e84892434",
+    "sourceTechnicalHash": "ae40ab3dab0480fcb70c43275bf4e918c8b1e05894e406d3a553e4ce0023d8e6",
+    "targetHash": "e17940a75d70c90e2d1dc3f04a59ba2358400b25a51424473a0c0f8f3a4c504e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:35.558Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9660f3e2e6ec8d97761e6e322d16f76781fdf9417bfb861953ad366e84892434",
+      "targetHash": "e17940a75d70c90e2d1dc3f04a59ba2358400b25a51424473a0c0f8f3a4c504e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators",
+        "sourcePath": "docs/sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/conditional-operators/pattern-matching-operators.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "9660f3e2e6ec8d97761e6e322d16f76781fdf9417bfb861953ad366e84892434",
+        "targetHash": "e17940a75d70c90e2d1dc3f04a59ba2358400b25a51424473a0c0f8f3a4c504e",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}

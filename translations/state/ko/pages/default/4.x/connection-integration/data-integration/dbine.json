@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/dbine",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/dbine.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/dbine.md",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "1903e0d95cf99301ea0b47bb46bef4f6191f6db2d3f61578887b1143a2b6a74d",
+    "sourceTechnicalHash": "6303dc3d568ae9b47c6e057dda5f3491e90f1485e17872fe85c51292e170d4d2",
+    "targetHash": "8f5c04992c1bbcd5e8d84aefa1d094ba721e0fd46d8d88acaa4ca93795ebf7f0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T05:13:17.581Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "1903e0d95cf99301ea0b47bb46bef4f6191f6db2d3f61578887b1143a2b6a74d",
+      "targetHash": "8f5c04992c1bbcd5e8d84aefa1d094ba721e0fd46d8d88acaa4ca93795ebf7f0",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"5.7.99\"]; received [\"inlineCode\",null,null,\"version()\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"version()\"]; received [\"inlineCode\",null,null,\"5.7.99\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"5.7.99\"]; received [\"inlineCode\",null,null,\"version()\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"version()\"]; received [\"inlineCode\",null,null,\"5.7.99\"]"
+            },
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"5.7.99\"]; received [\"inlineCode\",null,null,\"version()\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"version()\"]; received [\"inlineCode\",null,null,\"5.7.99\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"5.7.99\"]; received [\"inlineCode\",null,null,\"version()\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"version()\"]; received [\"inlineCode\",null,null,\"5.7.99\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/tencent-cos",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/tencent-cos.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/tencent-cos.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e3fdb0333784205ce12a4103c1c5e89a43f6cfff45c92f7b0eb536e63c0f4fb7",
+    "sourceTechnicalHash": "eff59180777620208201deedf25fd18b32cc6f0ce62c39670aaa0e63049b08e0",
+    "targetHash": "2da3fa6e0675b3d2f6f765f95994c150fee09c7dae1bc497c7363f78727e6416",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:09:58.809Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e3fdb0333784205ce12a4103c1c5e89a43f6cfff45c92f7b0eb536e63c0f4fb7",
+      "targetHash": "2da3fa6e0675b3d2f6f765f95994c150fee09c7dae1bc497c7363f78727e6416",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

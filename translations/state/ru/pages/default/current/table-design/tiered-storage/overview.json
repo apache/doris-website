@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/tiered-storage/overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/tiered-storage/overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/tiered-storage/overview.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6ec25a936c0503f9b1d1e835460d87d7972bd6e5aa948bbb6c8fd5d303d3ff7c",
+    "sourceTechnicalHash": "9e06b7c8da5860856bfdaf6232b2dec16cb9da9297aea698559b563f33548e46",
+    "targetHash": "140a56c16841801439569d6a1acd660ee7ab726a06c384b2d72721647a35d098",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:59:43.403Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6ec25a936c0503f9b1d1e835460d87d7972bd6e5aa948bbb6c8fd5d303d3ff7c",
+      "targetHash": "140a56c16841801439569d6a1acd660ee7ab726a06c384b2d72721647a35d098",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

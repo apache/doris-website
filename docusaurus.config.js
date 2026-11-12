@@ -1,5 +1,6 @@
 const themes = require('prism-react-renderer').themes;
 const versionsPlugin = require('./config/versions-plugin');
+const recentBlogsPlugin = require('./config/recent-blogs-plugin.cjs');
 const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const { DEFAULT_VERSION } = require('./src/constant/version');
@@ -10,8 +11,15 @@ const REDIRECTS_4X = require('./config/redirects-4.x.json');
 const path = require('path');
 const translationDocsPlugin = require('./scripts/i18n/docs-plugin.cjs');
 const translationStatusPlugin = require('./scripts/i18n/status-plugin.cjs');
+const manualPlugins = require('./scripts/i18n/manual-plugins.cjs');
+const {filterContentSitemap} = require('./scripts/i18n/sitemap.cjs');
+const contentTranslationPlugin = require('./scripts/i18n/content-plugin.cjs');
+const {translatedContentPages} = require('./scripts/i18n/source-groups.cjs');
 const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
-const {enabledLocales, enabledLocaleRecords, hasBlogTranslations} = require('./config/i18n');
+const SOURCE_SEARCH_CONTEXTS = ['docs',
+    {path:'community',label:{en:'Community','zh-CN':'社区'}}, 'course',
+    {path:'releases',label:{en:'Release Notes','zh-CN':'发行说明'}}];
+const {enabledLocales, enabledLocaleRecords} = require('./config/i18n');
 const {managedLocales} = require('./scripts/i18n/state.cjs');
 const DEFAULT_LOCALE = 'en';
 const ENABLED_LOCALES = enabledLocales();
@@ -19,27 +27,19 @@ const ENABLED_LOCALES = enabledLocales();
 // no localized content is being served, which disables the whole render path.
 const MANAGED_LOCALES = managedLocales(__dirname, ENABLED_LOCALES);
 
-// Locales whose blog is entirely the default locale's articles, see
-// hasBlogTranslations in config/i18n.js. The render path keeps those routes
-// out of the index.
-const DEFAULT_LOCALE_BLOG_LOCALES = ENABLED_LOCALES
-    .filter(locale => locale !== DEFAULT_LOCALE && !hasBlogTranslations(__dirname, locale));
-
 // Utility routes that are never content: /search renders a noindex search page
-// in every locale, and /slack is a tracking redirect. The sitemap filter below
-// drops them by exact path, so the set follows the enabled locales instead of
-// naming a language.
+// in every locale, and /slack and /telegram are tracking redirects. The sitemap
+// filter drops them by exact path, so the set follows the enabled locales
+// instead of naming a language.
 const UTILITY_PATHS = new Set(ENABLED_LOCALES.flatMap(locale => {
     const prefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;
-    return [`${prefix}/search`, `${prefix}/slack`];
+    return [`${prefix}/search`, `${prefix}/slack`, `${prefix}/telegram`];
 }));
 
-const BRAND_THEME_BOOTSTRAP = require('node:fs').readFileSync(require('node:path').join(__dirname, 'static/js/brand-theme-bootstrap.js'), 'utf8');
-
-// Doris 101 remembers whether its module rail is collapsed. Applying the stored
-// choice before first paint keeps the rail from rendering expanded and then
-// snapping shut once React mounts on every lesson navigation.
-const COURSE_RAIL_BOOTSTRAP = require('node:fs').readFileSync(require('node:path').join(__dirname, 'static/js/course-rail-bootstrap.js'), 'utf8');
+// Root-entry selection precedes hydration; theme and course rail preferences
+// still apply before paint. Publish builds emit these exact bytes by hash.
+const BOOTSTRAPS = require('./scripts/publish/bootstrap.cjs').scripts(__dirname,
+    {baseUrl:'/',defaultLocale:DEFAULT_LOCALE,locales:ENABLED_LOCALES});
 
 // Per-document last-update timestamps, generated from git history by
 // scripts/last-update/generate.js. The 2-hourly Cron Deploy regenerates the map
@@ -305,21 +305,10 @@ const config = {
             .map(({code, label, htmlLang}) => [code, {label, htmlLang}])),
     },
     headTags: require('./scripts/publish/shared-assets.cjs').enabled()
-        ? require('./scripts/publish/bootstrap.cjs').scripts(__dirname).map(script => ({
+        ? BOOTSTRAPS.map(script => ({
             // Blocking head scripts retain the before-paint theme/rail setup.
             tagName:'script', attributes:{src:require('./config/asset-origin').getAssetOrigin()+'/'+script.file},
-        })) : [
-        {
-            tagName: 'script',
-            attributes: {},
-            innerHTML: BRAND_THEME_BOOTSTRAP,
-        },
-        {
-            tagName: 'script',
-            attributes: {},
-            innerHTML: COURSE_RAIL_BOOTSTRAP,
-        },
-    ],
+        })) : BOOTSTRAPS.map(script => ({tagName:'script',attributes:{},innerHTML:script.content})),
     scripts: ['/js/custom-script.js',
         {
             async: true,
@@ -347,12 +336,17 @@ const config = {
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {
+        searchContexts: {source:SOURCE_SEARCH_CONTEXTS.map(item=>typeof item==='string'?item:item.path),
+            managed:searchPlugin.contextsFor(__dirname)},
         // Real Slack invite link. `/slack` (src/pages/slack.tsx) records the
         // click in Matomo and then forwards visitors here, so every public
         // channel keeps linking to https://doris.apache.org/slack and this is
         // the only value to update when the invite is rotated.
         slackInviteUrl:
             'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-4ce61raf7-LPi99HBnrzHOZ7E0_bQZXA',
+        // Keep public links on https://doris.apache.org/telegram. Update only
+        // this destination when the Telegram community link changes.
+        telegramInviteUrl: 'https://t.me/dorisapache',
         // The public HTTPS reverse proxy is the default browser entry point.
         // Local development can still replace this build-time value when needed.
         profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'https://agent.velodb.io',
@@ -364,24 +358,35 @@ const config = {
         // than naming a language. `translatedLocales` carry per-document
         // translation state and render its notices; `defaultLocalePageLocales`
         // show ordinary pages from the default locale, so a link to one must
-        // target it directly; `defaultLocaleBlogLocales` show the default
-        // locale's blog, so those routes must not be indexed on their own.
+        // target it directly. Blog indexing uses native per-route state.
         translatedLocales: MANAGED_LOCALES,
         defaultLocalePageLocales: enabledLocaleRecords()
             .filter(locale => locale.ordinaryPages === false).map(locale => locale.code),
         translatedPagePaths: Object.fromEntries(enabledLocaleRecords()
-            .filter(locale => locale.translatedPages?.length)
-            .map(locale => [locale.code, locale.translatedPages])),
-        defaultLocaleBlogLocales: DEFAULT_LOCALE_BLOG_LOCALES,
+            .map(locale => [locale.code, [...(locale.translatedPages ?? []), ...translatedContentPages(__dirname, locale.code)]])
+            .filter(([, pages]) => pages.length)),
     },
     future: {
         experimental_faster: true,
     },
     plugins: [
+        contentTranslationPlugin,
         SKIP_DOCS ? null : [translationDocsPlugin, MAIN_DOCS_OPTIONS],
-        MANAGED_LOCALES.length ? translationStatusPlugin : null,
+        [translationStatusPlugin, {browserData: MANAGED_LOCALES.length > 0}],
+        [manualPlugins.pages, {}],
+        SKIP_BLOG ? null : [manualPlugins.blog, {
+            blogTitle: 'Apache Doris - Blog | Latest news and events ',
+            blogDescription:
+                'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
+            postsPerPage: 'ALL',
+            blogSidebarCount: 0,
+            showReadingTime: false,
+            onUntruncatedBlogPosts: 'ignore',
+            onInlineAuthors: 'ignore',
+        }],
+        SKIP_BLOG ? null : recentBlogsPlugin,
         'docusaurus-plugin-sass',
-        'docusaurus-plugin-matomo',
+        require.resolve('./config/matomo-plugin/index.cjs'),
         // Use custom blog plugin
         versionsPlugin,
         SKIP_COURSE ? null : [
@@ -445,7 +450,7 @@ const config = {
                     // before forwarding to customFields.slackInviteUrl.
                 ],
                 createRedirects(existingPath) {
-                    const redirects = [];
+                    const redirects = [...require('./config/archived-docs-redirects.cjs')(existingPath)];
 
                     // Static redirects indexed by target. Trim trailing slash
                     // for the lookup since Docusaurus' trailingSlash:true
@@ -502,16 +507,8 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: false, // The native docs plugin is wrapped below for translation state.
-                blog: SKIP_BLOG ? false : {
-                    blogTitle: 'Apache Doris - Blog | Latest news and events ',
-                    blogDescription:
-                        'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
-                    postsPerPage: 'ALL',
-                    blogSidebarCount: 0,
-                    showReadingTime: false,
-                    onUntruncatedBlogPosts: 'ignore',
-                    onInlineAuthors: 'ignore',
-                },
+                blog: false, // Native blog metadata is wrapped for the content contract.
+                pages: false,
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),
                 },
@@ -527,7 +524,8 @@ const config = {
                     createSitemapItems: async params => {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
-                        const filteredItems = items.filter(item => {
+                        const locale = ENABLED_LOCALES.find(locale => locale !== 'en' && params.siteConfig.baseUrl.endsWith(`/${locale}/`)) ?? 'en';
+                        const filteredItems = filterContentSitemap(items, __dirname, locale, params.siteConfig.baseUrl).filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
                             return !UTILITY_PATHS.has(pathname);
                         });
@@ -555,13 +553,13 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['docs', 'course', 'zh-CN/docs', 'zh-CN/course'],
+                docsRouteBasePath: ['docs', 'community', 'course', 'releases', 'zh-CN/docs', 'zh-CN/community', 'zh-CN/course', 'zh-CN/releases'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
                 searchBarShortcutHint: true,
                 searchResultLimits: 100,
-                searchContextByPaths: ['docs', 'course'],
+                searchContextByPaths: SOURCE_SEARCH_CONTEXTS,
                 useAllContextsWithNoSearchContext: false,
                 ignoreFiles: [/^docs\/(?:[^/]+\/)?key-features\//],
             },

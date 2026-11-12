@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/database/SHOW-DATABASES",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/database/SHOW-DATABASES.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/database/SHOW-DATABASES.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1597cbeeb8cfaeae1aa265b2b58dd3cd37960afd576bcfc0528e72736376247c",
+    "sourceTechnicalHash": "1bf486fdfc22dd0831a2fc45f4d6a3981f78258c45bf5f10871aa6df0682d4ff",
+    "targetHash": "a9f06eb492d53447545739c36208faf5842a572da21e534a1c4120e5bc29f764",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:05:02.738Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1597cbeeb8cfaeae1aa265b2b58dd3cd37960afd576bcfc0528e72736376247c",
+      "targetHash": "a9f06eb492d53447545739c36208faf5842a572da21e534a1c4120e5bc29f764",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

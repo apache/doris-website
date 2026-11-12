@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-clickhouse-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-clickhouse-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-clickhouse-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "2dd308ba61ffa5e1d4f7d4af0e8264a894f30a39abdf2942068cf1ffc42ce543",
+    "sourceTechnicalHash": "e9ad1055b1392ab14f61ee9654fc2be5f9591d56da61da9594d173b019328211",
+    "targetHash": "e905e46914191362a2f8b519c8c252589769d1e805ad7b72415b5eab2dbb94b8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:56:33.645Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2dd308ba61ffa5e1d4f7d4af0e8264a894f30a39abdf2942068cf1ffc42ce543",
+      "targetHash": "e905e46914191362a2f8b519c8c252589769d1e805ad7b72415b5eab2dbb94b8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

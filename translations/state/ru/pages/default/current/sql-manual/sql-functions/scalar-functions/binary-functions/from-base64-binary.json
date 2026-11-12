@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/binary-functions/from-base64-binary",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/binary-functions/from-base64-binary.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/binary-functions/from-base64-binary.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d9f4ca085c7cc2f1d17e5aa598735ef89bbc68706b80bfc55e5f5c07b9b73e4d",
+    "sourceTechnicalHash": "6493b9dfaf6ec844ed0940c5c0cd207e9e99d27f39121b00668b715393f32dcd",
+    "targetHash": "8ab870dff4ab08a93ee3586d0ae3053b355f3d7f1d36c5a207b87cba3cad95bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:42:26.384Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d9f4ca085c7cc2f1d17e5aa598735ef89bbc68706b80bfc55e5f5c07b9b73e4d",
+      "targetHash": "8ab870dff4ab08a93ee3586d0ae3053b355f3d7f1d36c5a207b87cba3cad95bd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

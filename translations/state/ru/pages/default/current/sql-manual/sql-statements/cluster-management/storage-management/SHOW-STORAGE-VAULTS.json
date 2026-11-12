@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-VAULTS",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-VAULTS.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-VAULTS.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "13a09cde36746891099a2009fb1baad10b751b5148786544c33ac41d7741cb47",
+    "sourceTechnicalHash": "8cf75255c094f7e448e22d7a501ec135691e73c003f62f7ee21b512d91c17cc4",
+    "targetHash": "2eada2e2eabe1695b2bb83bf354de4f9406040ecccf7f61fb33c8013cdd56825",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:59:10.076Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "13a09cde36746891099a2009fb1baad10b751b5148786544c33ac41d7741cb47",
+      "targetHash": "2eada2e2eabe1695b2bb83bf354de4f9406040ecccf7f61fb33c8013cdd56825",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/file-formats/lance",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/file-formats/lance.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/file-formats/lance.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "78b429633dbe2bcfad9e6a7230d527d53e32a9abc770214aec567f165a5de55d",
+    "sourceTechnicalHash": "bdbfe245ed3baf2f8e8a27efa0b07007c38e042be49bf5fbdfcbcfc943e16d21",
+    "targetHash": "ee9f542bef61419bb622c3f369e359765407ad73cce648212fc389558c8aabad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:59:03.959Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "78b429633dbe2bcfad9e6a7230d527d53e32a9abc770214aec567f165a5de55d",
+      "targetHash": "ee9f542bef61419bb622c3f369e359765407ad73cce648212fc389558c8aabad",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

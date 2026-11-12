@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/changelog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/changelog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/incremental/changelog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "bf1fe9c08aa2a9e2fce782be2f5f9c41c7f2d31dab6868dc94ee8b11a6a5287d",
+    "sourceTechnicalHash": "61ad6350cd1177b83dcb2e78b4fbfc29c42796e8af06ddcb58da7b3dda11c041",
+    "targetHash": "9d70ce6de7bc2853efe636d20aacc6d3cddcb72825cd8e62e60a5ad73df3e5e1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T14:46:34.114Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bf1fe9c08aa2a9e2fce782be2f5f9c41c7f2d31dab6868dc94ee8b11a6a5287d",
+      "targetHash": "9d70ce6de7bc2853efe636d20aacc6d3cddcb72825cd8e62e60a5ad73df3e5e1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 246: expected [\"inlineCode\",null,null,\"changelog.ttl_seconds\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 247: expected [\"inlineCode\",null,null,\"changelog.need_historical_value\"]; received [\"inlineCode\",null,null,\"changelog.ttl_seconds\"]\nprotected node 248: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"changelog.need_historical_value\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature description + Parameter reference -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Описание функции + Справочник параметров -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use cases: Enabling row-level change recording on a table / Checking whether a table model is supported / Inspecting change records -->\"]; received [\"html\",null,null,\"<!-- Сценарии использования: Включение записи изменений на уровне строк в таблице / Проверка поддержки модели таблицы / Просмотр записей об изменениях -->\"]\nprotected node 14: expected [\"html\",null,null,\"<!-- Knowledge type: Environment requirements -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Требования к окружению -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

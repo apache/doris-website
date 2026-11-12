@@ -1,29 +1,31 @@
 ---
 {
-    "title": "DATE | 日付と時刻",
+    "title": "DATE | 日時",
     "language": "ja",
-    "description": "DATE 型は日付を格納します。値の範囲は [0000-01-01, 9999-12-31] で、デフォルトの出力形式は 'yyyy-MM-dd' です。",
+    "description": "DATE 型は日付を格納し、値の範囲は [0000-01-01, 9999-12-31] で、既定の出力形式は 'yyyy-MM-dd' です。",
     "sidebar_label": "DATE"
 }
 ---
 
-# DATE
+# DATE {#date}
 
-## 説明
+## 説明 {#description}
 
-DATE 型は日付を格納します。値の範囲は `[0000-01-01, 9999-12-31]` で、デフォルトの出力形式は 'yyyy-MM-dd' です。
+DATE 型は日付を格納し、値の範囲は `[0000-01-01, 9999-12-31]` で、`0000-02-29` は除外されます。既定の出力形式は 'yyyy-MM-dd' です。
 
-Doris ではグレゴリオ暦の日付形式を使用しており、グレゴリオ暦上の日付と Doris 上の日付は一対一に対応します。`0000` は紀元前 1 年（BCE 1）を表します。
+Doris はグレゴリオ暦の規則を使用し、`0000` 年は紀元前 1 年（BCE 1）を表します。特殊な境界日 `0000-02-29` はサポートされません。
 
-DATE 型は主キー、パーティション列、バケット列として使用できます。Doris では、DATE 型のフィールドは実際には 4 バイトを占有します。DATE は実行時に年、月、日を分けて格納するため、DATE 列に対する `months_add` 演算は `unix_timestamp` より効率的です。
+4.1.5 以降、Arrow、Parquet、ORC V2 における DATE のエポック日変換では、零年の最初の二か月にあるオフセットが修正されています。旧 Doris エンコーディングのファイルは自動的に識別できません。`0000-01-01` から `0000-02-28` までの日付を含むファイルについては、書き込み元を特定し、[アップグレードガイド](../../../../admin-manual/cluster-management/upgrade.md#year-zero-date-file-migration) に記載されている方法で移行してください。
 
-他の型を DATE に変換する方法と、変換時に受け付ける入力については、[DATE へのキャスト](../conversion/date-conversion.md) を参照してください。
+DATE 型は主キー、パーティション列、またはバケット列として使用できます。DATE 型のフィールドは、Doris では実際に 4 バイトを使用します。DATE は実行時に年、月、日ごとに個別に格納されるため、DATE 列で `months_add` 演算を実行する方が `unix_timestamp` より効率的です。
 
-日付・時刻型では、算術演算に数学演算子を直接使用できません。数学演算を行う際には、まず日付・時刻型が暗黙的に数値型へ変換され、その後に演算が行われます。時刻型の加減算や丸めを行う場合は、[DATE_ADD](../../../sql-functions/scalar-functions/date-time-functions/date-add.md)、[DATE_SUB](../../../sql-functions/scalar-functions/date-time-functions/date-sub.md)、[TIMESTAMPDIFF](../../../sql-functions/scalar-functions/date-time-functions/timestampdiff.md)、[DATE_TRUNC](../../../sql-functions/scalar-functions/date-time-functions/date-trunc.md) などの関数の使用を検討してください。
+他の型を DATE に変換する方法と、変換時に受け入れられる入力については、[DATE への変換](../conversion/date-conversion.md) を参照してください。
 
-DATE 型はタイムゾーンを保存しません。したがって、セッション変数 `time_zone` を変更しても、DATE 型に格納された値には影響しません。
+日付時刻型では、算術演算に数学演算子を直接使用できません。数学演算を行う際は、まず日付時刻型を暗黙的に数値型へ変換してから演算します。時間型に対して加算、減算、または丸め処理を行う必要がある場合は、[DATE_ADD](../../../sql-functions/scalar-functions/date-time-functions/date-add.md)、[DATE_SUB](../../../sql-functions/scalar-functions/date-time-functions/date-sub.md)、[TIMESTAMPDIFF](../../../sql-functions/scalar-functions/date-time-functions/timestampdiff.md)、[DATE_TRUNC](../../../sql-functions/scalar-functions/date-time-functions/date-trunc.md) などの関数の使用を検討してください。
 
-## 例
+DATE 型はタイムゾーンを格納しません。つまり、セッション変数 `time_zone` の変更は、格納されている DATE 型の値に影響しません。
+
+## 例 {#examples}
 
 ```sql
 select cast('2020-01-02' as date);

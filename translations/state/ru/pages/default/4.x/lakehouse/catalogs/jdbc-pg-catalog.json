@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/jdbc-pg-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-pg-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-pg-catalog.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1c6d80cd1541139acf1ce158d2f2ad78129874511b529b13b4ad65379c7cf2d7",
+    "sourceTechnicalHash": "f8aacc8d81cb44cfeb93bb9bbd5430beed9588dd3222735db7bef643a0e9e199",
+    "targetHash": "7505c1231cd2831e9b00e68b0f330286587da9cf54d25ea1db66ec510cb92935",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:20.376Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1c6d80cd1541139acf1ce158d2f2ad78129874511b529b13b4ad65379c7cf2d7",
+      "targetHash": "7505c1231cd2831e9b00e68b0f330286587da9cf54d25ea1db66ec510cb92935",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/catalogs/jdbc-pg-catalog",
+        "sourcePath": "docs/lakehouse/catalogs/jdbc-pg-catalog.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-pg-catalog.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "1c6d80cd1541139acf1ce158d2f2ad78129874511b529b13b4ad65379c7cf2d7",
+        "targetHash": "7505c1231cd2831e9b00e68b0f330286587da9cf54d25ea1db66ec510cb92935",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

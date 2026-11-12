@@ -48,6 +48,8 @@ Doris uses the [resource mechanism](../sql-manual/sql-statements/cluster-managem
 
 ### Resource parameters
 
+**Since 4.1.5**, configure at least one complete connection group: general `ai.*`, text embedding `ai.embed.*`, or multimodal embedding `ai.embed.mm.*`. Each configured group requires `provider_type`, `endpoint`, and `model_name`; `api_key` is also required unless that group's provider is `LOCAL`. The required connection fields below apply when configuring the general group. Scalar AI functions and `AI_AGG` require the general group. Earlier versions require the general group.
+
 | Parameter               | Required                                  | Description                                                                                                   |
 | ----------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `type`                  | Required                                  | Must be `ai`, used as the type identifier of an AI resource.                                                  |
@@ -59,6 +61,39 @@ Doris uses the [resource mechanism](../sql-manual/sql-statements/cluster-managem
 | `ai.max_tokens`         | Optional                                  | Limits the maximum number of tokens in the generated content. The default `-1` means the parameter is not set; the default for Anthropic is `2048`. |
 | `ai.max_retries`        | Optional                                  | The maximum number of retries for a single request. The default value is `3`.                                 |
 | `ai.retry_delay_second` | Optional                                  | The delay between retries, in seconds. The default value is `0`.                                              |
+| `ai.enable_structured_output` | Optional | **Since 4.2.** Boolean, defaults to `true`. Doris batches input rows for scalar AI functions. Enabling this option adds provider-specific format fields to improve response-format reliability. Doris does not check the configured model's support; LOCAL and MiniMax omit these fields. Set it to `false` if the model or endpoint rejects them. Batching, system-prompt format instructions, and response validation remain enabled. Does not apply to `AI_AGG` or `EMBED`. |
+| `ai.effort` | Optional | **Since 4.1.5.** String controlling reasoning effort for generation requests; unset by default. Doris accepts `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, or `max` for OpenAI-compatible providers; Anthropic accepts `low`, `medium`, `high`, `xhigh`, or `max`; Gemini accepts `minimal`, `low`, `medium`, or `high`. The configured model must support the selected value. Set it to an empty string with `ALTER RESOURCE` to remove it. |
+
+### Dedicated embedding properties
+
+**Since 4.1.5.** All properties below are strings and have no default value. A configured group must be complete; missing fields are not filled from another group.
+
+| Parameter | Description |
+| --- | --- |
+| `ai.embed.provider_type` | Provider for text embedding. |
+| `ai.embed.endpoint` | API endpoint for text embedding. |
+| `ai.embed.model_name` | Text embedding model name. |
+| `ai.embed.api_key` | API key for text embedding; optional for `LOCAL`. |
+| `ai.embed.mm.provider_type` | Provider for multimodal embedding. |
+| `ai.embed.mm.endpoint` | API endpoint for multimodal embedding. |
+| `ai.embed.mm.model_name` | Multimodal embedding model name. |
+| `ai.embed.mm.api_key` | API key for multimodal embedding; optional for `LOCAL`. |
+
+For text input, `EMBED` selects the complete `ai.embed.*` group, then the general group. For JSON multimodal input, it selects `ai.embed.mm.*`, then `ai.embed.*`, then the general group. Selection uses a complete group as a unit; the selected provider and model must support the input type. API keys in all three groups are masked in `SHOW RESOURCES`. Parameters such as `ai.dimensions` and retry settings are shared across groups.
+
+For example, create a resource used only for text embedding:
+
+```sql
+CREATE RESOURCE 'text_embedding' PROPERTIES (
+    'type' = 'ai',
+    'ai.embed.provider_type' = 'QWEN',
+    'ai.embed.endpoint' = 'https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings',
+    'ai.embed.model_name' = 'text-embedding-v4',
+    'ai.embed.api_key' = '<api-key>'
+);
+```
+
+After replacing `<api-key>` with a valid key, the resource can be used by `EMBED('text_embedding', 'example text')`. Add a complete general group to use the same resource for scalar AI functions or `AI_AGG`.
 
 :::caution Authentication notes
 Currently only static API key authentication is supported (the credential is sent directly in the request header). Authentication mechanisms that require signing with a private key and exchanging for a temporary access token (such as OAuth or Service Account) are not supported.

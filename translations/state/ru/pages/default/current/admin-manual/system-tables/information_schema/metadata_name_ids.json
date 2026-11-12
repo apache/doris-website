@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/metadata_name_ids",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/metadata_name_ids.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/metadata_name_ids.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "82b4472a984fe9abe8eff6e4f33bf107df41f4701059117a77e6b436b2e9dace",
+    "sourceTechnicalHash": "0031b8ba3d6c57cdd26878295f1a655ff3c708df17cdfbd6608e863e128329fe",
+    "targetHash": "c18048071f727a8945ab47d7074d7d8c4548d2a355fe1b966f0228f5baf11fb8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:41:13.537Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "82b4472a984fe9abe8eff6e4f33bf107df41f4701059117a77e6b436b2e9dace",
+      "targetHash": "c18048071f727a8945ab47d7074d7d8c4548d2a355fe1b966f0228f5baf11fb8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -2,11 +2,11 @@
 {
     "title": "FORMAT_ROUND",
     "language": "ja",
-    "description": "数値を「#,###,###.##」のような形式に整形し、指定した小数点以下の桁数に丸めて、文字列として返します。"
+    "description": "数値を\"#,###,###.##\"のような形式に整形し、指定した小数点以下の桁数に丸めて、文字列として返します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
 数値を「#,###,###.##」のような形式に整形し、指定した小数点以下の桁数に丸めて、文字列として返します。
 
@@ -14,31 +14,36 @@
 この関数はバージョン 3.0.6 以降でサポートされています。
 :::
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 FORMAT_ROUND(<number>, <D>)
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 
 | パラメータ | 説明 |
 | -- | -- |
 | `<number>` | 整形する数値 |
 | `<D>` | 小数点以下の桁数。範囲は [0, 1024] |
 
-## 戻り値
+## 戻り値 {#return-value}
 
-整形した文字列を返します。特殊なケースは次のとおりです。
+STRING 型の整形された文字列を返します。特殊なケースは次のとおりです。
 
-- 引数が NULL の場合は NULL を返します。
-- D が 0 の場合、結果には小数点と小数部分が含まれません。
-- D が [0, 1024] の範囲外の場合、引数をこの範囲内に指定する必要があることを示すエラーを返します。
+- パラメータが NULL の場合は NULL を返します。
+- D が 0 の場合、結果に小数点や小数部は含まれません。Doris 4.1 系の 4.1.5 以降では、D が 0 のとき DECIMAL 入力も丸められます。それ以前のバージョンでは、丸めずに小数部を切り捨てることがありました。
+- D が [0, 1024] の範囲外の場合、引数がこの範囲内である必要があることを示すエラーが返されます。
 
-## 例
+<a id="examples"></a>
+
+## 例 {#example}
 
 ```sql
-mysql> select format_round(17014116, 2);
+select format_round(17014116, 2);
+```
+
+```text
 +---------------------------+
 | format_round(17014116, 2) |
 +---------------------------+
@@ -47,7 +52,10 @@ mysql> select format_round(17014116, 2);
 ```
 
 ```sql
-mysql> select format_round(1123.456, 2);
+select format_round(1123.456, 2);
+```
+
+```text
 +---------------------------+
 | format_round(1123.456, 2) |
 +---------------------------+
@@ -56,7 +64,10 @@ mysql> select format_round(1123.456, 2);
 ```
 
 ```sql
-mysql> select format_round(1123.4, 2);
+select format_round(1123.4, 2);
+```
+
+```text
 +-------------------------+
 | format_round(1123.4, 2) |
 +-------------------------+
@@ -65,7 +76,10 @@ mysql> select format_round(1123.4, 2);
 ```
 
 ```sql
-mysql> select format_round(123456, 0);
+select format_round(123456, 0);
+```
+
+```text
 +-------------------------+
 | format_round(123456, 0) |
 +-------------------------+
@@ -74,7 +88,10 @@ mysql> select format_round(123456, 0);
 ```
 
 ```sql
-mysql> select format_round(123456, 3);
+select format_round(123456, 3);
+```
+
+```text
 +-------------------------+
 | format_round(123456, 3) |
 +-------------------------+
@@ -83,7 +100,10 @@ mysql> select format_round(123456, 3);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 0);
+select format_round(123456.123456, 0);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 0) |
 +--------------------------------+
@@ -92,7 +112,10 @@ mysql> select format_round(123456.123456, 0);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 3);
+select format_round(123456.123456, 3);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 3) |
 +--------------------------------+
@@ -101,7 +124,10 @@ mysql> select format_round(123456.123456, 3);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 6);
+select format_round(123456.123456, 6);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 6) |
 +--------------------------------+
@@ -110,8 +136,40 @@ mysql> select format_round(123456.123456, 6);
 ```
 
 ```sql
-mysql> SELECT format_round(-0.01, -1);
+SELECT format_round(-0.01, -1);
+```
+
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1, it should be in range [0, 1024].
-mysql> SELECT format_round(-0.01, -1500);
+```
+
+```sql
+SELECT format_round(-0.01, -1500);
+```
+
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1500, it should be in range [0, 1024].
+```
+
+DECIMAL 入力を小数点以下ゼロ桁に丸める:
+
+```sql
+SELECT FORMAT_ROUND(CAST(1.9 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(-1.9 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(1.4 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(-1.4 AS DECIMAL(9, 1)), 0);
+```
+
+```text
+2    -2    1    -1
+```
+
+NULL 入力:
+
+```sql
+SELECT FORMAT_ROUND(NULL, 2);
+```
+
+```text
+NULL
 ```

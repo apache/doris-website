@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/unique",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/unique.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/data-model/unique.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6b378116d758ffa7290561a48d29761a4857c82013f04e7c136523a33fa381e7",
+    "sourceTechnicalHash": "7986b095a15c13d17a9d64c294b536c06f9fa0b319de1b6764e5fe1e55ce5c96",
+    "targetHash": "acb901ae024c639b4d59dd6b537c83f3e61b0486728386dbcbe0edde2cc3dbdb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:56:01.071Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6b378116d758ffa7290561a48d29761a4857c82013f04e7c136523a33fa381e7",
+      "targetHash": "acb901ae024c639b4d59dd6b537c83f3e61b0486728386dbcbe0edde2cc3dbdb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

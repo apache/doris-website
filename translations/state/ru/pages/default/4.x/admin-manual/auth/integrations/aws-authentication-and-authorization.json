@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/integrations/aws-authentication-and-authorization",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/integrations/aws-authentication-and-authorization.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/integrations/aws-authentication-and-authorization.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c8164e0662b9952b58da4a78af3acd7ba8b33163cb42eb71a19ddb3ed5d4125e",
+    "sourceTechnicalHash": "71be24afa3c907b3acc72a92909127fb22f41ccd21692e916450ffe45522278b",
+    "targetHash": "3b53d3c6f5e1dbfc6b0d35b69b02ba11439e77c890ca8cb8e6157d437f5f9564",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:51:37.147Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c8164e0662b9952b58da4a78af3acd7ba8b33163cb42eb71a19ddb3ed5d4125e",
+      "targetHash": "3b53d3c6f5e1dbfc6b0d35b69b02ba11439e77c890ca8cb8e6157d437f5f9564",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/auth/integrations/aws-authentication-and-authorization",
+        "sourcePath": "docs/admin-manual/auth/integrations/aws-authentication-and-authorization.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/integrations/aws-authentication-and-authorization.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "c8164e0662b9952b58da4a78af3acd7ba8b33163cb42eb71a19ddb3ed5d4125e",
+        "targetHash": "3b53d3c6f5e1dbfc6b0d35b69b02ba11439e77c890ca8cb8e6157d437f5f9564",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

@@ -7,8 +7,9 @@ const {execFileSync} = require('node:child_process');
 const {hash, languageName, pipelineLocale} = require('./state.cjs');
 
 const root = path.resolve(__dirname, '../..');
-const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'sidebars.ts', 'sidebarsCommunity.json',
-    'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json'];
+const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'versions.json', 'src/constant/version.ts', 'config/versions-plugin.js', 'sidebars.ts', 'sidebarsCommunity.json',
+    'sidebarsCourse.ts', 'sidebarsReleases.json',
+    'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', 'translations/release-notes-baseline.json', 'translations/blog-baseline.json'];
 // A push to this locale's own scope or glossary changes what may be generated.
 const rulesFor = locale => new Set([...configInputs,
     `translations/scope/${locale}.json`, `translations/glossary/${locale}.json`]);
@@ -21,16 +22,16 @@ function relevantPush(changed, audit, scope) {
         const scopeGroup = scope.groups.find(item => item.id === group.id);
         const plugin = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
         const version = group.version === 'current' ? 'current' : `version-${group.version}`;
-        return group.entries.map(page => `i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/`
+        return group.entries.map(page => (scopeGroup.kind==='blog'?'i18n/zh-CN/docusaurus-plugin-content-blog/':`i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/`)
             + page.sourcePath.slice(scopeGroup.sourceRoot.length + 1));
     }));
-    return changed.some(file => source.has(file) || chinese.has(file) || rules.has(file));
+    return changed.some(file => source.has(file) || chinese.has(file) || rules.has(file) || file.startsWith('versioned_sidebars/'));
 }
 
 function changedPaths(before, head) {
     if (!/^[a-f0-9]{40}$/.test(before ?? '') || /^0{40}$/.test(before)) return null;
-    try {return execFileSync('git', ['diff', '--name-only', before, head],
-        {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);}
+    try {return execFileSync('git', ['diff', '--name-only','-z', before, head],
+        {cwd: root, encoding: 'utf8'}).split('\0').filter(Boolean);}
     catch {return null;}
 }
 
@@ -42,6 +43,7 @@ function planInputs(head, activeCandidates, env = process.env) {
 }
 
 function summarize(plan, reconciliation, eligible, mode, language, reused = false) {
+    const effective=plan.automaticCounts??plan.counts;
     const exceptionKinds = new Map();
     for (const item of [...plan.exceptions, ...reconciliation.exceptions])
         exceptionKinds.set(item.kind, (exceptionKinds.get(item.kind) ?? 0) + 1);
@@ -52,9 +54,12 @@ function summarize(plan, reconciliation, eligible, mode, language, reused = fals
         `- Plan: ${reused ? 'reused from discovery; master and open-PR reservations are unchanged'
             : 'recounted from the native documents'}`,
         `- Mode: \`${mode}\`; generation eligible: **${eligible}**`,
-        `- Required: ${plan.counts.required}; merged current: ${plan.counts.mergedCurrent}; pending: ${plan.counts.pending}`,
+        `- Required for enabled automatic groups: ${effective.required}; merged current: ${effective.mergedCurrent}; pending: ${effective.pending}`,
+        `- Additional registered content outside automatic maintenance: ${plan.counts.required-effective.required}; not a required translation backlog`,
         `- Open PRs inspected: ${reconciliation.openPrCount}; relevant: ${reconciliation.relevantPrs.length}; active candidates: ${plan.counts.activeCandidates}`,
         `- Selected for a possible next batch: ${plan.selected.length}; blocked targets: ${reconciliation.blockedTargets.length}`,
+        `- Outside enabled automatic groups: ${plan.deferredAutomationTasks ?? 0}; reported separately, not sent to a model`,
+        ...['releases','blog'].map(plugin=>`- ${plugin==='blog'?'Blog':'Release-note'} policy: historical excluded=${plan.exceptions.filter(item=>item.pluginId===plugin&&item.kind==='historical_excluded').length}; manual reconciliation=${plan.exceptions.filter(item=>item.pluginId===plugin&&item.kind==='policy_review').length}`),
         `- Robot batch PRs already open: ${reconciliation.botPrs.join(', ') || 'none'}`,
         `- Exceptions: ${[...exceptionKinds].map(([kind, count]) => `${kind}=${count}`).join(', ') || 'none'}`,
         '',
@@ -108,8 +113,8 @@ function main() {
     const locale = pipelineLocale(root);
     const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     if (event === 'workflow_dispatch' && mode === 'validate') {
-        assert(/\.mdx?$/.test(process.env.I18N_PATH || ''),
-            'Validation mode needs an exact English .md or .mdx source path');
+        assert(/\.(mdx?|tsx?)$/.test(process.env.I18N_PATH || ''),
+            'Validation mode needs an exact English Markdown, MDX or TypeScript source path');
         assert(plan.selected.length === 1 && plan.tasks.find(task => task.id === plan.selected[0])?.sourcePath === process.env.I18N_PATH,
             'Validation mode must select exactly one eligible source file');
     }

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/job/CANCEL-TASK",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/job/CANCEL-TASK.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/job/CANCEL-TASK.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e4c644c1af39f5839807a59d7996874a30e1fe04a7429ed8bd6d3a77c07f9745",
+    "sourceTechnicalHash": "078f979635d6b7df5f2e1c490559d936aaf7e5188ca0f15029c435f43afb4206",
+    "targetHash": "76b46272142eb04890ee6552815a9dc6ddf50bbcf04fb2b77a44da09cf6ad003",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:51:49.975Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e4c644c1af39f5839807a59d7996874a30e1fe04a7429ed8bd6d3a77c07f9745",
+      "targetHash": "76b46272142eb04890ee6552815a9dc6ddf50bbcf04fb2b77a44da09cf6ad003",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/job/CANCEL-TASK",
+        "sourcePath": "docs/sql-manual/sql-statements/job/CANCEL-TASK.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/CANCEL-TASK.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "e4c644c1af39f5839807a59d7996874a30e1fe04a7429ed8bd6d3a77c07f9745",
+        "targetHash": "76b46272142eb04890ee6552815a9dc6ddf50bbcf04fb2b77a44da09cf6ad003",
+        "commit": "ce24bd33dc04ac6b20bee9fd337ed9e8b6433ad0",
+        "pr": "https://github.com/apache/doris-website/pull/4456"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/azure-storage",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/azure-storage.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/azure-storage.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "215614aa3636568b042e71678e6890b2bd4b7402a9e796699a013a78468d7e36",
+    "sourceTechnicalHash": "e2765d0af602c56c87610d34335a1c0e0f424e67c4e233251526cd2583b11a4a",
+    "targetHash": "dedd325e500c425342f00e0bcaa4be870e4b830ff8255b8fb12466590cacd433",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:11:38.236Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "215614aa3636568b042e71678e6890b2bd4b7402a9e796699a013a78468d7e36",
+      "targetHash": "dedd325e500c425342f00e0bcaa4be870e4b830ff8255b8fb12466590cacd433",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

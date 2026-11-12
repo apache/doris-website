@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/bloomfilter",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/bloomfilter.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/index/bloomfilter.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e6417f22674a837f9c0618e7567bacfb8ce65f6460300ee6cf7c6c5b61d61dea",
+    "sourceTechnicalHash": "e24225fde399ad4056003abfc23f09a59cf7e3e72f7732533520be72b3d76f60",
+    "targetHash": "29f40c5e30bab30b6886dce7d0cde004879eabee542c4c885324a32ccc575fce",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:04:07.183Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e6417f22674a837f9c0618e7567bacfb8ce65f6460300ee6cf7c6c5b61d61dea",
+      "targetHash": "29f40c5e30bab30b6886dce7d0cde004879eabee542c4c885324a32ccc575fce",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "table-design/index/bloomfilter",
+        "sourcePath": "docs/table-design/index/bloomfilter.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/bloomfilter.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "e6417f22674a837f9c0618e7567bacfb8ce65f6460300ee6cf7c6c5b61d61dea",
+        "targetHash": "29f40c5e30bab30b6886dce7d0cde004879eabee542c4c885324a32ccc575fce",
+        "commit": "aa2a9993a3f68b04675dba12f6054562b5817c76",
+        "pr": "https://github.com/apache/doris-website/pull/4457"
+      }
+    }
+  }
+}

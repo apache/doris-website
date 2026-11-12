@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bc521baa0c417cc2242242f1d1693c14a9e27288b7f6d2eff41d66ed1f00f46b",
+    "sourceTechnicalHash": "be8c4b223809a247b5bf56dc35868a364431acdd1084ebb59775ec33f4e021c5",
+    "targetHash": "4a5101eed7f19062fe28a25a0aab2d6247e3c53b6e2e8bd784267b1ed28051a9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:08:16.278Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bc521baa0c417cc2242242f1d1693c14a9e27288b7f6d2eff41d66ed1f00f46b",
+      "targetHash": "4a5101eed7f19062fe28a25a0aab2d6247e3c53b6e2e8bd784267b1ed28051a9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

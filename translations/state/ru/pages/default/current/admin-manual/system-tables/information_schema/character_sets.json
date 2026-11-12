@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/character_sets",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/character_sets.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/character_sets.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e711baf27dcbec7d103bf7d70b50ec22cf4d0dd7e548354bbf6354ff29976358",
+    "sourceTechnicalHash": "0031b8ba3d6c57cdd26878295f1a655ff3c708df17cdfbd6608e863e128329fe",
+    "targetHash": "ffe4b8112603a86cb117715e4f59431ee6ccbebe51ef5b892794d4373878d8c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:40:16.336Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e711baf27dcbec7d103bf7d70b50ec22cf4d0dd7e548354bbf6354ff29976358",
+      "targetHash": "ffe4b8112603a86cb117715e4f59431ee6ccbebe51ef5b892794d4373878d8c5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

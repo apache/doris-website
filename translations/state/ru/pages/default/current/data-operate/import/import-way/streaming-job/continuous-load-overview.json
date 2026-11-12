@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "469612a9de86b800a24cef2de5b67aafca0bfbab7f0c7efbab4a3d34e9b9597f",
+    "sourceTechnicalHash": "51a4ab52b41a2d5f9409b9a8847a92ca08591a1579429ec23d07e6d05ac13698",
+    "targetHash": "ab00794dbf0cb9147ed0f0921b2ed1ab5aa26457c5bd1f203d22ee240ec844e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-03T22:17:36.521Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "469612a9de86b800a24cef2de5b67aafca0bfbab7f0c7efbab4a3d34e9b9597f",
+      "targetHash": "ab00794dbf0cb9147ed0f0921b2ed1ab5aa26457c5bd1f203d22ee240ec844e4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: обзор функции + решение по выбору архитектуры -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: выбор источника данных в реальном времени / эксплуатация непрерывной загрузки -->\"]\nprotected node 16: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: решение по выбору архитектуры -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+        "blob": "c2fdd0f8cd6ea67df136a8794a96531398348276"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+        "blob": "10bba96c9c2430fbb9b61a2f311565148bde7417"
+      }
+    }
+  }
+}

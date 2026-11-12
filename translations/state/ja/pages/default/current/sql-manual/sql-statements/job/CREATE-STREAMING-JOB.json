@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "a17ae96ee1bf2ff7c5e4f1f5cd4ab8812e36c1c48ab0716a4b60d0cbeaa04d2e",
     "sourceTechnicalHash": "b1c1b340439a0ae81d9677f65944e9805b81be16c2ea39408335cd72ba19988e",
-    "targetHash": "588415eb1276e38c434f13f15a52b1ba8e9a881ec147f563fe88ac64aec79c39",
+    "targetHash": "e9fd57f0919cb67e328618a98bde050662ccac12b39fcd4ddc1fc5894f919af7",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:50:40.612Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T05:33:35.479Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "a17ae96ee1bf2ff7c5e4f1f5cd4ab8812e36c1c48ab0716a4b60d0cbeaa04d2e",
+      "targetHash": "e9fd57f0919cb67e328618a98bde050662ccac12b39fcd4ddc1fc5894f919af7",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.4\",\"5\",\"6\",\"63\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.4\",\"5\",\"6\",\"63\"]\nprotected node 6: expected [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command> \"]; received [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command>\"]\nprotected node 99: expected [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO \\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]; received [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO\\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.4\",\"5\",\"6\",\"63\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.4\",\"5\",\"6\",\"63\"]\nprotected node 6: expected [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command> \"]; received [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command>\"]\nprotected node 99: expected [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO \\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]; received [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO\\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.4\",\"5\",\"6\",\"63\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.4\",\"5\",\"6\",\"63\"]\nprotected node 6: expected [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command> \"]; received [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command>\"]\nprotected node 99: expected [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO \\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]; received [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO\\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.4\",\"5\",\"6\",\"63\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.4\",\"5\",\"6\",\"63\"]\nprotected node 6: expected [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command> \"]; received [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command>\"]\nprotected node 99: expected [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO \\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]; received [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO\\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
+        "blob": "26ce126098533be3a3c30a4cfcdf61681c1659fd"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
+        "blob": "5bf7abb870374dad3a99987d43f166ad309839f1"
+      }
+    }
   }
 }

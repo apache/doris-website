@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-mysql-catalog.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-mysql-catalog.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "2e953ecf983aefbf0958e5cd372daa0948d50134c54968a32131d5a185e017a1",
-    "sourceTechnicalHash": "e10ced9db39e046712f98897f99b44b2bff022540b0c10996ec279843b263dee",
-    "targetHash": "e96e30249fc2618dbf009667c4ecf3dc3b1ca7def635e4e6df9a01016c72931c",
+    "sourceCommit": "819add3ae97a4996554421080fd612755b2c2129",
+    "sourceHash": "a8c7929d4965b2b80b7969b875fc26b08aa0f9ba8f06369da98c19b7b366b398",
+    "sourceTechnicalHash": "09a12719acea0d26a5ab73dfc597cb283c89b8fedbc13e499c69897e8ef2ee21",
+    "targetHash": "10c1246efa56c9623b9cf0f758ff07d01563eab2061d32e7a513af2602ede0f1",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.713Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T04:48:33.292Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "a8c7929d4965b2b80b7969b875fc26b08aa0f9ba8f06369da98c19b7b366b398",
+      "targetHash": "10c1246efa56c9623b9cf0f758ff07d01563eab2061d32e7a513af2602ede0f1",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 36: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed: \\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed:\\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 44: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0000\",\"0000\",\"1\",\"1\",\"2.0.13\",\"2.1.5\",\"3\",\"3306\",\"4\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5.7\",\"6\",\"686\",\"7\",\"8\",\"8\",\"8\",\"8\",\"8.0\",\"8.0.31\",\"8.0.31\",\"819\"]; received [\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0000\",\"0000\",\"1\",\"1\",\"2\",\"2.0.13\",\"2.1.5\",\"3\",\"3306\",\"4\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5.7\",\"6\",\"686\",\"7\",\"8\",\"8\",\"8\",\"8\",\"8.0\",\"8.0.31\",\"8.0.31\",\"819\"]\nprotected node 36: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed: \\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed:\\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 36: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed: \\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed:\\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 44: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 36: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed: \\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed:\\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 44: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

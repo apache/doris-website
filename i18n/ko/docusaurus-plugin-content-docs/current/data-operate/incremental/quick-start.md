@@ -2,14 +2,13 @@
 {
     "title": "빠른 시작",
     "language": "ko",
-    "description": "Doris Row Binlog와 Table Stream을 10분 만에 살펴봅니다. Row Binlog를 활성화한 테이블 생성, Stream 생성, 데이터 쓰기, 변경 사항 확인, 다운스트림에서의 소비 과정을 안내합니다.",
+    "description": "Doris changelog와 Table Stream을 10분 만에 살펴봅니다. changelog를 활성화한 테이블 생성, Stream 생성, 데이터 쓰기, 변경 사항 확인, 다운스트림에서의 소비 과정을 안내합니다.",
     "keywords": [
         "Doris Table Stream 빠른 시작",
-        "Row Binlog 예제",
+        "changelog 예제",
         "CREATE STREAM",
-        "binlog.enable",
-        "binlog.format ROW",
-        "binlog.need_historical_value",
+        "changelog.enable",
+        "changelog.need_historical_value",
         "min_delta",
         "show_initial_rows",
         "__DORIS_STREAM_CHANGE_TYPE_COL__",
@@ -24,9 +23,9 @@
 ---
 
 <!-- Knowledge type: Operations guide -->
-<!-- Use cases: First use of Row Binlog / Table Stream -->
+<!-- Use cases: First use of changelog / Table Stream -->
 
-이 페이지에서는 주문 테이블을 예로 들어 Row Binlog와 Table Stream의 기본 사용법을 설명합니다. 주문의 삽입, 업데이트, 삭제를 기록하고, 그 변경 사항을 정확히 한 번씩 소비하여 다운스트림 테이블에 반영합니다. MySQL 클라이언트와 약 10분만 있으면 됩니다.
+이 페이지에서는 주문 테이블을 예로 들어 changelog와 Table Stream의 기본 사용법을 설명합니다. 주문의 삽입, 업데이트, 삭제를 기록하고, 그 변경 사항을 정확히 한 번씩 소비하여 다운스트림 테이블에 반영합니다. MySQL 클라이언트와 약 10분만 있으면 됩니다.
 
 ## 사전 요구 사항 {#prerequisites}
 
@@ -36,7 +35,7 @@
 - 모든 FE의 `fe.conf`에 다음 설정을 추가하고 FE를 재시작합니다(두 설정 모두 동적 설정이 아닙니다):
 
     ```text
-    enable_feature_binlog = true
+    enable_feature_changelog = true
     enable_table_stream = true
     ```
 
@@ -44,18 +43,18 @@
 
 ## 진행 단계 개요 {#overview-of-the-steps}
 
-1. Row Binlog를 활성화한 `orders` 테이블을 생성하고 첫 번째 배치 데이터를 씁니다.
+1. changelog를 활성화한 `orders` 테이블을 생성하고 첫 번째 배치 데이터를 씁니다.
 2. `min_delta` Table Stream을 `orders`에 생성합니다.
 3. 업데이트, 삭제, 삽입이 포함된 두 번째 배치 데이터를 씁니다.
 4. Stream을 통해 변경 사항을 확인하고 각 행의 변경 유형을 이해합니다.
 5. `INSERT INTO ... SELECT`로 변경 사항을 다운스트림 테이블에 반영하여 소비합니다.
 6. `information_schema.table_stream_consumption`에서 소비 진행 상황을 확인합니다.
 
-## 1단계: Row Binlog를 활성화한 테이블 생성 {#step-1-create-a-table-with-row-binlog-enabled}
+## 1단계: changelog를 활성화한 테이블 생성 {#step-1-create-a-table-with-row-binlog-enabled}
 
 <!-- Knowledge type: Operational steps -->
 
-Row Binlog는 테이블 생성 시에만 활성화할 수 있습니다. Unique Key Merge-on-Write 테이블을 생성하고 `binlog.need_historical_value`를 활성화하여 업데이트와 삭제 시 변경 전 값도 기록하도록 합니다:
+Changelog는 테이블 생성 시에만 활성화할 수 있습니다. Unique Key Merge-on-Write 테이블을 생성하고 `changelog.need_historical_value`를 활성화하여 업데이트와 삭제 시 변경 전 값도 기록하도록 합니다:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS demo;
@@ -71,9 +70,8 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 ```
 
@@ -271,12 +269,12 @@ DROP TABLE orders;
 | 생성 직후 Stream이 비어 있음 | `show_initial_rows = false`이면 Stream 생성 시 이미 존재하는 데이터는 변경 사항으로 내보내지 않습니다. 새 변경 사항을 쓴 후 다시 쿼리하세요 |
 | `SELECT * FROM orders_stream`에 변경 유형이 표시되지 않음 | 가상 컬럼은 `SELECT *`에 포함되지 않습니다. `__DORIS_STREAM_CHANGE_TYPE_COL__`과 `__DORIS_STREAM_SEQUENCE_COL__`을 명시적으로 나열하세요 |
 | 쿼리할 때마다 같은 변경 사항이 계속 반환됨 | 일반 `SELECT`는 변경 사항을 읽기만 하며 오프셋을 앞으로 이동시키지 않습니다. `INSERT INTO ... SELECT ... FROM orders_stream`으로 소비하면 더 이상 반환되지 않습니다 |
-| 기존 테이블에서 Row Binlog 활성화 | Row Binlog는 테이블 생성 시에만 활성화할 수 있습니다. Row Binlog를 활성화한 새 테이블을 생성하고 데이터를 다시 적재하세요. [Row Binlog](row-binlog#enabling-row-binlog)를 참조하세요 |
+| 기존 테이블에서 changelog 활성화 | Changelog는 테이블 생성 시에만 활성화할 수 있습니다. changelog를 활성화한 새 테이블을 생성하고 데이터를 다시 적재하세요. [Changelog](changelog#enabling-changelog)를 참조하세요 |
 | `LAST_CONSUMPTION_TIME`에 `-1`이 표시됨 | 해당 파티션은 아직 소비된 적이 없습니다 |
 
 ## 다음 단계 {#next-steps}
 
 - 세 가지 소비 유형의 차이, `show_initial_rows`의 의미, 읽기와 소비의 트랜잭션 처리 방식: [Table Stream 기본](table-stream)
 - 파티션별 소비, 스냅샷 읽기, 차원 테이블 조인, 기본 테이블 DDL이 Stream에 미치는 영향: [Table Stream 고급](table-stream-advanced)
-- Row Binlog 속성, 지원 범위, 제한 사항: [Row Binlog](row-binlog)
+- Changelog 속성, 지원 범위, 제한 사항: [Changelog](changelog)
 - Stream을 생성하지 않고 시간 구간별로 변경 사항 읽기: [증분 쿼리](incremental-query)

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-execution/data-skew-handling",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-execution/data-skew-handling.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-execution/data-skew-handling.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "30637ac337f83998e28465426aeb899f67fe04430a12bd89698f12df44e12a48",
+    "sourceTechnicalHash": "2b55537386195c32c6c06146cebfdb136e1bae5a2117f1c287254897928e9fd3",
+    "targetHash": "59b98679a5c3f46690d0fbcd9f5637a9032dc28be6a25c1f5d95fae961d3be04",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:32.548Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "30637ac337f83998e28465426aeb899f67fe04430a12bd89698f12df44e12a48",
+      "targetHash": "59b98679a5c3f46690d0fbcd9f5637a9032dc28be6a25c1f5d95fae961d3be04",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/tuning/tuning-execution/data-skew-handling",
+        "sourcePath": "docs/query-acceleration/tuning/tuning-execution/data-skew-handling.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-execution/data-skew-handling.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "30637ac337f83998e28465426aeb899f67fe04430a12bd89698f12df44e12a48",
+        "targetHash": "59b98679a5c3f46690d0fbcd9f5637a9032dc28be6a25c1f5d95fae961d3be04",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

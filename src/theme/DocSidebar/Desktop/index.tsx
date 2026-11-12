@@ -4,7 +4,6 @@ import {useThemeConfig} from '@docusaurus/theme-common';
 import {useActivePlugin, useActiveVersion} from '@docusaurus/plugin-content-docs/client';
 import Logo from '@theme/Logo';
 import SearchBar from '@theme/SearchBar';
-import LocaleDropdownNavbarItem from '@theme/NavbarItem/LocaleDropdownNavbarItem';
 import CollapseButton from '@theme/DocSidebar/Desktop/CollapseButton';
 import Content from '@theme/DocSidebar/Desktop/Content';
 import type {Props} from '@theme/DocSidebar/Desktop';
@@ -36,9 +35,6 @@ function DocSidebarDesktop({path, sidebar, onCollapse, isHidden}: Props) {
         <div className={styles.sidebarHeader}>
           <div className={styles.sidebarSearch}>
             <SearchBar />
-          </div>
-          <div className={styles.sidebarLocale}>
-            <LocaleDropdownNavbarItem mobile={false} {...({} as any)} />
           </div>
         </div>
       )}

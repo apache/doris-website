@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1d20365a3e82f81393f6e556fcf038de3ac66f0d1227fa5b97635aaa3dc25493",
+    "sourceTechnicalHash": "60a2b261a96c1a41f8b5e69e78ac5f5a3ed4f11f712aec3c2e38c5548eeb0cb2",
+    "targetHash": "3878d58730ab499f3403bcef144ee9e717e7a14b58ae4ce06b1298bd0ec79dfe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:51:53.601Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1d20365a3e82f81393f6e556fcf038de3ac66f0d1227fa5b97635aaa3dc25493",
+      "targetHash": "3878d58730ab499f3403bcef144ee9e717e7a14b58ae4ce06b1298bd0ec79dfe",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/REBALANCE-DISK.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "1d20365a3e82f81393f6e556fcf038de3ac66f0d1227fa5b97635aaa3dc25493",
+        "targetHash": "3878d58730ab499f3403bcef144ee9e717e7a14b58ae4ce06b1298bd0ec79dfe",
+        "commit": "ce24bd33dc04ac6b20bee9fd337ed9e8b6433ad0",
+        "pr": "https://github.com/apache/doris-website/pull/4456"
+      }
+    }
+  }
+}

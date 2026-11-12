@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/complex-type",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/complex-type.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-data/complex-type.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "98a1f39f95547db68a2ef351ea6e210d75ff57a8545eecb432a865bdf1dd6c9f",
+    "sourceTechnicalHash": "f2f55dc85a0c0992a0917ce00e6a493e5c56368206855d8a23568f8ba23a94f9",
+    "targetHash": "ace6a5269d981405f2756e84ef5210c88d1bf2ed6c1b166f9d8064b0925c8710",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:33.684Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "98a1f39f95547db68a2ef351ea6e210d75ff57a8545eecb432a865bdf1dd6c9f",
+      "targetHash": "ace6a5269d981405f2756e84ef5210c88d1bf2ed6c1b166f9d8064b0925c8710",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-data/complex-type",
+        "sourcePath": "docs/query-data/complex-type.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-data/complex-type.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "98a1f39f95547db68a2ef351ea6e210d75ff57a8545eecb432a865bdf1dd6c9f",
+        "targetHash": "ace6a5269d981405f2756e84ef5210c88d1bf2ed6c1b166f9d8064b0925c8710",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

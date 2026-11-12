@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/update-of-unique-model",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/update-of-unique-model.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/update/update-of-unique-model.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "fd0f02a03a596f241e33ca3d66fe42bb03be608cf0c6891dd65ea6defbc39694",
+    "sourceTechnicalHash": "31f014e1f74cca067b3c0e3f9352fa4bdc2fd8acb57f3bf6ee3c76658322029a",
+    "targetHash": "950052b1df30c7ae98dc0191c9029a8ad89697d15a28fdd3b9fa29739564f4f7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:26:25.630Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fd0f02a03a596f241e33ca3d66fe42bb03be608cf0c6891dd65ea6defbc39694",
+      "targetHash": "950052b1df30c7ae98dc0191c9029a8ad89697d15a28fdd3b9fa29739564f4f7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

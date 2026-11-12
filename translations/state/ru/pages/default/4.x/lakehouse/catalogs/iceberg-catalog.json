@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/iceberg-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/iceberg-catalog.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/iceberg-catalog.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d038472e6b6d714592fc2308593b34750e9ccc0b676955e7205c35d4ad8027d1",
+    "sourceTechnicalHash": "0a05423d240bdeeda7e877de6dc3215dc9aa64e855069d7d81aeed5c6dbddca4",
+    "targetHash": "1db35f6fcc81188f032b6d24b1956d6a81dff91159e8c2750b7de1b5eccd1f68",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:27:39.073Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d038472e6b6d714592fc2308593b34750e9ccc0b676955e7205c35d4ad8027d1",
+      "targetHash": "1db35f6fcc81188f032b6d24b1956d6a81dff91159e8c2750b7de1b5eccd1f68",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 235: expected [\"code\",\"sql\",null,\"CREATE CATALOG polaris_oauth2_credential_static_cos PROPERTIES (\\n    'type' = 'iceberg',\\n    'warehouse' = 'doris_test',\\n    'iceberg.catalog.type' = 'rest',\\n    'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',\\n    'iceberg.rest.security.type' = 'oauth2',\\n    'iceberg.rest.oauth2.credential' = 'root:secret123',\\n    'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',\\n    'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',\\n    'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',\\n    'cos.access_key' = '<ak>',\\n    'cos.secret_key' = '<sk>',\\n    'cos.region' = 'ap-beijing'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG polaris_oauth2_credential_static_cos PROPERTIES (\\n    'type' = 'iceberg',\\n    'warehouse' = 'doris_test',\\n    'iceberg.catalog.type' = 'rest',\\n    'iceberg.rest.uri' = 'http://127.0.0.1:8181',\\n    'iceberg.rest.security.type' = 'oauth2',\\n    'iceberg.rest.oauth2.credential' = 'root:secret123',\\n    'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',\\n    'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',\\n    'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',\\n    'cos.access_key' = '<ak>',\\n    'cos.secret_key' = '<sk>',\\n    'cos.region' = 'ap-beijing'\\n);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

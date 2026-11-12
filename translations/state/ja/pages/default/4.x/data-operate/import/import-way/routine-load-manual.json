@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/routine-load-manual.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/routine-load-manual.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "87c0bd952ad220ac77fe2cba723de66f1ba0536eaec3129b1274e9660e08f60d",
-    "sourceTechnicalHash": "4ddce77a47dfab23604d5d9269957e6ebb83e0468bc9b1d64c81a4b4137d858c",
-    "targetHash": "dedf606b0a9ea770a82336dedff2409682a7d87d37c660de99629784aa1f34d0",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "bad960aa934b5e0e236c0846bcd8c548f7fbf0b6c385a536c5258dfe30d17a89",
+    "sourceTechnicalHash": "fbcfff5f84b5613f6b6276ebfbcf1369920231ca8619ad4af65106a07a0ab05d",
+    "targetHash": "23c2e16cf597c8610f91b8ae211059e51573a42f664652089efb1975d3ed4a89",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T05:45:05.917Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "bad960aa934b5e0e236c0846bcd8c548f7fbf0b6c385a536c5258dfe30d17a89",
+      "targetHash": "23c2e16cf597c8610f91b8ae211059e51573a42f664652089efb1975d3ed4a89",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"100\",\"100\",\"1024\",\"2\",\"2\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"30\",\"30\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"5\",\"5\",\"60\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"100\",\"100\",\"1024\",\"2\",\"2\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"30\",\"30\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"60\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$.\\\")\"]; received [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$. \\\")\"]\nprotected node 47: expected [\"inlineCode\",null,null,\"PAUSED\"]; received [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"100\",\"100\",\"1024\",\"2\",\"2\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"30\",\"30\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"5\",\"5\",\"60\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"100\",\"100\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"30\",\"30\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"5\",\"5\",\"60\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedures + Configuration parameters + Examples + FAQ -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 手順 + 設定パラメータ + 例 + FAQ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Continuously consume data from Kafka into Doris / Real-time data ingestion / CDC streaming sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: Kafka から Doris への継続的なデータ取り込み / リアルタイムのデータ取り込み / CDC ストリーミング同期 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 36: expected [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$.\\\")\"]; received [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"\\\\u0024.\\\")\"]\nprotected node 47: expected [\"inlineCode\",null,null,\"PAUSED\"]; received [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]\nprotected node 48: expected [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]; received [\"inlineCode\",null,null,\"PAUSED\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"100\",\"100\",\"1024\",\"2\",\"2\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"30\",\"30\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"5\",\"5\",\"60\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"100\",\"100\",\"1024\",\"2\",\"2\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"30\",\"30\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"60\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$.\\\")\"]; received [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$. \\\")\"]\nprotected node 47: expected [\"inlineCode\",null,null,\"PAUSED\"]; received [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

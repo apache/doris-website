@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/vector-index",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/vector-index.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/vector-index.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2fa15f7d2229b5748aa8a7c79c4a0070465f4149382314dbbabdf3042b478da7",
+    "sourceTechnicalHash": "0991bc6c4d9b52c449d93a94d470e4eae615fa6fa4d09b234e619efab679ac79",
+    "targetHash": "2e1b34f5e28573f217981258bb6cca888b0db43565c95837c1cb5aa128ecef4c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:51:30.827Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2fa15f7d2229b5748aa8a7c79c4a0070465f4149382314dbbabdf3042b478da7",
+      "targetHash": "2e1b34f5e28573f217981258bb6cca888b0db43565c95837c1cb5aa128ecef4c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

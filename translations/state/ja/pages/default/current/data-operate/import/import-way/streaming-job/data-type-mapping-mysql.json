@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "1fa11c2e4608bb7b8c229643df07d87ef4b229bbf869d11a2e58b103ce17b925",
-    "sourceTechnicalHash": "3be5cc57570c78ee9a7493fc3d24d6e1d7f2bfa69bb5e26588a2a226cc9e1103",
-    "targetHash": "2ee2db074d8c047185751241bc00e712740b9c3c5fe5b03d38cc180531ae8200",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "2d53b2d32d9aa40242e5c9cd02357afee01dec5c935d94b4e49b6884d500fec8",
+    "sourceTechnicalHash": "5d8d68cfb5888fd3e9d8f6d4a2a1b88d2ffe560dff416479496870d3130eb91f",
+    "targetHash": "a1740e99e6cabd9230d7ce3f02ccf830dbf987d8158273ac3543b9787a58ae45",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T05:47:47.489Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "2d53b2d32d9aa40242e5c9cd02357afee01dec5c935d94b4e49b6884d500fec8",
+      "targetHash": "a1740e99e6cabd9230d7ce3f02ccf830dbf987d8158273ac3543b9787a58ae45",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"true\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"false\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"4.1.5\",\"6\",\"64\",\"64\",\"8\"]; received [\"0\",\"1\",\"2\",\"4.1.5\",\"6\",\"64\",\"64\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: リファレンス / データ型マッピング -->\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"true\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"false\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"true\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"false\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+        "blob": "d003c0256a473f37d261ec0d805473b669eb9929"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+        "blob": "8a483ad034fb254fb0805be7d99080f347629a70"
+      }
+    }
   }
 }

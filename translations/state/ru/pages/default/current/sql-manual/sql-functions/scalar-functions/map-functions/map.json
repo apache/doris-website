@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/map",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/map.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/map.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5a14915765d979cec676970256c5563fd8f892eb37ddb34715bcf1043630c3de",
+    "sourceTechnicalHash": "e0f5a29bad73afe3145f723a17d9420a9487d7ee81817aedaf0cb430d1d7650e",
+    "targetHash": "e1b413620e81b7dac001ab19570ad4f678d81f4844ad167e0da09608d61ef912",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:24:35.454Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5a14915765d979cec676970256c5563fd8f892eb37ddb34715bcf1043630c3de",
+      "targetHash": "e1b413620e81b7dac001ab19570ad4f678d81f4844ad167e0da09608d61ef912",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

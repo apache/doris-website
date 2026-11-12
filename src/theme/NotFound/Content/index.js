@@ -1,5 +1,5 @@
 import React from 'react';
-import Translate from '@docusaurus/Translate';
+import Translate, {translate} from '@docusaurus/Translate';
 import ExternalLink from '@site/src/components/external-link/external-link';
 import { ExternalLinkArrowIcon } from '@site/src/components/Icons/external-link-arrow-icon';
 
@@ -30,14 +30,14 @@ export default function NotFoundContent({ className }) {
                         <div className="w-[9.75rem]">
                             <ExternalLink
                                 to="/"
-                                label="Go to home"
+                                label={translate({id: 'site.notFound.home', message: 'Go to home'})}
                                 className="text-sm h-[2.625rem] bg-primary text-white rounded-md hover:text-white cursor-pointer"
                                 linkIcon={<ExternalLinkArrowIcon />}
                             />
                         </div>
                         <div className="w-[9.75rem]">
                             <ExternalLink
-                                label="Report this issue"
+                                label={translate({id: 'site.notFound.report', message: 'Report this issue'})}
                                 linkIcon={<ExternalLinkArrowIcon />}
                                 to="https://github.com/apache/doris-website/issues"
                                 className="text-sm border border-primary h-[2.625rem] rounded-md text-primary cursor-pointer"

@@ -3,7 +3,7 @@ const path = require('node:path');
 const native = require('@docusaurus/plugin-content-docs');
 const {readVersionsMetadata} = require('@docusaurus/plugin-content-docs/lib/versions/index.js');
 const {processDocMetadata} = require('@docusaurus/plugin-content-docs/lib/docs.js');
-const {Globby, getPluginI18nPath, normalizeUrl, readLastUpdateData, aliasedSitePath, resolveMarkdownLinkPathname} = require('@docusaurus/utils');
+const {Globby, getPluginI18nPath, readLastUpdateData, aliasedSitePath, resolveMarkdownLinkPathname} = require('@docusaurus/utils');
 const {applyTrailingSlash} = require('@docusaurus/utils-common');
 const {hash, relative, identity, loadConfig, managedLocales, loadRecords, sourceLocaleFor, decide} = require('./state.cjs');
 const {mergeAlternates} = require('./alternates.cjs');
@@ -11,15 +11,9 @@ const {structure, alignHeadings} = require('./structure.cjs');
 
 async function exists(file) { try { await fs.access(file); return true; } catch { return false; } }
 async function read(file) { return await exists(file) ? fs.readFile(file, 'utf8') : undefined; }
-function localizedContext(context, locale) {
-    const defaultLocale = context.i18n.defaultLocale;
-    const rootBaseUrl = context.i18n.currentLocale === defaultLocale ? context.baseUrl
-        : context.baseUrl.replace(`/${context.i18n.currentLocale}/`, '/');
-    const baseUrl = locale === context.i18n.currentLocale ? context.baseUrl
-        : normalizeUrl([rootBaseUrl, locale === defaultLocale ? '' : locale, '/']);
-    return {...context, baseUrl, localizationDir: path.join(context.siteDir, 'i18n', locale),
-        i18n: {...context.i18n, currentLocale: locale}};
-}
+const {localizedContext} = require('./native-context.cjs');
+const {adaptDoc, docsId} = require('./content-manifest.cjs');
+const {withContentRoutes} = require('./route-context.cjs');
 
 async function metadata(context, options, versionMetadata, source, filePath, content) {
     return processDocMetadata({context, options: {...options, showLastUpdateTime: false, showLastUpdateAuthor: false},
@@ -32,10 +26,15 @@ async function metadata(context, options, versionMetadata, source, filePath, con
 // to its generated view and adds translation state.
 module.exports = async function translationDocsPlugin(context, options) {
     // Managed locales come from the translation configuration, restricted to the
-    // locales this build serves. With none of them active the adapter is inert
-    // and the native plugin runs untouched.
+    // locales this build serves. Without managed locales the native render path
+    // stays untouched, while English/Chinese identities still enter the registry.
+    const metadataCache = new Map();
+    const readMetadata = (ctx, opts, version, source, file, content) => {
+        const key = JSON.stringify([ctx.i18n.currentLocale, version.versionName, file, hash(content)]);
+        if (!metadataCache.has(key)) metadataCache.set(key, metadata(ctx, opts, version, source, file, content));
+        return metadataCache.get(key);
+    };
     const managed = managedLocales(context.siteDir, context.i18n.locales);
-    if (!managed.length) return native.default(context, options);
     const settings = loadConfig(context.siteDir).locales;
     const records = Object.fromEntries(managed.map(locale => [locale, loadRecords(context.siteDir, locale)]));
     // Source locales are always present; a managed locale that repeats one of
@@ -58,6 +57,7 @@ module.exports = async function translationDocsPlugin(context, options) {
         if (await exists(originalPluginDir(activeLocale))) await fs.cp(originalPluginDir(activeLocale), viewPluginDir(activeLocale), {recursive: true});
     }
     const pages = [];
+    const sourceEntries = [];
     const reports = [];
     const route = permalink => applyTrailingSlash(permalink, {trailingSlash: context.siteConfig.trailingSlash, baseUrl: context.baseUrl});
     const versionInputs = await Promise.all(versions.en.map(async (englishVersion, index) => {
@@ -65,6 +65,35 @@ module.exports = async function translationDocsPlugin(context, options) {
         return {index, englishVersion, filenames, registered: new Set(filenames),
             versionDir: englishVersion.versionName === 'current' ? 'current' : `version-${englishVersion.versionName}`};
     }));
+    // Native source metadata also exists when all optional locales are disabled.
+    // It supplies real Chinese slugs and per-file fallback, independent of docs state.
+    for (const {index, englishVersion, filenames} of versionInputs) {
+        for (const filename of filenames) {
+            const englishFile = path.join(englishVersion.contentPath, filename);
+            const englishContent = await fs.readFile(englishFile, 'utf8');
+            const englishDoc = await readMetadata(contexts.en, options, englishVersion, filename, englishFile, englishContent);
+            if (englishDoc.draft) continue;
+            for (const locale of ['en', 'zh-CN'].filter(lang => context.i18n.locales.includes(lang))) {
+                const file = locale === 'en' ? englishFile : path.join(versions[locale][index].contentPathLocalized, filename);
+                const content = locale === 'en' ? englishContent : await read(file);
+                const doc = locale === 'en' ? englishDoc : await readMetadata(contexts[locale], options, versions[locale][index], filename,
+                    content === undefined ? englishFile : file, content ?? englishContent);
+                if (doc.draft) continue;
+                if (doc.id !== englishDoc.id) {
+                    reports.push({kind: 'source_identity_conflict', pluginId: options.id, version: englishVersion.versionName,
+                        sourceLocale: locale, docId: doc.id, englishDocId: englishDoc.id, sourcePath: relative(context.siteDir, file)});
+                    continue;
+                }
+                sourceEntries.push({contentId: docsId({pluginId: options.id, version: englishVersion.versionName, docId: englishDoc.id}),
+                    kind: 'docs', renderIntegrated: true, pluginId: options.id, version: englishVersion.versionName, docId: englishDoc.id, siteLocale: locale,
+                    contentLocale: content === undefined ? 'en' : locale, state: content === undefined ? 'untranslated' : 'source',
+                    fallback: content === undefined, indexable: content !== undefined && !doc.unlisted && !versions[locale][index].noIndex,
+                    route: route(doc.permalink), englishRoute: route(englishDoc.permalink),
+                    englishPath: relative(context.siteDir, englishFile), sourcePath: relative(context.siteDir, content === undefined ? englishFile : file),
+                    sourceHash: hash(content ?? englishContent), targetHash: null, updatePolicy: 'native-manual-docs'});
+            }
+        }
+    }
     for (const locale of managed) {
     for (const {index, englishVersion, versionDir, filenames, registered} of versionInputs) {
         const targetDir = path.join(originalPluginDir(locale), versionDir);
@@ -72,10 +101,11 @@ module.exports = async function translationDocsPlugin(context, options) {
         for (const filename of filenames) {
             const englishFile = path.join(englishVersion.contentPath, filename);
             const englishContent = await fs.readFile(englishFile, 'utf8');
-            const englishDoc = await metadata(contexts.en, options, englishVersion, filename, englishFile, englishContent);
+            const englishDoc = await readMetadata(contexts.en, options, englishVersion, filename, englishFile, englishContent);
             seenIds.add(englishDoc.id);
             const page = {pluginId: options.id, version: englishVersion.versionName, docId: englishDoc.id, locale};
-            const requestedSourceLocale = sourceLocaleFor(settings[locale], page);
+            const fallbackOnly = require('./docs-language-policy.cjs').fallbackOnly(options.id, englishVersion.versionName);
+            const requestedSourceLocale = fallbackOnly ? 'en' : sourceLocaleFor(settings[locale], page);
             const chineseFile = path.join(versions['zh-CN'][index].contentPathLocalized, filename);
             const chineseContent = await read(chineseFile);
             const sourceLocale = requestedSourceLocale === 'zh-CN' && chineseContent !== undefined ? 'zh-CN' : 'en';
@@ -85,23 +115,25 @@ module.exports = async function translationDocsPlugin(context, options) {
             const target = await read(targetFile);
             Object.assign(page, {sourceLocale, sourcePath: relative(context.siteDir, sourceFile),
                 englishPath: relative(context.siteDir, englishFile), targetPath: relative(context.siteDir, targetFile)});
-            const record = records[locale].get(identity(page));
+            let record = records[locale].get(identity(page));
             const maintainCase = context.siteConfig.markdown.anchors.maintainCase;
             const sourceStructure = target !== undefined
                 ? await structure(source, path.extname(filename), maintainCase).catch(() => null) : null;
+            record=require('./source-revisions.cjs').resolveRecord(context.siteDir,page,record,sourceStructure?.technicalHash);
             let state = decide({page, source, target, record, technicalHash: sourceStructure?.technicalHash});
+            if (fallbackOnly) state = {...state, status: 'unsupported_translation_version', useTarget: false, indexable: false, contentLocale: 'en'};
             if (requestedSourceLocale !== sourceLocale) {
                 state = {...state, status: 'source_missing', useTarget: false, indexable: false, contentLocale: 'en'};
                 reports.push({kind: 'source_divergence', ...page, requestedSourceLocale});
             }
             // Parse all counterparts with the framework, including custom IDs,
             // number prefixes and localized slugs. Never invent a missing node.
-            const chineseDoc = await metadata(contexts['zh-CN'], options, versions['zh-CN'][index], filename,
+            const chineseDoc = await readMetadata(contexts['zh-CN'], options, versions['zh-CN'][index], filename,
                 chineseContent === undefined ? englishFile : chineseFile, chineseContent ?? englishContent);
             const nativeSourceDoc = sourceLocale === 'en' ? englishDoc : chineseDoc;
             let localizedContent;
             if (state.useTarget) {
-                const targetDoc = await metadata(contexts[locale], options, versions[locale][index], filename, targetFile, target).catch(() => null);
+                const targetDoc = await readMetadata(contexts[locale], options, versions[locale][index], filename, targetFile, target).catch(() => null);
                 if (!targetDoc || targetDoc.id !== englishDoc.id || targetDoc.slug !== englishDoc.slug || targetDoc.draft !== englishDoc.draft
                     || targetDoc.unlisted !== englishDoc.unlisted) {
                     state = {...state, status: 'state_conflict', useTarget: false, indexable: false, contentLocale: 'en'};
@@ -119,7 +151,7 @@ module.exports = async function translationDocsPlugin(context, options) {
                 reports.push({kind: 'source_divergence', ...page, reason: 'source_route_conflict'});
             }
             const selectedContent = state.useTarget ? localizedContent : englishContent;
-            const localizedDoc = await metadata(contexts[locale], options, versions[locale][index], filename, targetFile, selectedContent);
+            const localizedDoc = await readMetadata(contexts[locale], options, versions[locale][index], filename, targetFile, selectedContent);
             const indexable = state.indexable && !localizedDoc.draft && !localizedDoc.unlisted && !versions[locale][index].noIndex;
             state = {...state, indexable, draft: localizedDoc.draft, unlisted: localizedDoc.unlisted,
                 permalink: route(localizedDoc.permalink), englishPermalink: route(englishDoc.permalink),
@@ -165,7 +197,7 @@ module.exports = async function translationDocsPlugin(context, options) {
     const sourceAliases = new Map();
     const adaptedLoaders = new WeakSet();
     let loaded = false;
-    return {...plugin,
+    return withContentRoutes({...plugin,
         getPathsToWatch() {
             return [...plugin.getPathsToWatch().filter(file => !managed.some(locale => file.startsWith(viewRoot(locale)))),
                 ...managed.map(locale => `${originalPluginDir(locale)}/**/*`),
@@ -177,7 +209,15 @@ module.exports = async function translationDocsPlugin(context, options) {
             // the view, just like a new static build. Do not watch our own view.
             if (loaded) return (await translationDocsPlugin(context, options)).loadContent();
             loaded = true;
-            const content = await plugin.loadContent();
+            let content;
+            const dateOptions = {showLastUpdateTime: options.showLastUpdateTime,
+                showLastUpdateAuthor: options.showLastUpdateAuthor};
+            // Native dates for generated views would query untracked files.
+            // Every managed doc receives its actual source dates below. Keep
+            // the original options for contentLoaded and the displayed footer.
+            if (activeLocale) Object.assign(options, {showLastUpdateTime: false, showLastUpdateAuthor: false});
+            try {content = await plugin.loadContent();}
+            finally {if (activeLocale) Object.assign(options, dateOptions);}
             if (activeLocale) {
                 for (const version of content.loadedVersions) {
                     for (const doc of [...version.docs, ...version.drafts]) {
@@ -201,11 +241,12 @@ module.exports = async function translationDocsPlugin(context, options) {
                     }
                 }
             }
-            return {...content, translationManifest: {schemaVersion: 1, pluginId: options.id, locale: context.i18n.currentLocale, pages, reports}};
+            return {...content, contentIdentity: {entries: [...sourceEntries, ...pages.filter(page => !page.draft).map(adaptDoc)], reports},
+                ...(managed.length && {translationManifest: {schemaVersion: 1, pluginId: options.id, locale: context.i18n.currentLocale, pages, reports}})};
         },
         translateContent({content, translationFiles}) {
             // Docusaurus's native translateLoadedContent returns only versions.
-            return {...plugin.translateContent({content, translationFiles}), translationManifest: content.translationManifest};
+            return {...plugin.translateContent({content, translationFiles}), translationManifest: content.translationManifest, contentIdentity: content.contentIdentity};
         },
         async contentLoaded(args) {
             await plugin.contentLoaded(args);
@@ -220,16 +261,28 @@ module.exports = async function translationDocsPlugin(context, options) {
                         }
                     }
                 }
+            } else {
+                for (const version of args.content.loadedVersions) for (const doc of version.docs) {
+                    const entry = sourceEntries.find(page => page.siteLocale === context.i18n.currentLocale
+                        && page.version === version.versionName && page.docId === doc.id);
+                    if (!entry) continue;
+                    const englishVersion = versions.en.find(item => item.versionName === version.versionName);
+                    const localized = path.join(version.contentPathLocalized, path.relative(englishVersion.contentPath,
+                        path.join(context.siteDir, entry.englishPath)));
+                    for (const filename of [path.join(context.siteDir, entry.englishPath), path.join(context.siteDir, entry.sourcePath), localized])
+                        sourceAliases.set(aliasedSitePath(filename, context.siteDir), doc.permalink);
+                }
             }
         },
         configureWebpack(...args) {
             const result = plugin.configureWebpack(...args);
-            if (activeLocale) {
+            const resolveLocale = activeLocale ?? (context.i18n.currentLocale === 'zh-CN' ? 'zh-CN' : undefined);
+            if (resolveLocale) {
                 // Native MDX cache keys cannot see a changed counterpart route
                 // or state file read through fs. Bind the localized filesystem
                 // cache to this exact content/route decision snapshot.
                 if (args[0]?.cache?.type === 'filesystem') result.cache = {...args[0].cache,
-                    version: `${args[0].cache.version}:translations:${hash(JSON.stringify(pages))}`};
+                    version: `${args[0].cache.version}:translations:${hash(JSON.stringify([sourceEntries, pages]))}`};
                 for (const rule of result.module.rules) {
                     for (const item of rule.use) {
                         if (adaptedLoaders.has(item.options)) continue;
@@ -239,19 +292,19 @@ module.exports = async function translationDocsPlugin(context, options) {
                         // processors. Recreate them with the adapted resolver.
                         delete item.options.processors;
                         item.options.resolveMarkdownLink = params => {
-                            const version = versions[activeLocale].find(candidate => [candidate.contentPath, path.join(viewPluginDir(activeLocale),
-                                candidate.versionName === 'current' ? 'current' : `version-${candidate.versionName}`)]
+                            const localizedPath = candidate => activeLocale ? path.join(viewPluginDir(activeLocale),
+                                candidate.versionName === 'current' ? 'current' : `version-${candidate.versionName}`) : candidate.contentPathLocalized;
+                            const version = versions[resolveLocale].find(candidate => [candidate.contentPath, localizedPath(candidate)]
                                 .some(dir => params.sourceFilePath.startsWith(dir + path.sep)));
                             return version && resolveMarkdownLinkPathname(params.linkPathname, {...params, siteDir: context.siteDir,
-                                sourceToPermalink: sourceAliases, contentPaths: {...version, contentPathLocalized: path.join(viewPluginDir(activeLocale),
-                                    version.versionName === 'current' ? 'current' : `version-${version.versionName}`)}}) || nativeResolve(params);
+                                sourceToPermalink: sourceAliases, contentPaths: {...version, contentPathLocalized: localizedPath(version)}}) || nativeResolve(params);
                         };
                     }
                 }
             }
             return result;
         },
-    };
+    }, context);
 };
 module.exports.validateOptions = native.validateOptions;
 // Allows offline inventory tools to select these configured plugin instances.

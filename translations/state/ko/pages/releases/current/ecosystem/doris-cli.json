@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-cli",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-cli.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-cli.md",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "282dc69d1690e92a24b0930eefb808c77bd6e9f60a6116cce58c6996cc88aa26",
+    "sourceTechnicalHash": "82bf6717c7f9e166a164a29f4650fa8f7e532e64bd27a58d0d72da877992ecc1",
+    "targetHash": "b79422502c8538dd0a95ad8c3ce22e8d0b8eeff7a4275102577e74d8d3c48e03",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T05:20:36.585Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "282dc69d1690e92a24b0930eefb808c77bd6e9f60a6116cce58c6996cc88aa26",
+      "targetHash": "b79422502c8538dd0a95ad8c3ce22e8d0b8eeff7a4275102577e74d8d3c48e03",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

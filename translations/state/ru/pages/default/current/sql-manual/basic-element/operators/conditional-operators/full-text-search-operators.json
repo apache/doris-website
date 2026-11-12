@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/full-text-search-operators",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/operators/conditional-operators/full-text-search-operators.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/conditional-operators/full-text-search-operators.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "12dac40073c99aca5697f3f048d92231b3d6a33d43706731ca8d0ea36b6f6fff",
+    "sourceTechnicalHash": "081f08d27065d9d619631c3203007d3ed3fb1f90751306d707d6cb0d62c1dd9f",
+    "targetHash": "4e9f0e0ab5eaa22dd4168d583b99004f832231c4e181736c3a55ab19cba1f86c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:44:54.707Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "12dac40073c99aca5697f3f048d92231b3d6a33d43706731ca8d0ea36b6f6fff",
+      "targetHash": "4e9f0e0ab5eaa22dd4168d583b99004f832231c4e181736c3a55ab19cba1f86c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/system-functions/user",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/system-functions/user.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/system-functions/user.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "8410b87c60643a2a58835d394589a8bf9f0c0da7df0c98a6fd1eb9ce504aa83c",
+    "sourceTechnicalHash": "56a068154b712d69141893ab534f7a9716f62397d3100fa747fcadbc72f20a2e",
+    "targetHash": "7561ebee77dc58bc6da3a2045a12e7b5a58bfd7a2eaf687fa64e6a4213ed6e3c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:59:14.935Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8410b87c60643a2a58835d394589a8bf9f0c0da7df0c98a6fd1eb9ce504aa83c",
+      "targetHash": "7561ebee77dc58bc6da3a2045a12e7b5a58bfd7a2eaf687fa64e6a4213ed6e3c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

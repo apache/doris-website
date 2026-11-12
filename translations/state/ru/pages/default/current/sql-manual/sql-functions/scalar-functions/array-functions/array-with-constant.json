@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-with-constant",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-with-constant.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-with-constant.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "891e3d13dffdf0225aa9322292d1ab82bdc8cb9bdb27d302b9f1eee3ec17c847",
+    "sourceTechnicalHash": "0672f7affd08ba0b850af854663c902a4b39893307f88e09f51148c00f7bc42d",
+    "targetHash": "a536151bcac9cc39820017aad869ba998db4ba83932edfe298800e57347581f7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:46:05.165Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "891e3d13dffdf0225aa9322292d1ab82bdc8cb9bdb27d302b9f1eee3ec17c847",
+      "targetHash": "a536151bcac9cc39820017aad869ba998db4ba83932edfe298800e57347581f7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

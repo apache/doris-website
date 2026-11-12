@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/GEO",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/GEO.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/GEO.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b91e217238f3938c20fceb4c31bad4187942bc658fa7c3f1180dcc27f5af1e17",
+    "sourceTechnicalHash": "311c46c8480546e365a224258c919b3a0ee4a776bdcb7888df99e024f5e148a6",
+    "targetHash": "e712779d155ef921c60adbba53b22011b8662b780e393b3751405bb2f456222e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:11.645Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b91e217238f3938c20fceb4c31bad4187942bc658fa7c3f1180dcc27f5af1e17",
+      "targetHash": "e712779d155ef921c60adbba53b22011b8662b780e393b3751405bb2f456222e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/basic-element/sql-data-types/semi-structured/GEO",
+        "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/GEO.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/GEO.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "b91e217238f3938c20fceb4c31bad4187942bc658fa7c3f1180dcc27f5af1e17",
+        "targetHash": "e712779d155ef921c60adbba53b22011b8662b780e393b3751405bb2f456222e",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}

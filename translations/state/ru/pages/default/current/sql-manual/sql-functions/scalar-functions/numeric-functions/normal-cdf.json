@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/normal-cdf",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/normal-cdf.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/normal-cdf.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "937e63eb624b03ab7faefd843b744a37262ee0571e965d67c061388975677354",
+    "sourceTechnicalHash": "9b6e60157b4de9017a739fe79a692392bc0e1b8c68adfab6b3001fc56fd2200c",
+    "targetHash": "90356262ab68b212a6ec12efcfcf8bd9dcbb505e4a6d2ca70767c0c05c39e3c3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:31:39.826Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "937e63eb624b03ab7faefd843b744a37262ee0571e965d67c061388975677354",
+      "targetHash": "90356262ab68b212a6ec12efcfcf8bd9dcbb505e4a6d2ca70767c0c05c39e3c3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

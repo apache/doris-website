@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/format-round.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/format-round.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "e23c7a7dd2617d6b234383f8840fd2442f76b8cd0afe6122b00c72aea1b03157",
-    "sourceTechnicalHash": "c373315f1c159c17fc041f415e1c346dc090fc773ba598d0ec9589e631345a0e",
-    "targetHash": "feca10f8d3ed4ff50c7300afa6c0354e6bab53816578c26d7bf76fede24d8aea",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "809aec173514d2ddab23f23fd27a9a1fc9ca6dbe0049d1ad272cad4433600ce6",
+    "sourceTechnicalHash": "5cbe7260e65d6544eef5187ba074b3c6daa5d1860d9d55676d515ec666aae4f2",
+    "targetHash": "f5c96431706133f6ed8a509b1da2d401ac81c847e144ed4d9734c50516bf9d40",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:46:26.257Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T04:52:42.573Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "809aec173514d2ddab23f23fd27a9a1fc9ca6dbe0049d1ad272cad4433600ce6",
+      "targetHash": "f5c96431706133f6ed8a509b1da2d401ac81c847e144ed4d9734c50516bf9d40",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"1024\",\"1024\",\"3.0.6\",\"4.1\",\"4.1.5\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"1024\",\"1024\",\"3.0.6\",\"4.1\",\"4.1.5\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

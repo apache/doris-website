@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/arithmetic-operators",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/arithmetic-operators.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/arithmetic-operators.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3e189734e92dd098007f19ff885b97261401129520173668ef2233504c6a06ba",
+    "sourceTechnicalHash": "752de2a7594481334462844159d5f16c6f4bc76fe1b14fc860b0e61ca0c211da",
+    "targetHash": "8a453d7c5de72768dc96e1f5b335a64abac5d94187ed84032aaf8a01c9ca6a82",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:34.957Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3e189734e92dd098007f19ff885b97261401129520173668ef2233504c6a06ba",
+      "targetHash": "8a453d7c5de72768dc96e1f5b335a64abac5d94187ed84032aaf8a01c9ca6a82",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/basic-element/operators/arithmetic-operators",
+        "sourcePath": "docs/sql-manual/basic-element/operators/arithmetic-operators.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/arithmetic-operators.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "3e189734e92dd098007f19ff885b97261401129520173668ef2233504c6a06ba",
+        "targetHash": "8a453d7c5de72768dc96e1f5b335a64abac5d94187ed84032aaf8a01c9ca6a82",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}

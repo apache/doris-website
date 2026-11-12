@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/operators/arithmetic-operators",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/operators/arithmetic-operators.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/arithmetic-operators.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "3e189734e92dd098007f19ff885b97261401129520173668ef2233504c6a06ba",
+    "sourceTechnicalHash": "752de2a7594481334462844159d5f16c6f4bc76fe1b14fc860b0e61ca0c211da",
+    "targetHash": "8a453d7c5de72768dc96e1f5b335a64abac5d94187ed84032aaf8a01c9ca6a82",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:43:52.585Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3e189734e92dd098007f19ff885b97261401129520173668ef2233504c6a06ba",
+      "targetHash": "8a453d7c5de72768dc96e1f5b335a64abac5d94187ed84032aaf8a01c9ca6a82",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

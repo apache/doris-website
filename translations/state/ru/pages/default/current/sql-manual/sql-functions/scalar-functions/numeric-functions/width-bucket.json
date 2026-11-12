@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ab0b6819a4d3a8b5a7a4497f30cc19971a05daa6db6c86ec5a07bcd39e3a0942",
+    "sourceTechnicalHash": "c0f05ad0848d05d750591cf19a89daa6c2964c06d19eb2b729753589dc6bc314",
+    "targetHash": "b6d071f0fe999db86afabc79bc220d02424c7132d9c13dccf61b4a8979daec13",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:34:27.060Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ab0b6819a4d3a8b5a7a4497f30cc19971a05daa6db6c86ec5a07bcd39e3a0942",
+      "targetHash": "b6d071f0fe999db86afabc79bc220d02424c7132d9c13dccf61b4a8979daec13",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

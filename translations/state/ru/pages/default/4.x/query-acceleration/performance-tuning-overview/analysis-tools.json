@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/performance-tuning-overview/analysis-tools",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/performance-tuning-overview/analysis-tools.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/performance-tuning-overview/analysis-tools.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "46435172727e10414dd4414fa28ef91ae56ddb67a30fdb2178941cb010b1ebd2",
+    "sourceTechnicalHash": "db827015ae0ae7efe49000725477898946bf1a705710785a8c3ff5daa2f11079",
+    "targetHash": "437ce30ca6673f9f1aaf1617b3352f2db61f77007618c154b1060cf23b522d52",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:31.752Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "46435172727e10414dd4414fa28ef91ae56ddb67a30fdb2178941cb010b1ebd2",
+      "targetHash": "437ce30ca6673f9f1aaf1617b3352f2db61f77007618c154b1060cf23b522d52",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/performance-tuning-overview/analysis-tools",
+        "sourcePath": "docs/query-acceleration/performance-tuning-overview/analysis-tools.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/performance-tuning-overview/analysis-tools.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "46435172727e10414dd4414fa28ef91ae56ddb67a30fdb2178941cb010b1ebd2",
+        "targetHash": "437ce30ca6673f9f1aaf1617b3352f2db61f77007618c154b1060cf23b522d52",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

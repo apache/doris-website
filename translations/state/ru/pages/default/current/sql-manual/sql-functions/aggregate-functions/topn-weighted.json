@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/topn-weighted",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/topn-weighted.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/topn-weighted.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a84a273e28c5e9d8a6f93e3649f561f42b7c003544f57b1ea27266dea7729e73",
+    "sourceTechnicalHash": "76eabd5cf968a28af5f1d9cff570ebcc59ccc9f461d50fcaf63306b71c6a900c",
+    "targetHash": "3293ff1dc26335df958f2dc5ffc2ea3314a9893016d14d37562e3ff9e2444027",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:27:07.109Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a84a273e28c5e9d8a6f93e3649f561f42b7c003544f57b1ea27266dea7729e73",
+      "targetHash": "3293ff1dc26335df958f2dc5ffc2ea3314a9893016d14d37562e3ff9e2444027",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

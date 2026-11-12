@@ -2,6 +2,7 @@ import { Cascader, Select } from 'antd';
 import React, { ReactNode } from 'react';
 import { ArrowDownIcon } from '../Icons/arrow-down-icon';
 import { Option } from '@site/src/constant/download.data';
+import {translate} from '@docusaurus/Translate';
 import './form-select.scss';
 
 export interface FormSelectProps {
@@ -32,10 +33,14 @@ export default function FormSelect({
     },
     popupExtraClass = '',
 }: FormSelectProps) {
+    const controlId = `download-select-${React.useId().replace(/:/g, '')}`;
     return (
         <div className="group relative z-0 w-full form-select text-left">
             {isCascader ? (
                 <Cascader
+                    id={controlId}
+                    aria-label={placeholder || label}
+                    notFoundContent={translate({id: 'landing.download.noOptions', message: 'No options available'})}
                     displayRender={displayRender}
                     suffixIcon={<ArrowDownIcon />}
                     allowClear={false}
@@ -49,6 +54,9 @@ export default function FormSelect({
                 />
             ) : (
                 <Select
+                    id={controlId}
+                    aria-label={placeholder || label}
+                    notFoundContent={translate({id: 'landing.download.noOptions', message: 'No options available'})}
                     suffixIcon={<ArrowDownIcon />}
                     popupClassName={`form-select-select ${popupExtraClass}`}
                     value={value}
@@ -58,7 +66,7 @@ export default function FormSelect({
                 />
             )}
             <label
-                htmlFor={label}
+                htmlFor={controlId}
                 className="absolute left-2 top-5 z-10 origin-[0] -translate-y-7 scale-75 transform bg-[#fff]  px-1 text-sm text-[#8592A6] duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100  peer-hover:text-blue peer-focus:-translate-y-7 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-blue-600 peer-[.ant-input-status-error]:text-[#ff4d4f] peer-[.ant-select-open]:text-blue-500  dark:text-gray-400"
             >
                 {placeholder}

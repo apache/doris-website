@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "66bc73ea4a1e7ff66b603b92931cdf077c8eb28727b7031c885c2f0fa2efbb9c",
+    "sourceTechnicalHash": "70f5dd3ee8174de06a8c14a3e3c5a36668af375494b87f5f612e3682324a5936",
+    "targetHash": "5df0cf24725f2c6d369c904bc87f9cf666d4b09f4746741b2a3414db3f2f366d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:08:21.290Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "66bc73ea4a1e7ff66b603b92931cdf077c8eb28727b7031c885c2f0fa2efbb9c",
+      "targetHash": "5df0cf24725f2c6d369c904bc87f9cf666d4b09f4746741b2a3414db3f2f366d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/batch-load",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/batch-load.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/batch-load.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4df549d984ae39a2ead1f79a197edaa14e115ff8e82b31c408c5f0af74e91883",
+    "sourceTechnicalHash": "0227ad1b742e4745390f8c64c1390daa69a2d65e32543f92f9ab19d563aa0886",
+    "targetHash": "c27e2d72a200a8f6d706ac285bca9988dc2191e3c659a2d44eea9d970202cd5f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:30.413Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4df549d984ae39a2ead1f79a197edaa14e115ff8e82b31c408c5f0af74e91883",
+      "targetHash": "c27e2d72a200a8f6d706ac285bca9988dc2191e3c659a2d44eea9d970202cd5f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/batch-load",
+        "sourcePath": "docs/key-features/batch-load.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/batch-load.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "4df549d984ae39a2ead1f79a197edaa14e115ff8e82b31c408c5f0af74e91883",
+        "targetHash": "c27e2d72a200a8f6d706ac285bca9988dc2191e3c659a2d44eea9d970202cd5f",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0cf01da72f15c8286bdebdcd18d2f5e0c7dbcd78b69bf9799625e525a940ae1b",
+    "sourceTechnicalHash": "3e42245caed2c6ca608cf49617763f84852c6db2dcef225a1168f0cc6c50b0b4",
+    "targetHash": "2d0dbf75d18e6de8f9b689346a5521a082d053a818a7b38626ab9effdb769031",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:37:20.754Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0cf01da72f15c8286bdebdcd18d2f5e0c7dbcd78b69bf9799625e525a940ae1b",
+      "targetHash": "2d0dbf75d18e6de8f9b689346a5521a082d053a818a7b38626ab9effdb769031",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

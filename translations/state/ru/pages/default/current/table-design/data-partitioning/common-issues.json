@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-partitioning/common-issues",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-partitioning/common-issues.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/data-partitioning/common-issues.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "cc11224d7babb79a62defcae69405d9cc252e8d08497df7132443832705e0057",
+    "sourceTechnicalHash": "b67ba9fa0ea60da5794c0e17bfecdee3cac0f0815142920d127c64950f352ec1",
+    "targetHash": "04740937725bb0c234ed64f722b0f917b6236d8f68615af45721e635a5a9895a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:56:15.239Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cc11224d7babb79a62defcae69405d9cc252e8d08497df7132443832705e0057",
+      "targetHash": "04740937725bb0c234ed64f722b0f917b6236d8f68615af45721e635a5a9895a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

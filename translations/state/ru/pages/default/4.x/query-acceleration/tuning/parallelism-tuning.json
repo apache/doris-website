@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/parallelism-tuning",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/parallelism-tuning.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/parallelism-tuning.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7788799695134ca5ccb89487f83fe7254c129641401a8f7e248cecff81f8087a",
+    "sourceTechnicalHash": "48ac6052143e44e3c915fedc82580886b8bb90aff8290af080563f5e589212bc",
+    "targetHash": "142d4abb4450c670425f33ffe85680001562a95eeccefcabf690875364fa66e9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:32.380Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7788799695134ca5ccb89487f83fe7254c129641401a8f7e248cecff81f8087a",
+      "targetHash": "142d4abb4450c670425f33ffe85680001562a95eeccefcabf690875364fa66e9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/tuning/parallelism-tuning",
+        "sourcePath": "docs/query-acceleration/tuning/parallelism-tuning.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/parallelism-tuning.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "7788799695134ca5ccb89487f83fe7254c129641401a8f7e248cecff81f8087a",
+        "targetHash": "142d4abb4450c670425f33ffe85680001562a95eeccefcabf690875364fa66e9",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

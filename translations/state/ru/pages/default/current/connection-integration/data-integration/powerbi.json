@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/powerbi",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/powerbi.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/powerbi.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "1c2866875301b91f7cddca42d59267f5332022fba5163dd5ef78a9e1555bdaba",
+    "sourceTechnicalHash": "1a4eaa88c7ed750efdf0a05f2b5aa1c22b956a5b643b1f1fd47d109902c4fc44",
+    "targetHash": "ce5be935983deae99a9a01f795aa2ca76d5e2bb95429b137018b5d31e5be384e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:06:31.032Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1c2866875301b91f7cddca42d59267f5332022fba5163dd5ef78a9e1555bdaba",
+      "targetHash": "ce5be935983deae99a9a01f795aa2ca76d5e2bb95429b137018b5d31e5be384e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

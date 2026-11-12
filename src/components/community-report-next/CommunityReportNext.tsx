@@ -1,3 +1,5 @@
+import {translate} from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React, { JSX, useEffect, useRef, useState } from 'react';
 import { LayoutNext } from '../home-next/LayoutNext';
 import './CommunityReportNext.scss';
@@ -12,6 +14,7 @@ export interface WeeklyReportStat {
 export interface WeeklyReportRef {
     num: number;
     title: string;
+    sourceTitle?: string;
     url: string;
     /** Open PR opened within the report week (in-progress only). */
     isNew?: boolean;
@@ -73,6 +76,8 @@ export interface WeeklyReportData {
 export interface WeeklyReportEntry {
     /** Stable id (the markdown filename without extension); used as the URL hash. */
     id: string;
+    contentLocale?: string;
+    fallback?: boolean;
     /** Date range shown in the sidebar and page title, e.g. "Jun 29 – Jul 5, 2026". */
     label: string;
     /** Optional subtitle, e.g. "Week 27, 2026". */
@@ -96,18 +101,19 @@ const DORIS_ROADMAP_ISSUE_URL = 'https://github.com/apache/doris/issues/60036';
 
 const sidebarLinks = [
     {
-        title: 'Help Shape the Future of Apache Doris',
-        description: 'Complete the survey to help us build a better Doris community.',
+        title: translate({id: "landing.CommunityReportNext.001", message: "Help Shape the Future of Apache Doris"}),
+        description: translate({id: "landing.CommunityReportNext.002", message: "Complete the survey to help us build a better Doris community."}),
         href: COMMUNITY_SURVEY_URL,
     },
     {
-        title: 'Which Doris Feature Do You Want to Discuss or Build?',
-        description: 'Leave your reply on the GitHub issue.',
+        title: translate({id: "landing.CommunityReportNext.003", message: "Which Doris Feature Do You Want to Discuss or Build?"}),
+        description: translate({id: "landing.CommunityReportNext.004", message: "Leave your reply on the GitHub issue."}),
         href: DORIS_ROADMAP_ISSUE_URL,
     },
 ];
 
 export default function CommunityReportNext({ reports }: CommunityReportNextProps): JSX.Element {
+    const {i18n: {currentLocale}} = useDocusaurusContext();
     const latest = reports[0];
     const historical = reports.slice(1);
     const [selectedId, setSelectedId] = useState<string>(latest?.id ?? '');
@@ -118,10 +124,17 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
     // /community-report#2026-06-22. Read on mount (client-only; window is
     // undefined during SSR) and fall back to the latest report.
     useEffect(() => {
-        const hash = window.location.hash.replace(/^#/, '');
-        if (hash && reports.some(r => r.id === hash)) {
-            setSelectedId(hash);
-        }
+        const selectFromHash = () => {
+            const hash = window.location.hash.replace(/^#/, '');
+            setSelectedId(reports.find(report => report.id === hash)?.id ?? reports[0]?.id ?? '');
+        };
+        selectFromHash();
+        window.addEventListener('hashchange', selectFromHash);
+        window.addEventListener('popstate', selectFromHash);
+        return () => {
+            window.removeEventListener('hashchange', selectFromHash);
+            window.removeEventListener('popstate', selectFromHash);
+        };
     }, [reports]);
 
     useEffect(() => {
@@ -160,19 +173,19 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
 
     const selected = reports.find(r => r.id === selectedId) ?? latest;
     const isHistoricalSelected = historical.some(r => r.id === selectedId);
-    const selectedHistoricalLabel = isHistoricalSelected ? selected?.label : 'Past reports...';
+    const selectedHistoricalLabel = isHistoricalSelected ? selected?.label : translate({id: 'landing.reports.past', message: 'Past reports...'});
     const SelectedReport = selected?.Component;
 
     return (
         <LayoutNext
-            title="Community Report — Apache Doris"
-            description="Weekly reports from the Apache Doris community: merged features, fixes, new contributors, and notable discussions."
+            title={translate({id: "landing.CommunityReportNext.005", message: "Community Report — Apache Doris"})}
+            description={translate({id: "landing.CommunityReportNext.006", message: "Weekly reports from the Apache Doris community: merged features, fixes, new contributors, and notable discussions."})}
         >
             <div className="community-report">
                 <div className="community-report__layout">
-                    <aside className="community-report__sidebar" aria-label="Reports and community feedback">
+                    <aside className="community-report__sidebar" aria-label={translate({id: "landing.CommunityReportNext.007", message: "Reports and community feedback"})}>
                         <div className="community-report__section">
-                            <h2 className="community-report__section-title">Weekly Report</h2>
+                            <h2 className="community-report__section-title">{translate({id: "landing.CommunityReportNext.008", message: "Weekly Report"})}</h2>
 
                             {latest && (
                                 <button
@@ -183,8 +196,8 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                                     }
                                     onClick={() => select(latest.id)}
                                 >
-                                    <span className="community-report__entry-badge">Latest</span>
-                                    <span className="community-report__entry-label">{latest.label}</span>
+                                    <span className="community-report__entry-badge">{translate({id: "landing.CommunityReportNext.009", message: "Latest"})}</span>
+                                    <span className="community-report__entry-label" lang={latest.contentLocale}>{latest.label}</span>
                                 </button>
                             )}
 
@@ -215,7 +228,7 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                                             id="community-report-past-menu"
                                             className="community-report__select-menu"
                                             role="listbox"
-                                            aria-label="Browse past weekly reports"
+                                            aria-label={translate({id: "landing.CommunityReportNext.010", message: "Browse past weekly reports"})}
                                         >
                                             {historical.map(r => (
                                                 <button
@@ -231,7 +244,8 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                                                     }
                                                     onClick={() => select(r.id)}
                                                 >
-                                                    {r.label}
+                                                    <span lang={r.contentLocale}>{r.label}</span>
+                                                    {r.fallback && <> · {translate({id: 'landing.report.english', message: 'English'})}</>}
                                                 </button>
                                             ))}
                                         </div>
@@ -240,7 +254,7 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                             )}
                         </div>
 
-                        <div className="community-report__links" aria-label="Community feedback links">
+                        <div className="community-report__links" aria-label={translate({id: "landing.CommunityReportNext.011", message: "Community feedback links"})}>
                             {sidebarLinks.map(link => (
                                 <a
                                     key={link.href}
@@ -257,10 +271,15 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                     </aside>
 
                     <main className="community-report__content">
+                        {selected?.fallback && (
+                            <p className="weekly-report__fallback" role="note" data-report-fallback>
+                                {translate({id: 'landing.report.fallback', message: 'This report is available in English. The site navigation stays in your selected language.'})}
+                            </p>
+                        )}
                         {selected && (
-                            <article className="weekly-report">
+                            <article className="weekly-report" lang={selected.contentLocale ?? 'en'} data-report-id={selected.id}>
                                 <header className="weekly-report__header">
-                                    <p className="weekly-report__eyebrow">Community Weekly Report</p>
+                                    <p className="weekly-report__eyebrow" lang={currentLocale}>{translate({id: "landing.CommunityReportNext.012", message: "Community Weekly Report"})}</p>
                                     <h1 className="weekly-report__title">{selected.label}</h1>
                                     {selected.week && <p className="weekly-report__meta">{selected.week}</p>}
                                 </header>
@@ -277,7 +296,7 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                                 )}
 
                                 {selected.report ? (
-                                    <StructuredBody key={selected.id} report={selected.report} />
+                                    <StructuredBody key={selected.id} report={selected.report} contentLocale={selected.contentLocale ?? 'en'} />
                                 ) : (
                                     <div className="weekly-report__body">
                                         {SelectedReport && <SelectedReport />}
@@ -299,7 +318,8 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
 // reports fall back to __body above.
 // ---------------------------------------------------------------------------
 
-function StructuredBody({ report }: { report: WeeklyReportData }): JSX.Element {
+function StructuredBody({ report, contentLocale }: { report: WeeklyReportData; contentLocale: string }): JSX.Element {
+    const {i18n: {currentLocale}} = useDocusaurusContext();
     const { summary, repos } = report;
     const [activeRepo, setActiveRepo] = useState(0);
     const [activeHighlight, setActiveHighlight] = useState<number | null>(null);
@@ -311,18 +331,18 @@ function StructuredBody({ report }: { report: WeeklyReportData }): JSX.Element {
     const selectedScenario = scenarios[activeScenarioIndex];
 
     return (
-        <div className="wr-structured">
+        <div className="wr-structured" lang={currentLocale}>
             {summary.lead && (
                 <section className="wr-section">
-                    <SectionTitle index="00" title="Overview" />
-                    <p className="wr-pulse__lead">{summary.lead}</p>
+                    <SectionTitle index="00" title={translate({id: "landing.CommunityReportNext.013", message: "Overview"})} />
+                    <p className="wr-pulse__lead" lang={contentLocale}>{summary.lead}</p>
                 </section>
             )}
 
             {highlights.length > 0 && (
                 <section className="wr-section">
-                    <SectionTitle index="01" title="Highlights" />
-                    <div className="wr-highlights">
+                    <SectionTitle index="01" title={translate({id: "landing.CommunityReportNext.014", message: "Highlights"})} />
+                    <div className="wr-highlights" lang={contentLocale}>
                         {highlights.map((h, i) => (
                             <HighlightCard
                                 key={i}
@@ -337,7 +357,7 @@ function StructuredBody({ report }: { report: WeeklyReportData }): JSX.Element {
             )}
 
             {repos.length > 1 && (
-                <nav className="wr-tabs" aria-label="Repositories">
+                <nav className="wr-tabs" aria-label={translate({id: "landing.CommunityReportNext.015", message: "Repositories"})}>
                     {repos.map((r, i) => (
                         <button
                             key={r.repo}
@@ -357,12 +377,12 @@ function StructuredBody({ report }: { report: WeeklyReportData }): JSX.Element {
             {repo && (
                 <>
                     <section className="wr-section">
-                        <SectionTitle index="02" title="By Scenario" />
+                        <SectionTitle index="02" title={translate({id: "landing.CommunityReportNext.016", message: "By Scenario"})} />
                         {scenarios.length === 0 ? (
-                            <p className="wr-empty">Nothing to report this week.</p>
+                            <p className="wr-empty">{translate({id: "landing.CommunityReportNext.017", message: "Nothing to report this week."})}</p>
                         ) : (
                             <div className="wr-scenarios-tabs">
-                                <div className="wr-scenario-tabs" role="tablist" aria-label={`${repo.repo} scenarios`}>
+                                <div className="wr-scenario-tabs" role="tablist" aria-label={`${repo.repo}${translate({id: "landing.CommunityReportNext.018", message: " scenarios"})}`}>
                                     {scenarios.map((s, i) => (
                                         <button
                                             key={s.name + i}
@@ -380,7 +400,7 @@ function StructuredBody({ report }: { report: WeeklyReportData }): JSX.Element {
                                             <span className="wr-scenario-tab__idx">
                                                 {String(i + 1).padStart(2, '0')}
                                             </span>
-                                            <span className="wr-scenario-tab__label">{s.name}</span>
+                                            <span className="wr-scenario-tab__label" lang={contentLocale}>{s.name}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -390,6 +410,7 @@ function StructuredBody({ report }: { report: WeeklyReportData }): JSX.Element {
                                         role="tabpanel"
                                         aria-labelledby={`wr-scenario-tab-${activeScenarioIndex}`}
                                         className="wr-scenario-panel"
+                                        lang={contentLocale}
                                     >
                                         <ScenarioCard scenario={selectedScenario} index={activeScenarioIndex + 1} />
                                     </div>
@@ -400,11 +421,11 @@ function StructuredBody({ report }: { report: WeeklyReportData }): JSX.Element {
 
                     {summary.numbers && (
                         <section className="wr-section">
-                            <SectionTitle index="03" title="Community Pulse" />
+                            <SectionTitle index="03" title={translate({id: "landing.CommunityReportNext.019", message: "Community Pulse"})} />
                             <div className="wr-pulse">
-                                <PulseFigure num={summary.numbers.mergedPrs} label="Merged PRs" />
-                                <PulseFigure num={summary.numbers.newIssues} label="New issues" />
-                                <PulseFigure num={summary.numbers.contributors} label="Contributors" />
+                                <PulseFigure num={summary.numbers.mergedPrs} label={translate({id: "landing.CommunityReportNext.020", message: "Merged PRs"})} />
+                                <PulseFigure num={summary.numbers.newIssues} label={translate({id: "landing.CommunityReportNext.021", message: "New issues"})} />
+                                <PulseFigure num={summary.numbers.contributors} label={translate({id: "landing.CommunityReportNext.022", message: "Contributors"})} />
                             </div>
                         </section>
                     )}
@@ -528,11 +549,11 @@ function ScenarioCard({
                 <span className="wr-scn__idx">{String(index).padStart(2, '0')}</span>
             </div>
             {scenario.mergedNarrative && (
-                <ScenarioBlock label="Merged" narrative={scenario.mergedNarrative} items={scenario.merged ?? []} />
+                <ScenarioBlock label={translate({id: "landing.CommunityReportNext.023", message: "Merged"})} narrative={scenario.mergedNarrative} items={scenario.merged ?? []} />
             )}
             {scenario.inProgressNarrative && (
                 <ScenarioBlock
-                    label="In progress"
+                    label={translate({id: "landing.CommunityReportNext.024", message: "In progress"})}
                     narrative={scenario.inProgressNarrative}
                     items={scenario.inProgress ?? []}
                 />
@@ -550,9 +571,10 @@ function ScenarioBlock({
     narrative: string;
     items: WeeklyReportRef[];
 }): JSX.Element {
+    const {i18n: {currentLocale}} = useDocusaurusContext();
     return (
         <div className="wr-scn__block">
-            <div className="wr-scn__label">{label}</div>
+            <div className="wr-scn__label" lang={currentLocale}>{label}</div>
             <p className="wr-scn__narr">{narrative}</p>
             <RefList items={items} />
         </div>
@@ -560,6 +582,7 @@ function ScenarioBlock({
 }
 
 function RefList({ items }: { items: WeeklyReportRef[] }): JSX.Element | null {
+    const {i18n: {currentLocale}} = useDocusaurusContext();
     if (items.length === 0) {
         return null;
     }
@@ -568,9 +591,9 @@ function RefList({ items }: { items: WeeklyReportRef[] }): JSX.Element | null {
         <ul className="wr-scn__prs">
             {items.map(it => (
                 <li className="wr-scn__pr" key={it.num}>
-                    <span className="wr-scn__pr-title">{it.title}</span>
+                    <span className="wr-scn__pr-title" title={it.sourceTitle}>{it.title}</span>
                     <span className="wr-scn__pr-meta">
-                        {it.isNew && <span className="wr-scn__new">Newly opened</span>}
+                        {it.isNew && <span className="wr-scn__new" lang={currentLocale}>{translate({id: "landing.CommunityReportNext.025", message: "Newly opened"})}</span>}
                         <a className="wr-scn__pr-num" href={it.url} target="_blank" rel="noopener noreferrer">
                             #{it.num}
                         </a>

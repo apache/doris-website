@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode-bitmap-outer",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-bitmap-outer.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-bitmap-outer.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "39e036cc88c6d66fa301cee5cd7b6bf4c345f1eaefe1e40891b58331a3ab7738",
+    "sourceTechnicalHash": "1e48fb069f10bddf4c510aa85802fc5d0a0e0805c22dd35dfd31202c838d7b70",
+    "targetHash": "e6d0756f272deb0a006f5819e31f77fdd4c8e631f3bc5505b920e4b3196e13a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:00:37.693Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "39e036cc88c6d66fa301cee5cd7b6bf4c345f1eaefe1e40891b58331a3ab7738",
+      "targetHash": "e6d0756f272deb0a006f5819e31f77fdd4c8e631f3bc5505b920e4b3196e13a3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

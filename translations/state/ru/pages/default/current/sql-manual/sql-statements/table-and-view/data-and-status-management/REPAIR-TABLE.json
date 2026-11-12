@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/REPAIR-TABLE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/REPAIR-TABLE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/REPAIR-TABLE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3975b497567fc376147db3ab87db83bed4acda8b8e820383100d92a947718580",
+    "sourceTechnicalHash": "bdee9f5dfb9643a506378c18a6198250acefcdcd90cd9c0ed611ef88ed0a39af",
+    "targetHash": "c8e64173246c8e5e989d760766f0fccfc06b1dbe142506a02865ab1421ca3ba3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:39:23.610Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3975b497567fc376147db3ab87db83bed4acda8b8e820383100d92a947718580",
+      "targetHash": "c8e64173246c8e5e989d760766f0fccfc06b1dbe142506a02865ab1421ca3ba3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

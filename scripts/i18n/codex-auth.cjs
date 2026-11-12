@@ -35,6 +35,15 @@ function validAuth(raw) {
     return data;
 }
 
+function maskAuth(auth) {
+    if (!process.env.GITHUB_ACTIONS) return;
+    for (const value of Object.values(auth.tokens)) {
+        if (typeof value !== 'string' || !value) continue;
+        const escaped = value.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+        process.stdout.write(`::add-mask::${escaped}\n`);
+    }
+}
+
 function candidatesFrom(listing) {
     return [...new Set(listing.split('\n').map(line => line.trim()).filter(item => candidatePattern.test(item)))];
 }
@@ -76,6 +85,7 @@ function load() {
         oss(['cp', '-f', object, candidateFile]);
         const raw = fs.readFileSync(candidateFile, 'utf8');
         const auth = validAuth(raw);
+        maskAuth(auth);
         const refreshHash = sha256(auth.tokens.refresh_token);
         if (listed(`${object}.invalid.${refreshHash}`)) continue;
         const authFile = path.join(home, 'auth.json');
@@ -112,7 +122,7 @@ function sync() {
     }
     const authFile = path.join(home, 'auth.json');
     const raw = fs.readFileSync(authFile, 'utf8');
-    validAuth(raw);
+    maskAuth(validAuth(raw));
     if (sha256(raw) === originalHash) {
         process.stdout.write('Codex auth snapshot did not change\n');
         return;

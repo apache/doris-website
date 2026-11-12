@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/transform-values",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/transform-values.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/transform-values.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a55d3f8d02e4257445e089abde9afd9d9c80f9759f1b5785e3216771b0b34db6",
+    "sourceTechnicalHash": "7f76780fcd6c88187b63a324405d3ca39c4c6ca6e9fa4181c4bfc415838c9e30",
+    "targetHash": "276e14353cd204d88c5f798a518fa4a5e7d841f0553030fbdd97c1980d527ea5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:28:38.553Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a55d3f8d02e4257445e089abde9afd9d9c80f9759f1b5785e3216771b0b34db6",
+      "targetHash": "276e14353cd204d88c5f798a518fa4a5e7d841f0553030fbdd97c1980d527ea5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

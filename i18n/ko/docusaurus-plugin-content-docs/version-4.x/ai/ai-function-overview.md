@@ -2,71 +2,106 @@
 {
     "title": "AI 함수",
     "language": "ko",
-    "description": "Apache Doris의 SQL에서 대규모 언어 모델을 직접 호출하여 텍스트 분류, 정보 추출, 요약, 번역 및 기타 지능형 분석 작업을 수행하는 방법을 설명합니다."
+    "description": "Apache Doris에서 SQL을 통해 대규모 언어 모델을 직접 호출하여 텍스트 분류, 추출, 요약, 번역 및 기타 지능형 분석 작업을 수행하는 방법."
 }
 ---
 
-Apache Doris AI 함수는 SQL에서 외부 대규모 언어 모델(LLM)을 직접 호출하여 지능형 텍스트 분석을 수행하는 내장 함수 모음입니다. 분석가는 데이터를 외부 애플리케이션으로 내보내지 않고도 데이터베이스 내에서 텍스트 분류, 정보 추출, 감정 분석, 문법 교정, 콘텐츠 생성, 민감 정보 마스킹, 유사도 계산, 요약, 번역, 행 간 집계를 모두 수행할 수 있습니다.
+Apache Doris AI 함수는 외부 대규모 언어 모델(LLM)을 SQL에서 직접 호출하여 지능형 텍스트 분석을 수행하는 기본 제공 함수 집합입니다. 데이터를 외부 애플리케이션으로 내보내지 않고도 분석가는 데이터베이스 내부에서 텍스트 분류, 정보 추출, 감정 분석, 문법 교정, 콘텐츠 생성, 민감 정보 마스킹, 유사도 계산, 요약, 번역 및 행 간 집계 등의 작업을 수행할 수 있습니다.
 
-대표적인 활용 시나리오는 다음과 같습니다:
+일반적인 애플리케이션 시나리오는 다음과 같습니다.
 
-- **지능형 피드백**: 사용자의 의도와 감정을 자동으로 파악합니다.
-- **콘텐츠 검토**: 민감 정보를 일괄 탐지하고 처리하여 규정 준수를 보장합니다.
+- **지능형 피드백**: 사용자 의도와 감정을 자동으로 식별합니다.
+- **콘텐츠 조정**: 민감한 정보를 일괄적으로 감지하고 처리하여 규정 준수를 보장합니다.
 - **사용자 인사이트**: 사용자 피드백을 자동으로 분류하고 요약합니다.
-- **데이터 거버넌스**: 오류를 지능적으로 수정하고 핵심 정보를 추출하여 데이터 품질을 높입니다.
+- **데이터 거버넌스**: 오류를 지능적으로 수정하고 핵심 정보를 추출하여 데이터 품질을 향상합니다.
 
 :::note
-모든 대규모 언어 모델은 Doris 외부에서 제공되어야 하며 텍스트 분석을 지원해야 합니다. AI 함수 호출 결과와 비용은 외부 AI 공급업체와 사용하는 모델에 따라 달라집니다.
+모든 대규모 언어 모델은 Doris 외부에서 제공되어야 하며 텍스트 분석을 지원해야 합니다. AI 함수 호출의 결과와 비용은 외부 AI 공급업체와 사용된 모델에 따라 달라집니다.
 :::
 
-## 무엇을 하고 싶으신가요? (시나리오별 함수 선택) {#i-want-to-choose-a-function-by-scenario}
+## 수행하려는 작업... (시나리오별 함수 선택) {#i-want-to-choose-a-function-by-scenario}
 
 <!-- Knowledge type: Capability definition -->
 
-다음 테이블은 필요한 기능을 빠르게 찾을 수 있도록 "사용 시나리오 -> 권장 함수" 형식으로 구성되어 있습니다:
+다음 표는 "사용자 시나리오 -> 권장 함수" 형식으로 구성되어 필요한 기능을 빠르게 찾을 수 있도록 합니다.
 
-| 원하는 작업                                                  | 권장 함수                                                                                               | 반환 결과                                                 |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| 주어진 집합에서 가장 잘 맞는 레이블 선택                       | [AI_CLASSIFY](../sql-manual/sql-functions/ai-functions/ai-classify.md)                                  | 단일 레이블 문자열                                        |
-| 레이블별로 텍스트에서 정보 추출                                | [AI_EXTRACT](../sql-manual/sql-functions/ai-functions/ai-extract.md)                                    | 각 레이블에 대해 추출된 내용                               |
-| 텍스트가 의미적 조건을 충족하는지 판단                         | [AI_FILTER](../sql-manual/sql-functions/ai-functions/ai-filter.md)                                      | `BOOLEAN`                                                 |
-| 텍스트의 문법 및 맞춤법 오류 수정                              | [AI_FIXGRAMMAR](../sql-manual/sql-functions/ai-functions/ai-fixgrammar.md)                              | 수정된 텍스트                                             |
-| 입력 내용을 바탕으로 새 텍스트 생성                           | [AI_GENERATE](../sql-manual/sql-functions/ai-functions/ai-generate.md)                                  | 생성된 텍스트                                             |
-| 원본 텍스트의 민감 정보 마스킹                                 | [AI_MASK](../sql-manual/sql-functions/ai-functions/ai-mask.md)                                          | 민감 정보가 `[MASKED]`로 대체된 텍스트                     |
-| 텍스트의 감정 분석                                            | [AI_SENTIMENT](../sql-manual/sql-functions/ai-functions/ai-sentiment.md)                                | `positive` / `negative` / `neutral` / `mixed`             |
-| 두 텍스트 간 의미적 유사도 계산                               | [AI_SIMILARITY](../sql-manual/sql-functions/ai-functions/ai-similarity.md)                              | 0부터 10까지의 부동소수점 수. 값이 클수록 더 유사함        |
-| 단일 텍스트의 핵심 내용 요약                                  | [AI_SUMMARIZE](../sql-manual/sql-functions/ai-functions/ai-summarize.md)                                | 요약된 텍스트                                             |
-| 텍스트를 지정한 언어로 번역                                    | [AI_TRANSLATE](../sql-manual/sql-functions/ai-functions/ai-translate.md)                                | 번역된 텍스트                                             |
-| 여러 행의 텍스트를 대상으로 행 간 집계 분석 수행              | [AI_AGG](../sql-manual/sql-functions/aggregate-functions/ai-agg.md)                                     | 집계된 텍스트                                             |
+| 수행하려는 작업                                              | 권장 함수                                                                                              | 반환 결과                                      |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| 주어진 집합에서 가장 잘 일치하는 레이블 선택                  | [AI_CLASSIFY](../sql-manual/sql-functions/ai-functions/ai-classify.md)                                  | 단일 레이블 문자열                              |
+| 레이블을 기준으로 텍스트에서 정보 추출                        | [AI_EXTRACT](../sql-manual/sql-functions/ai-functions/ai-extract.md)                                    | 각 레이블에 해당하는 추출된 콘텐츠              |
+| 텍스트가 의미 조건을 충족하는지 판단                           | [AI_FILTER](../sql-manual/sql-functions/ai-functions/ai-filter.md)                                      | `BOOLEAN`                                      |
+| 텍스트의 문법 및 철자 오류 수정                               | [AI_FIXGRAMMAR](../sql-manual/sql-functions/ai-functions/ai-fixgrammar.md)                              | 수정된 텍스트                                  |
+| 입력 콘텐츠를 기반으로 새 텍스트 생성                          | [AI_GENERATE](../sql-manual/sql-functions/ai-functions/ai-generate.md)                                  | 생성된 텍스트                                  |
+| 원본 텍스트의 민감한 정보 마스킹                               | [AI_MASK](../sql-manual/sql-functions/ai-functions/ai-mask.md)                                          | 민감한 정보가 `[MASKED]`로 대체된 텍스트        |
+| 텍스트의 감정 분석                                             | [AI_SENTIMENT](../sql-manual/sql-functions/ai-functions/ai-sentiment.md)                                | `positive` / `negative` / `neutral` / `mixed` |
+| 두 텍스트 간의 의미적 유사도 계산                              | [AI_SIMILARITY](../sql-manual/sql-functions/ai-functions/ai-similarity.md)                              | 0~10의 부동 소수점 숫자, 클수록 더 유사         |
+| 단일 텍스트의 상위 수준 요약 생성                              | [AI_SUMMARIZE](../sql-manual/sql-functions/ai-functions/ai-summarize.md)                                | 요약 텍스트                                    |
+| 텍스트를 지정된 언어로 번역                                   | [AI_TRANSLATE](../sql-manual/sql-functions/ai-functions/ai-translate.md)                                | 번역된 텍스트                                  |
+| 여러 텍스트 행에 대한 행 간 집계 분석 수행                     | [AI_AGG](../sql-manual/sql-functions/aggregate-functions/ai-agg.md)                                     | 집계된 텍스트                                  |
 
-## LLM 연결: AI 리소스 설정 {#connecting-an-llm-configuring-an-ai-resource}
+## LLM 연결: AI 리소스 구성 {#connecting-an-llm-configuring-an-ai-resource}
 
 <!-- Knowledge type: Configuration parameters -->
 <!-- Applicable scenario: Connecting to an external LLM service -->
 
-Doris는 [리소스 메커니즘](../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md)을 통해 AI API 접근을 중앙에서 관리합니다. 공급업체, 모델, 키, 엔드포인트를 한곳에서 설정하고, 키를 안전하게 보호하며 접근을 제어할 수 있습니다.
+Doris는 [리소스 메커니즘](../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md)을 사용하여 AI API 액세스를 중앙에서 관리합니다. 이를 통해 공급업체, 모델, 키 및 엔드포인트를 한곳에서 구성하고 키를 안전하게 보호하며 액세스를 제어할 수 있습니다.
 
 ### 리소스 매개변수 {#resource-parameters}
 
-| 매개변수                | 필수 여부                                 | 설명                                                                                                          |
-| ----------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `type`                  | 필수                                      | AI 리소스의 유형 식별자로 사용되며, 반드시 `ai`여야 합니다.                                                   |
-| `ai.provider_type`      | 필수                                      | 외부 AI 공급업체 유형입니다.                                                                                  |
-| `ai.endpoint`           | 필수                                      | AI API 엔드포인트 URL입니다.                                                                                  |
-| `ai.model_name`         | 필수                                      | 모델 이름입니다.                                                                                              |
-| `ai.api_key`            | 필수(단, `ai.provider_type = local`인 경우 제외) | API 키입니다.                                                                                           |
-| `ai.temperature`        | 선택                                      | 생성되는 콘텐츠의 무작위성을 제어하며, 범위는 0-1입니다. 기본값 `-1`은 매개변수가 설정되지 않았음을 의미합니다. |
-| `ai.max_tokens`         | 선택                                      | 생성되는 콘텐츠의 최대 토큰 수를 제한합니다. 기본값 `-1`은 매개변수가 설정되지 않았음을 의미하며, Anthropic의 기본값은 `2048`입니다. |
-| `ai.max_retries`        | 선택                                      | 단일 요청의 최대 재시도 횟수입니다. 기본값은 `3`입니다.                                                        |
-| `ai.retry_delay_second` | 선택                                      | 재시도 간 대기 시간이며, 단위는 초입니다. 기본값은 `0`입니다.                                                  |
+**4.1.5부터**, 일반 `ai.*`, 텍스트 임베딩 `ai.embed.*` 또는 멀티모달 임베딩 `ai.embed.mm.*` 중 하나 이상의 완전한 연결 그룹을 구성합니다. 각 구성 그룹에는 `provider_type`, `endpoint`, `model_name`이 필요하며, 해당 그룹의 provider가 `LOCAL`인 경우를 제외하고 `api_key`도 필요합니다. 아래의 필수 연결 필드는 일반 그룹을 구성할 때 적용됩니다. 스칼라 AI 함수와 `AI_AGG`에는 일반 그룹이 필요합니다. 이전 버전에서는 일반 그룹이 필요합니다.
 
-:::caution 인증 관련 참고 사항
-현재는 정적 API 키 인증만 지원합니다(인증 정보가 요청 헤더에 직접 전송됨). 개인 키로 서명하고 임시 액세스 토큰으로 교환해야 하는 인증 방식(예: OAuth 또는 Service Account)은 지원하지 않습니다.
+| 매개변수                  | 필수 여부                                      | 설명                                                                                                   |
+| ------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `type`                    | 필수                                          | `ai`여야 하며 AI 리소스의 유형 식별자로 사용됩니다.                                                    |
+| `ai.provider_type`        | 필수                                          | 외부 AI 공급업체 유형입니다.                                                                           |
+| `ai.endpoint`             | 필수                                          | AI API 엔드포인트 URL입니다.                                                                           |
+| `ai.model_name`           | 필수                                          | 모델 이름입니다.                                                                                        |
+| `ai.api_key`              | `ai.provider_type = local`인 경우를 제외하고 필수 | API 키입니다.                                                                                          |
+| `ai.temperature`          | 선택 사항                                     | 생성 콘텐츠의 무작위성을 제어하며 범위는 0~1입니다. 기본값 `-1`은 매개변수가 설정되지 않았음을 의미합니다. |
+| `ai.max_tokens`           | 선택 사항                                     | 생성 콘텐츠의 최대 토큰 수를 제한합니다. 기본값 `-1`은 매개변수가 설정되지 않았음을 의미하며, Anthropic의 기본값은 `2048`입니다. |
+| `ai.max_retries`          | 선택 사항                                     | 단일 요청의 최대 재시도 횟수입니다. 기본값은 `3`입니다.                                                 |
+| `ai.retry_delay_second`   | 선택 사항                                     | 재시도 사이의 지연 시간(초)입니다. 기본값은 `0`입니다.                                                  |
+| `ai.enable_structured_output` | 선택 사항 | **4.2부터.** Boolean이며 기본값은 `true`입니다. Doris는 스칼라 AI 함수의 입력 행을 배치로 묶습니다. 이 옵션을 활성화하면 응답 형식의 안정성을 높이기 위해 공급업체별 형식 필드가 추가됩니다. Doris는 구성된 모델이 이러한 필드를 지원하는지 확인하지 않으며, LOCAL 및 MiniMax에서는 이러한 필드를 생략합니다. 모델 또는 엔드포인트가 해당 필드를 거부하면 `false`로 설정합니다. 배치 처리, 시스템 프롬프트 형식 지침 및 응답 검증은 계속 활성화됩니다. `AI_AGG` 또는 `EMBED`에는 적용되지 않습니다. |
+| `ai.effort` | 선택 사항 | **4.1.5부터.** 생성 요청의 추론 수준을 제어하는 문자열이며 기본적으로 설정되지 않습니다. Doris는 OpenAI 호환 provider에 대해 `none`, `minimal`, `low`, `medium`, `high`, `xhigh` 또는 `max`를 허용하고, Anthropic에 대해서는 `low`, `medium`, `high`, `xhigh` 또는 `max`를 허용하며, Gemini에 대해서는 `minimal`, `low`, `medium` 또는 `high`를 허용합니다. 구성된 모델은 선택한 값을 지원해야 합니다. `ALTER RESOURCE`를 사용하여 빈 문자열로 설정하면 해당 값을 제거할 수 있습니다. |
+
+### 전용 임베딩 속성 {#dedicated-embedding-properties}
+
+**4.1.5부터.** 아래의 모든 속성은 문자열이며 기본값이 없습니다. 구성 그룹은 완전해야 하며 누락된 필드는 다른 그룹에서 채워지지 않습니다.
+
+| 매개변수 | 설명 |
+| --- | --- |
+| `ai.embed.provider_type` | 텍스트 임베딩 provider입니다. |
+| `ai.embed.endpoint` | 텍스트 임베딩 API 엔드포인트입니다. |
+| `ai.embed.model_name` | 텍스트 임베딩 모델 이름입니다. |
+| `ai.embed.api_key` | 텍스트 임베딩 API 키이며 `LOCAL`에서는 선택 사항입니다. |
+| `ai.embed.mm.provider_type` | 멀티모달 임베딩 provider입니다. |
+| `ai.embed.mm.endpoint` | 멀티모달 임베딩 API 엔드포인트입니다. |
+| `ai.embed.mm.model_name` | 멀티모달 임베딩 모델 이름입니다. |
+| `ai.embed.mm.api_key` | 멀티모달 임베딩 API 키이며 `LOCAL`에서는 선택 사항입니다. |
+
+텍스트 입력의 경우 `EMBED`는 완전한 `ai.embed.*` 그룹을 먼저 선택한 다음 일반 그룹을 선택합니다. JSON 멀티모달 입력의 경우 `ai.embed.mm.*`, `ai.embed.*`, 일반 그룹 순서로 선택합니다. 선택은 완전한 그룹 단위로 이루어지며, 선택된 provider와 모델은 입력 유형을 지원해야 합니다. 세 그룹의 API 키는 모두 `SHOW RESOURCES`에서 마스킹됩니다. `ai.dimensions` 및 재시도 설정과 같은 매개변수는 그룹 간에 공유됩니다.
+
+예를 들어 텍스트 임베딩에만 사용되는 리소스를 생성합니다.
+
+```sql
+CREATE RESOURCE 'text_embedding' PROPERTIES (
+    'type' = 'ai',
+    'ai.embed.provider_type' = 'QWEN',
+    'ai.embed.endpoint' = 'https://dashscope.aliyuncs.com/compatible-mode/v1/embeddings',
+    'ai.embed.model_name' = 'text-embedding-v4',
+    'ai.embed.api_key' = '<api-key>'
+);
+```
+
+`<api-key>`를 유효한 키로 바꾸면 `EMBED('text_embedding', 'example text')`를 통해 리소스를 사용할 수 있습니다. 완전한 일반 그룹을 추가하면 동일한 리소스를 스칼라 AI 함수 또는 `AI_AGG`에도 사용할 수 있습니다.
+
+:::caution 인증 방식 참고
+현재는 정적 API 키 인증만 지원됩니다(자격 증명이 요청 헤더에 직접 전송됨). 개인 키로 서명한 후 임시 액세스 토큰으로 교환해야 하는 인증 메커니즘(예: OAuth 또는 Service Account)은 지원되지 않습니다.
 :::
 
-### 지원하는 공급업체 {#supported-vendors}
+### 지원되는 공급업체 {#supported-vendors}
 
-현재 Doris는 다음 공급업체를 직접 지원합니다:
+Doris는 현재 다음 공급업체를 직접 지원합니다.
 
 - OpenAI
 - Anthropic
@@ -79,7 +114,7 @@ Doris는 [리소스 메커니즘](../sql-manual/sql-statements/cluster-managemen
 - Qwen
 - Baichuan
 
-위 목록에 없는 공급업체라도 API 형식이 [OpenAI](https://platform.openai.com/docs/overview), [Anthropic](https://docs.anthropic.com/en/api/messages-examples) 또는 [Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1)와 같다면, `ai.provider_type`을 위 세 공급업체 중 API 형식이 일치하는 공급업체로 설정할 수 있습니다. 이 매개변수는 Doris가 내부적으로 생성하는 API 요청의 형식에만 영향을 줍니다.
+위 목록에 없는 공급업체라도 API 형식이 [OpenAI](https://platform.openai.com/docs/overview), [Anthropic](https://docs.anthropic.com/en/api/messages-examples) 또는 [Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1)와 동일하면 `ai.provider_type`에 동일한 형식을 사용하는 세 공급업체 중 하나를 설정할 수 있습니다. 이 매개변수는 Doris가 내부적으로 구성하는 API 요청의 형식에만 영향을 줍니다.
 
 ## 빠른 시작 {#quick-start}
 
@@ -87,7 +122,7 @@ Doris는 [리소스 메커니즘](../sql-manual/sql-statements/cluster-managemen
 <!-- Applicable scenario: Connecting to AI functions for the first time -->
 
 :::tip
-다음 예제는 최소한의 구성으로 실행할 수 있습니다. 더 자세한 절차는 [AI 함수 개요](../sql-manual/sql-functions/ai-functions/overview.md)를 참조하세요.
+다음 예제는 최소한의 실행 가능한 구현입니다. 더 자세한 단계는 [AI 함수 개요](../sql-manual/sql-functions/ai-functions/overview.md)를 참조하세요.
 :::
 
 ### 1단계: AI 리소스 생성 {#step-1-create-an-ai-resource}
@@ -120,7 +155,7 @@ PROPERTIES (
 
 ### 2단계: 기본 리소스 설정(선택 사항) {#step-2-set-a-default-resource-optional}
 
-기본 리소스를 설정하면 AI 함수를 호출할 때 리소스 이름을 명시적으로 지정할 필요가 없습니다:
+기본 리소스를 설정하면 AI 함수를 호출할 때 리소스 이름을 명시적으로 지정할 필요가 없습니다.
 
 ```sql
 SET default_ai_resource = 'ai_resource_name';
@@ -128,9 +163,9 @@ SET default_ai_resource = 'ai_resource_name';
 
 ### 3단계: SQL에서 AI 함수 호출 {#step-3-call-ai-functions-in-sql}
 
-#### 예제 1: 의미 기반 점수를 이용한 관련성 필터링 {#example-1-relevance-filtering-based-on-semantic-scoring}
+#### 예제 1: 의미 점수 기반 관련성 필터링 {#example-1-relevance-filtering-based-on-semantic-scoring}
 
-데이터베이스 관련 문서를 저장하는 다음 테이블이 있다고 가정합니다:
+다음과 같이 데이터베이스와 관련된 문서를 저장하는 테이블이 있다고 가정합니다.
 
 ```sql
 CREATE TABLE doc_pool (
@@ -143,7 +178,7 @@ PROPERTIES (
 );
 ```
 
-Apache Doris와 관련성이 가장 높은 레코드 10개를 선택합니다:
+Apache Doris와 가장 관련성이 높은 10개 레코드를 선택합니다.
 
 ```sql
 SELECT
@@ -157,7 +192,7 @@ ORDER BY score DESC
 LIMIT 10;
 ```
 
-이 쿼리는 LLM에 각 문서가 Apache Doris와 얼마나 관련이 있는지 점수를 매기도록 요청한 다음, 점수가 높은 순서대로 상위 10개 결과를 반환합니다:
+이 쿼리는 LLM에 각 문서와 Apache Doris의 관련성을 평가하도록 요청한 다음 점수 내림차순으로 상위 10개 결과를 반환합니다.
 
 ```text
 +---------------------------------------------------------------------------------------------------------------+-------+
@@ -176,9 +211,9 @@ LIMIT 10;
 +---------------------------------------------------------------------------------------------------------------+-------+
 ```
 
-#### 예제 2: 지원자 이력서와 채용 요건 간 의미 기반 매칭 {#example-2-semantic-matching-between-candidate-resumes-and-job-requirements}
+#### 예제 2: 후보자 이력서와 직무 요구 사항 간의 의미 매칭 {#example-2-semantic-matching-between-candidate-resumes-and-job-requirements}
 
-채용 상황을 가정하여 지원자 이력서 테이블과 채용 요건 테이블을 만듭니다:
+채용 시나리오에서 후보자 이력서 테이블과 직무 요구 사항 테이블을 시뮬레이션합니다.
 
 ```sql
 CREATE TABLE candidate_profiles (
@@ -213,7 +248,7 @@ INSERT INTO job_requirements VALUES
 (102, 'ML Engineer',      'Seeking a data scientist or ML engineer familiar with NLP and large language models.');
 ```
 
-`AI_FILTER`를 사용하여 채용 요건과 지원자의 자기소개를 의미적으로 매칭하고 적합한 지원자를 선별합니다:
+`AI_FILTER`를 사용하여 직무 요구 사항과 후보자 자기소개를 의미적으로 매칭하고 적합한 후보자를 선별합니다.
 
 ```sql
 SELECT
@@ -227,7 +262,7 @@ WHERE AI_FILTER(CONCAT(
 ));
 ```
 
-결과는 다음과 같습니다:
+결과는 다음과 같습니다.
 
 ```text
 +--------------+-------+--------+------------------+
@@ -246,11 +281,11 @@ WHERE AI_FILTER(CONCAT(
 
 ![AI 함수 실행 흐름도](/images/LLM-function-flowchart.png)
 
-실행 흐름의 핵심 사항은 다음과 같습니다:
+실행 흐름의 주요 사항은 다음과 같습니다.
 
 - **`<resource_name>`**: 현재는 문자열 상수만 전달할 수 있습니다.
-- **리소스**: 매개변수는 개별 요청의 설정에만 적용됩니다.
-- **`system_prompt`**: 함수마다 서로 다른 시스템 프롬프트를 사용합니다. 일반적인 형식은 다음과 같습니다:
+- **리소스**: 리소스의 매개변수는 각 개별 요청의 구성에만 적용됩니다.
+- **`system_prompt`**: 함수마다 서로 다른 시스템 프롬프트를 사용합니다. 일반적인 형식은 다음과 같습니다.
 
     ```text
     you are a ... you will ...
@@ -259,13 +294,13 @@ WHERE AI_FILTER(CONCAT(
     ```
 
 - **`user_prompt`**: 추가 설명 없이 입력 매개변수만 포함합니다.
-- **요청 본문**: 사용자가 설정하지 않은 선택적 매개변수(예: `ai.temperature` 및 `ai.max_tokens`)는 요청 본문에 포함되지 않습니다. Anthropic은 예외로, `max_tokens`를 반드시 전달해야 하며 Doris는 내부 기본값인 `2048`을 사용합니다. 이 매개변수의 실제 값은 공급업체 또는 해당 모델의 기본값에 따라 결정됩니다.
-- **시간 초과 제어**: 요청의 제한 시간은 요청을 보낼 때 남아 있는 쿼리 실행 시간과 같습니다. 전체 쿼리 실행 시간은 세션 변수 `query_timeout`에 의해 결정됩니다. 시간 초과가 발생하면 `query_timeout`을 적절히 늘릴 수 있습니다.
+- **요청 본문**: 사용자가 설정하지 않은 선택적 매개변수(예: `ai.temperature`, `ai.max_tokens`)는 요청 본문에 포함되지 않습니다. Anthropic은 예외로 `max_tokens`를 반드시 전달해야 하며 Doris는 내부 기본값 `2048`을 사용합니다. 이러한 매개변수의 실제 값은 공급업체 또는 특정 모델의 기본값에 의해 결정됩니다.
+- **시간 초과 제어**: 요청을 보낼 때의 요청 시간 초과는 남은 쿼리 시간과 동일합니다. 총 쿼리 시간은 세션 변수 `query_timeout`으로 결정됩니다. 시간 초과가 발생하면 `query_timeout`을 적절히 늘릴 수 있습니다.
 
 ### 리소스 기반 관리 {#resource-based-management}
 
-Doris는 AI 기능을 리소스로 추상화하고 이를 통해 다양한 LLM 서비스(예: OpenAI, DeepSeek, Moonshot, 로컬 모델)를 중앙에서 관리합니다. 각 리소스에는 공급업체, 모델 유형, API 키, 엔드포인트 등의 핵심 정보가 포함됩니다. 이를 통해 키를 안전하게 보호하고 접근을 제어하면서 여러 모델과 환경을 손쉽게 도입하고 전환할 수 있습니다.
+Doris는 AI 기능을 리소스로 추상화하고 이를 사용하여 다양한 LLM 서비스(예: OpenAI, DeepSeek, Moonshot 및 로컬 모델)를 중앙에서 관리합니다. 각 리소스에는 공급업체, 모델 유형, API 키, 엔드포인트 및 기타 주요 정보가 포함되어 여러 모델과 환경에서 온보딩 및 전환을 간소화하는 동시에 키를 안전하게 보호하고 액세스를 제어할 수 있습니다.
 
 ### 주요 LLM과의 호환성 {#compatibility-with-mainstream-llms}
 
-공급업체마다 API 형식이 다르므로 Doris는 각 서비스에 맞게 요청 구성, 인증, 응답 파싱 등의 핵심 메서드를 구현하고, 리소스 설정에 따라 적절한 구현을 동적으로 선택합니다. 따라서 사용자는 내부 API 차이를 신경 쓸 필요가 없습니다. 공급업체 유형만 선언하면 Doris가 통합과 호출을 자동으로 처리합니다.
+공급업체마다 API 형식이 다르므로 Doris는 각 서비스에 대해 요청 구성, 인증 및 응답 구문 분석과 같은 핵심 메서드를 구현하고 리소스 구성에 따라 적절한 구현을 동적으로 선택합니다. 따라서 사용자는 기본 API의 차이를 걱정할 필요가 없습니다. 공급업체 유형만 선언하면 Doris가 통합과 호출을 자동으로 처리합니다.

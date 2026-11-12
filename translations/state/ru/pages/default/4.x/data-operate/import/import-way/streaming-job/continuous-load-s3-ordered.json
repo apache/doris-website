@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3-ordered",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-ordered.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-ordered.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "1d1e3ca1852fb688f7775aaad8bc888d63341eaf164b21afb201e5cb7703c6ad",
+    "sourceTechnicalHash": "99263e8a8ab425fbb274bd2d266f802f31dd3d182e14020032c03d31ac045554",
+    "targetHash": "82b26bd8624725388c00117ea81d45f320b386b1dc99deb97245f00eacfa8be0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-05T12:46:03.180Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1d1e3ca1852fb688f7775aaad8bc888d63341eaf164b21afb201e5cb7703c6ad",
+      "targetHash": "82b26bd8624725388c00117ea81d45f320b386b1dc99deb97245f00eacfa8be0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-ordered.md",
+        "blob": "78132515f8a4bd2f78d75d489647f825f39572c5"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-ordered.md",
+        "blob": "63fb40728445833f8919a0348c450fea79c85597"
+      }
+    }
+  }
+}

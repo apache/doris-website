@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/intersect-count",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/intersect-count.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/intersect-count.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a6337de4cbf28c3d4db12a83c4b300d609e5652ec91f698b09d938652939fc17",
+    "sourceTechnicalHash": "26f01d44406058afa0132381e81f5f118c252f0cd5e7a7ca8df28c1ff3278955",
+    "targetHash": "788adace79896bf5f61c209100e12c2f0171ff22fdf84b2d19482f3c941fccb8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:47:09.930Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a6337de4cbf28c3d4db12a83c4b300d609e5652ec91f698b09d938652939fc17",
+      "targetHash": "788adace79896bf5f61c209100e12c2f0171ff22fdf84b2d19482f3c941fccb8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

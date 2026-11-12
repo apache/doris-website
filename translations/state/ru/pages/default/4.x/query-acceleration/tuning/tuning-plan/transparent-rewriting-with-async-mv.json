@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "92e43ba2e38ced23186fcaad3e3011bc7ecc63aa2d3c0662a67e471551a99047",
+    "sourceTechnicalHash": "a7de17c1ca6022a523bc79562a476f1d6cf3637f33d58b1a0dc8b95166aab116",
+    "targetHash": "50af54d7075319e8bc61581b8b3dd75ca24b730f97c522ea7d79f56a6fa1db52",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:33.532Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "92e43ba2e38ced23186fcaad3e3011bc7ecc63aa2d3c0662a67e471551a99047",
+      "targetHash": "50af54d7075319e8bc61581b8b3dd75ca24b730f97c522ea7d79f56a6fa1db52",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv",
+        "sourcePath": "docs/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "92e43ba2e38ced23186fcaad3e3011bc7ecc63aa2d3c0662a67e471551a99047",
+        "targetHash": "50af54d7075319e8bc61581b8b3dd75ca24b730f97c522ea7d79f56a6fa1db52",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

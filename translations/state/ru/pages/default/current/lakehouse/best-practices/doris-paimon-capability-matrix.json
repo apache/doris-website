@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-paimon-capability-matrix",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-paimon-capability-matrix.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-paimon-capability-matrix.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "7463753a5d3c6796fc73e073f7282464e85a24e381ec15a210fc2f4b0d77b6c2",
+    "sourceTechnicalHash": "aa3b5ac5a0db2032ed6973464ca6f93ec0a62416fbf45a19641e2b4f908ca555",
+    "targetHash": "d178b132d6ceae959c12ac8165f734fecc7bc08caadbbd738253e6467a7392fa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:54:20.022Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7463753a5d3c6796fc73e073f7282464e85a24e381ec15a210fc2f4b0d77b6c2",
+      "targetHash": "d178b132d6ceae959c12ac8165f734fecc7bc08caadbbd738253e6467a7392fa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

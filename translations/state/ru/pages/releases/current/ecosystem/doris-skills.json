@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-skills",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-skills.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-skills.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "0e7d43ffc650a706c774ef8129b2035b571dc86dad621f287efc57e48a106839",
+    "sourceTechnicalHash": "82bf6717c7f9e166a164a29f4650fa8f7e532e64bd27a58d0d72da877992ecc1",
+    "targetHash": "48489a0085411373fd4f57633c4891a81067cd88694296c73529f3ba9415c274",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T18:14:01.135Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0e7d43ffc650a706c774ef8129b2035b571dc86dad621f287efc57e48a106839",
+      "targetHash": "48489a0085411373fd4f57633c4891a81067cd88694296c73529f3ba9415c274",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-sentiment",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-sentiment.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-sentiment.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "168188bf1e51e81df4b209cb340985677deee8df2046a8294c8d4caa470b6e9d",
+    "sourceTechnicalHash": "853c52a03e5e84cd2e744133928d9b10602380d4575b17ad6adcd3250afd11dc",
+    "targetHash": "8b65ee956cb99211f162ad4baedaaa2a664cec0b7625b3f5bbb8eb528db1fabc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:28:30.703Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "168188bf1e51e81df4b209cb340985677deee8df2046a8294c8d4caa470b6e9d",
+      "targetHash": "8b65ee956cb99211f162ad4baedaaa2a664cec0b7625b3f5bbb8eb528db1fabc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

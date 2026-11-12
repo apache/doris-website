@@ -1,7 +1,7 @@
-import { translate } from '@docusaurus/Translate';
+import Translate, { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import { UseCasePage, UseCasePageContent } from './UseCasePage';
-import { Bolt } from './UseCaseIcons';
+import { AccentWithBolt } from './UseCaseIcons';
 import { AIAnalyticsFigure } from './figures/AIAnalyticsFigure';
 
 const KF = '/docs/dev/key-features';
@@ -16,12 +16,16 @@ const content: UseCasePageContent = {
     },
     hero: {
         title: (
-            <>
-                <span className="uc-accent">
-                    {translate({ id: "marketing.ai.004", message: "Real-Time" })}<Bolt />
-                </span>{' '}
-                {translate({ id: "marketing.ai.005", message: "AI-Ready" })}<br />
-                {translate({ id: "marketing.ai.006", message: "Analytics for the Agent Era" })}</>
+            <Translate id="marketing.ai.hero" values={{
+                realTime: <AccentWithBolt>
+                    {translate({ id: "marketing.ai.004", message: "Real-Time" })}
+                </AccentWithBolt>,
+                aiReady: translate({ id: "marketing.ai.005", message: "AI-Ready" }),
+                analytics: translate({ id: "marketing.ai.006", message: "Analytics for the Agent Era" }),
+                lineBreak: <br />,
+            }}>
+                {'{realTime} {aiReady}{lineBreak}{analytics}'}
+            </Translate>
         ),
         sub: translate({ id: "marketing.ai.007", message: "Apache Doris gives AI applications real-time access to trusted, queryable enterprise data. Build data-aware agents, improve RAG quality, monitor AI behavior, and run analytics and hybrid search across structured, semi-structured, and unstructured data at scale." }),
     },

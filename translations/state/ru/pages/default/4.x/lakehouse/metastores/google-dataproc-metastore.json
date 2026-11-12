@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/metastores/google-dataproc-metastore",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/metastores/google-dataproc-metastore.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/metastores/google-dataproc-metastore.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0da7ef56ce473752b70a177c38c3890b8ec23f6ccce1976fa742a3196698e4f0",
+    "sourceTechnicalHash": "64a41e95ce5613bb15b2cd6867f14a07c9d9d9331163c64d6d3ac260001465f7",
+    "targetHash": "b3ac5398af8277173d8dfa30d89972e55c820a104f515916c249537e214581bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:21.890Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0da7ef56ce473752b70a177c38c3890b8ec23f6ccce1976fa742a3196698e4f0",
+      "targetHash": "b3ac5398af8277173d8dfa30d89972e55c820a104f515916c249537e214581bd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/metastores/google-dataproc-metastore",
+        "sourcePath": "docs/lakehouse/metastores/google-dataproc-metastore.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/metastores/google-dataproc-metastore.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "0da7ef56ce473752b70a177c38c3890b8ec23f6ccce1976fa742a3196698e4f0",
+        "targetHash": "b3ac5398af8277173d8dfa30d89972e55c820a104f515916c249537e214581bd",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

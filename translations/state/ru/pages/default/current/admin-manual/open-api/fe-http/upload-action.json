@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/upload-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/upload-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/upload-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e3fe2cedc250612698af1e78f68a806c6b0f748a15b15e159ba8183c9f4d89a4",
+    "sourceTechnicalHash": "3beaafdcc3e5765e6f8f781250cadcc72749ec5cd7bebd64f2c959f21e5585c2",
+    "targetHash": "cb1c659c7c64b7850fa6cc26b9d970a7c6f43eecb0f29c3a4d425eca2dbfdd5d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:39:56.715Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e3fe2cedc250612698af1e78f68a806c6b0f748a15b15e159ba8183c9f4d89a4",
+      "targetHash": "cb1c659c7c64b7850fa6cc26b9d970a7c6f43eecb0f29c3a4d425eca2dbfdd5d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

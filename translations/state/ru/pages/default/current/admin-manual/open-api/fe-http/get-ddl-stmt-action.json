@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/get-ddl-stmt-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/get-ddl-stmt-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/get-ddl-stmt-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "7f1f2d8b79fc975304ec6fe48810e4371bb0baaa087353ce99fa2ef9d38844af",
+    "sourceTechnicalHash": "cf34a3b0396a5d18808e51412fa06c24c2f332c6f2054af48b0087e2b31e92c4",
+    "targetHash": "b1b056aa0f1113451f6e6efc561dd4c7dcdcbcd83e34a31f576911e4f7ddd0d1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:15:18.541Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7f1f2d8b79fc975304ec6fe48810e4371bb0baaa087353ce99fa2ef9d38844af",
+      "targetHash": "b1b056aa0f1113451f6e6efc561dd4c7dcdcbcd83e34a31f576911e4f7ddd0d1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/dayofyear",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/dayofyear.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/dayofyear.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0ff151a9709931b7668b9dfae35006a8091c667c8506d9256712903b429bc0cc",
+    "sourceTechnicalHash": "6a01bc144a96de7b320b6a50f29c65d2eca161a49688bb10955ead893de35a2a",
+    "targetHash": "486ee4135612cc154c92527de3d5574ad5324a6d90a966472c30cbe8e60f5f72",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:59:59.990Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0ff151a9709931b7668b9dfae35006a8091c667c8506d9256712903b429bc0cc",
+      "targetHash": "486ee4135612cc154c92527de3d5574ad5324a6d90a966472c30cbe8e60f5f72",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

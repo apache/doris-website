@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/get-load-state",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/get-load-state.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/get-load-state.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6f7c785ab8c48e082c7d4330898c06ab0cdb1a78f16a7a5d698622e7bf495678",
+    "sourceTechnicalHash": "b8032be045e4ab89f25659dfa46fcc29d2860f7f2a4a6ad381886e05ced3678c",
+    "targetHash": "8f2131cb32163a2fa55bb6802f6af7fb8e70335c874688c0ec5c5c85de09830b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:15:33.291Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6f7c785ab8c48e082c7d4330898c06ab0cdb1a78f16a7a5d698622e7bf495678",
+      "targetHash": "8f2131cb32163a2fa55bb6802f6af7fb8e70335c874688c0ec5c5c85de09830b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

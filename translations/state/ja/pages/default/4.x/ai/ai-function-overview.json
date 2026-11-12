@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/ai/ai-function-overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/ai/ai-function-overview.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
-    "sourceTechnicalHash": "3001a20159aeb47f42108af480abb173193fa80d2386dace1cdb20cbd4dae4ac",
-    "targetHash": "0cce4cb1e1efe5f6512accc1b6b44594e09e8419ec32bb8b80078b24e58466ef",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
+    "sourceHash": "0c8e37791c0503d9859f078c3c424421db47980442a0c0ee4d0592504a522255",
+    "sourceTechnicalHash": "c61cca1dfa22d1ee247ec36511cf610c216b9088901b419db2b25c6a7d3ebc0e",
+    "targetHash": "e12145f6509ab23857f1a819e94837c24a885ec49063e0a844c6c7d5f9a8ab83",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:38:46.110Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T05:46:11.268Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0c8e37791c0503d9859f078c3c424421db47980442a0c0ee4d0592504a522255",
+      "targetHash": "e12145f6509ab23857f1a819e94837c24a885ec49063e0a844c6c7d5f9a8ab83",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Capability definition -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 機能定義 -->\"]\nprotected node 19: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 構成パラメータ -->\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"LOCAL\"]; received [\"inlineCode\",null,null,\"api_key\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Capability definition -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 機能定義 -->\"]\nprotected node 19: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 構成パラメータ -->\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/ai/ai-function-overview.md",
+        "blob": "af6c01bb9c2293351c02cc2edded031943375c68"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/ai/ai-function-overview.md",
+        "blob": "2a6708da50e2d24b9cd20a655cff3cd4c757eaf5"
+      }
+    }
   }
 }

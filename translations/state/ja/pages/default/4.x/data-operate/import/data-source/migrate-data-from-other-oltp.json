@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "52bd4bf3d46f13aa99c9f347e8d8a8a8736a966397f15a82bbe39813a7ef9df4",
-    "sourceTechnicalHash": "59ba3e4652b33d8337940521ebf469d5881cf2d6734dbdd2fc08dcb2d89aeb16",
-    "targetHash": "28fca7c91ebe7d633854f73d2eaa1655e3c4e3c485ad9565350077affe585969",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "31cd7b30572cfc9b22ef4c5c43c0d5007e89295ad96a2d4ad3a8f622a079d493",
+    "sourceTechnicalHash": "89c66e7a7d03a7ccddd5b7098d6392642e1694143a64ae482396d1e296411c6b",
+    "targetHash": "0c0b35f37c6cd668ef629825f63718e9b14503b4b330324a7aa942257f16f1b8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T04:53:08.200Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "31cd7b30572cfc9b22ef4c5c43c0d5007e89295ad96a2d4ad3a8f622a079d493",
+      "targetHash": "0c0b35f37c6cd668ef629825f63718e9b14503b4b330324a7aa942257f16f1b8",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 27: expected [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]; received [\"inlineCode\",null,null,\"CTAS\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"CTAS\"]; received [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision / Operational steps -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: アーキテクチャ選択の判断 / 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Migrating or synchronizing data from OLTP databases (MySQL / SQL Server / Oracle / PostgreSQL) to Apache Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OLTP データベース（MySQL / SQL Server / Oracle / PostgreSQL）から Apache Doris へのデータ移行または同期 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]; received [\"inlineCode\",null,null,\"CTAS\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"CTAS\"]; received [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 27: expected [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]; received [\"inlineCode\",null,null,\"CTAS\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"CTAS\"]; received [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+        "blob": "5c65438ac8cc1872cecbd21d8f7e81ebf551d4d1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+        "blob": "6b605e23be5b32ac22bd4aa3f83e38c0bbdb5370"
+      }
+    }
   }
 }

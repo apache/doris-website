@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftleft",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftleft.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftleft.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "257f42d9b7445f9a8953a6ea6280e2842f86759237522ff1d0fe18bde04cde07",
+    "sourceTechnicalHash": "9892233b55d908563e893c541aaf3bbc0e2d2932f9e02a15b373eef14214bcde",
+    "targetHash": "e56b8e4ab9ae64a28fe22b5b068e87983130a9cc4ac8f07e2d0ac12f034278ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:49:26.057Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "257f42d9b7445f9a8953a6ea6280e2842f86759237522ff1d0fe18bde04cde07",
+      "targetHash": "e56b8e4ab9ae64a28fe22b5b068e87983130a9cc4ac8f07e2d0ac12f034278ba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

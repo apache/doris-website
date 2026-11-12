@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2300e0b173869de08acb9b46450f8ecaa13ab5df8ba9bfafccc3feac811203cc",
+    "sourceTechnicalHash": "52b818eab3f84bb776d409b8b42f4ddd5a8c1ea3d60abd00caee4cd0eec3aa93",
+    "targetHash": "266210ac0c3e766f8cc2c55daeea89fdb4e9a1e2bb846a42878f6a4b18bd5046",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:06:04.279Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2300e0b173869de08acb9b46450f8ecaa13ab5df8ba9bfafccc3feac811203cc",
+      "targetHash": "266210ac0c3e766f8cc2c55daeea89fdb4e9a1e2bb846a42878f6a4b18bd5046",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/ADD-FOLLOWER.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "2300e0b173869de08acb9b46450f8ecaa13ab5df8ba9bfafccc3feac811203cc",
+        "targetHash": "266210ac0c3e766f8cc2c55daeea89fdb4e9a1e2bb846a42878f6a4b18bd5046",
+        "commit": "d5ac930e1a15d171738ddccbd717b10b31ba98d3",
+        "pr": "https://github.com/apache/doris-website/pull/4455"
+      }
+    }
+  }
+}

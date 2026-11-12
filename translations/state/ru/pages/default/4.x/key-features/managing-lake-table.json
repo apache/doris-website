@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/managing-lake-table",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/managing-lake-table.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/managing-lake-table.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e6c89d385b6b29afec0828343f8d0fabb388e7a532429d2edf31571bf9d0161e",
+    "sourceTechnicalHash": "6c97e921f034613ac9944ef9d077d72c572607ac0fa02c332acc2e00495ae1ee",
+    "targetHash": "6a33a5e6b1f7f669abad114c5febe25bf5805d997a36e14646326d8406a2cffa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:32.241Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e6c89d385b6b29afec0828343f8d0fabb388e7a532429d2edf31571bf9d0161e",
+      "targetHash": "6a33a5e6b1f7f669abad114c5febe25bf5805d997a36e14646326d8406a2cffa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/managing-lake-table",
+        "sourcePath": "docs/key-features/managing-lake-table.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/managing-lake-table.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "e6c89d385b6b29afec0828343f8d0fabb388e7a532429d2edf31571bf9d0161e",
+        "targetHash": "6a33a5e6b1f7f669abad114c5febe25bf5805d997a36e14646326d8406a2cffa",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

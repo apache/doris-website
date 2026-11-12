@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "migration/postgresql-to-doris",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/migration/postgresql-to-doris.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/migration/postgresql-to-doris.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1a96cb749ed52f92f94df0a0122fa7e28282564ae06fb7062413f918d2fd2f11",
+    "sourceTechnicalHash": "f12033d8a1398737c8a7c8c972ca7595d3b30c7d93d5512903cd3470be685f09",
+    "targetHash": "053b5073115eac228fec63c07a8c290057b6c9ce5d32c4a6df7de3124cf78c34",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:04:18.951Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1a96cb749ed52f92f94df0a0122fa7e28282564ae06fb7062413f918d2fd2f11",
+      "targetHash": "053b5073115eac228fec63c07a8c290057b6c9ce5d32c4a6df7de3124cf78c34",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

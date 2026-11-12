@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "getting-started/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/getting-started/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/getting-started/intro.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "5c870a2583db46c203dcd610b575d3888bf2ba442e41a58a8acb7177d9db4abe",
+    "sourceTechnicalHash": "691b2315e50a90059f94a53fe7ffa14602ebfe5d0069d69053bf44580d12aa42",
+    "targetHash": "1e8fe51d3059386efbcc1ac24b8d19449bac9c91ce0be292d9eb37ea01cf29b2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:28:59.721Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5c870a2583db46c203dcd610b575d3888bf2ba442e41a58a8acb7177d9db4abe",
+      "targetHash": "1e8fe51d3059386efbcc1ac24b8d19449bac9c91ce0be292d9eb37ea01cf29b2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

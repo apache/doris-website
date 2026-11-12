@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/job/RESUME-JOB.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/RESUME-JOB.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "7d96aefe7fa972cbcab2f297e131e25a01f49ca852c581d7df8cc5ef84d892e9",
     "sourceTechnicalHash": "d0dfdef97a5d3953fe31445a529b808add1a3d6dc4e4716a2e5a98c0614fbbba",
-    "targetHash": "6b36bbfcce322e07f4abb37a5d2459334026464b713f30dda8b358b758f0ba54",
+    "targetHash": "396a438d25f5b3c50415dc83505507b3999327cc9733580810bd3789d6de18ee",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:50:40.612Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T05:34:46.519Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7d96aefe7fa972cbcab2f297e131e25a01f49ca852c581d7df8cc5ef84d892e9",
+      "targetHash": "396a438d25f5b3c50415dc83505507b3999327cc9733580810bd3789d6de18ee",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/job/RESUME-JOB.md",
+        "blob": "f6400f9bf7a3e85d939472e5bfc2e4477bb28478"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/RESUME-JOB.md",
+        "blob": "743c9f9f50c91e7cb8fa61ca11d669721728f739"
+      }
+    }
   }
 }

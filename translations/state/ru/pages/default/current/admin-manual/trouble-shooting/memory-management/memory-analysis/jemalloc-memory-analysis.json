@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "019683e00e5c19d20a070bf0c9027842ce12a2503dad81cafb1f6d2a5700554d",
+    "sourceTechnicalHash": "02e9dbc7c2315d061878e78cd7d5b70974581463a13f647eb7b6003ca1e4899f",
+    "targetHash": "cebb045c86e7950f0ddf5778ff591cd8cdf0f5eeac0dceaa115e6c21af1c4a38",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:47:18.337Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "019683e00e5c19d20a070bf0c9027842ce12a2503dad81cafb1f6d2a5700554d",
+      "targetHash": "cebb045c86e7950f0ddf5778ff591cd8cdf0f5eeac0dceaa115e6c21af1c4a38",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

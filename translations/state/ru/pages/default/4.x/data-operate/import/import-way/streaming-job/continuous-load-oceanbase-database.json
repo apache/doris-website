@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
+    "sourceHash": "242e620b0546ed354ba9662a11cd07d47bbcbcd13fa4a47ce33603a5b3c2c8b2",
+    "sourceTechnicalHash": "e250196dfc607b337e02d81d0c29c396a6143a8bc7f47502ce4846ac2cd4015b",
+    "targetHash": "f52feeb98bc960854ad553a730a2bcce99ddb5b0f7b19beaa5c7fe6e27f9657f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-04T10:10:18.845Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "242e620b0546ed354ba9662a11cd07d47bbcbcd13fa4a47ce33603a5b3c2c8b2",
+      "targetHash": "f52feeb98bc960854ad553a730a2bcce99ddb5b0f7b19beaa5c7fe6e27f9657f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура + параметры конфигурации -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Mirror an OceanBase database in MySQL compatibility mode to Doris -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: зеркалирование базы данных OceanBase в режиме совместимости с MySQL в Doris -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+        "blob": "6723db3500c7ddc81acbadc1caa3b4fd4aa33f84"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+        "blob": "e58fdf36b42ee837387ade99c52b9bfd56cf5dfe"
+      }
+    }
+  }
+}

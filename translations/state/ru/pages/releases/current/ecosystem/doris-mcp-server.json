@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-mcp-server",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-mcp-server.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-mcp-server.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "26de2dd77c7b09d00aed7d7f525cf253c47393c14aaf446fecc710970784ceb1",
+    "sourceTechnicalHash": "82bf6717c7f9e166a164a29f4650fa8f7e532e64bd27a58d0d72da877992ecc1",
+    "targetHash": "605dd5c8a7a40c2709994f368fffc192b925d31fedaf3ca39ff9fca2d6846177",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T18:10:01.546Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "26de2dd77c7b09d00aed7d7f525cf253c47393c14aaf446fecc710970784ceb1",
+      "targetHash": "605dd5c8a7a40c2709994f368fffc192b925d31fedaf3ca39ff9fca2d6846177",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

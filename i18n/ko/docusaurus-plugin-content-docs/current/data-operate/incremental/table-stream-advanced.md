@@ -231,7 +231,7 @@ WHERE o.__DORIS_STREAM_CHANGE_TYPE_COL__ IN ('APPEND', 'UPDATE_AFTER');
 | `DROP TABLE`로 기본 테이블 삭제 | Stream은 남아 있지만 더 이상 읽을 수 없습니다. `DROP STREAM ... FORCE`로 삭제합니다 |
 | `DROP DATABASE` | 해당 데이터베이스의 Stream도 함께 삭제됩니다. 기본 테이블은 삭제된 데이터베이스에 있었지만 Stream은 다른 데이터베이스에 있는 경우, Stream은 남아 있으며 이를 삭제할 때도 `FORCE`가 필요합니다 |
 
-Row Binlog가 활성화된 기본 테이블에서 허용되지 않는 DDL(예: `MODIFY COLUMN`)은 [Row Binlog](row-binlog#ddl-restrictions)에 나와 있습니다.
+Changelog가 활성화된 기본 테이블에서 허용되지 않는 DDL(예: `MODIFY COLUMN`)은 [Changelog](changelog#ddl-restrictions)에 나와 있습니다.
 
 ## 모니터링 및 복구 {#monitoring-and-recovery}
 
@@ -245,7 +245,7 @@ IVM이 생성한 내부 Stream도 이 시스템 테이블에 표시됩니다. �
 | 모니터링 항목 | 출처 | 참고 사항 |
 |---|---|---|
 | 미처리량 | `LAG` 필드(`information_schema.table_stream_consumption`) | 정기적으로 쿼리하고, 미처리량이 영이 아닌 상태로 유지되거나 계속 증가하는 파티션에 대해 알림을 설정합니다 |
-| 상태 | `ENABLED`, `IS_STALE`, `STALE_REASON` 필드(`information_schema.table_streams`) | Stream의 상태를 보여 주지만 현재 구현에서는 TTL 만료를 보고하지 않습니다. 기본 테이블의 `binlog.ttl_seconds`와 비교하여 소비 지연을 모니터링하고 오프셋 만료 오류가 발생하는지 확인합니다. [보존 및 정리](row-binlog#retention-and-cleanup)를 참조하세요 |
+| 상태 | `ENABLED`, `IS_STALE`, `STALE_REASON` 필드(`information_schema.table_streams`) | Stream의 상태를 보여 주지만 현재 구현에서는 TTL 만료를 보고하지 않습니다. 기본 테이블의 `changelog.ttl_seconds`와 비교하여 소비 지연을 모니터링하고 오프셋 만료 오류가 발생하는지 확인합니다. [보존 및 정리](changelog#retention-and-cleanup)를 참조하세요 |
 | 소비 이력 | `LAST_CONSUMPTION_TIME` 필드(`information_schema.table_stream_consumption`) | 소비 작업이 예정대로 실행되는지 알려 줍니다 |
 
 ### 복구 {#recovery}
@@ -253,7 +253,7 @@ IVM이 생성한 내부 Stream도 이 시스템 테이블에 표시됩니다. �
 | 상황 | 조치 |
 |---|---|
 | 소비 문 실패 | 오프셋은 변경되지 않습니다. 필요한 변경 사항이 보존 기간 내에 있는 동안 다시 실행합니다 |
-| 필요한 변경 사항이 `binlog.ttl_seconds`에 따라 만료됨 | `@reset()`으로 다운스트림 데이터를 전체적으로 다시 적재하고 오프셋을 다시 맞춥니다. `min_delta` 읽기는 오프셋이 만료되면 실패하며, `detail`과 `append_only`는 만료된 변경 사항을 건너뜁니다 |
+| 필요한 변경 사항이 `changelog.ttl_seconds`에 따라 만료됨 | `@reset()`으로 다운스트림 데이터를 전체적으로 다시 적재하고 오프셋을 다시 맞춥니다. `min_delta` 읽기는 오프셋이 만료되면 실패하며, `detail`과 `append_only`는 만료된 변경 사항을 건너뜁니다 |
 | 소비는 성공했지만 스케줄러가 이를 기록하지 못함 | 다시 실행하면 다음 변경 사항 묶음을 읽으며, 이전 묶음을 다시 소비하지 않습니다. 반복 실행 시 부수 효과가 전혀 없도록 하려면 대상 테이블에 Unique Key 모델을 사용합니다(기본 키를 기준으로 한 쓰기는 본래 멱등성을 갖습니다) |
 | 다운스트림 데이터가 잘못되어 재구축해야 함 | `@snapshot()`으로 소비 오프셋에 해당하는 상태를 복원한 후 증분 소비를 이어가거나, `@reset()`으로 전체 데이터를 다시 적재하면서 오프셋도 현재 시점으로 진행시킵니다 |
 | FE 재시작 또는 마스터 전환 | 오프셋은 메타데이터에 영구 저장되며, 재시작 후에도 소비를 이어갑니다 |
@@ -265,9 +265,9 @@ IVM이 생성한 내부 Stream도 이 시스템 테이블에 표시됩니다. �
 | 오류 메시지 | 원인 | 조치 |
 |---|---|---|
 | `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | FE에서 `enable_table_stream`이 활성화되지 않음 | `fe.conf`를 수정하고 FE를 재시작합니다 |
-| `Insert plan with Table stream failed. should enable binlog feature in FE config.` | FE에서 `enable_feature_binlog`가 활성화되지 않음 | `fe.conf`를 수정하고 FE를 재시작합니다 |
-| `Base Olap table ... need to enable row binlog for table stream` | 기본 테이블에서 Row Binlog가 활성화되지 않음 | `binlog.enable` + `binlog.format = ROW` 설정으로 기본 테이블을 다시 생성합니다 |
-| `MIN_DELTA table stream requires base mow table to enable binlog.need_historical_value=true` | 기본 유형인 `min_delta`에는 변경 전 이미지가 필요함 | 기본 테이블에서 `binlog.need_historical_value`를 활성화하거나 `append_only`를 사용합니다 |
+| `Insert plan with Table stream failed. should enable changelog feature in FE config.` | FE에서 `enable_feature_changelog`가 활성화되지 않음 | `fe.conf`를 수정하고 FE를 재시작합니다 |
+| `Base Olap table ... need to enable changelog for table stream` | 기본 테이블에서 Changelog가 활성화되지 않음 | `"changelog.enable" = "true"` 설정으로 기본 테이블을 다시 생성합니다 |
+| `MIN_DELTA table stream requires base mow table to enable changelog.need_historical_value=true` | 기본 유형인 `min_delta`에는 변경 전 이미지가 필요함 | `changelog.need_historical_value`를 활성화하여 기본 테이블을 다시 생성하거나 `append_only`를 사용합니다 |
 | `not supported type: xxx` | 잘못된 `type` 값 | `append_only` / `min_delta` / `detail`을 사용합니다 |
 | `target offset already consumed` | 동일한 파티션을 동시에 소비하여 이 트랜잭션이 커밋되기 전에 오프셋이 진행됨 | 다시 실행하여 다음 변경 사항 묶음을 읽습니다. 여러 소비자가 동시에 소비하지 않도록 합니다 |
 | `Cloud Table Stream consumption only supports a normal INSERT into a local OLAP table` | 컴퓨팅과 스토리지가 분리된 모드에서 명시적 트랜잭션 내부 또는 Group Commit으로 소비하거나, 대상이 내부 테이블이 아님 | 일반 `INSERT INTO ... SELECT`를 사용합니다 |

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/workload-group-bind-compute-group",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/workload-group-bind-compute-group.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/workload-group-bind-compute-group.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "0259a3550cd29d03bfd37912b27268d7d04383f1b216cfe9628b87a28b793734",
+    "sourceTechnicalHash": "5ee753482ba505ba53c248cd0bb23336ae373e7f6ca43823edbe91e03856d08e",
+    "targetHash": "cfd5759a2fb7db197bc9a9b8b32fa3a8fbc53cd64759625d143a59a2a45dada9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:59:16.202Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0259a3550cd29d03bfd37912b27268d7d04383f1b216cfe9628b87a28b793734",
+      "targetHash": "cfd5759a2fb7db197bc9a9b8b32fa3a8fbc53cd64759625d143a59a2a45dada9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

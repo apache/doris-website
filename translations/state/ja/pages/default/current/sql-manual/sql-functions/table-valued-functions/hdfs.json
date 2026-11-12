@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/hdfs.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/hdfs.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "c5c098a1287fffd6231e8dcc8585dd9b12e6ea8d93174c512a7236389207f816",
-    "sourceTechnicalHash": "bb44d3601cc90d4669e412ea22bf63cf54ed0f60036caf2045e149bd2c003692",
-    "targetHash": "98d29c36583946f571b3b381f1f479a21b3ee18b1c5a7dd92197243c35473b42",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "f50e2c3c5c45eb962894250b7db9f37566b51a83e2ccc2a85aeae9972712e3a2",
+    "sourceTechnicalHash": "01b92b9c45fdecc748191cb18948bfe3da3122370f4bdd8612411149b96ca2d0",
+    "targetHash": "a0e41dce508abe705b0b62aa2cebd4c84e33e1d22adcb650628497230282c7be",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:18:33.706Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T16:50:14.505Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "f50e2c3c5c45eb962894250b7db9f37566b51a83e2ccc2a85aeae9972712e3a2",
+      "targetHash": "a0e41dce508abe705b0b62aa2cebd4c84e33e1d22adcb650628497230282c7be",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 80: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 81: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 78: expected [\"inlineCode\",null,null,\"isAdjustedToUTC=true\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 79: expected [\"inlineCode\",null,null,\"TIMESTAMP_INSTANT\"]; received [\"inlineCode\",null,null,\"isAdjustedToUTC=true\"]\nprotected node 80: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"TIMESTAMP_INSTANT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 80: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 81: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 80: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 81: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

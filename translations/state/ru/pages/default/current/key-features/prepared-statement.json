@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/prepared-statement",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/prepared-statement.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/prepared-statement.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "fdc267dba9012490934edcf0689928200d0cedd68a99e0cb9b303c72551cbef7",
+    "sourceTechnicalHash": "5d345d872ccaf17ee319de64384c6f3e27537d8004f49fc3d7110b40f8dad499",
+    "targetHash": "5bacac9a3ed422acbd83b1e95156a4e264bdda10998766218406f277a2187f03",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:50:30.131Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fdc267dba9012490934edcf0689928200d0cedd68a99e0cb9b303c72551cbef7",
+      "targetHash": "5bacac9a3ed422acbd83b1e95156a4e264bdda10998766218406f277a2187f03",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

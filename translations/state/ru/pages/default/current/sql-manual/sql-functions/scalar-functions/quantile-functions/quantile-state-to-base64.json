@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-to-base64",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-to-base64.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-to-base64.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c43f2879195fbbbbd347e74126eda4b71ebafff8e19c7dd7799eff06e8074ebc",
+    "sourceTechnicalHash": "bcc105f0372d3e61065b7f5b661788e4f787099b4d7d2928fed6f13925b83529",
+    "targetHash": "b877c44a8e7c4d3ed862e2b7d5e47f99c45c5e988af0d4da9222fd4b45e02cff",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:35:05.836Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c43f2879195fbbbbd347e74126eda4b71ebafff8e19c7dd7799eff06e8074ebc",
+      "targetHash": "b877c44a8e7c4d3ed862e2b7d5e47f99c45c5e988af0d4da9222fd4b45e02cff",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

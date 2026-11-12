@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance-approximate",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance-approximate.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance-approximate.md",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "5f075a8db07e64f626d4ab6b0dee69f1e69a4df6d988fe0c476d2b58fdd66633",
+    "sourceTechnicalHash": "824b5b5fe408b32ec81e2eaba5a59d63175e251275ca5f37162f1fa7c1e28e05",
+    "targetHash": "62d030e9f38f4ee1d9e945bf05a4536a3af738327aacb0c83eaba051910211fa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T05:38:37.450Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5f075a8db07e64f626d4ab6b0dee69f1e69a4df6d988fe0c476d2b58fdd66633",
+      "targetHash": "62d030e9f38f4ee1d9e945bf05a4536a3af738327aacb0c83eaba051910211fa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

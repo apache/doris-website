@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/practical-guide",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/practical-guide.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/vector-index/practical-guide.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2b35afccd21be8e8eb7e5cb705d8b4db19a687c9805ef88b67dbd03623c0b468",
+    "sourceTechnicalHash": "0564f66877a2d0aeb7ff44bb49761ee828cd8340b3c1879f101a3812225afd7e",
+    "targetHash": "b8edd8899798e85d53555bff644432b4621598b5a9aa66babf23a8ed1582877b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:00:34.316Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2b35afccd21be8e8eb7e5cb705d8b4db19a687c9805ef88b67dbd03623c0b468",
+      "targetHash": "b8edd8899798e85d53555bff644432b4621598b5a9aa66babf23a8ed1582877b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

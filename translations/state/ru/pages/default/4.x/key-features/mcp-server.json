@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/mcp-server",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/mcp-server.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/mcp-server.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "446ff073a98f3d7873226869bafdbb5bb54fc11294c014333fdd015f5e9cb91f",
+    "sourceTechnicalHash": "f07db36c8c1852980955f655e71c8e7b35cbb101a4667221fe8bc39e87401113",
+    "targetHash": "c75d995edd289bede49b2fa4bcd79cfbcc459d553a7793b0579cdb4177e64778",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:32.350Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "446ff073a98f3d7873226869bafdbb5bb54fc11294c014333fdd015f5e9cb91f",
+      "targetHash": "c75d995edd289bede49b2fa4bcd79cfbcc459d553a7793b0579cdb4177e64778",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/mcp-server",
+        "sourcePath": "docs/key-features/mcp-server.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/mcp-server.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "446ff073a98f3d7873226869bafdbb5bb54fc11294c014333fdd015f5e9cb91f",
+        "targetHash": "c75d995edd289bede49b2fa4bcd79cfbcc459d553a7793b0579cdb4177e64778",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

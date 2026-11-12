@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/aggregate/HLL",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/aggregate/HLL.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/aggregate/HLL.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "d3691582124f5f8e6ce54fc8f87d18db1a381a05793822ca08e8a546ff13642d",
+    "sourceTechnicalHash": "7d2ee4779ea17a41e89c1d830e34fef773851a2734980157455e1d31e29750c8",
+    "targetHash": "b356454dd18229c83355f6fffd33c7aff532493ecd2d32b5f4342bcec6b7b521",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:46:01.067Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d3691582124f5f8e6ce54fc8f87d18db1a381a05793822ca08e8a546ff13642d",
+      "targetHash": "b356454dd18229c83355f6fffd33c7aff532493ecd2d32b5f4342bcec6b7b521",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

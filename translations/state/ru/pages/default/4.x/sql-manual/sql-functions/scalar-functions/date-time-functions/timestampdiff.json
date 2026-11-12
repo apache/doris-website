@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ac88a92419e8ab1fde58b14062e170c64859780fbfe6ed8c243472bd55d13995",
+    "sourceTechnicalHash": "c7717ccbb1c1479edd9969027ff531eb65b910f2133c1633cf7e1716acb30dc6",
+    "targetHash": "a458171131f78a9782157b90a6cfe8184a94d966ddfb13206fefa874af5eee2c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:34:20.924Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac88a92419e8ab1fde58b14062e170c64859780fbfe6ed8c243472bd55d13995",
+      "targetHash": "a458171131f78a9782157b90a6cfe8184a94d966ddfb13206fefa874af5eee2c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "ac88a92419e8ab1fde58b14062e170c64859780fbfe6ed8c243472bd55d13995",
+        "targetHash": "a458171131f78a9782157b90a6cfe8184a94d966ddfb13206fefa874af5eee2c",
+        "commit": "33c746dbf92a3743048e008eb6378ddf610d687a",
+        "pr": "https://github.com/apache/doris-website/pull/4449"
+      }
+    }
+  }
+}

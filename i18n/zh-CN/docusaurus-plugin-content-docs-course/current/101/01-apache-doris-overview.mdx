@@ -1,0 +1,294 @@
+---
+title: Apache Doris 概览
+description: 通过九个引导式单元，了解 Apache Doris 的核心概念，包括数据组织、存储模型、架构、查询执行和优化。
+slug: /101/01-apache-doris-overview
+sidebar_position: 1
+keywords:
+  - Apache Doris 101
+  - Apache Doris 架构
+  - 数据模型
+  - 查询执行
+  - 查询优化
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={1}
+    title="Apache Doris 概览"
+    readingTime="10–15 分钟"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/features-architecture/system-architecture"
+>
+    <CourseLessonUnit
+        id="data-organization"
+        label="数据组织"
+        title={<>Doris 如何 <em>组织</em> 数据？</>}
+        summary="先了解逻辑层级，再深入看看表如何在集群中划分和分布。"
+        coachTitle="表是逻辑结构落到存储的地方。"
+        coach={
+            <p>
+                Catalog 标识数据源，Database 划定逻辑边界，Table 定义 schema 和属性。在表内部，分区隔离数据范围，分桶分布数据以便并行处理。
+            </p>
+        }
+        calloutTitle="记住这个区别"
+        callout={<p>分区回答“数据属于哪个范围？”，分桶回答“数据分布在哪里、如何分布？”</p>}
+        check={{
+            question: "哪一层支持按日期范围裁剪数据？",
+            options: ["分桶", "分区"],
+            correctIndex: 1,
+            correctFeedback: "正确。分区为 Doris 提供可裁剪的逻辑范围。",
+            incorrectFeedback: "还不对。分桶负责分布数据行，分区负责定义逻辑范围。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 数据组织层级"
+            focusIndex={2}
+            items={[
+                { title: "Catalog", description: "数据源" },
+                { title: "Database", description: "业务边界" },
+                { title: "Table", description: "Schema + 属性" },
+                { title: "分区", description: "逻辑范围" },
+                { title: "分桶", description: "物理分布" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="columnar-storage"
+        label="列式存储"
+        title={<>为什么要按 <em>列存储数据</em>?</>}
+        summary="分析查询通常只访问大量数据行中的少数几列。列式存储让 Doris 只读取和处理查询所需的数据。"
+        coachTitle="列式布局减少无用功。"
+        coach={<p>同一列的值具有相同类型，分布也往往相近。这有利于编码、压缩、CPU 缓存利用和批量处理。</p>}
+        calloutTitle="可以这样理解"
+        callout={<p>行式存储把完整记录放在一起；列式存储把同一字段的值放在一起。</p>}
+        check={{
+            question: "一个查询只读取 80 列中的 3 列，主要优势是什么？",
+            options: ["减少读取不需要的值", "创建更多表副本"],
+            correctIndex: 0,
+            correctFeedback: "正确。Doris 可以避免读取大部分无关列的数据。",
+            incorrectFeedback: "副本用于保障可用性；列式布局主要减少不必要的 I/O。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="列式存储的优势"
+            columns={3}
+            items={[
+                { tag: 'I/O', title: "减少读取量", description: "只扫描查询引用的列。" },
+                { tag: 'ZIP', title: "提高压缩率", description: "类型相同且相近的值更容易紧凑编码。" },
+                { tag: 'CPU', title: "批量处理", description: "连续存放的向量能提高缓存利用率，并支持 SIMD。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="table-models"
+        label="表模型"
+        title={<>当 Key <em>重复时会怎样</em>?</>}
+        summary="表模型决定 Doris 是保留每一行、合并值，还是为每个 Key 维护一条逻辑数据行。"
+        coachTitle="加载数据前，先确定数据行的处理方式。"
+        coach={<p>Duplicate Key 适合不可变的明细数据；Aggregate Key 按声明的聚合方式存储预聚合结果；Unique Key 支持以 UPSERT 方式更新的记录。</p>}
+        calloutTitle="生产环境注意事项"
+        callout={<p>表创建后无法更改表模型。选择前，请确认所需的更新行为。</p>}
+        check={{
+            question: "通过 CDC 更新客户资料，适合使用哪种模型？",
+            options: ["Duplicate Key", "Aggregate Key", "Unique Key"],
+            correctIndex: 2,
+            correctFeedback: "正确。Unique Key 为每个 Key 保留一条逻辑数据行，并支持 UPSERT 语义。",
+            incorrectFeedback: "再想想。可变记录需要为每个 Key 保留一条当前有效的逻辑数据行。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 表模型"
+            columns={3}
+            items={[
+                { tag: 'DUP', title: "Duplicate Key", description: "保留每条输入数据，适合事件明细和日志。" },
+                { tag: 'AGG', title: "Aggregate Key", description: "使用声明的聚合函数合并 Value 列。" },
+                { tag: 'UNI', title: "Unique Key", description: "为每个 Key 保留一条逻辑数据行，适合更新和 CDC。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="integrated-architecture"
+        label="存算一体架构"
+        title={<>认识经典的 <em>FE + BE</em> 集群。</>}
+        summary="在存算一体架构中，Frontend 节点负责协调系统，Backend 节点负责执行查询，并将 tablet 副本持久化到本地存储。"
+        coachTitle="控制与数据处理各有分工。"
+        coach={<p>FE 负责身份验证、SQL 解析与规划、元数据管理和协调。BE 存储 tablet、运行向量化算子、执行数据压实，并参与副本修复和均衡。</p>}
+        calloutTitle="高可用性"
+        callout={<p>生产环境会部署多个 FE 节点，并按需配置 tablet 副本数。FE 使用 BDB JE 复制元数据，无需 ZooKeeper。</p>}
+        check={{
+            question: "哪个节点生成分布式查询计划？",
+            options: ["Frontend", "Backend"],
+            correctIndex: 0,
+            correctFeedback: "正确。FE 负责规划和协调；BE 负责执行和存储数据。",
+            incorrectFeedback: "BE 执行计划片段，计划则由 FE 生成并协调。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 存算一体架构中的请求流程"
+            focusIndex={1}
+            items={[
+                { title: "SQL 客户端", description: "MySQL 协议" },
+                { title: "Frontend", description: "解析 + 规划 + 协调" },
+                { title: "Backend", description: "存储 + 执行" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="decoupled-architecture"
+        label="存算分离架构"
+        title={<>当存储与计算 <em>分离时，会发生什么变化</em>?</>}
+        summary="无状态计算组可以独立扩缩容，持久数据则保存在共享存储中。"
+        coachTitle="弹性伸缩也带来了额外的运维工作。"
+        coach={<p>FE 负责请求和 SQL 层元数据，Meta Service 管理数据层元数据；无状态 BE 节点缓存热数据，并基于共享持久存储执行计算。</p>}
+        calloutTitle="运维上的权衡"
+        callout={<p>共享存储必须可靠；缓存未命中时读取数据可能增加延迟；平台团队还需要运维额外的服务。</p>}
+        check={{
+            question: "数据的持久副本存放在哪里？",
+            options: ["只存放在 BE 缓存中", "存放在共享存储中"],
+            correctIndex: 1,
+            correctFeedback: "正确。计算节点缓存数据，持久副本由共享存储保存。",
+            incorrectFeedback: "BE 缓存可以加快访问，但它不是持久存储层。",
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="Apache Doris 存算分离架构的层次"
+            items={[
+                { title: "SQL 与元数据层", description: "FE 提供 SQL 服务；Meta Service 管理数据层元数据。" },
+                { title: "计算组", description: "无状态 BE 节点执行计算并缓存热数据。" },
+                { title: "共享存储", description: "对象存储或受支持的分布式文件系统负责持久化数据。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-architecture"
+        label="选择架构"
+        title={<>从实际约束出发，不要只看哪种架构 <em>更新</em>.</>}
+        summary="存算一体和存算分离适合不同的运行环境，没有哪种架构在所有场景下都更好。"
+        coachTitle="简单易用与弹性伸缩需要权衡。"
+        coach={<p>存算一体通常更容易作为起点。如果确实需要共享存储、平台团队统一运维、独立扩缩容或隔离的计算组，存算分离就值得考虑。</p>}
+        calloutTitle="选择原则"
+        callout={<p>不要仅仅因为存算分离架构更新就选择它。增加的组件必须用于解决具体问题。</p>}
+        check={{
+            question: "如果可以使用本地磁盘，且计算资源可以随存储一起扩容，应从哪种架构开始？",
+            options: ["存算一体架构", "存算分离架构"],
+            correctIndex: 0,
+            correctFeedback: "正确。对于这些条件，存算一体架构更简单、更合适。",
+            incorrectFeedback: "需要独立弹性伸缩或共享存储时，存算分离架构才更有价值。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="存算一体与存算分离架构对比"
+            leftTitle="存算一体"
+            leftLead="有状态 BE 节点执行计算，并在本地持久化数据。"
+            leftItems={["运维复杂度较低", "访问本地存储", "计算与存储一起扩缩容"]}
+            rightTitle="存算分离"
+            rightLead="无状态计算组共享持久存储。"
+            rightItems={["计算资源独立弹性伸缩", "计算组之间隔离工作负载", "依赖更多平台组件"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="engine-modules"
+        label="核心引擎模块"
+        title={<>两个引擎协同，以 <em>更少的工作、更快的速度</em>.</>}
+        summary="存储引擎组织数据和访问路径；查询引擎将 SQL 转换为分布式向量化流水线。"
+        coachTitle="优化从执行前就开始。"
+        coach={<p>排序键、分区、索引和表模型减少需要访问的数据量。MPP、向量化、Pipeline 调度和优化器则降低处理剩余数据的成本。</p>}
+        calloutTitle="MPP 与 Pipeline"
+        callout={<p>MPP 将工作分布到多个节点；Pipeline 执行在每个节点内跨 CPU 核心调度算子工作。</p>}
+        check={{
+            question: "哪种机制将工作分布到多个 BE 节点？",
+            options: ["MPP", "Pipeline 调度"],
+            correctIndex: 0,
+            correctFeedback: "正确。MPP 提供节点级并行能力。",
+            incorrectFeedback: "Pipeline 在节点内部调度工作；MPP 将工作分布到多个节点。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 核心引擎模块"
+            columns={4}
+            items={[
+                { tag: 'COL', title: "列式存储", description: "读取所需的列，并压缩分析数据。" },
+                { tag: 'IDX', title: "索引", description: "Prefix、Min/Max、Bloom 和倒排索引用于裁剪扫描范围。" },
+                { tag: 'MPP', title: "分布式处理", description: "将查询执行分布到多个 Backend 节点。" },
+                { tag: 'OPT', title: "优化器", description: "应用基于规则、成本和历史信息的优化策略。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="query-execution"
+        label="查询执行"
+        title={<>跟随 SQL，从文本走向 <em>分布式流水线</em>.</>}
+        summary="查询经过校验和优化后，被拆分为片段和实例，在多个 BE 节点上执行，最后汇总为结果。"
+        coachTitle="片段描述工作，实例执行工作。"
+        coach={<p>片段是分布式计划中的一个逻辑部分；实例是在 BE 上运行的一个物理副本。需要重新分布数据时，Exchange 算子在实例之间传输数据行。</p>}
+        calloutTitle="向量化执行"
+        callout={<p>算子按列批量处理数据，而不是逐行处理，从而减少每行的处理开销，提高 CPU 效率。</p>}
+        check={{
+            question: "什么负责在片段实例之间传输数据行？",
+            options: ["Exchange 算子", "Catalog"],
+            correctIndex: 0,
+            correctFeedback: "正确。计划需要重新分布数据时，Exchange 负责传输数据行。",
+            incorrectFeedback: "Catalog 用于标识数据源；Exchange 连接分布式计划中的实例。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 查询执行阶段"
+            focusIndex={2}
+            items={[
+                { title: "解析", description: "校验 SQL" },
+                { title: "规划", description: "重写 + 成本估算" },
+                { title: "片段", description: "拆分分布式工作" },
+                { title: "执行", description: "运行向量化流水线" },
+                { title: "返回", description: "汇总结果" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="optimization-recap"
+        label="优化与回顾"
+        title={<>最快的工作，是 Doris 可以 <em>省去的工作</em>.</>}
+        summary="Doris 通过预计算、逻辑重写、基于统计信息的计划生成和运行时过滤，在执行前及执行过程中减少需要处理的数据。"
+        coachTitle="优化贯穿多个阶段。"
+        coach={<p>物化视图可以避免重复计算，RBO 简化计划，CBO 比较预估成本，运行时过滤器则在关联查询期间尽早剔除数据行。</p>}
+        calloutTitle="进入下一课之前"
+        callout={<p>记住数据组织层级、FE 与 BE 的职责划分、两种架构选择，以及从计划生成到分布式执行的流程。</p>}
+        check={{
+            question: "什么有助于 CBO 准确比较不同的计划？",
+            options: ["有代表性的表和列统计信息", "更多 SQL 注释"],
+            correctIndex: 0,
+            correctFeedback: "正确。最新的统计信息有助于改进基数估算和成本估算。",
+            incorrectFeedback: "注释可以向人解释 SQL；CBO 需要有代表性的统计信息。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 查询优化层次"
+            columns={4}
+            items={[
+                { tag: 'MV', title: "物化视图", description: "通过查询重写复用预计算结果。" },
+                { tag: 'RBO', title: "基于规则", description: "应用确定性的逻辑变换。" },
+                { tag: 'CBO', title: "基于成本", description: "利用统计信息比较物理计划。" },
+                { tag: 'RF', title: "运行时过滤器", description: "将过滤条件推向扫描阶段，尽早剔除数据行。" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

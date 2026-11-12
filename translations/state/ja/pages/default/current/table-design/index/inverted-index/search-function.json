@@ -8,13 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/inverted-index/search-function.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/search-function.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "9bba18ad86f25fa602eddd3ff8e2e4ca7bf4dcad678baa8fe6339501da90b811",
-    "sourceTechnicalHash": "5599b98df98dcc32ca2624e91c869352226956dfd0f096499194845f6c83621f",
-    "targetHash": "5649f53d5c6c1751f6bd4607b7f083838305462798c651c8b6a09a081b2e612f",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "39e1d99e4b8260a70c58a9075d39baffc3ddefa3bcbfe1fcef32005b7ae1943d",
+    "sourceTechnicalHash": "97e160e9e7b4e13c408f9d4ad6f27113ca41fa443512a73609c20d209718bb1f",
+    "targetHash": "4f1d32c56400f388f13db09fab963a3bf6360c5f25ce3c0c555729c104c228ec",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T14:05:28.127Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T17:08:09.585Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "39e1d99e4b8260a70c58a9075d39baffc3ddefa3bcbfe1fcef32005b7ae1943d",
+      "targetHash": "4f1d32c56400f388f13db09fab963a3bf6360c5f25ce3c0c555729c104c228ec",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"5\",\"5\",\"6\",\"7\",\"8\",\"9\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
   }
 }

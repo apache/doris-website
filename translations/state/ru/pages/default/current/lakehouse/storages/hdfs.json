@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/hdfs",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/hdfs.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/hdfs.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ae3ec4a5529b835416074b21d175763e3da90fb406b8d2ab014e8c2e61934b76",
+    "sourceTechnicalHash": "55ac0ac0b38b3c2a81ae710e69e8de8318095dd185a697168aba2c9a356696bf",
+    "targetHash": "4154ccc98564b1308aa07d4c2fc3a7ba1148c3071db68a34f9986ab975e8a103",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:13:59.207Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ae3ec4a5529b835416074b21d175763e3da90fb406b8d2ab014e8c2e61934b76",
+      "targetHash": "4154ccc98564b1308aa07d4c2fc3a7ba1148c3071db68a34f9986ab975e8a103",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

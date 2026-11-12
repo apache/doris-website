@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "maintenancePolicy": "source-revisions-v1",
   "locales": {
     "ja": {
       "sourceLocale": "en",
@@ -9,7 +10,9 @@
       "searchContextLabels": {
         "docs/dev": "Dev ドキュメント",
         "docs/4.x": "4.x ドキュメント",
-        "community": "コミュニティ"
+        "community": "コミュニティ",
+        "course": "コース",
+        "releases": "リリースノート"
       }
     },
     "ko": {
@@ -20,7 +23,9 @@
       "searchContextLabels": {
         "docs/dev": "Dev 문서",
         "docs/4.x": "4.x 문서",
-        "community": "커뮤니티"
+        "community": "커뮤니티",
+        "course": "강좌",
+        "releases": "릴리스 노트"
       }
     },
     "ru": {
@@ -31,7 +36,9 @@
       "searchContextLabels": {
         "docs/dev": "Документация Dev",
         "docs/4.x": "Документация 4.x",
-        "community": "Сообщество"
+        "community": "Сообщество",
+        "course": "Курсы",
+        "releases": "Примечания к выпуску"
       }
     }
   }

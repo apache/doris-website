@@ -2,7 +2,7 @@
 {
     "title": "Lance Hybrid Search Performance Best Practices",
     "language": "en",
-    "description": "Tune filtered vector and full-text search over Lance in Apache Doris: align index coverage, size segments, budget shared caches, and diagnose query profiles."
+    "description": "Use Lance vector and BM25 SQL pushdown in Apache Doris, understand approximate semantics and filters, and tune index coverage, segments, caches, and profiles."
 }
 ---
 
@@ -11,6 +11,94 @@ Use this guide when scalar conditions participate in vector or full-text retriev
 :::note
 Lance Catalog is experimental and supported starting from Apache Doris 4.2. Configure access and check the reader/writer compatibility requirements in [Lance Catalog](../catalogs/lance-catalog.mdx) first. Doris reads existing Lance indexes; build and maintain them with compatible Lance tooling. The latest Lance SDK or an upstream proposal does not guarantee support in the reader bundled with your Doris build.
 :::
+
+## Automatic Search from Ordinary SQL {#automatic-search}
+
+In Doris 4.2 builds that include automatic Lance search, eligible ordinary SQL can use the same native search path as the explicit TVFs. This feature is independent of calling the TVFs directly; do not assume an earlier build supports it merely because `vector_search()` works. No separate automatic-search session switch is required.
+
+### Function mapping
+
+| SQL expression | Required order | Lance metric and SQL result |
+|---|---|---|
+| [l2_distance_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate.md) | `ASC` | `l2`; returns `CAST(sqrt(_distance) AS FLOAT)`, Euclidean distance rather than native squared L2. |
+| [inner_product_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/inner-product-approximate.md) | `DESC` | `dot`; returns `1.0f - _distance`, an inner-product similarity. |
+| [cosine_distance_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance-approximate.md) | `ASC` | `cosine`; returns native cosine distance. |
+| [cosine_similarity_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity-approximate.md) | `DESC` | `cosine`; returns `1.0f - _distance`. |
+| [hamming_distance_approximate](../../sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance-approximate.md) | `ASC` | `hamming`; returns the number of differing bits. |
+| `score()` with `MATCH_ANY`, `MATCH_ALL`, or `MATCH_PHRASE` | `DESC` | Lance BM25; Match OR, Match AND, or Phrase respectively. |
+
+Exact distance/similarity functions remain scalar, including `cosine_distance()`, `cosine_similarity()`, and [hamming_distance](../../sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance.md). `l1_distance()` also remains scalar: the bundled Lance vector-search API does not expose an L1 metric.
+
+### Vector and BM25 examples
+
+After configuring the Catalog, assume `lance_catalog.default.items` has `id`, `category`, `content`, a four-dimensional Float32 fixed-size-list `embedding`, and a three-byte UInt8 fixed-size-list `binary_embedding`. Build compatible vector indexes and a committed FTS index on `content` with Lance tooling when index acceleration is needed.
+
+```sql
+SELECT id, cosine_distance_approximate(embedding, [0.1,0.2,0.3,0.4]) AS distance
+FROM lance_catalog.default.items
+WHERE category = 'book'
+ORDER BY distance ASC LIMIT 10 OFFSET 5;
+
+SELECT id, cosine_similarity_approximate(embedding, [0.1,0.2,0.3,0.4]) AS similarity
+FROM lance_catalog.default.items
+ORDER BY similarity DESC LIMIT 10;
+
+SELECT id, hamming_distance_approximate(binary_embedding, [0,255,170]) AS distance
+FROM lance_catalog.default.items
+ORDER BY distance ASC LIMIT 10;
+
+SELECT id, score() AS relevance
+FROM lance_catalog.default.items
+WHERE content MATCH_ALL 'storage engine' AND category = 'book'
+ORDER BY relevance DESC LIMIT 10;
+```
+
+The first query searches within `category = 'book'` before pruning candidates. Each split requests 15 candidates with offset zero; Doris merges candidates and applies the final `OFFSET 5 LIMIT 10`. The other queries return up to 10 neighbors or BM25 matches in their respective order. Index-based retrieval can be approximate, and fewer than the requested number of rows can be returned. Existing compatible indexes are reused; uncovered data uses the existing Flat Search path. BM25 requires an existing FTS index.
+
+### Eligibility and fallback
+
+- The query must have a direct Lance Catalog table scan, an optional filter, a projection, and Top-N with one search ordering key and a positive `LIMIT`. JOIN/EXISTS, secondary sort keys, DISTINCT, table sampling, and non-movable projection expressions prevent this rewrite.
+- Floating metrics require physical Float32 fixed-size-list vectors; Hamming requires physical UInt8 fixed-size-list vectors. Query vectors must be constant arrays with matching dimensions. Float16/Float64, multi-vector columns, and arbitrary element-changing casts are not automatically rewritten. UInt8 is exposed as Doris SMALLINT, and widening it to the Hamming function's BIGINT arguments is safe.
+- Vector queries with unsupported residual predicates, reversed search ordering, missing native metadata, or rejected native vector/schema validation retain scalar evaluation. `LIMIT + OFFSET` must fit the native UINT32 candidate budget for rewriting; this limit does not restrict ordinary scalar SQL.
+- BM25 requires one top-level supported MATCH predicate on a direct string column, a literal query, the index's stored analyzer, and descending `score()`. Remaining scalar predicates must be fully pushable. `score() > literal` and `score() >= literal` are supported as residual lower bounds; upper bounds and other score predicates are rejected. Unsupported scored-query shapes report an error rather than silently evaluating `score()` as a scalar.
+- Scores come from Lance's stored analyzer/index and snapshot-wide statistics. They need not numerically match a separately indexed Doris internal table. Fuzzy search, analyzer overrides, and multi-column `SEARCH()` expressions are not enabled by this rewrite. Use explicit TVFs for supported multi-vector queries and tuning such as `nprobes`, `refine_factor`, or `ef`.
+
+### Native approximate semantics
+
+The `_approximate` suffix opts an eligible Top-N query into native Lance candidate semantics. Without rewriting, the functions execute scalar kernels. Do not use approximate functions when exhaustive ranking or scalar validation of every stored row is required.
+
+| Input | Scalar evaluation | Eligible native search |
+|---|---|---|
+| Stored NULL vector | Error | Excluded from candidates. |
+| Stored vector producing NaN distance | May return NaN | Excluded, so the query may return fewer rows. |
+| NULL vector element | Error | Outside the supported native input domain; ensure elements contain no NULLs. |
+| Stored zero-norm cosine vector | Distance 2, similarity 0 | Excluded when it produces an undefined/NaN native distance. |
+| Zero/non-finite cosine query norm, including Float32 squared-norm overflow/underflow | Scalar behavior | Automatic rewrite is skipped. |
+| Hamming input | Integer arrays, each element in `[0,255]` | Physical UInt8 vectors and a valid byte query. |
+
+Cosine native arithmetic/index estimates can differ from scalar results. Hamming counts different bits, not unequal bytes: `hamming_distance([0,255,170], [255,0,85])` returns 24. Hamming rejects floating-point, decimal, and LARGEINT arrays before implicit casts, and rejects out-of-range values before byte conversion. Exact functions remain available for scalar execution.
+
+### WHERE prefilter and JOIN boundary
+
+Fully pushable predicates on the Lance table are evaluated against the same pinned snapshot before search. Doris first attempts a row-ID-only scan and shares the complete allowlist across search readers in the query. An empty list selects no rows. At more than 65,536 IDs, Doris discards the partial list and keeps the complete native predicate prefilter. Both temporary and cached list capacity count toward query memory limits; stopped or failed collections are not cached. This is separate from join Runtime Filter pushdown on ordinary scans.
+
+For this ACL example, assume `internal.auth.allowed_items` contains `item_id` and `principal_id`.
+
+```sql
+SELECT d.id,
+       l2_distance_approximate(d.embedding, [0.1,0.2,0.3,0.4]) AS distance
+FROM lance_catalog.default.items d
+WHERE EXISTS (
+    SELECT 1 FROM internal.auth.allowed_items a
+    WHERE a.item_id = d.id AND a.principal_id = 42
+)
+ORDER BY distance ASC
+LIMIT 10;
+```
+
+This retains the join, scalar distance evaluation, and global Top-N. The rewrite does not cross the ACL semi-join or map business IDs to native Lance `_rowid`. Selecting an unfiltered Top-K before ACL filtering could miss the nearest authorized rows. Adding a secondary ordering key would also prevent automatic rewriting.
+
+Use `EXPLAIN` on the exact query to verify `externalSearchType=VECTOR` with `lanceMetric=l2|dot|cosine|hamming`, or `externalSearchType=FULL_TEXT`. `LanceRowIdPrefilterTime`, `LanceRowIdPrefilterRows`, `LanceRowIdPrefilterCacheHits`, and `LanceRowIdPrefilterFallbacks` report Doris allowlist work; they are distinct from the native row-ID loader metrics below. Use explicit TVFs for search tuning or supported shapes outside this rule. Rewritten searches can use the existing two-phase output read when its own eligibility conditions are met.
 
 ## 1. Put Candidate Filters Inside the Search {#candidate-filters}
 

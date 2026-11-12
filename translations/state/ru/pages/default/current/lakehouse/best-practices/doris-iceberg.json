@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-iceberg",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-iceberg.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-iceberg.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "25332d82eb124649b01b6ef4f670da32a40b59f60191ce1def3470439cd74775",
+    "sourceTechnicalHash": "cf1725b244e421138a6e021937a83771d3f82216974bff3079283761d5c37614",
+    "targetHash": "e6a2ddad129ec60d8d97846d4e4f53c55b892d33d8643b16659a3147542405ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:54:00.813Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "25332d82eb124649b01b6ef4f670da32a40b59f60191ce1def3470439cd74775",
+      "targetHash": "e6a2ddad129ec60d8d97846d4e4f53c55b892d33d8643b16659a3147542405ba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

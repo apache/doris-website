@@ -2,25 +2,25 @@
 {
     "title": "RECOVER",
     "language": "ja",
-    "description": "このステートメントは、以前に削除したデータベース、テーブル、またはパーティションを復元するために使用します。"
+    "description": "このステートメントは、以前に削除されたデータベース、テーブル、またはパーティションを復元するために使用します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-このステートメントは、以前に削除したデータベース、テーブル、またはパーティションを復元するために使用します。
+このステートメントは、以前に削除されたデータベース、テーブル、またはパーティションを復元するために使用します。
 
-名前や ID を指定して対象のメタデータを復元でき、復元時に名前を変更することもできます。
+名前または ID を指定してメタデータを復元でき、復元したメタデータの名前も変更できます。
 
-## 構文:
+## 構文: {#syntax}
 
 ```sql
-RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>] 
-        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>] 
+RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
+        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>]
         | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }
 ```
 
-## 必須パラメータ
+## 必須パラメータ {#required-parameters}
 
 データベースを復元する場合
 
@@ -40,7 +40,7 @@ RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
 **2. `<table_name>`**
 > パーティションが属するテーブルの名前。
 
-## 任意パラメータ
+## 省略可能なパラメータ {#optional-parameters}
 
 データベースを復元する場合
 
@@ -72,19 +72,20 @@ RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
 **3. `<new_partition_name>`**
 > 復元後のパーティションの新しい名前。
 
-## アクセス制御要件
+## アクセス制御要件 {#access-control-requirements}
 
 | 権限        | オブジェクト | 備考 |
 |-------------|--------|------|
 | ADMIN_PRIV  |        |      |
 
-## 使用上の注意
+## 使用上の注意 {#usage-notes}
 
-- この操作では、一定期間内に削除されたメタデータのみ復元できます。デフォルトは 1 日です（`catalog_trash_expire_second` パラメータを `fe.conf` で設定して変更できます）。
-- メタデータの復元時に ID を指定しない場合、デフォルトでは、同じ名前で最後に削除されたメタデータが復元されます。
+- この操作で復元できるのは、一定期間内に削除されたメタデータのみです。デフォルトは 1 日で、`catalog_trash_expire_second` パラメータを `fe.conf` で設定して変更できます。
+- メタデータの復元時に ID を指定しない場合、デフォルトでは同じ名前で最後に削除されたメタデータが復元されます。
 - 現在復元可能なメタデータは、`SHOW CATALOG RECYCLE BIN` で確認できます。
+- 復元では、ごみ箱にある既存のメタデータ、データ、レプリカを再び関連付けます。新たなデータの書き込みやレプリカの作成としては扱われません。そのため、復元したオブジェクトによってデータベースの使用量がクォータを超える場合でも、データやレプリカのクォータによって `RECOVER` が妨げられることはありません。その後にデータやレプリカを追加する操作には、引き続きクォータが適用されます。
 
-## 例
+## 例 {#examples}
 
 1. `example_db` という名前のデータベースを復元する
 

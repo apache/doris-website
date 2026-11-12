@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/cast-to-string",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/cast-to-string.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/cast-to-string.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1a0ce0b71fd1a498865a76a07ea9649f114a505a8fe9c9ae10c6af8183b56085",
+    "sourceTechnicalHash": "071cf91fb26fc385edf87170e905f21cea5f4e496de4a5bef8e8b76fa9db40fd",
+    "targetHash": "e877faffeb13c1ad6441d5be4d76b61951cc36d91dd027cf2d902b603a47a0ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:34:54.510Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1a0ce0b71fd1a498865a76a07ea9649f114a505a8fe9c9ae10c6af8183b56085",
+      "targetHash": "e877faffeb13c1ad6441d5be4d76b61951cc36d91dd027cf2d902b603a47a0ae",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

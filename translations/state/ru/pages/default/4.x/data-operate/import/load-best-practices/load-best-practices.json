@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/load-best-practices/load-best-practices",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/load-best-practices/load-best-practices.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/load-best-practices/load-best-practices.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "287c739772b3d2f6195bc95b40a283aa48c423c67e40414aae5e9a5928f98a98",
+    "sourceTechnicalHash": "d1d704b9c5e9bbf50801b908af5dacd88d9878ceea017244045f556be28b1e57",
+    "targetHash": "6d11e3309b2d9aba70200d5407bfec68d13882f727b061b39487961e044d1793",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:36:03.514Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "287c739772b3d2f6195bc95b40a283aa48c423c67e40414aae5e9a5928f98a98",
+      "targetHash": "6d11e3309b2d9aba70200d5407bfec68d13882f727b061b39487961e044d1793",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

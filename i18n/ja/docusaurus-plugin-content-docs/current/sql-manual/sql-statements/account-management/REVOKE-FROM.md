@@ -2,16 +2,16 @@
 {
     "title": "REVOKE FROM",
     "language": "ja",
-    "description": "REVOKE コマンドは、次の操作に使用します。"
+    "description": "REVOKE コマンドには次の機能があります。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-REVOKE コマンドは、次の操作に使用します。
+REVOKE コマンドには次の機能があります。
 
-1. ユーザーまたはロールから指定した権限を取り消します。
-2. 以前ユーザーに付与した指定のロールを取り消します。
+1. ユーザーまたはロールに付与された指定の権限を取り消します。
+2. ユーザーに以前付与された指定のロールを取り消します。
 
 **関連コマンド**
 
@@ -22,38 +22,38 @@ REVOKE コマンドは、次の操作に使用します。
 - [CREATE RESOURCE](../cluster-management/compute-management/CREATE-RESOURCE.md)
 - [CREATE STORAGE VAULT](../cluster-management/storage-management/CREATE-STORAGE-VAULT.md)
 
-## 構文
+## 構文 {#syntax}
 
-**ユーザーまたはロールから指定した権限を取り消す**
+**ユーザーまたはロールに付与された指定の権限を取り消す**
 
 ```sql
-REVOKE <privilege_list> 
-ON { <priv_level> 
-   | RESOURCE <resource_name> 
-   | WORKLOAD GROUP <workload_group_name> 
-   | COMPUTE GROUP <compute_group_name> 
-   | STORAGE VAULT <storage_vault_name> 
-   } 
+REVOKE <privilege_list>
+ON { <priv_level>
+   | RESOURCE <resource_name>
+   | WORKLOAD GROUP <workload_group_name>
+   | COMPUTE GROUP <compute_group_name>
+   | STORAGE VAULT <storage_vault_name>
+   }
 FROM { <user_identity> | ROLE <role_name> }
 ```
 
-**ユーザーに付与した指定のロールを取り消す**
+**ユーザーに以前付与された指定のロールを取り消す**
 
 ```sql
-REVOKE <role_list> FROM <user_identity> 
+REVOKE <role_list> FROM <user_identity>
 ```
 
-## 必須パラメータ
+## 必須パラメータ {#required-parameters}
 
 **1. `<privilege_list>`**
 
-取り消す権限をカンマ区切りで指定します。次の権限をサポートします。
+取り消す権限をカンマで区切って指定します。指定できる権限は次のとおりです。
 
 - NODE_PRIV: クラスターノードの操作権限
 - ADMIN_PRIV: 管理者権限
-- GRANT_PRIV: 権限付与の権限
+- GRANT_PRIV: 権限の付与権限
 - SELECT_PRIV: クエリ権限
-- LOAD_PRIV: データインポート権限
+- LOAD_PRIV: データロード権限
 - ALTER_PRIV: 変更権限
 - CREATE_PRIV: 作成権限
 - DROP_PRIV: 削除権限
@@ -62,53 +62,57 @@ REVOKE <role_list> FROM <user_identity>
 
 **2. `<priv_level>`**
 
-権限の適用範囲を指定します。次の形式をサポートします。
+権限の適用範囲を指定します。指定できる形式は次のとおりです。
 
 - *.*.*: すべてのカタログ、データベース、テーブル
 - catalog_name.*.*: 指定したカタログ内のすべてのデータベースとテーブル
 - catalog_name.db.*: 指定したデータベース内のすべてのテーブル
-- catalog_name.db.tbl: 指定したデータベース内の指定したテーブル
+- catalog_name.db.tbl: 指定したデータベース内の特定のテーブル
 
 **3. `<resource_name>`**
 
-リソース名を指定します。`%`（任意の文字列に一致）と `_`（任意の一文字に一致）のワイルドカードを使用できます。
+リソース名を指定します。ワイルドカード文字として、`%`（任意の文字列に一致）と `_`（任意の一文字に一致）を使用できます。
 
 **4. `<workload_group_name>`**
 
-ワークロードグループ名を指定します。`%`（任意の文字列に一致）と `_`（任意の一文字に一致）のワイルドカードを使用できます。
+ワークロードグループ名を指定します。ワイルドカード文字として、`%`（任意の文字列に一致）と `_`（任意の一文字に一致）を使用できます。
 
 **5. `<compute_group_name>`**
 
-コンピュートグループ名を指定します。`%`（任意の文字列に一致）と `_`（任意の一文字に一致）のワイルドカードを使用できます。
+コンピュートグループ名を指定します。ワイルドカード文字として、`%`（任意の文字列に一致）と `_`（任意の一文字に一致）を使用できます。
 
 **6. `<storage_vault_name>`**
 
-ストレージボールト名を指定します。`%`（任意の文字列に一致）と `_`（任意の一文字に一致）のワイルドカードを使用できます。
+ストレージボールト名を指定します。ワイルドカード文字として、`%`（任意の文字列に一致）と `_`（任意の一文字に一致）を使用できます。
 
 
 **7. `<user_identity>`**
 
-ユーザー識別子を指定します。CREATE USER 文で作成したユーザーである必要があります。host 部分にはドメイン名を指定できます。その場合、権限の取り消しが反映されるまで 1 分ほど遅れることがあります。
+ユーザー識別子を指定します。対象のユーザーは CREATE USER 文で作成されている必要があります。ユーザー識別子のホスト部分にはドメイン名を指定できます。ドメイン名を使用する場合、権限の取り消しが反映されるまでに 1 分程度かかることがあります。
 
 **8. `<role_name>`**
 
-ロール名を指定します。ロールは存在する必要があります。
+ロール名を指定します。ロールは存在している必要があります。
 
 **9. `<role_list>`**
 
-取り消すロールをカンマ区切りで指定します。指定するロールはすべて存在する必要があります。
+取り消すロールをカンマで区切って指定します。指定するロールはすべて存在している必要があります。
 
-## 必要な権限
+4.1.5 以降、権限の対象名を構成できる要素は最大三つです。`db`、`db.table`、`catalog.db.table`、およびそれぞれに対応するワイルドカード形式を指定できます。三つを超える要素を指定すると、余分な接頭部分が黙って無視されるのではなく、エラーになります。
+
+## アクセス制御要件 {#access-control-requirements}
 
 この SQL コマンドを実行するユーザーには、少なくとも次の権限が必要です。
 
-| 権限 | 対象 | 説明                |
+| 権限 | 対象 | 備考                |
 | :---------------- | :------------- | :---------------------------- |
-| GRANT_PRIV        | User or Role   | REVOKE 操作を実行できるのは GRANT_PRIV 権限を持つユーザーまたはロールのみです。 |
+| GRANT_PRIV        | ユーザーまたはロール   | GRANT_PRIV 権限を持つユーザーまたはロールのみが REVOKE 操作を実行できます。 |
 
-## 例
+4.1.5 以降、`ADMIN` 以外のユーザーが列の権限を付与または取り消すには、既存の `GRANT` 権限に加え、対応するテーブルの権限、または指定したすべての列に対する対応する権限が必要です。`GRANT` 権限だけでは、自分が持っていない列の権限を付与または取り消すことはできません。
 
-準備として、以降の例で権限を取り消す対象のユーザー、ロール、データベース、ワークロードグループを作成し、前提となる `GRANT` を実行し、各 `REVOKE` が意味を持つようにします（付与されていない権限は取り消せません）。
+## 例 {#examples}
+
+準備として、以下の例で権限やロールを取り消す対象となるユーザー、ロール、データベース、ワークロードグループを作成し、各 `REVOKE` の前提となる `GRANT` を実行します（付与されていない権限は取り消せません）。
 
 ```sql
 CREATE DATABASE db1;
@@ -137,55 +141,55 @@ GRANT USAGE_PRIV ON STORAGE VAULT '%' TO 'jack'@'%';
    REVOKE SELECT_PRIV ON db1.* FROM 'jack'@'192.%';
    ```
 
-- 特定のリソースの使用権限をユーザーから取り消します。
+- 特定のリソースに対する使用権限をユーザーから取り消します。
 
    ```sql
    REVOKE USAGE_PRIV ON RESOURCE 'spark_resource' FROM 'jack'@'192.%';
    ```
 
-- ユーザーからロールを取り消します。
+- ユーザーに付与されたロールを取り消します。
 
    ```sql
    REVOKE 'role1','role2' FROM 'jack'@'192.%';
    ```
 
-- 特定のワークロードグループの使用権限をユーザーから取り消します。
+- 特定のワークロードグループに対する使用権限をユーザーから取り消します。
 
    ```sql
    REVOKE USAGE_PRIV ON WORKLOAD GROUP 'g1' FROM 'jack'@'%';
    ```
 
-- すべてのワークロードグループの使用権限をユーザーから取り消します。
+- すべてのワークロードグループに対する使用権限をユーザーから取り消します。
 
    ```sql
    REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
    ```
 
-- すべてのコンピュートグループの使用権限をユーザーから取り消します。
+- すべてのコンピュートグループに対する使用権限をユーザーから取り消します。
 
    ```sql
    REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM 'jack'@'%';
    ```
 
-- コンピュートグループの使用権限をロールから取り消します。
+- コンピュートグループに対する使用権限をロールから取り消します。
 
    ```sql
    REVOKE USAGE_PRIV ON COMPUTE GROUP 'group1' FROM ROLE 'my_role';
    ```
 
-- すべてのストレージボールトの使用権限をユーザーから取り消します。
+- すべてのストレージボールトに対する使用権限をユーザーから取り消します。
 
    ```sql
    REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM 'jack'@'%';
    ```
 
-- ストレージボールトの使用権限をロールから取り消します。
+- ストレージボールトに対する使用権限をロールから取り消します。
 
    ```sql
    REVOKE USAGE_PRIV ON STORAGE VAULT 'vault1' FROM ROLE 'my_role';
    ```
 
-- すべてのストレージボールトの使用権限をロールから取り消します。
+- すべてのストレージボールトに対する使用権限をロールから取り消します。
 
    ```sql
    REVOKE USAGE_PRIV ON STORAGE VAULT '%' FROM 'jack'@'%';

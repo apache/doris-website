@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "47045fad7aaa2ce14f070a48d573dda414a9c1ed5ee52042c533da3ea40d7fd2",
+    "sourceTechnicalHash": "84f425f0ee391cc511daee5c8cd284bd664391b6b224fb6eeb5bfad96160ec9b",
+    "targetHash": "584cfe73fcc5f7c92505488b469896d1ec5d80c258c994429258d4a81ca28161",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:37:33.298Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "47045fad7aaa2ce14f070a48d573dda414a9c1ed5ee52042c533da3ea40d7fd2",
+      "targetHash": "584cfe73fcc5f7c92505488b469896d1ec5d80c258c994429258d4a81ca28161",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

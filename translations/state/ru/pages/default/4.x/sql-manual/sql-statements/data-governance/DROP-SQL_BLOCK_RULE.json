@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a5bbee11987e8f622096af7460b6b4b83ddd907aa04cb70b28f8a34d31b27076",
+    "sourceTechnicalHash": "95a07581533bf370760aed92091f4bd4931a014929821d5437060bbd2b13bb6e",
+    "targetHash": "e059542f1ba04aa471f5f39dd5fea32501b51c181145948ef814f14694e20b2d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:06:06.636Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a5bbee11987e8f622096af7460b6b4b83ddd907aa04cb70b28f8a34d31b27076",
+      "targetHash": "e059542f1ba04aa471f5f39dd5fea32501b51c181145948ef814f14694e20b2d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE",
+        "sourcePath": "docs/sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "a5bbee11987e8f622096af7460b6b4b83ddd907aa04cb70b28f8a34d31b27076",
+        "targetHash": "e059542f1ba04aa471f5f39dd5fea32501b51c181145948ef814f14694e20b2d",
+        "commit": "d5ac930e1a15d171738ddccbd717b10b31ba98d3",
+        "pr": "https://github.com/apache/doris-website/pull/4455"
+      }
+    }
+  }
+}

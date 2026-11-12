@@ -9,8 +9,9 @@ function getHeadData() {
 
 export default function HeadBlogs(props) {
     const blogs = props.blogs;
-    const topNews = blogs.filter(blog => +blog.frontMatter.order === 1)[0];
-    const news = blogs.filter(blog => blog.frontMatter.title !== topNews.frontMatter.title);
+    const topNews = blogs.find(blog => +blog.frontMatter.order === 1) ?? blogs[0];
+    if (!topNews) return null;
+    const news = blogs.filter(blog => blog.metadata.permalink !== topNews.metadata.permalink);
     return (
         <>
             <div className="flex lg:flex-row flex-col lg:max-w-7xl">

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/database/ALTER-DATABASE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/database/ALTER-DATABASE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/database/ALTER-DATABASE.md",
+    "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+    "sourceHash": "490b086658a5794e05609dc9f83c841856cc7f77c5975c63bb24401cc3dae42e",
+    "sourceTechnicalHash": "291b7710b79594bea608ed879208e0eb548d276fb5053e2ce10a85da475781f7",
+    "targetHash": "482f763af25ba5e5629bf0e754f4910b0a5966f9e9089ad37978738e75228bba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-26T20:12:28.557Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "previousSourceHash": "c18426fc5374af5b67eedce528caddcb35cc2f3264ed1f944b4969bfca28764c",
+      "previousTargetHash": "8132478cc335e9c3d04148930c65c12b8d62b3ed4616bc14e1834a6e4de445a4",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 2,
+        "totalLines": 65,
+        "ratio": 0.03076923076923077
+      },
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "490b086658a5794e05609dc9f83c841856cc7f77c5975c63bb24401cc3dae42e",
+      "targetHash": "482f763af25ba5e5629bf0e754f4910b0a5966f9e9089ad37978738e75228bba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c766c02639d30b7c4bc2c7ff40bfa6af08c60e1b5e6be653d536072cc099fcc5",
+    "sourceTechnicalHash": "75b17d39ea97793f8f495b51bddbc2df58ba66ffdeb7eb0db757624c00227fc8",
+    "targetHash": "e2b3fca1bd0ea4c99f3ce46e8ad1053131bd9da6bb32216a5750786d96750eed",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:43:02.781Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c766c02639d30b7c4bc2c7ff40bfa6af08c60e1b5e6be653d536072cc099fcc5",
+      "targetHash": "e2b3fca1bd0ea4c99f3ce46e8ad1053131bd9da6bb32216a5750786d96750eed",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

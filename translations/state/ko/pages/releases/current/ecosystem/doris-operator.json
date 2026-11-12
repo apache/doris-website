@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-operator",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-operator.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-operator.md",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "c5038d3c275542480cefa8dcb535afb6c61072071b255b09adef78266aaf7b90",
+    "sourceTechnicalHash": "675908c95c60292ee8bf5fd9e05c8bec393d029b1265498d8ef45ee627de35e2",
+    "targetHash": "2193e4c0c23641b1aa05316c4ccdce55758ec490381d41af3c54df85eea72953",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T17:34:35.854Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "c5038d3c275542480cefa8dcb535afb6c61072071b255b09adef78266aaf7b90",
+      "targetHash": "2193e4c0c23641b1aa05316c4ccdce55758ec490381d41af3c54df85eea72953",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 26: expected [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]; received [\"inlineCode\",null,null,\"feSpec.replicas < feSpec.electionNumber\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"feSpec.replicas < feSpec.electionNumber\"]; received [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"storage_root_path\"]; received [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"CompareConfigmapAndTriggerRestart\"]; received [\"inlineCode\",null,null,\"dcr.Annotations\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"dcr.Annotations\"]; received [\"inlineCode\",null,null,\"CompareConfigmapAndTriggerRestart\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]; received [\"inlineCode\",null,null,\"feSpec.replicas < feSpec.electionNumber\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"CompareConfigmapAndTriggerRestart\"]; received [\"inlineCode\",null,null,\"dcr.Annotations\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"dcr.Annotations\"]; received [\"inlineCode\",null,null,\"CompareConfigmapAndTriggerRestart\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]; received [\"inlineCode\",null,null,\"feSpec.replicas < feSpec.electionNumber\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 26: expected [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]; received [\"inlineCode\",null,null,\"feSpec.replicas < feSpec.electionNumber\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"feSpec.replicas < feSpec.electionNumber\"]; received [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"storage_root_path\"]; received [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

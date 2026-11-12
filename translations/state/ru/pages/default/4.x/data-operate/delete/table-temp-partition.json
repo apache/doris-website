@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/delete/table-temp-partition",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/delete/table-temp-partition.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/delete/table-temp-partition.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "503636e4d6487d6df488baac0750823056d55385131bb2d6f3a69aade332f590",
+    "sourceTechnicalHash": "2f3446e52f97bbf2d9c4b929b403f71e03e04214c8033a960704713da949b373",
+    "targetHash": "4fb06c06763c59dd6c04e235b7c4e09fb443c4dd0a873474ec3ad7d77e49b913",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:29:38.697Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "503636e4d6487d6df488baac0750823056d55385131bb2d6f3a69aade332f590",
+      "targetHash": "4fb06c06763c59dd6c04e235b7c4e09fb443c4dd0a873474ec3ad7d77e49b913",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "data-operate/delete/table-temp-partition",
+        "sourcePath": "docs/data-operate/delete/table-temp-partition.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/delete/table-temp-partition.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "503636e4d6487d6df488baac0750823056d55385131bb2d6f3a69aade332f590",
+        "targetHash": "4fb06c06763c59dd6c04e235b7c4e09fb443c4dd0a873474ec3ad7d77e49b913",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

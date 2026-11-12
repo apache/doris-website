@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/file-cache/file-cache-peer-read",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/file-cache/file-cache-peer-read.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/compute-storage-decoupled/file-cache/file-cache-peer-read.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "cb639699d2e5d7206fca053693f33330541a8dcc9b979713244086de540766c0",
+    "sourceTechnicalHash": "c49d5cc144417e510e50629c820cc289e9ca1dc45d7472d105fa083f6bac47cf",
+    "targetHash": "c3486b7a0402b7f66928c4504545e0401eaf97067aaef73b62d3e044c10d2485",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:01:56.456Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cb639699d2e5d7206fca053693f33330541a8dcc9b979713244086de540766c0",
+      "targetHash": "c3486b7a0402b7f66928c4504545e0401eaf97067aaef73b62d3e044c10d2485",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DROP-OBSERVER",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/DROP-OBSERVER.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/DROP-OBSERVER.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "856573d1eeeafee38c75a38964991ea4a1249bb400af63a1c64429924d83e8a0",
+    "sourceTechnicalHash": "cdb93deedc17974c8ee6930eb1ce9202703c3c615a711be94c76e1064752f240",
+    "targetHash": "98f6b00fb3d7a4b6dea4ff382e4ef2793599448d2106ec77e6834ee7d17ee09f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:57:10.703Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "856573d1eeeafee38c75a38964991ea4a1249bb400af63a1c64429924d83e8a0",
+      "targetHash": "98f6b00fb3d7a4b6dea4ff382e4ef2793599448d2106ec77e6834ee7d17ee09f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

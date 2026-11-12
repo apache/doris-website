@@ -42,6 +42,9 @@ The user executing this SQL command must have at least the following permissions
 
 ## Precautions
 
+- Data and replica quotas are admission limits for operations that add new data or replicas. Lowering a quota below current usage does not delete existing data or replicas. When current usage reaches or exceeds a quota, Doris rejects subsequent operations that would increase the corresponding usage.
+- `RECOVER` restores metadata and existing data or replicas from the recycle bin. It does not write new data or create new replicas, so it is not blocked by data or replica quotas. A successful recovery can make database usage exceed a quota; subsequent operations that add data or replicas remain blocked until usage falls below the quota or the quota is raised.
+
 After renaming the database, use the REVOKE and GRANT commands to modify the corresponding user permissions if necessary. The default data volume quota for a database is 1024 GB, and the default replica number quota is 1073741824.
 
 ## Example

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/intro.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "981dc82e6bc7d141bd3021d323996f804ad46260680e13c23565b5bce65b86fa",
+    "sourceTechnicalHash": "128042a10a1bd37a89b7f3050bbd02e6ac2b4519fdc1269df5c4e43b6e14dfc9",
+    "targetHash": "cae5a2a147c8ab0be3b8dea901e8015a0e6d78dfad21289c19f8c3634ec7204e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:32:43.120Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "981dc82e6bc7d141bd3021d323996f804ad46260680e13c23565b5bce65b86fa",
+      "targetHash": "cae5a2a147c8ab0be3b8dea901e8015a0e6d78dfad21289c19f8c3634ec7204e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

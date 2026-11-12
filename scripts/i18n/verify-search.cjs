@@ -3,15 +3,30 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {createServer} = require('../publish/serve.cjs');
 const root = path.resolve(__dirname, '../..');
-const contexts = ['docs/dev', 'docs/4.x', 'community'];
+const {contextsFor, groupFor} = require('./search-plugin.cjs');
 const route = url => new URL(url, 'https://doris.apache.org').pathname.replace(/\/?$/, '/');
+const englishLanguageSwitchSelector = '.language-menu__links a[lang="en-US"]';
+async function verifyLanguageSwitchHref(page, expected) {
+    await page.waitForFunction(({selector, href}) =>
+        document.querySelector(selector)?.getAttribute('href') === href,
+        {selector: englishLanguageSwitchSelector, href: expected});
+    assert.equal(await page.locator(englishLanguageSwitchSelector).first().getAttribute('href'), expected);
+}
+function verifySourceSearchHref(href, origin, query) {
+    const source = new URL(href, origin);
+    assert.equal(source.origin, origin, href);
+    assert.equal(source.pathname, '/search/', href);
+    for (const [name, value] of Object.entries({q:query, ctx:'docs', version:'docs/dev/'}))
+        assert.deepEqual(source.searchParams.getAll(name), [value], href);
+}
 const corpus = {
     ja: {database:'データベース', query:'分析', community:'コミュニティ'},
     ko: {database:'데이터베이스', query:'쿼리', community:'커뮤니티'},
     ru: {database:'данных', query:'запрос', community:'сообщество'},
 };
 
-function checkIndexes({site, locale, manifest}) {
+function checkIndexes({site, locale, manifest, rootDir = root}) {
+    const contexts = contextsFor(rootDir);
     const summary = JSON.parse(fs.readFileSync(path.join(site, locale, `${locale}-search-summary.json`), 'utf8'));
     assert.equal(summary.locale, locale);
     assert.deepEqual(Object.keys(summary.contexts).sort(), [...contexts].sort());
@@ -26,10 +41,11 @@ function checkIndexes({site, locale, manifest}) {
     const expected = new Map(contexts.map(context => [context, new Set()]));
     for (const page of manifest.pages) {
         if (page.locale !== locale || page.status !== 'current' || !page.useTarget || !page.indexable) continue;
-        const context = page.pluginId === 'community' && page.version === 'current' ? 'community'
-            : page.pluginId === 'default' && page.version === 'current' ? 'docs/dev'
-                : page.pluginId === 'default' && page.version === '4.x' ? 'docs/4.x' : null;
-        if (context) expected.get(context).add(route(page.permalink));
+        const context = groupFor(page);
+        if (context) {
+            assert(expected.has(context), `Unregistered documentation search context: ${context}`);
+            expected.get(context).add(route(page.permalink));
+        }
     }
     const indexFiles = {};
     for (const context of ['', ...contexts]) {
@@ -52,6 +68,7 @@ function checkIndexes({site, locale, manifest}) {
 
 async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [], themes = false,
     manifest = path.join(root, '.i18n-build/manifests', `${locale}.json`)}) {
+    const contexts = contextsFor(root);
     assert(corpus[locale], `Add representative search queries for ${locale}`);
     const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
     assert.equal(data.locale, locale);
@@ -101,6 +118,7 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             {ctx:'docs/dev',query:corpus[locale].database}, {ctx:'docs/dev',query:corpus[locale].query},
             {ctx:'docs/dev',query:'SQL'}, {ctx:'docs/dev',query:'query_vector'},
             {ctx:'docs/4.x',query:'SQL'}, {ctx:'community',query:corpus[locale].community},
+            {ctx:'course',query:'SQL'},
             ...(locale === 'ru' ? ['ЗАПРОСЫ', 'отчёты', 'отчеты', 'ОТЧЁТЫ', 'match',
                 'query_vector()', '(SQL)', 'SQL запрос'].map(query => ({ctx:'docs/dev',query})) : []),
         ].filter(probe => (!devOnly || probe.ctx !== 'docs/4.x') && summary.contexts[probe.ctx] > 0);
@@ -116,7 +134,12 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             for (const label of Object.values(settings.searchContextLabels)) assert(labels.includes(label), `Missing context label: ${label}`);
             if (locale === 'ru' && probe.query === 'отчеты') {
                 const target = await newPage();
-                await open(target, links[0]);
+                // Search is stemmed: the first result may contain a different
+                // inflection. Use the exact-form fixture to test ё/е highlighting.
+                const highlightTarget = links.find(link => route(link)
+                    === `/${locale}/docs/dev/getting-started/what-is-apache-doris/`);
+                assert(highlightTarget, 'Russian exact-form highlight fixture missing from results');
+                await open(target, highlightTarget);
                 await target.locator('.theme-doc-markdown mark').first().waitFor();
                 assert((await target.locator('.theme-doc-markdown mark').allTextContents())
                     .some(text => /отчёты/i.test(text)), 'Russian target highlighting lost ё/е equivalence');
@@ -148,15 +171,13 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             assert.equal(source.hash, '#core-highlights');
             // Hydration must update language-switch attributes as well as the
             // source link. SSR cannot know the request's query or fragment.
-            const englishSwitch = navigation.locator('a.dropdown__link[lang="en-US"]').first();
-            await navigation.waitForFunction(expected =>
-                document.querySelector('a.dropdown__link[lang="en-US"]')?.getAttribute('href') === expected,
-            current.englishPermalink + source.search + source.hash);
-            assert.equal(await englishSwitch.getAttribute('href'), current.englishPermalink + source.search + source.hash);
+            await verifyLanguageSwitchHref(navigation, current.englishPermalink + source.search + source.hash);
             const linked = await navigation.locator('a[href]').evaluateAll(nodes => nodes.map(node => new URL(node.href).pathname));
-            const fallback = data.pages.find(page => page.pluginId === 'default' && page.version === 'current'
+            // A fully translated Dev links no fallback, but the version menu still
+            // reaches versions outside the scope. Dev-only builds omit them.
+            const fallback = data.pages.find(page => page.pluginId === 'default'
                 && !page.draft && !page.useTarget && linked.some(link => route(link) === route(page.permalink)));
-            if (locale === 'ru') assert(fallback, 'Russian SPA verification needs a linked English fallback');
+            if (locale === 'ru' && !devOnly) assert(fallback, 'Russian SPA verification needs a linked English fallback');
             if (fallback) {
                 // Use an actual native Link, including a collapsed sidebar entry.
                 await navigation.locator('a[href]').evaluateAll((nodes, target) => {
@@ -208,12 +229,12 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
         results.push({mobile:true,inputWidth:Math.round(box.width)});
         await mobile.close();
         const empty = await newPage();
-        await open(empty, `/${locale}/search/?q=zzzzqqqq_xxxxwwww&ctx=docs/dev`);
+        const emptyQuery = 'zzzzqqqq_xxxxwwww';
+        await open(empty, `/${locale}/search/?${new URLSearchParams({q:emptyQuery,ctx:'docs/dev'})}`);
         const label = dictionary['theme.SearchPage.searchSource'].message;
         await empty.getByRole('link',{name:label,exact:true}).waitFor({timeout:30000});
         const original = await empty.getByRole('link',{name:label,exact:true}).getAttribute('href');
-        assert(original.startsWith('/search/?q='), original);
-        assert.equal(new URL(original,origin).searchParams.get('version'), 'docs/dev/');
+        verifySourceSearchHref(original, origin, emptyQuery);
         results.push({noResultsOriginalSearch:original});
         await empty.close();
         for (const sourceLocale of sourceLocales) {
@@ -270,4 +291,4 @@ if (require.main === module) {
         .then(result=>{if(option('--output'))fs.writeFileSync(option('--output'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));})
         .catch(error=>{console.error(error);process.exitCode=1;});
 }
-module.exports = {verify, checkIndexes};
+module.exports = {verify, checkIndexes, englishLanguageSwitchSelector, verifyLanguageSwitchHref, verifySourceSearchHref};

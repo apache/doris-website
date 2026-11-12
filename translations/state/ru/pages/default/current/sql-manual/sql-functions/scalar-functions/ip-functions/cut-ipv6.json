@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+    "sourceTechnicalHash": "bd9349cced7e8176c85251bae8f76cb1ec3c20c3bfb7bea18c2c7e35a8428029",
+    "targetHash": "a5f380c688844470db7d979cce34e9cd5c91797a64202daf8ec4d9df720414b0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:16:52.890Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+      "targetHash": "a5f380c688844470db7d979cce34e9cd5c91797a64202daf8ec4d9df720414b0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

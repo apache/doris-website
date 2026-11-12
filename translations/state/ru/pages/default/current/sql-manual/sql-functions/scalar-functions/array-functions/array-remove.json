@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-remove",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-remove.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-remove.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c2fcf97611f9252621fc27072ac1155e844fe73d1ad2c0f6c12bcc699343dde1",
+    "sourceTechnicalHash": "8304aff32d5abd862dbeff9c8b5259e2ee55de967a0fe1832d9380cdce433c9e",
+    "targetHash": "5f80d6438a1109bf556011495e053f731a35eb3fe1fe11213310b4f2d5035316",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:38:53.672Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c2fcf97611f9252621fc27072ac1155e844fe73d1ad2c0f6c12bcc699343dde1",
+      "targetHash": "5f80d6438a1109bf556011495e053f731a35eb3fe1fe11213310b4f2d5035316",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { isValidElement, JSX, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import copy from 'copy-to-clipboard';
@@ -37,7 +38,7 @@ interface CopyButtonProps {
     ariaLabel?: string;
 }
 
-export function CopyButton({ text, className, label = 'Copy', ariaLabel }: CopyButtonProps): JSX.Element {
+export function CopyButton({ text, className, label = translate({id: "landing.HackathonCodeBlock.001", message: "Copy"}), ariaLabel }: CopyButtonProps): JSX.Element {
     const [copied, setCopied] = useState(false);
     const timer = useRef<number | undefined>(undefined);
 
@@ -54,7 +55,7 @@ export function CopyButton({ text, className, label = 'Copy', ariaLabel }: CopyB
         <button type="button" className={clsx(className, copied && 'is-done')} onClick={onCopy} aria-label={ariaLabel}>
             <IconCopy />
             <span className="hk-task__copy-label" aria-live="polite">
-                {copied ? 'Copied' : label}
+                {copied ? translate({id: "landing.HackathonCodeBlock.002", message: "Copied"}) : label}
             </span>
         </button>
     );

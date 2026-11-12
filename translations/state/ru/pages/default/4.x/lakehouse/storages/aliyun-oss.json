@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/aliyun-oss",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/aliyun-oss.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/aliyun-oss.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
+    "sourceTechnicalHash": "14194a30d59d401728ab85c5a31af341d62e67cfe49834dcb097ba5d139b32e7",
+    "targetHash": "86d4aafc73233687d5c37f514b4b3038a0639855a52ce30591ba16ebd7ded022",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:22.376Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
+      "targetHash": "86d4aafc73233687d5c37f514b4b3038a0639855a52ce30591ba16ebd7ded022",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/storages/aliyun-oss",
+        "sourcePath": "docs/lakehouse/storages/aliyun-oss.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/aliyun-oss.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
+        "targetHash": "86d4aafc73233687d5c37f514b4b3038a0639855a52ce30591ba16ebd7ded022",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

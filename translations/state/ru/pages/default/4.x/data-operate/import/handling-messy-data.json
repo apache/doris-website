@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/handling-messy-data",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/handling-messy-data.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/handling-messy-data.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
+    "sourceTechnicalHash": "59c9fe52f4658a8061ab29193716e29568582041a5064030b0e6deb4f7d77ee4",
+    "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:29:41.608Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
+      "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "data-operate/import/handling-messy-data",
+        "sourcePath": "docs/data-operate/import/handling-messy-data.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/handling-messy-data.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
+        "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
+        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
+        "pr": "https://github.com/apache/doris-website/pull/4436"
+      }
+    }
+  }
+}

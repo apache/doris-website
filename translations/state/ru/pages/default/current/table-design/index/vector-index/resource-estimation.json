@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/resource-estimation",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/resource-estimation.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/vector-index/resource-estimation.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "454078c114baa06e0e6d3c6b1591f9f749058f83fbfd02432dbe3175121685b5",
+    "sourceTechnicalHash": "ee5d527b72449fbeacd05657b58aacf555218563b94bf305e6dcdaac4b417e6b",
+    "targetHash": "8114e01375be4b2d8c4a87a23c4837ed05583d3b4b776856fcb202c75d03bd21",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:00:38.415Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "454078c114baa06e0e6d3c6b1591f9f749058f83fbfd02432dbe3175121685b5",
+      "targetHash": "8114e01375be4b2d8c4a87a23c4837ed05583d3b4b776856fcb202c75d03bd21",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -17,6 +17,12 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 操作步骤 + 配置参数 -->
 <!-- 适用场景: MySQL 整库镜像同步到 Doris -->
 
@@ -146,7 +152,7 @@ MySQL 源端 (`FROM MYSQL`) 支持的参数如下：
 | include_tables       | -       | 需要同步的表名，多个表用逗号分隔，不填默认所有的表                                                                  |
 | offset               | latest  | `latest`：仅增量同步；`initial`：全量 + 增量同步                                                                    |
 | `schema_change_behavior` | `evolve` | 可选。 字符串，不区分大小写。`evolve` 自动同步支持的列变更，`ignore` 关闭结构同步。可暂停后通过 `ALTER JOB` 修改；支持范围及暂停处理见 [Schema Change 同步](./schema-change-mysql.md)。 |
-| snapshot_split_size  | 40960（4.1.4 之前为 8096）    | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步                                                   |
+| snapshot_split_size  | 40960    | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步                                                   |
 | snapshot_parallelism | 1       | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量                                                             |
 
 ## 参考手册

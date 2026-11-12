@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/arthas",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/arthas.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/arthas.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "89cdb23643bb3c68649b54229a9d3840fde921b0346b31493ad8433abf1e5323",
+    "sourceTechnicalHash": "680afb6f7b6a50fe296827e0d0c22fdffd88c704797261b84b3d7f3664aaccb8",
+    "targetHash": "022c6b2e3d8409401906872b055354013f2a4afa6eab384616ee160d9727d71d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:07:56.473Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "89cdb23643bb3c68649b54229a9d3840fde921b0346b31493ad8433abf1e5323",
+      "targetHash": "022c6b2e3d8409401906872b055354013f2a4afa6eab384616ee160d9727d71d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"inlineCode\",null,null,\"DorisFE\"]; received [\"inlineCode\",null,null,\"as.sh\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"as.sh\"]; received [\"inlineCode\",null,null,\"DorisFE\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -5,7 +5,7 @@ const os = require('node:os');
 const net = require('node:net');
 const {spawn} = require('node:child_process');
 
-async function apache(site) {
+async function apache(site, {binary = process.platform === 'darwin' ? '/usr/sbin/httpd' : '/usr/sbin/apache2'} = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(),'doris-publish-apache-'));
     const socket = net.createServer();
     await new Promise(resolve => socket.listen(0,'127.0.0.1',resolve));
@@ -20,25 +20,42 @@ async function apache(site) {
             .map(name => `LoadModule ${name}_module "${moduleDir}/mod_${name}.so"`),
         `User ${os.userInfo().username}`, `Group #${process.getgid()}`, `ErrorLog "${directory}/error.log"`,
         'LogLevel warn', 'StartServers 1','ServerLimit 1','ThreadsPerChild 8','MaxRequestWorkers 8',
-        'TypesConfig /etc/apache2/mime.types', `DocumentRoot "${path.resolve(site)}"`,
+        `TypesConfig ${process.platform === 'darwin' ? '/etc/apache2/mime.types' : '/etc/mime.types'}`, `DocumentRoot "${path.resolve(site)}"`,
         `<Directory "${path.resolve(site)}">`, 'AllowOverride All','Require all granted','DirectoryIndex index.html','</Directory>',
     ].join('\n');
     const configFile = path.join(directory,'httpd.conf');
     fs.writeFileSync(configFile,config);
-    const binary = process.platform === 'darwin' ? '/usr/sbin/httpd' : '/usr/sbin/apache2';
     const child = spawn(binary,['-f',configFile,'-D','FOREGROUND'],{stdio:['ignore','ignore','pipe']});
-    let stderr = '';
+    let stderr = '', spawnError;
+    const exited = new Promise(resolve => {
+        child.once('exit', resolve);
+        child.once('error', error => {spawnError = error; resolve();});
+    });
     child.stderr.on('data',data => {stderr += data;});
     const origin = `http://127.0.0.1:${port}`;
-    for (let attempt = 0; attempt < 100; attempt++) {
-        if (child.exitCode !== null) throw new Error(`Apache failed: ${stderr}`);
-        try {await fetch(origin);break;} catch {}
-        await new Promise(resolve => setTimeout(resolve,50));
-    }
-    return {origin,directory,async close() {
-        child.kill('SIGTERM');
-        if (child.exitCode === null) await new Promise(resolve => child.once('exit',resolve));
+    const close = async () => {
+        if (!spawnError && child.exitCode === null && child.signalCode === null) {
+            child.kill('SIGTERM');
+            await exited;
+        }
         fs.rmSync(directory,{recursive:true,force:true});
-    }};
+    };
+    try {
+        const deadline = Date.now() + 5000;
+        while (Date.now() < deadline) {
+            if (spawnError || child.exitCode !== null || child.signalCode !== null) throw new Error('Apache failed to start');
+            try {
+                await fetch(origin, {method: 'HEAD', signal: AbortSignal.timeout(250)});
+                return {origin, directory, close};
+            } catch {}
+            await new Promise(resolve => setTimeout(resolve,50));
+        }
+        throw new Error('Apache did not respond within 5 seconds');
+    } catch (error) {
+        const log = path.join(directory, 'error.log');
+        const diagnostic = fs.existsSync(log) ? fs.readFileSync(log, 'utf8').slice(-8192) : '';
+        await close();
+        throw new Error([error.message, spawnError?.message, stderr.trim(), diagnostic.trim()].filter(Boolean).join('\n'));
+    }
 }
 module.exports = {apache};

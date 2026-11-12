@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/variable/SET-VARIABLE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/variable/SET-VARIABLE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/variable/SET-VARIABLE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d3c4ad60808cabc89fa177f3c6a775f6b8cf29ef5cc4b0745cc84fa99ebde283",
+    "sourceTechnicalHash": "2adbb3b8d822d9a239f1e932072eb52820a579202cf9ad74558d5544e829a1d0",
+    "targetHash": "48efb5d69901adbf51205cc8c321e43f673b64a2854028f6ad9596952d5139d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:51:51.804Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d3c4ad60808cabc89fa177f3c6a775f6b8cf29ef5cc4b0745cc84fa99ebde283",
+      "targetHash": "48efb5d69901adbf51205cc8c321e43f673b64a2854028f6ad9596952d5139d6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/session/variable/SET-VARIABLE",
+        "sourcePath": "docs/sql-manual/sql-statements/session/variable/SET-VARIABLE.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/variable/SET-VARIABLE.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "d3c4ad60808cabc89fa177f3c6a775f6b8cf29ef5cc4b0745cc84fa99ebde283",
+        "targetHash": "48efb5d69901adbf51205cc8c321e43f673b64a2854028f6ad9596952d5139d6",
+        "commit": "ce24bd33dc04ac6b20bee9fd337ed9e8b6433ad0",
+        "pr": "https://github.com/apache/doris-website/pull/4456"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/doris-operator/on-alibaba",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/doris-operator/on-alibaba.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/doris-operator/on-alibaba.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "796f9a87d92ed7f872f0d9acb6195bd881f1c099af6dec2a76518c570c41d608",
+    "sourceTechnicalHash": "12d96926cc3943b4ceb3ee264a4a0c40cc55549ccc8fdae6c7104f1827da3738",
+    "targetHash": "7916799deee79032bafa1f49a908fce79b5ca760ec4361b411dd7080d769a5bc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:31:59.164Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "796f9a87d92ed7f872f0d9acb6195bd881f1c099af6dec2a76518c570c41d608",
+      "targetHash": "7916799deee79032bafa1f49a908fce79b5ca760ec4361b411dd7080d769a5bc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

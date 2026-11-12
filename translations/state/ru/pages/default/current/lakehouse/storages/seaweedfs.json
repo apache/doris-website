@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/seaweedfs",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/seaweedfs.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/seaweedfs.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "98efaa96c8000e100762f99bd87e15fd8419ef85dc46166f0c34518468e1b868",
+    "sourceTechnicalHash": "73e3b08b3b882ea92feedf2af698730434c0cc86dddf1f55144c679bdee30144",
+    "targetHash": "ad4e9bb788600f8a35a7fed54856ab491f033bbfb7a7a6bd5b62cb3f81919efb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:13:28.280Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "98efaa96c8000e100762f99bd87e15fd8419ef85dc46166f0c34518468e1b868",
+      "targetHash": "ad4e9bb788600f8a35a7fed54856ab491f033bbfb7a7a6bd5b62cb3f81919efb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

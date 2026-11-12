@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/session-variables",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/session-variables.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/session-variables.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "701f679a035afefcc65174f466d352d3dd3976e9e18fe8a6b507b2406d272377",
+    "sourceTechnicalHash": "78174d700ccdca4d7c5c5c7108e444ce2a3606a710d0a362b2f9c5e5073be424",
+    "targetHash": "e064fe49a60ac6b6043b8b453e935295fce550cc372fba8d22f03e664a98c4b4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:34:54.967Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "701f679a035afefcc65174f466d352d3dd3976e9e18fe8a6b507b2406d272377",
+      "targetHash": "e064fe49a60ac6b6043b8b453e935295fce550cc372fba8d22f03e664a98c4b4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

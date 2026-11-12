@@ -1,0 +1,29 @@
+---
+{
+    "title": "Управление журналами",
+    "language": "ru",
+    "description": "Описывает файлы журналов, создаваемые процессами FE и BE Apache Doris, и способы управления ими."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Управление журналами {#log-management}
+
+Узлы FE и BE Apache Doris создают несколько типов файлов журналов. В этой главе описано содержимое каждого файла журнала, а также настройка уровней журналирования, правил ротации и правил хранения.
+
+## Журналы FE и BE {#fe-and-be-logs}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Управление журналами FE"
+    description="Описывает журналы, создаваемые процессом Frontend (FE), включая категории, форматы и настройку fe.log, fe.warn.log, fe.audit.log и fe.out"
+    link="fe-log"
+/>
+
+<GettingStartedCard
+    title="Управление журналами BE"
+    description="Описывает журналы, создаваемые процессом Backend (BE), включая категории, форматы и настройку be.INFO, be.WARNING и be.out"
+    link="be-log"
+/>
+</div>

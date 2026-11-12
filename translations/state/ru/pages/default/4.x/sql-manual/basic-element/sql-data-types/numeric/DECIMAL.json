@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/DECIMAL",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/DECIMAL.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/DECIMAL.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "88f74fd65db09ff5c2ec6a57340d20a16133b251ec534a3dcd21b435995ecb39",
+    "sourceTechnicalHash": "00ab5c05612f3a61fea4233e35fdd0c564f7298061550ab7727ea820d6996292",
+    "targetHash": "6a60baa6a12cb6e213e9fb419c632bccaddc01152c8aac613047d32c7222bcfc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:11.185Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "88f74fd65db09ff5c2ec6a57340d20a16133b251ec534a3dcd21b435995ecb39",
+      "targetHash": "6a60baa6a12cb6e213e9fb419c632bccaddc01152c8aac613047d32c7222bcfc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/basic-element/sql-data-types/numeric/DECIMAL",
+        "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/DECIMAL.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/DECIMAL.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "88f74fd65db09ff5c2ec6a57340d20a16133b251ec534a3dcd21b435995ecb39",
+        "targetHash": "6a60baa6a12cb6e213e9fb419c632bccaddc01152c8aac613047d32c7222bcfc",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}

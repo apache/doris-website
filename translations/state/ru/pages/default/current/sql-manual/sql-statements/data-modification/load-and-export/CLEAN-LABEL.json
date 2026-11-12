@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/CLEAN-LABEL",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/CLEAN-LABEL.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/CLEAN-LABEL.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d63253640be082c31763cb5fc3ef634c1e6b6da1d9355e810a47aa1094f279ba",
+    "sourceTechnicalHash": "26b8072303b48c45e9c0754565193c83d6abb1214fb1e1ad6da242ef1af0b13e",
+    "targetHash": "10c254e3927c458d7e2119d993870883bef01d5a2a56654682982fd9bbb01e37",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:02:35.678Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d63253640be082c31763cb5fc3ef634c1e6b6da1d9355e810a47aa1094f279ba",
+      "targetHash": "10c254e3927c458d7e2119d993870883bef01d5a2a56654682982fd9bbb01e37",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

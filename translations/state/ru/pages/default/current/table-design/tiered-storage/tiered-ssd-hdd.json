@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/tiered-storage/tiered-ssd-hdd",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/tiered-storage/tiered-ssd-hdd.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/tiered-storage/tiered-ssd-hdd.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
+    "sourceTechnicalHash": "01f90aff160c57d037316f9b13ef2305a3dc62d1eea050c1b0d6fe542c66cda3",
+    "targetHash": "9a3243eb70426c4b6b6a84cdeb955ddec6efd29a680113a5c03e494f2be66704",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:01:52.995Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
+      "targetHash": "9a3243eb70426c4b6b6a84cdeb955ddec6efd29a680113a5c03e494f2be66704",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

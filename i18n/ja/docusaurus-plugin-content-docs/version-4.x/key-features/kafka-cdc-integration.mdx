@@ -1,13 +1,13 @@
 ---
-title: Kafka と CDC の統合
-description: Routine Load で Kafka トピックを Doris に直接取り込むか、Flink と Stream Load 2PC を使って MySQL/Postgres の CDC データを exactly-once でストリーミングします。
+title: KafkaとCDCの連携
+description: Routine LoadでKafkaトピックをDorisに直接取り込むか、Flinkを介してMySQL/PostgresのCDCをストリーミングし、Stream Load 2PCでexactly-onceを実現します。
 keywords:
   - Kafka Routine Load
   - Flink CDC
   - MySQL CDC
   - exactly-once
   - Stream Load 2PC
-  - Apache Doris ストリーミング
+  - Apache Doris streaming
 slug: /key-features/kafka-cdc-integration
 image: /images/next/key-features/kafka-cdc-integration.jpg
 last_update:
@@ -18,43 +18,42 @@ featureCard:
     - load
     - streaming
     - cdc
-language: ja
 ---
 
-> **要約** Apache Doris は、三つの方法で Kafka トピックと CDC の変更ストリームを取り込みます。外部サービスを使わず、FE 内で動作する Kafka コンシューマーが必要な場合は **Routine Load** を使用します。MySQL/Postgres/Oracle のデータベース全体を、[Stream Load](./stream-load) 2PC による exactly-once で同期する場合は、Flink CDC と **Flink Doris Connector** を使用します。すでに Kafka Connect を運用しており、ペイロードが Avro、Protobuf、Debezium のいずれかである場合は、**Doris Kafka Connector** を使用します。いずれの方法でもデータは同じ Unique Key Merge-on-Write テーブルに格納されるため、イベントが順序どおりに届かない場合の処理や[削除](./data-update-delete)は、選んだ方法によらず同じように機能します。
+> **要約** Apache Dorisは、KafkaトピックとCDCの変更ストリームを三つの経路でネイティブに取り込みます。FE内で動作し、外部サービスを必要としないKafkaコンシューマーが欲しい場合は、**Routine Load**を使います。MySQL/Postgres/Oracleのデータベース全体を同期し、[Stream Load](./stream-load) 2PCでexactly-onceを実現したい場合は、Flink CDCと**Flink Doris Connector**を使います。Kafka Connectがすでに稼働していて、ペイロードがAvro、Protobuf、Debeziumの場合は、**Doris Kafka Connector**を使います。どの経路も同じUnique Key Merge-on-Writeテーブルに書き込むため、到着順が前後するイベントや[削除](./data-update-delete)は、選んだ経路によらず同じように処理されます。
 
-![Apache Doris と Kafka・CDC の統合：Routine Load で Kafka トピックを Doris に直接取り込むか、Flink と Stream Load 2PC を使って MySQL/Postgres の CDC データを exactly-once でストリーミングします。](/images/next/key-features/kafka-cdc-integration.jpg)
-## Apache Doris で Kafka と CDC を統合する理由 {#why}
+![Apache DorisのKafkaとCDCの連携：Routine LoadでKafkaトピックをDorisに直接取り込むか、Flinkを介してMySQL/PostgresのCDCをストリーミングし、Stream Load 2PCでexactly-onceを実現します。](/images/next/key-features/kafka-cdc-integration.jpg)
+## Apache DorisでKafkaとCDCの連携を使う理由 {#why}
 
-Apache Doris の Kafka・CDC 統合では、ストリーミング取り込み、exactly-once 配信、順序が入れ替わったイベントの処理をエンジン内で行うため、トピックや binlog からクエリ可能な行までの経路を短くできます。多くのデータウェアハウスでは、ストリーミング取り込みの仕組みを別途組み合わせる必要があります。Kafka コンシューマーを立て、オフセット管理、リトライ、スキーママッピング、削除処理を実装し直したうえで、データウェアハウスに障害が起きた際にコンシューマーが正常に停止することを期待することになります。あるいは前段に Flink を置き、追加のクラスターを運用します。そうしなければ「リアルタイム」を諦め、[一括ロード](./batch-load)で五分ごとにデータを送ることになります。
+Apache DorisのKafkaとCDCの連携では、ストリーミング取り込み、exactly-once配信、到着順が前後するイベントの処理をエンジン内で行うため、トピックやbinlogからクエリ可能な行までの経路が短くなります。多くのデータウェアハウスでは、ストリーミング取り込みを後付けする必要があります。Kafkaコンシューマーを立て、オフセット管理、再試行、スキーマの対応付け、削除処理を実装し直したうえで、データウェアハウスが停止したときにコンシューマーも正常に停止することを期待することになります。Flinkを前段で動かすなら、追加のクラスターも必要です。あるいは「リアルタイム」を諦めて、[バルクデータロード](./batch-load)で五分ごとのバッチを送ることになります。
 
-- チェックポイントが失敗した後、CDC パイプラインが直前のバッチを再実行し、バッファー内のすべての行が二重に取り込まれる。
-- 新しい更新より後に届いた古い更新が Unique Key テーブルで優先される。どちらの書き込みが新しいかをエンジンに伝える設定がないため。
-- Avro または Protobuf を含む Kafka トピックを、JSON と CSV しか扱えない HTTP ロード API に取り込めない。
+- CDCパイプラインがチェックポイントの失敗後に最後のバッチを再実行し、バッファに保持していたすべての行が二重になります。
+- どの書き込みが新しいかをエンジンに伝える手段がないため、Unique Keyテーブルで到着順が前後した更新が古いバージョンに負けます。
+- AvroやProtobufを含むKafkaトピックは、JSONかCSVしか扱えないHTTPデータロードAPIには適合しません。
 
-Doris はこれらの処理の大部分をエンジン内で行います。そのため、Kafka トピックや MySQL binlog からクエリ可能な行までの経路が短くなり、発生し得る障害も把握しやすくなります。
+Dorisはこうした処理の大半をエンジン内で行います。そのため、KafkaトピックやMySQLのbinlogからクエリ可能な行までの経路が短く、どのような障害が起こり得るかも明確です。
 
-## Apache Doris の Kafka・CDC 統合とは {#what}
+## Apache DorisのKafkaとCDCの連携とは {#what}
 
-Apache Doris の Kafka・CDC 統合は、ストリーミングデータと CDC データを取り込む複数の方法で構成されます。これらには共通の基盤があります。`Label` で識別されるトランザクションロード、upsert と削除に使う Unique Key Merge-on-Write テーブル、そしてイベントが順序どおりに届かないときに採用する行バージョンを決めるシーケンス列です。方法によって、コンシューマーをどこで実行するかが異なります。
+Apache DorisのKafkaとCDCの連携は、共通の基盤を使うストリーミングおよびCDCの取り込み経路の集まりです。その基盤は、`Label`で識別されるトランザクション型データロード、upsertと削除を処理するUnique Key Merge-on-Writeテーブル、そしてイベントの到着順が前後したときに採用するバージョンを決めるシーケンス列から成ります。経路によって異なるのは、コンシューマーをどこで動かすかです。
 
 **主な用語**
 
-- **`Routine Load`**：FE が管理する、継続的に動作する Kafka コンシューマーです。`CREATE ROUTINE LOAD` 文を一つ実行すると、FE が BE にタスクをスケジュールし、BE がバッチを取得して各バッチをトランザクションロードに変換します。
-- **`Stream Load 2PC`**：`PRECOMMITTED` で停止し、後続の呼び出しで `txn_operation: commit` または `txn_operation: abort` が送られるまで待つ HTTP ロードです。この二段階の分割により、外部の sink で exactly-once を実現できます。
-- **`Flink Doris Connector`**：Stream Load 2PC を操作し、コミットを Flink のチェックポイントに結び付ける外部 Flink sink です。Flink CDC と組み合わせると、データベース全体の同期と DDL の伝播ができます。
-- **`Doris Kafka Connector`**：Kafka Connect の sink プラグインです。Kafka Connect のコンバーター群を利用できるため、カスタムシリアライザーを使わずに Avro、Protobuf、Debezium のペイロードを扱えます。
-- **`function_column.sequence_col`**：Unique Key MOW テーブルで、行のどのバージョンを採用するかを決める列を指定するテーブルプロパティです。順序が入れ替わった CDC イベントに対する安全策になります。
+- **`Routine Load`**：FEが管理する、継続稼働型のKafkaコンシューマーです。`CREATE ROUTINE LOAD`文を一つ実行すると、FEがBEにタスクを割り当てます。BEはバッチを取得し、各バッチをトランザクション型データロードにします。
+- **`Stream Load 2PC`**：後続の呼び出しで`txn_operation: commit`または`txn_operation: abort`が送られるまで、`PRECOMMITTED`で停止するHTTPデータロードです。この二段階の処理によって、外部のシンクでexactly-onceを実現できます。
+- **`Flink Doris Connector`**：Stream Load 2PCを駆動し、コミットをFlinkのチェックポイントに結び付ける外部Flinkシンクです。Flink CDCと組み合わせると、データベース全体を同期し、DDLも反映します。
+- **`Doris Kafka Connector`**：Kafka Connectのシンクプラグインです。Kafka Connectのコンバーター群を利用できるため、カスタムシリアライザーなしでAvro、Protobuf、Debeziumのペイロードを扱えます。
+- **`function_column.sequence_col`**：Unique Key MOWテーブルに設定するプロパティで、行のどのバージョンを採用するかを値によって決める列を指定します。到着順が前後するCDCイベントに備える仕組みです。
 
-## Apache Doris の Kafka・CDC 統合の仕組み {#how}
+## Apache DorisのKafkaとCDCの連携の仕組み {#how}
 
-Apache Doris の Kafka・CDC 取り込みでは、データが FE に到達した後の処理は共通です。バッチを取得し、ラベル付きトランザクションにまとめ、確認後にコミットし、すべてのレプリカに公開します。
+Apache DorisのKafkaとCDCの各取り込み経路では、データがFEに到達した後の流れは共通です。バッチを取得し、ラベル付きトランザクションにまとめ、確認を受けてコミットし、すべてのレプリカに公開します。
 
-1. **コンシューマーがバッチを取得します。** Routine Load は BE にタスクをスケジュールします。BE は、`max_batch_rows`（デフォルト 20M）、`max_batch_size`（デフォルト 1 GB）、`max_batch_interval`（デフォルト 60 s）のいずれかに最初に達するまで Kafka からデータを取得します。Flink CDC は、チェックポイントの期間中開いたままの、チャンク転送方式の HTTP Stream Load を通じて行を送ります。
-2. **バッチがトランザクションになります。** BE は `Label` を指定してトランザクションを開始します。Routine Load はラベルを生成し、Flink Doris Connector はチェックポイント ID をラベルに含めます。どちらの場合も、同じラベルで再送すると重複が排除されます。
-3. **確認後にコミットします。** Routine Load はバッチの取り込みが完了するとすぐにコミットし、成功した場合にのみ Kafka オフセットを進めます。Flink CDC は `PRECOMMITTED` で停止します。次のチェックポイントバリアで `txn_operation: commit` が実行され、チェックポイントに失敗すると `abort` によって準備済みデータが破棄されます。
-4. **公開後に行が参照可能になります。** バックグラウンドのデーモンが各レプリカに `PublishVersion` を送ります。トランザクションが `VISIBLE` になると、新しい行をクエリできます。同じトランザクションに含まれるタブレットのデータが一部だけ公開されることはありません。
-5. **エラーが発生するとジョブが一時停止し、データは失われません。** Routine Load のバッチが `max_error_number`（デフォルト 0）を超えると、ジョブは `PAUSED` になり、最後のエラー URL が FE に保持されます。ソースデータを修正してから再開してください。オフセットは変更されません。
+1. **コンシューマーがバッチを取得します。** Routine LoadはBEにタスクを割り当て、`max_batch_rows`（デフォルトは20M行）、`max_batch_size`（デフォルトは1 GB）、`max_batch_interval`（デフォルトは60 s）のいずれかに達するまでKafkaから取得します。Flink CDCはチャンク形式のHTTP Stream Loadで行をストリーミングします。この接続はチェックポイントの処理中も開いたままです。
+2. **バッチがトランザクションになります。** BEは`Label`付きのトランザクションを開始します。Routine Loadはラベルを生成し、Flink Doris ConnectorはチェックポイントIDをラベルに付けます。どちらの場合も、同じラベルで再送すると重複が排除されます。
+3. **確認後にコミットします。** Routine Loadはバッチの取り込みが完了するとコミットし、成功した場合にのみKafkaのオフセットを進めます。Flink CDCは`PRECOMMITTED`で停止します。次のチェックポイントバリアで`txn_operation: commit`が実行され、チェックポイントが失敗すると`abort`によって準備済みのデータが破棄されます。
+4. **公開後に行が見えるようになります。** バックグラウンドのデーモンが各レプリカに`PublishVersion`を送ります。トランザクションが`VISIBLE`になると、新しい行をクエリできます。同じトランザクションに含まれるタブレットが部分的に見えることはありません。
+5. **エラーが起きると、データではなくジョブが一時停止します。** Routine Loadのバッチで`max_error_number`（デフォルトは0）を超えると、ジョブは`PAUSED`になり、FEには最後のエラーURLが保持されます。ソースデータを修正してから再開できます。オフセットは元の位置にとどまります。
 
 ## クイックスタート {#quick-start}
 
@@ -78,7 +77,7 @@ FROM KAFKA (
 );
 ```
 
-**期待される結果**
+**想定される結果**
 
 ```
 +--------+--------------+---------+----------------------+
@@ -88,9 +87,9 @@ FROM KAFKA (
 +--------+--------------+---------+----------------------+
 ```
 
-`SHOW ROUTINE LOAD FOR events_kafka` を実行すると、ジョブが `RUNNING` 状態であること、パーティションごとの最後に読み取ったオフセット、ロード済み行数を確認できます。`PAUSE`、`RESUME`、`STOP` は、ほかの Doris ジョブと同じように使用できます。
+`SHOW ROUTINE LOAD FOR events_kafka`を実行すると、`RUNNING`状態のジョブ、パーティションごとの最後に消費したオフセット、取り込んだ行数が表示されます。`PAUSE`、`RESUME`、`STOP`は、ほかのDorisジョブと同じように使えます。
 
-CDC の場合は、コンシューマーを Flink CDC と Flink Doris Connector に置き換えます（Flink ジョブ一つ、MySQL ソース、Doris sink、`sink.enable-2pc = true`）。スキーマとシーケンス列は Doris 側で定義します。
+CDCでは、コンシューマーをFlink CDCとFlink Doris Connectorに置き換えます（Flinkジョブ一つ、MySQLソース、Dorisシンク、`sink.enable-2pc = true`）。スキーマとシーケンス列はDoris側に定義します。
 
 ```sql
 CREATE TABLE orders (
@@ -100,38 +99,38 @@ UNIQUE KEY(order_id) DISTRIBUTED BY HASH(order_id) BUCKETS 8
 PROPERTIES ("function_column.sequence_col" = "updated");
 ```
 
-`sequence_col` の設定により、新しい CDC イベントより後に古いイベントが届いても、古い `updated` 値の更新は採用されず、新しい値の更新が採用されます。到着順序にかかわらず結果は同じです。
+新しいCDCイベントより後に遅延したイベントが届いても、`sequence_col`の設定があれば古い`updated`の値は採用されず、新しい値が採用されます。到着順にかかわらず結果は同じです。
 
-## Apache Doris の Kafka・CDC 統合を使うべき場合 {#when}
+## Apache DorisのKafkaとCDCの連携を使う場面 {#when}
 
-ストリーミングイベントや上流データベースの変更を、五分ごとのバッチ処理ではなく、exactly-once 配信と正しい順序で Doris に取り込む必要がある場合に使用します。
+ストリーミングイベントや上流データベースの変更を、五分ごとのバッチではなく、exactly-once配信と正しい順序でDorisに取り込む必要がある場合に、Apache DorisのKafkaとCDCの連携を使います。
 
-**適している場合**
+**適しているケース**
 
-- CSV または JSON を含む Kafka トピックを、追加サービスなしで Doris に取り込みたい場合。Routine Load が最も短い経路です。
-- MySQL、Postgres、Oracle の CDC データを、exactly-once 配信と DDL の伝播を使って Doris に取り込みたい場合。Flink CDC と Flink Doris Connector を使用します。
-- すでに Kafka Connect を運用しており、ペイロードが Avro、Protobuf、Debezium のいずれかである場合。Doris Kafka Connector ならフォーマットの不一致を避けられます。
-- 順序が入れ替わった書き込みを正しく処理する必要がある Unique Key テーブルで、リアルタイムダッシュボードを構築する場合。上記のいずれかの方法と `function_column.sequence_col` を組み合わせます。
+- CSVまたはJSONを含むKafkaトピックを、追加のサービスなしでDorisに取り込みたい場合。最も短い経路はRoutine Loadです。
+- MySQL、Postgres、OracleのCDCを、exactly-once配信とDDLの反映を伴ってDorisに取り込みたい場合。Flink CDCとFlink Doris Connectorを使います。
+- Kafka Connectがすでに稼働していて、ペイロードがAvro、Protobuf、Debeziumの場合。Doris Kafka Connectorなら形式の不一致を回避できます。
+- 到着順が前後する書き込みでも正しい順序で処理する必要があるUnique Keyテーブル上のリアルタイムダッシュボード。上記のいずれかの経路に`function_column.sequence_col`を組み合わせます。
 
-**適していない場合**
+**適さないケース**
 
-- Routine Load で Kafka の Avro データを取り込む場合。Routine Load が読み取れるのは CSV と JSON のみです。上流で変換するか、適切なコンバーターを指定した Doris Kafka Connector を使用してください。
-- マイクロサービスからイベントごとに `INSERT INTO ... VALUES` を実行する場合。これは Kafka や CDC の用途ではありません。BE が小さな書き込みをサーバー側でまとめる [Group Commit](./group-commit) を使用してください。
-- Kafka の保持期間が短いトピックで Routine Load を使う場合。保持期間が 24 h でジョブが二日間一時停止すると、保存されたオフセットは取得可能な最古のオフセットより前になり、Kafka は「out of range」として再開を拒否します。保持期間を延ばすか、バッファリングできるコネクターを使用してください。
-- FE だけでオフセットの遅延を監視する場合。現在、FE は遅延メトリクスを公開していません（[未解決の課題](https://github.com/apache/doris/issues/7113)）。Kafka 側のコンシューマー遅延エクスポーターを収集するか、BE 側の処理レートを監視してください。
-- **クラウド／ストレージとコンピュートが分離された構成**の Merge-on-Write Unique Key テーブルに対して Stream Load 2PC を使う場合。BE がこの組み合わせを拒否するため、その構成での Flink Connector の exactly-once 処理は、`Label` に基づく重複排除とシーケンス列に切り替わります。オンプレミスのクラスターでは、MoW に対して Stream Load 2PC の全機能を使用できます。
+- KafkaからAvroをRoutine Loadで取り込む場合。Routine Loadが読み取れるのはCSVとJSONだけです。上流で変換するか、適切なコンバーターを備えたDoris Kafka Connectorを使います。
+- マイクロサービスからイベントごとに`INSERT INTO ... VALUES`を実行する場合。KafkaやCDCの用途ではありません。BEが小さな書き込みをサーバー側でまとめられるよう、[Group Commit](./group-commit)を使います。
+- Kafkaの保持期間が短いトピックでRoutine Loadを使う場合。保持期間が24 hでジョブが二日間一時停止すると、保存済みのオフセットが取得可能な最も古いオフセットより前になり、再開時にKafkaが「out of range」で拒否します。保持期間を延ばすか、バッファリングするコネクターを使います。
+- FEだけでオフセットの遅延を監視する場合。現在、FEは遅延メトリクスを公開していません（[未解決のissue](https://github.com/apache/doris/issues/7113)）。Kafka側のコンシューマー遅延エクスポーターからメトリクスを収集するか、BE側の処理レートを監視します。
+- **クラウド環境またはストレージとコンピュートを分離した構成**で、Merge-on-WriteのUnique KeyテーブルにStream Load 2PCを使う場合。BEがこの組み合わせを拒否するため、その環境ではFlink Connectorのexactly-once経路は`Label`による重複排除とシーケンス列の組み合わせに切り替わります。オンプレミスのクラスターでは、MoWに対してStream Load 2PCの経路をすべて利用できます。
 
-## パフォーマンスと数値 {#performance}
+## 性能と数値 {#performance}
 
-「Flink による Apache Doris へのリアルタイム書き込みで高速性と exactly-once を両立する方法」（2022 年七月のリリースブログ）によると、同時実行する Stream Load が 30 件未満の場合、エンドツーエンドのレイテンシーは一秒未満でした。20 個の Flink タスクで、上流からの毎秒約 100,000 件のイベントを継続的に処理できました。また、同時実行数が多い場合の BE の CPU 使用率は、従来のロード方式より約 25% 低下しました。出典：[Apache Doris ブログ](https://doris.apache.org/blog/Flink-realtime-write/)。
+リリースブログ記事「FlinkからApache Dorisへのリアルタイム書き込みが高速性とexactly-onceを両立する仕組み」（2022年7月）によると、同時実行されるStream Loadが30件未満のとき、エンドツーエンドのレイテンシーは1秒未満でした。20個のFlinkタスクで、上流からの毎秒約100,000イベントを継続して処理しました。高い同時実行数では、従来のデータロード経路と比べてBEのCPU使用量が約25%低下しました。出典：[Apache Dorisブログ](https://doris.apache.org/blog/Flink-realtime-write/)。
 
-## 関連ドキュメント {#further-reading}
+## 関連資料 {#further-reading}
 
-- [Routine Load リファレンス](../data-operate/import/import-way/routine-load-manual)
-- [Flink Doris Connector と Flink CDC](../connection-integration/data-integration/flink-doris-connector)
-- [Avro、Protobuf、Debezium 用 Doris Kafka Connector](../connection-integration/data-integration/doris-kafka-connector)
-- [ロードトランザクション：2PC の基盤となるモデル](./load-transaction)
-- [データの更新と削除：シーケンス列と Merge-on-Write](./data-update-delete)
-- [Binlog Table Stream](./binlog-table-stream)：Doris の行変更を下流のコンシューマーに公開する、逆方向の変更フィード。
-- [Iceberg](./iceberg)：整備した CDC パイプラインの一般的な送信先。SQL による書き戻しで、ほかのエンジンの読み取り側との整合性を保てます。
-- [Unique Key](./unique-key)：CDC sink の取り込み先となるテーブルモデル。ソースの LSN またはコミット時刻を使うシーケンス列と組み合わせます。
+- [Routine Loadのリファレンス](../data-operate/import/import-way/routine-load-manual)
+- [Flink Doris ConnectorとFlink CDC](../connection-integration/data-integration/flink-doris-connector)
+- [Avro、Protobuf、Debezium向けDoris Kafka Connector](../connection-integration/data-integration/doris-kafka-connector)
+- [データロードトランザクション：2PCを支えるモデル](./load-transaction)
+- [データの更新と削除：シーケンス列とMerge-on-Write](./data-update-delete)
+- [Changelog / Table Stream](./changelog-table-stream)：逆方向に流れる変更フィードで、Dorisの行の変更を下流のコンシューマーに公開します。
+- [Iceberg](./iceberg)：整備されたCDCパイプラインの一般的な出力先です。SQLによる書き戻しによって、ほかのエンジンの読み取り側との同期を保てます。
+- [Unique Key](./unique-key)：CDCシンクの書き込み先となるテーブルモデルです。ソースのLSNまたはコミット時刻に対応するシーケンス列と組み合わせます。

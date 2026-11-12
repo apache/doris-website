@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-governance/data-lineage",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-governance/data-lineage.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-governance/data-lineage.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "fa038e09dedc923e6604aa0c07d29ce3e9c3ff3ff93c43746d4b16b762f87af9",
+    "sourceTechnicalHash": "841a618ccee88bbdeb1c5a79462e57ac2caacf67e3ee1c62bb398282803b448d",
+    "targetHash": "2efa4ab3f52f0481d556c3cf2f83fb65f6f09b337e8891997e2df79c97120440",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:12:02.095Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fa038e09dedc923e6604aa0c07d29ce3e9c3ff3ff93c43746d4b16b762f87af9",
+      "targetHash": "2efa4ab3f52f0481d556c3cf2f83fb65f6f09b337e8891997e2df79c97120440",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 180: expected [\"inlineCode\",null,null,\"eventFilter()\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 181: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"eventFilter()\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

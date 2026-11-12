@@ -238,8 +238,12 @@ export function getProfileAnalysisErrorMessage(reason: unknown): string {
     return 'Profile analysis failed. Please try again.';
 }
 
-export function useProfileAnalysis(apiBaseUrl: string) {
-    const [snapshot, dispatch] = useReducer(profileAnalysisReducer, initialProfileAnalysisSnapshot);
+export function createInitialProfileAnalysisSnapshot(language: ResponseLanguage = 'en'): ProfileAnalysisSnapshot {
+    return {...initialProfileAnalysisSnapshot, language};
+}
+
+export function useProfileAnalysis(apiBaseUrl: string, initialLanguage: ResponseLanguage = 'en') {
+    const [snapshot, dispatch] = useReducer(profileAnalysisReducer, initialLanguage, createInitialProfileAnalysisSnapshot);
     const abortControllerRef = useRef<AbortController | null>(null);
     const mountedRef = useRef(true);
 

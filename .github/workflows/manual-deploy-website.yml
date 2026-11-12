@@ -4,159 +4,287 @@ on:
     workflow_dispatch:
         inputs:
             branch:
-                description: 'Specify the branch name'
+                description: 'Protected repository branch to publish (run this workflow from master)'
                 required: true
                 default: 'master'
 
 permissions:
-    contents: write
+  contents: read
 
 concurrency:
     group: cron-deploy-website
     cancel-in-progress: false
 
 jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
-        environment: Production
+  source:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      source_sha: ${{ steps.source.outputs.source_sha }}
+      branch: ${{ steps.source.outputs.branch }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Resolve a protected branch to an immutable commit
+        id: source
         env:
-            DORIS_ENABLE_JA: 'true'
-            DORIS_ENABLE_KO: 'true'
-            DORIS_ENABLE_RU: 'true'
-        steps:
-            - name: Checkout
-              uses: actions/checkout@master
-              with:
-                  persist-credentials: false
-                  submodules: recursive
-                  ref: ${{ inputs.branch }}
-                  # Sitemap lastmod comes from each file's last commit, so a
-                  # shallow clone would date every page to the same commit.
-                  fetch-depth: 0
+          GH_TOKEN: ${{ github.token }}
+          DEPLOY_BRANCH: ${{ inputs.branch }}
+        run: python3 .github/scripts/review.py deploy-ref
 
-            - name: Add Chinese Fonts
-              run: |
-                  sudo apt-get install ttf-mscorefonts-installer
-                  sudo apt-get install fontconfig
-                  fc-list :lang=zh
-                  ls -lh /usr/share/fonts/
-                  cp -rf ./static/fonts/* /usr/share/fonts/
-                  mkfontscale
-                  mkfontdir
-                  fc-cache
-                  fc-list :lang=zh
+  build:
+    needs: source
+    runs-on: ubuntu-latest
+    # Temporary ceiling: validate build + verification + artifact transfer
+    # with 30% margin using the publishing measurement reports.
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    env:
+        DORIS_ENABLE_JA: 'true'
+        DORIS_ENABLE_KO: 'true'
+        DORIS_ENABLE_RU: 'true'
+        NODE_OPTIONS: '--max-old-space-size=6144'
+        TERSER_PARALLEL: '2'
+        RAYON_NUM_THREADS: '4'
+        DORIS_COMPILER_MODE: 'isolated'
+        DOCUSAURUS_SSR_CONCURRENCY: '8'
+        DOCUSAURUS_PERF_LOGGER: 'true'
+        DORIS_BUILD_METRICS: 'true'
+    steps:
+        - name: Checkout
+          uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+          with:
+              persist-credentials: false
+              ref: ${{ needs.source.outputs.source_sha }}
+              # Sitemap lastmod comes from each file's last commit, so a
+              # shallow clone would date every page to the same commit.
+              fetch-depth: 0
+              filter: blob:none
 
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 20
+        - name: Checkout trusted measurement code
+          uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+          with:
+              ref: ${{ github.sha }}
+              persist-credentials: false
+              path: .publish-tools
+              sparse-checkout: .github/scripts/publish_metrics.py
+              sparse-checkout-cone-mode: false
 
-            - name: Add Swap Space
-              run: |
-                  sudo fallocate -l 8G /mnt/swapfile2
-                  sudo chmod 600 /mnt/swapfile2
-                  sudo mkswap /mnt/swapfile2
-                  sudo swapon /mnt/swapfile2
-                  free -h
-                  swapon --show
+        - name: Start publishing measurements
+          id: metrics-start
+          env:
+              DEPLOY_SOURCE_SHA: ${{ needs.source.outputs.source_sha }}
+          run: python3 .publish-tools/.github/scripts/publish_metrics.py start --job build
 
-            - name: Build
-              env:
-                  GITHUB_TOKEN: ${{ github.token }}
-              run: |
-                  npm install -g yarn
-                  yarn cache clean
-                  export NODE_OPTIONS=--max-old-space-size=8192
-                  yarn
-                  node ./scripts/update_github_info.js
-                  yarn key-features:generate
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:publish
-                  touch build/.dummy
-                  cp .asf-site.yaml ./build/.asf.yaml
-                  cp versions.json ./build/
-                  ls build
-                  echo "DORIS_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+        - name: Add Chinese Fonts
+          run: |
+              sudo apt-get install ttf-mscorefonts-installer
+              sudo apt-get install fontconfig
+              fc-list :lang=zh
+              ls -lh /usr/share/fonts/
+              cp -rf ./static/fonts/* /usr/share/fonts/
+              mkfontscale
+              mkfontdir
+              fc-cache
+              fc-list :lang=zh
 
-            - name: Verify localized publishing artifacts
-              # Publishing builds every enabled locale, so every managed locale
-              # must be present and pass the strict cross-locale verification.
-              run: |
-                  for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
-                      test -s "build/${LOCALE}/index.html"
-                      node scripts/i18n/verify-static.cjs \
-                        --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
-                  done
+        - name: Use Node.js
+          id: node
+          uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
+          with:
+              node-version: 20
+              cache: yarn
 
-            - name: Check file sizes for asf-site
-              # GitHub rejects a push holding any file over 100 MiB. Checking
-              # before the OSS upload stops such a build before anything is
-              # published.
-              run: |
-                  if find build -type f -size +100M -exec ls -l {} + | grep .; then
-                      echo "::error::The files above exceed GitHub's 100 MiB file limit; the asf-site push would be rejected."
-                      exit 1
-                  fi
+        - name: Add Swap Space
+          run: |
+              sudo fallocate -l 8G /mnt/swapfile2
+              sudo chmod 600 /mnt/swapfile2
+              sudo mkswap /mnt/swapfile2
+              sudo swapon /mnt/swapfile2
+              free -h
+              swapon --show
 
-            - name: Upload files to OSS
-              id: oss-upload
-              # Same retry as cron-deploy-website.yml: the action has no
-              # per-request retry, one timed-out PUT fails the step, and the
-              # .actioninfo manifest it writes before exiting lets a second run
-              # re-send only what failed.
-              continue-on-error: true
-              uses: ./.github/actions/aliyun-oss-website-action
-              with:
-                  accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-                  accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-                  bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-                  # Transfer-acceleration endpoint of the website bucket (enabled
-                  # on the bucket on 2026-09-21): the runner enters Alibaba's
-                  # backbone at the nearest PoP instead of crossing the public
-                  # internet to the bucket's region. Uploads only - the CDN keeps
-                  # its regional origin for downloads.
-                  endpoint: oss-accelerate.aliyuncs.com
-                  folder: build
-                  onlyUpload: true
-                  otherCacheControl: 0
-                  skipSetting: true
+        - name: Build
+          env:
+              GITHUB_TOKEN: ${{ github.token }}
+          run: |
+              /usr/bin/time -v -o .i18n-build/publish-metrics/build-time.txt bash -e -o pipefail <<'BUILD'
+              npm install -g yarn@1.22.22
+              yarn --frozen-lockfile
+              node ./scripts/update_github_info.js
+              PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:publish
+              touch build/.dummy
+              cp .asf-site.yaml ./build/.asf.yaml
+              cp versions.json ./build/
+              ls build
+              BUILD
 
-            - name: Upload files to OSS (retry)
-              if: steps.oss-upload.outcome == 'failure'
-              uses: ./.github/actions/aliyun-oss-website-action
-              with:
-                  accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-                  accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-                  bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-                  endpoint: oss-accelerate.aliyuncs.com
-                  folder: build
-                  onlyUpload: true
-                  otherCacheControl: 0
-                  skipSetting: true
+        - name: Verify localized publishing artifacts
+          # Publishing builds every enabled locale, so every managed locale
+          # must be present and pass the strict cross-locale verification.
+          run: |
+              /usr/bin/time -v -o .i18n-build/publish-metrics/verify-time.txt bash -e -o pipefail <<'VERIFY'
+              node scripts/i18n/manual-report.cjs
+              node scripts/i18n/manual-report.cjs --coverage
+              for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
+                  test -s "build/${LOCALE}/index.html"
+              done
+              node scripts/i18n/verify-static.cjs --site build --all-managed
+              VERIFY
 
-            - name: Deploy Website
-              if: ${{ github.event.inputs.branch == 'master' }}
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  github_token: ${{ github.token }}
-                  publish_branch: asf-site
-                  force_orphan: true
-                  publish_dir: ./build
-                  destination_dir: ./
-                  user_name: 'github-actions[bot]'
-                  user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+        - name: Check file sizes for asf-site
+          # GitHub rejects a push holding any file over 100 MiB. Checking
+          # before the OSS upload stops such a build before anything is
+          # published.
+          run: |
+              if find build -type f -size +100M -exec ls -l {} + | grep .; then
+                  echo "::error::The files above exceed GitHub's 100 MiB file limit; the asf-site push would be rejected."
+                  exit 1
+              fi
+        - name: Upload the site artifact for the isolated deployment job
+          id: site-artifact
+          uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+          with:
+            name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
+            path: build
+            include-hidden-files: true
+            compression-level: 1
+            if-no-files-found: error
+            retention-days: 1
 
-            - name: Deploy Branch
-              if: ${{ github.event.inputs.branch != 'master' }}
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  github_token: ${{ github.token }}
-                  publish_branch: asf-site
-                  # Preserve the live root site while replacing this preview
-                  # subdirectory. Orphaning would discard the other paths.
-                  force_orphan: false
-                  publish_dir: ./build
-                  destination_dir: ${{ github.event.inputs.branch }}
-                  user_name: 'github-actions[bot]'
-                  user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+        - name: Report publishing measurements
+          if: always() && steps.metrics-start.outcome == 'success'
+          env:
+              GH_TOKEN: ${{ github.token }}
+              SITE_ARTIFACT_ID: ${{ steps.site-artifact.outputs.artifact-id }}
+              SITE_ARTIFACT_DIGEST: ${{ steps.site-artifact.outputs.artifact-digest }}
+              DEPENDENCY_CACHE_HIT: ${{ steps.node.outputs.cache-hit }}
+          run: python3 .publish-tools/.github/scripts/publish_metrics.py finish --budget 180
+
+        - name: Upload publishing measurements
+          if: always() && steps.metrics-start.outcome == 'success'
+          uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+          with:
+              name: publish-build-measurements-${{ github.run_id }}-${{ github.run_attempt }}
+              include-hidden-files: true
+              path: |
+                  .i18n-build/publish-metrics/
+                  .i18n-build/build-result.json
+                  .i18n-build/publish-result.json
+                  .i18n-build/manual-drift.json
+                  .i18n-build/coverage.json
+                  .i18n-build/content-manifests/*.json
+                  .i18n-build/compiler-metrics/*.json
+              if-no-files-found: error
+              retention-days: 14
+
+  deploy:
+    needs: [source, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    environment: Production
+    permissions:
+      contents: write
+      actions: read
+    env:
+      DORIS_COMMIT: ${{ needs.source.outputs.source_sha }}
+    steps:
+      - name: Checkout trusted deployment code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          submodules: recursive
+      - name: Start publishing measurements
+        id: metrics-start
+        env:
+          DEPLOY_SOURCE_SHA: ${{ needs.source.outputs.source_sha }}
+        run: python3 .github/scripts/publish_metrics.py start --job deploy
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
+          path: build
+      - name: Upload files to OSS
+        id: oss-upload
+        # Same retry as cron-deploy-website.yml: the action has no
+        # per-request retry, one timed-out PUT fails the step, and the
+        # .actioninfo manifest it writes before exiting lets a second run
+        # re-send only what failed.
+        continue-on-error: true
+        uses: ./.github/actions/aliyun-oss-website-action
+        with:
+            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+            # Transfer-acceleration endpoint of the website bucket (enabled
+            # on the bucket on 2026-09-21): the runner enters Alibaba's
+            # backbone at the nearest PoP instead of crossing the public
+            # internet to the bucket's region. Uploads only - the CDN keeps
+            # its regional origin for downloads.
+            endpoint: oss-accelerate.aliyuncs.com
+            folder: build
+            onlyUpload: true
+            otherCacheControl: 0
+            skipSetting: true
+
+      - name: Upload files to OSS (retry)
+        if: steps.oss-upload.outcome == 'failure'
+        uses: ./.github/actions/aliyun-oss-website-action
+        with:
+            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+            endpoint: oss-accelerate.aliyuncs.com
+            folder: build
+            onlyUpload: true
+            otherCacheControl: 0
+            skipSetting: true
+
+      - name: Deploy Website
+        if: ${{ needs.source.outputs.branch == 'master' }}
+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+        with:
+            github_token: ${{ github.token }}
+            publish_branch: asf-site
+            force_orphan: true
+            publish_dir: ./build
+            destination_dir: ./
+            user_name: 'github-actions[bot]'
+            user_email: 'github-actions[bot]@users.noreply.github.com'
+            commit_message: 'Automated deployment with doris branch ${{ needs.source.outputs.branch }}@${{ env.DORIS_COMMIT }}'
+
+      - name: Deploy Branch
+        if: ${{ needs.source.outputs.branch != 'master' }}
+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+        with:
+            github_token: ${{ github.token }}
+            publish_branch: asf-site
+            # Preserve the live root site while replacing this preview
+            # subdirectory. Orphaning would discard the other paths.
+            force_orphan: false
+            publish_dir: ./build
+            destination_dir: ${{ needs.source.outputs.branch }}
+            user_name: 'github-actions[bot]'
+            user_email: 'github-actions[bot]@users.noreply.github.com'
+            commit_message: 'Automated deployment with doris branch ${{ needs.source.outputs.branch }}@${{ env.DORIS_COMMIT }}'
+
+      - name: Report publishing measurements
+        if: always() && steps.metrics-start.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/publish_metrics.py finish --budget 180
+
+      - name: Upload publishing measurements
+        if: always() && steps.metrics-start.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: publish-deploy-measurements-${{ github.run_id }}-${{ github.run_attempt }}
+          include-hidden-files: true
+          path: .i18n-build/publish-metrics/
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d57a35ba0707452c6ee28e951fcaba24bf269ab6c897a39130f559f048ff6dd4",
+    "sourceTechnicalHash": "080ab3226da456dac0b345c09fa725a325d06fd925828f5e86e37be4c9382cbd",
+    "targetHash": "bb82914e33378018bd90e4c8477d4e6e63893b786268c91e9f5e9755857b5fb3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:03:59.279Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d57a35ba0707452c6ee28e951fcaba24bf269ab6c897a39130f559f048ff6dd4",
+      "targetHash": "bb82914e33378018bd90e4c8477d4e6e63893b786268c91e9f5e9755857b5fb3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

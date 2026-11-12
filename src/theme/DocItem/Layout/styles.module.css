@@ -29,10 +29,10 @@
   border: 1px solid var(--ifm-color-primary);
 }
 
-/* Freeze the search/locale/menu toolbar + breadcrumb at the top on mobile
+/* Freeze the search/menu toolbar + breadcrumb at the top on mobile
    so they remain reachable while scrolling. Sits just below the sticky
-   green NavbarNext (64px tall; 56px on phones at ≤768px) and, on Dev/4.x
-   docs, the two-row domain strip. z-index stays under the navbar (300) but
+   NavbarNext (64px tall; 56px on phones at ≤768px) and, on Dev/4.x and
+   community docs, the two-row domain strip. z-index stays under the navbar (300) but
    above content. */
 @media (max-width: 996px) {
   .mobileStickyHeader {

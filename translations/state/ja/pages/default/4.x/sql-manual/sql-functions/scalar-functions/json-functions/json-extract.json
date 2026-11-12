@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract.md",
-    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
-    "sourceHash": "7af9efd381f557a7422a89c5e935abc9ee197822b04a45d2db43fc21e68dea57",
-    "sourceTechnicalHash": "a3278a5ee908e6a64557a48d91b012b7ca4c3c7bda208c28f1afadb763dead59",
-    "targetHash": "8b117ddfec5f9a456296293aa27e2b572285035653308008825ecc01616a94fb",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "47eaf3b862a37987d386d092a9cb4695c6c5d7598723265b427351e38085211f",
+    "sourceTechnicalHash": "823c7f0c7e2d413e8950d5a5f0a3bcb4fe561ce25a733783e469a0ca2ef88b7d",
+    "targetHash": "0eddba863568f5b34b8467724d8e0e1adf86ebc599fab624c0b8457c502e67df",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-13T12:59:14.854Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T06:04:01.866Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "47eaf3b862a37987d386d092a9cb4695c6c5d7598723265b427351e38085211f",
+      "targetHash": "0eddba863568f5b34b8467724d8e0e1adf86ebc599fab624c0b8457c502e67df",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"4.0\",\"4.0\",\"4.0\"]; received [\"1\",\"1\",\"2\",\"4.0\",\"4.0\",\"4.0\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.0\",\"4.0\",\"4.0\"]; received [\"1\",\"1\",\"2\",\"4.0\",\"4.0\",\"4.0\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"<path>\"]; received [\"inlineCode\",null,null,\"$\"]\nprotected node 37: expected [\"inlineCode\",null,null,\"*\"]; received [\"inlineCode\",null,null,\"$**\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.0\",\"4.0\",\"4.0\"]; received [\"1\",\"1\",\"2\",\"4.0\",\"4.0\",\"4.0\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.0\",\"4.0\",\"4.0\"]; received [\"1\",\"1\",\"2\",\"4.0\",\"4.0\",\"4.0\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract.md",
+        "blob": "bef1de4a96ee73a1dc97451eb4751acfb43d48f1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract.md",
+        "blob": "a68dd979f805a9ef5f308d20973445b9914f6114"
+      }
+    }
   }
 }

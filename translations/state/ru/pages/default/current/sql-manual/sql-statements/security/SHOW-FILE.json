@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/SHOW-FILE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/SHOW-FILE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/SHOW-FILE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5d208abc06e59cc4c0c64867d63557f1355434333711dab868b7660485f0e261",
+    "sourceTechnicalHash": "fb74e68b47a779d9f8bf3623ab93106376aeb63149df3aafa4f69835f2401355",
+    "targetHash": "da88e4e94a144b8dbfa01cc27f986c4b2630fb02a0da1c3e0d83f214a4af5381",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:34:59.291Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5d208abc06e59cc4c0c64867d63557f1355434333711dab868b7660485f0e261",
+      "targetHash": "da88e4e94a144b8dbfa01cc27f986c4b2630fb02a0da1c3e0d83f214a4af5381",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

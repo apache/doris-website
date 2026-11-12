@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/money-format",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/money-format.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/money-format.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0d98b41d61981874dc4ab8ea5dccf60d46f4a340f29f1d4f08713d4055102ebf",
+    "sourceTechnicalHash": "59cfa15cf92be101fcbe5995a03b17a6cf90a887366e35e2405540768fb0f48c",
+    "targetHash": "7901f1221e87e38f902da66954830cf92a810128177cdffd9f71e7d411282cf2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:43:33.034Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0d98b41d61981874dc4ab8ea5dccf60d46f4a340f29f1d4f08713d4055102ebf",
+      "targetHash": "7901f1221e87e38f902da66954830cf92a810128177cdffd9f71e7d411282cf2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/money-format",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/money-format.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/money-format.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "0d98b41d61981874dc4ab8ea5dccf60d46f4a340f29f1d4f08713d4055102ebf",
+        "targetHash": "7901f1221e87e38f902da66954830cf92a810128177cdffd9f71e7d411282cf2",
+        "commit": "2ad35c2403c4c70e5b39ee7a7060a6a7606d77c8",
+        "pr": "https://github.com/apache/doris-website/pull/4451"
+      }
+    }
+  }
+}

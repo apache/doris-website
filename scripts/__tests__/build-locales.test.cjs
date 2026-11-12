@@ -139,3 +139,24 @@ test('failed optimized resource verification preserves the previous complete art
     await assert.rejects(buildLocales({...data,run}),/Missing compiled asset/);
     assert.equal(fs.readFileSync(path.join(data.outDir,'previous.txt'),'utf8'),'previous complete site');
 });
+
+test('malformed client JavaScript preserves the previous complete publish artifact', async t => {
+    const previous = process.env.DORIS_OPTIMIZE_PUBLISH;
+    process.env.DORIS_OPTIMIZE_PUBLISH = 'true';
+    t.after(() => {
+        if (previous === undefined) delete process.env.DORIS_OPTIMIZE_PUBLISH;
+        else process.env.DORIS_OPTIMIZE_PUBLISH = previous;
+    });
+    const data = fixture(t,['en']);
+    const run = async args => {
+        const result = await data.run(args);
+        if (args[0] === 'build') {
+            const file = path.join(args[2],'assets/js/runtime.js');
+            fs.mkdirSync(path.dirname(file),{recursive:true});
+            fs.writeFileSync(file,'self.registry={929b5da3:42};');
+        }
+        return result;
+    };
+    await assert.rejects(buildLocales({...data,run}),/Invalid compiled JavaScript/);
+    assert.equal(fs.readFileSync(path.join(data.outDir,'previous.txt'),'utf8'),'previous complete site');
+});

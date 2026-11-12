@@ -3,18 +3,17 @@ import siteConfig from '@generated/docusaurus.config';
 import { translate } from '@docusaurus/Translate';
 import { applyTrailingSlash } from '@docusaurus/utils-common';
 import { normalizePathname } from './locale';
+import {resolveLocalizedRoute, rootBaseUrl} from './localizedRoute';
 
 // The build writes locale facts into the site configuration, so this module
 // reads configuration instead of naming a language. See config/i18n.js.
 const fields = (siteConfig.customFields ?? {}) as {
     translatedLocales?: string[];
     defaultLocalePageLocales?: string[];
-    defaultLocaleBlogLocales?: string[];
     translatedPagePaths?: Record<string, string[]>;
 };
 const translatedLocales = fields.translatedLocales ?? [];
 const defaultLocalePageLocales = fields.defaultLocalePageLocales ?? [];
-const defaultLocaleBlogLocales = fields.defaultLocaleBlogLocales ?? [];
 export const translatedPagePaths = fields.translatedPagePaths ?? {};
 
 /** Ordinary pages with an explicit translation, even in a docs-first locale. */
@@ -39,24 +38,6 @@ export function usesDefaultLocalePages(): boolean {
 }
 
 /**
- * A locale whose blog has no translated posts, so every blog route under it
- * repeats the default locale's posts at its own URL. Those routes stay
- * reachable but must not be indexed as a second copy of the articles.
- */
-export function usesDefaultLocaleBlog(): boolean {
-    return defaultLocaleBlogLocales.includes(i18n.currentLocale);
-}
-
-/** Whether a route is one of those blog routes. */
-export function isDefaultLocaleBlogRoute(pathname: string): boolean {
-    if (!usesDefaultLocaleBlog()) return false;
-    // Blog routes live under the default locale's /blog, so its own prefix is
-    // what a localized route has to drop before the section can be told apart.
-    const path = normalizePathname(pathname, [i18n.currentLocale]).replace(/\/+$/, '');
-    return path === '/blog' || path.startsWith('/blog/');
-}
-
-/**
  * The default locale's path for a page the current locale served as a fallback,
  * so the page can point search engines at the copy worth ranking.
  */
@@ -67,29 +48,24 @@ export function defaultLocalePath(permalink: string): string {
 }
 
 export function localizedHomeLink(href: string): string {
-    if (!usesDefaultLocalePages() || !href.startsWith('/')) return href;
-    if (hasTranslatedPage(href.split(/[?#]/)[0])) return href;
-    const prefix = siteConfig.baseUrl.replace(/\/$/, '');
-    if (prefix && href.startsWith(`${prefix}/`)) return href;
-    // The course hub is an ordinary page; lessons use the docs plugin.
-    if (/^\/course\/?(?:[?#]|$)/.test(href)) return `pathname://${href}`;
-    if (/^\/(docs|community|releases|course)(\/|$)/.test(href)) return href;
-    return `pathname://${href}`;
+    return resolveLocalizedRoute({href, locale: i18n.currentLocale, currentUrl: siteConfig.baseUrl,
+        options: {url: siteConfig.url, baseUrl: rootBaseUrl(siteConfig.baseUrl, i18n.currentLocale, i18n.defaultLocale),
+            defaultLocale: i18n.defaultLocale, locales: i18n.locales, trailingSlash: siteConfig.trailingSlash}}).href;
 }
 
 // Plain HTML anchors do not receive Docusaurus Link's locale prefix.
 export function localizedDocLink(href: string): string {
-    return usesDefaultLocalePages()
-        ? `${siteConfig.baseUrl.replace(/\/$/, '')}${href}`
-        : href;
+    return localizedHomeLink(href);
 }
 
 export function localizedFrameSource(src: string): string {
-    return usesDefaultLocalePages() ? `${src}?locale=${i18n.currentLocale}` : src;
+    const url = new URL(src, siteConfig.url);
+    if (url.origin !== new URL(siteConfig.url).origin) return src;
+    url.searchParams.set('locale', i18n.currentLocale);
+    return url.pathname + url.search + url.hash;
 }
 
 export function localizedAiLabels(): Record<string, string> {
-    if (!usesDefaultLocalePages()) return {};
     return {
         'data-kapa-loading-label': translate({ id: 'homepage.ai.loading', message: 'Loading AI…' }),
         'data-kapa-slow-label': translate({ id: 'homepage.ai.slow', message: 'Still loading…' }),

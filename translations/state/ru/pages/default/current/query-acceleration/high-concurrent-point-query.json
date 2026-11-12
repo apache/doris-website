@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/high-concurrent-point-query",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/high-concurrent-point-query.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/high-concurrent-point-query.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6c5f067467b59a9c16f8555eeee08e509f3a36facfcce0177eea6583978e069e",
+    "sourceTechnicalHash": "fbddb12eb1118c6d3a266a9d4f83fd9597a41c56c47f98be8649f415e05958a4",
+    "targetHash": "e75363829108ff107c296905418c93e9b1e961c31ca959861423ef2b4b9d955c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:26:53.909Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6c5f067467b59a9c16f8555eeee08e509f3a36facfcce0177eea6583978e069e",
+      "targetHash": "e75363829108ff107c296905418c93e9b1e961c31ca959861423ef2b4b9d955c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 39: expected [\"html\",null,null,\"<!-- Knowledge type: Performance tuning -->\"]; received [\"inlineCode\",null,null,\"EXPLAIN\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"EXPLAIN\"]; received [\"inlineCode\",null,null,\"SHORT-CIRCUIT\"]\nprotected node 41: expected [\"inlineCode\",null,null,\"SHORT-CIRCUIT\"]; received [\"code\",\"sql\",null,\"mysql> explain select * from tbl_point_query where k1 = -2147481418 ;\\n+-----------------------------------------------------------------------------------------------+\\n| Explain String(Old Planner)                                                                   |\\n+-----------------------------------------------------------------------------------------------+\\n| PLAN FRAGMENT 0                                                                               |\\n|   OUTPUT EXPRS:                                                                               |\\n|     `test`.`tbl_point_query`.`k1`                                                             |\\n|     `test`.`tbl_point_query`.`v1`                                                             |\\n|     `test`.`tbl_point_query`.`v2`                                                             |\\n|     `test`.`tbl_point_query`.`v3`                                                             |\\n|     `test`.`tbl_point_query`.`v4`                                                             |\\n|     `test`.`tbl_point_query`.`v5`                                                             |\\n|     `test`.`tbl_point_query`.`v6`                                                             |\\n|     `test`.`tbl_point_query`.`v7`                                                             |\\n|   PARTITION: UNPARTITIONED                                                                    |\\n|                      "
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

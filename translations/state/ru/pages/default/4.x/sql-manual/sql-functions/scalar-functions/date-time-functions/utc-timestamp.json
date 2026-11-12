@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/utc-timestamp",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/utc-timestamp.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/utc-timestamp.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d13b7868743ebda2ad057066157e346ce50d55287c882793646b1b666423b9cf",
+    "sourceTechnicalHash": "1e07d48651d1492e45540af41cbcfa5a84ae8110b85cd90bfcca97fd22cb6529",
+    "targetHash": "5133610e722199f6bbf89420f22a39ac8cc359a7c1b78d62e8086f89b57e8e07",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:35:59.762Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d13b7868743ebda2ad057066157e346ce50d55287c882793646b1b666423b9cf",
+      "targetHash": "5133610e722199f6bbf89420f22a39ac8cc359a7c1b78d62e8086f89b57e8e07",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

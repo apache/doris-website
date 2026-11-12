@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-mask",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-mask.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-mask.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6783271d3d1a343809fd15f9cc54209e4946d8dd2b8b8563237a8ba722d0a4e6",
+    "sourceTechnicalHash": "42ffdb6ef074cb16ec61e0f18a535b0b945ef4bad1a8297ba88fd4ad6909f671",
+    "targetHash": "08efed70edf9a322580f378798c27eb6e8f482fc421ca498fbcf0653db08b72a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:28:16.105Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6783271d3d1a343809fd15f9cc54209e4946d8dd2b8b8563237a8ba722d0a4e6",
+      "targetHash": "08efed70edf9a322580f378798c27eb6e8f482fc421ca498fbcf0653db08b72a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

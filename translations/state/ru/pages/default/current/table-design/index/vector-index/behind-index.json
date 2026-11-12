@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/behind-index",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/behind-index.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/vector-index/behind-index.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "658711171d5b3eb3143ff02d3b1d77a44cbffb9be882a5f93f7f4692b301e02f",
+    "sourceTechnicalHash": "fdcc5c4b555c4fb31b67427d343aa974cfc901b4d2742b3d9fd15b6981b5cf2e",
+    "targetHash": "1a700432699918d562034ad913ab7f8c91cf0031e072e222173634d07e05d711",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:00:23.801Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "658711171d5b3eb3143ff02d3b1d77a44cbffb9be882a5f93f7f4692b301e02f",
+      "targetHash": "1a700432699918d562034ad913ab7f8c91cf0031e072e222173634d07e05d711",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

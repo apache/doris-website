@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "38c8570d44569f85c317c4c39e64319e83a9c55c4f2348d94a2ee9771e9adf4d",
-    "sourceTechnicalHash": "d5acc16549ae2f33f9be9e50d154761d3aa9bee8a81f85ea0872931ec533b9ab",
-    "targetHash": "584fbc7f96d269cc78f370a1ddde69ebd21e6521024c6d41fec10ba8e84f68f2",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "b566ac4289d7066ec8af5dececd0e36ba5e4789132adf4878d36f80b16a95ebd",
+    "sourceTechnicalHash": "d38dcf46602c576ce1c0e84f7a196a572862037085b2021f0a3afe12d7071270",
+    "targetHash": "75fb8a187365409497272503e86a95bb01c5a1e5c1ec63adc90964559ab6f70e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-05T06:40:14.939Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "b566ac4289d7066ec8af5dececd0e36ba5e4789132adf4878d36f80b16a95ebd",
+      "targetHash": "75fb8a187365409497272503e86a95bb01c5a1e5c1ec63adc90964559ab6f70e",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]; received [\"inlineCode\",null,null,\"TO DATABASE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"TO DATABASE\"]; received [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"4\",\"4.1.5\",\"40960\",\"5\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"4\",\"4.1.5\",\"40960\",\"5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operating procedure -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Continuously sync an entire PostgreSQL database to Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: PostgreSQL データベース全体を Doris に継続的に同期 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]; received [\"inlineCode\",null,null,\"TO DATABASE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"TO DATABASE\"]; received [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]; received [\"inlineCode\",null,null,\"TO DATABASE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"TO DATABASE\"]; received [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+        "blob": "6042a1adb22e0a63635e39216971906b7485ff20"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+        "blob": "d14bd06e026832c6a1e6c2a5b1530cc3a97d9123"
+      }
+    }
   }
 }

@@ -8,13 +8,29 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/database/ALTER-DATABASE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/database/ALTER-DATABASE.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "c18426fc5374af5b67eedce528caddcb35cc2f3264ed1f944b4969bfca28764c",
-    "sourceTechnicalHash": "759d18bab855e8ffdd75e39bb3b7d29344333d3b3f2726df97b1f8426b29fc58",
-    "targetHash": "01dbc7aa7ed0130a6e775ef82648d38e822c9c9bfc8c53e98a98f8d9b182eca7",
+    "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+    "sourceHash": "490b086658a5794e05609dc9f83c841856cc7f77c5975c63bb24401cc3dae42e",
+    "sourceTechnicalHash": "291b7710b79594bea608ed879208e0eb548d276fb5053e2ce10a85da475781f7",
+    "targetHash": "12c1b67bf9f96cae5f816f58268b23d20ef9df44637da2935113cf3f45d2d09b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:26:58.629Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T18:10:13.737Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "490b086658a5794e05609dc9f83c841856cc7f77c5975c63bb24401cc3dae42e",
+      "targetHash": "12c1b67bf9f96cae5f816f58268b23d20ef9df44637da2935113cf3f45d2d09b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }

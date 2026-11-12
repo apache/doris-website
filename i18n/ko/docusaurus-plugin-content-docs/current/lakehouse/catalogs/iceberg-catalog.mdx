@@ -222,6 +222,8 @@ ORDER BY engine_name, entry_name;
 | Iceberg Rest Catalog   | ✅          | ✅         | 서비스 제공자에 따라 다름 | 서비스 제공자에 따라 다름 | 서비스 제공자에 따라 다름      |
 | FileSystem             | ✅          | ✅         | ✅                            | ✅                            | ✅                                   |
 
+`labels` 시스템 테이블은 5.0.0 버전부터 지원되며 Iceberg REST Catalog에서만 사용할 수 있습니다. 자세한 내용은 아래 [labels](#labels)를 참조하세요.
+
 ## 지원되는 스토리지 시스템 {#supported-storage-systems}
 
 * [HDFS](../storages/hdfs.md)
@@ -1725,6 +1727,8 @@ SELECT * FROM iceberg_table$history;
 > `all_manifests` 시스템 테이블은 4.0.4 버전부터 지원됩니다.
 >
 > `position_deletes` 시스템 테이블은 4.1.4 버전부터 지원됩니다.
+>
+> `labels` 시스템 테이블은 5.0.0 버전부터 지원되며 Iceberg REST Catalog에서만 사용할 수 있습니다.
 
 :::caution 동작 변경(4.1.4)
 
@@ -1818,6 +1822,86 @@ SELECT * FROM iceberg_table$history;
 | 2025-06-12 22:29:39.922000 | 4890031351138056789 | 1851184769713369003 |                   1 |
 +----------------------------+---------------------+---------------------+---------------------+
 ```
+
+### labels
+
+> 이 기능은 5.0.0 버전부터 지원됩니다.
+
+REST Catalog가 Iceberg 테이블에 제공하는 테이블 수준(`object`) 및 필드 수준(`field`) 라벨을 표시합니다. 라벨의 키-값 쌍마다 한 행이 표시됩니다. 테이블 소유권이나 필드의 데이터 분류 등의 정보를 확인할 때 사용합니다.
+
+이 시스템 테이블은 `iceberg.catalog.type`이 `rest`일 때만 사용할 수 있습니다. Doris에서 추가로 설정할 항목은 없습니다. REST Catalog 서비스는 테이블을 로드할 때 라벨을 반환하며, 라벨의 생성과 수정은 서비스 제공자를 통해 수행합니다. 이 라벨은 테이블이나 필드를 설명하며 [refs](#refs)에 표시되는 스냅샷 Tag와는 별개입니다.
+
+**필드:**
+
+| 필드 | 유형 | 설명 |
+| --- | --- | --- |
+| `scope` | `TEXT` | 라벨의 적용 범위입니다. 테이블 수준 라벨은 `object`, 필드 수준 라벨은 `field`입니다. |
+| `field_id` | `INT` | Iceberg 필드 ID입니다. 테이블 수준 라벨에서는 `NULL`입니다. |
+| `field_name` | `TEXT` | 현재 테이블 스키마를 기준으로 확인한 필드 이름입니다. 중첩 필드는 `address.city`처럼 전체 경로를 사용합니다. 테이블 수준 라벨이거나 필드 ID가 현재 스키마에 없으면 `NULL`입니다. |
+| `key` | `TEXT` | 라벨 키입니다. `key`는 Doris의 예약어이므로 SQL에서 이 열을 명시적으로 참조할 때는 백틱으로 감싸야 합니다. |
+| `value` | `TEXT` | 라벨 값입니다. |
+
+**쿼리 예시:**
+
+다음 예시는 `iceberg_ctl` Catalog가 [Iceberg REST Catalog](#iceberg-rest-catalog)에 설명된 대로 설정되어 있고, `iceberg_db.iceberg_tbl` 테이블이 존재하며, 현재 사용자에게 이 테이블을 쿼리할 권한이 있다고 가정합니다. REST Catalog 서비스에는 다음 라벨이 설정되어 있으며, 서비스가 이를 반환합니다:
+
+- 테이블 수준 라벨: `owner=team-a`.
+- `email` 필드(필드 ID `2`)의 라벨: `classification=pii`.
+- 중첩 필드 `address.city`(필드 ID `5`)의 라벨: `classification=location`.
+
+모든 라벨을 적용 범위, 필드 ID, 라벨 키 순으로 정렬하여 쿼리합니다:
+
+```sql
+SELECT * FROM iceberg_ctl.iceberg_db.iceberg_tbl$labels
+ORDER BY scope, field_id, `key`;
+```
+
+결과:
+
+```text
++--------+----------+--------------+----------------+----------+
+| scope  | field_id | field_name   | key            | value    |
++--------+----------+--------------+----------------+----------+
+| field  |        2 | email        | classification | pii      |
+| field  |        5 | address.city | classification | location |
+| object |     NULL | NULL         | owner          | team-a   |
++--------+----------+--------------+----------------+----------+
+```
+
+`pii`로 분류된 필드를 찾습니다:
+
+```sql
+SELECT field_name, `key`, value
+FROM iceberg_ctl.iceberg_db.iceberg_tbl$labels
+WHERE scope = 'field' AND `key` = 'classification' AND value = 'pii';
+```
+
+결과:
+
+```text
++------------+----------------+-------+
+| field_name | key            | value |
++------------+----------------+-------+
+| email      | classification | pii   |
++------------+----------------+-------+
+```
+
+**캐싱 및 새로고침:**
+
+라벨은 테이블 메타데이터와 함께 캐시되며 `meta.cache.iceberg.table.ttl-second` 설정을 따릅니다. 서비스에서 라벨을 변경한 후 업데이트된 라벨을 가져오려면 `$labels`를 쿼리하기 전에 원본 테이블을 새로고침하세요:
+
+```sql
+REFRESH TABLE iceberg_ctl.iceberg_db.iceberg_tbl;
+```
+
+새로고침 후 다음 `$labels` 쿼리는 테이블을 다시 로드하고 서비스가 반환한 라벨을 읽습니다. `meta.cache.iceberg.table.ttl-second`를 `0`으로 설정하면 테이블 메타데이터 캐시가 비활성화되어 쿼리마다 라벨을 다시 로드합니다. 캐시 설정에 대한 자세한 내용은 [메타데이터 캐시](#meta-cache)를 참조하세요.
+
+**참고:**
+
+- REST Catalog 서비스가 라벨을 반환하지 않으면 쿼리 결과는 비어 있습니다. 스냅샷이 없는 테이블도 서비스가 라벨을 제공하면 라벨을 반환할 수 있습니다. `COUNT(*)`는 원본 테이블의 데이터 행이 아닌 라벨 키-값 쌍의 수를 셉니다.
+- 라벨은 스냅샷별로 버전이 관리되지 않습니다. `$labels`에 `FOR VERSION AS OF`를 사용해도 과거 라벨을 가져올 수 없습니다. 쿼리는 여전히 현재 로드된 테이블의 라벨을 반환하며, 필드 이름은 현재 스키마를 기준으로 확인합니다.
+- 필드 라벨은 필드 ID와 연결됩니다. 필드 이름이 변경되면 `field_name`에 새 이름이 표시됩니다. 필드가 삭제된 후에도 서비스가 해당 라벨을 반환한다면 `field_id`는 유지되고 `field_name`은 `NULL`이 됩니다.
+- REST Catalog가 아닌 Catalog는 `$labels`를 지원하지 않으며, 이를 쿼리하면 `Unknown sys table` 오류가 반환됩니다. 서버 측 스캔 계획이 필요한 REST Catalog도 이 시스템 테이블을 지원하지 않습니다.
 
 ### manifests {#manifests}
 

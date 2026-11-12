@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/fe-certificate",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/fe-certificate.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/fe-certificate.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d5bf68e5f09c16df7c00dc8ec94e31fdfc42726f32249bca2ad61e6f0bcfc41d",
+    "sourceTechnicalHash": "3674bfde8eef1b0789af1027e6d74c35488ecaaaa8c20b161844893b0c454fa2",
+    "targetHash": "37c79e1871d3cb32e46b530e0af75a564c8d6452d3992184bf9c99c6afffaaa6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:51:37.017Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d5bf68e5f09c16df7c00dc8ec94e31fdfc42726f32249bca2ad61e6f0bcfc41d",
+      "targetHash": "37c79e1871d3cb32e46b530e0af75a564c8d6452d3992184bf9c99c6afffaaa6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/auth/fe-certificate",
+        "sourcePath": "docs/admin-manual/auth/fe-certificate.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/fe-certificate.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "d5bf68e5f09c16df7c00dc8ec94e31fdfc42726f32249bca2ad61e6f0bcfc41d",
+        "targetHash": "37c79e1871d3cb32e46b530e0af75a564c8d6452d3992184bf9c99c6afffaaa6",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

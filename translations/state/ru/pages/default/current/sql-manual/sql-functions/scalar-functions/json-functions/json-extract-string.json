@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3ceb3def93fd0547982bbb1e4be0744756f2bd1346ad77ca73c625024b6539a2",
+    "sourceTechnicalHash": "918529e966a5eb0ec5bdcb6f2bbda9e27fe87ebd026d31dbd077e8413e7958a5",
+    "targetHash": "b3e00ba8e1090e34909ddba4b4262eab377c5cbdfb4a04f85185e4e70a0c1c1a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:22:00.417Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3ceb3def93fd0547982bbb1e4be0744756f2bd1346ad77ca73c625024b6539a2",
+      "targetHash": "b3e00ba8e1090e34909ddba4b4262eab377c5cbdfb4a04f85185e4e70a0c1c1a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"code\",null,null,\"\\n```text\\n+---------------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name') |\\n    +---------------------------------------------------------------+\\n    | doris                                                         |\\n    +---------------------------------------------------------------+\\n    ```\\n2. Case where path does not exist\\n    ```sql\\n    SELECT json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name2');\\n    ```\\n    ```text\\n    +----------------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name2') |\\n    +----------------------------------------------------------------+\\n    | NULL                                                           |\\n    +----------------------------------------------------------------+\\n    ```\\n3. NULL parameters\\n    ```sql\\n    SELECT json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', NULl);\\n    ```\\n    ```text\\n    +-----------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', NULl) |\\n    +-----------------------------------------------------------+\\n    | NULL                                                      |\\n    +-----------------------------------------------------------+\\n    ```\\n    ```sql\\n    SELECT json_extract_string(NULL, '$.id2');\\n    ```\\n    ```text\\n    +----------; received [\"code\",null,null,\"\\n```text\\n+---------------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name') |\\n    +---------------------------------------------------------------+\\n    | doris                                                         |\\n    +---------------------------------------------------------------+\\n    ```\\n2. Несуществующий путь\\n    ```sql\\n    SELECT json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name2');\\n    ```\\n    ```text\\n    +----------------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name2') |\\n    +----------------------------------------------------------------+\\n    | NULL                                                           |\\n    +----------------------------------------------------------------+\\n    ```\\n3. Параметры со значением NULL\\n    ```sql\\n    SELECT json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', NULl);\\n    ```\\n    ```text\\n    +-----------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', NULl) |\\n    +-----------------------------------------------------------+\\n    | NULL                                                      |\\n    +-----------------------------------------------------------+\\n    ```\\n    ```sql\\n    SELECT json_extract_string(NULL, '$.id2');\\n    ```\\n    ```text\\n    +---------"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

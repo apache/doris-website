@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn.md",
-    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
-    "sourceHash": "aa214af874a1c36c0d5069854f8e12f43c23ee8b1f37bc8f408d10c79344b44b",
-    "sourceTechnicalHash": "0a8491771f915666302734c6fa5f7cfd233e30e41260699ec960d7c05fe16bb1",
-    "targetHash": "e74dbf7ca9ab5da3a8e09232f42250ed45ddcc0a7ca1aa59f6a13a3ef4a07e87",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "8cb60a3bc3bda3d1be7482d3ec1a15860c9ae01eb6620952f71ff9811bc439b6",
+    "sourceTechnicalHash": "68102480954ac94c99dd0d028994e3a27b89a295a059c29eaa54d517ddf6b7b5",
+    "targetHash": "4de5d92530f19126e3335840417ad71477fef4fc90b77a8ec8e3a25b643ea1da",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T05:27:19.788Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T17:22:30.959Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8cb60a3bc3bda3d1be7482d3ec1a15860c9ae01eb6620952f71ff9811bc439b6",
+      "targetHash": "4de5d92530f19126e3335840417ad71477fef4fc90b77a8ec8e3a25b643ea1da",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn.md",
+        "blob": "8fca3e7b95241d83a7142b84db6b8d289f5ce6eb"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn.md",
+        "blob": "f351da77373b111b8ef89d83cd4d788d2f79f77b"
+      }
+    }
   }
 }

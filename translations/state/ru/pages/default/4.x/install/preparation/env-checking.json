@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/preparation/env-checking",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/preparation/env-checking.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/install/preparation/env-checking.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4e8bf0b7821d5579f66027b6a1993c369c00cce660eddef8353c4fc789746329",
+    "sourceTechnicalHash": "c58431f95fba9ced01812f8e908a8bf84ed4f07a0eab344c4e6112ecb872a2b0",
+    "targetHash": "fdca0d742318e078eff610e201ac328fab34a46cb15b66b2e2b3c2a0b83fbc35",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:30.144Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4e8bf0b7821d5579f66027b6a1993c369c00cce660eddef8353c4fc789746329",
+      "targetHash": "fdca0d742318e078eff610e201ac328fab34a46cb15b66b2e2b3c2a0b83fbc35",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "install/preparation/env-checking",
+        "sourcePath": "docs/install/preparation/env-checking.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/preparation/env-checking.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "4e8bf0b7821d5579f66027b6a1993c369c00cce660eddef8353c4fc789746329",
+        "targetHash": "fdca0d742318e078eff610e201ac328fab34a46cb15b66b2e2b3c2a0b83fbc35",
+        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
+        "pr": "https://github.com/apache/doris-website/pull/4436"
+      }
+    }
+  }
+}

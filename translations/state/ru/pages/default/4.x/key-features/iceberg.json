@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/iceberg",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/iceberg.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/iceberg.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d95c7a10897df6ce6f2e51246eeedf21a5e54c0a923d5a4d9cb2624c7d9329c1",
+    "sourceTechnicalHash": "8bc18d4f63d9051d6fe7b2679b0b78352e115672fccbee179192c5cd3914fd12",
+    "targetHash": "33137b40a9f414dd76c09477104209047847dc5457eb837dbe65d2cd5bac2bba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:31.861Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d95c7a10897df6ce6f2e51246eeedf21a5e54c0a923d5a4d9cb2624c7d9329c1",
+      "targetHash": "33137b40a9f414dd76c09477104209047847dc5457eb837dbe65d2cd5bac2bba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/iceberg",
+        "sourcePath": "docs/key-features/iceberg.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/iceberg.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "d95c7a10897df6ce6f2e51246eeedf21a5e54c0a923d5a4d9cb2624c7d9329c1",
+        "targetHash": "33137b40a9f414dd76c09477104209047847dc5457eb837dbe65d2cd5bac2bba",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

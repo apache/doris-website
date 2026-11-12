@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/GEO",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/GEO.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/GEO.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b91e217238f3938c20fceb4c31bad4187942bc658fa7c3f1180dcc27f5af1e17",
+    "sourceTechnicalHash": "311c46c8480546e365a224258c919b3a0ee4a776bdcb7888df99e024f5e148a6",
+    "targetHash": "e712779d155ef921c60adbba53b22011b8662b780e393b3751405bb2f456222e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:55:22.194Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b91e217238f3938c20fceb4c31bad4187942bc658fa7c3f1180dcc27f5af1e17",
+      "targetHash": "e712779d155ef921c60adbba53b22011b8662b780e393b3751405bb2f456222e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,26 +1,25 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
-import { localizedHomeLink } from '@site/src/utils/localization';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import {useLocalizedRoute} from '@site/src/utils/useLocalizedRoute';
+import {localePath, rootBaseUrl} from '@site/src/utils/localizedRoute';
 
-type Props = React.ComponentPropsWithoutRef<typeof Link>;
-
-// pathname:// prevents SPA navigation, but Link still adds the locale base URL
-// unless autoAddBaseUrl is disabled. English targets must opt out of both.
+type Props = React.ComponentPropsWithoutRef<typeof Link> & {preserveLocale?: boolean};
 const LocalizedLink = React.forwardRef<HTMLAnchorElement, Props>(function LocalizedLink(
-    { to, href, autoAddBaseUrl, ...props }, ref,
+    {to, href, preserveLocale, autoAddBaseUrl: _auto, ...props}, ref,
 ) {
-    const destination = localizedHomeLink(to || href || '');
-    const isEnglishTarget = destination.startsWith('pathname://');
-    return (
-        <Link
-            {...props}
-            {...(to ? { to: destination } : { href: destination })}
-            ref={ref}
-            autoAddBaseUrl={isEnglishTarget ? false : autoAddBaseUrl}
-            target={isEnglishTarget ? props.target ?? '_self' : props.target}
-            hrefLang={isEnglishTarget ? 'en' : props.hrefLang}
-        />
-    );
+    const resolve = useLocalizedRoute();
+    const {i18n, siteConfig} = useDocusaurusContext();
+    const resolved = resolve(to ?? href ?? '', {preserveLocale});
+    const destination = resolved.href;
+    const plain = destination.replace(/^pathname:\/\//, '');
+    const info = localePath(plain.split(/[?#]/)[0], {url: siteConfig.url,
+        baseUrl: rootBaseUrl(siteConfig.baseUrl, i18n.currentLocale, i18n.defaultLocale),
+        defaultLocale: i18n.defaultLocale, locales: i18n.locales});
+    const crossLocale = plain.startsWith('/') && info && info.locale !== i18n.currentLocale;
+    const fullNavigation = crossLocale || resolved.reason === 'resource';
+    return <Link {...props} {...(to !== undefined ? {to: fullNavigation ? `pathname://${plain}` : destination}
+        : {href: fullNavigation ? `pathname://${plain}` : destination})} ref={ref} autoAddBaseUrl={false}
+        {...(fullNavigation && {target: props.target ?? '_self'})} />;
 });
-
 export default LocalizedLink;

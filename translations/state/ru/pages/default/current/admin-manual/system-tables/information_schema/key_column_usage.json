@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/key_column_usage",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/key_column_usage.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/key_column_usage.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "374049816a5bea26244d582206a2bd65d992c7f3a54c5f820e118f8e627f56ab",
+    "sourceTechnicalHash": "b8745a19e759155ffed14213d062d22d4856b71405d23db5a54e5ab39801583e",
+    "targetHash": "d16644441c99c8571ca64b8d377a21250a7da86f7f650f41d77b11451fe460f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:41:08.183Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "374049816a5bea26244d582206a2bd65d992c7f3a54c5f820e118f8e627f56ab",
+      "targetHash": "d16644441c99c8571ca64b8d377a21250a7da86f7f650f41d77b11451fe460f2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

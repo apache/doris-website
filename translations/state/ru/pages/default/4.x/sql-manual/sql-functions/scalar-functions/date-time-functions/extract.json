@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/extract",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/extract.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/extract.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "72c9e3f0b34f10e035f60ead5bf8b529591a8ee82003dc8f6217ea75a633902c",
+    "sourceTechnicalHash": "69f2551bdb9ab50746f748ab6c2ac5379dc9173da26b92473578a92c5fb5fc13",
+    "targetHash": "5102fdca556f7b74dcc41feb8100245ff1eaaa127f4cdc8bf34be67cdbd8277f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:23:37.056Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "72c9e3f0b34f10e035f60ead5bf8b529591a8ee82003dc8f6217ea75a633902c",
+      "targetHash": "5102fdca556f7b74dcc41feb8100245ff1eaaa127f4cdc8bf34be67cdbd8277f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/extract",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/extract.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/extract.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "72c9e3f0b34f10e035f60ead5bf8b529591a8ee82003dc8f6217ea75a633902c",
+        "targetHash": "5102fdca556f7b74dcc41feb8100245ff1eaaa127f4cdc8bf34be67cdbd8277f",
+        "commit": "33c746dbf92a3743048e008eb6378ddf610d687a",
+        "pr": "https://github.com/apache/doris-website/pull/4449"
+      }
+    }
+  }
+}

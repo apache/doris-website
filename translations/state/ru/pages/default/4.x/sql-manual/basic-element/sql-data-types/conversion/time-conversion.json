@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/time-conversion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/time-conversion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/time-conversion.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0faf50df61ea1ef9963f10f92fcbf35e6895f8a86c09b986996fb78ddc1b6414",
+    "sourceTechnicalHash": "792ee599fc6b2e05bc2f33f7e7f102d7d6fc1ddd0ec7a1882962cb86c629dd9f",
+    "targetHash": "05b19e95229e28f499efb12e1eca8d9784dbd3cfe68e8a3758bcb29357eb136b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:37:13.730Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0faf50df61ea1ef9963f10f92fcbf35e6895f8a86c09b986996fb78ddc1b6414",
+      "targetHash": "05b19e95229e28f499efb12e1eca8d9784dbd3cfe68e8a3758bcb29357eb136b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

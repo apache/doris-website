@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-doris-manager",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-doris-manager.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/release-and-verify/release-doris-manager.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "80e9d1e69530fb2fbb99f60baeb6c3fa2eb56222d71d126881cf016b9df6efe3",
+    "sourceTechnicalHash": "236a1873475f82df7e21646fc76cab45deeebb95b2ca2a22a154f259e32c64ce",
+    "targetHash": "521cc2eeea37e18bcafabefef5c3159f9381a5b9045d4b68da8ef73f64093ab1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:33:33.160Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "80e9d1e69530fb2fbb99f60baeb6c3fa2eb56222d71d126881cf016b9df6efe3",
+      "targetHash": "521cc2eeea37e18bcafabefef5c3159f9381a5b9045d4b68da8ef73f64093ab1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

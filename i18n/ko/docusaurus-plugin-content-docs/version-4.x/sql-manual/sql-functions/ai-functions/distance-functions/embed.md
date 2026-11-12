@@ -2,11 +2,11 @@
 {
     "title": "EMBED",
     "language": "ko",
-    "description": "텍스트, 이미지, 비디오 또는 오디오 입력의 임베딩 벡터를 생성합니다."
+    "description": "텍스트, 이미지, 동영상 또는 오디오 입력에 대한 임베딩 벡터를 생성합니다."
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -27,28 +27,28 @@ under the License.
 
 ## 설명 {#description}
 
-텍스트 또는 멀티모달 입력의 임베딩 벡터를 생성합니다. 이 벡터는 유사도 계산, 검색 등 다양한 용도로 사용할 수 있습니다.
+텍스트 또는 멀티모달 입력에 대한 임베딩 벡터를 생성합니다. 이 벡터는 유사도 계산, 검색 등의 시나리오에 사용할 수 있습니다.
 
 :::note
-Apache Doris 4.1.4부터 멀티모달 임베딩을 지원합니다.
+멀티모달 임베딩은 Apache Doris 4.1.4부터 지원됩니다.
 :::
 
-멀티모달 임베딩을 생성하려면 이미지, 비디오 또는 오디오 파일을 설명하는 JSON 객체를 전달합니다. 미디어 유형을 사용하기 전에 구성된 AI 제공업체와 모델이 해당 유형을 지원하는지 확인하세요.
+멀티모달 임베딩을 사용하려면 이미지, 동영상 또는 오디오 파일을 설명하는 JSON 객체를 전달합니다. 미디어 유형을 사용하기 전에 구성된 AI Provider와 모델이 해당 유형을 지원하는지 확인하십시오.
 
-### 멀티모달 임베딩을 지원하는 제공업체 {#providers-that-support-multimodal-embedding}
+### 멀티모달 임베딩을 지원하는 Provider {#providers-that-support-multimodal-embedding}
 
-| 제공업체 | 지원하는 미디어 유형 |
+| Provider | 지원되는 미디어 유형 |
 | --- | --- |
-| `voyageai` | 이미지 (`image/`), 비디오 (`video/`) |
-| `qwen` | 이미지 (`image/`), 비디오 (`video/`) |
-| `jina` | 이미지 (`image/`), 비디오 (`video/`) |
-| `gemini` | 이미지 (`image/`), 비디오 (`video/`), 오디오 (`audio/`) |
+| `voyageai` | 이미지 (`image/`), 동영상 (`video/`) |
+| `qwen` | 이미지 (`image/`), 동영상 (`video/`) |
+| `jina` | 이미지 (`image/`), 동영상 (`video/`) |
+| `gemini` | 이미지 (`image/`), 동영상 (`video/`), 오디오 (`audio/`) |
 
-이 외의 제공업체에서 멀티모달 임베딩을 호출하면 `<provider> does not support multimodal Embed feature.` 오류가 발생합니다. 제공업체가 지원하지 않는 미디어 유형을 전달하면 `<provider> only supports <types> multimodal embed, got <type>` 오류가 발생합니다.
+다른 Provider에서 멀티모달 임베딩을 호출하면 `<provider> does not support multimodal Embed feature.` 오류가 발생합니다. Provider가 지원하지 않는 미디어 유형을 전달하면 `<provider> only supports <types> multimodal embed, got <type>` 오류가 발생합니다.
 
 ## 구문 {#syntax}
 
-버전 4.1.5부터 AI Resource에서 텍스트 임베딩과 멀티모달 임베딩을 위한 별도의 `ai.embed.*` 및 `ai.embed.mm.*` 모델 그룹을 구성할 수 있습니다. 텍스트 입력은 텍스트 임베딩 그룹을 먼저 선택하고, 없으면 일반 그룹을 선택합니다. JSON 형식의 멀티모달 입력은 멀티모달 임베딩 그룹, 텍스트 임베딩 그룹, 일반 그룹 순으로 선택합니다. 구성 요구 사항은 [AI 리소스 구성](../overview.md#dedicated-embedding-model-configuration-since-415)을 참조하세요.
+4.1.5부터 AI Resource에서 텍스트 및 멀티모달 임베딩에 대해 별도의 `ai.embed.*` 및 `ai.embed.mm.*` 모델 그룹을 구성할 수 있습니다. 텍스트 입력은 텍스트 임베딩 그룹을 먼저 선택한 다음 일반 그룹을 선택합니다. JSON 멀티모달 입력은 멀티모달 임베딩 그룹, 텍스트 임베딩 그룹, 일반 그룹 순서로 선택합니다. 구성 요구 사항은 [AI resource configuration](../overview.md#dedicated-embedding-model-configuration-since-415)을 참조하십시오.
 
 ```sql
 EMBED([<resource_name>], <input>)
@@ -58,7 +58,7 @@ EMBED([<resource_name>], <input>)
 
 | 매개변수         | 설명 |
 | ----------------- | ----------- |
-| `<resource_name>` | 선택 사항입니다. 임베딩 생성에 사용할 AI 리소스입니다. 생략하면 Doris는 세션 변수 `default_ai_resource`를 사용합니다. |
+| `<resource_name>` | 선택 사항입니다. 임베딩 생성에 사용되는 AI resource입니다. 생략하면 Doris는 세션 변수 `default_ai_resource`를 사용합니다. |
 | `<input>`         | 임베딩할 콘텐츠입니다. 텍스트 임베딩에는 문자열을, 멀티모달 임베딩에는 JSON 객체를 사용할 수 있습니다. |
 
 멀티모달 JSON 객체에는 다음 필드가 포함됩니다.
@@ -66,33 +66,35 @@ EMBED([<resource_name>], <input>)
 | 필드 | 필수 여부 | 설명 |
 | ----- | -------- | ----------- |
 | `uri` | 예 | `http://` 또는 `https://` URL이나 `s3://<bucket>/<key>` 형식의 S3 호환 URI입니다. |
-| `content_type` | 예 | 미디어의 MIME 유형입니다. `image/`, `video/` 또는 `audio/`로 시작하는 값을 인식합니다. AI 제공업체와 모델이 해당 미디어 유형을 지원해야 합니다. |
-| `endpoint` | S3 호환 URI에 필요 | S3 호환 스토리지 엔드포인트입니다. |
-| `region` | S3 호환 URI에 필요 | 스토리지 리전입니다. |
+| `content_type` | 예 | 미디어 MIME 유형입니다. `image/`, `video/` 또는 `audio/`로 시작하는 값이 인식됩니다. AI Provider와 모델이 해당 미디어 유형을 지원해야 합니다. |
+| `endpoint` | S3 호환 URI의 경우 | S3 호환 스토리지 엔드포인트입니다. |
+| `region` | S3 호환 URI의 경우 | 스토리지 리전입니다. |
 | `ak` | 아니요 | AK/SK 인증에 사용하는 액세스 키입니다. |
-| `sk` | 아니요 | AK/SK 인증에 사용하는 비밀 키입니다. |
+| `sk` | 아니요 | AK/SK 인증에 사용하는 보안 키입니다. |
 | `role_arn` | 아니요 | 역할 기반 인증에 사용하는 IAM 역할 ARN입니다. |
 | `external_id` | 아니요 | IAM 역할을 수임할 때 사용하는 외부 ID입니다. |
 
-HTTP 또는 HTTPS URL에는 `uri`와 `content_type`만 필요합니다. S3 호환 URI의 경우 Doris는 스토리지 자격 증명을 사용하여 사전 서명된 URL을 생성합니다. AK/SK 인증과 IAM 역할 인증을 모두 지원합니다.
+HTTP 또는 HTTPS URL을 사용하는 경우 `uri`와 `content_type`만 필요합니다. S3 호환 URI를 사용하는 경우 Doris는 스토리지 자격 증명을 사용하여 presigned URL을 생성합니다. AK/SK 및 IAM 역할 인증을 모두 지원합니다.
 
-사전 서명된 URL의 유효 기간은 세션 변수 `file_presigned_url_ttl_seconds`로 제어하며, 단위는 초이고 기본값은 `3600`(1시간)입니다. 미디어 파일이 커서 제공업체가 파일을 가져오는 데 더 많은 시간이 필요한 경우 이 값을 늘리세요.
+presigned URL의 수명은 세션 변수 `file_presigned_url_ttl_seconds`로 제어되며, 단위는 초이고 기본값은 `3600`(1시간)입니다. 미디어 파일이 크고 Provider가 파일을 가져오는 데 더 오래 걸리는 경우 다음과 같이 값을 늘리십시오.
 
 ```sql
 SET file_presigned_url_ttl_seconds = 7200;
 ```
 
-## 반환값 {#return-value}
+**4.1.5부터**, 텍스트 입력에 대해 `EMBED`는 리소스에 완전한 `ai.embed.*` 연결 그룹이 구성되어 있으면 이를 사용하고, 그렇지 않으면 일반 `ai.*` 그룹을 사용합니다. JSON 멀티모달 입력의 선택 순서는 `ai.embed.mm.*`, `ai.embed.*`, 일반 `ai.*`입니다. 각 그룹에는 `endpoint`, `provider_type`, `model_name` 및 `api_key`(`LOCAL`의 경우 선택 사항)가 포함됩니다. 선택은 완전한 그룹 단위로 수행되며, 선택된 Provider와 모델이 입력 유형을 지원해야 합니다. 임베딩 속성만 포함하는 리소스는 해당 `EMBED` 호출에 사용할 수 있습니다. 이전 버전에서는 일반 그룹을 사용합니다. [임베딩 전용 속성](../../../../ai/ai-function-overview.md#dedicated-embedding-properties)을 참조하십시오.
 
-반환 유형은 `ARRAY<FLOAT>`이며, 생성된 벡터를 나타냅니다.
+## 반환 값 {#return-value}
 
-입력값이 NULL이면 NULL을 반환합니다.
+반환 유형은 생성된 벡터를 나타내는 `ARRAY<FLOAT>`입니다.
 
-벡터의 차원과 값은 AI 제공업체와 모델에 따라 달라집니다.
+입력 값이 NULL이면 NULL을 반환합니다.
 
-## 멀티모달 예제 {#multimodal-examples}
+벡터의 차원과 값은 AI Provider 및 모델에 따라 달라집니다.
 
-다음 예제는 HTTPS URL로 접근할 수 있는 이미지의 임베딩을 생성합니다.
+## 멀티모달 예시 {#multimodal-examples}
+
+다음 예시는 HTTPS URL을 통해 사용할 수 있는 이미지의 임베딩을 생성합니다.
 
 ```sql
 SELECT ARRAY_SIZE(
@@ -114,7 +116,7 @@ SELECT ARRAY_SIZE(
 +---------------------------+
 ```
 
-다음 예제는 AK/SK 인증을 사용하여 S3 호환 스토리지에서 비디오를 읽습니다.
+다음 예시는 AK/SK 인증을 사용하여 S3 호환 스토리지에서 비디오를 읽습니다.
 
 ```sql
 SELECT ARRAY_SIZE(
@@ -140,7 +142,7 @@ SELECT ARRAY_SIZE(
 +---------------------------+
 ```
 
-AK/SK 대신 IAM 역할 인증을 사용할 수도 있습니다. 다음 예제는 이미지 임베딩을 생성합니다.
+AK/SK 대신 IAM 역할 인증을 사용할 수도 있습니다. 다음 예시는 이미지 임베딩을 생성합니다.
 
 ```sql
 SELECT ARRAY_SIZE(
@@ -166,11 +168,11 @@ SELECT ARRAY_SIZE(
 +---------------------------+
 ```
 
-위 결과는 예시입니다. 실제 임베딩 차원은 구성된 제공업체와 모델에 따라 달라집니다.
+앞의 결과는 예시입니다. 실제 임베딩 차원은 구성된 Provider와 모델에 따라 달라집니다.
 
-## 텍스트 예제 {#text-example}
+## 텍스트 예시 {#text-example}
 
-다음 테이블은 회사의 행동 강령을 예로 든 것입니다.
+다음 표는 한 회사의 행동 강령을 가정한 것입니다.
 
 ```sql
 CREATE TABLE knowledge_base (
@@ -208,9 +210,9 @@ INSERT INTO knowledge_base (id, title, content, embedding) VALUES
 
 텍스트를 벡터화하면 다음과 같은 작업을 수행할 수 있습니다.
 
-1. 질의응답을 위한 검색(`COSINE_DISTANCE` 사용)
+1. 질문 답변 검색 (`COSINE_DISTANCE` 사용)
 ```sql
-SELECT 
+SELECT
     id, title, content,
     COSINE_DISTANCE(embedding, EMBED("How to apply for travel reimbursement?")) AS score
 FROM knowledge_base
@@ -227,9 +229,9 @@ LIMIT 2;
 +------+-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+--------------------+
 ```
 
-2. 문제 분석 매칭(`L2_DISTANCE` 사용)
+2. 문제 분석 매칭 (`L2_DISTANCE` 사용)
 ```sql
-SELECT 
+SELECT
     id, title, content,
     L2_DISTANCE(embedding, EMBED("How to access the company intranet")) AS distance
 FROM knowledge_base
@@ -246,9 +248,9 @@ LIMIT 2;
 +------+-----------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+--------------------+
 ```
 
-3. 문서 내용에 기반한 텍스트 관련성 매칭 및 추천(`INNER PRODUCT` 사용)
+3. 문서 내용 기반 텍스트 관련성 매칭 및 추천 (`INNER PRODUCT` 사용)
 ```sql
-SELECT 
+SELECT
     id, title, content,
     INNER_PRODUCT(embedding, EMBED("Leave system request leader approval")) AS score
 FROM knowledge_base
@@ -266,9 +268,9 @@ LIMIT 2;
 +------+-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+---------------------+
 ```
 
-4. 차이가 가장 적은 콘텐츠 찾기(`L1_DISTANCE` 사용)
+4. 차이가 가장 작은 콘텐츠 찾기 (`L1_DISTANCE` 사용)
 ```sql
-SELECT 
+SELECT
     id, title, content,
     L1_DISTANCE(embedding, EMBED("Procurement application process")) AS distance
 FROM knowledge_base

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/analytic-functions",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/analytic-functions.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/analytic-functions.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "2f7ad400e06c8f2653cc59afe3f95b73ac7c254c9232d3e5667a08b57d09ffa8",
+    "sourceTechnicalHash": "d3b70f24f39465e774e7b77ae3ca8c020ad50f34bcf5b7d02e636170da13aae8",
+    "targetHash": "b79204f432c1ee38e2ff292d084bfaf4baa8f0ec9bd0a67d271c406c8eb1b25e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:45:11.000Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2f7ad400e06c8f2653cc59afe3f95b73ac7c254c9232d3e5667a08b57d09ffa8",
+      "targetHash": "b79204f432c1ee38e2ff292d084bfaf4baa8f0ec9bd0a67d271c406c8eb1b25e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

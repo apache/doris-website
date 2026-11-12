@@ -1,43 +1,43 @@
 ---
 {
-    "title": "STRUCT | 半構造化データ",
+    "title": "STRUCT | 半構造化",
     "language": "ja",
-    "description": "STRUCT 型は複数のフィールドを単一の構造体にまとめるために使用します。各フィールドにはそれぞれ名前と型を指定できます。",
+    "description": "STRUCT 型は複数のフィールドを単一の構造にまとめるために使用します。各フィールドには独自の名前と型を指定でき、ネストした複雑な業務データ構造の表現に適しています。",
     "sidebar_label": "STRUCT"
 }
 ---
 
-# STRUCT
+# STRUCT {#struct}
 
-## 型の説明
+## 型の説明 {#type-description}
 
-STRUCT 型は複数のフィールドを単一の構造体にまとめるために使用します。各フィールドにはそれぞれ名前と型を指定でき、入れ子になったデータや複雑な業務データ構造の表現に適しています。
+STRUCT 型は複数のフィールドを単一の構造にまとめるために使用します。各フィールドには独自の名前と型を指定でき、ネストした複雑な業務データ構造の表現に適しています。
 
 - `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >`
 
-  - `field_name` はフィールド名を表します。**空にできず、重複もできません。大文字と小文字は区別されません。**
+  - `field_name` は名前を表し、**空にできず、重複できず、大文字と小文字を区別しません**。
 
-  - `field_type` はフィールドの型を表します。NULL を許容し、NOT NULL は指定できません。サポートされる型は `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT` です。
+  - `field_type` は型を表します。NULL を許容し、NOT NULL は指定できません。サポートされる型は次のとおりです：`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT`。
 
   - `[COMMENT 'comment-string']` は省略可能なコメントを表します。
 
-## 型の制約
+## 型の制約 {#type-constraints}
 
-- `STRUCT` 型でサポートされる入れ子の最大深さは 9 です。
+- `STRUCT` 型でサポートされる最大ネスト深度は 9 です。
 
-- `STRUCT` 型同士の変換可否は、内部の型を変換できるかどうかによって決まります（フィールド名は変換に影響しません）。`STRUCT` 型から他の型への変換はできません。
+- `STRUCT` 型間の変換は、内部型を変換できるかどうかに依存します（名前は変換に影響しません）。`STRUCT` 型を他の型に変換することはできません。
 
-  - 文字列型から `STRUCT` 型への変換は可能です（文字列を解析し、解析に失敗した場合は NULL を返します）。
+  - 文字列型は `STRUCT` 型に変換できます（解析によって行われ、解析に失敗すると NULL を返します）。
 
-- `AGGREGATE` テーブルモデルでは、`STRUCT` 型でサポートされる集約方法は `REPLACE` と `REPLACE_IF_NOT_NULL` のみです。**どのテーブルモデルでも、KEY 列、パーティション列、バケット列には使用できません。**
+- `AGGREGATE` テーブルモデルでは、`STRUCT` 型は `REPLACE` と `REPLACE_IF_NOT_NULL` のみをサポートします。**どのテーブルモデルでも、KEY 列、パーティション列、バケット列として使用できません。**
 
-- `STRUCT` 型の列では比較演算や算術演算を使用できません。**`ORDER BY` や `GROUP BY` の対象にできず、`JOIN KEY` としても、`DELETE` 文でも使用できません。**
+- `STRUCT` 型の列は、`IN` や `NOT IN` を含む比較または算術演算をサポートしません。**`ORDER BY` および `GROUP BY` 操作をサポートせず、`JOIN KEY` として使用できず、`DELETE` 文でも使用できません。**
 
-- `STRUCT` 型の列にはインデックスを作成できません。
+- `STRUCT` 型の列では、インデックスを作成できません。
 
-## 型の構築
+## 型の構築 {#type-construction}
 
-- `STRUCT()` を使用して `STRUCT` 型の値を構築します。内部のフィールド名は col1 から始まります。
+- `STRUCT()` を使用して `STRUCT` 型の値を構築します。内部の名前は col1 から始まります。
 
   ```SQL
   SELECT STRUCT(1, 'a', "abc");
@@ -49,7 +49,7 @@ STRUCT 型は複数のフィールドを単一の構造体にまとめるため�
   +--------------------------------------+
   ```
 
-- `NAMED_STRUCT()` を使用して、指定した `STRUCT` 型の値を構築します。
+- `NAMED_STRUCT()` を使用して、特定の `STRUCT` 型の値を構築します。
 
   ```SQL
   SELECT NAMED_STRUCT("name", "Jack", "id", 1728923);
@@ -61,11 +61,11 @@ STRUCT 型は複数のフィールドを単一の構造体にまとめるため�
   +---------------------------------------------+
   ```
 
-## 型の変更
+## 型の変更 {#modifying-type}
 
-- `STRUCT` のサブ列の型が `VARCHAR` の場合に限り、変更できます。
+- 変更が許可されるのは、`STRUCT` のサブカラム型が `VARCHAR` の場合のみです。
 
-   - `VARCHAR` の長さは小さい値から大きい値への変更のみ可能で、その逆はできません。
+   - `VARCHAR` のパラメータは小さい値から大きい値への変更のみ可能で、逆方向には変更できません。
 
   ```SQL
   CREATE TABLE struct_table (
@@ -79,9 +79,9 @@ STRUCT 型は複数のフィールドを単一の構造体にまとめるため�
   );
 
   ALTER TABLE struct_table MODIFY COLUMN struct_varchar STRUCT<name: VARCHAR(20), age: INT>;
-  ``` 
+  ```
 
-- `STRUCT` 型のサブ列は削除できませんが、末尾に新しいサブ列を追加できます。
+- `STRUCT` 型内部のサブカラムは削除できませんが、末尾に新しいサブカラムを追加できます。
 
 ```SQL
   CREATE TABLE struct_table (
@@ -98,20 +98,20 @@ STRUCT 型は複数のフィールドを単一の構造体にまとめるため�
   ALTER TABLE struct_table MODIFY COLUMN struct_varchar STRUCT<name: VARCHAR(10), age: INT, id: INT>;
 ```
 
-## 要素へのアクセス
+## 要素へのアクセス {#element-access}
 
-`STRUCT` 内の特定のサブ列には、次の同等の方法でアクセスできます。
+`STRUCT` 内部の特定のサブカラムには、次の同等な方法でアクセスできます。
 
 - `ELEMENT_AT(struct, k/field_name)` 関数。
 
 - 添字演算子 `struct[k]` / `struct['field_name']`。
 
-- ドット演算子 `struct_col.field_name`（`STRUCT` 列にのみ使用可能）。
+- ドット演算子 `struct_col.field_name`（`STRUCT` 列にのみ適用されます）。
 
-`k` は位置（1 から始まる定数）、`field_name` はサブ列名（文字列定数）です。フィールド名の照合では**大文字と小文字は区別されません**。存在しないフィールド名や範囲外の位置を指定すると、エラーが報告されます。
+ここで、`k` は位置（1 から始まる定数）、`field_name` はサブカラム名（文字列定数）です。フィールド名は**大文字と小文字を区別せず**に照合されます。存在しないフィールド名や範囲外の位置にアクセスすると、エラーが報告されます。
 
 :::caution
-他のデータベースやクエリエンジンにはこのような関数がないため、`STRUCT_ELEMENT` はバージョン 4.1.3 以降で削除されました。代わりに `ELEMENT_AT`、添字演算子、またはドット演算子を使用してください。
+他のデータベースやクエリエンジンにはこのような関数がないため、`STRUCT_ELEMENT` は 4.1.3 以降のバージョンで削除されています。代わりに `ELEMENT_AT` または添字 / ドット演算子を使用してください。
 :::
 
 - `ELEMENT_AT` または添字演算子を使用して、位置またはフィールド名でアクセスします。
@@ -134,7 +134,7 @@ STRUCT 型は複数のフィールドを単一の構造体にまとめるため�
   +--------------------------------------------------+
   ```
 
-- `STRUCT` 列では、ドット演算子を使用して名前でサブ列にアクセスします。`s.a.b` のような入れ子のフィールドにもアクセスできます。
+- `STRUCT` 列では、ドット演算子を使用して名前でサブカラムにアクセスできます。`s.a.b` のようなネストしたアクセスにも対応しています。
 
   ```SQL
   -- Table with a STRUCT column: s STRUCT<a: INT, b: DOUBLE>
@@ -144,9 +144,9 @@ STRUCT 型は複数のフィールドを単一の構造体にまとめるため�
   SELECT s.s.s.s FROM nested_struct_table;
   ```
 
-## 例
+## 例 {#examples}
 
-- 入れ子になった複合型
+- ネストした複合型
 
   ```SQL
   -- Create table

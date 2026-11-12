@@ -1,0 +1,105 @@
+---
+{
+    "title": "Запросы к данным",
+    "language": "ru",
+    "description": "Возможности выполнения запросов в Apache Doris для разных сценариев: совместимость с SQL, соединения нескольких таблиц, аналитика с агрегацией, запросы к полуструктурированным данным и пользовательские функции."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Запросы к данным {#data-querying}
+
+Apache Doris поддерживает стандартный SQL с высокой степенью совместимости с MySQL, а также предоставляет высокопроизводительные запросы с соединениями, богатый набор аналитических функций, доступ к полуструктурированным данным и пользовательские функции. Выберите ниже документацию для своего сценария.
+
+## Совместимость с SQL {#sql-compatibility}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Совместимость с MySQL"
+    description="Краткий справочник по различиям между Doris и MySQL: типы данных, синтаксис DDL/DML, функции SQL и ключевые различия в SQL Mode."
+    link="mysql-compatibility"
+/>
+</div>
+
+## Соединения нескольких таблиц {#multi-table-joins}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Соединения (JOIN)"
+    description="Типы JOIN, такие как INNER / LEFT / RIGHT / FULL / SEMI / ANTI, и четыре реализации распределённого JOIN: Broadcast, Shuffle, Bucket Shuffle и Colocate."
+    link="join"
+/>
+
+<GettingStartedCard
+    title="ASOF JOIN для поиска ближайшего соответствия во временных рядах"
+    description="Для каждой строки левой таблицы найдите ближайшую строку правой таблицы по времени в заданном направлении, чтобы выровнять временные ряды без оконных функций."
+    link="asof-join"
+/>
+
+<GettingStartedCard
+    title="Подзапросы"
+    description="Синтаксис, ограничения и использование Mark Join при обработке скалярных, нескалярных, коррелированных и некоррелированных подзапросов."
+    link="subquery"
+/>
+
+<GettingStartedCard
+    title="Общие табличные выражения (CTE)"
+    description="Определяйте временные наборы результатов с помощью предложения WITH. Поддерживаются вложенные и рекурсивные CTE, подходящие для обхода иерархий, графов и решения подобных задач."
+    link="cte"
+/>
+</div>
+
+## Агрегация и аналитика {#aggregation-and-analytics}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Аналитика с многомерной агрегацией"
+    description="Используйте ROLLUP, CUBE и GROUPING SETS для аналитики с многомерной агрегацией в одном операторе SQL."
+    link="multi-dimensional-analytics"
+/>
+
+<GettingStartedCard
+    title="Аналитические функции (оконные функции)"
+    description="Используйте предложение OVER для разбиения наборов результатов на секции и задания окон с поддержкой ранжирования, сумм с накоплением, скользящих средних, сравнений год к году и квартал к кварталу и других операций."
+    link="window-function"
+/>
+</div>
+
+## Полуструктурированные и сложные данные {#semi-structured-and-complex-data}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Запросы к сложным типам"
+    description="Выполняйте запросы к сложным типам, таким как Array, Map, Struct и JSON, и обрабатывайте полуструктурированные данные с помощью специализированных функций SQL."
+    link="complex-type"
+/>
+
+<GettingStartedCard
+    title="Преобразование столбцов в строки (Lateral View)"
+    description="Используйте LATERAL VIEW с функциями-генераторами, такими как EXPLODE, чтобы развернуть одну строку в несколько строк и выполнять SQL-запросы с преобразованием столбцов в строки."
+    link="lateral-view"
+/>
+</div>
+
+## Пользовательские функции (UDF) {#user-defined-functions-udf}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Java UDF / UDAF / UDWF / UDTF"
+    description="Разработка пользовательских функций UDF/UDAF/UDWF/UDTF на Java: сопоставление типов, синтаксис регистрации, рекомендации и примеры."
+    link="udf/java-user-defined-function"
+/>
+
+<GettingStartedCard
+    title="Python UDF / UDAF / UDWF / UDTF"
+    description="Разработка UDF/UDAF/UDTF на Python: создание, векторизация, настройка окружения и устранение распространённых неполадок."
+    link="udf/python-user-defined-function"
+/>
+
+<GettingStartedCard
+    title="Функции-псевдонимы"
+    description="Регистрируйте новую сигнатуру для функции или фрагмента выражения с помощью CREATE ALIAS FUNCTION, чтобы повысить совместимость при миграции и упростить написание сложных запросов."
+    link="udf/alias-function"
+/>
+</div>

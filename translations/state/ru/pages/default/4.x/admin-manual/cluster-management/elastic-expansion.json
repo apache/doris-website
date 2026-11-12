@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/elastic-expansion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/elastic-expansion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/elastic-expansion.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4ee93bb676416316b0f5e9a627f3f1d8b1643206f29f078480dfa5ac4ffbc93e",
+    "sourceTechnicalHash": "c1ca5f24cb99b017b9eaf4c6d74d03b4b9ba592141ed6f02416db02126bb91dc",
+    "targetHash": "a5c91ca75cdb390865db14b5a42358b003ce6aff6c46708f669805bf7033d3ac",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:51:37.525Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ee93bb676416316b0f5e9a627f3f1d8b1643206f29f078480dfa5ac4ffbc93e",
+      "targetHash": "a5c91ca75cdb390865db14b5a42358b003ce6aff6c46708f669805bf7033d3ac",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/cluster-management/elastic-expansion",
+        "sourcePath": "docs/admin-manual/cluster-management/elastic-expansion.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/elastic-expansion.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "4ee93bb676416316b0f5e9a627f3f1d8b1643206f29f078480dfa5ac4ffbc93e",
+        "targetHash": "a5c91ca75cdb390865db14b5a42358b003ce6aff6c46708f669805bf7033d3ac",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/DML/UPDATE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/UPDATE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/UPDATE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bf5d73b5c4945a3bec824994761d85e88ec63fbdaa621a15d6ce3a08a2b9558e",
+    "sourceTechnicalHash": "7028531e9138bb12302809e7140032e2dd14e742aceb2a9ca3ed220437ff26c4",
+    "targetHash": "00ad4d6d630d40f1f4f480074ac9ba5632f27acbcfbd44b31ba83b0e60c48586",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:01:44.962Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bf5d73b5c4945a3bec824994761d85e88ec63fbdaa621a15d6ce3a08a2b9558e",
+      "targetHash": "00ad4d6d630d40f1f4f480074ac9ba5632f27acbcfbd44b31ba83b0e60c48586",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

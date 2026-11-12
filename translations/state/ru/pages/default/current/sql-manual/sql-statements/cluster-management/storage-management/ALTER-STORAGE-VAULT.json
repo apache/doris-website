@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5d8f7bbb4010b3ef582716225ffa414aa2ff71d3fbf500f4776429c23d29c933",
+    "sourceTechnicalHash": "c2fcffd029deef552abe149d2c2f7e2b82d18e08cbd934a6a340836a8e0c8f3d",
+    "targetHash": "10be6fa6d52cc89d1f9759e5d6ae180051eee2bb94c36088621d0b5a71005706",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:58:33.872Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5d8f7bbb4010b3ef582716225ffa414aa2ff71d3fbf500f4776429c23d29c933",
+      "targetHash": "10be6fa6d52cc89d1f9759e5d6ae180051eee2bb94c36088621d0b5a71005706",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

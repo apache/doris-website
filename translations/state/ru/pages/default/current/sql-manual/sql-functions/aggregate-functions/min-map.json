@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/min-map",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/min-map.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/min-map.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2482e126cb941454a246fe14fcf102e173a0cf26980ace90cee1ad4975622f4f",
+    "sourceTechnicalHash": "209c882f4271228f9848a0d7782e3e6d8e89190462128a7c1d32fde2e249d128",
+    "targetHash": "25cc4075cfb78c8cfe1f9fa7e9b154e80c73612ee1626e44c7085148ea84da05",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:23:56.849Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2482e126cb941454a246fe14fcf102e173a0cf26980ace90cee1ad4975622f4f",
+      "targetHash": "25cc4075cfb78c8cfe1f9fa7e9b154e80c73612ee1626e44c7085148ea84da05",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

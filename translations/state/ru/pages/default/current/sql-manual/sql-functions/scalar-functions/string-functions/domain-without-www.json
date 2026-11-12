@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a9de900099ccafe281a89ab5a1f23fd56fa8f5122269ee4317670e4706375eaa",
+    "sourceTechnicalHash": "51580149a86f96b076e714d37dbe281ba71f390da43bde80d078d1cb5d009e5a",
+    "targetHash": "95ccf243f49d2356379e2724e4971e5d091dcc0f18401e5f177e429acf24db00",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:43:46.879Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a9de900099ccafe281a89ab5a1f23fd56fa8f5122269ee4317670e4706375eaa",
+      "targetHash": "95ccf243f49d2356379e2724e4971e5d091dcc0f18401e5f177e429acf24db00",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"code\",\"sql\",null,\"SELECT DOMAIN_WITHOUT_WWW(\\\"https://www.apache.org/docs/gettingStarted/what-is-apache-doris\\\")\"]; received [\"link\",\"http://www\",null]\nprotected node 6: expected [\"code\",\"text\",null,\"+---------------------------------------------------------------------------------------+\\n| domain_without_www('https://www.apache.org/docs/gettingStarted/what-is-apache-doris') |\\n+---------------------------------------------------------------------------------------+\\n| apache.org                                                                            |\\n+---------------------------------------------------------------------------------------+\"]; received [\"code\",\"sql\",null,\"SELECT DOMAIN_WITHOUT_WWW(\\\"https://www.apache.org/docs/gettingStarted/what-is-apache-doris\\\")\"]\nprotected node 7: expected missing; received [\"code\",\"text\",null,\"+---------------------------------------------------------------------------------------+\\n| domain_without_www('https://www.apache.org/docs/gettingStarted/what-is-apache-doris') |\\n+---------------------------------------------------------------------------------------+\\n| apache.org                                                                            |\\n+---------------------------------------------------------------------------------------+\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

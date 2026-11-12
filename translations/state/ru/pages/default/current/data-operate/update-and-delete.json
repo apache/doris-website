@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update-and-delete",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update-and-delete.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/update-and-delete.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f643e194681b938e17919bc8cf0299e2d4c8c11c2456a656cf199a5f60474ee9",
+    "sourceTechnicalHash": "90260377a318c4055e30da41f308f9c647acbf3ff79aab3f406ee9a15ce33068",
+    "targetHash": "86111e63fee6a2c5d1cab30df77d163d97f5f9016b18585403b317c3417a0f1b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:25:15.996Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f643e194681b938e17919bc8cf0299e2d4c8c11c2456a656cf199a5f60474ee9",
+      "targetHash": "86111e63fee6a2c5d1cab30df77d163d97f5f9016b18585403b317c3417a0f1b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

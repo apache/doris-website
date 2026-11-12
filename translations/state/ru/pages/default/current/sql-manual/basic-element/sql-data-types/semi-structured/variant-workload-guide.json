@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "bec80bdd9204e324ea1c3dd03f54b067fba081a3cf9e00defa918e10b1ef1577",
+    "sourceTechnicalHash": "0f8086f54ccc5e6d9be7833d90918005ea1acc2e27aa280d3698a45c62c56dc5",
+    "targetHash": "bbcb3fc6940f29a8eabd9746036871e4ebadf70a0097bae969dd308b531e8285",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:56:40.825Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bec80bdd9204e324ea1c3dd03f54b067fba081a3cf9e00defa918e10b1ef1577",
+      "targetHash": "bbcb3fc6940f29a8eabd9746036871e4ebadf70a0097bae969dd308b531e8285",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,39 +1,41 @@
 ---
 {
-    "title": "Paimon JDBC カタログ",
+    "title": "Paimon JDBC Catalog",
     "language": "ja",
-    "description": "JDBC インターフェースを使用して Paimon Catalog のメタデータサービスに接続し、アクセスする際にサポートされるパラメータについて説明します。"
+    "description": "このドキュメントでは、JDBC インターフェースを使用して Paimon Catalog のメタデータサービスに接続し、アクセスする際にサポートされるパラメータについて説明します。"
 }
 ---
 
-このドキュメントでは、`CREATE CATALOG` 文を使用し、JDBC インターフェース経由で Paimon Catalog のメタデータサービスに接続してアクセスする際にサポートされるパラメータについて説明します。
+このドキュメントでは、`CREATE CATALOG` 文から JDBC インターフェースを使用して Paimon Catalog のメタデータサービスに接続し、アクセスする際にサポートされるパラメータについて説明します。
 
-:::tip 注記
-この機能は実験的な機能で、バージョン 4.1.0 以降でサポートされています。
+:::tip 注
+これは実験的な機能で、バージョン 4.1.0 以降でサポートされています。
 :::
 
-## パラメータの概要
+## パラメータの概要 {#parameter-overview}
 
 | プロパティ名 | 説明 | デフォルト値 | 必須 |
 | --- | --- | --- | --- |
 | paimon.jdbc.uri | JDBC 接続 URI を指定します | - | はい |
 | paimon.jdbc.user | JDBC 接続のユーザー名 | - | はい |
 | paimon.jdbc.password | JDBC 接続のパスワード | - | はい |
-| warehouse | Paimon ウェアハウスを指定します | - | はい |
-| paimon.jdbc.driver_class | JDBC ドライバーのクラス名。例: `org.postgresql.Driver`、`com.mysql.cj.jdbc.Driver` など | - | いいえ |
+| warehouse | Paimon warehouse を指定します | - | はい |
+| paimon.jdbc.driver_class | `org.postgresql.Driver`、`com.mysql.cj.jdbc.Driver` などの JDBC ドライバーのクラス名 | - | いいえ |
 | paimon.jdbc.driver_url | JDBC ドライバーの JAR ファイルへのパス | - | いいえ |
 
-> 注記:
+> 注:
 >
-> 1. Paimon JDBC カタログは、PostgreSQL や MySQL など、さまざまなリレーショナルデータベースをバックエンドストレージとしてサポートしています。
+> 1. Paimon JDBC Catalog は、PostgreSQL や MySQL など、バックエンドストレージとしてさまざまなリレーショナルデータベースをサポートしています。
 >
 > 2. JDBC ドライバーの JAR ファイルにアクセスできることを確認してください。`paimon.jdbc.driver_url` でドライバーの場所を指定できます。
 
-## 設定例
+4.1.5 以降、Catalog の作成時と変更時に、JDBC ドライバーの場所が同じ基準で検証されます。URI スキームがない値は、`[A-Za-z0-9._-]+.jar` に一致するファイル名でなければなりません。絶対パスには `file:///...` を使用してください。URL デコード後のパスに、親ディレクトリを表す `..` セグメントを含めることはできません。安全なドライバーパスに関する既存の制限と、URL 許可リストの制限も引き続き適用されます。
 
-### PostgreSQL をメタデータストレージとして使用する場合
+## 設定例 {#example-configurations}
 
-PostgreSQL データベースを使用して Paimon のメタデータを保存する例:
+### メタデータの保存先として PostgreSQL を使用 {#postgresql-as-metadata-storage}
+
+PostgreSQL データベースに Paimon のメタデータを保存する場合:
 
 ```sql
 CREATE CATALOG paimon_jdbc_postgresql PROPERTIES (
@@ -52,9 +54,9 @@ CREATE CATALOG paimon_jdbc_postgresql PROPERTIES (
 );
 ```
 
-### MySQL をメタデータストレージとして使用する場合
+### メタデータの保存先として MySQL を使用 {#mysql-as-metadata-storage}
 
-MySQL データベースを使用して Paimon のメタデータを保存する例:
+MySQL データベースに Paimon のメタデータを保存する場合:
 
 ```sql
 CREATE CATALOG paimon_jdbc_mysql PROPERTIES (

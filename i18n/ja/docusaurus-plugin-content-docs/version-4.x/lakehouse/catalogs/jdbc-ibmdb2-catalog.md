@@ -1,26 +1,26 @@
 ---
 {
-    "title": "IBM Db2 JDBC カタログ",
+    "title": "IBM Db2 JDBC Catalog",
     "language": "ja",
-    "description": "Doris JDBC Catalog は、標準の JDBC インターフェースを介した IBM Db2 データベースへの接続をサポートします。"
+    "description": "Doris JDBC Catalog は、標準の JDBC インターフェースを介した IBM Db2 データベースへの接続をサポートしています。"
 }
 ---
 
-Doris JDBC Catalog は、標準の JDBC インターフェースを介した IBM Db2 データベースへの接続をサポートします。このドキュメントでは、IBM Db2 データベースへの接続方法を説明します。
+Doris JDBC Catalog は、標準の JDBC インターフェースを介した IBM Db2 データベースへの接続をサポートしています。このドキュメントでは、IBM Db2 データベースへの接続方法を説明します。
 
 JDBC Catalog の概要については、[JDBC Catalog の概要](./jdbc-catalog-overview.md)を参照してください。
 
-## 利用上の注意
+## 利用上の注意 {#usage-notes}
 
 IBM Db2 データベースに接続するには、以下が必要です。
 
 * IBM Db2 11.5.x 以降
 
-* IBM Db2 データベース用の JDBC ドライバー。[Maven リポジトリ](https://mvnrepository.com/artifact/com.ibm.db2/jcc)から IBM Db2 ドライバーの最新バージョンまたは指定したバージョンをダウンロードできます。IBM Db2 jcc バージョン 11.5.8.0 の使用を推奨します。
+* IBM Db2 データベース用の JDBC ドライバー。[Maven Repository](https://mvnrepository.com/artifact/com.ibm.db2/jcc)から、IBM Db2 ドライバーの最新バージョンまたは指定したバージョンをダウンロードできます。IBM db2 jcc バージョン 11.5.8.0 の使用を推奨します。
 
 * 各 Doris FE ノードおよび BE ノードと IBM Db2 サーバー間のネットワーク接続。デフォルトのポートは 51000 です。
 
-## IBM Db2 への接続
+## IBM Db2 への接続 {#connecting-to-ibm-db2}
 
 ```sql
 CREATE CATALOG db2_catalog PROPERTIES (
@@ -33,11 +33,11 @@ CREATE CATALOG db2_catalog PROPERTIES (
 )
 ```
 
-`jdbc_url` には、IBM Db2 ドライバーに渡す接続情報とパラメーターを指定します。サポートされる URL パラメーターについては、[Db2 JDBC ドライバーのドキュメント](https://www.ibm.com/docs/en/db2-big-sql/5.0?topic=drivers-jdbc-driver)を参照してください。
+`jdbc_url` には、IBM Db2 ドライバーに渡す接続情報とパラメータを指定します。使用できる URL パラメータについては、[Db2 JDBC ドライバーのドキュメント](https://www.ibm.com/docs/en/db2-big-sql/5.0?topic=drivers-jdbc-driver)を参照してください。
 
-## 階層マッピング
+## 階層のマッピング {#hierarchical-mapping}
 
-IBM Db2 をマッピングする場合、Doris の Database は、`jdbc_url` の「database」パラメーターで指定した Db2 の DataBase に属する Schema に対応します。また、Doris の Database に属する Table は、Db2 の Schema に属する Table に対応します。対応関係は以下のとおりです。
+IBM Db2 をマッピングする際、Doris のデータベースは、DB2 の指定されたデータベース（`jdbc_url` の「database」パラメータ）配下の Schema に対応します。また、Doris のデータベースに属するテーブルは、DB2 の Schema に属するテーブルに対応します。対応関係は次のとおりです。
 
 | Doris    | IBM Db2  |
 | -------- | -------- |
@@ -45,7 +45,7 @@ IBM Db2 をマッピングする場合、Doris の Database は、`jdbc_url` の
 | Database | Schema   |
 | Table    | Table    |
 
-## 列型のマッピング
+## カラム型のマッピング {#column-type-mapping}
 
 | IBM Db2 の型     | Doris の型    | 備考 |
 | ---------------- | ------------- | ------- |
@@ -68,15 +68,15 @@ IBM Db2 をマッピングする場合、Doris の Database は、`jdbc_url` の
 | time             | string        |         |
 | clob             | string        |         |
 | xml              | string        |         |
-| BLOB             | varbinary     |Catalog の `enable.mapping.varbinary` プロパティーで制御します（4.0.2 以降でサポート）。デフォルト値は `false` で、この場合は `string` にマッピングされます。`true` の場合は `varbinary` 型にマッピングされます。|
+| BLOB | VARBINARY | 4.1.5 以降、この型は常に `VARBINARY` にマッピングされます。`enable.mapping.varbinary` プロパティは互換性のために残されていますが、`false` に設定しても `STRING` へのマッピングには戻りません。それ以前のバージョンでは、このプロパティで従来のマッピングを選択できます。 |
 | other            | UNSUPPORTED   |         |
 
-## よくある問題
+## よくある問題 {#common-issues}
 
-1. JDBC Catalog を介して IBM Db2 のデータを読み取る際に、`Invalid operation: result set is closed. ERRORCODE=-4470` 例外が発生する。
+1. JDBC Catalog を介して IBM Db2 のデータを読み込む際に、`Invalid operation: result set is closed. ERRORCODE=-4470` という例外が発生する。
 
-    IBM Db2 Catalog の作成時に、jdbc\_url の接続文字列へ `allowNextOnExhaustedResultSet=1;resultSetHoldability=1;` という接続パラメーターを追加してください。例：`jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`。
+    IBM Db2 Catalog の作成時に、jdbc\_url の接続文字列に接続パラメータ `allowNextOnExhaustedResultSet=1;resultSetHoldability=1;` を追加します。例: `jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`。
 
-2. java.io.CharConversionException が発生する。
+2. java.io.CharConversionException が発生する
 
-    この問題は文字セットに起因する可能性があります。設定 `-Ddb2.jcc.charsetDecoderEncoder=3` を `JAVA_OPTS`（`be.conf` 内）に追加し、BE を再起動して問題が解消するか確認してください。`1` や `2` などの値も試すことができます。詳細については、https://www.ibm.com/docs/en/content-collector/4.0.1?topic=manager-jdbc-throws-javaiocharconversionexception を参照してください。
+    この問題は文字セットに起因する可能性があります。設定 `-Ddb2.jcc.charsetDecoderEncoder=3` を `JAVA_OPTS`（`be.conf` 内）に追加し、BE を再起動して問題が解消されるか確認してください。`1` や `2` などの値も試すことができます。詳細については、https://www.ibm.com/docs/en/content-collector/4.0.1?topic=manager-jdbc-throws-javaiocharconversionexception を参照してください。

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/hive-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/hive-catalog.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/hive-catalog.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b4f05d08387d34ef9f4e4681502d9e9c2455f1f4320d4e021c56cd5990cd4b44",
+    "sourceTechnicalHash": "1c455ac176d04ca41d12462b6de3a736afc2bcfce906a843b92e98d57556c078",
+    "targetHash": "46de26db4e8b871bfd98e4146755af330709a1f972c0972fb926c7aaf7f74664",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:08:09.775Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b4f05d08387d34ef9f4e4681502d9e9c2455f1f4320d4e021c56cd5990cd4b44",
+      "targetHash": "46de26db4e8b871bfd98e4146755af330709a1f972c0972fb926c7aaf7f74664",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

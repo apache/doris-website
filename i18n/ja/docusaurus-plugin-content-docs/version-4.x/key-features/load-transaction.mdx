@@ -1,16 +1,15 @@
 ---
-title: ロードトランザクション
-description: 複数のロード文を単一のアトミックな単位として実行し、Label による重複排除と、厳密に一度だけの書き込みを実現するストリーミングシンク向けの 2PC を提供します。
+title: データロードトランザクション
+description: 複数のステートメントによるデータロードを単一のアトミックな単位として実行します。Label による重複排除と 2PC により、ストリーミングシンクで exactly-once を実現できます。
 keywords:
-  - ロードトランザクション
-  - 2PC コミット
-  - 厳密に一度だけのロード
-  - アトミックなロード
-  - Label による重複排除
-  - Apache Doris ストリーミングシンク
+  - load transaction
+  - 2PC commit
+  - exactly-once load
+  - atomic load
+  - label dedup
+  - Apache Doris streaming sink
 slug: /key-features/load-transaction
 image: /images/next/key-features/load-transaction.jpg
-language: ja
 last_update:
   date: 2026-05-10
   author: Apache Doris
@@ -20,43 +19,43 @@ featureCard:
     - streaming
 ---
 
-> **要点** Apache Doris では、すべてのデータロードがトランザクション内で実行されます。複数の挿入を単一の `BEGIN ... COMMIT` にまとめ、ロードの `Label` によって再試行時の重複を排除し、[Stream Load](./stream-load) の HTTP リクエストのヘッダーから二相コミットを実行できます。最後の仕組みにより、Flink、Spark、[CDC パイプライン](./kafka-cdc-integration)は独自の管理テーブルを用意せずに、Doris へ厳密に一度だけ書き込めます。
+> **要約** Apache Doris は、すべてのデータロードをトランザクションで処理します。複数の挿入を一つの `BEGIN ... COMMIT` にまとめ、データロードの `Label` で再試行時の重複を排除できます。また、[Stream Load](./stream-load) の HTTP リクエストに指定するヘッダーを使って二段階コミットを実行できます。この仕組みにより、Flink、Spark、[CDC パイプライン](./kafka-cdc-integration) は、独自の管理用テーブルを持たずに Doris へ exactly-once で書き込めます。
 
-![Apache Doris のロードトランザクション: 複数のロード文を単一のアトミックな単位として実行し、Label による重複排除と、厳密に一度だけの書き込みを実現するストリーミングシンク向けの 2PC を提供します。](/images/next/key-features/load-transaction.jpg)
+![Apache Doris のデータロードトランザクション：複数のステートメントによるデータロードを単一のアトミックな単位として実行し、Label による重複排除と 2PC でストリーミングシンクの exactly-once を実現します。](/images/next/key-features/load-transaction.jpg)
 
-## Apache Doris でロードトランザクションを使う理由 {#why}
+## Apache Doris でデータロードトランザクションを使う理由 {#why}
 
-Apache Doris のロードトランザクションを使うと、行の重複や書き込みの一部だけが成功する問題をアプリケーション側ではなくデータウェアハウス側で処理できます。これにより、Flink による再実行、複数テーブルへの書き込みの途中での失敗、同じファイルの再アップロードにも適切に対処できます。データウェアハウスへのロードで起こる問題には、よくあるパターンがあります。Flink ジョブがチェックポイントの途中で再起動して最後のバッチを再実行すると、行が重複します。CDC パイプラインが[ファクトテーブルを更新](./data-update-delete)できても、対応するディメンションテーブルへの書き込みに失敗すると、次のバックフィルまで両者の整合性が失われます。再試行スクリプトは、前回の処理が実際に完了したかどうかを確認できず、同じファイルを再アップロードします。いずれの場合も、アプリケーション側に煩雑な管理処理が必要になります。
+Apache Doris のデータロードトランザクションは、行の重複や書き込みの一部だけが完了する問題をデータウェアハウス側で処理します。これにより、Flink の再実行、途中で止まった複数テーブルへの書き込み、ファイルの再アップロードにも適切に対処できます。データウェアハウスへのデータロードでは、よくある問題が起こります。Flink ジョブがチェックポイントの途中で再起動して直前のバッチを再実行し、行が二重に登録されます。CDC パイプラインが[ファクトテーブルを更新](./data-update-delete)できても、対応するディメンションテーブルへの書き込みに失敗し、次のバックフィルまで両者に不整合が残ることがあります。また、前回の試行が実際には成功したと分からないため、再試行スクリプトが同じファイルを再アップロードすることもあります。いずれもアプリケーション側に煩雑な管理処理を強います。
 
-- 停止したストリーミングジョブを再実行すると、行が重複します。
-- 一緒に反映されるべき複数テーブルへの書き込みが、途中で止まることがあります。
-- 同じファイルを再送信すると、自分で追跡していない限り、データが二重に取り込まれます。
+- 停滞したストリーミングジョブの再実行で、行が重複します。
+- 一緒に反映すべき複数テーブルへの書き込みが、途中で止まることがあります。
+- 同じファイルを再送信すると、アプリケーション側で追跡していない限り、二重に取り込まれます。
 
-Apache Doris はこれら三つの問題をサーバー側で解決するため、ロードクライアントの実装を簡潔に保てます。
+Apache Doris はこれら三つをサーバー側で処理するため、データロードクライアントをシンプルに保てます。
 
-## Apache Doris のロードトランザクションとは {#what}
+## Apache Doris のデータロードトランザクションとは {#what}
 
-Apache Doris のロードトランザクションは、すべてのデータ取り込み方法の基盤となるアトミックな書き込み単位です。Doris へのすべての書き込みはトランザクション内で実行されます。対象には `INSERT INTO`、Stream Load、Routine Load、Broker Load が含まれます。それぞれに一意の Label が割り当てられ、FE が管理する一連のライフサイクル状態を経由します。ロードごとに Apache Doris にトランザクションの開始とコミットを暗黙的に任せることも、明示的な `BEGIN`/`COMMIT`/`ROLLBACK` で制御することも、ストリーミングシンク向けに HTTP 経由でコミットを二つのフェーズに分けることもできます。
+Apache Doris のデータロードトランザクションは、すべてのデータ取り込み経路を支えるアトミックな書き込み単位です。Doris への書き込みはすべてトランザクション内で実行されます。対象には `INSERT INTO`、Stream Load、Routine Load、Broker Load が含まれます。各トランザクションには一意の Label が割り当てられ、FE が管理する一連のライフサイクル状態を経て進みます。Apache Doris にデータロードごとのトランザクションの開始とコミットを暗黙的に任せることも、明示的な `BEGIN`/`COMMIT`/`ROLLBACK` で制御することもできます。ストリーミングシンクでは、HTTP 経由でコミットを二段階に分けることもできます。
 
 **主な用語**
 
-- **`Label`**: トランザクションを識別する、データベースごとの文字列です。同じ Label で再送信したロードは重複排除されます。
-- **`Implicit transaction`**（暗黙的なトランザクション）: 個々のロードがそれぞれ単一のトランザクションになり、成功時に自動的にコミットされます。
-- **`Explicit transaction`**（明示的なトランザクション）: `BEGIN ... COMMIT;` により、同じデータベースに対する複数の書き込みを単一のアトミックな単位にまとめます。
-- **`Stream Load 2PC`**: 後続の HTTP 呼び出しでコミットまたは中止するまで、PRECOMMITTED 状態で停止する Stream Load です。
-- **`Lifecycle states`**（ライフサイクル状態）: `PREPARE` → `PRECOMMITTED` → `COMMITTED` → `VISIBLE`（または `ABORTED`）です。行をクエリできるのは `VISIBLE` になってからです。
+- **`Label`**：データベース内でトランザクションを識別する文字列です。同じ Label で再送信すると、データロードの重複が排除されます。
+- **`Implicit transaction`**：個々のデータロードがそれぞれ独立したトランザクションとなり、成功時に自動でコミットされます。
+- **`Explicit transaction`**：`BEGIN ... COMMIT;` により、同じデータベースへの複数の書き込みを一つのアトミックな単位にまとめます。
+- **`Stream Load 2PC`**：後続の HTTP 呼び出しでコミットまたは中止するまで、PRECOMMITTED で停止する Stream Load です。
+- **`Lifecycle states`**：`PREPARE` → `PRECOMMITTED` → `COMMITTED` → `VISIBLE`（または `ABORTED`）です。行をクエリで参照できるのは `VISIBLE` になってからです。
 
-## Apache Doris のロードトランザクションの仕組み {#how}
+## Apache Doris のデータロードトランザクションの仕組み {#how}
 
-Apache Doris のロードトランザクションでは、すべての書き込みが FE の管理する五つの状態（`PREPARE` → `PRECOMMITTED` → `COMMITTED` → `VISIBLE`、失敗時は `ABORTED`）を経由します。`Label` によって再試行時の重複を排除し、最後にレプリカへの反映を行うことで、行を一度にクエリ可能にします。
+Apache Doris のデータロードトランザクションでは、すべての書き込みが FE の管理する五つの状態（`PREPARE` → `PRECOMMITTED` → `COMMITTED` → `VISIBLE`、失敗時は `ABORTED`）を経ます。`Label` によって再試行時の重複を排除し、最後にレプリカ単位で公開することで、ある一時点から行をクエリで参照できるようにします。
 
-1. **開始。** ロードは `PREPARE` 状態でトランザクションを開始します。FE が `TxnId` を割り当て、ユーザーが指定した、または生成された Label に紐付けます。同じ Label で再度送信すると、新しい処理は行われず、元のトランザクションの結果が返されます。
-2. **書き込み。** BE がデータを受信してセグメントを構築し、成功を報告します。予定されたすべてのロードから確認応答を受けると、トランザクションは `PRECOMMITTED` に進みます。
+1. **開始。** データロードは `PREPARE` 状態でトランザクションを開始します。FE は `TxnId` を割り当て、ユーザーが指定した Label または生成された Label に関連付けます。同じ Label で再度送信すると、元のトランザクションの結果が返されます。
+2. **書き込み。** BE がデータを受け取り、セグメントを構築して成功を報告します。予定されたすべてのデータロードから完了通知が届くと、トランザクションは `PRECOMMITTED` に進みます。
 3. **コミット。** `COMMIT`（または第二段階の `txn_operation: commit` HTTP 呼び出し）によって、トランザクションは `COMMITTED` に進みます。データはディスク上にありますが、まだ読み取れません。
-4. **反映。** バックグラウンドのデーモンが各レプリカに `PublishVersion` タスクを送ります。影響を受けるすべてのタブレットの全レプリカから確認応答を受けると、トランザクションは `VISIBLE` になります。
-5. **読み取り。** `VISIBLE` になった後に実行されるクエリには新しい行が見えます。それより前のクエリには以前のバージョンが見えます。同じトランザクション内のタブレット間で、読み取り結果の整合性が崩れることはありません。
+4. **公開。** バックグラウンドデーモンが各レプリカに `PublishVersion` タスクを送ります。対象となるすべてのタブレットの全レプリカから完了通知が届くと、トランザクションは `VISIBLE` になります。
+5. **読み取り。** `VISIBLE` になった後に実行されるクエリには新しい行が見えます。それ以前のクエリには前のバージョンが見えます。同じトランザクション内のタブレット間で、更新の一部だけが見える読み取りは発生しません。
 
-途中で何かが失敗した場合、またはクライアントが `ROLLBACK`（もしくは `txn_operation: abort`）を呼び出した場合、トランザクションは `ABORTED` になり、データは破棄されます。
+途中で何かが失敗した場合や、クライアントが `ROLLBACK`（または `txn_operation: abort`）を呼び出した場合、トランザクションは `ABORTED` となり、データは破棄されます。
 
 ## クイックスタート {#quick-start}
 
@@ -75,41 +74,41 @@ INSERT INTO order_audit  VALUES (1, 'created'), (2, 'created');
 COMMIT;
 ```
 
-**想定される結果**
+**期待される結果**
 
 ```
 Query OK, 2 rows affected
 {'label':'txn_insert_b55db21aad7451b','status':'VISIBLE','txnId':'10013'}
 ```
 
-両方のテーブルが同時に読み取り可能になります。二番目の `INSERT` が失敗した場合や、`COMMIT` より前に接続が切れた場合、どちらのテーブルにも新しい行は反映されません。
+両方のテーブルが同時に読み取り可能になります。二つ目の `INSERT` が失敗した場合や、`COMMIT` 前に接続が切れた場合は、どちらのテーブルにも新しい行は反映されません。
 
-## Apache Doris のロードトランザクションを使う場面 {#when}
+## Apache Doris のデータロードトランザクションを使う場面 {#when}
 
-複数の挿入をまとめて反映する必要がある場合、ストリーミングシンクに厳密に一度だけの書き込みが必要な場合、または再試行したロードをアプリケーション側ではなく Label で重複排除する必要がある場合は、Apache Doris のロードトランザクションを使用します。
+複数の挿入をまとめて反映する必要がある場合、ストリーミングシンクに exactly-once セマンティクスが必要な場合、または再試行されたデータロードをアプリケーション側ではなく Label で重複排除したい場合に、Apache Doris のデータロードトランザクションを使います。
 
-**適しているケース**
+**適した用途**
 
-- チェックポイント間で厳密に一度だけの書き込みを実現するために、Stream Load 2PC を利用する Flink や Spark のシンク。
+- チェックポイントをまたいだ exactly-once セマンティクスのために Stream Load 2PC を使用する Flink や Spark のシンク。
 - ファクトテーブルとディメンションテーブルをまとめて更新する必要がある CDC パイプライン。
-- 関連する行のバッチを単位として追加または削除するバックフィル。
-- 冪等な再試行が重要で、クライアントではなくデータウェアハウスに Label による重複排除を行わせたいワークロード。
+- 関連する行のバッチを一つの単位として追加または削除するバックフィル。
+- 冪等な再試行が重要で、クライアントではなくデータウェアハウス側で Label による重複排除を行いたいワークロード。
 
-**適していないケース**
+**適さない用途**
 
-- 高頻度の単一行の挿入。トランザクションごとにコミットの往復通信とタブレットのバージョンが増え、小規模なロードはコミット段階がボトルネックになります。代わりに [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/) を使用してください。
-- 二つのデータベースをまたぐアトミックな処理。単一のトランザクション内のすべてのテーブルは、同じデータベースに属する必要があります。
-- **クラウド環境またはストレージとコンピュートを分離した構成**における、Merge-on-Write の Unique Key テーブルに対する Stream Load 2PC。この組み合わせは BE によって `Status::NotSupported` で拒否されます。オンプレミスのシェアードナッシング構成のクラスターでは使用できます。
-- 長期間にわたる重複排除。Label は約 3 日後、またはデータベースごとに 2,000 件に達した時点の、いずれか早い方で削除されます。その後に同じ Label を再利用しても重複排除されません。長期間保持する冪等性キーはアプリケーション側で管理してください。
-- 同じトランザクション内で自分の書き込みを読み取る処理。各文は開始時点のスナップショットに対して実行されるため、先行する `INSERT` の結果は `COMMIT` が完了するまで見えません。
+- 高頻度の単一行挿入。トランザクションごとにコミットの往復通信とタブレットのバージョンが増え、小規模なデータロードではコミット段階がボトルネックになります。代わりに [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/) を使用してください。
+- 二つのデータベースにまたがるアトミックな処理。一つのトランザクションに含まれるすべてのテーブルは、同じデータベースに属している必要があります。
+- **cloud / storage-compute-separated 構成**での Merge-on-Write Unique Key テーブルに対する Stream Load 2PC。この組み合わせは BE によって `Status::NotSupported` で拒否されます。on-prem (shared-nothing) クラスターでは使用できます。
+- 長期間にわたる重複排除。Label は約3日後、またはデータベースあたり2,000件に達した時点のうち、早い方で削除されます。その後に同じ Label を再利用しても重複は排除されません。長期間有効な冪等性キーはアプリケーション側で追跡してください。
+- 同じトランザクション内で自分の書き込みを読み取る処理。各ステートメントは開始時点のスナップショットに対して実行されるため、先行する `INSERT` の結果は `COMMIT` 後まで見えません。
 
-## 関連情報 {#further-reading}
+## 関連資料 {#further-reading}
 
-- [Stream Load](./stream-load): 2PC を利用できる同期 HTTP ロード。
-- [Group Commit](./group-commit): 明示的な `BEGIN ... COMMIT` を必要としない、高頻度の小規模な挿入に適した方法。
-- [Kafka と CDC の統合](./kafka-cdc-integration): Routine Load と Flink CDC が、このトランザクションモデルを使って厳密に一度だけの書き込みを実現する仕組み。
-- [Binlog テーブルストリーム](./binlog-table-stream): コミットされた行が可視になったときに生成される変更フィード。
-- [トランザクション、分離レベル、Label の保持期間](https://doris.apache.org/docs/data-operate/transaction/)
+- [Stream Load](./stream-load)：2PC 方式を提供する同期 HTTP データロード。
+- [Group Commit](./group-commit)：明示的な `BEGIN ... COMMIT` を必要としない、高頻度の小規模な挿入に適した機能。
+- [Kafka と CDC の統合](./kafka-cdc-integration)：Routine Load と Flink CDC が、このトランザクションモデルを使って exactly-once を実現する仕組み。
+- [Changelog / Table Stream](./changelog-table-stream)：コミットされた行が可視になった後に生成される変更フィード。
+- [トランザクション、分離、Label の保持期間](https://doris.apache.org/docs/data-operate/transaction/)
 - [Stream Load 2PC の手順](https://doris.apache.org/docs/data-operate/import/import-way/stream-load-manual/)
-- [Flink による Doris へのリアルタイム書き込みが高速かつ厳密に一度だけとなる仕組み](https://doris.apache.org/blog/Flink-realtime-write/)
-- [Unique Key](./unique-key): Merge-on-Write による更新も同じロードトランザクションプロトコルでコミットされるテーブルモデル。
+- [Flink による Doris へのリアルタイム書き込みが高速性と exactly-once を両立する仕組み](https://doris.apache.org/blog/Flink-realtime-write/)
+- [Unique Key](./unique-key)：Merge-on-Write による upsert が、同じデータロードトランザクションのプロトコルを通じてコミットされるテーブルモデル。

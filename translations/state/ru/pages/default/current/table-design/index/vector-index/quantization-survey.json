@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/quantization-survey",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/quantization-survey.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/vector-index/quantization-survey.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "06364abeab7e4969077ba9c86e371cbc52572da6e8af06971ee2c1080161b709",
+    "sourceTechnicalHash": "083e288792511570276128551d82b746955fec728e5237f7dc89496eca0a4b57",
+    "targetHash": "22b815740fdc448dd11bfeb528e4ce6861f450d13e912b902d79b7cf7d0ba977",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:00:54.780Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "06364abeab7e4969077ba9c86e371cbc52572da6e8af06971ee2c1080161b709",
+      "targetHash": "22b815740fdc448dd11bfeb528e4ce6861f450d13e912b902d79b7cf7d0ba977",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

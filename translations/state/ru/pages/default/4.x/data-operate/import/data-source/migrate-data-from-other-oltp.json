@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/migrate-data-from-other-oltp",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "31cd7b30572cfc9b22ef4c5c43c0d5007e89295ad96a2d4ad3a8f622a079d493",
+    "sourceTechnicalHash": "89c66e7a7d03a7ccddd5b7098d6392642e1694143a64ae482396d1e296411c6b",
+    "targetHash": "950f01d7ad5055896f7f6c8035faabdc1629cdc46ff679d167fe0f4cef56fb88",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-31T06:52:31.260Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "31cd7b30572cfc9b22ef4c5c43c0d5007e89295ad96a2d4ad3a8f622a079d493",
+      "targetHash": "950f01d7ad5055896f7f6c8035faabdc1629cdc46ff679d167fe0f4cef56fb88",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision / Operational steps -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Выбор архитектуры / Операционные шаги -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Migrating or synchronizing data from OLTP databases (MySQL / SQL Server / Oracle / PostgreSQL) to Apache Doris -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: миграция или синхронизация данных из баз данных OLTP (MySQL / SQL Server / Oracle / PostgreSQL) в Apache Doris -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+        "blob": "5c65438ac8cc1872cecbd21d8f7e81ebf551d4d1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+        "blob": "6b605e23be5b32ac22bd4aa3f83e38c0bbdb5370"
+      }
+    }
+  }
+}

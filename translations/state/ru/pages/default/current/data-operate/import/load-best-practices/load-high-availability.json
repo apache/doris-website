@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/load-best-practices/load-high-availability",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/load-best-practices/load-high-availability.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/load-best-practices/load-high-availability.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b0d89ac3f3ea80ddc86931d91bafc85ab2d365cf188e04897d5aafb7c616f1e7",
+    "sourceTechnicalHash": "de3396e750aecb11883eb6bbf76ab07595d0759ee1f5091c9d51e83d2c7fcd5c",
+    "targetHash": "47adff96daa8080697ec570ebe76205f037ef2c7c71fcc5b501d20205dc1a986",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:24:25.904Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b0d89ac3f3ea80ddc86931d91bafc85ab2d365cf188e04897d5aafb7c616f1e7",
+      "targetHash": "47adff96daa8080697ec570ebe76205f037ef2c7c71fcc5b501d20205dc1a986",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

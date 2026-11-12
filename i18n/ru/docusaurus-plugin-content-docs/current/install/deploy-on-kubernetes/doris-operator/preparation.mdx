@@ -1,0 +1,47 @@
+---
+{
+    "title": "Подготовка",
+    "language": "ru",
+    "description": "Подготовка среды и рекомендации перед развертыванием Doris с помощью Doris Operator в облачных сервисах Kubernetes."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Перед развертыванием Apache Doris с помощью Doris Operator проверьте сервис Kubernetes, системные параметры узлов, реестр образов, хранилище и требования к привилегиям в вашей облачной среде.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Рекомендации по развертыванию в Alibaba Cloud Container Service"
+    description="Подготовьте ACK или ACS к развертыванию Doris с помощью Doris Operator"
+    link="on-alibaba"
+/>
+
+<GettingStartedCard
+    title="Рекомендации по развертыванию в AWS EKS"
+    description="Подготовьте Amazon EKS к развертыванию Doris с помощью Doris Operator"
+    link="on-aws"
+/>
+</div>
+
+## Требования к безопасности Pod {#pod-security-requirements}
+
+Официальные образы Doris FE и BE в настоящее время запускаются от имени пользователя root, поскольку их скрипты запуска обновляют файлы конфигурации в `/opt/apache-doris` и могут инициализировать системные настройки. Перед развертыванием убедитесь, что политика безопасности, применяемая к пространству имен Doris, разрешает запуск контейнеров с UID `0`.
+
+Например, можно явно задать контекст безопасности контейнера в ресурсе `DorisCluster`:
+
+```yaml
+spec:
+  feSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+  beSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+```
+
+Эта конфигурация не позволяет обойти политики допуска Kubernetes. Если в кластере применяется Pod Security Standard уровня `restricted` или политика запуска от имени пользователя, отличного от root, обеспечиваемая такими инструментами, как Kyverno или OPA Gatekeeper, попросите администратора кластера создать исключение для Doris в пределах пространства имен или рабочей нагрузки. Избегайте ослабления политики во всем кластере.
+
+Если для BE задано `enableWorkloadGroup: true`, Doris Operator запускает контейнер BE в привилегированном режиме для управления cgroups. Убедитесь, что политика безопасности также разрешает привилегированные контейнеры, или отключите эту функцию.

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/JSON.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/JSON.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "44e0590952d928738a596a3b6bab8578a6112ead90fda4d25533df62e6c9266b",
+    "sourceTechnicalHash": "5cac76b5297f60e16ed9f3af6d5cb028c0948dc4e125e9bd939b1748b87debf8",
+    "targetHash": "b1a35a0b3dd5dc6f17885f49443e1a2b74abc347704bdfa2e9c6ad98728e0fda",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:04:34.681Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "44e0590952d928738a596a3b6bab8578a6112ead90fda4d25533df62e6c9266b",
+      "targetHash": "b1a35a0b3dd5dc6f17885f49443e1a2b74abc347704bdfa2e9c6ad98728e0fda",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 73: expected [\"code\",null,null,\"mysql> SELECT id, j, json_exists_path(j, '$') FROM test_json ORDER BY id;\\n+------+---------------------------------------------------------------+-----------------------------+\\n| id   | j                                                             | json_exists_path(`j`, '$') |\\n+------+---------------------------------------------------------------+-----------------------------+\\n|    1 |                                                          NULL |                        NULL |\\n|    2 |                                                          null |                           1 |\\n|    3 |                                                          true |                           1 |\\n|    4 |                                                         false |                           1 |\\n|    5 |                                                           100 |                           1 |\\n|    6 |                                                         10000 |                           1 |\\n|    7 |                                                    1000000000 |                           1 |\\n|    8 |                                           1152921504606846976 |                           1 |\\n|    9 |                                                          6.18 |                           1 |\\n|   10 |                                                        \\\"abcd\\\" |                           1 |\\n|   11 |                                             ; received [\"code\",null,null,\"mysql> SELECT id, j, json_exists_path(j, '$') FROM test_json ORDER BY id;\\n+------+---------------------------------------------------------------+-----------------------------+\\n| id   | j                                                             | json_exists_path(`j`, '$') |\\n+------+---------------------------------------------------------------+-----------------------------+\\n|    1 |                                                          NULL |                        NULL |\\n|    2 |                                                          null |                           1 |\\n|    3 |                                                          true |                           1 |\\n|    4 |                                                         false |                           1 |\\n|    5 |                                                           100 |                           1 |\\n|    6 |                                                         10000 |                           1 |\\n|    7 |                                                    1000000000 |                           1 |\\n|    8 |                                           1152921504606846976 |                           1 |\\n|    9 |                                                          6.18 |                           1 |\\n|   10 |                                                        \\\"abcd\\\" |                           1 |\\n|   11 |                                             "
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

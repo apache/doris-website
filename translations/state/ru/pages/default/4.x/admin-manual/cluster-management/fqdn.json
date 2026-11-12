@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/fqdn",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/fqdn.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/fqdn.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7d4ab23543024ceac15b7899c1ef5c029560cd05e4c0c740fe9c56ae49e13c1b",
+    "sourceTechnicalHash": "ec91cd72bfe2943b500e28472debd76bf09e641e7ceed828571ca47762bf410e",
+    "targetHash": "55b4732dbfd6728e748a704ead481af5cf132aefd16ce35b40b4c32b7aefbe05",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:51:37.619Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7d4ab23543024ceac15b7899c1ef5c029560cd05e4c0c740fe9c56ae49e13c1b",
+      "targetHash": "55b4732dbfd6728e748a704ead481af5cf132aefd16ce35b40b4c32b7aefbe05",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/cluster-management/fqdn",
+        "sourcePath": "docs/admin-manual/cluster-management/fqdn.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/fqdn.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "7d4ab23543024ceac15b7899c1ef5c029560cd05e4c0c740fe9c56ae49e13c1b",
+        "targetHash": "55b4732dbfd6728e748a704ead481af5cf132aefd16ce35b40b4c32b7aefbe05",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

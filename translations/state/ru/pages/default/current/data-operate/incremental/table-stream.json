@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/table-stream",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/table-stream.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/incremental/table-stream.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "0ce9063715fcad866e66f1bd218253766ea8ef38a6af3c5af80627ba8365d631",
+    "sourceTechnicalHash": "7498859f3d9462ec4ecaa9ffc593722ff96dfe9354fb4c122baf8dd69e36adcc",
+    "targetHash": "cc649263e644150b94c024561f3443efaee0aa8b2fee3949cf33b36e1c5e3a78",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:30:09.315Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0ce9063715fcad866e66f1bd218253766ea8ef38a6af3c5af80627ba8365d631",
+      "targetHash": "cc649263e644150b94c024561f3443efaee0aa8b2fee3949cf33b36e1c5e3a78",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/lead",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/lead.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/lead.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9814b62ff4b61448865709cad2ddc7432356a7c3d10d1074d18cc5d1d5fa0c1b",
+    "sourceTechnicalHash": "9cfed6c497f56f440cf6303af0bc85dfc9ab66fcaaeed14ab980abd6259adf60",
+    "targetHash": "1645c6f16f109e712c4665adbc46561c9588bd87e6efa27e1bd1bad1b27c0184",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:59:33.441Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9814b62ff4b61448865709cad2ddc7432356a7c3d10d1074d18cc5d1d5fa0c1b",
+      "targetHash": "1645c6f16f109e712c4665adbc46561c9588bd87e6efa27e1bd1bad1b27c0184",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

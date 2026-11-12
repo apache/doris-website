@@ -1,10 +1,13 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
+const {Script} = require('node:vm');
 const {inventory} = require('./optimize.cjs');
+const {validateApacheControls} = require('./apache-controls.cjs');
 
 function verify(site) {
     site = path.resolve(site);
+    assert(!fs.existsSync(path.join(site,'.ci-validation.json')), 'Sample validation artifacts must not be published');
     const manifest = JSON.parse(fs.readFileSync(path.join(site,'.publish/redirects.json'),'utf8'));
     const redirects = new Map(manifest.redirects.map(([from,to]) => [decodeURIComponent(from),to]));
     const files = inventory(site);
@@ -24,7 +27,7 @@ function verify(site) {
     for (const [from,to] of manifest.redirects) {
         if (to.startsWith('/')) assert(resolve(to), `Missing redirect destination: ${from} -> ${to}`);
     }
-    let references = 0;
+    let references = 0, compiledJavaScriptFiles = 0;
     const check = (value,source) => {
         if (value.startsWith('data:')) return;
         const url = new URL(value,`https://doris.apache.org/${source}`);
@@ -34,7 +37,9 @@ function verify(site) {
         references++;
     };
     for (const item of files) {
-        if (item.relative.endsWith('.html')) {
+        if (path.basename(item.file) === '.htaccess') {
+            validateApacheControls(fs.readFileSync(item.file,'utf8'),item.relative);
+        } else if (item.relative.endsWith('.html')) {
             const content = fs.readFileSync(item.file,'utf8');
             for (const tag of content.matchAll(/<(?:script|link|img|source|video|audio)\b[^>]*>/g)) {
                 for (const attribute of tag[0].matchAll(/\b(?:src|href)=(?:"([^"]*)"|'([^']*)'|([^\s>]+))/g)) {
@@ -43,9 +48,15 @@ function verify(site) {
             }
         } else if (item.relative.endsWith('.css')) {
             for (const match of fs.readFileSync(item.file,'utf8').matchAll(/url\(["']?([^\s"')]+)["']?\)/g)) check(match[1],item.relative);
+        } else if (item.relative.startsWith('assets/') && item.relative.endsWith('.js')) {
+            // Check syntax without executing browser code. A successful SSG
+            // build can still contain a malformed client entry or lazy chunk.
+            try {new Script(fs.readFileSync(item.file, 'utf8'), {filename: item.relative});}
+            catch (error) {throw new SyntaxError(`Invalid compiled JavaScript in ${item.relative}: ${error.message}`);}
+            compiledJavaScriptFiles++;
         }
     }
-    return {files:files.length,redirects:manifest.redirects.length,compiledAssetReferences:references};
+    return {files:files.length,redirects:manifest.redirects.length,compiledAssetReferences:references,compiledJavaScriptFiles};
 }
 
 if (require.main === module) {

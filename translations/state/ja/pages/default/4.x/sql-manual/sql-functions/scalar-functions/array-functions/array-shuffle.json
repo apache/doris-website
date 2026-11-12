@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle.md",
-    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
-    "sourceHash": "1add2afb10a98fe97270845cc4bc6518bb0de772cd50188e6ed5bc54f30a248c",
-    "sourceTechnicalHash": "563602f340250e6daa2a86b5728261edcd02876ee4655d831c307bad13b3655f",
-    "targetHash": "a5d0f6969ac79df832435ef76cf536c662b5d61eabdf75adc9feaa5ec54aa441",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "9d661d14611e87bd3b9a64b748fe57b39b542282875ba61c2a0350cfa9e6d6f7",
+    "sourceTechnicalHash": "1cd47ff6aab23f72e4273510c4309df6c074c87e352de78009bccfb417e8e9d9",
+    "targetHash": "16db2f4c5b1ee3cc19318c9f350613faf97a9c34fbbc33627de68f899d418032",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T06:59:59.331Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T05:30:53.628Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9d661d14611e87bd3b9a64b748fe57b39b542282875ba61c2a0350cfa9e6d6f7",
+      "targetHash": "16db2f4c5b1ee3cc19318c9f350613faf97a9c34fbbc33627de68f899d418032",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle.md",
+        "blob": "697b739fbe823d4a07e09d4dec3dc4df9485d8be"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle.md",
+        "blob": "e8ae3cc1112067799c84c652a40216f6ea0d6a15"
+      }
+    }
   }
 }

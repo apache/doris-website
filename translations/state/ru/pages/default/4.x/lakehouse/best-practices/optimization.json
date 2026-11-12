@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/optimization",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/optimization.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/optimization.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2afffb6c3ee662b29e415c94773434b349f1b3b419b987d60a0af4453aeaa250",
+    "sourceTechnicalHash": "b2c39588462e5c9413d61273df080c73bfb851025bfeb5dc79ed8770427096ab",
+    "targetHash": "294f7fe36a734199fde88a84ea17681df79522a1ca8bf9ec310964c42e8b958a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:02:40.087Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2afffb6c3ee662b29e415c94773434b349f1b3b419b987d60a0af4453aeaa250",
+      "targetHash": "294f7fe36a734199fde88a84ea17681df79522a1ca8bf9ec310964c42e8b958a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

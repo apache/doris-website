@@ -5,134 +5,137 @@ on:
     types: [created]
 
 permissions:
-  pull-requests: write
   contents: read
-  issues: write
+  pull-requests: read
+
+# One shared OAuth snapshot: do not race refresh-token persistence.
+concurrency:
+  group: opencode-review-auth
+  cancel-in-progress: false
 
 jobs:
-  code-review:
+  authorize:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/review')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      allowed: ${{ steps.authorize.outputs.allowed }}
+      number: ${{ steps.authorize.outputs.number }}
+      head_sha: ${{ steps.authorize.outputs.head_sha }}
+      base_sha: ${{ steps.authorize.outputs.base_sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Check the exact command and repository write permission
+        id: authorize
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/review.py authorize --command /review
+
+  analyze:
+    needs: authorize
+    if: needs.authorize.outputs.allowed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    if: >-
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/review') &&
-      (
-        github.event.comment.author_association == 'MEMBER' ||
-        github.event.comment.author_association == 'OWNER' ||
-        github.event.comment.author_association == 'COLLABORATOR'
-      )
+    env:
+      HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
+      BASE_SHA: ${{ needs.authorize.outputs.base_sha }}
     steps:
-      - name: Get PR info
-        id: pr
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          PR_JSON=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.issue.number }})
-          HEAD_SHA=$(echo "$PR_JSON" | jq -r '.head.sha')
-          BASE_SHA=$(echo "$PR_JSON" | jq -r '.base.sha')
-          HEAD_REF=$(echo "$PR_JSON" | jq -r '.head.ref')
-          BASE_REF=$(echo "$PR_JSON" | jq -r '.base.ref')
-          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
-          echo "base_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
-          echo "head_ref=$HEAD_REF" >> "$GITHUB_OUTPUT"
-          echo "base_ref=$BASE_REF" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout trusted orchestration only
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ steps.pr.outputs.head_sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
-
-      - name: Install OpenCode
+          filter: blob:none
+          persist-credentials: false
+      - name: Fetch reviewed objects without checking out PR code
+        run: git fetch --no-tags origin "$BASE_SHA" "$HEAD_SHA"
+      - name: Prepare bounded text input from Git objects
+        run: python3 .github/scripts/review.py packet --output "$RUNNER_TEMP/review-prompt.txt"
+      - name: Install checksum-verified OpenCode and ossutil
         run: |
-          for attempt in 1 2 3; do
-            if curl -fsSL https://opencode.ai/install | bash; then
-              echo "$HOME/.opencode/bin" >> "$GITHUB_PATH"
-              exit 0
-            fi
-            echo "Install attempt $attempt failed, retrying in 10s..."
-            sleep 10
-          done
-          echo "All install attempts failed"
-          exit 1
-
-      - name: Install ossutil
-        run: |
-          tmp_dir="$(mktemp -d)"
-          trap 'rm -rf "$tmp_dir"' EXIT
-          curl -fsSL -o "$tmp_dir/ossutil.zip" https://gosspublic.alicdn.com/ossutil/1.7.19/ossutil-v1.7.19-linux-amd64.zip
-          unzip -q "$tmp_dir/ossutil.zip" -d "$tmp_dir"
-          sudo install -m 0755 "$tmp_dir/ossutil-v1.7.19-linux-amd64/ossutil" /usr/local/bin/ossutil
-
-      - name: Configure OpenCode auth
-        id: configure-auth
+          set -euo pipefail
+          tools="$RUNNER_TEMP/review-tools"
+          mkdir -p "$tools"
+          curl --fail --silent --show-error --location --retry 3 \
+            https://github.com/anomalyco/opencode/releases/download/v1.19.3/opencode-linux-x64.tar.gz \
+            --output "$tools/opencode.tar.gz"
+          echo "13a8fb2978302071b86f9d7e00da9c8895f9cd846978379c3bdc6a5333536c9b  $tools/opencode.tar.gz" | sha256sum --check
+          tar -xzf "$tools/opencode.tar.gz" -C "$tools"
+          curl --fail --silent --show-error --location --retry 3 \
+            https://gosspublic.alicdn.com/ossutil/1.7.19/ossutil-v1.7.19-linux-amd64.zip \
+            --output "$tools/ossutil.zip"
+          echo "dcc512e4a893e16bbee63bc769339d8e56b21744fd83c8212a9d8baf28767343  $tools/ossutil.zip" | sha256sum --check
+          unzip -q "$tools/ossutil.zip" -d "$tools"
+      - name: Load and mask the OpenCode auth snapshot
+        id: auth
         env:
           OSS_AK: ${{ secrets.OSS_AK }}
           OSS_SK: ${{ secrets.OSS_SK }}
-          OSS_ENDPOINT: oss-cn-hongkong.aliyuncs.com
-          OSS_AUTH_OBJECT: oss://doris-community-ci/auth.json
         run: |
-          mkdir -p ~/.local/share/opencode
-          ossutil -i "$OSS_AK" -k "$OSS_SK" -e "$OSS_ENDPOINT" cp -f "$OSS_AUTH_OBJECT" ~/.local/share/opencode/auth.json
-          chmod 600 ~/.local/share/opencode/auth.json
-          test -s ~/.local/share/opencode/auth.json
-
-      - name: Configure OpenCode permission
+          set -euo pipefail
+          umask 077
+          runtime="$RUNNER_TEMP/opencode-review"
+          mkdir -p "$runtime/data/opencode"
+          "$RUNNER_TEMP/review-tools/ossutil-v1.7.19-linux-amd64/ossutil" \
+            -i "$OSS_AK" -k "$OSS_SK" -e oss-cn-hongkong.aliyuncs.com \
+            cp -f oss://doris-community-ci/auth.json "$runtime/data/opencode/auth.json"
+          python3 .github/scripts/review.py mask-auth --input "$runtime/data/opencode/auth.json"
+      - name: Run a text-only review without external plugins or inherited secrets
         run: |
-          echo '{"permission":"allow"}' > opencode.json
-
-      - name: Prepare review prompt
-        run: |
-          cat > /tmp/review_prompt.txt <<'PROMPT'
-          You are performing an automated code review inside a GitHub Actions runner. The gh CLI is available and authenticated via GH_TOKEN. You can inspect git history, view diffs, run local validation commands, and comment on the pull request.
-
-          Context:
-          - Repository: PLACEHOLDER_REPO
-          - PR number: PLACEHOLDER_PR_NUMBER
-          - PR Head SHA: PLACEHOLDER_HEAD_SHA
-          - PR Base SHA: PLACEHOLDER_BASE_SHA
-
-          Read `AGENTS.md` in the repository root. It is the sole review guide; follow it strictly.
-
-          Submission:
-          - After completing the review, provide a final summary that includes conclusions for every applicable critical checkpoint required by `AGENTS.md`.
-          - If no issues are found, submit a short summary comment with `gh pr comment PLACEHOLDER_PR_NUMBER --body "<summary>"`.
-          - If issues are found, submit a review with inline comments plus a comprehensive summary body using the GitHub Reviews API.
-          - Build a JSON array of comments like: [{ "path": "<file>", "position": <diff_position>, "body": "..." }]
-          - Submit via: `gh api repos/PLACEHOLDER_REPO/pulls/PLACEHOLDER_PR_NUMBER/reviews --input <json_file>`
-          - The JSON file should contain: {"event":"COMMENT","body":"<summary>","comments":[...]}
-          - Do not use `gh pr review --approve` or `gh pr review --request-changes`.
-          PROMPT
-          sed -i "s|PLACEHOLDER_REPO|${REPO}|g" /tmp/review_prompt.txt
-          sed -i "s|PLACEHOLDER_PR_NUMBER|${PR_NUMBER}|g" /tmp/review_prompt.txt
-          sed -i "s|PLACEHOLDER_HEAD_SHA|${HEAD_SHA}|g" /tmp/review_prompt.txt
-          sed -i "s|PLACEHOLDER_BASE_SHA|${BASE_SHA}|g" /tmp/review_prompt.txt
-        env:
-          REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.issue.number }}
-          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
-          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
-
-      - name: Run automated code review
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          PROMPT=$(cat /tmp/review_prompt.txt)
-          opencode run "$PROMPT" -m "openai/gpt-5.5"
-
-      - name: Persist OpenCode auth
-        if: ${{ always() && steps.configure-auth.outcome == 'success' }}
+          mkdir -p "$RUNNER_TEMP/review-result"
+          python3 .github/scripts/review.py model \
+            --binary "$RUNNER_TEMP/review-tools/opencode" \
+            --runtime "$RUNNER_TEMP/opencode-review" \
+            --input "$RUNNER_TEMP/review-prompt.txt" \
+            --output "$RUNNER_TEMP/review-result/review.json"
+      - name: Persist refreshed authentication
+        if: always() && steps.auth.outcome == 'success'
         env:
           OSS_AK: ${{ secrets.OSS_AK }}
           OSS_SK: ${{ secrets.OSS_SK }}
-          OSS_ENDPOINT: oss-cn-hongkong.aliyuncs.com
-          OSS_AUTH_OBJECT: oss://doris-community-ci/auth.json
         run: |
-          if [ ! -s ~/.local/share/opencode/auth.json ]; then
-            echo "::warning::OpenCode auth file is missing or empty; skip OSS auth persistence."
-            exit 0
-          fi
+          set -euo pipefail
+          auth="$RUNNER_TEMP/opencode-review/data/opencode/auth.json"
+          python3 .github/scripts/review.py mask-auth --input "$auth"
+          "$RUNNER_TEMP/review-tools/ossutil-v1.7.19-linux-amd64/ossutil" \
+            -i "$OSS_AK" -k "$OSS_SK" -e oss-cn-hongkong.aliyuncs.com \
+            cp -f "$auth" oss://doris-community-ci/auth.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: opencode-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/review-result/review.json
+          if-no-files-found: error
+          retention-days: 7
 
-          if ! ossutil -i "$OSS_AK" -k "$OSS_SK" -e "$OSS_ENDPOINT" cp -f ~/.local/share/opencode/auth.json "$OSS_AUTH_OBJECT"; then
-            echo "::warning::Failed to persist OpenCode auth to OSS; continue because review already finished."
-          fi
+  publish:
+    needs: [authorize, analyze]
+    if: needs.authorize.outputs.allowed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      PR_NUMBER: ${{ needs.authorize.outputs.number }}
+      HEAD_SHA: ${{ needs.authorize.outputs.head_sha }}
+      BASE_SHA: ${{ needs.authorize.outputs.base_sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: opencode-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/review-result
+      - name: Fetch reviewed objects without checking out PR code
+        run: git fetch --no-tags origin "$BASE_SHA" "$HEAD_SHA"
+      - name: Validate the result and publish for the reviewed commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/review.py publish --kind code --input "$RUNNER_TEMP/review-result/review.json"

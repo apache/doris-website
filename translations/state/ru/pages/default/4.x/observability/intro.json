@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/observability/intro.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5333aa7bff9666ff1a7f23bf6bc310342f5ea9f9f378986eb0b61654d2188b7a",
+    "sourceTechnicalHash": "6e33a766375fc39997a5e71a43bbe87c73637b1ff4bbc9b1059fde2f45e4b038",
+    "targetHash": "5d3bca001b13247b754b48896ec94a771e8a1f0d4497ce730716082c6a5dc703",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:24.191Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5333aa7bff9666ff1a7f23bf6bc310342f5ea9f9f378986eb0b61654d2188b7a",
+      "targetHash": "5d3bca001b13247b754b48896ec94a771e8a1f0d4497ce730716082c6a5dc703",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "observability/intro",
+        "sourcePath": "docs/observability/intro.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/observability/intro.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "5333aa7bff9666ff1a7f23bf6bc310342f5ea9f9f378986eb0b61654d2188b7a",
+        "targetHash": "5d3bca001b13247b754b48896ec94a771e8a1f0d4497ce730716082c6a5dc703",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

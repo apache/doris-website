@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/fluentbit",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/fluentbit.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/fluentbit.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3c79723365f02526d28e68d0a5ebbf90df78bf9f3315a7512219b4f2943badd8",
+    "sourceTechnicalHash": "dce101b53d477d2308ed64fd0aed8dee6250eabf51d2482309eba4c01335a462",
+    "targetHash": "d15507d7f3a7c3c0fd4760aa5aae306fa1eb263ddcb955a5cc4ed5175b587644",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:22:43.838Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3c79723365f02526d28e68d0a5ebbf90df78bf9f3315a7512219b4f2943badd8",
+      "targetHash": "d15507d7f3a7c3c0fd4760aa5aae306fa1eb263ddcb955a5cc4ed5175b587644",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

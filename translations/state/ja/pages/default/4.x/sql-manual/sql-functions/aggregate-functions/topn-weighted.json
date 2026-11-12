@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn-weighted.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn-weighted.md",
-    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
-    "sourceHash": "ab4d6b879aba84680e834eb9416783d3d86bd1bd2e3e967aa430f106dfe5d2fa",
-    "sourceTechnicalHash": "ec1d1bc6ba2cde41e3622ad9b6f6bb7197a30cac99fb65cebc0f7c5e565298d7",
-    "targetHash": "8b1489fdab270f92d515d6add9bfee534e6983937c42b997873efc53c3065b28",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "1deded4278f003f1d2417f37840e1d45e7d66b6c4b9a2056ccf3b253530e35fd",
+    "sourceTechnicalHash": "76eabd5cf968a28af5f1d9cff570ebcc59ccc9f461d50fcaf63306b71c6a900c",
+    "targetHash": "c9db78adb89361b24a30b09c69c9e96056dc7a2546f6cc57cfa13abdb4b185ab",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T05:27:19.788Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T17:21:40.625Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1deded4278f003f1d2417f37840e1d45e7d66b6c4b9a2056ccf3b253530e35fd",
+      "targetHash": "c9db78adb89361b24a30b09c69c9e96056dc7a2546f6cc57cfa13abdb4b185ab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn-weighted.md",
+        "blob": "167bd9e08ee639deb8b2a57e136e6072c6102a2a"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn-weighted.md",
+        "blob": "bd37396199e94d56c49caedbf32a988f580d954b"
+      }
+    }
   }
 }

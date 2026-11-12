@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "v1.1/release-1.1.3",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/v1.1/release-1.1.3.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/v1.1/release-1.1.3.md",
+    "sourceCommit": "d058196f23d866a507f3d4c6b1186c98f0261669",
+    "sourceHash": "f5a4510f8a4c659de1ed06b38f2d51af77b62d4214a5f92ebba07a448ab786af",
+    "sourceTechnicalHash": "813b41121fe910d36c4e5561ef9acb2c74d654db20d46dba89b3b57f7e695e69",
+    "targetHash": "9065a0958c06c2f6a549ea07f0dab6c4e47adbce614295bb618a4237deb9b1a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T05:41:47.329Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f5a4510f8a4c659de1ed06b38f2d51af77b62d4214a5f92ebba07a448ab786af",
+      "targetHash": "9065a0958c06c2f6a549ea07f0dab6c4e47adbce614295bb618a4237deb9b1a3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1.1\",\"1.1.2\",\"1.1.2\",\"1.1.2\",\"1.1.3\",\"1.1.3\",\"1.1.3\",\"10\",\"10094\",\"12313\",\"12581\",\"12587\",\"12592\",\"12644\",\"12658\",\"12666\",\"12682\",\"12688\",\"12706\",\"12708\",\"12712\",\"12716\",\"12720\",\"12776\",\"12782\",\"12791\",\"12794\",\"12820\",\"12930\",\"12932\",\"12951\",\"12954\",\"13009\",\"13070\",\"13127\",\"13643\",\"2\",\"200\",\"209715200\",\"238\",\"3\",\"5\",\"80\"]; received [\"1\",\"1.1\",\"1.1.2\",\"1.1.2\",\"1.1.2\",\"1.1.3\",\"1.1.3\",\"1.1.3\",\"10\",\"10094\",\"12313\",\"12581\",\"12587\",\"12592\",\"12644\",\"12658\",\"12666\",\"12682\",\"12688\",\"12706\",\"12708\",\"12712\",\"12716\",\"12720\",\"12776\",\"12782\",\"12791\",\"12794\",\"12820\",\"12930\",\"12932\",\"12951\",\"12954\",\"13009\",\"13070\",\"13127\",\"13643\",\"200\",\"209715200\",\"238\",\"3\",\"5\",\"80\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

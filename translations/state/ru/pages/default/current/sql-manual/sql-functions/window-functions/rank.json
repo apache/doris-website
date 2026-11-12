@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/rank",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/rank.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/rank.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5032af683c45911d4ca5363cd93e63a3c54791df0e27ce002ebff0996b91a627",
+    "sourceTechnicalHash": "fba810f4760599782a231f6ad0e445a1be4c34632c05400baaa5d369769e2134",
+    "targetHash": "bb9e39ae3d2ca0c8c7bb9e00ba4057cd9f8a788db33341fadbaed7cda68dc4c7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:30:20.709Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-final-output-recovery",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "5032af683c45911d4ca5363cd93e63a3c54791df0e27ce002ebff0996b91a627",
+      "targetHash": "bb9e39ae3d2ca0c8c7bb9e00ba4057cd9f8a788db33341fadbaed7cda68dc4c7",
+      "warnings": [
+        {
+          "check": "request",
+          "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        }
+      ],
+      "recoveredOutput": {
+        "sourceAttempt": 3,
+        "finalAttempt": 3,
+        "path": "attempt-3-captured-cli.json",
+        "rawTargetHash": "0e2a17fe6e105f7cb080ad2c86c239a63dc8e312b33c4b781c790f66568e9ae2",
+        "protocolFailure": true
+      },
+      "localCorrections": [
+        {
+          "at": "2026-10-22T12:30:20.709Z",
+          "sourceAttempt": 3,
+          "kind": "captured-final-output-recovery",
+          "beforeTargetHash": "0e2a17fe6e105f7cb080ad2c86c239a63dc8e312b33c4b781c790f66568e9ae2",
+          "afterTargetHash": "bb9e39ae3d2ca0c8c7bb9e00ba4057cd9f8a788db33341fadbaed7cda68dc4c7",
+          "reason": "Recovered the complete translation emitted by the third CLI request after the adapter rejected the request result. Preserved the exact third output and all request diagnostics; applied the usual source heading and code whitespace alignment and passed content, Markdown, metadata, protection, glossary and link checks. No additional model call."
+        }
+      ]
+    }
+  }
+}

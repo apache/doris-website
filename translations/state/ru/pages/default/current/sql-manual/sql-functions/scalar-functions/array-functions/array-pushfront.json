@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-pushfront",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-pushfront.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-pushfront.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "658ec73cba2c1186c1a5100784efebe4aebde1c0c9c6c85ff6970eebe56b8540",
+    "sourceTechnicalHash": "81ae8060a944237568a7528b47ff9a5d7ec99be2b304d4218f36b2cc5acfcd49",
+    "targetHash": "70468a7a5a41907c75ef14b7d3474f69f244ce795632ace4db98b84b517732d9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:39:01.269Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "658ec73cba2c1186c1a5100784efebe4aebde1c0c9c6c85ff6970eebe56b8540",
+      "targetHash": "70468a7a5a41907c75ef14b7d3474f69f244ce795632ace4db98b84b517732d9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

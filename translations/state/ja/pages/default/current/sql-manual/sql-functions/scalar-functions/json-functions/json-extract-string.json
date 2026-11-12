@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "0e44b5eb877202e153dfa109fc0d61d96918ce5096a0688fc2fbee534a8a68f6",
-    "sourceTechnicalHash": "524fae2a079b0578ce94023bde0844cb3ad6c80586ab98fb4d50c4bf5089125a",
-    "targetHash": "bd1210d968de6ba6639c04b07917b3544bd68149ae1b58cbd9fa086bd29a3f78",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "3ceb3def93fd0547982bbb1e4be0744756f2bd1346ad77ca73c625024b6539a2",
+    "sourceTechnicalHash": "918529e966a5eb0ec5bdcb6f2bbda9e27fe87ebd026d31dbd077e8413e7958a5",
+    "targetHash": "5dadd5f45034947d21e3c216e218c850f6411c55b6019f5432bcffb6491d0197",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:05:15.136Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T04:50:14.701Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3ceb3def93fd0547982bbb1e4be0744756f2bd1346ad77ca73c625024b6539a2",
+      "targetHash": "5dadd5f45034947d21e3c216e218c850f6411c55b6019f5432bcffb6491d0197",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"code\",null,null,\"\\n```text\\n+---------------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name') |\\n    +---------------------------------------------------------------+\\n    | doris                                                         |\\n    +---------------------------------------------------------------+\\n    ```\\n2. Case where path does not exist\\n    ```sql\\n    SELECT json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name2');\\n    ```\\n    ```text\\n    +----------------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name2') |\\n    +----------------------------------------------------------------+\\n    | NULL                                                           |\\n    +----------------------------------------------------------------+\\n    ```\\n3. NULL parameters\\n    ```sql\\n    SELECT json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', NULl);\\n    ```\\n    ```text\\n    +-----------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', NULl) |\\n    +-----------------------------------------------------------+\\n    | NULL                                                      |\\n    +-----------------------------------------------------------+\\n    ```\\n    ```sql\\n    SELECT json_extract_string(NULL, '$.id2');\\n    ```\\n    ```text\\n    +----------; received [\"code\",null,null,\"\\n```text\\n+---------------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name') |\\n    +---------------------------------------------------------------+\\n    | doris                                                         |\\n    +---------------------------------------------------------------+\\n    ```\\n2. パスが存在しない場合\\n    ```sql\\n    SELECT json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name2');\\n    ```\\n    ```text\\n    +----------------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', '$.name2') |\\n    +----------------------------------------------------------------+\\n    | NULL                                                           |\\n    +----------------------------------------------------------------+\\n    ```\\n3. NULL パラメータ\\n    ```sql\\n    SELECT json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', NULl);\\n    ```\\n    ```text\\n    +-----------------------------------------------------------+\\n    | json_extract_string('{\\\"id\\\": 123, \\\"name\\\": \\\"doris\\\"}', NULl) |\\n    +-----------------------------------------------------------+\\n    | NULL                                                      |\\n    +-----------------------------------------------------------+\\n    ```\\n    ```sql\\n    SELECT json_extract_string(NULL, '$.id2');\\n    ```\\n    ```text\\n    +-----------------------------------"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

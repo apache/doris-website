@@ -5,7 +5,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync, spawnSync} = require('node:child_process');
 const {hash, identity, inventoryBaseline, loadRecordsAt, pipelineLocale} = require('./state.cjs');
-const {collect, validateScope} = require('./inventory.cjs');
+const {collect, validateScope, routingFiles} = require('./inventory.cjs');
+const {policiesFor, docKey} = require('./release-policy.cjs');
 
 const keyFor = locale => page => identity({...page,locale});
 // One `git show` per page is several thousand processes for a full-scope
@@ -42,9 +43,10 @@ function baselineEntries(root) {
         return meta.entryFiles.flatMap(shard => JSON.parse(fs.readFileSync(path.join(root,shard),'utf8')).entries);
     });
 }
-function sidebarAudit(native,root,scope) {
+function sidebarAudit(native,root,scope,policies = new Map()) {
     const result = [];
     for (const group of scope.groups) {
+        if (group.kind) continue; // Source modules/partials have no native sidebar.
         const plugin = native.labels.find(item => item.pluginId === group.pluginId);
         assert(plugin, `Missing native sidebar plugin ${group.pluginId}`);
         const versionFile = plugin.files.find(file => file.path === (group.version === 'current' ? 'current' : `version-${group.version}`));
@@ -61,8 +63,16 @@ function sidebarAudit(native,root,scope) {
                 throw new Error(`Invalid retained sidebar label ${name}`);
             const state = !translated[name]?.message ? 'missing' : translated[name].message === value.message
                 ? exception ? 'retained_technical' : 'untranslated' : 'translated';
+            const policy = policies.get(group.id);
+            const docId = name.match(/\.doc\.(.+)$/)?.[1];
+            const page = policy && native.pages.find(page => page.pluginId === group.pluginId
+                && page.version === group.version && page.docId === docId);
+            // Existing release categories/version labels remain manual native
+            // navigation; they do not become a historical translation backlog.
+            const maintenance = policy ? page ? policy.classify(page).kind : 'retained_navigation' : undefined;
             result.push({group:group.id, pluginId:group.pluginId,version:group.version,key:name,
-                source:value.message,translation:translated[name]?.message || null,state});
+                source:value.message,translation:translated[name]?.message || null,state,
+                ...(maintenance && {maintenance})});
         }
         for (const exception of retained.filter(entry => entry.pluginId === group.pluginId && entry.version === group.version))
             assert(sourceKeys.some(([name]) => name === exception.key),`Unused sidebar exception ${exception.key}`);
@@ -74,6 +84,11 @@ async function audit({root,sourceRef,baseline,native}) {
     const key = keyFor(locale);
     baseline ??= inventoryBaseline(root, locale);
     const commit = execFileSync('git',['rev-parse',`${sourceRef}^{commit}`],{cwd:root,encoding:'utf8'}).trim();
+    if(require('./state.cjs').loadConfig(root).maintenancePolicy){
+        execFileSync('git',['diff','--quiet',commit,'--','i18n/zh-CN'],{cwd:root});
+        assert(!execFileSync('git',['ls-files','--others','--exclude-standard','--','i18n/zh-CN'],
+            {cwd:root,encoding:'utf8'}).trim(),'Uncommitted Chinese source cannot enter the audit');
+    }
     execFileSync('git',['diff','--quiet',commit,'--',`i18n/${locale}`,`translations/state/${locale}`],{cwd:root});
     const untracked = execFileSync('git',['ls-files','--others','--exclude-standard','--',`i18n/${locale}`,`translations/state/${locale}`],
         {cwd:root,encoding:'utf8'}).trim();
@@ -81,11 +96,13 @@ async function audit({root,sourceRef,baseline,native}) {
     const scope = JSON.parse(fs.readFileSync(path.join(root,`translations/scope/${locale}.json`),'utf8'));
     validateScope(scope, locale);
     const committedRecords = loadRecordsAt(root, locale, commit);
+    const policies = policiesFor(root, scope, commit);
     native ||= await collect(root);
     const old = new Map(baselineEntries(baseline).map(page => [key(page),page]));
     const current = new Set(), groups = [];
-    const files = group => execFileSync('git',['ls-tree','-r','--name-only',commit,'--',group.sourceRoot],{cwd:root,encoding:'utf8'})
-        .split('\n').filter(file => /\.(md|mdx)$/.test(file));
+    const files = group => execFileSync('git',['ls-tree','-r','--name-only','-z',commit,'--',group.sourceRoot],{cwd:root,encoding:'utf8'})
+        .split('\0').filter(file => group.kind ? require('./source-groups.cjs').matchesSource(group, file)
+            && require('./source-groups.cjs').hasProse(root, group, file) : /\.(md|mdx)$/.test(file));
     const scoped = scope.groups.map(group => ({group,
         pages:native.pages.filter(page => page.pluginId === group.pluginId && page.version === group.version)}));
     const sourceHashes = refHashes(root, commit, scoped.flatMap(({pages}) => pages.map(page => page.englishPath)));
@@ -103,48 +120,79 @@ async function audit({root,sourceRef,baseline,native}) {
             assert(!seen.has(page.englishPath),`Duplicate native source ${page.englishPath}`);
             seen.add(page.englishPath); current.add(key(page));
             const previous = old.get(key(page));
-            const disposition = page.draft ? 'draft' : scope.retainEnglish.some(entry => key(entry) === key(page)) ? 'retain_english' : 'translate';
+            const eligibility = policies.get(group.id)?.classify(page);
+            const disposition = page.draft ? 'draft' : scope.retainEnglish.some(entry => key(entry) === key(page)) ? 'retain_english'
+                : eligibility && eligibility.kind !== 'eligible' ? eligibility.kind : 'translate';
             const mergedCurrent = page.status === 'current' && page.reviewStatus !== 'unverified' && page.useTarget
                     && targetHashes.get(page.targetPath) !== null
                     && targetHashes.get(page.targetPath) === page.targetHash
-                && committedRecords.get(key(page))?.targetHash === page.targetHash;
+                && require('./source-revisions.cjs').resolveRecord(root,page,committedRecords.get(key(page)),undefined,
+                    {ref:commit,worktree:false})?.targetHash === page.targetHash;
             const state = disposition !== 'translate' ? disposition : page.status === 'current'
                 ? mergedCurrent ? 'current' : 'unverified' : page.status;
             entries.push({pluginId:page.pluginId,version:page.version,docId:page.docId,sourcePath:page.sourcePath,
                 targetPath:page.targetPath,sourceHash:page.sourceHash,targetHash:page.targetHash,
                 sourceCommit:commit,permalink:page.permalink,reviewStatus:page.reviewStatus,state,
+                ...(require('./state.cjs').loadConfig(root).maintenancePolicy&&{
+                    chineseSourceBlob:require('./source-revisions.cjs').currentSnapshot(root,page,commit)?.['zh-CN']?.blob??null}),
+                ...(eligibility && {eligibility, contentState: page.status}),
                 change:!previous ? 'new' : previous.sourcePath !== page.sourcePath ? 'moved'
                     : previous.sourceHash !== page.sourceHash ? 'source_changed' : 'unchanged'});
         }
         const unregistered = sourceFiles.filter(file => !seen.has(file));
-        const required = entries.filter(entry => !['draft','retain_english'].includes(entry.state));
+        const required = entries.filter(entry => !['draft','retain_english','historical_excluded','policy_review'].includes(entry.state));
         groups.push({id:group.id,pluginId:group.pluginId,version:group.version,
             counts:{registered:entries.length,required:required.length,current:required.filter(entry => entry.state === 'current').length,
                 pending:required.filter(entry => entry.state !== 'current').length,new:entries.filter(entry => entry.change === 'new').length,
                 changed:entries.filter(entry => entry.change === 'source_changed').length,moved:entries.filter(entry => entry.change === 'moved').length,
-                drafts:entries.filter(entry => entry.state === 'draft').length,unregistered:unregistered.length},
+                drafts:entries.filter(entry => entry.state === 'draft').length,
+                historicalExcluded:entries.filter(entry => entry.state === 'historical_excluded').length,
+                policyReview:entries.filter(entry => entry.state === 'policy_review').length,unregistered:unregistered.length},
             unregistered,entries});
     }
     const removed = [...old.values()].filter(page => !current.has(key(page)))
         .map(page => ({pluginId:page.pluginId,version:page.version,docId:page.docId,sourcePath:page.sourcePath,
             likelyMoveTo: groups.flatMap(group => group.entries).find(entry => entry.sourceHash === page.sourceHash
                 && entry.pluginId === page.pluginId && entry.version === page.version)?.sourcePath || null}));
-    const sidebar = sidebarAudit(native,root,scope);
+    const sidebar = sidebarAudit(native,root,scope,policies);
+    const automaticGroups=groups.filter(group=>!scope.automaticGroups||scope.automaticGroups.includes(group.id));
+    const automaticCounts=Object.fromEntries(['required','current','pending'].map(name=>[name,
+        automaticGroups.reduce((sum,group)=>sum+group.counts[name],0)]));
     const labels = Object.fromEntries(['translated','untranslated','missing','retained_technical']
         .map(state => [state,sidebar.filter(entry => entry.state === state).length]));
-    const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
-        'translations/config.json',`translations/scope/${locale}.json`];
+    const automaticLabels = Object.fromEntries(['translated','untranslated','missing','retained_technical']
+        .map(state => [state,sidebar.filter(entry => entry.state === state
+            && (!scope.automaticGroups || scope.automaticGroups.includes(entry.group))
+            && (!entry.maintenance || entry.maintenance === 'eligible')).length]));
+    const routingInputs = routingFiles(root, scope);
+    routingInputs.push(...[...policies.values()].map(policy => policy.baselinePath));
     routingInputs.push(`translations/state/${locale}/docs.json`, `translations/state/${locale}/resolved-deletions.json`);
     const schemaPath = `translations/state/${locale}/shards.schema.json`;
     if (refHashes(root, commit, [schemaPath]).get(schemaPath) !== null) routingInputs.push(schemaPath);
-    routingInputs.push(...execFileSync('git', ['ls-tree', '-r', '--name-only', commit, '--', `translations/state/${locale}/pages`],
-        {cwd:root,encoding:'utf8'}).split('\n').filter(Boolean));
+    routingInputs.push(...execFileSync('git', ['ls-tree', '-r', '--name-only', '-z', commit, '--', `translations/state/${locale}/pages`],
+        {cwd:root,encoding:'utf8'}).split('\0').filter(Boolean));
     const routingHashes = refHashes(root, commit, routingInputs);
     for (const file of routingInputs) assert.equal(routingHashes.get(file),hash(fs.readFileSync(path.join(root,file),'utf8')),
         `Routing input differs from source ref: ${file}`);
-    return {schemaVersion:1,sourceCommit:commit,baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,
+    return {schemaVersion:1,sourceCommit:commit,maintenancePolicy:require('./state.cjs').loadConfig(root).maintenancePolicy,
+        baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,
         routingInputHashes:Object.fromEntries(routingInputs.map(file => [file,routingHashes.get(file)])),
-        groups,removed,labels,sidebar,reports:native.reports};
+        groups,removed,labels,automaticLabels,sidebar,reports:native.reports,automaticCounts,
+        policyExclusions: [...new Map([...old.values(), ...committedRecords.values(), ...native.pages]
+            .flatMap(page => {
+                const group = scope.groups.find(group => group.pluginId === page.pluginId && group.version === page.version);
+                const eligibility = policies.get(group?.id)?.classify(page);
+                return eligibility && eligibility.kind !== 'eligible'
+                    ? [[docKey(page), {pluginId:page.pluginId,version:page.version,docId:page.docId,sourcePath:page.sourcePath, ...eligibility}]] : [];
+            })).values()],
+        deferredAutomaticGroups:groups.filter(group=>!automaticGroups.includes(group)).map(group=>group.id),
+        fallbackOnlyVersions: require('./docs-language-policy.cjs').fallbackOnlyVersions.map(version => ({pluginId:'default',version,
+            proseLocales:['en','zh-CN'],otherLocaleContent:'en',requiredTranslation:false}))};
+}
+function hasPending(report) {
+    const pending = report.automaticCounts?.pending ?? report.groups.some(group => group.counts.pending);
+    const labels = report.automaticLabels ?? report.labels;
+    return !!(pending || labels.missing || labels.untranslated);
 }
 if (require.main === module) {
     const args = process.argv.slice(2), option = name => args[args.indexOf(name)+1];
@@ -154,7 +202,7 @@ if (require.main === module) {
             if(args.includes('--output')) fs.writeFileSync(option('--output'),output); else process.stdout.write(output);
             console.log(JSON.stringify({sourceCommit:result.sourceCommit,groups:result.groups.map(({id,counts}) => ({id,counts})),
                 labels:result.labels,removed:result.removed.length}));
-            if(args.includes('--fail-on-pending') && (result.groups.some(group => group.counts.pending) || result.labels.missing || result.labels.untranslated)) process.exitCode=1;
+            if(args.includes('--fail-on-pending') && hasPending(result)) process.exitCode=1;
         }).catch(error => {console.error(error);process.exitCode=1;});
 }
-module.exports = {audit,sidebarAudit};
+module.exports = {audit,sidebarAudit,hasPending};

@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "6d8f38683a371b7c59904778add526b8f2173b16ce1b1950d7fb7c07730a8a39",
-    "sourceTechnicalHash": "b1dd31c5af92f3202b37d3933d115159cdae829886c4f59629c2cb2cc97570f5",
-    "targetHash": "501b8e4d6425f69444c4a546cf38b7f350b23dbc1233607b7bb940ac36e23727",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "c76b1b7c0922ddd7f44b523e8715e82b545d89264372882947bc84ebcea6574c",
+    "sourceTechnicalHash": "1ba8824150c8bb53053a0409379af7ec4604a0c9fcf2471ee36f5ac2349e6e50",
+    "targetHash": "23a91a9b723076e0db097f1033f1bde628b0a86bca0d4120949079143888ceea",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T17:03:51.934Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "c76b1b7c0922ddd7f44b523e8715e82b545d89264372882947bc84ebcea6574c",
+      "targetHash": "23a91a9b723076e0db097f1033f1bde628b0a86bca0d4120949079143888ceea",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"4\",\"4.1.5\",\"5\",\"63\",\"63\",\"8\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"4\",\"4.1.5\",\"5\",\"63\",\"63\",\"8\"]\nprotected node 88: expected [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]; received [\"inlineCode\",null,null,\"TO DATABASE\"]\nprotected node 89: expected [\"inlineCode\",null,null,\"TO DATABASE\"]; received [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"4\",\"4.1.5\",\"5\",\"63\",\"63\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"4\",\"4.1.5\",\"5\",\"63\",\"63\",\"8\"]\nprotected node 88: expected [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]; received [\"inlineCode\",null,null,\"TO DATABASE\"]\nprotected node 89: expected [\"inlineCode\",null,null,\"TO DATABASE\"]; received [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operating procedure -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Continuously sync an entire PostgreSQL database to Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: PostgreSQL データベース全体を Doris に継続的に同期する -->\"]\nprotected node 7: expected [\"html\",null,null,\"<!-- Knowledge type: Operating procedure -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 操作手順 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"4\",\"4.1.5\",\"5\",\"63\",\"63\",\"8\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"4\",\"4.1.5\",\"5\",\"63\",\"63\",\"8\"]\nprotected node 88: expected [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]; received [\"inlineCode\",null,null,\"TO DATABASE\"]\nprotected node 89: expected [\"inlineCode\",null,null,\"TO DATABASE\"]; received [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+        "blob": "9f8d379708f35ab263551a4b8bf052de3d1ca635"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+        "blob": "80cab6e69f71ceb40b4a914b958d2bd265b7319d"
+      }
+    }
   }
 }

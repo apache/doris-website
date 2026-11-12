@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-flink-connector",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-flink-connector.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-flink-connector.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "ab235970b433a4f1e0ef05761020c1515aa6c36eab134b7e1231490c9b18c913",
+    "sourceTechnicalHash": "6335de136f3aea573a545fce60e55e8e2d74cc8feea16585f69cdac5825bd697",
+    "targetHash": "10ad15a4ad9e953a030028dca8fa466a4b8f6d2506de3350583e3e3a6dacee27",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T18:09:33.074Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ab235970b433a4f1e0ef05761020c1515aa6c36eab134b7e1231490c9b18c913",
+      "targetHash": "10ad15a4ad9e953a030028dca8fa466a4b8f6d2506de3350583e3e3a6dacee27",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: NULL"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

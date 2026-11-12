@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/xor",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitwise-functions/xor.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitwise-functions/xor.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1eeb55b5b40b48d4b668e3ebd276939b448c63d39f1689e9531700a4a913b55a",
+    "sourceTechnicalHash": "8bb534ce56dc9b3c2810b18f170dd9a19d7c2f7795482ffc76b69aba30fe5da2",
+    "targetHash": "3b08a79dc9e5f793384eb475bd03070d494e8c5173eacc50dfc77b77043e5e6e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:49:25.072Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1eeb55b5b40b48d4b668e3ebd276939b448c63d39f1689e9531700a4a913b55a",
+      "targetHash": "3b08a79dc9e5f793384eb475bd03070d494e8c5173eacc50dfc77b77043e5e6e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

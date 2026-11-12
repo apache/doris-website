@@ -1,8 +1,10 @@
-import { localizedDocLink, localizedAiLabels } from '@site/src/utils/localization';
+import { localizedAiLabels } from '@site/src/utils/localization';
 import { translate } from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React, { JSX, useState, useEffect, useMemo, useRef } from 'react';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
-import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
+import { buildCommunityEntryUrl, getCommunityName } from '@site/src/components/slack-redirect/slack-attribution.logic';
+import { TelegramIcon } from '@site/src/components/Icons/telegram';
 import './HeroSection.scss';
 
 // ─── SVG atoms ───────────────────────────────────────────────────────────────
@@ -843,6 +845,8 @@ function MascotWithEyes(): JSX.Element {
 // ─── HeroSection ─────────────────────────────────────────────────────────────
 
 export function HeroSection(): JSX.Element {
+    const { i18n: { currentLocale } } = useDocusaurusContext();
+    const communityName = getCommunityName(currentLocale);
     return (
         <section className="hero-next">
             {/* Layered backgrounds */}
@@ -864,24 +868,24 @@ export function HeroSection(): JSX.Element {
                 {/* ── Left column ── */}
                 <div className="hero-next__left">
                     <div className="hero-next__intro">
-                        <h1 className="hero-next__title">
-                            <span className="hero-next__title-line">{translate({ id: "homepage.hero.049", message: "Lightning" })}</span>
+                        <h1 className="hero-next__title" lang="en" aria-label="Lightning Fast Analytics and Search Database">
+                            <span className="hero-next__title-line">Lightning</span>
                             <span className="hero-next__title-line hero-next__title-fast">
-                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.050", message: "Fast" })}</span>
+                                <span className="hero-next__title-accent">Fast</span>
                                 <LightningSvg size={56} />
                             </span>
                             <span className="hero-next__title-line hero-next__title-line--mascot-host">
-                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.051", message: "Analytics" })}</span> {translate({ id: "homepage.hero.052", message: " and" })}<MascotWithEyes />
+                                <span className="hero-next__title-accent">Analytics</span> and<MascotWithEyes />
                             </span>
                             <span className="hero-next__title-line">
-                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.053", message: "Search" })}</span> {translate({ id: "homepage.hero.054", message: " Database" })}</span>
+                                <span className="hero-next__title-accent">Search</span> Database</span>
                         </h1>
 
                         <p className="hero-next__sub">
-                            {translate({ id: "homepage.hero.055", message: "Apache Doris is an open-source, real-time database for modern analytics and AI. Run it shared-nothing on bare metal, or disaggregated on cloud object storage." })}</p>
+                            {translate({ id: "homepage.hero.055", message: "Give your applications and AI agents fresh data, fast insights, and relevant context. Apache Doris is your open-source data foundation for the AI era." })}</p>
 
                         <div className="hero-next__ctas">
-                            <a className="hero-next__btn hero-next__btn--yellow" href={localizedDocLink(GET_STARTED_HREF)}>
+                            <a className="hero-next__btn hero-next__btn--yellow" href={GET_STARTED_HREF}>
                                 {translate({ id: "homepage.hero.056", message: "Get Started" })}</a>
                             <button
                                 type="button"
@@ -898,11 +902,11 @@ export function HeroSection(): JSX.Element {
                             </button>
                             <a
                                 className="hero-next__btn hero-next__btn--ghost"
-                                href={buildSlackEntryUrl({ medium: 'website', content: 'homepage_hero' })}
+                                href={buildCommunityEntryUrl({ locale: currentLocale, medium: 'website', content: 'homepage_hero' })}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <SlackIcon />
+                                {communityName === 'Telegram' ? <TelegramIcon width="14" height="14" /> : <SlackIcon />}
                                 {translate({ id: "homepage.hero.058", message: "Join Slack" })}</a>
                         </div>
                     </div>

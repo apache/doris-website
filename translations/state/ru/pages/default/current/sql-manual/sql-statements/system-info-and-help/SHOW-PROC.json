@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/system-info-and-help/SHOW-PROC",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/system-info-and-help/SHOW-PROC.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/system-info-and-help/SHOW-PROC.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "eb641fb9d728ac73583282382e0673a2b2d6e5596201844bf0e40bfe228ac7e5",
+    "sourceTechnicalHash": "5afc350c0fdcebde54403adbf5df9c308d16477b1bd921390c15e67197b6fcd9",
+    "targetHash": "bf370c582a312a530031910ab0c922888b0ab867560bb2276de393648453af45",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:39:14.753Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "eb641fb9d728ac73583282382e0673a2b2d6e5596201844bf0e40bfe228ac7e5",
+      "targetHash": "bf370c582a312a530031910ab0c922888b0ab867560bb2276de393648453af45",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

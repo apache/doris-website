@@ -34,6 +34,12 @@ test('scope and glossary checks need no site, inventory or credentials and isola
     assert.equal(checkConfiguration(root, 'ja').locale, 'ja');
 });
 
+test('an empty automatic group list can pause a language while retaining registered content', t => {
+    const {root, write, scope} = fixture(t);
+    write('translations/scope/ko.json', {...scope, automaticGroups: []});
+    assert.equal(checkConfiguration(root, 'ko').groups, 1);
+});
+
 test('invalid or cross-locale scope and sidebar exceptions fail offline', t => {
     const {root, write, scope} = fixture(t);
     write('translations/scope/ko.json', {...scope, locale: 'ja'});
@@ -43,6 +49,10 @@ test('invalid or cross-locale scope and sidebar exceptions fail offline', t => {
     const entry = {pluginId:'default', version:'current', key:'sidebar.docs.category.SQL', reason:'SQL identifier'};
     write('translations/scope/ko.json', {...scope, retainSidebarLabels:[entry,entry]});
     assert.throws(() => checkConfiguration(root, 'ko'), /sidebar label/);
+    for (const version of ['3.x', '2.1']) {
+        write('translations/scope/ko.json', {...scope, groups: [{id:'OLD',pluginId:'default',version,sourceRoot:`versioned_docs/version-${version}`}]});
+        assert.throws(() => checkConfiguration(root, 'ko'), /English\/Chinese only/);
+    }
 });
 
 test('glossary duplicates, malformed terms and incomplete reasons fail before generation', t => {

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/auto-increment",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/auto-increment.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/auto-increment.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f0742191b4a2d9f2b0c4e8deb595d3d6595a0d64b31bfbe0871ee0fcf0ac79ae",
+    "sourceTechnicalHash": "59a504992a389848dfd9d7110c690a21696373006c03c5f172900c0a6b524bac",
+    "targetHash": "50b82b2e37a81fccf867471ddfaadf0d852444d284e2fcb7b12c557dce730cff",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:04:06.006Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f0742191b4a2d9f2b0c4e8deb595d3d6595a0d64b31bfbe0871ee0fcf0ac79ae",
+      "targetHash": "50b82b2e37a81fccf867471ddfaadf0d852444d284e2fcb7b12c557dce730cff",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "table-design/auto-increment",
+        "sourcePath": "docs/table-design/auto-increment.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/auto-increment.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "f0742191b4a2d9f2b0c4e8deb595d3d6595a0d64b31bfbe0871ee0fcf0ac79ae",
+        "targetHash": "50b82b2e37a81fccf867471ddfaadf0d852444d284e2fcb7b12c557dce730cff",
+        "commit": "aa2a9993a3f68b04675dba12f6054562b5817c76",
+        "pr": "https://github.com/apache/doris-website/pull/4457"
+      }
+    }
+  }
+}

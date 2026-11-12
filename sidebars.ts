@@ -176,6 +176,7 @@ const sidebars: SidebarsConfig = {
                         'connection-integration/data-integration/datagrip',
                         'connection-integration/data-integration/datax',
                         'connection-integration/data-integration/dbeaver',
+                        'connection-integration/data-integration/dbine',
                         'connection-integration/data-integration/dbt-doris-adapter',
                         'connection-integration/data-integration/doris-kafka-connector',
                         'connection-integration/data-integration/doris-streamloader',
@@ -388,7 +389,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 {
                                     type: 'category',
-                                    label: 'MySQL (Experimental)',
+                                    label: 'MySQL',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-database',
@@ -406,7 +407,7 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'category',
-                                    label: 'PostgreSQL (Experimental)',
+                                    label: 'PostgreSQL',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-database',
@@ -424,7 +425,7 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'category',
-                                    label: 'OceanBase (Experimental)',
+                                    label: 'OceanBase',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database',
                                         'data-operate/import/import-way/streaming-job/schema-change-oceanbase',
@@ -509,6 +510,7 @@ const sidebars: SidebarsConfig = {
                     link: {type: 'doc', id: 'data-operate/delete/delete-overview'},
                     items: [
                         'data-operate/delete/delete-manual',
+                        'data-operate/delete/row-ttl',
                         'data-operate/delete/batch-delete-manual',
                         'data-operate/delete/truncate-manual',
                         'data-operate/delete/atomicity-replace',

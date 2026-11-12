@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/incremental/incremental-query.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/incremental-query.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "7f1640381216d68ee6d387cd83a1d78b74180d1dc8fcc41fbeca29c52ac6905c",
-    "sourceTechnicalHash": "630b264e4086c04ef6c6d420ba8d90bc2c24b6ea623cd0cafd82d7305ab6ad82",
-    "targetHash": "fcfc9be3a43d18579bb840017aca49b7f4880bd805a56151eec6448451e55383",
+    "sourceCommit": "67589e0c2bf5c0bb50ed71c34b0760e1a293b478",
+    "sourceHash": "b9e979bf9c71a2eb4e10cad6247d78e370b29f19a11f1599b5a2531c3b541c3c",
+    "sourceTechnicalHash": "ca15ec9708ed302b64f86ab42c4d9232422d84cd0209a63ebe3b3eafae1d4cd2",
+    "targetHash": "64bb62393450f97e30f17e9d2769f93f1eb58803c788883ef1ddd0e2bbc80ec1",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T16:06:57.645Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T13:13:39.884Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "b9e979bf9c71a2eb4e10cad6247d78e370b29f19a11f1599b5a2531c3b541c3c",
+      "targetHash": "64bb62393450f97e30f17e9d2769f93f1eb58803c788883ef1ddd0e2bbc80ec1",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 47: expected [\"inlineCode\",null,null,\"orders\"]; received [\"link\",\"quick-start\",null]\nprotected node 48: expected [\"link\",\"quick-start\",null]; received [\"inlineCode\",null,null,\"orders\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"03\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"5\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]; received [\"03\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"5\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operations guide + Syntax description -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 運用ガイド + 構文の説明 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use cases: Ad-hoc incremental reads by time range / External systems managing their own positions -->\"]; received [\"html\",null,null,\"<!-- ユースケース: 時間範囲を指定したアドホックな増分読み取り / 外部システムによる読み取り位置の管理 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 47: expected [\"inlineCode\",null,null,\"orders\"]; received [\"link\",\"quick-start\",null]\nprotected node 48: expected [\"link\",\"quick-start\",null]; received [\"inlineCode\",null,null,\"orders\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 47: expected [\"inlineCode\",null,null,\"orders\"]; received [\"link\",\"quick-start\",null]\nprotected node 48: expected [\"link\",\"quick-start\",null]; received [\"inlineCode\",null,null,\"orders\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

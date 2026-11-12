@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/optimization-technology-principle/query-optimizer",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/optimization-technology-principle/query-optimizer.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/optimization-technology-principle/query-optimizer.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c6debc8b4b29f3ae2f9847524a2a53328944edff58dd387654c03d7c14ae18b4",
+    "sourceTechnicalHash": "ea54ff4c5be275839294ed4a92c5679867b3693967709a6bf8ae78275ad767a7",
+    "targetHash": "7ef6ddc53a27d1f5a7b53e3b348b0cb330a5e8ec030f3281feb315f9cfb44d25",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:33:17.479Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c6debc8b4b29f3ae2f9847524a2a53328944edff58dd387654c03d7c14ae18b4",
+      "targetHash": "7ef6ddc53a27d1f5a7b53e3b348b0cb330a5e8ec030f3281feb315f9cfb44d25",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

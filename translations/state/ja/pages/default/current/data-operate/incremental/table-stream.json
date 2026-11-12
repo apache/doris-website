@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/incremental/table-stream.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/table-stream.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "ff945cba7f91a8a1a435bfef8af3aac3f21c33881d8d2169b773398caec984aa",
-    "sourceTechnicalHash": "b3f3e7301dcfb5743e9c3d30d768cd8ba5ab9bec02c4e251d0e9018096ee204d",
-    "targetHash": "d812de8c6074f9b5db1f5245bd4f3135b7cc51c3a32ef51cfde8452a36199880",
+    "sourceCommit": "67589e0c2bf5c0bb50ed71c34b0760e1a293b478",
+    "sourceHash": "0ce9063715fcad866e66f1bd218253766ea8ef38a6af3c5af80627ba8365d631",
+    "sourceTechnicalHash": "7498859f3d9462ec4ecaa9ffc593722ff96dfe9354fb4c122baf8dd69e36adcc",
+    "targetHash": "6144d25c8523569bf21df68fb8b05c57907c410ad0502195b16e3e06b12875e9",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T16:06:57.645Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T13:30:43.756Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0ce9063715fcad866e66f1bd218253766ea8ef38a6af3c5af80627ba8365d631",
+      "targetHash": "6144d25c8523569bf21df68fb8b05c57907c410ad0502195b16e3e06b12875e9",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]; received [\"1\",\"1\",\"2\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]; received [\"1\",\"1\",\"2\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

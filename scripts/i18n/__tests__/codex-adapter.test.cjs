@@ -140,15 +140,19 @@ if (command === 'ls') {
         const githubEnv = path.join(dir, 'github-env');
         fs.writeFileSync(githubEnv, '');
         const env = {...process.env, PATH: `${bin}:${process.env.PATH}`, MOCK_OSS_STORE: store,
-            OSS_AK: 'test', OSS_SK: 'test', RUNNER_TEMP: dir, GITHUB_ENV: githubEnv};
+            OSS_AK: 'test', OSS_SK: 'test', RUNNER_TEMP: dir, GITHUB_ENV: githubEnv, GITHUB_ACTIONS: 'true'};
         const script = path.join(__dirname, '../codex-auth.cjs');
-        execFileSync(process.execPath, [script, 'load'], {env, encoding: 'utf8'});
+        const loadLog = execFileSync(process.execPath, [script, 'load'], {env, encoding: 'utf8'});
+        assert(loadLog.includes('::add-mask::first\n'));
+        assert(loadLog.includes('::add-mask::refresh-one\n'));
         const loaded = Object.fromEntries(fs.readFileSync(githubEnv, 'utf8').trim().split('\n')
             .map(line => [line.slice(0, line.indexOf('=')), line.slice(line.indexOf('=') + 1)]));
         assert.equal(fs.existsSync(path.join(loaded.CODEX_HOME, 'auth.json')), true);
         fs.writeFileSync(path.join(loaded.CODEX_HOME, 'auth.json'), JSON.stringify({auth_mode: 'chatgpt',
             tokens: {access_token: 'second', refresh_token: 'refresh-two'}}));
-        execFileSync(process.execPath, [script, 'sync'], {env: {...env, ...loaded}, encoding: 'utf8'});
+        const syncLog = execFileSync(process.execPath, [script, 'sync'], {env: {...env, ...loaded}, encoding: 'utf8'});
+        assert(syncLog.includes('::add-mask::second\n'));
+        assert(syncLog.includes('::add-mask::refresh-two\n'));
         assert.equal(JSON.parse(fs.readFileSync(object, 'utf8')).tokens.access_token, 'second');
     } finally {fs.rmSync(dir, {recursive: true, force: true});}
 });

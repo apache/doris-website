@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "course",
+    "version": "current",
+    "docId": "101/apache-doris-query-data-guide",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "course/101/05-apache-doris-query-data-guide.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-course/current/101/05-apache-doris-query-data-guide.mdx",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "2209555922c2563956f06a14e4b887b7bbf3fd7504f5809f4bb1d58f599a847e",
+    "sourceTechnicalHash": "67666be921e153d787a0b688bfe4a0cbbd25a9cdfebb83ce9e1dbb1a763efca2",
+    "targetHash": "5e869ad0f19de6023fc2f25b69e752d009a10290f676236f11c5267e525d353e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-01T06:48:51.641Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "course/101/05-apache-doris-query-data-guide.mdx",
+        "blob": "aacb33fc1ad698b03978b7180f12f9f090157b5f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-course/current/101/05-apache-doris-query-data-guide.mdx",
+        "blob": "6ab26eee5771837955e0034e932830a291007349"
+      }
+    }
+  }
+}

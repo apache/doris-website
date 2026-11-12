@@ -1,5 +1,5 @@
-// Shared English footer content. Render this source in every locale so theme
-// translations cannot change the global footer.
+// Stable footer links and English legal source. Shared operation labels are
+// translated by the Footer component; legal copy keeps its original language.
 module.exports = {
     links: [
         {
@@ -83,7 +83,7 @@ module.exports = {
         },
     ],
     logo: {
-        alt: '',
+        alt: 'The Apache Software Foundation',
         src: '/images/asf_logo_apache.svg',
     },
     copyright: `Copyright © ${new Date().getFullYear()} The Apache Software Foundation,Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>. Apache, Doris, Apache Doris, the Apache feather logo and the Apache Doris logo are trademarks of The Apache Software Foundation.`,

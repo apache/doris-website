@@ -1,0 +1,132 @@
+---
+title: Changelog / Table Stream
+description: Doris 테이블이 다운스트림 소비자에게 제공할 행 수준 변경 피드입니다.
+keywords:
+  - changelog
+  - table stream
+  - row-level CDC
+  - change data capture
+  - Apache Doris CDC
+  - STREAM object
+slug: /key-features/changelog-table-stream
+image: /images/next/key-features/binlog-table-stream.jpg
+last_update:
+  date: 2026-10-21
+  author: Apache Doris
+unlisted: true
+featureCard:
+  tags:
+    - cdc
+    - data-streaming
+    - coming-soon
+---
+
+> **요약** Apache Doris Table Stream은 MySQL binlog를 읽듯 Doris 테이블에서 행 수준 변경 사항(삽입, 업데이트, 삭제)을 읽기 위한 공개 API로 제공될 예정입니다. 기반 기능은 이미 코드베이스에 있습니다. 테이블별 changelog, 파티션별 오프셋을 고정하는 `STREAM` 객체, 소비 메타데이터가 그것입니다. 이 기능은 아직 GA가 아니며, 기본 `changelog.ttl_seconds` 값은 86,400초(하루)입니다. Doris에서 변경 데이터를 내보내는 일반적인 CDC에는 [Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector)를 사용하세요. **상태: 출시 예정(Preview).**
+
+![Apache Doris Changelog / Table Stream: Doris 테이블이 다운스트림 소비자에게 제공할 행 수준 변경 피드.](/images/next/key-features/binlog-table-stream.jpg)
+:::caution 상태: 출시 예정
+여기서 설명하는 `STREAM` 객체, `changelog.enable` 테이블 속성, 소비 메타데이터 뷰는 Doris 소스 트리에 있지만, 안정적인 사용자용 API로 아직 출시되지 않았습니다. GA 이전에 구문과 동작 방식이 변경될 수 있습니다. 현재 운영 환경의 CDC 파이프라인에는 [Kafka 및 CDC 통합](./kafka-cdc-integration)을 사용하세요.
+:::
+
+## Apache Doris에서 changelog와 Table Stream을 사용하는 이유는 무엇인가요? {#why}
+
+Apache Doris changelog와 Table Stream은 다운스트림 소비자에게 행 수준 변경 피드를 제공합니다. 따라서 Flink 작업, 감사 기록 또는 검색 인덱스가 테이블을 다시 읽지 않고도 모든 삽입, 업데이트, 삭제에 대응할 수 있습니다. Apache Doris는 [변경 데이터 수집](./kafka-cdc-integration)에 강점이 있습니다. 반면 Doris에서 변경 데이터를 다시 내보내기는 더 어렵습니다. 다운스트림 시스템(Flink 작업, 감사 기록, 다른 Doris 클러스터, 검색 인덱스)이 모든 삽입, [업데이트, 삭제](./data-update-delete)에 대응해야 한다면 현재 선택지는 번거롭습니다.
+
+- 주기적으로 테이블을 다시 읽고 차이를 비교합니다. 구현은 쉽지만 실행 비용이 높고 실시간으로 처리할 수 없습니다.
+- 생산자가 Kafka와 Doris에 데이터를 이중으로 기록합니다. 데이터를 받는 곳이 둘이므로 장애가 발생할 수 있는 곳도 둘입니다.
+
+Changelog와 Table Stream은 이 문제를 해결합니다. Changelog는 커밋된 모든 변경 사항을 행 수준에서 기록합니다. Table Stream은 이 로그를 읽는 이름이 있는 커서입니다. 소비자는 스트림에 연결해 마지막 오프셋 이후의 변경 사항을 읽고 확인 응답을 보냅니다. MySQL binlog, Snowflake Streams, Postgres 논리적 복제 슬롯과 같은 개념을 Doris의 일급 객체로 제공하는 것입니다.
+
+## Apache Doris changelog와 Table Stream이란 무엇인가요? {#what}
+
+Apache Doris changelog는 Doris가 테이블별로 유지하는 행 수준 변경 로그이며, Apache Doris Table Stream은 이를 행 수준 CDC로 제공하는 소비자용 객체입니다. Changelog는 커밋된 모든 행 변경 사항을 커밋 타임스탬프와 함께 기록하며, 선택적으로 변경 전 값도 기록합니다. 이는 클러스터 간 복제(CCR)에 사용되는 binlog와 별개입니다. Changelog에는 자체 `changelog.*` 속성이 있으며, 한 테이블에서 두 기능을 동시에 활성화할 수 없습니다.
+
+Table Stream은 changelog 위에 있는 소비자용 객체입니다. 스트림은 `CREATE STREAM <name> ON TABLE <base_table>`로 생성하고, 소비자별 파티션 오프셋을 독립적으로 관리합니다. 또한 `SHOW CREATE STREAM`과 소비 진행 상황을 보여 주는 `information_schema` 뷰를 SQL 인터페이스로 제공합니다.
+
+**주요 용어**
+
+- **`changelog.enable`**: 테이블별 속성입니다. `true`로 설정하면 해당 테이블의 changelog가 활성화됩니다. 테이블을 생성할 때만 설정할 수 있습니다.
+- **`changelog.need_historical_value`**: 테이블별 속성입니다. `true`로 설정하면 각 업데이트와 삭제의 변경 전 값도 기록합니다. Unique Key Merge-on-Write 테이블에서만 사용할 수 있습니다.
+- **`changelog.ttl_seconds`**: 보존 기간을 조정하는 속성입니다. 기본 TTL은 하루이며, 테이블 생성 후에도 변경할 수 있습니다.
+- **`STREAM`**: 기본 테이블을 감싸고 한 소비자의 파티션별 오프셋을 추적하는 Doris Catalog 객체입니다.
+- **스트림 소비 유형**: `detail`, `append_only`, `min_delta`(기본값) 중 하나입니다. 스트림이 모든 행 변경 사항, 삽입만, 또는 최소 변경 집합 중 무엇을 내보낼지 제어합니다.
+- **스트림 지연**: 파티션의 가시 버전에서 스트림에 기록된 오프셋을 뺀 값입니다. `LAG` 열에 표시됩니다.
+
+## Apache Doris changelog와 Table Stream은 어떻게 작동하나요? {#how}
+
+Apache Doris changelog는 BE에서 행 수준 변경분을 기록합니다. Table Stream은 이 로그에 파티션별 오프셋을 적용해 다운스트림 소비자가 변경 사항을 증분 방식으로 읽고 확인 응답을 보낼 수 있게 합니다.
+
+1. **테이블을 생성할 때 changelog를 활성화합니다.** `CREATE TABLE t (...) PROPERTIES ("changelog.enable" = "true")`. 기존 테이블에서는 changelog를 활성화할 수 없습니다. BE는 `changelog.ttl_seconds`에 따라 행 수준 변경분을 태블릿 데이터와 함께 보존합니다.
+2. **테이블에 스트림을 생성합니다.** `CREATE STREAM s ON TABLE t PROPERTIES ("type" = "min_delta")`. FE는 `STREAM` 객체를 생성하고, 각 파티션의 현재 가시 버전을 시작 오프셋으로 잡아 데이터베이스에 등록합니다. `show_initial_rows = true`로 설정하면 첫 번째 읽기에서 과거 상태를 반환합니다.
+3. **변경 사항을 소비합니다.** 다운스트림 리더(현재는 외부 CDC 커넥터, 향후에는 네이티브 소비자 엔드포인트)가 스트림에서 읽습니다. 각 배치를 읽을 때마다 파티션별 오프셋이 앞으로 이동하고 소비 타임스탬프가 기록됩니다.
+4. **오래된 변경 사항을 정리합니다.** 모든 스트림이 읽었는지와 관계없이 `changelog.ttl_seconds`보다 오래된 변경 사항은 만료되며, 이후 백그라운드 컴팩션이 해당 저장 공간을 회수합니다. 오프셋이 보존 기간을 벗어난 스트림은 새 스냅샷에서 재설정해야 합니다.
+5. **상태를 확인합니다.** `information_schema.table_streams`에는 모든 스트림과 해당 기본 테이블이 나열됩니다. `table_stream_consumption`은 파티션마다 `UNIT`(파티션), `CONSUMPTION_STATUS`, `LAG`, `LAST_CONSUMPTION_TIME`을 보고합니다. 이를 통해 지연 상태를 확인할 수 있습니다.
+
+## 빠른 시작 {#quick-start}
+
+```sql
+-- 1. Enable the changelog when the source table is created
+CREATE TABLE orders (
+  order_id   BIGINT,
+  order_date DATE,
+  status     VARCHAR(16),
+  amount     DECIMAL(10, 2)
+)
+UNIQUE KEY(order_id, order_date)
+PARTITION BY RANGE(order_date) (
+  PARTITION p_2026_05 VALUES [('2026-05-01'), ('2026-06-01'))
+)
+DISTRIBUTED BY HASH(order_id) BUCKETS 8
+PROPERTIES (
+  "enable_unique_key_merge_on_write" = "true",
+  "changelog.enable" = "true",
+  "changelog.need_historical_value" = "true",
+  "changelog.ttl_seconds" = "86400"
+);
+
+-- 2. Create a Table Stream over it (planned syntax, subject to change)
+CREATE STREAM orders_cdc ON TABLE orders
+PROPERTIES ("type" = "min_delta", "show_initial_rows" = "false");
+
+-- 3. Inspect the stream and its lag
+SHOW CREATE STREAM orders_cdc;
+SELECT * FROM information_schema.table_stream_consumption
+WHERE STREAM_NAME = 'orders_cdc';
+```
+
+**예상 결과**
+
+```
++---------+------------+-----------+--------------------+-----+----------------------+
+| DB_NAME | STREAM_NAME| STREAM_ID | UNIT (partition)   | LAG | LAST_CONSUMPTION_TIME|
++---------+------------+-----------+--------------------+-----+----------------------+
+| sales   | orders_cdc | 10042     | p_2026_05          | 0   | 2026-05-09 10:14:33  |
++---------+------------+-----------+--------------------+-----+----------------------+
+```
+
+`LAG = 0`은 소비자가 파티션의 가시 버전까지 따라잡았다는 뜻입니다. 업스트림에서 쓰기 작업이 커밋되면 `LAG`가 커지고, 소비자가 데이터를 읽으면 줄어듭니다. 소비 지연이 `changelog.ttl_seconds`를 초과한 소비자는 스냅샷을 다시 생성해야 합니다. `STALE_REASON`은 이 경우를 보고하지 않으므로 소비 지연 시간과 보존 기간을 비교하세요.
+
+## Apache Doris changelog와 Table Stream은 언제 사용해야 하나요? {#when}
+
+GA 이후에는 다운스트림 시스템이 테이블 전체를 다시 읽지 않고 Doris 테이블의 행 수준 변경 이벤트를 받아야 할 때 Apache Doris changelog와 Table Stream을 사용하세요.
+
+**적합한 경우(GA 이후)**
+
+- 테이블을 다시 읽지 않고 Doris에서 발생한 변경 이벤트로 다운스트림 Flink 또는 Spark 작업을 구동할 때.
+- 모든 삽입과 삭제를 반영해야 하는 외부 검색 인덱스, 캐시 또는 감사 기록을 유지할 때.
+- 소비자 오프셋을 명시적으로 관리해야 하는 Doris 간 복제를 수행할 때.
+- 파티션의 `LAG`가 변경될 때 외부 구체화된 뷰의 재계산을 시작할 때.
+
+**적합하지 않은 경우(특히 현재)**
+
+- 현재 운영 환경의 CDC 파이프라인. `STREAM` 객체는 소스 트리에 있지만 GA로 발표되지 않았습니다. 대신 [Kafka 및 CDC 통합](./kafka-cdc-integration)을 사용하세요.
+- Changelog 보존 기간은 짧은데 소비자가 오랫동안 일시 중지되는 경우. 소비 지연이 `changelog.ttl_seconds`를 초과하면 아직 필요한 변경 사항이 만료되므로 소비자의 초기 데이터를 다시 채워야 합니다.
+- 스토리지와 컴퓨팅이 분리된 클러스터. 해당 환경에서 Table Stream의 지원 방식은 아직 정해지는 중입니다.
+- 외부 Catalog 테이블(Hive, Iceberg)을 읽는 경우. Table Stream은 내부 OLAP 테이블만 지원합니다.
+
+## 더 읽어보기 {#further-reading}
+
+- [Kafka 및 CDC 통합](./kafka-cdc-integration): 현재 Doris로 변경 데이터를 가져오고 Doris 내에서 이동하는 데 지원되는 방법입니다.
+- [데이터 업데이트 및 삭제](./data-update-delete): Unique Key Merge-on-Write 테이블이 행 스트림에 포함될 삭제와 순서가 뒤바뀐 업데이트를 표현하는 방법입니다.
+- [Iceberg](./iceberg): 복제된 테이블을 저장할 외부 대상입니다. Doris를 벗어나지 않고 SQL로 CDC 데이터를 Iceberg에 저장할 수 있습니다.
+- [Unique Key](./unique-key): 다운스트림 changelog 소비자를 위해 키마다 한 행으로 표현된 상태를 명확하게 포착하는 업스트림 테이블 모델입니다.

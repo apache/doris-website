@@ -2,38 +2,38 @@
 {
     "title": "PARSE_DATA_SIZE",
     "language": "ja",
-    "description": "PARSE_DATA_SIZE 関数は、ストレージ単位を含む文字列（\"1.5GB\" など）を解析し、バイト単位の数値に変換します。"
+    "description": "PARSE_DATA_SIZE 関数は、ストレージ単位を含む文字列（「1.5GB」など）を解析し、バイト単位の数値に変換します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-PARSE_DATA_SIZE 関数は、ストレージ単位を含む文字列（"1.5GB" など）を解析し、バイト単位の数値に変換します。
+PARSE_DATA_SIZE 関数は、ストレージ単位を含む文字列（「1.5GB」など）を解析し、バイト単位の数値に変換します。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 PARSE_DATA_SIZE(<str>)
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 
 | パラメータ | 説明 |
 | -------- | ----------------------------------------- |
-| `<str>` | 単位を含むデータサイズの文字列（例: "100MB"、"2.5GB"）。型: VARCHAR |
+| `<str>` | 単位を含むデータサイズの文字列（例：「100MB」、「2.5GB」）。型：VARCHAR |
 
-## 戻り値
+## 戻り値 {#return-value}
 
-バイト数を表す BIGINT 型の値を返します。
+バイト単位に変換した数値を LARGEINT 型で返します。
 
-特殊なケース:
-- 対応する単位（大文字と小文字を区別しません）: B、kB、MB、GB、TB、PB、EB、ZB、YB
-- 単位は 1024 を基数として計算します（例: 1kB = 1024B）
-- 小数を含む値に対応します（例: "2.5MB"）
-- 引数の形式が無効な場合はエラーを返します
-- 引数が NULL の場合は NULL を返します
+特殊なケース：
+- 対応する単位（大文字と小文字を区別するため、表記を正確に使用してください）：B、kB、MB、GB、TB、PB、EB、ZB、YB
+- 単位は 1024 を基数とします（例：1kB = 1024B）
+- 小数に対応します（例：「2.5MB」）
+- パラメータの形式が無効な場合はエラーを返します
+- パラメータが NULL の場合は NULL を返します。Doris 4.1 シリーズの 4.1.5 以降では、NULL 許容列の NULL 行は文字列の解析前にスキップされます
 
-**対応する単位の一覧:**
+**対応する単位の一覧：**
 
 | 単位 | 名称 | バイト数 |
 |------|------|-------|
@@ -45,9 +45,11 @@ PARSE_DATA_SIZE(<str>)
 | PB   | ペタバイト  | 1024⁵      |
 | EB   | エクサバイト | 1024⁶      |
 
-## 使用例
+<a id="examples"></a>
 
-1. 基本的な使い方: バイト単位の値を解析
+## 例 {#example}
+
+1. 基本的な使い方：バイトを解析する
 ```sql
 SELECT parse_data_size('1024B');
 ```
@@ -59,7 +61,7 @@ SELECT parse_data_size('1024B');
 +--------------------------+
 ```
 
-2. キロバイト単位の値を解析
+2. キロバイトを解析する
 ```sql
 SELECT parse_data_size('1kB');
 ```
@@ -71,7 +73,7 @@ SELECT parse_data_size('1kB');
 +------------------------+
 ```
 
-3. 小数を含むメガバイト単位の値を解析
+3. 小数を含むメガバイトを解析する
 ```sql
 SELECT parse_data_size('2.5MB');
 ```
@@ -83,7 +85,7 @@ SELECT parse_data_size('2.5MB');
 +--------------------------+
 ```
 
-4. ギガバイト単位の値を解析
+4. ギガバイトを解析する
 ```sql
 SELECT parse_data_size('1GB');
 ```
@@ -95,7 +97,7 @@ SELECT parse_data_size('1GB');
 +------------------------+
 ```
 
-5. テラバイト単位の値を解析
+5. テラバイトを解析する
 ```sql
 SELECT parse_data_size('1TB');
 ```
@@ -107,7 +109,7 @@ SELECT parse_data_size('1TB');
 +------------------------+
 ```
 
-6. 未対応の単位を指定した場合のエラー
+6. 対応していない単位を指定した場合のエラー
 ```sql
 SELECT parse_data_size('1iB');
 ```
@@ -115,7 +117,7 @@ SELECT parse_data_size('1iB');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Invalid Input argument "1iB" of function parse_data_size
 ```
 
-7. NULL を入力
+7. NULL を入力する
 ```sql
 SELECT parse_data_size(NULL);
 ```
@@ -127,6 +129,6 @@ SELECT parse_data_size(NULL);
 +-----------------------+
 ```
 
-### キーワード
+### キーワード {#keywords}
 
     PARSE_DATA_SIZE

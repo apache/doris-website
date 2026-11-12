@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "af112f4309eb7d19d705833a5e310a43cf01c85c96f2b55395c87f7016a11954",
+    "sourceTechnicalHash": "31269a18374f500b88490b410192a2fb2d4cdb72a422e2385a6d63b23c2872fb",
+    "targetHash": "ed2a3a7c46a2adb003caa1cd29f72e87b45e277aed3e09c285df7dd219123aab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:14.020Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "af112f4309eb7d19d705833a5e310a43cf01c85c96f2b55395c87f7016a11954",
+      "targetHash": "ed2a3a7c46a2adb003caa1cd29f72e87b45e277aed3e09c285df7dd219123aab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "af112f4309eb7d19d705833a5e310a43cf01c85c96f2b55395c87f7016a11954",
+        "targetHash": "ed2a3a7c46a2adb003caa1cd29f72e87b45e277aed3e09c285df7dd219123aab",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

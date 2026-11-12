@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/query-cache",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/query-cache.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/query-cache.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9ec56debf4f9bf08432a77994d82e4e1d706c5c6cf345546dfdf68f3667fc466",
+    "sourceTechnicalHash": "f274bb7738b74344693df2daf5f994454edb7463c2d9d1e98f5c3b05cd5f8c6b",
+    "targetHash": "f42261c5e08c658894f37e7103298d7d76cadb97789c4f3d8d08d0a4e5d83fc4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:36:03.395Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9ec56debf4f9bf08432a77994d82e4e1d706c5c6cf345546dfdf68f3667fc466",
+      "targetHash": "f42261c5e08c658894f37e7103298d7d76cadb97789c4f3d8d08d0a4e5d83fc4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

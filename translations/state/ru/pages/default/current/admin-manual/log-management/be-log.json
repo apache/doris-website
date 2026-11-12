@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/log-management/be-log",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/log-management/be-log.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/log-management/be-log.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b9608fc81b4da8d5e843a0b8523057f0ad6df1aca6c3578266d284e35e5e44fc",
+    "sourceTechnicalHash": "6930c90d7fe504b06c8d620884b3107fb701fe2009e77af519874252f1058b2a",
+    "targetHash": "daf4b917c354df55fad8eff51d5034ec7d59e2a229de55781dfd36cb35e51c23",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:11:46.177Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b9608fc81b4da8d5e843a0b8523057f0ad6df1aca6c3578266d284e35e5e44fc",
+      "targetHash": "daf4b917c354df55fad8eff51d5034ec7d59e2a229de55781dfd36cb35e51c23",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

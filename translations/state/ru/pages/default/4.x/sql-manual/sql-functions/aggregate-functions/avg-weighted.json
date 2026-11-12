@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/avg-weighted",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/avg-weighted.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/avg-weighted.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2f39788ba916b589823833f7484e5ff01b86cc6632aad3e67c9b836dc7f55869",
+    "sourceTechnicalHash": "29a07a8534f559a7e567b8161b90d5b197e21b5c6bb60cacbbcacd1abba19f13",
+    "targetHash": "004531aad2bf53086b2fb1071c14fcf4f7150560531c1509958790c974236ccd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:12.131Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2f39788ba916b589823833f7484e5ff01b86cc6632aad3e67c9b836dc7f55869",
+      "targetHash": "004531aad2bf53086b2fb1071c14fcf4f7150560531c1509958790c974236ccd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/avg-weighted",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/avg-weighted.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/avg-weighted.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "2f39788ba916b589823833f7484e5ff01b86cc6632aad3e67c9b836dc7f55869",
+        "targetHash": "004531aad2bf53086b2fb1071c14fcf4f7150560531c1509958790c974236ccd",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}

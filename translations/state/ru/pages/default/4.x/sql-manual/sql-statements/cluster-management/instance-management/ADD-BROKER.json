@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bc7208ed4f9f7ca75b45fc5fe1f3cded2c0493062294506504876dd0fe06a750",
+    "sourceTechnicalHash": "4e8618e4ab32eae74f16926966986764cb3cc8e866af86adf2efc741ed250dbf",
+    "targetHash": "f1cd0e4196b5be9b55b626f08682baf4d778110d2bf97aa58324ab0b357b760b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:06:04.208Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bc7208ed4f9f7ca75b45fc5fe1f3cded2c0493062294506504876dd0fe06a750",
+      "targetHash": "f1cd0e4196b5be9b55b626f08682baf4d778110d2bf97aa58324ab0b357b760b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "bc7208ed4f9f7ca75b45fc5fe1f3cded2c0493062294506504876dd0fe06a750",
+        "targetHash": "f1cd0e4196b5be9b55b626f08682baf4d778110d2bf97aa58324ab0b357b760b",
+        "commit": "d5ac930e1a15d171738ddccbd717b10b31ba98d3",
+        "pr": "https://github.com/apache/doris-website/pull/4455"
+      }
+    }
+  }
+}

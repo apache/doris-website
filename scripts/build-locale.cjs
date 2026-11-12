@@ -6,7 +6,7 @@ const path = require('node:path');
 const {createRequire} = require('node:module');
 
 async function main() {
-    const [mode, siteDir, outDir, value] = process.argv.slice(2);
+    const [mode, siteDir, outDir, value, samplePlan] = process.argv.slice(2);
     const fromSite = createRequire(path.join(siteDir, 'package.json'));
     const version = fromSite('@docusaurus/core/package.json').version;
     if (version !== '3.6.3') throw new Error(`Revalidate the locale build adapter for Docusaurus ${version}`);
@@ -24,9 +24,32 @@ async function main() {
                 directory:locale === i18n.defaultLocale ? '.' : locale,
                 baseUrl:localizePath({path:siteConfig.baseUrl, pathType:'url', i18n:{...i18n,currentLocale:locale}}),
             }))}, null, 2) + '\n');
-    } else if (mode === 'build') {
-        const {buildLocale} = fromSite('@docusaurus/core/lib/commands/build/buildLocale.js');
-        await buildLocale({siteDir, locale:value, cliOptions:{outDir}});
+    } else if (mode === 'build' || mode === 'sample' || mode === 'client') {
+        const adapter = require('./i18n/compiler-processes.cjs');
+        const {sourceStamp} = require('./build-locales.cjs');
+        const stamp = sourceStamp(siteDir);
+        const compilerMode = process.env.DORIS_COMPILER_MODE ?? 'isolated';
+        if (!['isolated','parallel'].includes(compilerMode)) throw new Error(`Unknown DORIS_COMPILER_MODE: ${compilerMode}`);
+        const clientResult = mode !== 'client' && compilerMode === 'isolated'
+            ? await adapter.runClient({siteDir,outDir,locale:value,samplePlan:mode === 'sample' ? samplePlan : null}) : null;
+        if (clientResult && JSON.stringify(clientResult.source) !== JSON.stringify(sourceStamp(siteDir))) throw new Error('Source changed during isolated client compilation');
+        const restore = (mode === 'sample' || mode === 'client' && samplePlan) ? await require('./i18n/ci-sample.cjs').install({root:siteDir,outDir,locale:value,planFile:samplePlan}) : () => {};
+        let restoreCompiler = () => {};
+        let result;
+        try {
+            if (mode === 'client') result = await adapter.buildClient({fromSite,siteDir,outDir,locale:value,samplePlan});
+            else {
+                restoreCompiler = adapter.install({fromSite,siteDir,locale:value,clientResult});
+                const {buildLocale} = fromSite('@docusaurus/core/lib/commands/build/buildLocale.js');
+                await buildLocale({siteDir, locale:value, cliOptions:{outDir}});
+            }
+        } finally {try {restoreCompiler();} finally {restore();}}
+        if (JSON.stringify(stamp) !== JSON.stringify(sourceStamp(siteDir))) throw new Error('Source changed between compiler phases');
+        if (mode === 'client') adapter.writeClientResult(siteDir,value,{...result,source:stamp});
+        else {
+            if(mode === 'sample' && clientResult)adapter.mergeSamplingScope(siteDir,value,clientResult);
+            fs.rmSync(adapter.stateDirectory(siteDir,value),{recursive:true,force:true});
+        }
     } else throw new Error(`Unknown locale build mode: ${mode}`);
 }
 main().catch(error => {console.error(error); process.exitCode = 1;});

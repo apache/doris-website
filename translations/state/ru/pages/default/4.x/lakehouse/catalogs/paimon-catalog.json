@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/paimon-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/paimon-catalog.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/paimon-catalog.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0c88064db683bea5b27f8a0338c898f171f5c784c20e06a9164bafdab3964471",
+    "sourceTechnicalHash": "2dbf62d1846b4548dcdfe6778bb1d691f6095c603740c5dcf1d8a63e5cc1d1a1",
+    "targetHash": "f3a43f82e9f7c56f8e9ca0a53abb67b4f33477d0da073e34b1717e46c264b877",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:08:15.098Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0c88064db683bea5b27f8a0338c898f171f5c784c20e06a9164bafdab3964471",
+      "targetHash": "f3a43f82e9f7c56f8e9ca0a53abb67b4f33477d0da073e34b1717e46c264b877",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

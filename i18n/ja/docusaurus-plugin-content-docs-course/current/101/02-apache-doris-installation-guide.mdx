@@ -1,0 +1,262 @@
+---
+title: Apache Doris インストールガイド
+description: 手動、Kubernetes、一体型、分離型の各方式を扱う八つの学習ユニットを通して、Apache Doris のデプロイ方式の選び方と検証方法を学びます。
+slug: /101/02-apache-doris-installation-guide
+sidebar_position: 2
+keywords:
+  - Apache Doris 101
+  - Apache Doris のインストール
+  - Doris Operator
+  - ストレージとコンピュートの分離
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={2}
+    title="Apache Doris インストールガイド"
+    readingTime="15–20 分"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/install/intro"
+>
+    <CourseLessonUnit
+        id="choose-deployment-path"
+        label="方式を選ぶ"
+        title={<>二つのことを <em>デプロイ前に</em> 決めておこう。</>}
+        summary="まずストレージアーキテクチャを選び、次にプロセスをどう管理するかを決めます。この二つの選択から四つのデプロイ方式が決まります。"
+        coachTitle="アーキテクチャとオーケストレーションは、それぞれ異なる課題を解決します。"
+        coach={<p>一体型ではデータを BE のディスクに保存します。分離型では永続データを共有ストレージに保存します。手動デプロイでは各プロセスを直接管理し、Kubernetes では Doris Operator が望ましい状態を管理します。</p>}
+        calloutTitle="シンプルな構成から始める"
+        callout={<p>ローカル環境や VM 上に初めてクラスタを構築するなら、手動の一体型デプロイが、Doris を動かすための最も手早い方法です。</p>}
+        check={{
+            question: "永続データの保存先を決めるのはどちらですか？",
+            options: ["アーキテクチャ", "オーケストレーション基盤"],
+            correctIndex: 0,
+            correctFeedback: "正解です。一体型か分離型かというアーキテクチャの選択で、永続データの保存方式が決まります。",
+            incorrectFeedback: "Kubernetes が変えるのはオーケストレーションです。永続データの保存方式はアーキテクチャの選択で決まります。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris のデプロイ方式"
+            columns={2}
+            items={[
+                { tag: 'VM', title: "手動 · 一体型", description: "ローカルディスクを持つホスト上で動作する FE とステートフルな BE のプロセス。" },
+                { tag: 'VM', title: "手動 · 分離型", description: "FE、Meta Service、ステートレスな BE、FoundationDB、共有ストレージ。" },
+                { tag: 'K8S', title: "Operator · 一体型", description: "DorisCluster リソースが FE とステートフルな BE のワークロードを管理します。" },
+                { tag: 'K8S', title: "Operator · 分離型", description: "Operator がクラウドモードのクラスタとそのコンピュートグループを管理します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="deployment-prerequisites"
+        label="前提条件"
+        title={<>環境の不安要素をなくすのが <em>先決</em>.</>}
+        summary="デプロイの信頼性は、ディスク、ネットワーク上の識別情報、時刻、ポート、OS の準備状況に左右されます。"
+        coachTitle="すべてのノードで環境を確認してください。"
+        coach={<p>サポート対象の CPU と OS の組み合わせ、FE に対応した JDK、安定したホスト名または IP アドレス、同期された時刻、Doris のサービスポートを介した必要な通信を確認してください。</p>}
+        calloutTitle="後から変更しにくい設定"
+        callout={<p>FE のメタデータは耐久性のある専用ストレージに置き、初期化前にクラスタ全体で名前の扱いを統一してください。</p>}
+        check={{
+            question: "すべてのクラスタノードで安定しているべきものは何ですか？",
+            options: ["ネットワーク上の識別情報と時刻", "SQL クライアントの数"],
+            correctIndex: 0,
+            correctFeedback: "正解です。安定した識別情報、接続性、時刻はクラスタの前提条件です。",
+            incorrectFeedback: "クライアント数は変わってもかまいませんが、ノードの識別情報と時刻の整合性は信頼できる状態に保つ必要があります。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris のデプロイ前提条件"
+            columns={4}
+            items={[
+                { tag: 'CPU', title: "互換性のあるホスト", description: "命令セット、カーネル、リソース制限、Java の要件を確認します。" },
+                { tag: 'NET', title: "接続可能なサービス", description: "必要なノード間で FE、BE、Web サービスのポートを通すようにします。" },
+                { tag: 'NTP', title: "同期された時刻", description: "協調動作、ログ、障害調査のために、時刻のずれを防ぎます。" },
+                { tag: 'SSD', title: "永続化するデータの保存先", description: "FE のメタデータ、BE のデータ、ログ、共有ストレージの保存先を計画します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="manual-integrated"
+        label="手動の一体型デプロイ"
+        title={<>制御系を立ち上げてから、 <em>ストレージを追加する</em>.</>}
+        summary="最初の FE を初期化し、FE のクォーラムを拡張して BE ノードを登録します。データロードを始める前に、各ノードがクラスタに参加していることを確認してください。"
+        coachTitle="登録とプロセスの起動は別々の手順です。"
+        coach={<p>新しい FE は登録後、既存の FE をヘルパーとして指定して参加します。BE はハートビートのエンドポイントを登録し、プロセスが正常な状態になって初めて利用できます。</p>}
+        calloutTitle="本番環境の構成"
+        callout={<p>高可用性のため、投票権を持つ FE を奇数台で構成し、ワークロードで想定する障害に耐えられる数の BE レプリカを用意してください。</p>}
+        check={{
+            question: "新しいフォロワー FE を起動する前に何をすべきですか？",
+            options: ["クラスタに登録する", "その FE にテーブルをデータロードする"],
+            correctIndex: 0,
+            correctFeedback: "正解です。フォロワーを登録してから、既存の FE をヘルパーに指定して起動します。",
+            incorrectFeedback: "FE ノードはテーブルのレプリカを保存しません。フォロワーは先に登録する必要があります。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="手動の一体型デプロイの手順"
+            focusIndex={0}
+            items={[
+                { title: "最初の FE", description: "メタデータを初期化" },
+                { title: "FE のクォーラム", description: "投票メンバーを追加" },
+                { title: "BE ノード", description: "ストレージパスを登録" },
+                { title: "検証", description: "正常性を確認し、セキュリティを設定" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="manual-decoupled"
+        label="手動の分離型デプロイ"
+        title={<>メタデータ層とストレージ層の構築は <em>コンピュートより先に</em>.</>}
+        summary="分離型クラスタでは、従来の FE と BE のプロセスに加え、FoundationDB、Meta Service、Storage Vault を使用します。"
+        coachTitle="すべての層で同じクラスタ識別情報を共有する必要があります。"
+        coach={<p>FoundationDB はシステムメタデータを永続化し、Meta Service はデータ層のメタデータを調整します。FE はクラウドモードで動作し、BE はコンピュートグループに参加します。Storage Vault は共有のオブジェクトストレージまたはファイルストレージを指定します。</p>}
+        calloutTitle="運用上の負担"
+        callout={<p>FoundationDB と共有ストレージは本番運用に欠かせません。伸縮性に頼る前に、バックアップと監視を行い、障害時の動作をテストしてください。</p>}
+        check={{
+            question: "分離型クラスタが共有データファイルにアクセスするために必要なものは何ですか？",
+            options: ["Storage Vault", "FE のローカルメタデータディレクトリ"],
+            correctIndex: 0,
+            correctFeedback: "正解です。Storage Vault が共有ストレージ層へのアクセスを定義します。",
+            incorrectFeedback: "FE のメタデータはクラスタの調整に使います。共有データの保存先を指定するのは Storage Vault です。",
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="手動の分離型デプロイに必要な構成要素"
+            items={[
+                { title: "FoundationDB + Meta Service", description: "データ層のメタデータを永続化し、調整します。" },
+                { title: "クラウドモードの FE + コンピュートグループ", description: "SQL の実行計画を立て、伸縮可能な処理を実行します。" },
+                { title: "Storage Vault", description: "耐久性のあるオブジェクトストレージまたは分散ファイルシステムに接続します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="kubernetes-integrated"
+        label="Kubernetes の一体型デプロイ"
+        title={<>クラスタを定義すれば、Operator が <em>望ましい状態に収束</em> させる。</>}
+        summary="Doris Operator は DorisCluster リソースをもとに、FE と BE のワークロード、サービス、設定、永続ストレージを構成します。"
+        coachTitle="カスタムリソースが望ましい状態を定義する基準になります。"
+        coach={<p>DorisCluster の定義で、イメージ、レプリカ数、リソース、ConfigMaps、永続ボリューム要求、サービスの公開方法を設定します。ワークロードの移動後も Pod の識別情報が安定するよう、FQDN モードを使用してください。</p>}
+        calloutTitle="永続化の設定を確実に"
+        callout={<p>一体型の BE Pod はステートフルです。本番運用の前に、StorageClass の動作、ボリュームの保持、容量、障害ゾーンへの配置を確認してください。</p>}
+        check={{
+            question: "FE と BE の目標レプリカ数はどこで宣言すべきですか？",
+            options: ["DorisCluster リソース", "その場で書いた SQL コメント"],
+            correctIndex: 0,
+            correctFeedback: "正解です。Operator は DorisCluster リソースで指定されたレプリカ数に合わせて構成を調整します。",
+            incorrectFeedback: "SQL コメントで Kubernetes のワークロードを制御することはできません。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Kubernetes の一体型デプロイの流れ"
+            focusIndex={2}
+            items={[
+                { title: "インストール", description: "CRDs + Operator" },
+                { title: "設定", description: "イメージ + ConfigMaps" },
+                { title: "永続化", description: "PVCs + サービス" },
+                { title: "適用", description: "DorisCluster" },
+                { title: "監視", description: "Pod + SQL による正常性確認" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="kubernetes-decoupled"
+        label="Kubernetes の分離型デプロイ"
+        title={<>依存サービスも <em>プラットフォームの一部として扱う</em>.</>}
+        summary="Kubernetes は Doris のプロセスを自動管理しますが、FoundationDB、共有ストレージ、認証情報、障害対策の管理も引き続き必要です。"
+        coachTitle="Pod が正常でも、データ基盤全体が正常とは限りません。"
+        coach={<p>FoundationDB を用意し、分離型用の Operator リソースをインストールします。クラスタ識別情報とストレージへのアクセスを設定して Storage Vault を作成したら、FE、Meta Service、コンピュートグループ、エンドツーエンドの SQL 処理を検証してください。</p>}
+        calloutTitle="環境に応じた構成"
+        callout={<p>学習には、レプリカが一つの簡易構成が役立ちます。本番環境には、冗長なメタデータサービスと、目標とする可用性に合わせて設計したストレージが必要です。</p>}
+        check={{
+            question: "エンドツーエンドの稼働確認には何を含めるべきですか？",
+            options: ["データの作成、データロード、クエリを行う", "Pod が Running であることだけを確認する"],
+            correctIndex: 0,
+            correctFeedback: "正解です。メタデータ、コンピュート、ストレージを通る一連の処理を実行します。",
+            incorrectFeedback: "Pod が Running でも、メタデータと共有ストレージが一連の処理で正しく機能するとは限りません。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Kubernetes の分離型デプロイで確認する層"
+            columns={4}
+            items={[
+                { tag: 'FDB', title: "メタデータストア", description: "容量を監視し、冗長化した FoundationDB。" },
+                { tag: 'MS', title: "Meta Service", description: "一貫したクラスタ識別情報と、接続可能なエンドポイント。" },
+                { tag: 'CG', title: "コンピュートグループ", description: "適切なリソースとキャッシュを備えたステートレスなワーカー。" },
+                { tag: 'OBJ', title: "共有ストレージ", description: "Vault の認証情報、権限、耐久性、スループット。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="operate-the-cluster"
+        label="運用と検証"
+        title={<>すべての <em>層で状態を確認する</em>.</>}
+        summary="デプロイの仕上げには、正常性確認、セキュリティ、監視、スケーリングのルール、事前に試したアップグレード手順が必要です。"
+        coachTitle="SQL とプラットフォームの両方で状態を確認してください。"
+        coach={<p>SQL で FE と BE のクラスタへの参加状況を確認し、プラットフォームでプロセスや Pod の状態を確認します。障害の原因はログとメトリクスで調べます。サービスを公開する前に、デフォルトの認証情報を変更してください。</p>}
+        calloutTitle="アップグレードの順序"
+        callout={<p>対象バージョンのアップグレードガイドと互換性マトリクスに従ってください。ローリングアップグレードでは、全手順を通してクォーラムとレプリカの可用性を維持します。</p>}
+        check={{
+            question: "BE が Doris クラスタに参加したことを示すのはどの状態ですか？",
+            options: ["SHOW BACKENDS で正常と表示される", "ホストが ping に応答する"],
+            correctIndex: 0,
+            correctFeedback: "正解です。クラスタへの参加とハートビートの正常性を Doris 上で確認できる必要があります。",
+            incorrectFeedback: "ネットワーク経由で接続できることは必要ですが、それだけでは Doris クラスタへの参加は確認できません。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris の運用時の確認項目"
+            columns={4}
+            items={[
+                { tag: 'SQL', title: "クラスタへの参加状況", description: "FE の役割、BE のハートビート、コンピュートグループの状態を確認します。" },
+                { tag: 'SEC', title: "セキュリティ", description: "認証情報を設定し、公開範囲を制限して、ストレージの機密情報を保護します。" },
+                { tag: 'OBS', title: "監視", description: "最初の障害が起きる前に、メトリクスとログを収集できるようにします。" },
+                { tag: 'DR', title: "復旧", description: "再起動、交換、バックアップ、アップグレードの手順をテストします。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="deployment-recap"
+        label="デプロイ方式の振り返り"
+        title={<>デプロイ方式とは、 <em>自ら引き受けるトレードオフの組み合わせ</em>.</>}
+        summary="ストレージ、伸縮性、可用性、プラットフォームの要件を満たす中で最もシンプルな方式を選び、実データで検証します。"
+        coachTitle="一連の処理を実行できて初めて、クラスタの準備は完了です。"
+        coach={<p>選んだアーキテクチャ、障害ドメイン、クォーラム、レプリカ方針、ストレージの管理責任、アクセス方式、監視、アップグレード手順を、デプロイ用のマニフェストとともに文書化してください。</p>}
+        calloutTitle="次のレッスンに進む前に"
+        callout={<p>デプロイした環境を安定した状態に保ってください。次のモジュールでは、ワークロードの特性をテーブルモデル、パーティション、バケット、ソートキーに落とし込みます。</p>}
+        check={{
+            question: "デプロイの最後に行うべき最適なテストは何ですか？",
+            options: ["実際の利用を想定したデータロードとクエリの一連の処理を実行する", "アーカイブが正常に展開されたことを確認する"],
+            correctIndex: 0,
+            correctFeedback: "正解です。実際の利用を想定した一連の処理で、システム全体を検証できます。",
+            incorrectFeedback: "バイナリの展開は、セットアップの初期段階にすぎません。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="デプロイ方式の選択を振り返る"
+            leftTitle="一体型が適する場合"
+            leftLead="ローカルストレージと一体でのスケーリングが要件に合うなら、運用のシンプルさを優先します。"
+            leftItems={["プラットフォームへの依存が少ない", "ステートフルな BE ノード", "ローカルディスクを直接管理"]}
+            rightTitle="分離型が適する場合"
+            rightLead="共有ストレージを利用でき、プラットフォームの運用を担えるなら、独立したスケーリングを選びます。"
+            rightItems={["伸縮可能なコンピュートグループ", "耐久性のある共有ストレージ", "追加のメタデータサービス"]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

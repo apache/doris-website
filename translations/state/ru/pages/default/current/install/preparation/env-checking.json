@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/preparation/env-checking",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/preparation/env-checking.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/preparation/env-checking.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "4e8bf0b7821d5579f66027b6a1993c369c00cce660eddef8353c4fc789746329",
+    "sourceTechnicalHash": "c58431f95fba9ced01812f8e908a8bf84ed4f07a0eab344c4e6112ecb872a2b0",
+    "targetHash": "fdca0d742318e078eff610e201ac328fab34a46cb15b66b2e2b3c2a0b83fbc35",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:36:17.578Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4e8bf0b7821d5579f66027b6a1993c369c00cce660eddef8353c4fc789746329",
+      "targetHash": "fdca0d742318e078eff610e201ac328fab34a46cb15b66b2e2b3c2a0b83fbc35",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0.3\",\"0.5\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.4\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"16\",\"16\",\"16\",\"16\",\"17\",\"17.0.10\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0\",\"352\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"40\",\"50\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"86\"]; received [\"0.3\",\"0.5\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.4\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"16\",\"16\",\"16\",\"16\",\"17\",\"17.0.10\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0\",\"352\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"40\",\"50\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"86\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

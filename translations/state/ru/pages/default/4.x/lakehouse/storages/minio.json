@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/minio",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/minio.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/minio.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a786a8f80095dd2871cc6eb70f16360f44302f58386cc164c4ab3efef6a85be5",
+    "sourceTechnicalHash": "e56c9c6ebdce825424900c8318d1abc6ca373cd97f527d778822476eadd4ae8b",
+    "targetHash": "cf1b598d9d6da754ebdad5a022173b22b20937dcbdae3792a352ef6d5f3e866a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:22.900Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a786a8f80095dd2871cc6eb70f16360f44302f58386cc164c4ab3efef6a85be5",
+      "targetHash": "cf1b598d9d6da754ebdad5a022173b22b20937dcbdae3792a352ef6d5f3e866a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/storages/minio",
+        "sourcePath": "docs/lakehouse/storages/minio.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/minio.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "a786a8f80095dd2871cc6eb70f16360f44302f58386cc164c4ab3efef6a85be5",
+        "targetHash": "cf1b598d9d6da754ebdad5a022173b22b20937dcbdae3792a352ef6d5f3e866a",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

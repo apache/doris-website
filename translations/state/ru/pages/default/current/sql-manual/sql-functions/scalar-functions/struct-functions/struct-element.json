@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/struct-functions/struct-element",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/struct-functions/struct-element.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/struct-functions/struct-element.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c27240ec2c0477b268d5401a4303cab01f976e66b241f4b3eaf0102185c977bb",
+    "sourceTechnicalHash": "cd01f599314711dfcb12716c7685d8e2ad5a82cb9560ce549a6ec174390e3a0d",
+    "targetHash": "6cb371260786e4c35d2b411a85546bf158a667ac0775af8dae6e128767ec404c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:52:52.186Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c27240ec2c0477b268d5401a4303cab01f976e66b241f4b3eaf0102185c977bb",
+      "targetHash": "6cb371260786e4c35d2b411a85546bf158a667ac0775af8dae6e128767ec404c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

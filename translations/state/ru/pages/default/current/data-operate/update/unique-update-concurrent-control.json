@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/unique-update-concurrent-control",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/unique-update-concurrent-control.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/update/unique-update-concurrent-control.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ea7889a6d9289e2c92a51b6bb86e562bfaaacbe6ad27dfad943ace121524b92c",
+    "sourceTechnicalHash": "b5cc05ffd957e043957102af229d163d5ef2198f1aca583384b443b8120708bc",
+    "targetHash": "46369dde0c4c639a550f858234a6cb94cc55e9d98bce496c546ee2dd5fca4c87",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:28:09.888Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ea7889a6d9289e2c92a51b6bb86e562bfaaacbe6ad27dfad943ace121524b92c",
+      "targetHash": "46369dde0c4c639a550f858234a6cb94cc55e9d98bce496c546ee2dd5fca4c87",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

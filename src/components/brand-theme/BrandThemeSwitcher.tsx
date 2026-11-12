@@ -18,11 +18,20 @@ function PaletteIcon(): JSX.Element {
     );
 }
 
-export function BrandThemeSwitcher({ mobile = false }: { mobile?: boolean }): JSX.Element {
+export function BrandThemeSwitcher({
+    mobile = false,
+    inline = false,
+    onSelect,
+}: {
+    mobile?: boolean;
+    inline?: boolean;
+    onSelect?: () => void;
+}): JSX.Element {
     const { brandTheme, setBrandTheme } = useBrandTheme();
     const detailsRef = useRef<HTMLDetailsElement>(null);
 
     useEffect(() => {
+        if (inline) return undefined;
         const closeOnEscape = (event: KeyboardEvent) => {
             if (event.key === 'Escape' && detailsRef.current?.open) {
                 detailsRef.current.open = false;
@@ -40,45 +49,57 @@ export function BrandThemeSwitcher({ mobile = false }: { mobile?: boolean }): JS
             window.removeEventListener('keydown', closeOnEscape);
             window.removeEventListener('pointerdown', closeOnOutsideClick);
         };
-    }, []);
+    }, [inline]);
 
     const currentTheme = BRAND_THEMES.find(theme => theme.id === brandTheme) ?? BRAND_THEMES[0];
 
-    return (
-        <details
-            ref={detailsRef}
-            className={`brand-theme-switcher${mobile ? ' brand-theme-switcher--mobile' : ''}`}
+    const options = (
+        <div
+            className="brand-theme-switcher__menu"
+            role="group"
+            aria-label={translate({ id: 'homepage.theme.label', message: 'Color theme' })}
         >
+            {BRAND_THEMES.map(theme => (
+                <button
+                    key={theme.id}
+                    type="button"
+                    className="brand-theme-switcher__option"
+                    data-brand-theme-option={theme.id}
+                    aria-pressed={brandTheme === theme.id}
+                    onClick={() => {
+                        setBrandTheme(theme.id);
+                        if (detailsRef.current) detailsRef.current.open = false;
+                        onSelect?.();
+                    }}
+                >
+                    <span className="brand-theme-switcher__swatches" aria-hidden="true">
+                        <span style={{ backgroundColor: theme.primary }} />
+                        <span style={{ backgroundColor: theme.accent }} />
+                    </span>
+                    <span className="brand-theme-switcher__name">{theme.label}</span>
+                    <span className="brand-theme-switcher__check" aria-hidden="true">
+                        {brandTheme === theme.id ? '✓' : ''}
+                    </span>
+                </button>
+            ))}
+        </div>
+    );
+
+    if (inline) return <div className="brand-theme-switcher brand-theme-switcher--inline">{options}</div>;
+
+    return (
+        <details ref={detailsRef} className={`brand-theme-switcher${mobile ? ' brand-theme-switcher--mobile' : ''}`}>
             <summary
-                aria-label={translate({ id: 'homepage.theme.current', message: 'Color theme: {theme}' }, { theme: currentTheme.label })}
+                aria-label={translate(
+                    { id: 'homepage.theme.current', message: 'Color theme: {theme}' },
+                    { theme: currentTheme.label },
+                )}
                 title={translate({ id: 'homepage.theme.change', message: 'Change color theme' })}
             >
                 <PaletteIcon />
                 {mobile && <span>{translate({ id: 'homepage.theme.label', message: 'Color theme' })}</span>}
             </summary>
-            <div className="brand-theme-switcher__menu" role="group" aria-label={translate({ id: 'homepage.theme.label', message: 'Color theme' })}>
-                {BRAND_THEMES.map(theme => (
-                    <button
-                        key={theme.id}
-                        type="button"
-                        className="brand-theme-switcher__option"
-                        aria-pressed={brandTheme === theme.id}
-                        onClick={() => {
-                            setBrandTheme(theme.id);
-                            if (detailsRef.current) detailsRef.current.open = false;
-                        }}
-                    >
-                        <span className="brand-theme-switcher__swatches" aria-hidden="true">
-                            <span style={{ backgroundColor: theme.primary }} />
-                            <span style={{ backgroundColor: theme.accent }} />
-                        </span>
-                        <span>{theme.label}</span>
-                        <span className="brand-theme-switcher__check" aria-hidden="true">
-                            {brandTheme === theme.id ? '✓' : ''}
-                        </span>
-                    </button>
-                ))}
-            </div>
+            {options}
         </details>
     );
 }

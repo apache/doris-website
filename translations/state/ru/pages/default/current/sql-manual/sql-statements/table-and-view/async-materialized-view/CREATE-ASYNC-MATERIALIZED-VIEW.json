@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "00dced33a07461db52fc488a69081433c6480c24e29d7bb6b0d8363e2651824f",
+    "sourceTechnicalHash": "a83e48e03a70fd0e65434690842fcb00fb4e8823019376e821a36f49e0349f10",
+    "targetHash": "9f0866232bcdbd4707bf013853a616f6b44137fa2658058b5b4730cbf62cbd5b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:42:21.953Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "00dced33a07461db52fc488a69081433c6480c24e29d7bb6b0d8363e2651824f",
+      "targetHash": "9f0866232bcdbd4707bf013853a616f6b44137fa2658058b5b4730cbf62cbd5b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 41: expected [\"code\",null,null,\"```sql\\nCREATE MATERIALIZED VIEW orders_by_status\\nBUILD DEFERRED\\nREFRESH INCREMENTAL FALLBACK ON MANUAL\\nDISTRIBUTED BY RANDOM BUCKETS 1\\nAS\\nSELECT order_status, COUNT(*) AS order_count, SUM(amount) AS total_amount\\nFROM orders\\nGROUP BY order_status;\\n```\\n\\nRun `REFRESH MATERIALIZED VIEW orders_by_status COMPLETE` once after creation to build the full baseline, then run incremental refreshes.\"]; received [\"code\",null,null,\"```sql\\nCREATE MATERIALIZED VIEW orders_by_status\\nBUILD DEFERRED\\nREFRESH INCREMENTAL FALLBACK ON MANUAL\\nDISTRIBUTED BY RANDOM BUCKETS 1\\nAS\\nSELECT order_status, COUNT(*) AS order_count, SUM(amount) AS total_amount\\nFROM orders\\nGROUP BY order_status;\\n```\\n\\nПосле создания выполните `REFRESH MATERIALIZED VIEW orders_by_status COMPLETE` один раз, чтобы сформировать полную исходную версию данных, затем выполняйте инкрементальные обновления.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/schema-change-postgresql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "8e3b23ea433ad9ba0a97b1149978dc4b7f71f00333c34a55272b295cf6b452a5",
+    "sourceTechnicalHash": "2e25de7d0526383aa311f8fd109fb86bfee270cd20a862e3eb900fdc5143a97e",
+    "targetHash": "956ef138edfa2a240348b7ef5aa9f3c89a22fad86095882cc149e372dc572104",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-05T21:47:31.008Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8e3b23ea433ad9ba0a97b1149978dc4b7f71f00333c34a55272b295cf6b452a5",
+      "targetHash": "956ef138edfa2a240348b7ef5aa9f3c89a22fad86095882cc149e372dc572104",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: концепция -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during PostgreSQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- Применимый сценарий: изменения схемы в источнике во время автоматической синхронизации создания таблиц PostgreSQL -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "9de74ae1a5f449b56e4b04f651204fc5978ca3c1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "94637264873b46048b7d943ec363e1f23499211d"
+      }
+    }
+  }
+}

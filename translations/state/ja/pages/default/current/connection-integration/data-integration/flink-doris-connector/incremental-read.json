@@ -8,13 +8,36 @@
     "sourceLocale": "en",
     "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/incremental-read.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/incremental-read.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "0d43b7cc31a9c2dc98fba628e8fadf5d8d7d584f94c71933fa89e41c6ec5e6ce",
-    "sourceTechnicalHash": "2107bda1e26031877f02d777cec9df6f3102fb2107bcfd94233c2d7cdeb330b5",
-    "targetHash": "b40be5923bdf7de5c27eabca7182634df7db32159662e65dbfcd3c6ef74caf10",
+    "sourceCommit": "e3ba202a890e362eee5e4aafa507ffb4750c0078",
+    "sourceHash": "c10a187e2d44f25aaafab73f456bb900ecee69e704cdd863d57d5e8cd4f77d31",
+    "sourceTechnicalHash": "7ce37fb51aaddf7c21c9a9b6754220d48e2f750433d2a1778725851a3415646c",
+    "targetHash": "4627637ef0114b2dcc3fcf558eb952ce56200e9f2e25574dc9e58fede80aa427",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T13:19:43.742Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-23T07:00:27.956Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "previousSourceHash": "3d725124b27cc053967591a48e15f80d890460648a15a1d73b36759f7609fe0d",
+      "previousTargetHash": "f084de1e4aea9dd5bef84eb2067e0fbf95a183d91e2a1c12236832278d9cda17",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 32,
+        "totalLines": 140,
+        "ratio": 0.22857142857142856
+      },
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c10a187e2d44f25aaafab73f456bb900ecee69e704cdd863d57d5e8cd4f77d31",
+      "targetHash": "4627637ef0114b2dcc3fcf558eb952ce56200e9f2e25574dc9e58fede80aa427",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }

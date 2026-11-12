@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "cc1fc7ef647429b06c69b0b6f0b004d58939af23c9b6a10228e02e45be7e8e5f",
+    "sourceTechnicalHash": "1f705c3179365e2d10ad8eb2c86eb92624f8e02613c352b70f569502f71c5f67",
+    "targetHash": "c4d97b099846e2ba32dc98fbfcb79b5988f8e621ea00799be2fad84884709828",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-05T21:33:51.631Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cc1fc7ef647429b06c69b0b6f0b004d58939af23c9b6a10228e02e45be7e8e5f",
+      "targetHash": "c4d97b099846e2ba32dc98fbfcb79b5988f8e621ea00799be2fad84884709828",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure / Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура / параметры конфигурации -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Environment preparation -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: предварительная проверка перед развертыванием / подготовка среды -->\"]\nprotected node 4: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+        "blob": "07ce3d00a0677911888aa29cd9443fd733b75bea"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+        "blob": "82a43ca64362692bc35984398e892ddc3fea9385"
+      }
+    }
+  }
+}

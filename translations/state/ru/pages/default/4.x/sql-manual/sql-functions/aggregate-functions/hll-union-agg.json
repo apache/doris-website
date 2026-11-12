@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/hll-union-agg.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/hll-union-agg.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "21769d0f779555691a57421a3174b0ce597d652caadb0b642941e96b7b4d3b57",
+    "sourceTechnicalHash": "3fa5fc2580677e4d11a873e442b5836cdb36100de136bfc5c190303447f379df",
+    "targetHash": "a830b43a4c9b636cddc450afece029dedb889dadd613f1e17a88bd580dffbf30",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:13.604Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "21769d0f779555691a57421a3174b0ce597d652caadb0b642941e96b7b4d3b57",
+      "targetHash": "a830b43a4c9b636cddc450afece029dedb889dadd613f1e17a88bd580dffbf30",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/hll-union-agg.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/hll-union-agg.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "21769d0f779555691a57421a3174b0ce597d652caadb0b642941e96b7b4d3b57",
+        "targetHash": "a830b43a4c9b636cddc450afece029dedb889dadd613f1e17a88bd580dffbf30",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

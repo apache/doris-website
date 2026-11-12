@@ -8,7 +8,7 @@
 
 # Doris에서 데이터 읽기 {#reading-data-from-doris}
 
-Flink Doris Connector는 Doris 테이블을 Flink 작업의 소스로 사용할 수 있습니다. 기본적으로 테이블의 유한한 스냅샷을 읽습니다. 행 수준의 변경 사항을 지속적으로 읽으려면 [Doris Binlog를 통한 증분 읽기](./incremental-read.md)를 참조하세요.
+Flink Doris Connector는 Doris 테이블을 Flink 작업의 소스로 사용할 수 있습니다. 기본적으로 테이블의 유한한 스냅샷을 읽습니다. 행 수준의 변경 사항을 지속적으로 읽으려면 [Doris Changelog를 통한 증분 읽기](./incremental-read.md)를 참조하세요.
 
 ## 읽기 원리 {#how-it-works}
 
@@ -83,7 +83,7 @@ SELECT * FROM student;
 
 ## 옵션 {#options}
 
-일반 연결 옵션은 [연결 옵션 및 TLS](./connection.md#common-options)에, 증분 읽기 옵션은 [Doris Binlog를 통한 증분 읽기](./incremental-read.md#options)에 나와 있습니다.
+일반 연결 옵션은 [연결 옵션 및 TLS](./connection.md#common-options)에, 증분 읽기 옵션은 [Doris Changelog를 통한 증분 읽기](./incremental-read.md#options)에 나와 있습니다.
 
 | 키                         | 기본값 | 필수 여부 | 설명                                                                                                                                                |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |

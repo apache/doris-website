@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a1e4a00c680970e6b15a09a91d984dda9db6be7d13461e768f693d2c21bbce3d",
+    "sourceTechnicalHash": "18dc23e2d842c46cb5ca665c7597f277d4b77bc95d2863ef04aeabbb8dbc2998",
+    "targetHash": "5d124203b4ad9fb1c7f00ca7fb73c233a309c898a48e0bdb24c49540d2e18026",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:58:45.916Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a1e4a00c680970e6b15a09a91d984dda9db6be7d13461e768f693d2c21bbce3d",
+      "targetHash": "5d124203b4ad9fb1c7f00ca7fb73c233a309c898a48e0bdb24c49540d2e18026",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

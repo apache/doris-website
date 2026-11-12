@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-postgresql-table",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "53c31c6cc369a430a6a088dc148b9181788d8fccd53bc46ae93a1757327a7cb2",
+    "sourceTechnicalHash": "9f12578199423d87f366b43d79094cd67d9793ba253f7d7b6230b81a8ceea484",
+    "targetHash": "586afa267004e13d852dd693745065afd0503b8655ade50ac2be4e6218b2b073",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-04T22:06:50.115Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "53c31c6cc369a430a6a088dc148b9181788d8fccd53bc46ae93a1757327a7cb2",
+      "targetHash": "586afa267004e13d852dd693745065afd0503b8655ade50ac2be4e6218b2b073",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: процедура -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: PostgreSQL real-time data sync / single-table CDC ingestion with SQL mapping -->\"]; received [\"html\",null,null,\"<!-- Применимый сценарий: синхронизация данных PostgreSQL в реальном времени / приём CDC для одной таблицы с сопоставлением SQL -->\"]\nprotected node 18: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: параметры конфигурации -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+        "blob": "3f7ecec80ea7ac650eaa46a63970b799390baa90"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+        "blob": "7e0a7a318f5f834e1593b49738ff55ca357a98e6"
+      }
+    }
+  }
+}

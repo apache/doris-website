@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0f7885043c7aa4ee03372d5b30361a3b60e7125ad1ba1d4cb4330c0ea381e5cc",
+    "sourceTechnicalHash": "02905433255307879a8835e84207a37cd75299b2c7f7d88333283c1cd6e4c810",
+    "targetHash": "53ba9b618d31a7e805ada46b0bfe8b3584f57ae7ecbe3c07d380e5a7c672fbe5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:49:34.613Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0f7885043c7aa4ee03372d5b30361a3b60e7125ad1ba1d4cb4330c0ea381e5cc",
+      "targetHash": "53ba9b618d31a7e805ada46b0bfe8b3584f57ae7ecbe3c07d380e5a7c672fbe5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "0f7885043c7aa4ee03372d5b30361a3b60e7125ad1ba1d4cb4330c0ea381e5cc",
+        "targetHash": "53ba9b618d31a7e805ada46b0bfe8b3584f57ae7ecbe3c07d380e5a7c672fbe5",
+        "commit": "2ad35c2403c4c70e5b39ee7a7060a6a7606d77c8",
+        "pr": "https://github.com/apache/doris-website/pull/4451"
+      }
+    }
+  }
+}

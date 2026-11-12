@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/compress",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/compress.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/compress.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "63147c3c840b70169640f14e7425914288be57fd92c3b19cd42ca997bae47dcb",
+    "sourceTechnicalHash": "b95ff712bc75f7f810294808732653b06cd3da856ad5ef57dfdfa1bb92c07482",
+    "targetHash": "935364b4bf7ec40c6e2ef73de4db66ce3483b85e0dad6c1d8578e7ee33de58ef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:43:03.399Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "63147c3c840b70169640f14e7425914288be57fd92c3b19cd42ca997bae47dcb",
+      "targetHash": "935364b4bf7ec40c6e2ef73de4db66ce3483b85e0dad6c1d8578e7ee33de58ef",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

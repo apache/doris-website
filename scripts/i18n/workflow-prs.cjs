@@ -16,8 +16,8 @@ function managedTarget(scope, target) {
     return scope.groups.some(group => {
         const suffix = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
         const version = group.version === 'current' ? 'current' : `version-${group.version}`;
-        return target.startsWith(`i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`)
-            && /\.mdx?$/.test(target);
+        return target.startsWith(group.kind==='blog'?`i18n/${scope.locale}/docusaurus-plugin-content-blog/`:`i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`)
+            && (group.kind === 'code' ? /\.tsx?$/.test(target) : /\.mdx?$/.test(target));
     });
 }
 
@@ -107,6 +107,7 @@ async function reconcileOpenPrs({scope, language, pulls, filesFor, readHead, rea
                 assert(target !== null && hash(target) === record.targetHash, 'Target does not match PR state hash');
                 const candidate = {pluginId: record.pluginId, version: record.version, docId: record.docId,
                     locale: scope.locale, sourcePath: record.sourcePath, sourceHash: record.sourceHash,
+                    ...(record.sourceRevisions&&{chineseSourceBlob:record.sourceRevisions['zh-CN'].blob}),
                     pr: `#${pull.number}`};
                 const key = identity(candidate);
                 if (active.has(key)) {
@@ -134,14 +135,26 @@ function targetFor(scope, candidate) {
     assert(group && candidate.sourcePath.startsWith(`${group.sourceRoot}/`), 'Invalid candidate source root');
     const suffix = candidate.pluginId === 'default' ? '' : `-${candidate.pluginId}`;
     const version = candidate.version === 'current' ? 'current' : `version-${candidate.version}`;
-    return `i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`
+    return (group.kind==='blog'?`i18n/${scope.locale}/docusaurus-plugin-content-blog/`:`i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`)
         + candidate.sourcePath.slice(group.sourceRoot.length + 1);
 }
 
-function ghPages(endpoint) {
-    const raw = execFileSync('gh', ['api', '--paginate', '--slurp', endpoint],
-        {encoding: 'utf8', maxBuffer: 32 * 1024 * 1024});
-    return json(raw).flat();
+function ghPages(endpoint, {run = execFileSync, wait = ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,ms)} = {}) {
+    for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+            const raw = run('gh', ['api', '--paginate', '--slurp', endpoint],
+                {encoding:'utf8',maxBuffer:32*1024*1024});
+            return json(raw).flat();
+        } catch (error) {
+            // Retry the complete read, including all pages; never use partial
+            // output to decide which documents are already in an active PR.
+            const transient = /HTTP (?:429|500|502|503|504)|TLS handshake timeout|connection reset|ETIMEDOUT|EAI_AGAIN/i
+                .test(String(error.stderr ?? '') + '\n' + error.message);
+            if (!transient || attempt === 2) throw error;
+            console.warn(`Retrying GitHub PR read after a transient error (${attempt + 1}/2)`);
+            wait(1000 * (attempt + 1));
+        }
+    }
 }
 
 async function main() {
@@ -192,4 +205,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error.message); process.exitCode = 1;});
-module.exports = {reconcileOpenPrs, managedTarget, targetFor, statePathFor};
+module.exports = {reconcileOpenPrs, managedTarget, targetFor, statePathFor, ghPages};

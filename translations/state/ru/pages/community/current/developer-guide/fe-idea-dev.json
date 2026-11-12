@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/fe-idea-dev",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/fe-idea-dev.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/fe-idea-dev.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "860ed3be932ac17c9e42a8f4e57d7e4d8e6b81e6f7802b47955de096125a5b65",
+    "sourceTechnicalHash": "9a77b185e2804ae848715f2301dc5fe27d90c2dddcf7c71ae2a847d267b4473b",
+    "targetHash": "8199c2600f005c836381ae221e5b6ea50d429bb962bcb03db4f18151cd195da6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:32:14.174Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "860ed3be932ac17c9e42a8f4e57d7e4d8e6b81e6f7802b47955de096125a5b65",
+      "targetHash": "8199c2600f005c836381ae221e5b6ea50d429bb962bcb03db4f18151cd195da6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

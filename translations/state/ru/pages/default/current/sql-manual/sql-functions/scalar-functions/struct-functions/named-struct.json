@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/struct-functions/named-struct",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/struct-functions/named-struct.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/struct-functions/named-struct.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "06e22fe30c479c33ec9383584cd5e012b8a7924480022b640a6cb7be745d412c",
+    "sourceTechnicalHash": "cd0383a2f6fb9bed9926da448d752c1798e3123d84cc68623d05bb6c15269036",
+    "targetHash": "46f188fe01a08c28bc17141c22df026eaaa9fcb46dc3903902d9827cca4b40f1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:52:46.182Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "06e22fe30c479c33ec9383584cd5e012b8a7924480022b640a6cb7be745d412c",
+      "targetHash": "46f188fe01a08c28bc17141c22df026eaaa9fcb46dc3903902d9827cca4b40f1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/fe-profiler",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/fe-profiler.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/fe-profiler.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b7a41239c628d4e78f07d7fe1bb46c351b0aaaac3d0a6014a97ea45b3e5a8ea8",
+    "sourceTechnicalHash": "c6ab99cbbd115335c8747152bae3a4832a2981117f54a41cc211a194a7606b25",
+    "targetHash": "3ea16f30ad6f9f4057d5b9df778bae7eef00183544835da44aef2abdbbd31691",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:31:13.038Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b7a41239c628d4e78f07d7fe1bb46c351b0aaaac3d0a6014a97ea45b3e5a8ea8",
+      "targetHash": "3ea16f30ad6f9f4057d5b9df778bae7eef00183544835da44aef2abdbbd31691",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

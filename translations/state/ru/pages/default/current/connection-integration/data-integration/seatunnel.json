@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/seatunnel",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/seatunnel.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/seatunnel.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "4e06235afb88b4e81a795e22def4f6824fed7f877318222616d631d89556adf9",
+    "sourceTechnicalHash": "d3ce1c10291ed05379ea45c5d6bf77d2882d16a47b76bf8ae3f740ae862c3fd4",
+    "targetHash": "c2b826f19d3fb1a3e1ffb690c34d2ebd35f6dd8cfd1be3363dc0289fb197066f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:06:40.169Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4e06235afb88b4e81a795e22def4f6824fed7f877318222616d631d89556adf9",
+      "targetHash": "c2b826f19d3fb1a3e1ffb690c34d2ebd35f6dd8cfd1be3363dc0289fb197066f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

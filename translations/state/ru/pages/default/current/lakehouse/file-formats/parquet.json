@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/file-formats/parquet",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/file-formats/parquet.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
+    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
+    "sourceHash": "a87392751451893c002c2f57d021622c61905ee7305559d38b1d6aaff87a7f2b",
+    "sourceTechnicalHash": "38c5aa1fc8e41b3081866fe16fa4b89a22bc764e846ec59bedc8f074e8c882e6",
+    "targetHash": "22a9446c7b1ea15f021d8d44e23a3366152ea964349f274707f5f1c193133b32",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-04T09:49:20.266Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a87392751451893c002c2f57d021622c61905ee7305559d38b1d6aaff87a7f2b",
+      "targetHash": "22a9446c7b1ea15f021d8d44e23a3366152ea964349f274707f5f1c193133b32",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"10:11:00\"]; received [\"inlineCode\",null,null,\"DATETIMEV2\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"DATETIMEV2\"]; received [\"inlineCode\",null,null,\"10:11:00\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/file-formats/parquet.md",
+        "blob": "24be88ccceda270531b2b696ce9d9c2047ab0356"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
+        "blob": "105f7b5b4de7f2bbd08dfd26a0ca69205686b482"
+      }
+    }
+  }
+}

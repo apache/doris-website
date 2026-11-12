@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/countequal",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/countequal.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/countequal.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "154c3ac0284c8b6edeefadb10680256451fccb405d18e174855fe47d785052d8",
+    "sourceTechnicalHash": "f8b1939f81b881a79b657b62b85f48c5148c15208ebfafc1daf85a2a4bab5871",
+    "targetHash": "cea25a1c416006984a696bb53fd1b75d537430b0ab5d3c8d5d533af71d098f8c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:59:31.270Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "154c3ac0284c8b6edeefadb10680256451fccb405d18e174855fe47d785052d8",
+      "targetHash": "cea25a1c416006984a696bb53fd1b75d537430b0ab5d3c8d5d533af71d098f8c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

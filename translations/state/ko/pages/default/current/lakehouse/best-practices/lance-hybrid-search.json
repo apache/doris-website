@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/lance-hybrid-search",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/lance-hybrid-search.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/lance-hybrid-search.mdx",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
+    "sourceTechnicalHash": "3f05cc51c538369f5d60fe1dfc25e6d30d7e027759d221c3bb25664d9257b9ac",
+    "targetHash": "ae8e8f081dde13799e32ed531397dcbfc2fb2eb2caf495ff56fee23130ad6750",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T17:27:29.654Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
+      "targetHash": "ae8e8f081dde13799e32ed531397dcbfc2fb2eb2caf495ff56fee23130ad6750",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"25\",\"3\",\"4\",\"4.2\",\"5\",\"50\",\"6\",\"95\",\"95\"]; received [\"0\",\"0\",\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"25\",\"3\",\"4\",\"4\",\"4\",\"4.2\",\"5\",\"50\",\"6\",\"8\",\"8\",\"95\",\"95\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"25\",\"3\",\"4\",\"4.2\",\"5\",\"50\",\"6\",\"95\",\"95\"]; received [\"0\",\"0\",\"0\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"25\",\"3\",\"4\",\"4\",\"4\",\"4.2\",\"5\",\"50\",\"6\",\"8\",\"8\",\"95\",\"95\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

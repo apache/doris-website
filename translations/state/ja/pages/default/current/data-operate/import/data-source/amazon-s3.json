@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/data-source/amazon-s3.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/data-source/amazon-s3.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceCommit": "b1f54b8f686135f54d3ffab1841aa9e27ee02666",
     "sourceHash": "ca94f799c99260becf89bd1419e5abb4db3fa11137043d53a616a9176523d8f4",
     "sourceTechnicalHash": "5f352f21821df1430ddd72b2efc2356480c487e7a6f6673eb052ba12175c2e96",
-    "targetHash": "b181a5927970c69f8c96c74a3ec64c2d2ece2962a1cc08239239373240047708",
+    "targetHash": "a7b5fa2203ff09453084c5a95afd8c2ed63854f424d6367e25b6e7633fdf2767",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T14:56:43.007Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-29T19:23:30.984Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ca94f799c99260becf89bd1419e5abb4db3fa11137043d53a616a9176523d8f4",
+      "targetHash": "a7b5fa2203ff09453084c5a95afd8c2ed63854f424d6367e25b6e7633fdf2767",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"403\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"403\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure / Data loading -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 手順 / データロード -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use case: Load files from AWS S3 into Doris -->\"]; received [\"html\",null,null,\"<!-- ユースケース: AWS S3 から Doris にファイルをロード -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 56: expected [\"inlineCode\",null,null,\"timeout\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"timeout\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/data-source/amazon-s3.md",
+        "blob": "dd9a9ceb665c497bf3a6161dcafd63be49a9b733"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/data-source/amazon-s3.md",
+        "blob": "6ac48081671ac3c2b0c4e9097ba5463b56a6cc97"
+      }
+    }
   }
 }

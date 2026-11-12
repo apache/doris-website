@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/period-add",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/period-add.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/period-add.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bb07294c2a5dcf36bc035b0b61db728b29823eb4f18824a056127a8f351c22f7",
+    "sourceTechnicalHash": "e84b110c633c6f510443559e49946fca11a77c858ecc54d7e2eba98638d18fda",
+    "targetHash": "2568bdabd9f969f2d5fb5b6060aa562b9023c15249d63439282885c543b159c1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:23:37.791Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bb07294c2a5dcf36bc035b0b61db728b29823eb4f18824a056127a8f351c22f7",
+      "targetHash": "2568bdabd9f969f2d5fb5b6060aa562b9023c15249d63439282885c543b159c1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/period-add",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/period-add.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/period-add.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "bb07294c2a5dcf36bc035b0b61db728b29823eb4f18824a056127a8f351c22f7",
+        "targetHash": "2568bdabd9f969f2d5fb5b6060aa562b9023c15249d63439282885c543b159c1",
+        "commit": "33c746dbf92a3743048e008eb6378ddf610d687a",
+        "pr": "https://github.com/apache/doris-website/pull/4449"
+      }
+    }
+  }
+}

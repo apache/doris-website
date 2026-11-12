@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f543edf6cb062daa751657652f3bdd5df06f671602e7f53919a7581a19b768d3",
+    "sourceTechnicalHash": "0cd16bb8f5d2d8c4c1300299f019a2bb6b90ee5b54a8ee480500315b52eff913",
+    "targetHash": "b7b1011ebc2610ad118966c28b85acd24395cf65c386ce10558156561781875a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:14:59.503Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f543edf6cb062daa751657652f3bdd5df06f671602e7f53919a7581a19b768d3",
+      "targetHash": "b7b1011ebc2610ad118966c28b85acd24395cf65c386ce10558156561781875a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

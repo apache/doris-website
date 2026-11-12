@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "c860cf45635c80f0cc324f001985ee7540b72104d71e0c27394d43afe0571a50",
-    "sourceTechnicalHash": "9332d60d9df19daa215e3dd847ef43bb5772bcf5a248cee53aab4fad80ab778a",
-    "targetHash": "ca8cd4f533a93e9321a77aa076795632c3b89cce82fdb1357bfe8894efdada44",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "d04c3ede27f2f7f4a9c313c9008a457989e7eead493fcaa614ce1e85b7584934",
+    "sourceTechnicalHash": "7bc16e38638c962a7f6de0064a0e4da4d4487997df434d6d10f6b9738c88d6fa",
+    "targetHash": "4c20f8f592508fae482af1727560400a8bcd54d14290afe00c28b99821cae0f3",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:52:07.834Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T17:07:49.938Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "d04c3ede27f2f7f4a9c313c9008a457989e7eead493fcaa614ce1e85b7584934",
+      "targetHash": "4c20f8f592508fae482af1727560400a8bcd54d14290afe00c28b99821cae0f3",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]\nprotected node 57: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]\nprotected node 57: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]\nprotected node 57: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]\nprotected node 57: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp.md",
+        "blob": "02fa016fb0f67a28e3d772e8551fa86849fb4e72"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp.md",
+        "blob": "f3e8310c4429a9d3d9b1a4cc8a8a9ff9d486d45f"
+      }
+    }
   }
 }

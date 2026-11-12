@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/avg-map",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/avg-map.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/avg-map.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "dbe796a8132fe2623977cdd34505c8c7599f31ca549c71386665407ef474917f",
+    "sourceTechnicalHash": "df4d5e00f7c70adab058c7c8e9801307adbc87db4ec407d487c11aaa0d00331b",
+    "targetHash": "61aaed739cca708141e0ef6cf9637d818bb71564c7bb20d4298560eef16b906f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:54:31.564Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dbe796a8132fe2623977cdd34505c8c7599f31ca549c71386665407ef474917f",
+      "targetHash": "61aaed739cca708141e0ef6cf9637d818bb71564c7bb20d4298560eef16b906f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

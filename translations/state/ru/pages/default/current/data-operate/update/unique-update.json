@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/unique-update",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/unique-update.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/update/unique-update.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "cd1a28fa1bc01c7faf0cd5c716eb4b5375901528a08d74a02b3d9f059fa721ac",
+    "sourceTechnicalHash": "6dae12a019cc8ba9182cf149bfae3348f32bb29e5b5941ec6d1756d2aa0b6a5b",
+    "targetHash": "314ed20199db0220ed325c9ae95ff6df382c58efa02f4278c64640d9974255d0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:27:15.755Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cd1a28fa1bc01c7faf0cd5c716eb4b5375901528a08d74a02b3d9f059fa721ac",
+      "targetHash": "314ed20199db0220ed325c9ae95ff6df382c58efa02f4278c64640d9974255d0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

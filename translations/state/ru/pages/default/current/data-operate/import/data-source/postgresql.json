@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/postgresql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/postgresql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/postgresql.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e8387946d226975a14121576f95e02d32534e3fdcc40084bc0207e7980c33e81",
+    "sourceTechnicalHash": "312f41c983e2249aa30329be3d58c600dd377495549b55dbd19b6027b7baa857",
+    "targetHash": "7c6ec1ead33e7118b568b1e77bc613772daf53f42c5fac93b0010350dc551cc1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:13:32.346Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e8387946d226975a14121576f95e02d32534e3fdcc40084bc0207e7980c33e81",
+      "targetHash": "7c6ec1ead33e7118b568b1e77bc613772daf53f42c5fac93b0010350dc551cc1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

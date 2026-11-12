@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/file-cache/file-cache.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/file-cache/file-cache.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "980bacf1b836fd9c4c3ae8a45ed6df90aba63761f5385337cbc58bde70f7be77",
-    "sourceTechnicalHash": "16f200e95348a7af5e76adbb9c8de7fdf87d6b92e56e123a906a1d752e847971",
-    "targetHash": "1bed1323a20f54fd980f3dca8a59a7633682392b3fc844ba5278e7db181103f6",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "535026a0c9b15a02668863ee04dec7ea98a7752a8cc87938370c47cc973d7d07",
+    "sourceTechnicalHash": "ac2d4df3f8df450a77e4259c02b0b17149971933a3bfe4f556053368c90b912e",
+    "targetHash": "8ad8c1bb8778e57efe92b94957b3035a02affbe971659c8cc9d39c7ab0340f79",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T01:12:08.629Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T05:30:31.949Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "535026a0c9b15a02668863ee04dec7ea98a7752a8cc87938370c47cc973d7d07",
+      "targetHash": "8ad8c1bb8778e57efe92b94957b3035a02affbe971659c8cc9d39c7ab0340f79",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]\nprotected node 188: expected [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]\nprotected node 188: expected [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture and design decisions -->\"]; received [\"html\",null,null,\"<!-- Knowledge type: アーキテクチャと設計上の判断 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Compute-storage decoupled deployment / Query performance optimization / Object storage cost optimization -->\"]; received [\"html\",null,null,\"<!-- Applicable scenarios: ストレージとコンピュートを分離した構成でのデプロイ / クエリ性能の最適化 / オブジェクトストレージのコスト最適化 -->\"]\nprotected node 4: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture and design decisions -->\"]; received [\"html\",null,null,\"<!-- Knowledge type: アーキテクチャと設計上の判断 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]\nprotected node 188: expected [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

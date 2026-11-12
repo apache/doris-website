@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/week-floor.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/week-floor.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "bb9494668c3cc531e8f464dce312c77104ade73eeac3fd88f20dc750609c2e3f",
-    "sourceTechnicalHash": "a8b86a081f7037fe87a2342f253f41c26b1d1bb41c09a9fc2b10945722cd5728",
-    "targetHash": "c88f7f2518262aff0d2cfacb9a8fa02e6a98bd5d698f07ccb729d50a0c2900b9",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "c013965cdb541ea3504a09b54eb81e348f3fd7d9d747479d8b43e46d8508a012",
+    "sourceTechnicalHash": "b81a1a8dea3d3cc514a57f7b5081e54b0ba305715d0eaf8d04c91e2953ee7d9e",
+    "targetHash": "47da2c68fb2cbc3ccbf3565ef799e081ef4653b66337bc9daea8ce1abeacd9f7",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T19:36:49.814Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T04:49:10.879Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "c013965cdb541ea3504a09b54eb81e348f3fd7d9d747479d8b43e46d8508a012",
+      "targetHash": "47da2c68fb2cbc3ccbf3565ef799e081ef4653b66337bc9daea8ce1abeacd9f7",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 24: expected [\"inlineCode\",null,null,\"2025-12-31 23:59:59+05:00\"]; received [\"inlineCode\",null,null,\"+08:00\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"2026-01-01 02:59:59\"]; received [\"inlineCode\",null,null,\"2025-12-31 23:59:59+05:00\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"+08:00\"]; received [\"inlineCode\",null,null,\"2026-01-01 02:59:59\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0001\",\"0001\",\"01\",\"01\",\"01\",\"01\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\"]; received [\"0\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0001\",\"0001\",\"01\",\"01\",\"01\",\"01\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"9\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"<origin>\"]; received [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]; received [\"inlineCode\",null,null,\"<origin>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"<origin>\"]; received [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]; received [\"inlineCode\",null,null,\"<origin>\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"2025-12-31 23:59:59+05:00\"]; received [\"inlineCode\",null,null,\"+08:00\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 24: expected [\"inlineCode\",null,null,\"2025-12-31 23:59:59+05:00\"]; received [\"inlineCode\",null,null,\"+08:00\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"2026-01-01 02:59:59\"]; received [\"inlineCode\",null,null,\"2025-12-31 23:59:59+05:00\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"+08:00\"]; received [\"inlineCode\",null,null,\"2026-01-01 02:59:59\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/pull-request",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/pull-request.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/how-to-contribute/pull-request.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ed3064f9e7c889c04c77929170c2de07d4c4987a8803f2cc3277406e120ef018",
+    "sourceTechnicalHash": "f07de74b6e5343debdcb895bc90af8cdf7b26ca24a345800f55fba9ca1b9341a",
+    "targetHash": "d0ded891d54aa86b96e9fc745c3bd146503fa3e008a76eab50721ca878e8a7a1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:31:58.138Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed3064f9e7c889c04c77929170c2de07d4c4987a8803f2cc3277406e120ef018",
+      "targetHash": "d0ded891d54aa86b96e9fc745c3bd146503fa3e008a76eab50721ca878e8a7a1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

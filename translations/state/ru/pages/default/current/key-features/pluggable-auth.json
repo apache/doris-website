@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/pluggable-auth",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/pluggable-auth.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/pluggable-auth.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ccfc5e2a156ae8fb3b74ae3eb6d5a1df0a4ba04dc28bc11856dd794b919c49fb",
+    "sourceTechnicalHash": "ea2f3aabb603b6087be1ea658e7ab98f887b2cdb7c91512c51f318e3341f9e54",
+    "targetHash": "00c2ba05ca5a5c111950a3ff7767804f8f554b17ea182aa25d3d9b6ebea7ddae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:50:04.431Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ccfc5e2a156ae8fb3b74ae3eb6d5a1df0a4ba04dc28bc11856dd794b919c49fb",
+      "targetHash": "00c2ba05ca5a5c111950a3ff7767804f8f554b17ea182aa25d3d9b6ebea7ddae",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

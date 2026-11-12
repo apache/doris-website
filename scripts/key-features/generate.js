@@ -107,8 +107,18 @@ function generate({ rootDir = process.cwd(), output = OUTPUT_FILE } = {}) {
 
   const outputPath = path.resolve(rootDir, output);
   const localizedCards = {};
-  for (const locale of localeRegistry.filter(locale => locale.translatedPages?.includes('/why-doris/key-features'))) {
+  for (const locale of localeRegistry.filter(locale => locale.code === 'zh-CN' || locale.translatedPages?.includes('/why-doris/key-features'))) {
+    const messages = locale.code === 'zh-CN'
+      ? JSON.parse(fs.readFileSync(path.join(rootDir, 'i18n', locale.code, 'code.json'), 'utf8')) : null;
     localizedCards[locale.code] = cards.map(({ sourcePath, ...card }) => {
+      // Chinese landing summaries are localized independently of linked manuals.
+      if (messages) {
+        const prefix = `marketing.features.cards.${card.id}`;
+        const title = messages[`${prefix}.title`]?.message;
+        const description = messages[`${prefix}.description`]?.message;
+        if (!title || !description) throw new Error(`Missing Chinese feature summary: ${card.id}`);
+        return { ...card, title, description };
+      }
       const target = path.join(rootDir, 'i18n', locale.code, 'docusaurus-plugin-content-docs', 'current',
         sourcePath.replace(/^docs\//, ''));
       if (!fs.existsSync(target)) return card;

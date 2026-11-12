@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "919f85e3c5d6b0e5e545d0159063e2da14994483f9516546c3b86203f49cf96a",
+    "sourceTechnicalHash": "c178851e8b2a53ce69595391d80c9ed891fb872eac2a5b5074e23e7c0d4ec5da",
+    "targetHash": "0fe68cad140a05bbf4bfa085198704c5e66f08503fdb6098538f255e25c24019",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:23:36.375Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "919f85e3c5d6b0e5e545d0159063e2da14994483f9516546c3b86203f49cf96a",
+      "targetHash": "0fe68cad140a05bbf4bfa085198704c5e66f08503fdb6098538f255e25c24019",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "919f85e3c5d6b0e5e545d0159063e2da14994483f9516546c3b86203f49cf96a",
+        "targetHash": "0fe68cad140a05bbf4bfa085198704c5e66f08503fdb6098538f255e25c24019",
+        "commit": "a6cc84ec040e19448c89d8bf1bc2f4ca4681188f",
+        "pr": "https://github.com/apache/doris-website/pull/4447"
+      }
+    }
+  }
+}

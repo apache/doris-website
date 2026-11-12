@@ -2,28 +2,28 @@
 {
     "title": "Iceberg Catalog",
     "language": "ja",
-    "description": "Apache Doris Iceberg Catalog：HMS、Glue、REST、JDBC を介して Iceberg テーブルに接続します。HDFS やクラウドストレージ上のデータをクエリ・書き込みでき、タイムトラベル、スキーマ進化、DDL 操作、テーブル最適化機能を利用できます。"
+    "description": "Apache Doris Iceberg Catalog：HMS、Glue、REST、JDBC を介して Iceberg テーブルに接続します。HDFS やクラウドストレージ上のデータをクエリ・書き込みでき、タイムトラベル、スキーマ進化、DDL 操作、テーブル最適化機能に対応します。"
 }
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris は、さまざまなメタデータサービスを介して Iceberg テーブルのデータにアクセスできます。データの読み取りに加え、INSERT、INSERT OVERWRITE、UPDATE、DELETE、MERGE INTO による Iceberg テーブルへの書き込みもサポートします。
+Doris は、さまざまなメタデータサービスを介して Iceberg テーブルのデータにアクセスできます。データの読み取りに加え、INSERT、INSERT OVERWRITE、UPDATE、DELETE、MERGE INTO による Iceberg テーブルへの書き込みにも対応しています。
 
 [Apache Doris と Apache Iceberg のクイックスタート](../best-practices/doris-iceberg.md)。
 
 :::tip
-Hive Catalog を使用し、Hive Metastore をメタデータサービスとして Iceberg テーブルにアクセスすることもできます。ただし、互換性の問題を避けるため、Iceberg Catalog を直接使用することを推奨します。
+Hive Catalog を使用し、Hive Metastore をメタデータサービスとして Iceberg テーブルにアクセスできます。ただし、互換性の問題を避けるため、Iceberg Catalog を直接使用することを推奨します。
 :::
 
 ## 適用シナリオ {#applicable-scenarios}
 
 | シナリオ | 説明 |
 | ----------- | ----------- |
-| クエリ高速化 | Doris の分散コンピューティングエンジンから Iceberg データに直接アクセスし、クエリを高速化します。 |
-| データ統合 | Iceberg データを読み取って Doris の内部テーブルに書き込むか、Doris のコンピューティングエンジンで ZeroETL 操作を実行します。 |
-| データの書き戻し | Doris がサポートする任意のデータソースのデータを処理し、Iceberg テーブルのストレージに書き戻します。 |
+| クエリの高速化 | Doris の分散コンピューティングエンジンから Iceberg データに直接アクセスし、クエリを高速化します。 |
+| データ統合 | Iceberg データを読み取って Doris の内部テーブルに書き込むか、Doris のコンピューティングエンジンを使用して ZeroETL 操作を実行します。 |
+| データの書き戻し | Doris が対応する任意のデータソースのデータを処理し、Iceberg テーブルのストレージに書き戻します。 |
 
 ## Catalog の設定 {#configuring-catalog}
 
@@ -43,13 +43,13 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `<iceberg_catalog_type>`
 
-  Iceberg Catalog の種類です。次の値を指定できます。
+  Iceberg Catalog の種類です。次のオプションに対応します。
 
   * `hms`：Hive Metastore をメタデータサービスとして使用します。
 
   * `rest`：Iceberg Rest Catalog インターフェースと互換性のあるメタデータサービスを使用します。
 
-  * `hadoop`：ファイルシステム上のメタデータに直接アクセスします。
+  * `hadoop`：ファイルシステムに保存されたメタデータに直接アクセスします。
 
   * `glue`：AWS Glue をメタデータサービスとして使用します。
 
@@ -61,17 +61,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `<warehouse>`
 
-  Iceberg の warehouse パスです。`<iceberg_catalog_type>` が `hadoop` の場合は必須です。
+  Iceberg のウェアハウスパスです。`<iceberg_catalog_type>` が `hadoop` の場合は必須です。
 
-  `warehouse` パスは `Database` パスの一つ上の階層を指す必要があります。たとえば、テーブルのパスが `s3://bucket/path/to/db1/table1` なら、`warehouse` は `s3://bucket/path/to/` です。
+  `warehouse` パスは `Database` パスの一つ上の階層を指す必要があります。たとえば、テーブルパスが `s3://bucket/path/to/db1/table1` の場合、`warehouse` は `s3://bucket/path/to/` にします。
 
 * `{MetaStoreProperties}`
 
-  MetaStoreProperties には、Metastore メタデータサービスへの接続情報と認証情報を指定します。[サポートされるメタデータサービス]のセクションを参照してください。
+  MetaStoreProperties には、Metastore メタデータサービスへの接続情報と認証情報を指定します。「[対応するメタデータサービス]」のセクションを参照してください。
 
 * `{StorageProperties}`
 
-  StorageProperties には、ストレージシステムへの接続情報と認証情報を指定します。[サポートされるストレージシステム]のセクションを参照してください。
+  StorageProperties には、ストレージシステムに関する接続情報と認証情報を指定します。「[対応するストレージシステム]」のセクションを参照してください。
 
 * `{IcebergProperties}`
 
@@ -79,66 +79,66 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     - `list-all-tables`
 
-        Hive Metastore をメタデータサービスとして使用する Iceberg Catalog 向けの設定です。デフォルトは `true` です。デフォルトでは、`SHOW TABLES` は現在のデータベース内にあるすべての種類のテーブルを表示します。Hive Metastore には Iceberg 以外のテーブルも格納される場合があります。この方法が最も高性能です。
+        Hive Metastore をメタデータサービスとして使用する Iceberg Catalog 向けです。デフォルトは `true` です。デフォルトでは、`SHOW TABLES` は現在のデータベース内のすべての種類のテーブルを一覧表示します（Hive Metastore には Iceberg 以外のテーブルも保存されている場合があります）。この方法が最も高いパフォーマンスを発揮します。
 
-        `false` に設定すると、Doris は各テーブルの種類を一つずつ確認し、Iceberg テーブルのみを返します。テーブル数が多い場合、このモードの性能は低下します。
+        `false` に設定すると、Doris は各テーブルの種類を一つずつ確認し、Iceberg テーブルのみを返します。テーブル数が多い場合、このモードのパフォーマンスは低下します。
 
     - `iceberg.rest.view-enabled`
 
-        バージョン 4.0.6 以降でサポートされます。
+        バージョン 4.0.6 以降でサポートされています。
 
-        Iceberg REST Catalog でのみ有効です。View 関連の操作（`listViews`、`loadView`、`viewExists`、`dropView` など）を有効にするかどうかを指定します。デフォルトは `true` です。
+        Iceberg REST Catalog にのみ有効です。`listViews`、`loadView`、`viewExists`、`dropView` など、View 関連の操作を有効にするかどうかを指定します。デフォルトは `true` です。
 
-        Iceberg REST Catalog の実装によっては Table API は公開されていても、View API が利用できないかエラーを返します。Doris は `SHOW TABLES` の実行時に `ViewCatalog.listViews()` を呼び出してテーブル一覧から View を除外するため、このような REST サービスでは `SHOW TABLES` やテーブルメタデータのデータロードが失敗することがあります。
+        Iceberg REST Catalog の実装によっては Table API を公開していても、View API が利用できないか、エラーを返します。Doris は `SHOW TABLES` の実行時に `ViewCatalog.listViews()` を呼び出してテーブル一覧から View を除外するため、このような REST サービスでは `SHOW TABLES` やテーブルメタデータのデータロードが失敗する場合があります。
 
-        この場合は `false` に設定してください。Doris は View 関連の操作をすべて省略し、`SHOW TABLES` などのメタデータ操作を正常に実行できるようになります。
+        その場合は、このパラメータを `false` に設定します。Doris は View 関連の操作をすべてスキップし、`SHOW TABLES` などのメタデータ操作を正常に実行できるようになります。
 
 * `{CommonProperties}`
 
-  CommonProperties には共通プロパティを指定します。詳細は [Catalog の概要](../catalog-overview.md)を参照してください。
+  CommonProperties には共通プロパティを指定します。詳細は [Catalog の概要](../catalog-overview.md) を参照してください。
 
 ## メタデータキャッシュ {#meta-cache}
 
-Apache Doris は外部データソースへのアクセス性能を高めるため、Iceberg のメタデータをキャッシュします。対象には、データロード済みのテーブルメタデータ、パーティションデータ、manifest、導出されたパーティション投影、最新の snapshot id、推定されたファイル形式が含まれます。
+外部データソースへのアクセス性能を高めるため、Apache Doris は Iceberg のメタデータをキャッシュします。対象には、データロード済みのテーブルメタデータ、パーティションデータ、マニフェスト、導出されたパーティション射影、最新スナップショット ID、推定されたファイル形式が含まれます。
 
 :::tip
-Doris 4.1.x より前のバージョンでは、メタデータキャッシュは主に FE の設定項目でグローバルに制御されます。詳細は[メタデータキャッシュ](../meta-cache.md)を参照してください。
-Doris 4.1.x 以降では、Iceberg Catalog の外部メタデータキャッシュを統一された `meta.cache.*` キーで設定します。以下のエントリは現行バージョンについて説明しています。Doris 4.1.x と 4.2.x では異なるエントリ群を使用し、このページの 4.x 版で説明しています。
+Doris 4.1.x より前のバージョンでは、メタデータキャッシュは主に FE の設定項目でグローバルに制御されます。詳細は [メタデータキャッシュ](../meta-cache.md) を参照してください。
+Doris 4.1.x 以降では、Iceberg Catalog の外部メタデータキャッシュを統一された `meta.cache.*` キーで設定します。以下の項目は現在のバージョンについて説明しています。Doris 4.1.x と 4.2.x では別の設定項目を使用します。これらはこのページの 4.x 版で説明しています。
 :::
 
 ### キャッシュプロパティの設定 {#meta-cache-unified-model}
 
-各キャッシュエントリには、統一された形式の設定キー `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}` を使用します。Iceberg の `<engine>` は `iceberg` です。`meta.cache.iceberg.table.ttl-second` は共有 TTL 設定であり、`table` と `partition` エントリのデフォルト TTL、および独自の `<entry>` トークンを持たないキャッシュの TTL になります。この値を `0` にすると、これらすべてが無効になり、各クエリが最新のスナップショットを直接読み取ります。
+各キャッシュエントリには、統一された形式の設定キー `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}` を使用します。Iceberg の `<engine>` は `iceberg` です。`meta.cache.iceberg.table.ttl-second` は共有 TTL 設定で、`table` と `partition` エントリのデフォルト TTL、および独自の `<entry>` トークンを持たないキャッシュの TTL になります。値を `0` にするとこれらすべてが無効になり、各クエリが最新のスナップショットを直接読み取ります。
 
 | プロパティ | 例 | 意味 |
 |---|---|---|
 | `enable` | `true/false` | このキャッシュエントリを有効にするかどうか。 |
-| `ttl-second` | `600`, `0`, `-1` | `0` はエントリを無効にします（直ちに反映され、最新データの確認に使用できます）。`-1` は無期限を意味します。その他の正の整数はアクセス時刻を基準とする秒単位の TTL です。 |
+| `ttl-second` | `600`, `0`, `-1` | `0` はエントリを無効にします（直ちに反映され、最新データの確認に使用できます）。`-1` は無期限です。その他の正の整数は、アクセス時刻を基準とした秒単位の TTL です。 |
 | `capacity` | `10000` | キャッシュエントリ数の上限です。`0` はエントリを無効にします。 |
-| `max-weight` | `1GB` | Doris 4.1.4 以降でサポートされます。エントリが保持するメモリの推定上限を指定する任意の設定です。正の値が必要で、`0` は拒否されます。以下で対応と記載されたエントリにのみ指定できます。 |
+| `max-weight` | `1GB` | Doris 4.1.4 以降でサポートされます。エントリが保持するメモリの推定量に対する任意の上限です。正の値が必要で、`0` は拒否されます。以下で示すエントリにのみ指定できます。 |
 
-**有効になる条件：** `enable=true`、`ttl-second != 0`、`capacity > 0` の場合、エントリが有効になります。さらに、FE 全体、Catalog、またはエントリ単位のメモリ上限が、推定メモリ使用量に基づく登録可否を制御します。[外部メタデータキャッシュのメモリ管理](../external-meta-cache-memory-management)を参照してください。
+**有効条件：** `enable=true`、`ttl-second != 0`、`capacity > 0` の場合にエントリが有効になります。FE 全体、Catalog、またはエントリのメモリ上限も、推定メモリ使用量に基づいてキャッシュへの登録を制御します。[外部メタデータキャッシュのメモリ管理](../external-meta-cache-memory-management) を参照してください。
 
 ### キャッシュモジュール {#meta-cache-unified-modules}
 
-次のエントリには固有の設定キーがあり、`max-weight` を指定できます。
+次のエントリには専用の設定キーがあり、`max-weight` を指定できます。
 
-| エントリ（`<entry>`） | プロパティキーのプレフィックス | `ENTRY_NAME` | キャッシュ内容と効果 | デフォルトの enable / TTL / capacity |
+| エントリ（`<entry>`） | プロパティキーの接頭辞 | `ENTRY_NAME` | キャッシュする内容と効果 | デフォルトの有効状態 / TTL / 容量 |
 |---|---|---|---|---|
-| `table` | `meta.cache.iceberg.table.` | `iceberg-table` | データロード済みの Iceberg テーブルメタデータ。Catalog との通信やメタデータファイルの読み取りを減らします。 | `true` / 86400 秒 / 1000 |
+| `table` | `meta.cache.iceberg.table.` | `iceberg-table` | データロード済みの Iceberg テーブルメタデータ。効果：Catalog との通信やメタデータファイルの読み取りを削減します。 | `true` / 86400 秒 / 1000 |
 | `partition` | `meta.cache.iceberg.partition.` | `iceberg-partition` | テーブルのスナップショットの生のパーティションデータ。 | `true` / `table` と同じ / 1000 |
-| `manifest` | `meta.cache.iceberg.manifest.` | `iceberg-manifest` | 解析済みの manifest 内容。スキャン計画で使用されるのは `enable` が `true` の場合のみで、デフォルトは `false` です。 | キャッシュ自体は `true`、使用は `false` / 無期限 / 100000 |
-| `partition_view` | `meta.cache.iceberg.partition_view.` | `iceberg.mvcc-partition-view`, `iceberg.list-partitions-view` | 一つのエントリ上限を共有する、導出された二種類のパーティション投影。 | `true` / 86400 秒 / 1000 |
+| `manifest` | `meta.cache.iceberg.manifest.` | `iceberg-manifest` | 解析済みのマニフェスト内容。スキャン計画では `enable` が `true` の場合にのみ使用され、デフォルトは `false` です。 | キャッシュ自体は `true`、その使用は `false` / 無期限 / 100000 |
+| `partition_view` | `meta.cache.iceberg.partition_view.` | `iceberg.mvcc-partition-view`, `iceberg.list-partitions-view` | 一つのエントリ上限を共有する、導出された二つのパーティション射影。 | `true` / 86400 秒 / 1000 |
 
-次のキャッシュには `<entry>` トークンがありません。Catalog と FE 全体のメモリ上限に従い、TTL には `meta.cache.iceberg.table.ttl-second` を使用します：`iceberg-latest-snapshot`（最新の snapshot id）、`iceberg-format`（推定されたファイル形式）、`iceberg-comment`（テーブルのコメント。vended credentials を使用する REST Catalog でのみ作成）、`iceberg-equality-delete-field-ids`。
+次のキャッシュには `<entry>` トークンがありません。Catalog と FE 全体のメモリ上限に従い、TTL は `meta.cache.iceberg.table.ttl-second` から取得します：`iceberg-latest-snapshot`（最新スナップショット ID）、`iceberg-format`（推定されたファイル形式）、`iceberg-comment`（テーブルのコメント。資格情報を払い出す REST Catalog でのみ作成）、`iceberg-equality-delete-field-ids`。
 
 Iceberg テーブルのカラムスキーマは、共有の `default` エンジン（`meta.cache.default.schema.*`）によってキャッシュされます。
 
 :::note
-`iceberg.rest.session` が `user` の場合、共有キャッシュがユーザーごとの認可を迂回してしまうため、`table`、`partition`、`partition_view`、latest-snapshot、format の各キャッシュは作成されません。vended credentials を使用する REST Catalog でも `table` キャッシュは作成されません。
+`iceberg.rest.session` が `user` の場合、共有キャッシュがユーザーごとの認可を迂回してしまうため、`table`、`partition`、`partition_view`、最新スナップショット、形式のキャッシュは作成されません。資格情報を払い出す REST Catalog でも `table` キャッシュは作成されません。
 :::
 
-### 旧パラメータの対応と変換 {#meta-cache-mapping}
+### 旧パラメータと統一キーの対応・変換 {#meta-cache-mapping}
 
 | 旧プロパティキー | 統一キー | 説明 |
 |---|---|---|
@@ -146,24 +146,24 @@ Iceberg テーブルのカラムスキーマは、共有の `default` エンジ�
 
 ### ベストプラクティス {#meta-cache-best-practices}
 
-* **最新データへのリアルタイムアクセス**：各クエリで Iceberg テーブルの最新スナップショットを参照するには、`meta.cache.iceberg.table.ttl-second` を `0` に設定します。
+* **最新データへのリアルタイムアクセス**：各クエリで Iceberg テーブルの最新スナップショットを参照したい場合は、`meta.cache.iceberg.table.ttl-second` を `0` に設定します。
   ```sql
   -- Disable the table, partition, latest-snapshot, and format caches to read the latest snapshot live
   ALTER CATALOG iceberg_ctl SET PROPERTIES ("meta.cache.iceberg.table.ttl-second" = "0");
   ```
-* **性能の最適化**：
-    * manifest キャッシュを有効にすると、大規模なテーブルのクエリ計画を大幅に高速化できます。manifest が大きい場合は、`max-weight` でメモリ使用量を制限します。
+* **パフォーマンス最適化**：
+    * マニフェストキャッシュを有効にすると、大きなテーブルのクエリ計画を大幅に高速化できます。マニフェストが大きい場合は `max-weight` でメモリ使用量を制限します。
       ```sql
       ALTER CATALOG iceberg_ctl SET PROPERTIES (
         "meta.cache.iceberg.manifest.enable" = "true",
         "meta.cache.iceberg.manifest.max-weight" = "1GB"
       );
       ```
-    * Catalog プロパティの変更が成功すると、影響を受けるメタデータキャッシュが破棄され、次回のアクセス時に新しい設定で再構築されます。`meta.cache.max-weight` または `schema.cache.ttl-second` を変更すると Catalog のすべてのキャッシュが破棄され、`meta.cache.<engine>.<entry>.*` を変更すると、そのエンジンのキャッシュが破棄されます。進行中のクエリには影響しません。
+    * Catalog プロパティの変更に成功すると、影響を受けるメタデータキャッシュが破棄され、次回アクセス時に新しい設定で再構築されます。`meta.cache.max-weight` または `schema.cache.ttl-second` を変更すると、その Catalog のすべてのキャッシュが破棄されます。`meta.cache.<engine>.<entry>.*` を変更すると、そのエンジンのキャッシュが破棄されます。実行中のクエリには影響しません。
 
-### 可観測性 {#meta-cache-unified-observability}
+### 観測方法 {#meta-cache-unified-observability}
 
-キャッシュのメトリクスは、`information_schema.catalog_meta_cache_statistics` システムテーブルで確認できます。`ENTRY_NAME` には上の表に示した名前が表示され、`default` エンジンの行は共有のテーブルスキーマキャッシュを示します。
+キャッシュのメトリクスは、システムテーブル `information_schema.catalog_meta_cache_statistics` で確認できます。`ENTRY_NAME` には上の表に記載した名前が表示され、`default` エンジンの行は共有のテーブルスキーマキャッシュを表します。
 
 ```sql
 SELECT engine_name, entry_name,
@@ -176,7 +176,7 @@ ORDER BY engine_name, entry_name;
 
 このシステムテーブルの詳細は、[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md) を参照してください。
 
-## サポートされる Iceberg バージョン {#supported-iceberg-versions}
+## 対応する Iceberg バージョン {#supported-iceberg-versions}
 
 | Doris バージョン | Iceberg SDK バージョン |
 | --- | --- |
@@ -190,18 +190,18 @@ ORDER BY engine_name, entry_name;
 
 ### メタデータと読み取りのエラー（4.1.5 以降） {#metadata-and-read-errors-since-415}
 
-- `DESCRIBE`、`SHOW COLUMNS`、`SHOW CREATE TABLE` は、現在の Iceberg スキーマにある必須・任意の宣言を維持します。スキャンでは、スキーマ進化によって存在しないフィールドも引き続き処理できます。表示された NOT NULL 宣言は、そのフィールドが過去のすべてのファイルに存在することを保証しません。
-- 開発版では、行単位の書き込みに使用するパーティションメタデータを、シリアル化されたパーティションデータとして保持します。4.1.5 のエラー `Cannot produce Iceberg row IDs with unsupported partition types in spec ...` は以前の Row ID 表現に関するもので、現在の表現には該当しません。
-- コミット済みスナップショットが参照するデータファイルまたは delete file が見つからない場合、`ignore_not_found_file_in_external_table=true` でもクエリは失敗します。欠落したオブジェクトを復元するか、ファイルがすべて揃っている有効なスナップショットを選択してください。
-- `schema.name-mapping.default` には有効な Iceberg Name Mapping JSON 配列を指定する必要があります。無効な値の場合、現在のカラム名にフォールバックして NULL を返すのではなく、データスキャンが失敗します。Spark などのライターでこのプロパティを修正または削除し、Doris でテーブルを更新してください。メタデータシステムテーブルへのクエリでは、このデータスキャンの検証は行われません。
+- `DESCRIBE`、`SHOW COLUMNS`、`SHOW CREATE TABLE` は、現在の Iceberg スキーマにある必須・任意の宣言を保持します。スキャンでは、スキーマ進化によって存在しないフィールドも処理できます。表示された NOT NULL 宣言は、すべての過去のファイルにそのフィールドが存在することを保証しません。
+- dev バージョンでは、行レベルの書き込みに使うパーティションメタデータを、シリアライズされたパーティションデータとして保持します。4.1.5 のエラー `Cannot produce Iceberg row IDs with unsupported partition types in spec ...` は以前の Row ID 表現に関するもので、現在の表現には当てはまりません。
+- コミット済みスナップショットが参照するデータファイルまたは削除ファイルが欠けている場合、`ignore_not_found_file_in_external_table=true` であってもクエリは失敗します。欠けたオブジェクトを復元するか、必要なファイルがすべてそろった有効なスナップショットを選択してください。
+- `schema.name-mapping.default` には有効な Iceberg Name Mapping の JSON 配列が必要です。値が無効な場合、現在のカラム名にフォールバックして NULL を返すのではなく、データスキャンが失敗します。Spark などの書き込みエンジンでこのプロパティを修正または削除し、Doris でテーブルを更新してください。メタデータのシステムテーブルへのクエリでは、このデータスキャン時の検証は行われません。
 
-### サポートされる Iceberg 形式 {#supported-iceberg-formats}
+### 対応する Iceberg 形式 {#supported-iceberg-formats}
 
-* Iceberg V1/V2 形式をサポートします。
-* Position Delete と Equality Delete の読み取りをサポートします。
-* Deletion Vector の読み取りをサポートします（4.1.0 以降）。
+* Iceberg V1/V2 形式に対応します。
+* Position Delete と Equality Delete の読み取りに対応します。
+* Deletion Vector の読み取りに対応します（4.1.0 以降）。
 
-## サポートされるメタデータサービス {#supported-metadata-services}
+## 対応するメタデータサービス {#supported-metadata-services}
 
 * [Hive Metastore](../metastores/hive-metastore.md)
 * [AWS Glue](../metastores/aws-glue.md)
@@ -210,11 +210,11 @@ ORDER BY engine_name, entry_name;
 * [Iceberg JDBC Catalog](../metastores/iceberg-jdbc.md)（バージョン 4.1.0 以降でサポート）
 * [FileSystem](../metastores/filesystem.md)
 
-> 注：Doris のバージョンによって、サポートされるサービスの種類とパラメータは若干異なります。[例]のセクションを参照してください。
+> 注：Doris のバージョンによって、対応するサービスの種類やパラメータは若干異なります。「[例]」のセクションを参照してください。
 
-## Iceberg Catalog の機能サポート一覧 {#iceberg-catalog-feature-support-matrix}
+## Iceberg Catalog の機能対応表 {#iceberg-catalog-feature-support-matrix}
 
-| メタデータサービス | テーブルのクエリ | View のクエリ | DDL 操作 | データの書き戻し | システムテーブル（3.1+ 以降でサポート） |
+| メタデータサービス | テーブルクエリ | View クエリ | DDL 操作 | データの書き戻し | システムテーブル（3.1+ 以降でサポート） |
 | ---------------------- | ----------- | ---------- | ----------------------------- | ----------------------------- | ------------------------------------ |
 | Hive MetaStore | ✅ | ✅ | ✅ | ✅ | ✅ |
 | AWS Glue | ✅ | ✅ | ❌ | ❌ | ✅ |
@@ -222,7 +222,9 @@ ORDER BY engine_name, entry_name;
 | Iceberg Rest Catalog | ✅ | ✅ | サービスプロバイダーによる | サービスプロバイダーによる | サービスプロバイダーによる |
 | FileSystem | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-## サポートされるストレージシステム {#supported-storage-systems}
+`labels` システムテーブルはバージョン 5.0.0 以降でサポートされ、Iceberg REST Catalog でのみ利用できます。後述の [labels](#labels) を参照してください。
+
+## 対応するストレージシステム {#supported-storage-systems}
 
 * [HDFS](../storages/hdfs.md)
 * [AWS S3](../storages/s3.md)
@@ -235,34 +237,34 @@ ORDER BY engine_name, entry_name;
 * [MINIO](../storages/minio.md)
 * [SeaweedFS](../storages/seaweedfs.md)
 
-> 注：Doris のバージョンによって、サポートされるサービスの種類とパラメータは若干異なります。[例]のセクションを参照してください。
+> 注：Doris のバージョンによって、対応するサービスの種類やパラメータは若干異なります。「[例]」のセクションを参照してください。
 
-## サポートされるデータ形式 {#supported-data-formats}
+## 対応するデータ形式 {#supported-data-formats}
 
 * [Parquet](../file-formats/parquet.md)
 * [ORC](../file-formats/orc.md)
 
-バージョン 4.1.4 以降では、ファイル形式はデータファイル（split）ごとに決定されます。そのため、**Parquet と ORC のデータファイルが混在する一つの Iceberg テーブルも正常にクエリできます**。
+バージョン 4.1.4 以降では、ファイル形式をデータファイル（split）ごとに判定します。そのため、**Parquet と ORC の両方のデータファイルを含む単一の Iceberg テーブルも正常にクエリできます**。
 
-バージョン 4.1.4 以降では、Iceberg の identity パーティションメタデータがすべての split とともに渡され、パスのパーティションキーはテーブルにあるすべてのパーティション仕様の identity カラムを網羅します。このため、**Partition Evolution** を経たテーブルでもパーティションカラムの値が正しく返されます。
+バージョン 4.1.4 以降では、Iceberg の identity パーティションメタデータが各 split とともに渡され、パスのパーティションキーはテーブル内のすべてのパーティション仕様の identity カラムを網羅します。その結果、**Partition Evolution** を経たテーブルでも、パーティションカラムの値が正しく返されます。
 
 ## カラム型のマッピング {#column-type-mapping}
 
-Doris 4.2 のマッピング表、精度の規則、サポートされない型については、[Iceberg から Doris へのデータ型マッピング](iceberg-catalog/doris-type-mapping.md)を参照してください。
+Doris 4.2 の完全なマッピング表、精度の規則、非対応の型については、[Iceberg から Doris へのデータ型マッピング](iceberg-catalog/doris-type-mapping.md) を参照してください。
 
 ### カラム名の大文字と小文字 {#column-name-case}
 
-Doris は Iceberg テーブルのカラム名の元の大文字・小文字を保持し、読み取り時には大文字・小文字を区別せずにカラムを照合します。大文字や大文字・小文字が混在するカラム名（`UserId` や `ORDER_ID` など）も正常にクエリできます。
+Doris は Iceberg テーブルのカラム名の元の大文字・小文字を保持し、読み取り時には大文字・小文字を区別せずにカラムを照合します。大文字や大文字・小文字が混在するカラム名（例：`UserId`、`ORDER_ID`）も正常にクエリできます。
 
 :::info バージョンに関する注記
 
-4.0 系のうち 4.0.8 より前のバージョンでは、読み取り時にカラムを完全一致で特定していたため、大文字・小文字が混在するカラム名を持つ Iceberg や Paimon のテーブルで、誤ったカラムが読み取られたり、クエリが失敗したりすることがありました。この問題は 4.0.8 で修正されました。
+4.0 系の 4.0.8 より前のバージョンでは、読み取り時に完全一致でカラムを特定していたため、大文字・小文字が混在するカラム名を持つ Iceberg テーブルや Paimon テーブルで、誤ったカラムを読み取ったり、クエリが失敗したりする場合がありました。この問題は 4.0.8 で修正されました。
 
 :::
 
 ## Namespace のマッピング {#namespace-mapping}
 
-Iceberg のメタデータ階層は Catalog -> Namespace -> Table です。Namespace は複数階層にできます（Nested Namespace）。
+Iceberg のメタデータ階層は Catalog -> Namespace -> Table です。Namespace は複数の階層を持つことができます（Nested Namespace）。
 
 ```
       ┌─────────┐
@@ -285,9 +287,9 @@ Iceberg のメタデータ階層は Catalog -> Namespace -> Table です。Names
 ```
 
 
-バージョン 3.1.2 以降、Doris は Iceberg Rest Catalog で Nested Namespace のマッピングをサポートします。
+バージョン 3.1.2 以降、Iceberg Rest Catalog については、Doris は Nested Namespace のマッピングに対応しています。
 
-上の例のテーブルは、次のように Doris のメタデータへマッピングされます。
+上の例では、テーブルは次の規則に従って Doris のメタデータにマッピングされます。
 
 | Catalog | データベース | テーブル |
 | --- | --- | --- |
@@ -304,7 +306,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
     <summary>バージョン 3.1+</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HMS と HDFS のサービスにアクセスする
+            Kerberos 認証なしで HMS と HDFS のサービスにアクセスする
             ```sql
             CREATE CATALOG iceberg_hms_on_hdfs_catalog PROPERTIES (
                 'type' = 'iceberg',
@@ -339,7 +341,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
             ```
         </TabItem>
         <TabItem value='S3' label='S3'>
-            Kerberos 認証を使用せずに HMS にアクセスする
+            Kerberos 認証なしで HMS にアクセスする
             ```sql
             CREATE CATALOG iceberg_hms_on_s3_catalog PROPERTIES (
                 'type' = 'iceberg',
@@ -351,7 +353,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
                 's3.secret_key' = '<sk>'
             );
             ```
-            IAM Assumed Role を使用して S3 アクセス認証情報を取得する（3.1.2+）
+            IAM Assume Role を使用して S3 のアクセス資格情報を取得する（3.1.2+）
             ```sql
             CREATE CATALOG iceberg_hms_on_s3_iamrole PROPERTIES (
                 'type' = 'iceberg',
@@ -364,7 +366,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
-            Kerberos 認証を使用せずに HMS にアクセスする
+            Kerberos 認証なしで HMS にアクセスする
             ```sql
             CREATE CATALOG iceberg_hms_on_oss_catalog PROPERTIES (
                 'type' = 'iceberg',
@@ -401,7 +403,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
             ```
         </TabItem>
         <TabItem value='COS' label='COS'>
-            Kerberos 認証を使用せずに HMS にアクセスする
+            Kerberos 認証なしで HMS にアクセスする
             ```sql
             CREATE CATALOG `iceberg_hms_on_cos_catalog` PROPERTIES (
                 'type' = 'iceberg',
@@ -437,7 +439,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
             ```
         </TabItem>
         <TabItem value='OBS' label='OBS'>
-            Kerberos 認証を使用せずに HMS にアクセスする
+            Kerberos 認証なしで HMS にアクセスする
             ```sql
             CREATE CATALOG test_iceberg_on_hms_obs_catalog PROPERTIES (
                 'type' = 'iceberg',
@@ -535,10 +537,10 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
 </details>
 
 <details >
-    <summary>バージョン 2.1 と 3.0</summary>
+    <summary>バージョン 2.1 & 3.0</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HMS と HDFS のサービスにアクセスする
+            Kerberos 認証なしで HMS と HDFS のサービスにアクセスする
             ```sql
             CREATE CATALOG iceberg_hms_on_hdfs_catalog PROPERTIES (
                 'type' = 'iceberg',
@@ -647,7 +649,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
     <summary>バージョン 3.1+</summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
-            AWS Glue と S3 ストレージサービスで同じ認証情報を共有する場合です。
+            AWS Glue と S3 ストレージサービスは同じ認証資格情報を共有します。
             ```sql
             CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
                 'type' = 'iceberg',
@@ -660,7 +662,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
             );
             ```
 
-            Glue サービスと S3 の認証情報が異なる場合は、次のように S3 の認証情報を個別に指定できます。
+            Glue サービスと S3 の認証資格情報が異なる場合は、次の方法で S3 の認証資格情報を個別に指定できます。
             ```sql
             CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
                 'type' = 'iceberg',
@@ -690,12 +692,12 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
     </Tabs>
 </details>
 <details >
-    <summary>バージョン 2.1 と 3.0</summary>
+    <summary>バージョン 2.1 & 3.0</summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
-            AWS Glue と S3 ストレージサービスで同じ認証情報を共有する場合です。
+            AWS Glue と S3 ストレージサービスは同じ認証資格情報を共有します。
 
-            EC2 以外の環境では、[aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) を使って認証情報を設定し、~/.aws ディレクトリに認証情報ファイルを生成する必要があります。
+            EC2 以外の環境では、[aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) を使用して Credentials 情報を設定し、~/.aws ディレクトリに資格情報ファイルを生成する必要があります。
             ```sql
             CREATE CATALOG glue PROPERTIES (
                 'type'='iceberg',
@@ -755,7 +757,7 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
     </Tabs>
 </details>
 <details >
-    <summary>バージョン 2.1 と 3.0</summary>
+    <summary>バージョン 2.1 & 3.0</summary>
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
@@ -777,15 +779,15 @@ Nested Namespace のサポートは明示的に有効にする必要がありま
 
 ### Iceberg Rest Catalog {#iceberg-rest-catalog}
 
-:::caution 動作の変更（4.1.4）
+:::caution 動作変更（4.1.4）
 
-バージョン 4.1.4 以降、`iceberg.rest.signing-name` に `glue`、`s3tables`、`osstables` などのマネージド署名サービスを設定する場合、`'iceberg.rest.sigv4-enabled' = 'true'` も**必ず**設定する必要があります。設定しないと、Catalog の作成時に次のエラーが発生します。
+バージョン 4.1.4 以降、`iceberg.rest.signing-name` に `glue`、`s3tables`、`osstables` などのマネージド署名サービスを設定する場合は、`'iceberg.rest.sigv4-enabled' = 'true'` も**必ず**設定する必要があります。設定しないと、Catalog の作成が次のエラーで失敗します。
 
 ```text
 Rest Catalog requires sigv4-enabled set to true when signing-name is <name>
 ```
 
-既存の Catalog で `sigv4-enabled` を有効にせずに `signing-name` だけを設定している場合、アップグレード後に検証が失敗するため、このプロパティを追加する必要があります。
+既存の Catalog で `sigv4-enabled` を有効にせず `signing-name` だけを設定していた場合、アップグレード後に検証が失敗するため、このプロパティを追加する必要があります。
 
 `osstables` を使用する場合は、`iceberg.rest.signing-region` と `iceberg.rest.sigv4-enabled = 'true'` の両方が必要です。設定しないと、次のエラーが報告されます。
 
@@ -833,7 +835,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
                     );
                     ```
                 </TabItem>
-                <TabItem value='s3-vended' label='払い出し認証情報'>
+                <TabItem value='s3-vended' label='払い出された資格情報'>
                     ```sql
                     CREATE CATALOG gravitino_vended_s3 PROPERTIES (
                         'type' = 'iceberg',
@@ -1010,7 +1012,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
 </details>
 
 <details >
-    <summary>バージョン 2.1 と 3.0</summary>
+    <summary>バージョン 2.1 & 3.0</summary>
 
     <Tabs>
         <TabItem value='S3' label='S3' default>
@@ -1086,8 +1088,8 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
 </details>
 
 ### Iceberg JDBC Catalog {#iceberg-jdbc-catalog}
-:::tip 注記
-これは実験的な機能で、バージョン 4.1.0 以降でサポートされます。
+:::tip 注
+これは実験的な機能で、バージョン 4.1.0 以降でサポートされています。
 :::
 
 <details>
@@ -1165,7 +1167,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
     <summary>バージョン 3.1+</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HDFS サービスにアクセスする
+            Kerberos 認証なしで HDFS サービスにアクセスする
             ```sql
             CREATE CATALOG iceberg_fs_on_hdfs_catalog PROPERTIES (
                 'type' = 'iceberg',
@@ -1200,7 +1202,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
                 's3.secret_key' = '<sk>'
             );
             ```
-            IAM Assumed Role を使用して S3 アクセス認証情報を取得する（3.1.2+）
+            IAM Assume Role を使用して S3 のアクセス資格情報を取得する（3.1.2+）
             ```sql
             CREATE CATALOG iceberg_fs_on_s3_iamrole PROPERTIES (
                 'type' = 'iceberg',
@@ -1280,10 +1282,10 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
     </Tabs>
 </details>
 <details >
-    <summary>バージョン 2.1 と 3.0</summary>
+    <summary>バージョン 2.1 & 3.0</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HDFS サービスにアクセスする
+            Kerberos 認証なしで HDFS サービスにアクセスする
             ```sql
             CREATE CATALOG iceberg_fs_on_hdfs_catalog PROPERTIES (
                 'type' = 'iceberg',
@@ -1378,8 +1380,8 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
 <details>
     <summary>バージョン 3.1+</summary>
     <Tabs>
-        <TabItem value='S3 Tables Rest Catalog' label='S3 Tables Rest Catalog' default>
-            [S3 Tables との統合](../best-practices/doris-aws-s3tables.md)のドキュメントを参照してください。
+        <TabItem value='S3 Tables Rest Catalog' label='S3 Tables REST Catalog' default>
+            [S3 Tables との統合](../best-practices/doris-aws-s3tables.md) のドキュメントを参照してください。
             ```sql
             CREATE CATALOG aws_s3_tables PROPERTIES (
                 'type' = 'iceberg',
@@ -1394,8 +1396,8 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
             );
             ```
         </TabItem>
-        <TabItem value='AWS Glue Rest Catalog' label='AWS Glue Rest Catalog' default>
-            [S3 Tables との統合](../best-practices/doris-aws-s3tables.md)のドキュメントを参照してください。
+        <TabItem value='AWS Glue Rest Catalog' label='AWS Glue REST Catalog' default>
+            [S3 Tables との統合](../best-practices/doris-aws-s3tables.md) のドキュメントを参照してください。
             ```sql
             CREATE CATALOG glue_s3 PROPERTIES (
                 'type' = 'iceberg',
@@ -1411,7 +1413,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
             ```
         </TabItem>
         <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
-            [S3 Tables との統合](../best-practices/doris-aws-s3tables.md)のドキュメントを参照してください。
+            [S3 Tables との統合](../best-practices/doris-aws-s3tables.md) のドキュメントを参照してください。
             ```sql
             CREATE CATALOG test_s3tables_write_insert PROPERTIES (
                 'type' = 'iceberg',
@@ -1433,7 +1435,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
     <summary>バージョン 3.0.6+</summary>
     <Tabs>
         <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
-            [S3 Tables との統合](../best-practices/doris-aws-s3tables.md)のドキュメントを参照してください。
+            [S3 Tables との統合](../best-practices/doris-aws-s3tables.md) のドキュメントを参照してください。
             ```sql
             CREATE CATALOG test_s3tables_catalog PROPERTIES (
                 'type' = 'iceberg',
@@ -1455,7 +1457,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
     <summary>バージョン 4.1.4+</summary>
     <Tabs>
         <TabItem value='OSS Tables REST Catalog' label='OSS Tables REST Catalog' default>
-            設定と使用方法の詳細は、[Alibaba Cloud OSS Tables との統合](../best-practices/doris-aliyun-oss-tables)を参照してください。
+            設定と使用方法の詳細は、[Alibaba Cloud OSS Tables との統合](../best-practices/doris-aliyun-oss-tables) を参照してください。
             ```sql
             CREATE CATALOG oss_tables PROPERTIES (
                 'type' = 'iceberg',
@@ -1481,7 +1483,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
 
 ## クエリ操作 {#query-operations}
 
-### 基本的なクエリ {#basic-query}
+### 基本クエリ {#basic-query}
 
 ```sql
 -- 1. switch to catalog, use database and query
@@ -1499,16 +1501,16 @@ SELECT * FROM iceberg.iceberg_db.iceberg_tbl LIMIT 10;
 
 ### ファイルメタデータカラム {#file-metadata-columns}
 
-> バージョン 4.2.0 以降でサポートされます。
+> バージョン 4.2.0 以降でサポートされています。
 
-Doris は Iceberg データテーブルに二つの非表示メタデータカラムを公開します。これらを使用して、クエリ結果の各行の元となった物理データファイルと行を特定できます。
+Doris は Iceberg データテーブルに対し、二つの隠しメタデータカラムを公開します。各クエリ結果を生成した物理データファイルと行を特定するために使用できます。
 
 | カラム | 型 | 説明 |
 | --- | --- | --- |
-| `_file` | `STRING NOT NULL` | Iceberg データファイルに記録された元のパス。 |
-| `_pos` | `BIGINT NOT NULL` | データファイル全体の中での、ゼロ始まりの物理的な行位置。 |
+| `_file` | `STRING NOT NULL` | Iceberg データファイルについて記録された元のパス。 |
+| `_pos` | `BIGINT NOT NULL` | データファイル全体における、0 から始まる物理的な行位置。 |
 
-前提条件として、前述の例に従って Iceberg Catalog を設定し、`id` カラムを持ち、Parquet または ORC ファイルを使用する Iceberg データテーブルを作成します。次のクエリでは、`iceberg_tbl` に `id` が `1` と `2` の行がすでに存在することを想定します。
+前提条件：前述の例に従って Iceberg Catalog を設定し、`id` カラムを含み、Parquet または ORC ファイルを使用する Iceberg データテーブルを作成します。次のクエリは、`iceberg_tbl` に `id` の値が `1` と `2` の行がすでに存在することを前提とします。
 
 ```sql
 SELECT id, `_file`, `_pos`
@@ -1529,7 +1531,7 @@ ORDER BY `_file`, `_pos`;
 
 デフォルトでは、これらのカラムは `SELECT *` や `DESC` に表示されません。
 
-`SELECT *` と `DESC` に非表示カラムを含めるには、セッションで `show_hidden_columns` を有効にします。
+`SELECT *` と `DESC` に隠しカラムを含めるには、セッションで `show_hidden_columns` を有効にします。
 
 ```sql
 SET show_hidden_columns = true;
@@ -1539,14 +1541,14 @@ SET show_hidden_columns = true;
 
 | 変数 | 型 | デフォルト | 必須 | 効果 |
 | --- | --- | --- | --- | --- |
-| `show_hidden_columns` | `BOOLEAN` | `false` | いいえ | `SELECT *` と `DESC` に非表示カラムを含めます。カラムを明示的に参照する場合は不要です。 |
-| `enable_file_scanner_v2` | `BOOLEAN` | `true` | いいえ | クエリがこれらのメタデータカラムを参照する場合は、有効のままにする必要があります。 |
+| `show_hidden_columns` | `BOOLEAN` | `false` | いいえ | `SELECT *` と `DESC` に隠しカラムを含めます。カラムを明示的に参照する場合は不要です。 |
+| `enable_file_scanner_v2` | `BOOLEAN` | `true` | いいえ | クエリでこれらのメタデータカラムを参照する場合は、有効のままにする必要があります。 |
 | `force_jni_scanner` | `BOOLEAN` | `false` | いいえ | JNI リーダーはこれらのメタデータカラムを生成できないため、無効のままにする必要があります。 |
 
-行位置は物理ファイル全体に対する相対位置です。述語によるフィルタリング、削除処理、スキャンの分割によって、残った行の番号は振り直されません。したがって、`_file` と `_pos` を組み合わせると、現在のテーブルスナップショット内の物理レコードを特定できます。データファイルの書き換えや compaction によって両方の値が変わる可能性があるため、安定した論理行 ID として使用しないでください。
+行位置は物理ファイル全体を基準にします。述語によるフィルタリング、削除処理、スキャンの分割によって、残った行に新しい番号が付けられることはありません。したがって、`_file` と `_pos` の組み合わせで、現在のテーブルスナップショット内の物理レコードを特定できます。データファイルの再書き込みやコンパクションによって両方の値が変わる可能性があるため、安定した論理行 ID として使用しないでください。
 
 :::caution
-これらのカラムを利用できるのは、Iceberg データテーブルを FileScannerV2 のネイティブ Parquet または ORC リーダーで読み取る場合のみです。`enable_file_scanner_v2` が無効、`force_jni_scanner` が有効、または選択されたデータファイルをネイティブ Parquet/ORC リーダーで読み取れない場合、これらのカラムを参照するクエリは失敗します。
+これらのカラムを使用できるのは、Iceberg データテーブルを FileScannerV2 のネイティブ Parquet または ORC リーダーで読み取る場合だけです。`enable_file_scanner_v2` が無効、`force_jni_scanner` が有効、または選択されたデータファイルにネイティブ Parquet/ORC リーダーを使用できない場合、これらのカラムを参照するクエリは失敗します。
 
 `_file` と `_pos` は予約名で、大文字・小文字を区別せずに比較されます。Iceberg テーブルの物理カラム名に使用しないでください。
 :::
@@ -1555,13 +1557,13 @@ SET show_hidden_columns = true;
 
 Iceberg テーブルの特定のスナップショットを読み取れます。
 
-デフォルトでは、読み取り要求は最新のスナップショットバージョンにアクセスします。
+デフォルトでは、読み取りリクエストは最新のスナップショットバージョンにアクセスします。
 
-`$snapshots` システムテーブルを使用すると、Iceberg テーブルのスナップショットをクエリできます。
+Iceberg テーブルのスナップショットは、`$snapshots` システムテーブルでクエリできます。
 
-:::caution 動作の変更（4.1.4）
+:::caution 動作変更（4.1.4）
 
-バージョン 4.1.4 以降、`iceberg_meta()` テーブル関数は削除されました。代わりに Iceberg システムテーブル（`iceberg_tbl$snapshots` など）を使用してメタデータをクエリしてください。後述の[システムテーブル](#system-tables)を参照してください。
+バージョン 4.1.4 以降、`iceberg_meta()` テーブル関数は削除されました。代わりに Iceberg システムテーブル（例：`iceberg_tbl$snapshots`）を使用してメタデータをクエリしてください。後述の「[システムテーブル](#system-tables)」を参照してください。
 
 :::
 
@@ -1584,7 +1586,7 @@ manifest_list: oss://path/to/metadata/snap-6099853805930794326-1-dd46a1bd-219b-4
       summary: {"added-data-files":"1","added-records":"1","added-files-size":"1367","changed-partition-count":"1","total-records":"4","total-files-size":"4109","total-data-files":"3","total-delete-files":"0","total-position-deletes":"0","total-equality-deletes":"0"}
 ```
 
-`FOR TIME AS OF` と `FOR VERSION AS OF` 句を使用すると、snapshot ID またはスナップショットの作成時刻に基づいて過去のデータを読み取れます。例を示します。
+`FOR TIME AS OF` と `FOR VERSION AS OF` の句を使用すると、スナップショット ID またはスナップショットの作成時刻に基づいて過去のデータを読み取れます。例を示します。
 
 ```sql
 -- Read data as of a specific timestamp
@@ -1594,19 +1596,19 @@ SELECT * FROM iceberg_table FOR TIME AS OF '2023-01-01 00:00:00';
 SELECT * FROM iceberg_table FOR VERSION AS OF 123456789;
 ```
 
-4.1.5 以降、`FOR TIME AS OF` は `yyyy-MM-dd HH:mm:ss` の後に小数秒を 1～9 桁指定できます。値をセッションのタイムゾーンで解釈し、スナップショット選択用にミリ秒へ変換します。たとえば `FOR TIME AS OF '2024-01-01 12:00:00.123456'` を使用します。スナップショットの選択精度はミリ秒であり、この構文を受け付けてもナノ秒精度のスナップショット時刻が保持されるわけではありません。
+4.1.5 以降、`FOR TIME AS OF` は `yyyy-MM-dd HH:mm:ss` の後に 1～9 桁の小数秒を受け付けます。この値をセッションのタイムゾーンで解釈し、スナップショット選択のためにミリ秒へ変換します。たとえば `FOR TIME AS OF '2024-01-01 12:00:00.123456'` を使用できます。スナップショット選択の精度はミリ秒であり、この構文を受け付けてもスナップショット時刻のナノ秒精度は保持されません。
 
-Doris 4.1.5 では、カラムの名前変更・削除・型の昇格やパーティション進化後の過去のスナップショットの読み取りも修正されています。各ファイルは、現在の仕様だけでなく、書き込まれた時点で有効だったパーティション仕様に従って解釈されます。過去のクエリを書き換えて現在のマテリアライズドビューを読み取るようにしてはいけません。
+Doris 4.1.5 では、カラム名の変更、削除、型の昇格、パーティション進化後の過去のスナップショット読み取りも修正されました。各ファイルは、現在のパーティション仕様だけでなく、そのファイルの書き込み時に有効だった仕様に従って解釈されます。履歴クエリを現在のマテリアライズドビューから読み取るように書き換えてはいけません。
 
-### Branch と Tag {#branch-and-tag}
+### ブランチとタグ {#branch-and-tag}
 
 > 3.1.0 以降。
 >
-> branch と tag の作成、削除、管理については、[Branch と Tag の管理]のセクションを参照してください。
+> ブランチとタグの作成、削除、管理については「[ブランチとタグの管理]」を参照してください。
 
-Iceberg テーブルの特定の branch と tag を読み取れます。
+Iceberg テーブルの特定のブランチとタグの読み取りに対応しています。
 
-Spark や Trino などのシステムとの互換性のため、複数の構文形式をサポートします。
+Spark や Trino などのシステムとの互換性のため、複数の構文を使用できます。
 
 ```sql
 -- BRANCH
@@ -1620,37 +1622,37 @@ SELECT * FROM iceberg_tbl@tag("name" = "tag1");
 SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
 ```
 
-`FOR VERSION AS OF` 構文では、パラメータがタイムスタンプか Branch/Tag 名かを Doris が自動的に判定します。
+`FOR VERSION AS OF` 構文では、Doris がパラメータをタイムスタンプまたはブランチ／タグ名として自動的に判別します。
 
 ### View {#view}
 
 > 3.1.0 以降
 
-Iceberg view のクエリをサポートします。View のクエリは通常のテーブルのクエリと同様に動作します。次の点に注意してください。
+Iceberg View のクエリに対応しています。View のクエリ方法は通常のテーブルクエリと同じです。次の点に注意してください。
 
-- `hms` 型の Iceberg Catalog のみサポートします。
+- `hms` タイプの Iceberg Catalog のみサポートします。
 - View 定義の SQL は Doris の SQL 方言と互換性が必要です。互換性がない場合は解析エラーが発生します（方言変換機能は将来のバージョンで提供予定です）。
 
-### Iceberg V3 の非表示カラム（Row Lineage） {#iceberg-v3-hidden-columns-row-lineage}
+### Iceberg V3 の隠しカラム（Row Lineage） {#iceberg-v3-hidden-columns-row-lineage}
 
 :::tip
-これは実験的な機能で、バージョン 4.1.0 以降でサポートされます。
+これは実験的な機能で、バージョン 4.1.0 以降でサポートされています。
 :::
 
-Doris は Iceberg V3 テーブルの Row Lineage 非表示カラムをクエリできます。Iceberg V3 では、データ変更レコードの追跡に使用する行の lineage データを含むシステム非表示カラムが導入されました。増分同期やデータ監査に特に適しています。
+Doris は Iceberg V3 テーブルの Row Lineage 隠しカラムをクエリできます。Iceberg V3 では、データ変更レコードの追跡に使用する Row Lineage データを含むシステムの隠しカラムが導入されました。増分同期やデータ監査に適しています。
 
 - `_row_id`：データ行を一意に識別する数値です（データが書き込まれたファイルと位置に基づいて生成されます）。
-- `_last_updated_sequence_number`：その行が最後に変更されたときの Sequence Number です。`UPDATE` または `MERGE INTO` がデータを更新すると、この数値はバージョン番号とともに自動的に増加します。
+- `_last_updated_sequence_number`：その行が最後に変更されたときの Sequence Number です。`UPDATE` または `MERGE INTO` 操作でデータを更新すると、この値はバージョン番号とともに自動的に増加します。
 
-**非表示カラムのクエリ方法：**
+**隠しカラムのクエリ方法：**
 
-デフォルトでは、`DESC` や `SELECT *` に非表示カラムは表示されません。カラム名を直接指定すれば、明示的にクエリできます。
+デフォルトでは、`DESC` や `SELECT *` を使用しても隠しカラムは表示されません。カラム名を直接指定して明示的にクエリできます。
 
 ```sql
 SELECT id, _row_id, _last_updated_sequence_number FROM iceberg_tbl;
 ```
 
-セッション変数 `show_hidden_columns` を有効にすると、`DESC` や `SELECT *` などの通常の表示にも非表示カラムを含められます。
+セッション変数 `show_hidden_columns` を有効にすると、`DESC` や `SELECT *` などの通常の表示にも隠しカラムを含められます。
 
 ```sql
 SET show_hidden_columns = true;
@@ -1659,29 +1661,29 @@ DESC iceberg_tbl;
 
 **注意事項：**
 
-1. これらの行単位のパラメータを生成するには、Iceberg テーブルの形式バージョン（`format-version`）を `3` に設定する必要があります。V1 および V2 形式のテーブルで row lineage カラムをクエリすると、エラーが発生する場合があります。
-2. 非表示カラムはシステムが管理します。`INSERT` などの書き込み文で `_row_id` や `_last_updated_sequence_number` カラムを明示的に指定したり、書き込んだりすることはできません。バージョン 4.1.4 以降、`format-version >= 3` のテーブルに対する `INSERT` 文のカラム一覧に row lineage カラムを指定すると、`Cannot specify invisible column '<name>' in INSERT statement` というエラーが直ちに発生します。
+1. これらの行レベルのパラメータを生成するには、Iceberg テーブルの形式バージョン（`format-version`）を `3` に設定する必要があります。V1 および V2 形式のテーブルで Row Lineage カラムをクエリすると、エラーが発生する場合があります。
+2. 隠しカラムはシステムが管理します。`INSERT` などの書き込みステートメントで、ユーザーが `_row_id` または `_last_updated_sequence_number` を明示的に指定したり、書き込んだりすることはできません。バージョン 4.1.4 以降、`format-version >= 3` のテーブルへの `INSERT` ステートメントのカラム一覧に Row Lineage カラムを指定すると、直ちに `Cannot specify invisible column '<name>' in INSERT statement` というエラーになります。
 
 ### Iceberg V3 のデフォルト値 {#iceberg-v3-default-values}
 
-> バージョン 4.1.4 以降でサポートされます。
+> バージョン 4.1.4 以降でサポートされています。
 
-Iceberg V3 は二種類のカラムデフォルト値を定義しており、Doris は両方をサポートします。
+Iceberg V3 は二種類のカラムのデフォルト値を定義しており、Doris は両方に対応します。
 
-- `initial-default`：カラム追加時に**既存の過去データ**へ割り当てるデフォルト値です。カラムが存在する前に書き込まれた古いデータファイルを読み取る場合、Doris は NULL の代わりにこのデフォルト値を返します。Parquet と ORC の両方でサポートされ、最上位カラム、`STRUCT` 内のネストしたサブフィールド、全体が存在しない複合型の親カラムに適用されます。述語の評価時にも有効です。
-- `write-default`：書き込み時に**指定されていないカラム**へ補完するデフォルト値です。`INSERT INTO t (subset of columns) VALUES (...)` では、一覧にないカラムには現在の `write-default` が書き込まれます（以前のバージョンでは NULL が書き込まれていました）。
+- `initial-default`：カラム追加時に**既存の過去のデータ**に割り当てるデフォルト値です。カラムが存在する前に書き込まれた古いデータファイルを読み取る場合、Doris は NULL の代わりにこのデフォルト値を返します。Parquet と ORC の両方に対応し、トップレベルのカラム、`STRUCT` 内のネストしたサブフィールド、全体が存在しない複合型の親カラムに適用されます。述語の評価時にも有効です。
+- `write-default`：書き込み時に**指定されなかったカラム**に設定されるデフォルト値です。`INSERT INTO t (subset of columns) VALUES (...)` では、一覧にないカラムに現在の `write-default` が書き込まれます（以前のバージョンでは NULL が書き込まれました）。
 
-**DDL によるデフォルト値の指定：**
+**DDL でデフォルト値を指定する：**
 
 ```sql
 ALTER TABLE iceberg_tbl ADD COLUMN c1 INT DEFAULT 10;
 ```
 
-この文は Iceberg の `write-default` と `initial-default` の両方を設定します。**テーブルの `format-version` が `3` である必要があります**。V1 と V2 のテーブルでは、NULL 以外のデフォルト値を持つカラムはサポートされません。
+このステートメントは Iceberg の `write-default` と `initial-default` の両方を設定します。**テーブルの `format-version` が `3` である必要があります**。V1 と V2 のテーブルは、NULL 以外のデフォルト値を持つカラムに対応していません。
 
 **`DEFAULT()` 式：**
 
-バージョン 4.1.4 以降、`DEFAULT(<column>)` 式を使って DML 内でカラムのデフォルト値を明示的に参照できます。`INSERT`、`UPDATE ... SET`、`MERGE INTO` の各分岐で使用できます。
+バージョン 4.1.4 以降では、DML でカラムのデフォルト値を明示的に参照する `DEFAULT(<column>)` 式を使用できます。`INSERT`、`UPDATE ... SET`、`MERGE INTO` の各分岐で使用できます。
 
 ```sql
 INSERT INTO iceberg_tbl VALUES (1, DEFAULT(c1));
@@ -1694,13 +1696,13 @@ WHEN NOT MATCHED THEN INSERT VALUES (s.id, DEFAULT(c1));
 
 動作：
 
-- 書き込み先が Iceberg テーブルの場合、`DEFAULT()` はその書き込みで固定された Iceberg スキーマに基づいて解決されます。書き込み先に含まれないカラムを参照すると、`DEFAULT requires a target column reference` または `Cannot find column information for DEFAULT(<col>)` が報告されます。
-- Iceberg 以外のカラムでは、そのカラムのデフォルト値が使用されます。デフォルト値がなく、カラムが NOT NULL または自動増分の場合、`Column '<name>' has no default value and does not allow NULL or column is auto-increment` というエラーになります。NULL 許容でデフォルト値がない場合は NULL が使用されます。
+- Iceberg の書き込み先テーブルでは、`DEFAULT()` はその書き込みに固定された Iceberg スキーマに対して解決されます。書き込み先に含まれないカラムを参照すると、`DEFAULT requires a target column reference` または `Cannot find column information for DEFAULT(<col>)` が報告されます。
+- Iceberg 以外のカラムには、そのカラムのデフォルト値が使用されます。デフォルト値がなく、カラムが NOT NULL または自動増分の場合、`Column '<name>' has no default value and does not allow NULL or column is auto-increment` というエラーになります。NULL を許容するカラムにデフォルト値がない場合は NULL が使用されます。
 - その他のエラーには、`DEFAULT requires a column reference, but got: <expr>` と `DEFAULT cannot be used on generated column '<name>'` があります。
 
-:::info 注記
+:::info 注
 
-Iceberg の `write-default` は書き込み側コネクタの概念です。`DESCRIBE`、`SHOW CREATE TABLE`、`information_schema.columns.COLUMN_DEFAULT` には公開され**ません**。
+Iceberg の `write-default` は書き込み側のコネクターの概念です。`DESCRIBE`、`SHOW CREATE TABLE`、`information_schema.columns.COLUMN_DEFAULT` には**表示されません**。
 
 :::
 
@@ -1708,27 +1710,29 @@ Iceberg の `write-default` は書き込み側コネクタの概念です。`DES
 
 > 3.1.0 以降
 
-Doris は、テーブルのメタデータ情報を取得するための Iceberg システムテーブルのクエリをサポートします。システムテーブルを使用して、スナップショット履歴、manifest ファイル、データファイル、パーティションなどのメタデータを確認できます。
+Doris は Iceberg システムテーブルのクエリに対応しており、テーブルに関するメタデータ情報を取得できます。システムテーブルを使用して、スナップショット履歴、マニフェストファイル、データファイル、パーティションなどのメタデータを確認できます。
 
-Iceberg テーブルのメタデータにアクセスするには、テーブル名の末尾に `$` とシステムテーブル名を続けます。
+Iceberg テーブルのメタデータにアクセスするには、テーブル名の後に `$` とシステムテーブル名を付けます。
 
 ```sql
 SELECT * FROM iceberg_table$system_table_name;
 ```
 
-たとえば、テーブルの履歴を表示するには、次を実行します。
+たとえば、テーブルの履歴を確認するには、次を実行します。
 
 ```sql
 SELECT * FROM iceberg_table$history;
 ```
 
-> `all_manifests` システムテーブルはバージョン 4.0.4 以降でサポートされます。
+> `all_manifests` システムテーブルはバージョン 4.0.4 以降でサポートされています。
 >
-> `position_deletes` システムテーブルはバージョン 4.1.4 以降でサポートされます。
+> `position_deletes` システムテーブルはバージョン 4.1.4 以降でサポートされています。
+>
+> `labels` システムテーブルはバージョン 5.0.0 以降でサポートされ、Iceberg REST Catalog でのみ利用できます。
 
-:::caution 動作の変更（4.1.4）
+:::caution 動作変更（4.1.4）
 
-バージョン 4.1.4 以降、Iceberg システムテーブルはネイティブ実行経路でクエリされ、`iceberg_meta()` テーブル関数は**削除されました**。代わりに `<table>$<system_table_name>` 構文を使用してください。[ICEBERG_META](../../sql-manual/sql-functions/table-valued-functions/iceberg-meta.md) を参照してください。
+バージョン 4.1.4 以降、Iceberg システムテーブルのクエリにはネイティブの実行経路が使用され、`iceberg_meta()` テーブル関数は**削除されました**。代わりに `<table>$<system_table_name>` というシステムテーブル構文を使用してください。[ICEBERG_META](../../sql-manual/sql-functions/table-valued-functions/iceberg-meta.md) を参照してください。
 
 システムテーブル自体のアクセス構文と返される結果は変わりません。また、システムテーブルで `SHOW CREATE TABLE` がサポートされるようになりました。
 
@@ -1736,9 +1740,9 @@ SELECT * FROM iceberg_table$history;
 
 ### entries {#entries}
 
-テーブルの現在のスナップショットにあるすべての manifest エントリを表示します。
+テーブルの現在のスナップショットに含まれるすべてのマニフェストエントリを表示します。
 
-`all_entries` と `entries` は似ていますが、`all_entries` にはすべてのスナップショットのエントリが含まれ、`entries` には現在のスナップショットのエントリだけが含まれます。
+`all_entries` と `entries` は似ていますが、`all_entries` はすべてのスナップショットのエントリを含み、`entries` は現在のスナップショットのエントリのみを含みます。
 
 ```sql
 SELECT * FROM iceberg_table$entries;
@@ -1757,7 +1761,7 @@ SELECT * FROM iceberg_table$entries;
 
 ### files {#files}
 
-テーブルの現在のスナップショットにあるファイル一覧を表示します。
+テーブルの現在のスナップショットのファイル一覧を表示します。
 
 ```sql
 SELECT * FROM iceberg_table$files;
@@ -1777,7 +1781,7 @@ SELECT * FROM iceberg_table$files;
 +---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-----------+--------------+--------------------+--------------+--------------+-------------------+------------------+-----------------------+-----------------------+--------------+---------------+--------------+---------------+--------------+----------------------+----------------+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-`files` システムテーブルと同様に、次のシステムテーブルから特定の種類のファイル情報もクエリできます。
+`files` システムテーブルと同様に、次のシステムテーブルを使用して特定の種類のファイル情報もクエリできます。
 
 ```sql
 -- Query data files for the current snapshot
@@ -1796,9 +1800,9 @@ SELECT * FROM iceberg_table$all_data_files;
 SELECT * FROM iceberg_table$all_delete_files;
 ```
 
-これらのテーブルの結果形式は `files` システムテーブルと同様ですが、それぞれデータファイルまたは delete file に対象を絞ります。`all_` プレフィックスを持つシステムテーブルには、現在のスナップショットだけでなく、すべてのスナップショットのファイルが含まれます。
+これらのテーブルの結果形式は `files` システムテーブルに似ていますが、それぞれデータファイルまたは削除ファイルに特化しています。接頭辞 `all_` が付くシステムテーブルには、現在のスナップショットだけでなく、すべてのスナップショットのファイルが含まれます。
 
-注：テーブルに特定の種類のファイルが存在しない場合（たとえば delete file がないテーブルで `delete_files` をクエリする場合）、結果は空になることがあります。
+注：特定の種類のファイルがテーブルに存在しない場合（たとえば削除ファイルがないテーブルで `delete_files` をクエリする場合）、結果が空になることがあります。
 
 ### history {#history}
 
@@ -1819,9 +1823,89 @@ SELECT * FROM iceberg_table$history;
 +----------------------------+---------------------+---------------------+---------------------+
 ```
 
+### labels {#labels}
+
+> この機能はバージョン 5.0.0 以降でサポートされています。
+
+REST Catalog が Iceberg テーブルに提供するテーブルレベル（`object`）とフィールドレベル（`field`）のラベルを表示します。ラベルのキーと値の組ごとに一行を返します。テーブルの所有者やフィールドのデータ分類などの確認に使用できます。
+
+このシステムテーブルは、`iceberg.catalog.type` が `rest` の場合にのみ利用できます。Doris 側で追加の設定は不要です。REST Catalog サービスはテーブルのデータロード時にラベルを返します。ラベルの作成と変更はサービスプロバイダーを通じて行います。これらのラベルはテーブルまたはフィールドを説明するもので、[refs](#refs) に表示されるスナップショットの Tag とは異なります。
+
+**フィールド：**
+
+| フィールド | 型 | 説明 |
+| --- | --- | --- |
+| `scope` | `TEXT` | ラベルのスコープ。テーブルレベルのラベルは `object`、フィールドレベルのラベルは `field`。 |
+| `field_id` | `INT` | Iceberg のフィールド ID。テーブルレベルのラベルでは `NULL`。 |
+| `field_name` | `TEXT` | 現在のテーブルスキーマに照らして解決したフィールド名。ネストしたフィールドでは `address.city` のようにフルパスを使用します。テーブルレベルのラベル、またはフィールド ID が現在のスキーマに存在しない場合は `NULL`。 |
+| `key` | `TEXT` | ラベルのキー。`key` は Doris の予約語なので、このカラムを SQL で明示的に参照する際はバッククォートで囲みます。 |
+| `value` | `TEXT` | ラベルの値。 |
+
+**クエリ例：**
+
+次の例では、[Iceberg REST Catalog](#iceberg-rest-catalog) の説明に従って `iceberg_ctl` Catalog を設定済みであり、`iceberg_db.iceberg_tbl` テーブルが存在し、現在のユーザーにクエリ権限があることを前提とします。REST Catalog サービスは次のラベルを設定し、返します。
+
+- テーブルレベルのラベル：`owner=team-a`。
+- `email` フィールド（フィールド ID `2`）のラベル：`classification=pii`。
+- ネストした `address.city` フィールド（フィールド ID `5`）のラベル：`classification=location`。
+
+すべてのラベルをスコープ、フィールド ID、ラベルキーの順に取得します。
+
+```sql
+SELECT * FROM iceberg_ctl.iceberg_db.iceberg_tbl$labels
+ORDER BY scope, field_id, `key`;
+```
+
+結果：
+
+```text
++--------+----------+--------------+----------------+----------+
+| scope  | field_id | field_name   | key            | value    |
++--------+----------+--------------+----------------+----------+
+| field  |        2 | email        | classification | pii      |
+| field  |        5 | address.city | classification | location |
+| object |     NULL | NULL         | owner          | team-a   |
++--------+----------+--------------+----------------+----------+
+```
+
+`pii` に分類されたフィールドを検索します。
+
+```sql
+SELECT field_name, `key`, value
+FROM iceberg_ctl.iceberg_db.iceberg_tbl$labels
+WHERE scope = 'field' AND `key` = 'classification' AND value = 'pii';
+```
+
+結果：
+
+```text
++------------+----------------+-------+
+| field_name | key            | value |
++------------+----------------+-------+
+| email      | classification | pii   |
++------------+----------------+-------+
+```
+
+**キャッシュと更新：**
+
+ラベルはテーブルメタデータとともにキャッシュされ、`meta.cache.iceberg.table.ttl-second` の設定に従います。サービス側のラベルを変更した後、更新後のラベルを取得するには、`$labels` をクエリする前に元のテーブルを更新してください。
+
+```sql
+REFRESH TABLE iceberg_ctl.iceberg_db.iceberg_tbl;
+```
+
+更新後、次の `$labels` クエリではテーブルが再度データロードされ、サービスから返されたラベルが読み取られます。`meta.cache.iceberg.table.ttl-second` を `0` に設定すると、テーブルメタデータキャッシュが無効になり、クエリのたびにラベルが再データロードされます。キャッシュ設定については [メタデータキャッシュ](#meta-cache) を参照してください。
+
+**注意事項：**
+
+- REST Catalog サービスがラベルを返さない場合、クエリ結果は空になります。スナップショットがないテーブルでも、サービスがラベルを提供すればラベルを返せます。`COUNT(*)` が数えるのは、元のテーブルのデータ行ではなく、ラベルのキーと値の組です。
+- ラベルはスナップショットとともにバージョン管理されません。`$labels` に `FOR VERSION AS OF` を使用しても過去のラベルは取得されず、現在データロードされたテーブルのラベルが返され、フィールド名も現在のスキーマに対して解決されます。
+- フィールドラベルはフィールド ID に関連付けられます。フィールド名を変更すると、`field_name` には新しい名前が表示されます。フィールドを削除した後もサービスがそのラベルを返す場合、`field_id` は保持され、`field_name` は `NULL` になります。
+- REST 以外の Catalog は `$labels` に対応しておらず、クエリすると `Unknown sys table` エラーになります。サーバー側でのスキャン計画を必要とする REST Catalog も、このシステムテーブルには対応していません。
+
 ### manifests {#manifests}
 
-テーブルの manifest ファイル情報を表示します。
+テーブルのマニフェストファイル情報を表示します。
 
 ```sql
 SELECT * FROM iceberg_table$manifests;
@@ -1839,11 +1923,11 @@ SELECT * FROM iceberg_table$manifests;
 
 ### all_manifests {#all_manifests}
 
-> この機能はバージョン 4.0.4 以降でサポートされます。
+> この機能はバージョン 4.0.4 以降でサポートされています。
 
-テーブルの有効なすべてのスナップショットの manifest ファイル情報を表示します。
+テーブルのすべての有効なスナップショットについて、マニフェストファイル情報を表示します。
 
-`all_manifests` と `manifests` の構造は同じです。`all_manifests` は有効なすべてのスナップショットの manifest ファイルを含み、`manifests` は現在のスナップショットの manifest ファイルのみを含みます。
+`all_manifests` と `manifests` の構造は同じです。`all_manifests` はすべての有効なスナップショットのマニフェストファイルを含み、`manifests` は現在のスナップショットのマニフェストファイルのみを含みます。
 
 ```sql
 SELECT * FROM iceberg_table$all_manifests;
@@ -1895,12 +1979,12 @@ SELECT * FROM iceberg_table$partitions;
 
 注：
 
-1. パーティションのないテーブルでは、`partitions` テーブルに `partition` と `spec_id` フィールドは含まれません。
-2. `partitions` テーブルには、現在のスナップショットにデータファイルまたは delete file があるパーティションが表示されます。ただし、delete file は適用されないため、パーティション内のすべてのデータ行が delete file によって削除済みとマークされていても、そのパーティションが表示される場合があります。
+1. パーティション化されていないテーブルでは、`partitions` テーブルに `partition` と `spec_id` のフィールドはありません。
+2. `partitions` テーブルには、現在のスナップショットでデータファイルまたは削除ファイルを含むパーティションが表示されます。ただし、削除ファイルは適用されないため、パーティション内のすべてのデータ行が削除ファイルによって削除対象とされていても、そのパーティションが表示される場合があります。
 
 ### refs {#refs}
 
-テーブルで認識されているすべてのスナップショット参照（branch と tag）を表示します。
+テーブルで既知のすべてのスナップショット参照（ブランチとタグ）を表示します。
 
 ```sql
 SELECT * FROM iceberg_table$refs;
@@ -1939,7 +2023,7 @@ SELECT * FROM iceberg_table$snapshots;
 
 ### INSERT INTO {#insert-into}
 
-INSERT 操作は、対象テーブルにデータを追加します。
+INSERT 操作は、書き込み先テーブルにデータを追加します。
 
 例：
 
@@ -1951,7 +2035,7 @@ INSERT INTO iceberg_tbl(col1, col2) VALUES (val1, val2);
 INSERT INTO iceberg_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, 'beijing', '2023-12-12');
 ```
 
-バージョン 3.1.0 以降、指定した branch へのデータ書き込みをサポートします。
+バージョン 3.1.0 以降、指定したブランチへのデータ書き込みに対応しています。
 
 ```sql
 INSERT INTO iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
@@ -1967,14 +2051,14 @@ INSERT OVERWRITE TABLE iceberg_tbl VALUES (val1, val2, val3, val4);
 INSERT OVERWRITE TABLE iceberg.iceberg_db.iceberg_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
 ```
 
-バージョン 3.1.0 以降、指定した branch へのデータ書き込みをサポートします。
+バージョン 3.1.0 以降、指定したブランチへのデータ書き込みに対応しています。
 
 ```sql
 INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
 INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
 ```
 
-バージョン 4.1.0 以降、静的パーティション（または混合パーティション）へのデータ書き込みをサポートします。
+バージョン 4.1.0 以降、静的パーティション（または混合パーティション）へのデータ書き込みに対応しています。
 
 ```sql
 -- Full Static Partition
@@ -1988,7 +2072,7 @@ SELECT id, name, region FROM source_table;
 
 ### CTAS {#ctas}
 
-`CTAS`（Create Table As Select）文を使用して、Iceberg テーブルの作成とデータ書き込みを行えます。
+`CTAS`（Create Table As Select）ステートメントを使用して Iceberg テーブルを作成し、データを書き込めます。
 
 ```sql
 CREATE TABLE iceberg_ctas AS SELECT * FROM other_table;
@@ -2022,14 +2106,14 @@ INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
 ### DELETE {#delete}
 
 :::tip
-これは実験的な機能で、バージョン 4.1.0 以降でサポートされます。
+これは実験的な機能で、バージョン 4.1.0 以降でサポートされています。
 :::
 
-`DELETE` 操作は、指定した条件を満たす Iceberg テーブルのデータ行を削除します。基盤となる主な仕組みは、V2 形式のテーブルでは Position Delete ファイルの書き込み、V3 形式のテーブルでは Puffin 形式の Deletion Vectors ファイルの書き込みです。
+`DELETE` 操作は、指定した条件を満たす Iceberg テーブルのデータ行を削除します。内部では主に次の仕組みを使用します。V2 形式のテーブルでは Position Delete ファイルを、V3 形式のテーブルでは Puffin 形式の Deletion Vectors ファイルを書き込みます。
 
 **前提条件：**
 
-- Iceberg テーブルの形式バージョン（`format-version`）は 2 以上である必要があります。V1 形式のテーブルは `DELETE` 操作をサポートしません。
+- Iceberg テーブルの形式バージョン（`format-version`）は 2 以上である必要があります。V1 形式のテーブルは `DELETE` 操作に対応していません。
 
 **構文：**
 
@@ -2050,7 +2134,7 @@ DELETE FROM iceberg_tbl WHERE age > 30 AND name = 'Bob';
 DELETE FROM iceberg_tbl WHERE id IN (SELECT id FROM other_table WHERE status = 'inactive');
 ```
 
-パーティションテーブルでも使用方法は同じです。
+パーティション化されたテーブルでも使用方法は同じです。
 
 ```sql
 DELETE FROM iceberg_partition_tbl WHERE id = 10;
@@ -2059,14 +2143,14 @@ DELETE FROM iceberg_partition_tbl WHERE id = 10;
 ### UPDATE {#update}
 
 :::tip
-これは実験的な機能で、バージョン 4.1.0 以降でサポートされます。
+これは実験的な機能で、バージョン 4.1.0 以降でサポートされています。
 :::
 
-`UPDATE` 操作は、指定した条件を満たす Iceberg テーブルのデータ行を変更します。内部では、まず削除追跡情報（V2 では Position Delete ファイル、V3 では Puffin 形式の Deletion Vectors）を書き込んで古いデータ行を無効としてマークし、更新後の新しいデータファイルを追加します。V3 形式のオプションが有効な場合、新しく挿入された行の追跡値 `_last_updated_sequence_number` は自動的に進みます。
+`UPDATE` 操作は、指定した条件を満たす Iceberg テーブルのデータ行を変更します。内部的には、まず削除追跡情報（V2 では Position Delete ファイル、V3 では Puffin 形式の Deletion Vectors）を書き込んで古いデータ行を無効にし、その後、更新後の新しいデータファイルを追加します（V3 形式のオプションが有効な場合、新しく挿入された行の追跡値 `_last_updated_sequence_number` は自動的に進みます）。
 
 **前提条件：**
 
-- Iceberg テーブルの形式バージョン（`format-version`）は 2 以上である必要があります。V1 形式のテーブルは `UPDATE` 操作をサポートしません。
+- Iceberg テーブルの形式バージョン（`format-version`）は 2 以上である必要があります。V1 形式のテーブルは `UPDATE` 操作に対応していません。
 
 **構文：**
 
@@ -2090,7 +2174,7 @@ UPDATE iceberg_tbl SET age = age * 2 + 1, name = concat(name, '-modified') WHERE
 UPDATE iceberg_tbl SET name = 'UpdatedViaSubquery' WHERE id IN (SELECT id FROM other_table);
 ```
 
-パーティションテーブルでも使用方法は同じです。
+パーティション化されたテーブルでも使用方法は同じです。
 
 ```sql
 UPDATE iceberg_partition_tbl SET name = 'Updated' WHERE id = 10;
@@ -2099,14 +2183,14 @@ UPDATE iceberg_partition_tbl SET name = 'Updated' WHERE id = 10;
 ### MERGE INTO {#merge-into}
 
 :::tip
-これは実験的な機能で、バージョン 4.1.0 以降でサポートされます。
+これは実験的な機能で、バージョン 4.1.0 以降でサポートされています。
 :::
 
-`MERGE INTO` 操作は、ソースデータを対象の Iceberg テーブルと照合し、照合結果に応じて挿入、更新、削除を行います。データ同期や増分更新などに適しています。
+`MERGE INTO` 操作は、ソースデータと書き込み先の Iceberg テーブルを照合し、照合結果に応じて挿入、更新、削除を行います。データ同期や増分更新などに適しています。
 
 **前提条件：**
 
-- Iceberg テーブルの形式バージョン（`format-version`）は 2 以上である必要があります。V1 形式のテーブルは `MERGE INTO` 操作をサポートしません。
+- Iceberg テーブルの形式バージョン（`format-version`）は 2 以上である必要があります。V1 形式のテーブルは `MERGE INTO` 操作に対応していません。
 
 **構文：**
 
@@ -2123,7 +2207,7 @@ ON <merge_condition>
 
 **例：**
 
-- 完全な照合操作（更新、削除、挿入を含む）：
+- すべての照合操作（更新、削除、挿入）を行う例：
 
     ```sql
     MERGE INTO iceberg_tbl t
@@ -2143,12 +2227,12 @@ ON <merge_condition>
     VALUES (s.id, s.name, s.age);
     ```
 
-    上の例では、次の処理が行われます。
-    * `id = 2` の行は `flag = 'D'` のため削除されます。
-    * `id = 1` の行は新しい `name` と `age` で更新されます。
-    * `id = 4` の行は対象テーブルに存在しないため挿入されます。
+    上の例では、次のように処理されます。
+    * `id = 2` の行は `flag = 'D'` であるため削除されます。
+    * `id = 1` の行は新しい `name` と `age` に更新されます。
+    * `id = 4` の行は書き込み先テーブルに存在しないため挿入されます。
 
-- 一致した行の更新のみを実行する：
+- 一致した行の更新のみを行う例：
 
     ```sql
     MERGE INTO iceberg_tbl t
@@ -2157,7 +2241,7 @@ ON <merge_condition>
     WHEN MATCHED THEN UPDATE SET name = s.name, age = s.age;
     ```
 
-- 一致しない行の挿入のみを実行する：
+- 一致しない行の挿入のみを行う例：
 
     ```sql
     MERGE INTO iceberg_tbl t
@@ -2166,7 +2250,7 @@ ON <merge_condition>
     WHEN NOT MATCHED THEN INSERT (id, name, age) VALUES (s.id, s.name, s.age);
     ```
 
-- サブクエリをデータソースとして使用する：
+- サブクエリをデータソースとして使用する例：
 
     ```sql
     MERGE INTO iceberg_tbl t
@@ -2175,7 +2259,7 @@ ON <merge_condition>
     WHEN MATCHED THEN UPDATE SET name = 'UpdatedViaSubquery';
     ```
 
-- パーティションテーブルに対する `MERGE INTO` 操作：
+- パーティション化されたテーブルでの `MERGE INTO` 操作：
 
     ```sql
     MERGE INTO iceberg_partition_tbl t
@@ -2197,12 +2281,12 @@ ON <merge_condition>
 
 **注意事項：**
 
-1. 上記の三つの操作（`DELETE`、`UPDATE`、`MERGE INTO`）はいずれも Iceberg テーブルの形式バージョン（`format-version`）が 2 以上であることを必要とします。V1 形式のテーブルで実行すると、`must have format version 2 or higher for position deletes` というエラーが発生します。V3 形式のテーブルでは、システムは従来の Position Delete データを Puffin 形式の Deletion Vectors に置き換えるだけでなく、内容の更新が伴う場合には書き込まれるレコードの lineage ライフサイクル属性（`_last_updated_sequence_number`）も自動的に調整します。
-2. これらの操作は Parquet と ORC の両方のファイル形式をサポートします。
-3. 同時書き込み時には、Iceberg の楽観的同時実行制御が機能します。書き込み競合が発生すると、トランザクション競合の例外がスローされる場合があります。
-4. 単独の `UPDATE` 操作と `MERGE INTO` 内の `UPDATE` 操作では、`age = age * 2 + 1` や `name = concat(name, '-modified')` のような式や関数を使用できます。
-5. これらの操作は、パーティションテーブルと非パーティションテーブルの両方に適用できます。
-6. **バージョン 4.1.4 以降**、`MERGE INTO` はソースと対象テーブルの照合関係を検証します。同じ対象行に複数のソース行が一致した場合、非決定的な結果を生成せず、`multiple source rows matched the same target row` というエラーで文が失敗します。一対多の一致が想定される場合は、先にソース側で重複を除去してください。
+1. 上記の三つの操作（`DELETE`、`UPDATE`、`MERGE INTO`）は、いずれも Iceberg テーブルの形式バージョン（`format-version`）が 2 以上であることが必要です。V1 形式のテーブルで実行すると、`must have format version 2 or higher for position deletes` というエラーになります。V3 形式のテーブルでは、元の Position Delete データの代わりに Puffin 形式の Deletion Vectors を使用するほか、内容の更新を伴う場合は、書き込まれるレコードの Lineage ライフサイクル属性（`_last_updated_sequence_number`）も自動的に調整されます。
+2. これらの操作は Parquet と ORC の両方のファイル形式に対応しています。
+3. 並行書き込み時には、Iceberg は楽観的同時実行制御を提供します。書き込みが競合すると、トランザクション競合の例外が発生する場合があります。
+4. `UPDATE` 操作では、単独で実行する場合も `MERGE INTO` 内で実行する場合も、`age = age * 2 + 1` や `name = concat(name, '-modified')` などの式や関数を使用できます。
+5. これらの操作は、パーティション化されたテーブルにも、パーティション化されていないテーブルにも適用できます。
+6. **バージョン 4.1.4 以降**、`MERGE INTO` はソースと書き込み先テーブルの照合関係を検証します。同じ書き込み先行に複数のソース行が一致した場合、結果が非決定的になる代わりに、ステートメントは `multiple source rows matched the same target row` で失敗します。1 対多の一致が想定される場合は、先にソース側で重複を除去してください。
 
 ### 関連パラメータ {#related-parameters}
 
@@ -2210,24 +2294,24 @@ ON <merge_condition>
 
   | パラメータ名 | デフォルト値 | 説明 |
   | ----------------------------------------------------------------------------- | ------------- | ----------- |
-  | `iceberg_sink_max_file_size` | 1GB | データファイルの最大サイズです。書き込むデータがこのサイズを超えると、現在のファイルを閉じ、新しいファイルを作成して書き込みを続けます。 |
-  | `table_sink_partition_write_max_partition_nums_per_writer` | 128 | BE ノード上で各インスタンスが書き込めるパーティションの最大数です。 |
-  | `table_sink_non_partition_write_scaling_data_processed_threshold` | 25MB | 非パーティションテーブルで書き込みのスケーリングを開始するデータ量のしきい値です。データが `table_sink_non_partition_write_scaling_data_processed_threshold` ずつ増えるたびに、新しいライター（インスタンス）が使用されます。この仕組みはデータ量に応じてライター数を調整し、少量のデータではリソースとファイル数を抑えながらスループットを高めます。 |
-  | `table_sink_partition_write_min_data_processed_rebalance_threshold` | 25MB | パーティションテーブルでリバランスを開始するデータ量の最小しきい値です。`current accumulated data volume` - `data volume since last rebalancing` >= `table_sink_partition_write_min_data_processed_rebalance_threshold` の場合に開始します。このしきい値を下げると、ファイルサイズの差が大きい場合にバランスを改善できますが、リバランスのコストが増え、性能に影響する可能性があります。 |
-  | `table_sink_partition_write_min_partition_data_processed_rebalance_threshold` | | リバランスを開始するパーティションデータ量の最小しきい値です。`current partition data volume` >= `threshold` \* `number of tasks already allocated to the partition` の場合に開始します。このしきい値を下げると、ファイルサイズの差が大きい場合にバランスを改善できますが、リバランスのコストが増え、性能に影響する可能性があります。 |
+  | `iceberg_sink_max_file_size` | 1GB | データファイルの最大サイズです。書き込まれたデータがこのサイズを超えると、現在のファイルを閉じ、新しいファイルを作成して書き込みを続けます。 |
+  | `table_sink_partition_write_max_partition_nums_per_writer` | 128 | BE ノード上の各インスタンスが書き込めるパーティション数の上限です。 |
+  | `table_sink_non_partition_write_scaling_data_processed_threshold` | 25MB | パーティション化されていないテーブルで、書き込みのスケーリングを開始するデータ量のしきい値です。`table_sink_non_partition_write_scaling_data_processed_threshold` のデータ量が追加されるたびに、新しいライター（インスタンス）を使用します。この仕組みはデータ量に応じてライター数を調整し、少量のデータではリソース消費とファイル数を抑えながら、スループットを高めます。 |
+  | `table_sink_partition_write_min_data_processed_rebalance_threshold` | 25MB | パーティション化されたテーブルで再バランスを開始する最小データ量のしきい値です。`現在までの累積データ量` - `前回の再バランス以降のデータ量` >= `table_sink_partition_write_min_data_processed_rebalance_threshold` の場合に再バランスを開始します。ファイルサイズの差が大きい場合は、このしきい値を下げるとバランスが改善する可能性がありますが、再バランスのコストが増え、パフォーマンスに影響する場合があります。 |
+  | `table_sink_partition_write_min_partition_data_processed_rebalance_threshold` | | 再バランスを開始するパーティションごとの最小データ量のしきい値です。`現在のパーティションデータ量` >= `しきい値` \* `そのパーティションにすでに割り当てられたタスク数` の場合に再バランスを開始します。ファイルサイズの差が大きい場合は、このしきい値を下げるとバランスが改善する可能性がありますが、再バランスのコストが増え、パフォーマンスに影響する場合があります。 |
 
 ## データベースとテーブルの管理 {#database-and-table-management}
 
 ### データベースの作成と削除 {#creating-and-dropping-databases}
 
-`SWITCH` 文で目的の Catalog に切り替え、`CREATE DATABASE` コマンドを実行できます。
+`SWITCH` ステートメントで目的の Catalog に切り替え、`CREATE DATABASE` コマンドを実行できます。
 
 ```sql
 SWITCH iceberg;
 CREATE DATABASE [IF NOT EXISTS] iceberg_db;
 ```
 
-完全修飾名を使用したり、場所を指定したりしてデータベースを作成することもできます。現在、場所の指定をサポートするのは HMS 型の Catalog のみです。
+完全修飾名を使用してデータベースを作成したり、場所を指定したりすることもできます（現在、場所の指定に対応するのは HMS タイプの Catalog のみです）。例：
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db;
@@ -2236,7 +2320,7 @@ CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db
 PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
 ```
 
-`SHOW CREATE DATABASE` コマンドを使用すると、データベースの場所を確認できます。
+`SHOW CREATE DATABASE` コマンドでデータベースの場所を確認できます。
 
 ```sql
 mysql> SHOW CREATE DATABASE iceberg_db;
@@ -2254,14 +2338,14 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 ```
 
 :::caution
-Iceberg データベースを削除するには、先にそのデータベース内のすべてのテーブルを削除する必要があります。削除していないテーブルがあるとエラーが発生します。
+Iceberg データベースを削除するには、先にそのデータベース内のすべてのテーブルを削除する必要があります。そうしないとエラーになります。
 :::
 
 ### テーブルの作成と削除 {#creating-and-dropping-tables}
 
 * **テーブルの作成**
 
-  Doris は Iceberg でパーティションテーブルと非パーティションテーブルの両方の作成をサポートします。
+  Doris は、パーティション化された Iceberg テーブルと、パーティション化されていない Iceberg テーブルの両方を作成できます。
 
   例：
 
@@ -2305,7 +2389,7 @@ Iceberg データベースを削除するには、先にそのデータベース
   );
   ```
 
-  バージョン 4.1.0 以降、Doris は Iceberg テーブル作成時のソートカラム指定をサポートします。書き込み時に指定したソートカラムに従ってデータを並べ替え、クエリ性能を高めます。
+  バージョン 4.1.0 以降、Doris は Iceberg テーブルの作成時にソートカラムを指定できます。データの書き込み時に、指定したソートカラムに従ってデータが並べ替えられ、クエリ性能の向上につながります。
 
   ```sql
   CREATE TABLE ordered_table (
@@ -2324,11 +2408,11 @@ Iceberg データベースを削除するには、先にそのデータベース
   - ソートカラムを指定しない場合、書き込み時にソートは行われません。
   - デフォルトのソート順は ASC NULLS FIRST です。
 
-  作成後、`SHOW CREATE TABLE` コマンドで Iceberg テーブルの作成文を確認できます。パーティション関数の詳細は、[パーティション分割](#)のセクションを参照してください。
+  作成後は `SHOW CREATE TABLE` コマンドで Iceberg テーブルの作成ステートメントを確認できます。パーティション関数の詳細は「[パーティション分割](#)」を参照してください。
 
 * **テーブルの削除**
 
-  `DROP TABLE` 文で Iceberg テーブルを削除できます。テーブルを削除すると、パーティションデータを含むデータも削除されます。
+  `DROP TABLE` ステートメントで Iceberg テーブルを削除できます。テーブルを削除すると、パーティションデータを含むデータも削除されます。
 
   例：
 
@@ -2338,23 +2422,23 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 * **カラム型のマッピング**
 
-  [カラム型のマッピング](#)のセクションを参照してください。
+  「[カラム型のマッピング](#)」を参照してください。
 
 * **パーティション分割**
 
-    Iceberg のパーティション型は Doris の List パーティションに対応します。そのため、Doris で Iceberg パーティションテーブルを作成するときは List パーティション構文を使用します。ただし、各パーティションを明示的に列挙する必要はありません。データ挿入時に、Doris がデータ値に基づいて対応する Iceberg パーティションを自動作成します。
+    Iceberg のパーティションの種類は、Doris の List パーティションに対応します。そのため、Doris で Iceberg のパーティション化テーブルを作成する際は List パーティションの構文を使用します。ただし、各パーティションを明示的に列挙する必要はありません。データの挿入時に、Doris がデータ値に基づいて対応する Iceberg パーティションを自動的に作成します。
 
-    * 単一カラムまたは複数カラムのパーティションテーブルの作成をサポートします。
+    * 単一カラムまたは複数カラムによるパーティション化テーブルの作成に対応します。
 
-    * パーティション変換関数をサポートし、Iceberg の暗黙的なパーティション分割とパーティション進化を利用できます。Iceberg の各パーティション変換関数については、[Iceberg partition transforms](https://iceberg.apache.org/spec/#partition-transforms) を参照してください。
+    * パーティション変換関数に対応し、Iceberg の暗黙的なパーティション分割とパーティション進化を利用できます。Iceberg の具体的なパーティション変換関数については、[Iceberg partition transforms](https://iceberg.apache.org/spec/#partition-transforms) を参照してください。
 
         * `year(ts)` または `years(ts)`
 
         * `month(ts)` または `months(ts)`
 
-        * `day(ts)`、`days(ts)`、または `date(ts)`
+        * `day(ts)` または `days(ts)` または `date(ts)`
 
-        * `hour(ts)`、`hours(ts)`、または `date_hour(ts)`
+        * `hour(ts)` または `hours(ts)` または `date_hour(ts)`
 
         * `bucket(N, col)`
 
@@ -2364,11 +2448,11 @@ Iceberg データベースを削除するには、先にそのデータベース
 
     * Parquet（デフォルト）
 
-        Doris が作成した Iceberg テーブルでは、Datetime は `timestamp_ntz` 型に対応することに注意してください。
+        Doris が作成した Iceberg テーブルでは、Datetime は `timestamp_ntz` 型に対応します。
 
-        3.1.0 より後のバージョンでは、Datetime 型を Parquet ファイルに書き込む際の物理型は INT96 ではなく INT64 です。
+        3.1.0 より後のバージョンでは、Datetime 型を Parquet ファイルに書き込む際の物理型に INT96 ではなく INT64 を使用します。
 
-        他のシステムが作成した Iceberg テーブルでは、`timestamp` と `timestamp_ntz` はどちらも Doris の Datetime 型にマッピングされますが、書き込み時には実際の型に基づいてタイムゾーン処理の要否が判定されます。
+        また、他のシステムが作成した Iceberg テーブルでは、`timestamp` と `timestamp_ntz` の両方が Doris の Datetime 型にマッピングされますが、書き込み時には実際の型に基づいてタイムゾーン処理の要否を判断します。
 
     * ORC
 
@@ -2386,13 +2470,13 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 ### スキーマ変更 {#schema-change}
 
-3.1.0 以降、Doris は Iceberg テーブルのスキーマ変更をサポートし、`ALTER TABLE` 文で変更できます。
+3.1.0 以降、Doris は Iceberg テーブルのスキーマ変更に対応しており、`ALTER TABLE` ステートメントで変更できます。
 
-サポートされるスキーマ変更操作は次のとおりです。
+対応するスキーマ変更操作は次のとおりです。
 
 * **カラム名の変更**
 
-    `RENAME COLUMN` 句を使用してカラム名を変更します。バージョン 4.1.4 以降は、ネストした型の中にあるカラム名も変更でき、`TO` キーワードは省略可能です。
+    `RENAME COLUMN` 句でカラム名を変更します。バージョン 4.1.4 以降は、ネストした型内のカラム名も変更でき、`TO` キーワードを省略できます。
 
     ```sql
     ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
@@ -2406,9 +2490,9 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 * **カラムの追加**
 
-    `ADD COLUMN` を使用して新しいカラムを追加します。バージョン 4.1.4 以降は、ドット区切りのパス（`s.new_field` など）を使用してネストした型（STRUCT）に新しいカラムを追加できます。新しく追加するネストしたフィールドは NULL 許容である必要があります。
+    `ADD COLUMN` で新しいカラムを追加します。バージョン 4.1.4 以降は、ドット区切りのパス（例：`s.new_field`）を使用してネストした型（STRUCT）に新しいカラムを追加できます。新しく追加するネストしたフィールドは NULL を許容する必要があります。
 
-    新しいカラムを追加するときは、NULL 許容属性、デフォルト値、コメント、カラム位置を指定できます。
+    新しいカラムを追加する際には、NULL 許容属性、デフォルト値、コメント、カラム位置を指定できます。
 
     ```sql
     ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
@@ -2422,9 +2506,9 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 * **複数カラムの追加**
 
-    `ADD COLUMN` を使って複数のカラムを追加することもできます。新しいカラムはテーブルの末尾に追加されます。複数カラムの追加では、カラム位置の指定とネストした型へのカラム追加はサポートされません。
+    `ADD COLUMN` で複数のカラムを追加することもできます。新しいカラムはテーブルの末尾に追加されます。複数カラムの追加では、カラム位置の指定はサポートされません。ネストした型への新しいカラムの追加もサポートされません。
 
-    各カラムの構文は単一カラムの追加と同じです。
+    各カラムの構文は、単一カラムを追加する場合と同じです。
 
     ```sql
     ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
@@ -2432,7 +2516,7 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 * **カラムの削除**
 
-    `DROP COLUMN` を使用してカラムを削除します。バージョン 4.1.4 以降は、ドット区切りのパスでネストした型の中にあるカラムも削除できます。
+    `DROP COLUMN` でカラムを削除します。バージョン 4.1.4 以降は、ドット区切りのパスを使用してネストした型内のカラムも削除できます。
 
     ```sql
     ALTER TABLE iceberg_table DROP COLUMN col_name;
@@ -2443,24 +2527,24 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 * **カラムの変更**
 
-    `MODIFY COLUMN` 文を使用して、型、NULL 許容、デフォルト値、コメント、カラム位置などのカラム属性を変更します。
+    `MODIFY COLUMN` ステートメントで、型、NULL 許容属性、デフォルト値、コメント、カラム位置などのカラム属性を変更します。
 
-    バージョン 4.0.4 以降、Doris は複合型（STRUCT、ARRAY、MAP）の変更をサポートします。これには安全な型の昇格や struct フィールドの追加が含まれます。
+    バージョン 4.0.4 以降、Doris は複合型（STRUCT、ARRAY、MAP）の変更に対応します。安全な型の昇格や struct フィールドの追加も含まれます。
 
     ネストした型でサポートされる安全な型の昇格：
-    - INT -> BIGINT, LARGEINT
-    - TINYINT -> SMALLINT, INT, BIGINT, LARGEINT
-    - SMALLINT -> INT, BIGINT, LARGEINT
+    - INT -> BIGINT、LARGEINT
+    - TINYINT -> SMALLINT、INT、BIGINT、LARGEINT
+    - SMALLINT -> INT、BIGINT、LARGEINT
     - BIGINT -> LARGEINT
     - FLOAT -> DOUBLE
-    - VARCHAR(n) -> VARCHAR(m) where m > n
+    - VARCHAR(n) -> VARCHAR(m)（m > n の場合）
 
     複合型の制約：
-    - 新しいネストしたフィールドはすべて NULL 許容である必要があります。
+    - 新しいネストしたフィールドはすべて NULL を許容する必要があります。
     - 任意から必須への変更はできません。
-    - 複合型のデフォルト値は NULL のみサポートされます。
+    - 複合型のデフォルト値には NULL のみ指定できます。
 
-    注：カラム属性を変更する場合、変更しない属性も元の値を明示的に指定してください。
+    注：カラム属性を変更する際は、変更しない属性も元の値を明示的に指定してください。
 
     ```sql
     ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
@@ -2477,7 +2561,7 @@ Iceberg データベースを削除するには、先にそのデータベース
   ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
   ```
 
-  複合型の変更例：
+  複合型を変更する例：
 
   ```sql
   -- Create Iceberg table with complex types
@@ -2496,7 +2580,7 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 * **カラムの並べ替え**
 
-    `ORDER BY` で新しいカラム順を指定し、カラムを並べ替えます。
+    `ORDER BY` で新しいカラム順を指定して、カラムを並べ替えます。
 
     ```sql
     ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
@@ -2504,13 +2588,13 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 #### ネストしたカラムのスキーマ変更（4.1.4+） {#nested-column-schema-change-414}
 
-バージョン 4.1.4 以降、`ADD COLUMN`、`DROP COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN` では、ドット区切りのパス（`a.b.c` など）を指定してネストしたフィールドを直接操作できます。この機能が適用されるのは**Iceberg テーブルのみ**です。他の種類のテーブルで使用すると、`Nested column path is only supported for Iceberg tables: ...` が報告されます。
+バージョン 4.1.4 以降、`ADD COLUMN`、`DROP COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN` はいずれもドット区切りのパス（例：`a.b.c`）を受け付け、ネストしたフィールドを直接操作できます。この機能が適用されるのは**Iceberg テーブルのみ**です。他の種類のテーブルで使用すると、`Nested column path is only supported for Iceberg tables: ...` が報告されます。
 
 主な制限とエラー：
 
 | エラーメッセージ | 説明 |
 | --- | --- |
-| `New nested field '<path>' must be nullable` | 新しく追加するネストしたフィールドは NULL 許容である必要があります。 |
+| `New nested field '<path>' must be nullable` | 新しく追加するネストしたフィールドは NULL を許容する必要があります。 |
 | `Rollup is not supported for Iceberg column operations` | Rollup 句はサポートされません。 |
 | `PROPERTIES are not supported for Iceberg column operations` | PROPERTIES 句はサポートされません。 |
 | `KEY is not supported for Iceberg ADD/MODIFY COLUMN` | KEY キーワードはサポートされません。 |
@@ -2518,15 +2602,15 @@ Iceberg データベースを削除するには、先にそのデータベース
 | `Modifying default values is not supported for Iceberg columns` | 既存カラムのデフォルト値の変更はサポートされません。 |
 | `ON UPDATE is not supported for Iceberg ADD COLUMN` | ON UPDATE 句はサポートされません。 |
 | `Modify column type from complex to primitive is not supported` | 複合型からプリミティブ型への変更はサポートされません。 |
-| `Cannot change MAP key type from ...` / `Cannot <op> MAP key nested column` | MAP のキー型の変更や、MAP のキーに対するネストしたカラム操作はサポートされません。 |
-| `Iceberg does not support comments on collection element or value fields` | コレクション要素や MAP の値フィールドへのコメントはサポートされません。 |
-| `Multiple Iceberg ALTER clauses are not supported when a statement ...` | ネストしたカラムを扱う場合、一つの文に含められる ALTER 句は一つだけです。 |
+| `Cannot change MAP key type from ...` / `Cannot <op> MAP key nested column` | MAP のキーの型の変更、および MAP のキーに対するネストしたカラム操作はサポートされません。 |
+| `Iceberg does not support comments on collection element or value fields` | コレクション要素または MAP の値フィールドへのコメントはサポートされません。 |
+| `Multiple Iceberg ALTER clauses are not supported when a statement ...` | ネストしたカラムを扱う場合、ステートメントに含められる ALTER 句は一つだけです。 |
 
 ### パーティション進化 {#partition-evolution}
 
-バージョン 4.0.2 以降、Doris は `ALTER` 文による Iceberg テーブルの Partition Evolution をサポートします。
+バージョン 4.0.2 以降、Doris は `ALTER` ステートメントによる Iceberg テーブルの Partition Evolution に対応しています。
 
-サポートされるパーティション変換は次のとおりです。
+対応するパーティション変換は次のとおりです。
 
 | 変換 | 構文 | 例 |
 |-----------|--------|---------|
@@ -2538,7 +2622,7 @@ Iceberg データベースを削除するには、先にそのデータベース
 | hour | `hour(column)` | `hour(ts)` |
 | identity | `column` | `category` |
 
-サポートされる操作は次のとおりです。
+対応する操作は次のとおりです。
 
 - **パーティションキーの追加**
 
@@ -2567,7 +2651,7 @@ Iceberg データベースを削除するには、先にそのデータベース
     ALTER TABLE prod.db.sample DROP PARTITION KEY shard;
     ```
 
-- **パーティションキーの置き換え**
+- **パーティションキーの置換**
 
     ```sql
     -- use optional AS keyword to specify a custom name for the partition field
@@ -2579,11 +2663,11 @@ Iceberg データベースを削除するには、先にそのデータベース
     ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts) AS day_of_ts;
     ```
 
-### Branch と Tag の管理 {#managing-branch--tag}
+### ブランチとタグの管理 {#managing-branch--tag}
 
 > 3.1.0 以降
 
-* **Branch の作成**
+* **ブランチの作成**
 
   構文：
 
@@ -2621,7 +2705,7 @@ Iceberg データベースを削除するには、先にそのデータベース
   ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS 2 DAYS;
   ```
 
-* **Branch の削除**
+* **ブランチの削除**
 
   構文：
 
@@ -2636,7 +2720,7 @@ Iceberg データベースを削除するには、先にそのデータベース
   ALTER TABLE tbl DROP BRANCH b1;
   ```
 
-* **Tag の作成**
+* **タグの作成**
 
   構文：
 
@@ -2661,7 +2745,7 @@ Iceberg データベースを削除するには、先にそのデータベース
   ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456 RETAIN 1 DAYS;
   ```
 
-* **Tag の削除**
+* **タグの削除**
 
   構文：
 
@@ -2678,11 +2762,11 @@ Iceberg データベースを削除するには、先にそのデータベース
 
 ## Iceberg テーブルのアクション {#iceberg-table-actions}
 
-> この機能はバージョン 4.0.2 以降でサポートされます。各操作の具体的なバージョン要件を確認してください。
+> この機能はバージョン 4.0.2 以降でサポートされています。各操作のバージョン要件を確認してください。
 >
 > これは実験的な機能です。
 
-Doris は `ALTER TABLE EXECUTE` 構文による特定の Iceberg テーブルアクションの実行をサポートします。この構文は、テーブル最適化やスナップショット管理などのさまざまな操作を実行するための統一されたインターフェースを提供します。
+Doris は `ALTER TABLE EXECUTE` 構文を使用して、特定の Iceberg テーブルアクションを実行できます。この構文は、テーブルの最適化やスナップショット管理など、さまざまな操作を実行するための統一されたインターフェースを提供します。
 
 ```sql
 ALTER TABLE [catalog.][database.]table_name
@@ -2691,14 +2775,14 @@ EXECUTE <action_name> ("key1" = "value1", "key2" = "value2", ...)
 ```
 
 * `action_name`：実行する操作の名前
-* `("key1" = "value1", ...)`：キーと値のペアで指定する操作関連のパラメータ。パラメータ名は二重引用符で囲む必要があります。
-* `[WHERE <condition>]`：操作対象のパーティションまたはデータ範囲を指定する任意の WHERE 条件。一部の操作でのみサポートされます。
+* `("key1" = "value1", ...)`：キーと値の組で指定する操作関連のパラメータ。パラメータ名は二重引用符で囲む必要があります。
+* `[WHERE <condition>]`：操作対象のパーティションまたはデータ範囲を指定する任意の WHERE 条件（一部の操作でのみサポート）
 
 ### cherrypick_snapshot {#cherrypick_snapshot}
 
-`cherrypick_snapshot` 操作は、指定したスナップショットの変更を現在のテーブル状態に統合し、元のスナップショットを変更・削除せずに新しいスナップショットを作成します。
+`cherrypick_snapshot` 操作は、指定したスナップショットの変更を現在のテーブル状態にマージし、元のスナップショットを変更・削除せずに新しいスナップショットを作成します。
 
-> サポートされるバージョン：4.0.2+
+> 対応バージョン：4.0.2+
 
 **構文：**
 
@@ -2711,16 +2795,16 @@ EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
 
 | パラメータ | 型 | 必須 | 説明 |
 | -------- | ---- | ---- | ---- |
-| `snapshot_id` | Long | はい | 統合するスナップショット ID |
+| `snapshot_id` | Long | はい | マージするスナップショット ID |
 
 **戻り値：**
 
-`cherrypick_snapshot` 操作は、次の二つのカラムを持つ結果セットを返します。
+`cherrypick_snapshot` 操作を実行すると、次の 2 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
-| `source_snapshot_id` | BIGINT | 統合されたスナップショット ID |
-| `current_snapshot_id` | BIGINT | 統合操作後に新しく作成され、現在のスナップショットに設定された ID |
+| `source_snapshot_id` | BIGINT | マージしたスナップショット ID |
+| `current_snapshot_id` | BIGINT | マージ操作後に新たに作成され、現在のスナップショットに設定された ID |
 
 **例：**
 
@@ -2732,15 +2816,15 @@ EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
 
 **注意事項：**
 
-1. この操作は WHERE 条件をサポートしません。
+1. この操作は WHERE 条件に対応していません。
 2. 指定したスナップショットが存在しない場合、操作は失敗します。
-3. 統合操作では新しいスナップショットが作成され、元のスナップショットは削除されません。
+3. マージ操作では新しいスナップショットが作成され、元のスナップショットは削除されません。
 
 ### expire_snapshots {#expire_snapshots}
 
-`expire_snapshots` 操作は Iceberg テーブルの古いスナップショットを削除し、ストレージ領域を解放してメタデータの性能を改善します。この操作は Apache Iceberg Spark procedure の仕様に従います。
+`expire_snapshots` 操作は、Iceberg テーブルから古いスナップショットを削除し、ストレージ領域を解放してメタデータの処理性能を改善します。この操作は Apache Iceberg Spark procedure の仕様に従います。
 
-> サポートされるバージョン：4.1.0+
+> 対応バージョン：4.1.0+
 
 **構文：**
 
@@ -2753,24 +2837,24 @@ EXECUTE expire_snapshots ("key1" = "value1", "key2" = "value2", ...)
 
 | パラメータ | 型 | 必須 | 説明 |
 | -------- | ---- | ---- | ---- |
-| `older_than` | String | いいえ | スナップショットの期限切れを判定するタイムスタンプのしきい値です。これより古いスナップショットを削除します。ISO 日時形式（`2024-01-01T00:00:00` など）またはミリ秒単位のタイムスタンプをサポートします。 |
-| `retain_last` | Integer | いいえ | 保持する祖先スナップショットの数です。単独で指定した場合、`older_than` は自動的に現在時刻に設定されます。 |
+| `older_than` | String | いいえ | スナップショットの期限切れを判定する時刻のしきい値。これより古いスナップショットを削除します。ISO 日時形式（例：`2024-01-01T00:00:00`）またはミリ秒単位のタイムスタンプに対応します。 |
+| `retain_last` | Integer | いいえ | 保持する祖先スナップショットの数。単独で指定すると、`older_than` は自動的に現在時刻に設定されます。 |
 | `snapshot_ids` | String | いいえ | 期限切れにする特定のスナップショット ID をカンマ区切りで指定します。 |
-| `max_concurrent_deletes` | Integer | いいえ | 削除操作に使用するスレッドプールのサイズです。 |
+| `max_concurrent_deletes` | Integer | いいえ | 削除操作に使用するスレッドプールのサイズ。 |
 | `clean_expired_metadata` | Boolean | いいえ | `true` に設定すると、使用されていないパーティション仕様とスキーマをクリーンアップします。 |
 
 **戻り値：**
 
-`expire_snapshots` 操作は、次の六つのカラムを持つ結果セットを返します。
+`expire_snapshots` 操作を実行すると、次の 6 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
-| `deleted_data_files_count` | BIGINT | 削除されたデータファイル数 |
-| `deleted_position_delete_files_count` | BIGINT | 削除された position delete file の数 |
-| `deleted_equality_delete_files_count` | BIGINT | 削除された equality delete file の数 |
-| `deleted_manifest_files_count` | BIGINT | 削除された manifest ファイル数 |
-| `deleted_manifest_lists_count` | BIGINT | 削除された manifest list ファイル数 |
-| `deleted_statistics_files_count` | BIGINT | 削除された統計ファイル数 |
+| `deleted_data_files_count` | BIGINT | 削除したデータファイルの数 |
+| `deleted_position_delete_files_count` | BIGINT | 削除した Position Delete ファイルの数 |
+| `deleted_equality_delete_files_count` | BIGINT | 削除した Equality Delete ファイルの数 |
+| `deleted_manifest_files_count` | BIGINT | 削除したマニフェストファイルの数 |
+| `deleted_manifest_lists_count` | BIGINT | 削除したマニフェストリストファイルの数 |
+| `deleted_statistics_files_count` | BIGINT | 削除した統計ファイルの数 |
 
 **例：**
 
@@ -2794,17 +2878,17 @@ EXECUTE expire_snapshots ("older_than" = "2024-06-01T00:00:00", "retain_last" = 
 
 **注意事項：**
 
-1. この操作は WHERE 条件をサポートしません。
-2. `older_than` と `retain_last` の両方を指定した場合は両方の条件が適用されます。`older_than` より古く、かつ直近の `retain_last` 個に含まれないスナップショットのみが削除されます。
-3. `snapshot_ids` は単独で使用して特定のスナップショットを削除できます。
+1. この操作は WHERE 条件に対応していません。
+2. `older_than` と `retain_last` の両方を指定した場合は、両方の条件が適用されます。`older_than` より古く、かつ直近の `retain_last` 個のスナップショットに含まれないものだけが削除されます。
+3. `snapshot_ids` は単独で使用し、特定のスナップショットを削除できます。
 4. この操作はスナップショットと関連するデータファイルを完全に削除します。慎重に使用してください。
-5. 実行前に `$snapshots` システムテーブルをクエリして、テーブルのスナップショット情報を確認することを推奨します。
+5. 実行前に `$snapshots` システムテーブルをクエリし、テーブルのスナップショット情報を確認することを推奨します。
 
 ### fast_forward {#fast_forward}
 
-`fast_forward` 操作は、ある branch の現在のスナップショットを、別の branch の最新スナップショットまで進めます。
+`fast_forward` 操作は、一方のブランチの現在のスナップショットを、もう一方のブランチの最新スナップショットまで進めます。
 
-> サポートされるバージョン：4.0.2+
+> 対応バージョン：4.0.2+
 
 **構文：**
 
@@ -2817,18 +2901,18 @@ EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
 
 | パラメータ | 型 | 必須 | 説明 |
 | -------- | ---- | ---- | ---- |
-| `branch` | String | はい | 進める branch の名前 |
-| `to` | String | はい | 対象の branch 名。`branch` はこの branch の最新スナップショットまで進みます。 |
+| `branch` | String | はい | 進めるブランチの名前 |
+| `to` | String | はい | 参照先のブランチ名。`branch` はこのブランチの最新スナップショットまで進められます。 |
 
 **戻り値：**
 
-`fast_forward` 操作は、次の三つのカラムを持つ結果セットを返します。
+`fast_forward` 操作を実行すると、次の 3 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
-| `branch_updated` | STRING | 進められた branch の名前 |
-| `previous_ref` | BIGINT | 進める前に branch が指していたスナップショット ID（NULL の場合あり） |
-| `updated_ref` | BIGINT | 進めた後に branch が指すスナップショット ID |
+| `branch_updated` | STRING | 進められたブランチの名前 |
+| `previous_ref` | BIGINT | 操作前にブランチが指していたスナップショット ID（NULL の場合あり） |
+| `updated_ref` | BIGINT | 操作後にブランチが指すスナップショット ID |
 
 **例：**
 
@@ -2840,15 +2924,15 @@ EXECUTE fast_forward ("branch" = "feature", "to" = "main");
 
 **注意事項：**
 
-1. この操作は WHERE 条件をサポートしません。
-2. 指定した branch が存在しない場合、操作は失敗します。
-3. 進められるのは branch のみで、tag は対象外です。
+1. この操作は WHERE 条件に対応していません。
+2. 指定したブランチが存在しない場合、操作は失敗します。
+3. 進められるのはブランチのみで、タグは対象外です。
 
 ### publish_changes {#publish_changes}
 
-`publish_changes` 操作は、Write-Audit-Publish（WAP）パターンにおける「Publish」ステップです。この処理は、特定の `wap.id` 属性を持つスナップショットを探して現在のテーブル状態に追加します。これにより、検証後に「ステージング」されたデータをアトミックに公開できます。
+`publish_changes` 操作は、Write-Audit-Publish（WAP）パターンの「Publish」ステップです。この処理では、特定の `wap.id` 属性を持つスナップショットを見つけて現在のテーブル状態に追加します。これにより、検証後に「ステージング済み」のデータをアトミックに公開できます。
 
-> サポートされるバージョン：4.1.0+
+> 対応バージョン：4.1.0+
 
 **構文：**
 
@@ -2865,7 +2949,7 @@ EXECUTE publish_changes ("wap_id" = "<wap-id>")
 
 **戻り値：**
 
-`publish_changes` 操作は、次の二つのカラムを持つ結果セットを返します。
+`publish_changes` 操作を実行すると、次の 2 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
@@ -2881,15 +2965,15 @@ EXECUTE publish_changes ("wap_id" = "branch-123")
 
 **注意事項：**
 
-1. この操作は WHERE 条件をサポートしません。
+1. この操作は WHERE 条件に対応していません。
 2. 指定した `wap.id` が存在しない場合、操作は失敗します。
 
 
 ### rewrite_data_files {#rewrite_data_files}
 
-`rewrite_data_files` 操作は Iceberg テーブルのデータファイルを書き換えて小さなファイルを統合し、クエリ性能とストレージ効率を最適化します。これは同期操作です。
+`rewrite_data_files` 操作は、Iceberg テーブルのデータファイルを書き換えて小さなファイルを統合し、クエリ性能とストレージ効率を最適化します。これは同期操作です。
 
-> サポートされるバージョン：4.0.2+
+> 対応バージョン：4.0.2+
 
 **構文：**
 
@@ -2902,26 +2986,26 @@ EXECUTE rewrite_data_files ("key1" = "value1", "key2" = "value2", ...) [WHERE <c
 
 | パラメータ | 型 | デフォルト値 | 説明 |
 | -------- | ---- | ------ | ---- |
-| `target-file-size-bytes` | Long | 536870912 (512MB) | 出力ファイルの目標サイズ（バイト）です。 |
-| `min-file-size-bytes` | Long | target-file-size-bytes * 0.75 | 最小ファイルサイズ（バイト）です。これより小さいファイルは書き換えられます。未指定の場合、目標ファイルサイズの 75% がデフォルトです。 |
-| `max-file-size-bytes` | Long | target-file-size-bytes * 1.8 | 最大ファイルサイズ（バイト）です。これより大きいファイルは分割されます。未指定の場合、目標ファイルサイズの 180% がデフォルトです。 |
-| `min-input-files` | Integer | 5 | 書き換えを開始する入力ファイル数の下限です。書き換え対象のファイル数がこのしきい値に達した場合にのみ実行されます。 |
-| `rewrite-all` | Boolean | false | ファイルサイズに関係なく、すべてのファイルを書き換えるかどうか。 |
-| `max-file-group-size-bytes` | Long | 107374182400 (100GB) | 単一ファイルグループの最大サイズ（バイト）です。一つの書き換えタスクが処理するデータ量を制限します。 |
-| `delete-file-threshold` | Integer | Integer.MAX_VALUE | 書き換えを開始するために必要な delete file 数の下限です。 |
-| `delete-ratio-threshold` | Double | 0.3 | 書き換えを開始するために必要な削除済みレコードの比率（削除済みレコード数 / 総レコード数）の下限です。範囲：0.0 - 1.0。 |
-| `output-spec-id` | Long | 2 | 出力ファイルのパーティション仕様 ID です。 |
+| `target-file-size-bytes` | Long | 536870912（512MB） | 目標ファイルサイズ（バイト単位）。出力ファイルの目標サイズです。 |
+| `min-file-size-bytes` | Long | target-file-size-bytes * 0.75 | 最小ファイルサイズ（バイト単位）。これより小さいファイルは書き換えられます。指定しない場合、目標ファイルサイズの 75% がデフォルトです。 |
+| `max-file-size-bytes` | Long | target-file-size-bytes * 1.8 | 最大ファイルサイズ（バイト単位）。これより大きいファイルは分割されます。指定しない場合、目標ファイルサイズの 180% がデフォルトです。 |
+| `min-input-files` | Integer | 5 | 書き換えを開始するために必要な入力ファイルの最小数。書き換え対象ファイル数がこのしきい値に達した場合にのみ実行されます。 |
+| `rewrite-all` | Boolean | false | ファイルサイズに関係なくすべてのファイルを書き換えるかどうか。 |
+| `max-file-group-size-bytes` | Long | 107374182400（100GB） | 単一のファイルグループの最大サイズ（バイト単位）。一つの書き換えタスクが処理するデータ量を制限します。 |
+| `delete-file-threshold` | Integer | Integer.MAX_VALUE | 書き換えを開始するために必要な削除ファイルの最小数。 |
+| `delete-ratio-threshold` | Double | 0.3 | 書き換えを開始するために必要な削除済みレコードの最小比率（削除済みレコード数 / 総レコード数）。範囲：0.0～1.0。 |
+| `output-spec-id` | Long | 2 | 出力ファイルのパーティション仕様 ID。 |
 
 **戻り値：**
 
-`rewrite_data_files` 操作は、次の四つのカラムを持つ結果セットを返します。
+`rewrite_data_files` 操作を実行すると、次の 4 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
-| `rewritten_data_files_count` | INT | 書き換えられたデータファイル数 |
-| `added_data_files_count` | INT | 新しく追加されたデータファイル数 |
+| `rewritten_data_files_count` | INT | 書き換えられたデータファイルの数 |
+| `added_data_files_count` | INT | 新たに追加されたデータファイルの数 |
 | `rewritten_bytes_count` | INT | 書き換えられたバイト数 |
-| `removed_delete_files_count` | BIGINT | 削除された delete file 数 |
+| `removed_delete_files_count` | BIGINT | 削除された削除ファイルの数 |
 
 **例：**
 
@@ -2953,18 +3037,18 @@ EXECUTE rewrite_data_files (
 
 **注意事項：**
 
-1. `rewrite_data_files` 操作はデータファイルを読み取って書き換えるため、追加の I/O と計算負荷が発生します。クラスターリソースを適切に割り当ててください。
-2. 実行前に[データファイル分布の確認](#view-data-file-distribution)の SQL を使用して、書き換えが必要かどうかを評価できます。
-3. WHERE 条件を使用して、書き換え対象のパーティションやデータ範囲を制限できます。この条件は一致するデータを含まないファイルを除外し、書き換えるファイル数とデータ量を減らします。
-4. 実行前に[書き換え対象ファイルの選択ロジック](#rewrite_data_files-file-selection-strategy)の SQL を使用して、どのファイルが書き換えられるかを計算できます。
+1. `rewrite_data_files` 操作ではデータファイルを読み取って書き換えるため、追加の I/O と計算負荷が発生します。クラスタのリソースを適切に割り当ててください。
+2. 実行前に「[データファイルの分布を確認する](#view-data-file-distribution)」の SQL を使用して、書き換えが必要かどうかを評価できます。
+3. WHERE 条件を使用すると、書き換え対象のパーティションやデータ範囲を制限できます。この条件に一致するデータを含まないファイルが除外されるため、書き換えるファイル数とデータ量が減ります。
+4. 実行前に「[書き換え対象ファイルの選択ロジック](#rewrite_data_files-file-selection-strategy)」の SQL を使用して、書き換え対象となるファイルを算出できます。
 
 ### rewrite_manifests {#rewrite_manifests}
 
-`rewrite_manifests` 操作では、manifest ファイルを書き換えて Iceberg テーブルのメタデータを最適化し、クエリ性能を改善してメタデータの負荷を減らせます。
+`rewrite_manifests` 操作では、マニフェストファイルを書き換えて Iceberg テーブルのメタデータを最適化し、クエリ性能を高めてメタデータ処理の負荷を減らせます。
 
-大規模な Iceberg テーブルでは、小さな manifest ファイルが大量にあるとクエリ計画の性能に影響するため、この操作で最適化できます。
+大規模な Iceberg テーブルでは、小さなマニフェストファイルが多数あるとクエリ計画の性能に影響するため、この操作でマニフェストファイルを最適化できます。
 
-> サポートされるバージョン：4.1.0+
+> 対応バージョン：4.1.0+
 
 **構文：**
 
@@ -2975,16 +3059,16 @@ EXECUTE rewrite_manifests();
 
 **パラメータ：**
 
-パラメータなし
+パラメータはありません。
 
 **戻り値：**
 
-`rewrite_manifests` 操作は、次の二つのカラムを持つ結果セットを返します。
+`rewrite_manifests` 操作を実行すると、次の 2 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
-| `rewritten_manifests_count` | BIGINT | 書き換えられたファイル数 |
-| `total_data_manifests_count` | BIGINT | 書き換えられたデータ manifest ファイル数 |
+| `rewritten_manifests_count` | BIGINT | 書き換えられたファイルの数 |
+| `total_data_manifests_count` | BIGINT | 書き換えられたデータマニフェストファイルの数 |
 
 **例：**
 
@@ -2997,7 +3081,7 @@ EXECUTE rewrite_manifests();
 
 `rollback_to_snapshot` 操作は、Iceberg テーブルを指定したスナップショットにロールバックします。
 
-> サポートされるバージョン：4.0.2+
+> 対応バージョン：4.0.2+
 
 **構文：**
 
@@ -3014,12 +3098,12 @@ EXECUTE rollback_to_snapshot ("snapshot_id" = "<snapshot_id>")
 
 **戻り値：**
 
-`rollback_to_snapshot` 操作は、次の二つのカラムを持つ結果セットを返します。
+`rollback_to_snapshot` 操作を実行すると、次の 2 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
 | `previous_snapshot_id` | BIGINT | ロールバック前の現在のスナップショット ID |
-| `current_snapshot_id` | BIGINT | ロールバック後に現在のスナップショットに設定された ID |
+| `current_snapshot_id` | BIGINT | ロールバック後に現在のスナップショットとして設定された ID |
 
 **例：**
 
@@ -3031,15 +3115,15 @@ EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
 
 **注意事項：**
 
-1. この操作は WHERE 条件をサポートしません。
+1. この操作は WHERE 条件に対応していません。
 2. 指定したスナップショットが存在しない場合、操作は失敗します。
-3. 現在のスナップショットがすでに対象のスナップショットである場合、新しいスナップショットを作成せず、そのまま戻ります。
+3. 現在のスナップショットがすでに対象のスナップショットである場合、新しいスナップショットを作成せずに終了します。
 
 ### rollback_to_timestamp {#rollback_to_timestamp}
 
-`rollback_to_timestamp` 操作は、Iceberg テーブルを指定時点のスナップショットにロールバックします。
+`rollback_to_timestamp` 操作は、Iceberg テーブルを指定した時点のスナップショットにロールバックします。
 
-> サポートされるバージョン：4.0.2+
+> 対応バージョン：4.0.2+
 
 **構文：**
 
@@ -3052,16 +3136,16 @@ EXECUTE rollback_to_timestamp ("timestamp" = "<timestamp>")
 
 | パラメータ | 型 | 必須 | 説明 |
 | -------- | ---- | ---- | ---- |
-| `timestamp` | String | はい | ロールバック先の時点です。次の二つの形式をサポートします：<br />1. ISO 日時形式：`yyyy-MM-dd HH:mm:ss.SSS`（例：`2024-01-01 10:30:00.000`）<br/>2. ミリ秒単位のタイムスタンプ（例：`1704067200000`） |
+| `timestamp` | String | はい | ロールバック先の時点。次の二つの形式に対応します。<br />1. ISO 日時形式：`yyyy-MM-dd HH:mm:ss.SSS`（例：`2024-01-01 10:30:00.000`）<br/>2. ミリ秒単位のタイムスタンプ（例：`1704067200000`） |
 
 **戻り値：**
 
-`rollback_to_timestamp` 操作は、次の二つのカラムを持つ結果セットを返します。
+`rollback_to_timestamp` 操作を実行すると、次の 2 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
 | `previous_snapshot_id` | BIGINT | ロールバック前の現在のスナップショット ID |
-| `current_snapshot_id` | BIGINT | 指定時点のスナップショット ID。現在のスナップショットに設定されます。 |
+| `current_snapshot_id` | BIGINT | 指定した時点のスナップショット ID。操作後は現在のスナップショットに設定されます。 |
 
 **例：**
 
@@ -3077,15 +3161,15 @@ EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
 
 **注意事項：**
 
-1. この操作は WHERE 条件をサポートしません。
-2. `timestamp` パラメータは ISO 日時形式（`yyyy-MM-dd HH:mm:ss.SSS`）またはミリ秒単位のタイムスタンプ形式をサポートします。
-3. 指定した時点に対応するスナップショットが存在しない場合、操作は失敗します。
+1. この操作は WHERE 条件に対応していません。
+2. `timestamp` パラメータは ISO 日時形式（`yyyy-MM-dd HH:mm:ss.SSS`）またはミリ秒単位のタイムスタンプ形式に対応します。
+3. 指定した時点に対応するスナップショットがない場合、操作は失敗します。
 
 ### set_current_snapshot {#set_current_snapshot}
 
-`set_current_snapshot` 操作は、Iceberg テーブルの現在のスナップショットを、指定したスナップショット ID または参照（branch または tag）に設定します。
+`set_current_snapshot` 操作は、Iceberg テーブルの現在のスナップショットを、指定したスナップショット ID または参照（ブランチかタグ）に設定します。
 
-> サポートされるバージョン：4.0.2+
+> 対応バージョン：4.0.2+
 
 **構文：**
 
@@ -3098,17 +3182,17 @@ EXECUTE set_current_snapshot ("snapshot_id" = "<snapshot_id>" | "ref" = "<ref_na
 
 | パラメータ | 型 | 必須 | 説明 |
 | -------- | ---- | ---- | ---- |
-| `snapshot_id` | Long | いずれか一方 | 現在のスナップショットに設定する ID |
-| `ref` | String | いずれか一方 | 現在のスナップショットに設定する参照名（branch または tag） |
+| `snapshot_id` | Long | いずれか一方 | 現在のスナップショットとして設定するスナップショット ID |
+| `ref` | String | いずれか一方 | 現在のスナップショットとして設定する参照名（ブランチまたはタグ） |
 
 **戻り値：**
 
-`set_current_snapshot` 操作は、次の二つのカラムを持つ結果セットを返します。
+`set_current_snapshot` 操作を実行すると、次の 2 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ---- | ---- | ---- |
 | `previous_snapshot_id` | BIGINT | 操作前の現在のスナップショット ID |
-| `current_snapshot_id` | BIGINT | 操作後のスナップショット ID（`snapshot_id` パラメータの値、または `ref` パラメータから解決された値） |
+| `current_snapshot_id` | BIGINT | 操作後のスナップショット ID（`snapshot_id` パラメータで指定した値、または `ref` パラメータから解決した値） |
 
 **例：**
 
@@ -3128,15 +3212,15 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
 
 **注意事項：**
 
-1. この操作は WHERE 条件をサポートしません。
-2. `snapshot_id` と `ref` パラメータは相互に排他的で、どちらか一方のみ指定できます。
+1. この操作は WHERE 条件に対応していません。
+2. `snapshot_id` と `ref` は同時に指定できません。指定できるのはいずれか一方だけです。
 3. 指定したスナップショット ID または参照が存在しない場合、操作は失敗します。
-4. 現在のスナップショットがすでに対象のスナップショットである場合、新しいスナップショットを作成せず、そのまま戻ります。
+4. 現在のスナップショットがすでに対象のスナップショットである場合、新しいスナップショットを作成せずに終了します。
 
 ### publish_changes {#publish_changes-1}
 
-`publish_changes` 操作は、WAP（Write-Audit-Publish）モードで、指定した `wap.id` を持つスナップショットを現在のテーブル状態として公開します。
-指定した `wap_id` に一致する `wap.id` を持つスナップショットを探し、現在のテーブルに cherry-pick して、ステージングされたデータをすべての読み取り操作から参照できるようにします。
+`publish_changes` 操作は、WAP（Write-Audit-Publish）モードで、指定した `wap.id` を持つスナップショットを現在のテーブル状態として公開するために使用します。
+指定した `wap_id` と一致する `wap.id` を持つスナップショットを特定して現在のテーブルに cherry-pick し、ステージング済みのデータをすべての読み取り操作から参照できるようにします。
 
 **構文：**
 
@@ -3155,12 +3239,12 @@ EXECUTE publish_changes("wap_id" = "<wap_id>")
 
 **戻り値：**
 
-`publish_changes` は、次の二つのカラムを持つ結果セットを返します。
+`publish_changes` を実行すると、次の 2 カラムを持つ結果セットが返されます。
 
 | カラム名 | 型 | 説明 |
 | ----------- | ---- | ----------- |
 | `previous_snapshot_id` | STRING | 公開操作前の現在のスナップショット ID（存在しない場合は NULL） |
-| `current_snapshot_id` | STRING | 公開後に作成され、現在のスナップショットに設定された新しい ID |
+| `current_snapshot_id` | STRING | 公開後に新たに作成され、現在のスナップショットとして設定された ID |
 
 **例：**
 
@@ -3172,19 +3256,19 @@ EXECUTE publish_changes("wap_id" = "test_wap_001");
 
 **注意事項：**
 
-1. この操作は WHERE 句、PARTITION/PARTITIONS 句をサポートしません。
-2. `write.wap.enabled = true` の Iceberg テーブルで、`wap.id` を使用して生成された WAP スナップショットに対してのみ意味があります。
-3. 指定した `wap_id` に対応するスナップショットが見つからない場合、操作はエラーで失敗します。
-4. 公開後は、新しいスナップショットが現在のスナップショットになります。
+1. この操作は WHERE 句にも PARTITION/PARTITIONS 句にも対応していません。
+2. `write.wap.enabled = true` が設定された Iceberg テーブルで、`wap.id` による WAP スナップショットが生成されている場合にのみ意味があります。
+3. 指定した `wap_id` に対応するスナップショットが見つからない場合、操作は失敗してエラーを返します。
+4. 公開後、新しいスナップショットが現在のスナップショットになります。
 5. 公開前にスナップショットが存在しない場合、`previous_snapshot_id` は NULL になることがあります。
 
 ## Iceberg テーブルの最適化 {#iceberg-table-optimization}
 
-### データファイル分布の確認 {#view-data-file-distribution}
+### データファイルの分布を確認する {#view-data-file-distribution}
 
-次の SQL で Iceberg テーブルのデータ分布と delete file 数を分析し、`rewrite_data_files` などの最適化が必要かどうかを判断できます。
+次の SQL を使用して Iceberg テーブルのデータ分布と削除ファイル数を分析し、`rewrite_data_files` などの最適化が必要かどうかを判断できます。
 
-- データファイルのサイズ分布を表示します。小さなファイルが多すぎないか確認できます。
+- データファイルのサイズ分布を表示します。小さなファイルが多すぎるかどうかを確認できます。
 
     ```sql
     SELECT
@@ -3209,7 +3293,7 @@ EXECUTE publish_changes("wap_id" = "test_wap_001");
     +-----------+---------+
     ```
 
-- データファイル数と delete file 数を表示します。
+- データファイルと削除ファイルの数を表示します。
 
     ```sql
     SELECT
@@ -3238,48 +3322,48 @@ EXECUTE publish_changes("wap_id" = "test_wap_001");
 
 ### Dangling Delete {#dangling-delete}
 
-場合によっては、`rewrite_data_files` アクションの実行後に、特定の Position Delete への参照が Snapshot メタデータから削除されないことがあります（Dangling Delete）。この状態でメタデータの行数情報を直接使用すると、結果が正しくない可能性があります。
+場合によっては、`rewrite_data_files` アクションの実行後も、特定の Position Delete への参照がスナップショットメタデータから削除されないことがあります（Dangling Delete）。この状態でメタデータ内の行数情報をそのまま使用すると、結果が不正確になる可能性があります。
 
-そのためデフォルトでは、`COUNT(*)` クエリで Position Delete ファイルが見つかると、COUNT プッシュダウン最適化を有効にせず、ファイルを直接読み取って実際の `COUNT(*)` 結果を取得します。ただし、この方法には時間がかかります。
+そのため、デフォルトでは、`COUNT(*)` クエリで Position Delete ファイルが見つかった場合、COUNT のプッシュダウン最適化を有効にせず、ファイルを直接読み取って実際の `COUNT(*)` 結果を取得します。ただし、この方法には時間がかかります。
 
-Dangling Delete の問題がないと確認できる場合は、Doris のセッション変数 `ignore_iceberg_dangling_delete` を使用してこのチェックを省略できます。デフォルトは `false` です。`true` に設定すると、システムはメタデータ内の行数情報に基づく `COUNT(*)` 結果を直接返し、クエリ効率を高めます。
+Dangling Delete の問題がないことを確認できる場合は、Doris のセッション変数 `ignore_iceberg_dangling_delete` を使用してこの確認を省略できます。この変数のデフォルトは `false` です。`true` に設定すると、システムはメタデータ内の行数情報に基づいて `COUNT(*)` の結果を直接返し、クエリ効率を高めます。
 
-この機能はバージョン 3.1.4 と 4.0.3 以降でサポートされます。
+この機能はバージョン 3.1.4 および 4.0.3 以降でサポートされています。
 
 ## 付録 {#appendix}
 
-### `rewrite_data_files` のファイル選択戦略 {#rewrite_data_files-file-selection-strategy}
+### `rewrite_data_files` のファイル選択方法 {#rewrite_data_files-file-selection-strategy}
 
-このセクションでは、書き換えるファイルの選択ロジックを説明します。次の SQL クエリを使用して、システムテーブルの情報から書き換え対象となるファイルを分析することもできます。実際の書き換え操作を実行する前に、その動作を調査・理解するのに役立ちます。
+このセクションでは、書き換え対象ファイルを選択するロジックを説明します。次の SQL クエリを使用すると、システムテーブルの情報に基づいて、どのファイルが書き換え対象になるかを分析できます。実際の書き換え操作を実行する前に、その動作を確認して問題を調査するのに役立ちます。
 
 書き換え操作では、二段階のフィルタリングとグループ化を使用します。
 
 1. 第 1 段階：ファイル単位のフィルタリング
 
-    まず、ファイル単位の条件でフィルタリングします。次の条件の少なくとも一つを満たすファイルのみが書き換え候補になります。
+    まずファイル単位の条件でフィルタリングします。次のいずれかの条件を満たすファイルだけが、書き換え候補になります。
 
     1. **ファイルサイズが範囲外**：ファイルが `min-file-size-bytes` より小さい、または `max-file-size-bytes` より大きい。
-    2. **delete file が多すぎる**：関連する delete file 数 >= `delete-file-threshold`。
-    3. **削除比率が高い**：削除済みレコードの比率 >= `delete-ratio-threshold`。
+    2. **削除ファイルが多すぎる**：関連する削除ファイルの数 >= `delete-file-threshold`。
+    3. **削除率が高い**：削除済みレコードの比率 >= `delete-ratio-threshold`。
 
-    **delete file 条件に関する注記：** delete file に関する条件（`delete-file-threshold` と `delete-ratio-threshold`）は書き換え対象ファイルの選択に影響しますが、システムテーブルへの SQL クエリでは正確に計算できません。現在のシステムテーブルの情報だけでは、delete file がどのデータファイルに影響するかを正確に判定できないためです。delete file は特定のデータファイルにのみ影響する場合があり（特に Position Delete ファイル）、delete file とデータファイルの関連付けには、現在のシステムテーブルでは利用できない詳細なメタデータが必要です。実際の書き換え操作では、システムテーブルに公開されない詳細なメタデータに基づいてこれらの条件を評価します。
+    **削除ファイルに関する条件の注記：** 削除ファイルに関する条件（`delete-file-threshold` と `delete-ratio-threshold`）は、書き換え対象ファイルの選択に影響しますが、システムテーブルに対する SQL クエリでは正確に計算できません。現在のシステムテーブルの情報だけでは、削除ファイルの影響を受けるデータファイルを正確に特定できないためです。削除ファイルは特定のデータファイルだけに影響する場合があり（特に Position Delete ファイル）、削除ファイルとデータファイルの関連付けには、現在のシステムテーブルにはない詳細なメタデータが必要です。実際の書き換え操作では、システムテーブルで公開されない詳細なメタデータに基づいてこれらの条件を評価します。
 
 2. 第 2 段階：BinPack によるグループ化とグループ単位のフィルタリング
 
-    ファイル単位のフィルタリング後、まずパーティションごとにファイルを分け、各パーティション内でファイルサイズと `max-file-group-size-bytes` に基づく **BinPack アルゴリズム**でグループ化します。BinPack アルゴリズムは、書き換え操作を最適化するようファイルをグループへ配置します。
+    ファイル単位のフィルタリング後、ファイルをパーティションごとに分けます。次に、各パーティション内でファイルサイズと `max-file-group-size-bytes` に基づく **BinPack アルゴリズム**を使用してファイルをグループ化します。BinPack アルゴリズムは、書き換え操作を最適化するためにファイルを効率よくグループにまとめます。
 
-    グループ化後、グループ単位の条件でファイルグループをフィルタリングします。次の条件の少なくとも一つを満たすファイルグループが書き換えられます。
+    グループ化後、グループ単位の条件でファイルグループをフィルタリングします。次のいずれかを満たすグループが書き換えられます。
 
     1. **入力ファイルが十分にある**：グループ内のファイル数 > 1、かつファイル数 >= `min-input-files`。
-    2. **内容量が十分にある**：グループ内のファイル数 > 1、かつ合計サイズ > `target-file-size-bytes`。
-    3. **内容量が多すぎる**：グループの合計サイズ > `max-file-group-size-bytes`。
-    4. **delete file に関する問題を持つファイルが含まれる**：グループ内の少なくとも一つのファイルで、delete file が多すぎるか削除比率が高い。
+    2. **データ量が十分にある**：グループ内のファイル数 > 1、かつ合計サイズ > `target-file-size-bytes`。
+    3. **データ量が多すぎる**：グループの合計サイズ > `max-file-group-size-bytes`。
+    4. **削除ファイルに関する問題があるファイルを含む**：グループ内の少なくとも一つのファイルで、削除ファイルが多すぎるか削除率が高い。
 
-    **BinPack によるグループ化に関する注記：** 各パーティション内のファイルをグループ化する BinPack アルゴリズムは複雑な最適化アルゴリズムであり、システムテーブルへの SQL クエリでは正確に再現できません。このアルゴリズムはファイルサイズと `max-file-group-size-bytes` を考慮してファイルをグループへ配置するため、単純なパーティション単位のグループ化とは結果が異なる場合があります。そのため、以下の SQL クエリで特定できるのはファイル単位の条件を満たすファイルのみであり、最終的に書き換えられるファイルグループを正確に計算することはできません。
+    **BinPack によるグループ化の注記：** 各パーティション内のファイルをグループ化する BinPack アルゴリズムは複雑な最適化アルゴリズムであり、システムテーブルに対する SQL クエリでは正確に再現できません。ファイルサイズと `max-file-group-size-bytes` を考慮してファイルをグループにまとめるため、単純なパーティション単位のグループ化とは結果が異なる場合があります。したがって、以下の SQL クエリで特定できるのはファイル単位の条件を満たすファイルだけであり、最終的に書き換えられるファイルグループを正確に算出することはできません。
 
-クエリ戦略の例を次に示します。
+クエリ方法の例を示します。
 
-- クエリ 1：ファイル単位の条件を満たすファイルの特定
+- クエリ 1：ファイル単位の条件を満たすファイルを特定する
 
     このクエリは、ファイル単位の条件（ファイルサイズ）を満たし、書き換え候補となるファイルを特定します。
 
@@ -3318,11 +3402,11 @@ Dangling Delete の問題がないと確認できる場合は、Doris のセッ�
     5 rows in set
     ```
 
-    **注記：** このクエリで特定できるのは、ファイル単位の条件（ファイルサイズ）を満たすファイルのみです。実際に書き換えられるファイルグループは BinPack アルゴリズムによるグループ化に依存し、SQL クエリでは正確に再現できません。このクエリで特定したファイルが BinPack アルゴリズムによって異なるグループに配置されたり、グループ単位の条件によって一部のグループが除外されたりする場合があります。
+    **注：** このクエリで特定できるのは、ファイル単位の条件（ファイルサイズ）を満たすファイルだけです。実際に書き換えられるファイルグループは BinPack のグループ化アルゴリズムに依存し、SQL クエリでは正確に再現できません。このクエリで特定されたファイルが BinPack によって別の形でグループ化されたり、グループ単位の条件によって一部のグループが除外されたりする場合があります。
 
-- クエリ 2：全体統計の概要
+- クエリ 2：全体の統計概要
 
-    このクエリは、ファイル単位の条件を満たすファイルの全体的な統計を示します。
+    このクエリは、ファイル単位の条件を満たすファイルに関する全体の統計を示します。
 
     ```sql
     -- Set parameters (adjust according to your rewrite parameters)
@@ -3381,11 +3465,11 @@ Dangling Delete の問題がないと確認できる場合は、Doris のセッ�
 
     **注意事項：**
 
-    - 例の `iceberg_table` を実際のテーブル名に置き換えてください。
+    - 例中の `iceberg_table` を実際のテーブル名に置き換えてください。
     - 実際の書き換えパラメータに合わせて、パラメータ値（`@min_file_size_bytes`、`@max_file_size_bytes`）を調整してください。
-    - 上記のデフォルト値は、デフォルトの書き換えパラメータ（min-file-size-bytes = target-file-size-bytes * 0.75、max-file-size-bytes = target-file-size-bytes * 1.8）に対応します。
+    - 上に示したデフォルト値は、書き換えパラメータのデフォルト（min-file-size-bytes = target-file-size-bytes * 0.75、max-file-size-bytes = target-file-size-bytes * 1.8）に対応します。
 
-- スナップショットと branch の関係を表示する：
+- スナップショットとブランチの関係を確認する：
 
     ```sql
     SELECT

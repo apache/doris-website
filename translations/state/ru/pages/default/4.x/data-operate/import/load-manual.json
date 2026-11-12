@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/load-manual",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/load-manual.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/load-manual.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6a6f78369e10ff0e11bca0c19629e265fd298898b1d05f7fc19c8a9341b0274c",
+    "sourceTechnicalHash": "dce87406b77f23aa1b7a41be130703136473f01cc2affeefafe6bcbec1c90870",
+    "targetHash": "1882703fad6225422dc3d8021264d00f86ff93e95365e39d8a7eb3f6ee934043",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:34:40.551Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6a6f78369e10ff0e11bca0c19629e265fd298898b1d05f7fc19c8a9341b0274c",
+      "targetHash": "1882703fad6225422dc3d8021264d00f86ff93e95365e39d8a7eb3f6ee934043",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

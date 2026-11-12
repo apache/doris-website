@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/incremental/quick-start.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/quick-start.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "84c6fd2c6738bfc28b3e903e349b21f1d320c16e51c1cdefa24cda75e44d1217",
-    "sourceTechnicalHash": "65fee7497d773f28d1f85d87e96022f67aca75c902f378a84d513ec94c955a71",
-    "targetHash": "2d1b2cb3b050e149886226cbd5b40ee93583573ec21e4a2d6294822a8a852bea",
+    "sourceCommit": "67589e0c2bf5c0bb50ed71c34b0760e1a293b478",
+    "sourceHash": "040a1d85e7ccfb5bf653013824cf5e3135baddeff93663f2db08c85aff8ddfda",
+    "sourceTechnicalHash": "73a44c69162124bb152cfa7ea029dc69bbd76d3ce1e0b92e5394f3b40a585ba0",
+    "targetHash": "dc1f273c805c5b27e0862f51630d32f060c4f323a7211dbdc09def1e2fe8cf6d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T16:06:57.644Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T13:20:48.999Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "040a1d85e7ccfb5bf653013824cf5e3135baddeff93663f2db08c85aff8ddfda",
+      "targetHash": "dc1f273c805c5b27e0862f51630d32f060c4f323a7211dbdc09def1e2fe8cf6d",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"min_delta\"]; received [\"inlineCode\",null,null,\"orders\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"min_delta\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5.0.0\",\"6\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5.0.0\",\"6\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"min_delta\"]; received [\"inlineCode\",null,null,\"orders\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"min_delta\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5.0.0\",\"6\"]; received [\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5.0.0\",\"6\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"min_delta\"]; received [\"inlineCode\",null,null,\"orders\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"min_delta\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"min_delta\"]; received [\"inlineCode\",null,null,\"orders\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"min_delta\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

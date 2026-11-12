@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/bootstrap-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/bootstrap-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/bootstrap-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "fa0ec3dbd6d21135db54408bf5813c77d358ea9be66b7f7a621b75a11d750be8",
+    "sourceTechnicalHash": "d646f14a9aece6f565ea60a0fdc09473d04e78228bd812fb07bb3d75b780c908",
+    "targetHash": "c2f77b96bf172088e5a4e48bb35507bd7cf5ec3c8e30d2f8f38a95cc2fbacf43",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:14:05.046Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fa0ec3dbd6d21135db54408bf5813c77d358ea9be66b7f7a621b75a11d750be8",
+      "targetHash": "c2f77b96bf172088e5a4e48bb35507bd7cf5ec3c8e30d2f8f38a95cc2fbacf43",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

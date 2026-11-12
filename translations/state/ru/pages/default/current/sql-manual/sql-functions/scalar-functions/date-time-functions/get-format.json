@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/get-format",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/get-format.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/get-format.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "af7165091ce13a3b0373acc54d001158a3e5841d0d82889925bc3d660d8facaf",
+    "sourceTechnicalHash": "35125e6a180ec25e6dfdc32cb4620382309b45a493c4ff96c9a7a5d015cf4e61",
+    "targetHash": "a1ca1937110294bb8b3b9a351038354f2ef73b6cecff8e83c2a74e76c5abc27f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:59:58.771Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "af7165091ce13a3b0373acc54d001158a3e5841d0d82889925bc3d660d8facaf",
+      "targetHash": "a1ca1937110294bb8b3b9a351038354f2ef73b6cecff8e83c2a74e76c5abc27f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

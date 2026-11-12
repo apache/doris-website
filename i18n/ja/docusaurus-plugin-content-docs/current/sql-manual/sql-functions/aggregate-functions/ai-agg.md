@@ -2,37 +2,43 @@
 {
     "title": "AI_AGG",
     "language": "ja",
-    "description": "ユーザーが指定した指示に従い、大規模言語モデルを使って特定の列を集約します。"
+    "description": "ユーザーが指定した指示に従い、大規模言語モデルを使用して特定のカラムを集約します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-ユーザーが指定した指示に従い、大規模言語モデルを使って特定の列を集約します。
+ユーザーが指定した指示に従い、大規模言語モデルを使用して特定のカラムを集約します。
 
-## 構文
+## 構文 {#syntax}
 
-`AI_AGG([<resource_name>], <expr>, <instruction>)`
+```sql
+AI_AGG([<resource_name>], <expr>, <instruction>)
+```
 
-## パラメータの説明
+<a id="parameter-description"></a>
+
+## パラメータ {#parameters}
 
 | パラメータ | 説明 |
-| --- | --- |
-| `<resource_name>` | 使用するリソース名。省略可能です。 |
-| `<expr>` | 集約するテキスト列。個々のテキストは 128K 文字未満である必要があります。 |
+| --------- | ---- |
+| `<resource_name>` | 指定するリソース名。省略可能です。 |
+| `<expr>` | 集約するテキストカラム。単一のテキストの文字数は 128K 未満である必要があります。 |
 | `<instruction>` | 実行する指示。リテラルのみ指定できます。 |
 
-## 戻り値
+## 戻り値 {#return-value}
+
+バージョン 4.1.5 以降、AI_AGG は JSON 配列を含むテキストも含め、モデルが生成したテキスト全体を単一の結果として返します。その配列を複数の集約結果に分割することはありません。OpenAI Responses 形式では、推論やツール項目などのテキスト以外の出力をスキップし、メッセージ項目の `output_text` を連結します。レスポンスにステータスが含まれる場合、その値は `completed` である必要があります。レスポンスが未完了の場合やテキストが含まれない場合は、エラーが報告されます。
 
 集約結果を含む文字列を返します。
 
-すべての入力値が NULL の場合は NULL を返します。
+入力値がすべて NULL の場合は、NULL を返します。
 
-結果は言語モデルが生成するため、出力は固定されません。
+結果は言語モデルによって生成されるため、出力は固定されていません。
 
-## 例
+## 例 {#example}
 
-次のテーブルは、カスタマーサポートの問い合わせを模しています。
+次のテーブルは、カスタマーサポートのチケットを模したものです。
 ```sql
 CREATE TABLE support_tickets (
     ticket_id      BIGINT,
@@ -54,7 +60,7 @@ INSERT INTO support_tickets VALUES
 (5, 'Eve', 'Login Failure', 'Getting redirected back to login after entering 2FA code.');
 ```
 
-`AI_AGG` を使用すると、問題の主題ごとに顧客の問い合わせを要約できます。
+`AI_AGG` を使用して、問題の件名ごとに顧客の問題を要約できます。
 ```sql
 SELECT
     subject,
@@ -79,7 +85,7 @@ GROUP BY subject;
 
 ケース 2：
 
-次のテーブルは、EC サイトのユーザーレビューを模しています。
+次のテーブルは、EC プラットフォームのユーザーレビューテーブルを模したものです。
 ```sql
 CREATE TABLE product_reviews (
     review_id   BIGINT,
@@ -105,7 +111,7 @@ INSERT INTO product_reviews VALUES
 (9, 1004, 5, '降噪给力，地铁里也能安静听歌，续航一周充一次。');
 ```
 
-AI_AGG を使って要約・評価する場合:
+AI_AGG を使用して要約・評価します。
 ```sql
 SET default_ai_resource = 'ai_resource_name';
 SELECT

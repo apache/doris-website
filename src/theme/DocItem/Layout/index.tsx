@@ -21,6 +21,7 @@ import MobileSidebarDrawer from './MobileSidebarDrawer';
 import SourceFallback from './SourceFallback';
 import TranslationStatus from './TranslationStatus';
 import {docTranslation} from '@site/src/utils/translation';
+import {useContentRouteData} from '@site/src/utils/contentRoute';
 import { isFallbackSource as usesEnglishFallback, isTranslatedLocale } from '@site/src/utils/localization';
 
 import styles from './styles.module.css';
@@ -64,7 +65,8 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
     const isZH = currentLocale === 'zh-CN';
     // metadata.source is the file actually selected by the content plugin,
     // including its per-file fallback. Do not infer translation from the URL.
-    const isFallbackSource = usesEnglishFallback(metadata.source, currentLocale);
+    const page = useContentRouteData();
+    const isFallbackSource = page?.fallback ?? usesEnglishFallback(metadata.source, currentLocale);
     const translation = isTranslatedLocale(currentLocale) ? docTranslation(metadata) : undefined;
     const docContent = translation ? (
         <>

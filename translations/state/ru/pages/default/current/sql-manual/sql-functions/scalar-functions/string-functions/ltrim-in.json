@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "16dcaad7f2b89ef02dadee1186f5faef50afea86bc7983d7bbd2862f168c4121",
+    "sourceTechnicalHash": "e1ee3aab3318fc708efc9292adea91ad825a1b5e4a28362972d0a2fae704dbd7",
+    "targetHash": "3efbe19b547bae4dbd2b1a177eb97fb93850e7be1a435cc7a79ddb392580fb30",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:45:54.591Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "16dcaad7f2b89ef02dadee1186f5faef50afea86bc7983d7bbd2862f168c4121",
+      "targetHash": "3efbe19b547bae4dbd2b1a177eb97fb93850e7be1a435cc7a79ddb392580fb30",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

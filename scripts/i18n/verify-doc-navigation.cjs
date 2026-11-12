@@ -7,6 +7,13 @@ const cheerio = require('cheerio');
 const {inventoryBaseline} = require('./state.cjs');
 const root = path.resolve(__dirname, '../..');
 
+async function configuredDefaultVersion(siteDir = root) {
+    const {loadFreshModule} = require('@docusaurus/utils');
+    const {DEFAULT_VERSION} = await loadFreshModule(path.join(siteDir, 'src/constant/version.ts'));
+    assert(typeof DEFAULT_VERSION === 'string' && DEFAULT_VERSION, 'Missing configured default documentation version');
+    return DEFAULT_VERSION;
+}
+
 function verifyRedirect(html, target) {
     const $ = cheerio.load(html);
     const origin = 'https://doris.apache.org';
@@ -21,12 +28,13 @@ function verifyRedirect(html, target) {
 }
 
 function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale), devOnly = false,
-    manifest = path.join(root, '.i18n-build/manifests', `${locale}.json`)}) {
+    defaultVersion,
+    manifest = path.join(root, '.i18n-build/manifests', `${locale}.json`),
+    scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'))}) {
     const summary = JSON.parse(fs.readFileSync(path.join(snapshot, 'summary.json'), 'utf8'));
     assert.equal(summary.locale, locale, 'Inventory belongs to a different locale');
     const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
     assert.equal(data.locale, locale, 'Translation manifest belongs to a different locale');
-    const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     const dictionary = JSON.parse(fs.readFileSync(path.join(root, `i18n/${locale}/code.json`), 'utf8'));
     const filename = route => path.join(site, decodeURIComponent(route), 'index.html');
     const read = route => {
@@ -35,7 +43,7 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
     };
     let routes = 0;
     const checks = [];
-    for (const group of scope.groups.filter(group => !devOnly || group.version !== '4.x')) {
+    for (const group of scope.groups.filter(group => !group.kind && (!devOnly || group.version !== '4.x'))) {
         // Use the current build manifest, not a historical snapshot allowlist.
         const pages = data.pages.filter(page => page.pluginId === group.pluginId && page.version === group.version && !page.draft);
         assert(pages.length, `Missing built native group: ${group.id}`);
@@ -46,21 +54,23 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
         // Native standalone docs can be current without belonging to a sidebar.
         // Cover their routes above, and inspect navigation on a sidebar member.
         const candidates = [...pages.filter(page => page.status === 'current' && page.indexable), ...pages];
-        const representative = candidates.find(page => read(page.permalink)('.theme-doc-sidebar-container').length) ?? pages[0];
+        const representative = group.pluginId === 'course' ? pages[0]
+            : candidates.find(page => read(page.permalink)('.theme-doc-sidebar-container').length) ?? pages[0];
         const $ = read(representative.permalink);
-        assert.equal($('.theme-doc-markdown').attr('lang'), representative.contentLocale, representative.permalink);
-        const sidebar = $('.theme-doc-sidebar-container');
+        assert.equal($('.theme-doc-markdown,.course-doc-content').attr('lang'), representative.contentLocale, representative.permalink);
+        const sidebar = $(group.pluginId === 'course' ? '.course-player__rail' : '.theme-doc-sidebar-container');
         assert(sidebar.length, `Missing document sidebar: ${representative.permalink}`);
         const links = sidebar.find('a[href]').map((_, node) => $(node).attr('href')).get();
         for (const link of links.filter(link => link.startsWith(`/${locale}/`))) read(new URL(link, 'https://doris.apache.org').pathname);
         const domains = [];
-        if (group.pluginId === 'default') {
+        if (group.pluginId === 'default' || group.pluginId === 'community') {
             const label = dictionary['docs.navigation.sections']?.message ?? 'Documentation sections';
             const nav = $('nav').filter((_, node) => $(node).attr('aria-label') === label);
             assert(nav.length, `Missing document domain navigation: ${representative.permalink}`);
             for (const node of nav.find('details a[href]').toArray()) {
                 const link = $(node).attr('href');
-                assert(link.startsWith(`/${locale}/docs/`), `Wrong domain locale: ${link}`);
+                const routeBase = group.pluginId === 'community' ? 'community' : 'docs';
+                assert(link.startsWith(`/${locale}/${routeBase}/`), `Wrong domain locale or plugin: ${link}`);
                 read(new URL(link, 'https://doris.apache.org').pathname);
                 domains.push($(node).text());
             }
@@ -70,7 +80,10 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
             contentLocale: representative.contentLocale, sidebarLinks: links.length, domains: [...new Set(domains)]});
     }
     const entries = [];
-    if (!devOnly) entries.push({entry: `/${locale}/docs/`, pluginId: 'default', version: '4.x'});
+    if (!devOnly) {
+        assert(typeof defaultVersion === 'string' && defaultVersion, 'Provide the configured default documentation version');
+        entries.push({entry: `/${locale}/docs/`, pluginId: 'default', version: defaultVersion});
+    }
     if (scope.groups.some(group => group.pluginId === 'community'))
         entries.push({entry: `/${locale}/community/`, pluginId: 'community', version: 'current'});
     for (const {entry, pluginId, version} of entries) {
@@ -93,18 +106,17 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
         read(target);
         checks.push({entry, target});
     }
-    return {locale, snapshotSourceCommit: summary.sourceCommit, manifest, devOnly, routes, bodyLanguageSamples: checks.filter(check => check.sample).length, checks};
+    return {locale, snapshotSourceCommit: summary.sourceCommit, manifest, devOnly, defaultVersion, routes, bodyLanguageSamples: checks.filter(check => check.sample).length, checks};
 }
-if (require.main === module) {
-    try {
+async function main() {
         const args = process.argv.slice(2);
         const option = name => args.includes(name) ? args[args.indexOf(name) + 1] : undefined;
         const locale = option('--locale') ?? 'ja';
-        const result = verify({site: path.resolve(option('--site')), locale,
+        const result = verify({site: path.resolve(option('--site')), locale, defaultVersion:await configuredDefaultVersion(),
             snapshot: option('--snapshot') ? path.resolve(option('--snapshot')) : undefined,
             manifest: option('--manifest') ? path.resolve(option('--manifest')) : undefined, devOnly: args.includes('--dev-only')});
         if (option('--output')) fs.writeFileSync(option('--output'), JSON.stringify(result, null, 2) + '\n');
         console.log(JSON.stringify(result));
-    } catch (error) {console.error(error); process.exitCode = 1;}
 }
-module.exports = {verify, verifyRedirect};
+if (require.main === module) main().catch(error => {console.error(error); process.exitCode = 1;});
+module.exports = {verify, verifyRedirect, configuredDefaultVersion};

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/quantile-union",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/quantile-union.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/quantile-union.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4fa605d33bbd4971b7a9dcbc875a976806f2cdc456dd8053bb10c4e57935835c",
+    "sourceTechnicalHash": "4928cd8f5e5f90c530d9ed29532f6a1ab1e74a3a904622bf1fb5e17ebea4dd0e",
+    "targetHash": "883f5486d58b2b4414817882b33258d0a8cc4da1be84c982ab4cb6a9d4c93be7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:24:26.938Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4fa605d33bbd4971b7a9dcbc875a976806f2cdc456dd8053bb10c4e57935835c",
+      "targetHash": "883f5486d58b2b4414817882b33258d0a8cc4da1be84c982ab4cb6a9d4c93be7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

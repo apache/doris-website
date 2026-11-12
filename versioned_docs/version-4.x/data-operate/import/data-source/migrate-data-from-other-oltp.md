@@ -32,9 +32,9 @@ The following table summarizes the main migration options that Doris supports. Y
 | Flink Doris Connector (CDC) | Real-time full + incremental synchronization | Real-time | Supported | Supported (INSERT / UPDATE / DELETE) |
 | Spark Connector | Batch data writes in the Spark stack | Offline | No | No |
 | Streaming Job | Built-in continuous synchronization from MySQL / PostgreSQL in Doris | Streaming (continuous) | Supported | Supported |
-| Third-party tools (DataX / SeaTunnel / CloudCanal) | Existing synchronization platforms, visual operations | Offline / real-time | Supported | Depends on the tool |
+| Third-party tools (NineData / DataX / SeaTunnel / CloudCanal) | Existing synchronization platforms, visual operations | Offline / real-time | Supported | Supported |
 
-> Note: If you need to complete the migration without introducing an external compute engine, use **Multi-Catalog** or **Streaming Job**. If you need real-time incremental synchronization, use **Flink Doris Connector + CDC** or **Streaming Job**.
+> Note: If you need to complete the migration without introducing an external compute engine, use **Multi-Catalog** or **Streaming Job**. If you need real-time incremental synchronization, use **Flink Doris Connector + CDC**, **Streaming Job**, or **NineData** for MySQL-compatible sources to Doris.
 
 ---
 
@@ -249,6 +249,7 @@ For more details, see [Postgres / MySQL Continuous Load](../import-way/streaming
 
 In addition to the native options above, you can use common third-party synchronization tools from the community. These suit scenarios where you already have a synchronization platform or want to manage tasks through a visual interface:
 
+- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
 - [DataX](../../../connection-integration/data-integration/datax.md)
 - [SeaTunnel](../../../connection-integration/data-integration/seatunnel.md)
 - [CloudCanal](../../../connection-integration/data-integration/cloudcanal.md)

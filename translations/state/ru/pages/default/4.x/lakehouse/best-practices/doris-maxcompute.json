@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-maxcompute",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-maxcompute.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-maxcompute.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "fc10288f13cfb3584d96da1e727032497995d7c2c5bbd47c3efe4b5d7ed7a687",
+    "sourceTechnicalHash": "3fc2451a87dd722bc00648647c11296dd5efd3fda4779ad65867cd62867c5b5c",
+    "targetHash": "e59b0fa6da039ff55d94af03f94eeb919cafd952b360fdb2153e7b048ee4c5e8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:18.042Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fc10288f13cfb3584d96da1e727032497995d7c2c5bbd47c3efe4b5d7ed7a687",
+      "targetHash": "e59b0fa6da039ff55d94af03f94eeb919cafd952b360fdb2153e7b048ee4c5e8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/best-practices/doris-maxcompute",
+        "sourcePath": "docs/lakehouse/best-practices/doris-maxcompute.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-maxcompute.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "fc10288f13cfb3584d96da1e727032497995d7c2c5bbd47c3efe4b5d7ed7a687",
+        "targetHash": "e59b0fa6da039ff55d94af03f94eeb919cafd952b360fdb2153e7b048ee4c5e8",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

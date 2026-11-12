@@ -154,7 +154,8 @@
         }
     }
 
-    &__help {
+    &__help,
+    &__language-help {
         margin-bottom: 1rem;
         color: var(--ifm-color-emphasis-700);
     }

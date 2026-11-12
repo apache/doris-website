@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-streamloader",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-streamloader.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-streamloader.md",
+    "sourceCommit": "d058196f23d866a507f3d4c6b1186c98f0261669",
+    "sourceHash": "dd5ac0749629e2b676a658181aa07410df80f8bc8f6024c632f04a3d4ba8bda4",
+    "sourceTechnicalHash": "05d17d1ed40814da03b14d324cbf100422e41dd9033198db045d763d6625fb7a",
+    "targetHash": "ea7e545eddf51482639428d5d68d6cf16dac6b478d7065d993c8ee8f70df0f91",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T05:37:33.662Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dd5ac0749629e2b676a658181aa07410df80f8bc8f6024c632f04a3d4ba8bda4",
+      "targetHash": "ea7e545eddf51482639428d5d68d6cf16dac6b478d7065d993c8ee8f70df0f91",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

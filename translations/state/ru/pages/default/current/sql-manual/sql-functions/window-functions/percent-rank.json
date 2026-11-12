@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/percent-rank",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/percent-rank.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/percent-rank.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bb85bf2c652043d0f103e3c7d8c3d81adc75f4014960418b3b893ea71fcc432c",
+    "sourceTechnicalHash": "877871eaeb89c1e5c0ea2438f1947e1ae25fa15597051168df3ed0bdb7d879a8",
+    "targetHash": "c98568130b817e13ec53f9db4565df1fe8689b55bde9803686536566f233fd8f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T03:11:18.604Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bb85bf2c652043d0f103e3c7d8c3d81adc75f4014960418b3b893ea71fcc432c",
+      "targetHash": "c98568130b817e13ec53f9db4565df1fe8689b55bde9803686536566f233fd8f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "4.x",
+        "docId": "sql-manual/sql-functions/window-functions/percent-rank",
+        "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/percent-rank.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/percent-rank.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "bb85bf2c652043d0f103e3c7d8c3d81adc75f4014960418b3b893ea71fcc432c",
+        "targetHash": "c98568130b817e13ec53f9db4565df1fe8689b55bde9803686536566f233fd8f",
+        "commit": "07e65036634d07aae961f7c4140f50dc2fbba213",
+        "pr": "https://github.com/apache/doris-website/pull/4470"
+      },
+      "recoveryReason": "explicitly-requested-final14-recovery",
+      "historicalModelCalls": 3,
+      "lifetimeModelCalls": 3,
+      "historicalBatch": "20261022T115633Z-016"
+    }
+  }
+}

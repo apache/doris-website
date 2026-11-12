@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/data-type-mapping-mysql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
+    "sourceHash": "2d53b2d32d9aa40242e5c9cd02357afee01dec5c935d94b4e49b6884d500fec8",
+    "sourceTechnicalHash": "5d8d68cfb5888fd3e9d8f6d4a2a1b88d2ffe560dff416479496870d3130eb91f",
+    "targetHash": "770f8633db3c9f7006310beb4cd443e8e0361ca423829f943ae631778bfe3821",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-04T08:42:40.827Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2d53b2d32d9aa40242e5c9cd02357afee01dec5c935d94b4e49b6884d500fec8",
+      "targetHash": "770f8633db3c9f7006310beb4cd443e8e0361ca423829f943ae631778bfe3821",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: справочная информация / сопоставление типов данных -->\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"tinyInt1isBit=true\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"yearIsDateType=true\"]; received [\"inlineCode\",null,null,\"tinyInt1isBit=true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 26: expected [\"inlineCode\",null,null,\"tinyInt1isBit=true\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"yearIsDateType=true\"]; received [\"inlineCode\",null,null,\"tinyInt1isBit=true\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"yearIsDateType=true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+        "blob": "d003c0256a473f37d261ec0d805473b669eb9929"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+        "blob": "8a483ad034fb254fb0805be7d99080f347629a70"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/routines",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/routines.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/routines.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "84d4e47f17d401a03553caa68801ac7c31de1662a940760d86050638434258be",
+    "sourceTechnicalHash": "ee368466dfd57b67e7f262af0c2b50a5cc5682e66f3f1e9ee9d7079d4eba7a70",
+    "targetHash": "83086337d5f32801b0400edf3a9ea5d71d6b0a5d2461447e86844cf20bf2c513",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:42:00.674Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "84d4e47f17d401a03553caa68801ac7c31de1662a940760d86050638434258be",
+      "targetHash": "83086337d5f32801b0400edf3a9ea5d71d6b0a5d2461447e86844cf20bf2c513",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

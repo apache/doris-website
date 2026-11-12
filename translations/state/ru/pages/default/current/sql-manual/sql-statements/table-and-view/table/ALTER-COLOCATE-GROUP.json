@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "69fcf417df7b5229a1a246b69d93c3463def9d6d38e51c694eeeac286d8d163f",
+    "sourceTechnicalHash": "da89dcb71da7021cf818c13a520443d7e6b229916c6fe67c371ed1aeb7b952be",
+    "targetHash": "62e3561d0ef7339f7fb5fb9f6a292de685b045d0fe762f48336a380a4d19b876",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:42:44.432Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "69fcf417df7b5229a1a246b69d93c3463def9d6d38e51c694eeeac286d8d163f",
+      "targetHash": "62e3561d0ef7339f7fb5fb9f6a292de685b045d0fe762f48336a380a4d19b876",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

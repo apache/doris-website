@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/last-value",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/last-value.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/last-value.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "55cd266ecfa3e459ed157e58fb26c011e926bc857045e76fa1c14a938f28bd45",
+    "sourceTechnicalHash": "e29f2c0ad08638778d2bc18bf7d79a5d7fdb620d7ec6194d3b6d36f911bc1d06",
+    "targetHash": "9c438a622330f6eb56a03bae6621d2b059d401173ff0c426b79ed4ec61290a06",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T03:11:18.090Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "55cd266ecfa3e459ed157e58fb26c011e926bc857045e76fa1c14a938f28bd45",
+      "targetHash": "9c438a622330f6eb56a03bae6621d2b059d401173ff0c426b79ed4ec61290a06",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "4.x",
+        "docId": "sql-manual/sql-functions/window-functions/last-value",
+        "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/last-value.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/last-value.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "55cd266ecfa3e459ed157e58fb26c011e926bc857045e76fa1c14a938f28bd45",
+        "targetHash": "9c438a622330f6eb56a03bae6621d2b059d401173ff0c426b79ed4ec61290a06",
+        "commit": "07e65036634d07aae961f7c4140f50dc2fbba213",
+        "pr": "https://github.com/apache/doris-website/pull/4470"
+      },
+      "recoveryReason": "explicitly-requested-final14-recovery",
+      "historicalModelCalls": 3,
+      "lifetimeModelCalls": 3,
+      "historicalBatch": "20261022T115633Z-016"
+    }
+  }
+}

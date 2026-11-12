@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/tencent-cos",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/tencent-cos.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/tencent-cos.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ef59f346e2b29daf6c3e8fcd340bb972614102b50d0f6249f0576bcf2733c77d",
+    "sourceTechnicalHash": "79b83b3f2db687dc203961665adc0e31419694d76f6cf9ef56d05567c1398335",
+    "targetHash": "48e270f5ac6cd1bc813e6a1ad5acd1b76f1b289aa3f68738796cd2e74993b1c8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:29:41.065Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ef59f346e2b29daf6c3e8fcd340bb972614102b50d0f6249f0576bcf2733c77d",
+      "targetHash": "48e270f5ac6cd1bc813e6a1ad5acd1b76f1b289aa3f68738796cd2e74993b1c8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "data-operate/import/data-source/tencent-cos",
+        "sourcePath": "docs/data-operate/import/data-source/tencent-cos.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/tencent-cos.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "ef59f346e2b29daf6c3e8fcd340bb972614102b50d0f6249f0576bcf2733c77d",
+        "targetHash": "48e270f5ac6cd1bc813e6a1ad5acd1b76f1b289aa3f68738796cd2e74993b1c8",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

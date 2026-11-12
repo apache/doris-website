@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/config/be-config",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/config/be-config.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/config/be-config.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c8b840efd76e40eb3d5f0e5f231e1453b9f52cff5346bf7e69af629dbc855da8",
+    "sourceTechnicalHash": "a5a3295795330d01825456420a6692a04ab43998c08324508def7b1d1a26caf7",
+    "targetHash": "7ca6301cfd88cdca1ac5a43f034528f25a3e33492f081864a6528aa3666eba14",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:20:50.233Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c8b840efd76e40eb3d5f0e5f231e1453b9f52cff5346bf7e69af629dbc855da8",
+      "targetHash": "7ca6301cfd88cdca1ac5a43f034528f25a3e33492f081864a6528aa3666eba14",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 318: expected [\"inlineCode\",null,null,\"wal\"]; received [\"inlineCode\",null,null,\"storage_root_path\"]\nprotected node 319: expected [\"inlineCode\",null,null,\"storage_root_path\"]; received [\"inlineCode\",null,null,\"wal\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

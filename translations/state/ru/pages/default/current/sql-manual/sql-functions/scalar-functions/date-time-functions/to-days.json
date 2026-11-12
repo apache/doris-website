@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/to-days",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/to-days.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/to-days.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3789dd8bb34b0d122c581f9c27ce98255d49d092c39344041725e505d81ca06b",
+    "sourceTechnicalHash": "9792d442f12aee3c1d76aec300626fc9e822901f3a5e82a48171f2e390efe9e3",
+    "targetHash": "d8c67ccf4593e77eca57556a7c3c7ffb0ff241c49bde1d92e5f60699b7c94ea7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:05:56.674Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3789dd8bb34b0d122c581f9c27ce98255d49d092c39344041725e505d81ca06b",
+      "targetHash": "d8c67ccf4593e77eca57556a7c3c7ffb0ff241c49bde1d92e5f60699b7c94ea7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

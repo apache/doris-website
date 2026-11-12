@@ -68,12 +68,10 @@ function BannerLabel(props: BannerLabelComponentProps) {
 function VersionsSuggestionLabel({
     v4xTo,
     v3xTo,
-    v21To,
     onClick,
 }: {
     v4xTo: string;
     v3xTo: string;
-    v21To: string;
     onClick: () => void;
 }) {
     return (
@@ -95,16 +93,9 @@ function VersionsSuggestionLabel({
                         </Link>
                     </b>
                 ),
-                v21Link: (
-                    <b>
-                        <Link to={v21To} onClick={onClick}>
-                            2.1
-                        </Link>
-                    </b>
-                ),
             }}
         >
-            {'For usage, please refer to the official documentation of Version {v4xLink}/{v3xLink}/{v21Link}'}
+            {'For usage, please refer to the official documentation of Version {v4xLink}/{v3xLink}'}
         </Translate>
     );
 }
@@ -136,7 +127,6 @@ function DocVersionBannerEnabled({
 
     const v4xTo = resolveDocPath('4.x');
     const v3xTo = resolveDocPath('3.x');
-    const v21To = resolveDocPath('2.1');
 
     return (
         <div
@@ -150,7 +140,6 @@ function DocVersionBannerEnabled({
                 <VersionsSuggestionLabel
                     v4xTo={v4xTo}
                     v3xTo={v3xTo}
-                    v21To={v21To}
                     onClick={() => savePreferredVersionName(latestVersionSuggestion.name)}
                 />
             </div>

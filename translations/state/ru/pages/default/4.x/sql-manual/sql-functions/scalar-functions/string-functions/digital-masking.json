@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/digital-masking",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/digital-masking.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/digital-masking.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2b761d6e4423fa27f25d08bc619356489ac2309f5f1ca60c56d53cb9683fc6ab",
+    "sourceTechnicalHash": "762dad3e7df8509cee890c10764eb864a79b9d63ba88522ab3fb89ca3357d259",
+    "targetHash": "a19436eb851fb15903d54b198ccb16bc1c867309f8d92d924697c4e4c14a1844",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:49:35.358Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2b761d6e4423fa27f25d08bc619356489ac2309f5f1ca60c56d53cb9683fc6ab",
+      "targetHash": "a19436eb851fb15903d54b198ccb16bc1c867309f8d92d924697c4e4c14a1844",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/string-functions/digital-masking",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/digital-masking.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/digital-masking.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "2b761d6e4423fa27f25d08bc619356489ac2309f5f1ca60c56d53cb9683fc6ab",
+        "targetHash": "a19436eb851fb15903d54b198ccb16bc1c867309f8d92d924697c4e4c14a1844",
+        "commit": "4c49434cb9ef2ff4cf2803b9e1cdd1470b3ede8d",
+        "pr": "https://github.com/apache/doris-website/pull/4452"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "cf9dad399061120808acdb19ad6f9c0e94e083e88a4f15e47219abd66ba7423e",
+    "sourceTechnicalHash": "dc3a9b00033c2de77ba2bd754ace50091f0d923746f6196f6e4499f1d4eb1ee4",
+    "targetHash": "247a5b0a4ed4bc6e25019a432848aa74d05e4318ff2f2a6fd2ce43f91681891d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:57.049Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cf9dad399061120808acdb19ad6f9c0e94e083e88a4f15e47219abd66ba7423e",
+      "targetHash": "247a5b0a4ed4bc6e25019a432848aa74d05e4318ff2f2a6fd2ce43f91681891d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy",
+        "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "cf9dad399061120808acdb19ad6f9c0e94e083e88a4f15e47219abd66ba7423e",
+        "targetHash": "247a5b0a4ed4bc6e25019a432848aa74d05e4318ff2f2a6fd2ce43f91681891d",
+        "commit": "8046b263706ddcdf890bf51f6efec7f3ea77bf66",
+        "pr": "https://github.com/apache/doris-website/pull/4433"
+      }
+    }
+  }
+}

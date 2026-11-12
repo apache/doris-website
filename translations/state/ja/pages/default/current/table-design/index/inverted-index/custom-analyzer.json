@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/inverted-index/custom-analyzer.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/custom-analyzer.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "61532386bb644b88a6e4d61e684396605e9e750f2040ef048cacc1cde602bca0",
-    "sourceTechnicalHash": "3015b62c38e782b0dedfc53cf10bfede8219ccc81c59df9b05fb1fa2a5c6966a",
-    "targetHash": "af3a1318687a8d2fb9969cf094cce8f500f57aa20955f220d3ade9425b5b6dc6",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "99ac7aa2757304bf537446413f911bb8fba6a7a8f6324d87079d280f9b82648e",
+    "sourceTechnicalHash": "34cf375f7990721966f6b46e63603c11962ae9f89bc441736f57de769b4ed7e4",
+    "targetHash": "1a754318c3a83e7cc2a96e3f52e4368b5ff56c9c25f4b3155237298b3bd699c1",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T14:05:28.127Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T16:58:56.643Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "99ac7aa2757304bf537446413f911bb8fba6a7a8f6324d87079d280f9b82648e",
+      "targetHash": "1a754318c3a83e7cc2a96e3f52e4368b5ff56c9c25f4b3155237298b3bd699c1",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"5\",\"5\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"5\",\"5\"]\nprotected node 76: expected [\"inlineCode\",null,null,\"ngram\"]; received [\"inlineCode\",null,null,\"mode\"]\nprotected node 77: expected [\"inlineCode\",null,null,\"mode\"]; received [\"inlineCode\",null,null,\"ngram\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"5\",\"5\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"5\",\"5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + Configuration parameters + Operating procedures -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 機能概要 + 設定パラメーター + 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Inverted index text tokenization customization / Multilingual search / Auto-completion / Exact match -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: 転置インデックスのテキスト分割のカスタマイズ / 多言語検索 / オートコンプリート / 完全一致 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"5\",\"5\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"5\",\"5\"]\nprotected node 76: expected [\"inlineCode\",null,null,\"ngram\"]; received [\"inlineCode\",null,null,\"mode\"]\nprotected node 77: expected [\"inlineCode\",null,null,\"mode\"]; received [\"inlineCode\",null,null,\"ngram\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"5\",\"5\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"5\",\"5\"]\nprotected node 76: expected [\"inlineCode\",null,null,\"ngram\"]; received [\"inlineCode\",null,null,\"mode\"]\nprotected node 77: expected [\"inlineCode\",null,null,\"mode\"]; received [\"inlineCode\",null,null,\"ngram\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

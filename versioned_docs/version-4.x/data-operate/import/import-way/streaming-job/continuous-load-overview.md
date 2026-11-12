@@ -20,14 +20,16 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Feature overview + architecture selection decision -->
 <!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->
 
 Doris supports continuously loading data from multiple data sources into Doris tables through **Streaming Job**. After a Job is submitted, Doris keeps the load job running, reading data from the source in real time and writing it into the Doris table.
-
-:::tip
-This feature is supported starting from version 4.1.0.
-:::
 
 This document helps you answer the following questions:
 
@@ -39,13 +41,13 @@ This document helps you answer the following questions:
 
 ## Supported Data Sources and Sync Modes
 
-Continuous load supports the following data sources and sync modes:
+Continuous load supports the following data sources and sync modes. S3 notification and one-time ingestion are supported starting with Doris 4.1.6:
 
 | Data Source | Supported Versions | SQL Mapping Sync                                                  | Auto Table Creation Sync                                                | Configuration Guide                                                                                                                       |
 | :---------- | :----------------- | :---------------------------------------------------------------- | :---------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
 | MySQL       | 5.6, 5.7, 8.0.x    | [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md)    | [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md) | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
 | PostgreSQL  | 14, 15, 16, 17     | [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md) | [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md) | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
-| OceanBase   | MySQL compatibility mode | -                                                           | [OceanBase CDC with Auto Table Creation](./continuous-load-oceanbase-database.md) (since version 4.1.4) | -                                                                                                                                         |
+| OceanBase   | MySQL compatibility mode | -                                                           | [OceanBase CDC with Auto Table Creation](./continuous-load-oceanbase-database.md) | -                                                                                                                                         |
 | S3          | -                  | [S3 Continuous Load](./continuous-load-s3.md)                     | -                                                                       | -                                                                                                                                         |
 
 For how upstream column types map to Doris types, see Data Type Mapping for [MySQL](./data-type-mapping-mysql.md), [PostgreSQL](./data-type-mapping-postgresql.md), and [OceanBase](./data-type-mapping-oceanbase.md).
@@ -142,8 +144,8 @@ Result columns:
 | LoadStatistic     | Job statistics                                                           |
 | ErrorMsg          | Error message of the Job                                                 |
 | JobRuntimeMsg     | Runtime hints of the Job                                                 |
-| LagBytes          | Number of backlog bytes in the source log (MySQL / OceanBase binlog or PostgreSQL WAL). `-1` means the value is currently unavailable, for example for an S3 data source or during the full snapshot phase. **Since version 4.1.4**, this column replaces the former `Lag` column (in seconds) and is reported in bytes |
-| LastSourceEventTimestamp | Timestamp (in Unix seconds) of the latest source event recorded in the committed offset. Empty when unavailable. **Added in version 4.1.4** |
+| LagBytes          | Number of backlog bytes in the source log (MySQL / OceanBase binlog or PostgreSQL WAL). `-1` means the value is currently unavailable, for example for an S3 data source or during the full snapshot phase. |
+| LastSourceEventTimestamp | Timestamp (in Unix seconds) of the latest source event recorded in the committed offset. Empty when unavailable. |
 | LastTaskSuccessTime | Time when the most recent Task completed successfully                  |
 
 ### View Task Status
@@ -227,16 +229,16 @@ Only upstream tables **with a primary key** can be synchronized (both sync metho
 
 DDL sync applies **only to Auto Table Creation Sync**; SQL Mapping (TVF) does not sync any DDL — the `cdc_stream()` table function always forces `schema_change_enabled` to `false`.
 
-- **PostgreSQL** (supported since 4.1): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
-- **MySQL** (supported since 4.1.4): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
-- **OceanBase** (supported since 4.1.4): only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and primary key / constraint / index / partition changes are NOT synced** — apply them manually in Doris.
+- **PostgreSQL**: only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
+- **MySQL**: only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and constraint / index / partition changes are NOT synced** — apply them manually in Doris.
+- **OceanBase**: only `ADD COLUMN` and `DROP COLUMN` are synced. **Column type changes, `RENAME COLUMN`, and primary key / constraint / index / partition changes are NOT synced** — apply them manually in Doris.
 
 Auto Table Creation Sync enables Schema Change Sync by default. Doris 4.1 currently does not provide a SQL property to disable it.
 
-:::caution Behavior change (4.1.4)
+:::caution Schema change behavior
 
-- Starting from version 4.1.4, an added column **no longer carries the `DEFAULT` value of the upstream column** (for MySQL, PostgreSQL, and OceanBase). The new column has no default value in Doris, and historical rows are not backfilled.
-- PostgreSQL schema change detection is now driven by Relation events: only `ADD COLUMN` and `DROP COLUMN` are recognized; a change that both adds and drops columns (possibly a `RENAME`) is skipped, as are column type changes. This capability applies only to the Auto Table Creation Sync (at-least-once) path; the TVF / exactly-once path does not support it.
+- An added column **does not carry the `DEFAULT` value of the upstream column** (for MySQL, PostgreSQL, and OceanBase). The new column has no default value in Doris, and historical rows are not backfilled.
+- PostgreSQL schema change detection is driven by Relation events: only `ADD COLUMN` and `DROP COLUMN` are recognized; a change that both adds and drops columns (possibly a `RENAME`) is skipped, as are column type changes. This capability applies only to the Auto Table Creation Sync (at-least-once) path; the TVF / exactly-once path does not support it.
 
 :::
 

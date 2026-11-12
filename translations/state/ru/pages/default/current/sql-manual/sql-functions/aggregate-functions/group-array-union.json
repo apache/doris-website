@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-array-union",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-array-union.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-array-union.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ca31d1d6c94af5abc78f5223d2f0aea813f4bc26b87bac230a9893eb18de1d3b",
+    "sourceTechnicalHash": "4cc9c7039720cd7805b1f7fa48811b62480c4d74bd9229f7c43302b30d1b33f8",
+    "targetHash": "f6ce0719077856dd925c061f845c8fd75a8ffddeebf14247e6084a181ef6d31b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:21:55.874Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ca31d1d6c94af5abc78f5223d2f0aea813f4bc26b87bac230a9893eb18de1d3b",
+      "targetHash": "f6ce0719077856dd925c061f845c8fd75a8ffddeebf14247e6084a181ef6d31b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

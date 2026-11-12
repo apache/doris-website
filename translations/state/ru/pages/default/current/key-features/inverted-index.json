@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/inverted-index",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/inverted-index.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/inverted-index.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "28c2335cb0af8475a3b504826048b2aed9e79a48163385b92eef68115605a62a",
+    "sourceTechnicalHash": "2ad7dcb41454d21de8e6b07841408e33cbe9807d803c0cf1fc0c8a9370d34676",
+    "targetHash": "4a117531c3be703165af98dd4cbc51bdecb08eb50d4c3d251be32f220149dafe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:47:39.234Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "28c2335cb0af8475a3b504826048b2aed9e79a48163385b92eef68115605a62a",
+      "targetHash": "4a117531c3be703165af98dd4cbc51bdecb08eb50d4c3d251be32f220149dafe",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

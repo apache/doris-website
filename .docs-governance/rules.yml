@@ -24,8 +24,8 @@ versions:
   active:
     - "4.x"
     - "3.x"
-    - "2.1"
   archived:
+    - "2.1"
     - "2.0"
     - "1.2"
   default_version: "4.x"

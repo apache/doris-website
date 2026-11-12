@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/sql-blocking",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/sql-blocking.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/sql-blocking.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "eb3f4ae8106d14d8bc2376293fefbb87a76a0d4d3aece7326330ad541fb64da6",
+    "sourceTechnicalHash": "3190c0ce120b072f49fc2d74844006f49b3dc531ec10a8408686b4d2dec89a48",
+    "targetHash": "cb9353fc102c4239a7af5068b6381f610d811e73374dc9647a749b9418acffa6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:23:44.357Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "eb3f4ae8106d14d8bc2376293fefbb87a76a0d4d3aece7326330ad541fb64da6",
+      "targetHash": "cb9353fc102c4239a7af5068b6381f610d811e73374dc9647a749b9418acffa6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

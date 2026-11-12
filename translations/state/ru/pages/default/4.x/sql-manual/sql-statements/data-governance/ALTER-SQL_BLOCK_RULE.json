@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-governance/ALTER-SQL_BLOCK_RULE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-governance/ALTER-SQL_BLOCK_RULE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-governance/ALTER-SQL_BLOCK_RULE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "edc6957b50f7b28e1f087ec7750fde5a8eee67b5d9cd7e3c396073ca34bbba4b",
+    "sourceTechnicalHash": "0171b7f3e7143b7586ae4d1486339aa162babd7a738f340f7bac4a21ca2d3b1f",
+    "targetHash": "aa4dba7eccbdd727c02b9f6381cc32a510a5532a55135641702848b28771b802",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:06:06.428Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "edc6957b50f7b28e1f087ec7750fde5a8eee67b5d9cd7e3c396073ca34bbba4b",
+      "targetHash": "aa4dba7eccbdd727c02b9f6381cc32a510a5532a55135641702848b28771b802",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/data-governance/ALTER-SQL_BLOCK_RULE",
+        "sourcePath": "docs/sql-manual/sql-statements/data-governance/ALTER-SQL_BLOCK_RULE.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-governance/ALTER-SQL_BLOCK_RULE.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "edc6957b50f7b28e1f087ec7750fde5a8eee67b5d9cd7e3c396073ca34bbba4b",
+        "targetHash": "aa4dba7eccbdd727c02b9f6381cc32a510a5532a55135641702848b28771b802",
+        "commit": "d5ac930e1a15d171738ddccbd717b10b31ba98d3",
+        "pr": "https://github.com/apache/doris-website/pull/4455"
+      }
+    }
+  }
+}

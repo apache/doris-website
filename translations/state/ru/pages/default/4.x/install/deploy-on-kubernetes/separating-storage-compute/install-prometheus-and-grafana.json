@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "de8870e8ac513d424d04205d9e915344c7cc6479e419ca1ca849767f69268815",
+    "sourceTechnicalHash": "083bb60d68bdf2ffd23e4b1aaa1e808e850505777bd03b775f217be0db87a779",
+    "targetHash": "aae214fee340c0cd5f9bab3963178318b2145029dc1b9f7aa38e9e440475affe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:29.918Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "de8870e8ac513d424d04205d9e915344c7cc6479e419ca1ca849767f69268815",
+      "targetHash": "aae214fee340c0cd5f9bab3963178318b2145029dc1b9f7aa38e9e440475affe",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana",
+        "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "de8870e8ac513d424d04205d9e915344c7cc6479e419ca1ca849767f69268815",
+        "targetHash": "aae214fee340c0cd5f9bab3963178318b2145029dc1b9f7aa38e9e440475affe",
+        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
+        "pr": "https://github.com/apache/doris-website/pull/4436"
+      }
+    }
+  }
+}

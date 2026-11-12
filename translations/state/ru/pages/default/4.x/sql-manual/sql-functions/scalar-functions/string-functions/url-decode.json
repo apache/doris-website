@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/url-decode",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/url-decode.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/url-decode.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b1422383763def6d8f353f07932b998c7685e5cb73aa6604a598ec2c0e919aca",
+    "sourceTechnicalHash": "8fb0ce2360af14d0818ff082d28992add61533fbbebda5913abd3af2bfaff031",
+    "targetHash": "2a18120fba49c5c00752565011551fe8b98a41baf1678edda723fb5737640108",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:57:49.879Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b1422383763def6d8f353f07932b998c7685e5cb73aa6604a598ec2c0e919aca",
+      "targetHash": "2a18120fba49c5c00752565011551fe8b98a41baf1678edda723fb5737640108",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

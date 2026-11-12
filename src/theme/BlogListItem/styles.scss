@@ -1,3 +1,18 @@
+.blog-language-note {
+  display: inline-block;
+  margin-top: .5rem;
+  color: var(--global-colors-text-secondary);
+  font-size: .75rem;
+  line-height: 1.5;
+}
+
+.blog-card {
+  min-width: 0;
+  color: var(--global-colors-text-primary);
+  h2 { color: var(--global-colors-text-primary); }
+  p, time, .authors { color: var(--global-colors-text-secondary); }
+}
+
 .blog-list-item {
   display: flex;
   padding: 1.5rem;

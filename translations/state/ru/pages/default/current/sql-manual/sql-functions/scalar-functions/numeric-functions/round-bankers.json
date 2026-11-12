@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "18e3e4c1bd9d6ddb0b294989dd5979c7bc4dbc03188bc5a5c301866d4bb815a5",
+    "sourceTechnicalHash": "9bdf9e00a841205989b5fc8223fe715e63ce0affb05dc3734706f8b4041f8429",
+    "targetHash": "a4686883d6106740da8c9d56e33cbc794274d8b527a539212c6aabe08846255b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:33:12.934Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "18e3e4c1bd9d6ddb0b294989dd5979c7bc4dbc03188bc5a5c301866d4bb815a5",
+      "targetHash": "a4686883d6106740da8c9d56e33cbc794274d8b527a539212c6aabe08846255b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

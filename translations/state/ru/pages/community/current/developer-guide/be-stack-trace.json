@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/be-stack-trace",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/be-stack-trace.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/be-stack-trace.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f3e0ff94973174c1d876c17f0b43678c60d7ee58f77f417b707404ee717691e1",
+    "sourceTechnicalHash": "74effc6532120070e649460a63912f58bcf7112f46db7b30e504a04b400cbf52",
+    "targetHash": "84f0c6a76d63ced9fbf9fd922c615124cd87b4ebc8dd197c1ba0c3375c9d4ce9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:07:16.381Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f3e0ff94973174c1d876c17f0b43678c60d7ee58f77f417b707404ee717691e1",
+      "targetHash": "84f0c6a76d63ced9fbf9fd922c615124cd87b4ebc8dd197c1ba0c3375c9d4ce9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

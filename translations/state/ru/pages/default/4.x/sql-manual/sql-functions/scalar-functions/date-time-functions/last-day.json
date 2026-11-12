@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/last-day",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/last-day.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/last-day.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d48e13a45c9945b0416193554e8bcd925f87b461af0373f3f2edd7183e07fb0c",
+    "sourceTechnicalHash": "8e31297ffc35fd2f4633c1548aaae6946bdeefe3a45f1193188e194d982ba4bf",
+    "targetHash": "173eb44758f6ea023f42e17581b968cedda1d2ec1eb3b5dd6508434c7fadf289",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:26:46.988Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d48e13a45c9945b0416193554e8bcd925f87b461af0373f3f2edd7183e07fb0c",
+      "targetHash": "173eb44758f6ea023f42e17581b968cedda1d2ec1eb3b5dd6508434c7fadf289",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

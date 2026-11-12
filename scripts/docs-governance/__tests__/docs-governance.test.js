@@ -1507,14 +1507,19 @@ test('Week 7 AI review scripts and workflow are exposed without replacing the ge
   assert.match(docsAiReviewWorkflow, /\/review-docs/);
   assert.match(docsAiReviewWorkflow, /issue_comment:/);
   assert.doesNotMatch(docsAiReviewWorkflow, /workflow_dispatch:/);
-  assert.match(docsAiReviewWorkflow, /docs-governance-report\.json/);
-  assert.match(docsAiReviewWorkflow, /render-ai-review-comment\.js/);
+  const workflow = require('js-yaml').load(docsAiReviewWorkflow);
+  const wrapper = fs.readFileSync(path.join(rootDir, '.github/scripts/docs-review.cjs'), 'utf8');
+  assert.match(wrapper, /buildAiReviewPacket/);
+  assert.match(wrapper, /runChecks/);
+  assert.match(wrapper, /renderDocsAiReviewComment/);
   assert.doesNotMatch(docsAiReviewWorkflow, /DISPATCH_PR_NUMBER/);
   assert.match(docsAiReviewWorkflow, /pull-requests: write/);
   assert.match(docsAiReviewWorkflow, /contents: read/);
-  assert.match(docsAiReviewWorkflow, /issues: write/);
-  assert.ok(docsAiReviewWorkflow.indexOf('Checkout PR head') < docsAiReviewWorkflow.indexOf('Run changed docs governance report'));
-  assert.ok(docsAiReviewWorkflow.indexOf('Run changed docs governance report') < docsAiReviewWorkflow.indexOf('Upsert advisory PR comment'));
+  assert.deepEqual(workflow.permissions, {contents: 'read', 'pull-requests': 'read'});
+  assert.deepEqual(workflow.jobs.publish.needs, ['authorize', 'analyze']);
+  assert.equal(workflow.jobs.publish.permissions['pull-requests'], 'write');
+  assert(!JSON.stringify(workflow.jobs.analyze).includes('secrets.'));
+  assert(workflow.jobs.publish.steps.every(step => !/node |yarn /.test(step.run || '')));
   assert.match(openCodeWorkflow, /\/review/);
 });
 

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/handling-messy-data",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/handling-messy-data.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/handling-messy-data.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
+    "sourceTechnicalHash": "59c9fe52f4658a8061ab29193716e29568582041a5064030b0e6deb4f7d77ee4",
+    "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:20:35.511Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
+      "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

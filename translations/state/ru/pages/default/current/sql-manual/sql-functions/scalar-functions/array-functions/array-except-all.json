@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-except-all",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-except-all.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-except-all.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "75bd5093f1495743f64cf494f312963a22a810490759ae8de721c4639413e3ef",
+    "sourceTechnicalHash": "4493cb49e9ca7b52bf5781b3862545225e2775c7d337618fb5b572a7ee5e8800",
+    "targetHash": "8fc82ebc638715b9e94f3419fc54e3115398a17498e0fa6e925b0ecfc13f6776",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:31:43.619Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "75bd5093f1495743f64cf494f312963a22a810490759ae8de721c4639413e3ef",
+      "targetHash": "8fc82ebc638715b9e94f3419fc54e3115398a17498e0fa6e925b0ecfc13f6776",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/cast-expr.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/cast-expr.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "56a95773f82958530461f64a2344dd4649113ff6a60200176e46b25b1d7dae33",
-    "sourceTechnicalHash": "3f884f365938f4f68dbaab871e7e1c8c5bd8558420768a3a61f4557014ce6faa",
-    "targetHash": "85672624f826adc924f2ebc0577e3274da8fe85257da584ffb4c644a7767058f",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "42bf4acb43cbba817e2a95dc05eb66f899d3dc5afd172b9a2e1de37f8f167521",
+    "sourceTechnicalHash": "4dc00f04dab8ded68ba047ed20756dc4250c3606911feab216af0d2884cb45ea",
+    "targetHash": "fe8abd1bfd102f22a45ace7daa85d936738f8a3e239dc7c76981d319a55784e2",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.669Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T05:01:58.485Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "42bf4acb43cbba817e2a95dc05eb66f899d3dc5afd172b9a2e1de37f8f167521",
+      "targetHash": "fe8abd1bfd102f22a45ace7daa85d936738f8a3e239dc7c76981d319a55784e2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/cast-expr.md",
+        "blob": "6211bdb75eff99a84f8af0e8f44245e9787726a8"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/cast-expr.md",
+        "blob": "fe0c1dbca299f8e206c6bd8fcf4fc6b6b77173a1"
+      }
+    }
   }
 }

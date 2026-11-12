@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/assignment-operators",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/assignment-operators.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/assignment-operators.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1bc3568ce97fa218363e3d8aa17b077f70cb3aa1b03bb91b8890a4c63b324a0c",
+    "sourceTechnicalHash": "e912d528e624162f30ae1ed237db70534916c0b636e85293583bfb257202fddf",
+    "targetHash": "080afa4d7bad55e12dac14960043f54d40cf608d7dafc6b9549bf13114d910cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:35.026Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1bc3568ce97fa218363e3d8aa17b077f70cb3aa1b03bb91b8890a4c63b324a0c",
+      "targetHash": "080afa4d7bad55e12dac14960043f54d40cf608d7dafc6b9549bf13114d910cd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/basic-element/operators/assignment-operators",
+        "sourcePath": "docs/sql-manual/basic-element/operators/assignment-operators.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/assignment-operators.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "1bc3568ce97fa218363e3d8aa17b077f70cb3aa1b03bb91b8890a4c63b324a0c",
+        "targetHash": "080afa4d7bad55e12dac14960043f54d40cf608d7dafc6b9549bf13114d910cd",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}

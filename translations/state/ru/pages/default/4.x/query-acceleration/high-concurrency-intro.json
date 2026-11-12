@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/high-concurrency-intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/high-concurrency-intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/high-concurrency-intro.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "048d474cbd44da8902877b055ca7c13b1b767875807c92193641776737af86a1",
+    "sourceTechnicalHash": "cbd05d742498f09e5d99dd66f739fd9a6c3c3535ebfa97d5d4b7f8918f77b684",
+    "targetHash": "53e74e9aa630c6c490eeccc00ac8dd50ec00db7809a8c2b70bda15f8253a51b0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:30.674Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "048d474cbd44da8902877b055ca7c13b1b767875807c92193641776737af86a1",
+      "targetHash": "53e74e9aa630c6c490eeccc00ac8dd50ec00db7809a8c2b70bda15f8253a51b0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/high-concurrency-intro",
+        "sourcePath": "docs/query-acceleration/high-concurrency-intro.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/high-concurrency-intro.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "048d474cbd44da8902877b055ca7c13b1b767875807c92193641776737af86a1",
+        "targetHash": "53e74e9aa630c6c490eeccc00ac8dd50ec00db7809a8c2b70bda15f8253a51b0",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

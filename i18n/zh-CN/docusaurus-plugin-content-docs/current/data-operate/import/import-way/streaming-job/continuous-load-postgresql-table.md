@@ -17,12 +17,16 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: PostgreSQL 实时数据同步 / 单表 SQL 映射 CDC 接入 -->
 
 SQL 映射同步通过 Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) 实现，目标是一张已存在的 Doris 表（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`），借助 Doris SQL 的表达能力支持列映射、过滤和数据转换，适用于对数据需要做加工的实时同步场景。
-
-> SQL 映射同步自 4.1.0 版本起支持。
 
 通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，Doris 从 PostgreSQL 读取变更日志（WAL），实现源表到目标表的全量 + 增量同步。若希望 Doris 自动创建下游表、按库为单位同步一组表，请参考 [PostgreSQL CDC 自动建表同步](./continuous-load-postgresql-database.md)。
 
@@ -105,7 +109,7 @@ select * from jobs("type"="insert") where ExecuteType = "STREAMING";
 | `schema` | 是 | - | Schema 名称。 |
 | `table` | 是 | - | 需要同步的表名。SQL Mapping 每个作业只支持一张源表。 |
 | `offset` | 是 | - | 启动位点。`initial`：全量 + 增量同步；`snapshot`：仅全量同步；`latest`：仅同步作业启动后的增量；也可设置 JSON 精确位点，例如 `{"lsn":"12345678"}`。PostgreSQL 不支持 `earliest`。 |
-| `snapshot_split_size` | 否 | `40960`（4.1.4 之前为 `8096`） | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
+| `snapshot_split_size` | 否 | `40960` | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
 | `snapshot_parallelism` | 否 | `1` | 全量阶段的并行度，即单次 Task 最多调度的 split 数量。必须为正整数。 |
 | `skip_snapshot_backfill` | 否 | `false` | 是否跳过快照期间的 WAL 回填。设置为 `true` 时采用 at-least-once 语义。 |
 | `slot_name` | 否 | `doris_cdc_<job_id>` | 逻辑复制槽名称。名称只能包含小写字母、数字和下划线，不能以数字开头，最长 63 个字符。自定义复制槽必须预先创建，且不会由 Doris 删除。 |

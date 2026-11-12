@@ -2,34 +2,36 @@
 {
     "title": "ALTER RESOURCE",
     "language": "ja",
-    "description": "このステートメントは、既存のリソースを変更するために使用します。リソースを変更できるのは root ユーザーまたは admin ユーザーのみです。"
+    "description": "この文は既存のリソースを変更するために使用します。root または admin ユーザーのみがリソースを変更できます。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-このステートメントは、既存のリソースを変更するために使用します。リソースを変更できるのは root ユーザーまたは admin ユーザーのみです。
+この文は既存のリソースを変更するために使用します。root または admin ユーザーのみがリソースを変更できます。
 
-## 構文
+4.1.5 以降、新しく作成され、root が作成者としてマークされた AI Resource は、root のみが変更または削除できます。他の `ADMIN` ユーザーはこれらの操作を実行できません。アップグレード前に作成され、このマーカーが付いていないリソースには、遡及的な制限は適用されません。詳しくは [AI Resource の権限](../../../sql-functions/ai-functions/overview.md) を参照してください。
+
+## 構文 {#syntax}
 
 ```sql
 ALTER RESOURCE '<resource_name>'
 PROPERTIES (
-  `<property>`, 
+  `<property>`,
   [ , ... ]
 );
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 
 1.`<property>`
 
-`<property>` の形式は `<key>` = `<value>` です。`<value>` の変更は、`<key>` が 'type' の場合にはサポートされていません。
+`<property>` の形式は `<key>` = `<value>` であり、`<value>` のうち `<key>` が 'type' に等しいものの変更はサポートされません。
 
-変更可能なプロパティのパラメータについては、[CREATE-RESOURCE](./CREATE-RESOURCE.md) を参照してください。
+変更可能な properties パラメータについては、[CREATE-RESOURCE](./CREATE-RESOURCE.md) セクションを参照してください。
 
 
-## 例
+## 例 {#examples}
 
 1. spark0 という名前の Spark リソースの作業ディレクトリを変更します。
 
@@ -43,15 +45,15 @@ ALTER RESOURCE 'spark0' PROPERTIES ("working_dir" = "hdfs://127.0.0.1:10000/tmp/
 ALTER RESOURCE 'remote_s3' PROPERTIES ("s3.connection.maximum" = "100");
 ```
 
-3. 温冷分離用の S3 リソースに関連する情報を変更します。
+3. コールド/ホット分離 S3 リソースに関連する情報を変更します。
 
 - サポート対象
-  - `s3.access_key`  S3 アクセスキー
-  - `s3.secret_key`  S3 シークレットキー
-  - `s3.session_token` S3 セッショントークン
-  - `s3.connection.maximum` デフォルト: 50
-  - `s3.connection.timeout` デフォルト: 1000ms
-  - `s3.connection.request.timeout` デフォルト: 3000ms
+  - `s3.access_key`  s3 の ak
+  - `s3.secret_key`  s3 の sk
+  - `s3.session_token` s3 トークン
+  - `s3.connection.maximum` デフォルト 50
+  - `s3.connection.timeout` デフォルト 1000ms
+  - `s3.connection.request.timeout` デフォルト 3000ms
 - サポート対象外
   - `s3.region`
   - `s3.bucket"`
