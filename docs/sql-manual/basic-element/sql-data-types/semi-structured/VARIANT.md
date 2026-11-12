@@ -607,12 +607,6 @@ CREATE TABLE example_table (
 
 The **ALTER** column tells whether `ALTER TABLE ... MODIFY COLUMN` can change the property; see [ALTER TABLE](#alter-table). See [Wide columns](#wide-columns) for how to use the sparse and DOC mode properties.
 
-### Session variables
-
-| Variable | Default | Description |
-| --- | --- | --- |
-| `describe_extend_variant_column` | `false` | When `true`, `DESC` also lists the subcolumns of VARIANT columns. |
-
 ### BE configuration
 
 | Configuration | Default | Description |

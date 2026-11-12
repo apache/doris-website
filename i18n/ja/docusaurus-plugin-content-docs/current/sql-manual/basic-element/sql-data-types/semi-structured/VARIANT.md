@@ -607,12 +607,6 @@ CREATE TABLE example_table (
 
 **ALTER** 列は、`ALTER TABLE ... MODIFY COLUMN` でそのプロパティを変更できるかどうかを示します。[ALTER TABLE](#alter-table) をご覧ください。スパースカラムと DOC モードのプロパティの使い方については、[ワイドカラム](#wide-columns)をご覧ください。
 
-### セッション変数 {#session-variables}
-
-| 変数 | デフォルト | 説明 |
-| --- | --- | --- |
-| `describe_extend_variant_column` | `false` | `true` にすると、`DESC` に VARIANT カラムのサブカラムも表示されます。 |
-
 ### BE の設定 {#be-configuration}
 
 | 設定 | デフォルト | 説明 |

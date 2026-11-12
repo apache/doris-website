@@ -607,12 +607,6 @@ CREATE TABLE example_table (
 
 表中 **ALTER** 列表示 `ALTER TABLE ... MODIFY COLUMN` 能否修改该属性，参见 [ALTER TABLE](#alter-table)。稀疏列和 DOC mode 相关属性的用法参见[宽列](#wide-columns)。
 
-### 会话变量 {#session-variables}
-
-| 变量 | 默认值 | 描述 |
-| --- | --- | --- |
-| `describe_extend_variant_column` | `false` | 为 `true` 时，`DESC` 还会列出 VARIANT 列的子列。 |
-
 ### BE 配置 {#be-configuration}
 
 | 配置项 | 默认值 | 描述 |

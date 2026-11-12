@@ -607,12 +607,6 @@ CREATE TABLE example_table (
 
 Столбец **ALTER** показывает, можно ли изменить свойство через `ALTER TABLE ... MODIFY COLUMN`; см. [ALTER TABLE](#alter-table). О применении свойств разреженных столбцов и режима DOC см. в разделе [Широкие столбцы](#wide-columns).
 
-### Переменные сеанса {#session-variables}
-
-| Переменная | По умолчанию | Описание |
-| --- | --- | --- |
-| `describe_extend_variant_column` | `false` | При значении `true` вывод `DESC` также включает подстолбцы столбцов VARIANT. |
-
 ### Настройки BE {#be-configuration}
 
 | Настройка | По умолчанию | Описание |

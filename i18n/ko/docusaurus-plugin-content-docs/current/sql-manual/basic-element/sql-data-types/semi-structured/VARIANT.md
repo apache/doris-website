@@ -607,12 +607,6 @@ CREATE TABLE example_table (
 
 **ALTER** 열은 `ALTER TABLE ... MODIFY COLUMN`으로 해당 속성을 변경할 수 있는지 나타냅니다. [ALTER TABLE](#alter-table)을 참조하세요. 희소 컬럼 및 DOC 모드 속성의 사용법은 [와이드 컬럼](#wide-columns)을 참조하세요.
 
-### 세션 변수 {#session-variables}
-
-| 변수 | 기본값 | 설명 |
-| --- | --- | --- |
-| `describe_extend_variant_column` | `false` | `true`이면 `DESC`가 VARIANT 컬럼의 하위 컬럼도 나열합니다. |
-
 ### BE 설정 {#be-configuration}
 
 | 설정 | 기본값 | 설명 |
