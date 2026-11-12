@@ -2,7 +2,7 @@
 {
     "title": "ALTER USER",
     "language": "zh-CN",
-    "description": "ALTER USER 语句用于修改一个用户的账户属性，包括密码、和密码策略等"
+    "description": "介绍 Apache Doris ALTER USER 的语法、权限和密码策略，以及自 4.2.1 起通过 RETAIN CURRENT PASSWORD 保留旧密码和 DISCARD OLD PASSWORD 撤销次密码的轮换流程。"
 }
 ---
 
@@ -10,10 +10,13 @@
 
 ALTER USER 语句用于修改一个用户的账户属性，包括密码、和密码策略等
 
+自 4.2.1 起，Doris 内置密码认证支持通过 `RETAIN CURRENT PASSWORD` 和 `DISCARD OLD PASSWORD` 管理双密码。
+
 ## 语法
 
 ```sql
-ALTER USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
+ALTER USER [IF EXISTS] <user_identity>
+    [IDENTIFIED BY <password> [RETAIN CURRENT PASSWORD] | DISCARD OLD PASSWORD]
 [<password_policy>]
 [<comment>]
 
@@ -68,13 +71,21 @@ password_policy:
 
 > 指定用户注释
 
+**4. `RETAIN CURRENT PASSWORD`（自 4.2.1 起支持）**
+
+> 与 `IDENTIFIED BY` 一起使用，将原主密码保留为次密码，新密码成为主密码。主密码和次密码均可用于登录；更早保留的次密码会被替换。
+
+**5. `DISCARD OLD PASSWORD`（自 4.2.1 起支持）**
+
+> 删除保留的次密码，主密码保持不变。这是独立操作，不能与修改密码、密码策略、注释或其他账号操作组合使用。不存在次密码时，执行后没有变化。
+
 ## 权限控制
 
 执行此 SQL 命令的用户必须至少具有以下权限：
 
 | 权限         | 对象         | 说明            |
 |:------------|:------------|:--------------|
-| ADMIN_PRIV  | 用户（User）或 角色（Role） | 用户或者角色拥有 ADMIN_PRIV 权限才能进行此操作 |
+| GRANT_PRIV 或 ADMIN_PRIV | 全局 | 执行 ALTER USER，包括 RETAIN CURRENT PASSWORD 和 DISCARD OLD PASSWORD，均需要此权限。 |
 
 ## 注意事项
 
@@ -83,11 +94,20 @@ password_policy:
 1. 从 2.0 版本开始，此命令不再支持修改用户角色，相关操作请使用[GRANT](./GRANT-TO.md)和[REVOKE](./REVOKE-FROM.md)。
 
 2. 在一个 ALTER USER 命令中，只能同时对以下账户属性中的一项进行修改：
-- 修改密码
+- 修改密码，可附带 RETAIN CURRENT PASSWORD
+- 删除保留的次密码
 - 修改 PASSWORD_HISTORY
 - 修改 PASSWORD_EXPIRE
 - 修改 FAILED_LOGIN_ATTEMPTS 和 PASSWORD_LOCK_TIME
 - 解锁用户
+
+### 双密码（自 4.2.1 起支持）
+
+- `RETAIN CURRENT PASSWORD` 必须伴随修改密码，且当前主密码非空。新密码为空时，两份密码都会被清除，即使指定了 RETAIN。
+- 普通的非空改密语句如果不带 RETAIN，已有次密码仍然有效，不会因此被撤销。
+- 主密码和次密码均受账号锁定和密码过期策略约束。DISCARD 不改变密码历史，也不重新计算密码过期时间。
+
+完整轮换步骤、可观测性、域名账号行为和升级限制见[双密码](../../../admin-manual/auth/authentication/internal#双密码)。这些子句管理内置密码，不管理 LDAP 或外部认证集成持有的凭据。
 
 ## 示例
 
@@ -121,3 +141,16 @@ ALTER USER jack@'%' ACCOUNT_UNLOCK
 ALTER USER jack@'%' COMMENT "this is my first user"
 ```
 
+- 修改密码并保留旧密码（自 4.2.1 起支持）
+
+```sql
+ALTER USER jack@'%' IDENTIFIED BY 'NewPwd_2026!' RETAIN CURRENT PASSWORD;
+```
+
+原密码和 `NewPwd_2026!` 均可登录。所有客户端切换到新密码后，删除保留的旧密码：
+
+```sql
+ALTER USER jack@'%' DISCARD OLD PASSWORD;
+```
+
+此后只有 `NewPwd_2026!` 可以登录。
