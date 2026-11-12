@@ -14,6 +14,8 @@ When `<expr2>` is an Array, arrays are compared lexicographically, element by el
 
 Version difference: In the Doris 4.1 series since 4.1.5, and in Doris 4.2 and later, a `NULL` element inside an array compares greater than a non-`NULL` element. In Doris 4.0 and Doris 4.1 before 4.1.5, a `NULL` array element compares smaller. A `NULL` array value is ignored in all these versions.
 
+If multiple rows share the minimum `<expr2>`, `MIN_BY` returns `<expr1>` from one of those rows. Which row is selected is not guaranteed, and the result is not necessarily the smallest associated value. For a deterministic result, specify a tie-breaking rule, for example by filtering to the minimum `<expr2>` and applying `MIN` to `<expr1>`.
+
 ## Syntax
 
 ```sql
@@ -58,6 +60,8 @@ Table created and data inserted successfully.
 ```sql
 select min_by(k1, k2) from tbl;
 ```
+
+One possible result follows; returning either `3` or `4` is valid for this example.
 
 ```text
 +----------------+
@@ -124,4 +128,28 @@ SELECT min_by(1, CAST(NULL AS ARRAY<INT>)) AS result;
 
 ```text
 NULL
+```
+
+### Deterministic handling of tied minimum values
+
+This self-contained example returns the smallest `k1` among rows with the minimum `k4`. Even though two rows have the minimum `k4 = 1`, the result is always `3`:
+
+```sql
+WITH data AS (
+    SELECT 0 AS k1, 100 AS k4
+    UNION ALL SELECT 1, 4
+    UNION ALL SELECT 4, 1
+    UNION ALL SELECT 3, 1
+)
+SELECT MIN(k1) AS min_k1
+FROM data
+WHERE k4 = (SELECT MIN(k4) FROM data);
+```
+
+```text
++--------+
+| min_k1 |
++--------+
+|      3 |
++--------+
 ```
