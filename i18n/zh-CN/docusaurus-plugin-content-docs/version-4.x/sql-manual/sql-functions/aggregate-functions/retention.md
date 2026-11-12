@@ -93,9 +93,9 @@ PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
 
-INSERT into retention_test2 values (0, false, false), (1, true,  NULL);
+INSERT into retention_test2 values (0, true, NULL), (1, false, false);
 
-SELECT * from retention_test2;
+SELECT * FROM retention_test2 ORDER BY uid;
 ```
 
 ```text
@@ -111,7 +111,7 @@ SELECT * from retention_test2;
 4. 空表计算时，没有任何数据参与聚合，返回 NULL 值
 
 ```sql
-SELECT RETENTION(date = '2022-10-12') AS r FROM retention_test2 where uid is NULL;
+SELECT RETENTION(flag) AS r FROM retention_test2 WHERE uid IS NULL;
 ```
 
 ```text
@@ -153,7 +153,7 @@ select retention(flag,flag2) from retention_test2;
 7. 如果需要解决NULL值问题，可以用IFNULL 函数将NULL转换成false，这样 uid = 0,1 两行都会参与聚合计算
 
 ```sql
-select retention(flag,IFNULL(flag2,false)) from retention_test2;;
+select retention(flag,IFNULL(flag2,false)) from retention_test2;
 ```
 
 ```text
