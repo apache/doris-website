@@ -56,13 +56,35 @@ LIMIT 10;
 
 ### Doris 4.0.1 中按相关性得分过滤
 
+先准备一张带英文分词倒排索引的独立示例表。执行以下语句需要建库、建表、导入和查询权限：
+
+```sql
+CREATE DATABASE IF NOT EXISTS score_filter_example;
+USE score_filter_example;
+
+CREATE TABLE score_filter_demo (
+    id BIGINT,
+    content TEXT,
+    INDEX idx_content (content) USING INVERTED
+        PROPERTIES("parser" = "english", "support_phrase" = "true")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO score_filter_demo VALUES
+(1, 'Full text search engine test demo'),
+(2, 'Database performance analysis'),
+(3, 'Search engine examples');
+```
+
 Doris 4.0.1 不允许在 `WHERE` 子句中使用 `score()`。如需过滤计算后的得分，请先在子查询中获取数量受限的候选结果，并将 `MATCH_*` 条件、按得分别名的 `ORDER BY` 和 `LIMIT` 都放在该子查询内，再在外层查询中按别名过滤：
 
 ```sql
 SELECT a.*
 FROM (
     SELECT *, score() AS relevance
-    FROM search_demo
+    FROM score_filter_demo
     WHERE content MATCH_ANY 'text search test'
     ORDER BY relevance DESC
     LIMIT 1000

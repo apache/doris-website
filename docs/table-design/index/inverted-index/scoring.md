@@ -56,13 +56,35 @@ For score calculation to take effect, the query must meet all three of the follo
 
 ### Filter by Relevance Score on Doris 4.0.1
 
+First prepare a separate example table with a tokenized inverted index. Run the following statements with permission to create the database and table, load data, and query it:
+
+```sql
+CREATE DATABASE IF NOT EXISTS score_filter_example;
+USE score_filter_example;
+
+CREATE TABLE score_filter_demo (
+    id BIGINT,
+    content TEXT,
+    INDEX idx_content (content) USING INVERTED
+        PROPERTIES("parser" = "english", "support_phrase" = "true")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO score_filter_demo VALUES
+(1, 'Full text search engine test demo'),
+(2, 'Database performance analysis'),
+(3, 'Search engine examples');
+```
+
 Doris 4.0.1 rejects `score()` in the `WHERE` clause. To filter the computed score, first select a bounded set of scored candidates in a subquery, with the `MATCH_*` predicate, `ORDER BY` on the score alias, and `LIMIT` all inside that subquery. Then filter the alias in the outer query:
 
 ```sql
 SELECT a.*
 FROM (
     SELECT *, score() AS relevance
-    FROM search_demo
+    FROM score_filter_demo
     WHERE content MATCH_ANY 'text search test'
     ORDER BY relevance DESC
     LIMIT 1000
