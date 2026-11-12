@@ -7,6 +7,8 @@
 }
 ---
 
+配置 FDB 连接前，确认 MetaService 构建产物中的客户端兼容 FDB 服务端系列；安装 Operator 客户端不会更新 MetaService。固定版本安装及兼容方案见[部署 FoundationDB](install-fdb.md)。删除单个 Doris 集群时应保留共享 FDB。
+
 ## 学完本章节你将能够
 
 - 配置 MetaService 访问 FoundationDB 的连接信息
@@ -105,7 +107,7 @@ spec:
       memory: 4Gi
 ```
 
-将上述配置更新到需要[部署的 DorisDisaggregatedCluster 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中。
+将上述配置更新到需要[部署的 DorisDisaggregatedCluster 资源](./install-doris-cluster.md#2-修改关键配置)中。
 
 ## 4. 定制化启动配置
 
@@ -175,7 +177,7 @@ spec:
 - `${msConfigMapName}`：包含 MetaService 启动配置的 ConfigMap 名称
 - `mountPath`：挂载点必须为 `/etc/doris`
 
-将上述配置更新到需要部署的 [DorisDisaggregatedCluster 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中。
+将上述配置更新到需要部署的 [DorisDisaggregatedCluster 资源](./install-doris-cluster.md#2-修改关键配置)中。
 
 ## 5. 配置服务探测超时
 
