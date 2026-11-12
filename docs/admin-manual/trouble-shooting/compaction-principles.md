@@ -67,12 +67,10 @@ Therefore, this tablet's Compaction Score = 4.
 
 ### 2.2 Compaction Types
 
-- Cumulative Compaction: Merges small incremental rowsets to improve merge efficiency
-- Base Compaction: Merges all rowsets before a certain rowset into a new rowset
-- Full Compaction: Merges all rowsets
-- Cumulative Point: The boundary point that divides Base and Cumulative Compaction
-
-The ideal strategy is: First merge small rowsets through Cumulative Compaction, and after accumulating to a certain scale, perform Base Compaction.
+- Cumulative Compaction: merges eligible incremental rowsets on the incremental side of the cumulative point.
+- Base Compaction: merges eligible historical rowsets before the cumulative point; one task may select only part of that history.
+- Full Compaction: merges the complete local version chain after continuity and completeness checks.
+- Cumulative Point: separates the Base and Cumulative candidate ranges.
 
 ## 3. Compaction Strategy
 
@@ -82,23 +80,12 @@ Since Compaction's goal is to improve query performance, it prioritizes tablets 
 
 ### 3.2 Rowset Selection Strategy
 
-After identifying the target tablet, appropriate rowsets need to be selected for Compaction. The principles are:
-- Reduce Compaction Score as much as possible while minimizing computational load
-- Control write amplification ratio
-- Avoid occupying excessive system resources
+After choosing a tablet, the selected compaction policy chooses a continuous set of eligible rowsets. The tablet's total score is not a fixed rowset-count limit for every task.
 
-Main considerations:
-1. Cost-effectiveness
-   - Cumulative Compaction: The sizes of rowsets participating in the merge shouldn't differ too much; the largest rowset size ≤ half of the total
-   - Base Compaction: Only triggers when the ratio of Base rowset to other candidate rowsets ≥ 0.3
-2. Write amplification control
-   - Cumulative Compaction:
-     - Only triggers when candidate rowset Score > 5
-     - Only triggers when data volume exceeds promotion size
-   - Base Compaction: Only triggers when candidate rowset Score > 5
-3. System resource control
-   - Number of rowsets in a single Cumulative Compaction ≤ 1000
-   - Number of rowsets in a single Base Compaction ≤ 20
+- **Cumulative**: the `size_based` and `time_series` policies have different size, score, and time conditions. For the size-based policy, `cumulative_compaction_min_deltas` and `cumulative_compaction_max_deltas` are score parameters, while promotion size controls movement of the cumulative point. Reaching promotion size is not a prerequisite for every cumulative merge.
+- **Base**: after filtering candidates and applying the score budget, the task can become eligible if the candidate count exceeds `base_compaction_min_rowset_num`, the total size of the remaining candidates divided by the base-rowset size exceeds `base_compaction_min_data_ratio`, or the base-rowset age exceeds `base_compaction_interval_seconds_since_last_operation`. These are alternative conditions; a universal “Score > 5” rule is incorrect.
+- **Resource limits**: the Base score budget is `base_compaction_max_compaction_score`, or `mow_base_compaction_max_compaction_score` for merge-on-write Unique Key tablets. A rowset can contribute more than one score unit, and whole rowsets are selected, so these budgets must not be described as strict counts of 20 or 1000 rowsets.
+
 
 ## 4. Compaction Process
 
@@ -126,12 +113,49 @@ Compaction execution follows a producer-consumer model:
 
 | Parameter Name | Meaning | Default Value |
 |---|---|---|
-| tive_compaction_rounds_for_each_base_compaction_round | How many rounds of cumulative compaction tasks are generated before one base compaction task is generated. Adjusting this parameter can control the ratio between cumulative and base compaction tasks | 9 |
+| cumulative_compaction_rounds_for_each_base_compaction_round | How many rounds of cumulative compaction tasks are generated before one base compaction task is generated. Adjusting this parameter can control the ratio between cumulative and base compaction tasks | 9 |
 | compaction_task_num_per_fast_disk | Maximum number of concurrent compaction tasks per SSD disk | 8 |
 | compaction_task_num_per_disk | Maximum number of concurrent compaction tasks per HDD disk | 4 |
 | max_base_compaction_threads | Number of worker threads in the Base compaction thread pool | 4 |
-| max_cumu_compaction_threads | Number of worker threads in the Cumulative compaction thread pool. -1 means the thread pool size is determined by the number of disks, with one thread per disk | -1 |
-| base_compaction_min_rowset_num | Condition for triggering base compaction. When triggered by rowset count, this is the minimum number of rowsets required for base compaction | 5 |
-| base_compaction_max_compaction_score | Maximum compaction score for rowsets participating in a base compaction | 20 |
+| max_cumu_compaction_threads | Cumulative thread-pool size. On a storage-compute coupled BE, -1 uses the larger of the data-directory count and CPU cores / 6 (at least 1); this is not a CPU quota | -1 |
+| base_compaction_min_rowset_num | Base candidate-count trigger threshold, as an alternative to the data-ratio and age conditions | 5 |
+| base_compaction_max_compaction_score | Base candidate score budget except for MOW Unique Key tablets; whole rowsets are selected, not a strict rowset-count limit | 20 |
+| mow_base_compaction_max_compaction_score | Base candidate score budget for MOW Unique Key tablets | 200 |
 | cumulative_compaction_min_deltas | Minimum compaction score for rowsets participating in a cumulative compaction | 5 |
 | cumulative_compaction_max_deltas | Maximum compaction score for rowsets participating in a cumulative compaction | 1000 |
+
+## Choosing and Manually Triggering Compaction
+
+Background compaction is normally sufficient. Before intervening, inspect the tablet's rowsets, `cumulative point`, current tasks, and errors with the [Compaction status API](../open-api/be-http/compaction-status). Choose the operation based on the rowsets to merge:
+
+| Operation | Appropriate use | Limits |
+| --- | --- | --- |
+| Cumulative | Reduce small incremental rowsets on the incremental side of the cumulative point | Uses the table's compaction policy and its rowset selection rules; it does not merge the entire history |
+| Base | Merge eligible historical rowsets before the cumulative point | Candidate filtering and score budgets can select only part of the history; one Base task need not produce a single rowset for the whole tablet |
+| Full | Deliberately merge the tablet's complete local version chain | Requires a complete, continuous chain; cannot recreate missing data. It rewrites more data and can consume substantial CPU, I/O, and memory |
+
+Base and Full are therefore not interchangeable. Even after repeated Base tasks, newer incremental rowsets can remain beyond the cumulative point. Full selects the input chain for that task; loads that arrive afterward can create new rowsets again.
+
+A low score does not mean that only one rowset remains or that no merge is possible. Automatic selection balances read cost against write amplification, size, time, and resource limits. For example, Base can become eligible through a rowset-count condition, the ratio of cumulative data to base data, **or** elapsed time. There is no universal rule that all compaction stops when a tablet's score is 5 or below. Manually requesting Base or Cumulative still runs their selection checks; a request can report that no suitable versions exist. Use Full only when merging the complete chain is justified and resources permit it, rather than lowering thresholds or forcing Full after every load.
+
+### Manual HTTP example
+
+For a storage-compute coupled cluster, use an account with ADMIN privileges and a reachable BE HTTP endpoint. First identify the tablet and the BE hosting the replica using `SHOW TABLETS FROM db_name.table_name`, `SHOW TABLET tablet_id`, and `SHOW BACKENDS`. The BE HTTP request acts on the replica hosted by that BE, not all replicas in the cluster.
+
+```shell
+# Inspect the rowsets and cumulative point before choosing an operation.
+curl -u '<user>:<password>' \
+  'http://<be-host>:8040/api/compaction/show?tablet_id=<tablet-id>'
+
+# Example: merge the complete chain, after checking its continuity and resources.
+curl -u '<user>:<password>' -X POST \
+  'http://<be-host>:8040/api/compaction/run?tablet_id=<tablet-id>&compact_type=full'
+
+# Check the manual task and then inspect rowsets again.
+curl -u '<user>:<password>' \
+  'http://<be-host>:8040/api/compaction/run_status?tablet_id=<tablet-id>'
+```
+
+The run endpoint supports `base`, `cumulative`, and `full`. A successful submission is not proof that compaction has finished: check the task status, resulting rowsets, and BE logs. A version gap, a conflicting task, or no useful input can prevent the requested merge. See the [manual Compaction API](../open-api/be-http/compaction-run) for response fields.
+
+Since Doris 4.1.4, `ADMIN COMPACT TABLET <tablet_id> WHERE TYPE='FULL'` can also request Full Compaction for one tablet in both deployment modes. The partition-level `ADMIN COMPACT TABLE` still accepts only Base/Cumulative and is limited to storage-compute coupled clusters. See [COMPACT TABLE](../../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE) for syntax and permissions.

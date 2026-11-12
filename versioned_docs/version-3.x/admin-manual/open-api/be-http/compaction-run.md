@@ -17,6 +17,8 @@
 
 ## Description
 
+For choosing Base, Cumulative, or Full and understanding low-score behavior, start with [Compaction principles and manual operations](../../trouble-shooting/compaction). This page is the HTTP API reference.
+
 Used to manually trigger the comparison and show status.
 
 ## Query parameters

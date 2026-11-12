@@ -59,11 +59,10 @@ Compaction Score 是衡量 tablet 数据乱序程度 的指标，同时也是判
 
 ### 2.2 Compaction 类型
 
-- Cumulative Compaction：合并小的增量 rowset，提升合并效率；
-- Base Compaction：将某个 rowset 之前的所有 rowset 合并为一个新的 rowset；
-- Full Compaction：合并所有 rowset；
-- Cumulative Point：划分 Base 与 Cumulative Compaction 的边界点。
-理想策略是：先通过 Cumulative Compaction 合并小 rowset，累积到一定规模后再进行 Base Compaction。
+- Cumulative Compaction：选择 cumulative point 增量侧符合策略的 rowset 进行合并；
+- Base Compaction：选择 cumulative point 之前符合条件的历史 rowset，可能只合并候选中的一部分；
+- Full Compaction：选择完整的本地版本链进行合并，需要连续性及完整性检查；
+- Cumulative Point：划分 Base 与 Cumulative 候选范围的边界。
 
 ## 3. Compaction 策略
 
@@ -73,22 +72,12 @@ Compaction 的目标是提升查询性能，因此优先选择 Compaction Score 
 
 ### 3.2 Rowset 选择策略
 
-在确定了目标 tablet 后，还需要选择合适的 rowset 进行 Compaction。原则是：
-- 在尽量降低 Compaction Score 的同时，减少计算量；
-- 控制写放大比例；
-- 避免占用过多系统资源。
-主要考虑因素：
-1. 性价比
-  - Cumulative Compaction：参与合并的 rowset 大小不能相差过大，最大 rowset 的大小 ≤ 总量的一半；
-  - Base Compaction：Base rowset 与其他候选 rowset 的比例 ≥ 0.3 才会触发。
-2. 写放大控制
-  - Cumulative Compaction：
-    - 候选 rowset 的 Score > 5 才会触发；
-    - 数据量超过 promotion size 才会触发。
-  - Base Compaction：候选 rowset 的 Score > 5 才会触发。
-3. 系统资源控制
-  - 单次 Cumulative Compaction 的 rowset 数量 ≤ 1000；
-  - 单次 Base Compaction 的 rowset 数量 ≤ 20。
+选定 tablet 后，由对应的 Compaction 策略选择连续且符合条件的一组 rowset。tablet 的总 Score 不能直接当作每次任务固定的 rowset 数量限制。
+
+- **Cumulative**：`size_based` 与 `time_series` 策略具有不同的大小、score 和时间条件。对于 size-based 策略，`cumulative_compaction_min_deltas`、`cumulative_compaction_max_deltas` 是 score 参数，而 promotion size 用于控制 cumulative point 的推进，不是每次 Cumulative 合并都必须先达到的门槛。
+- **Base**：过滤候选并按 score 预算截取后，候选数量超过 `base_compaction_min_rowset_num`、其余候选总大小除以 base rowset 大小超过 `base_compaction_min_data_ratio`、或 base rowset 的存续时间超过 `base_compaction_interval_seconds_since_last_operation`，均可能使任务符合条件。这些是可替代的触发条件，不能统一写成“Score > 5”。
+- **资源限制**：Base 的 score 预算为 `base_compaction_max_compaction_score`；Merge-on-Write 主键 tablet 使用 `mow_base_compaction_max_compaction_score`。一个 rowset 可能贡献多个 score 单位，而且按完整 rowset 选取，不能把这些预算描述为严格的 20 个或 1000 个 rowset 数量上限。
+
 
 ## 4. Compaction 流程
 
@@ -116,31 +105,49 @@ Compaction 的执行流程采用 生产者-消费者模型：
  
 |参数名 |含义| 默认值|
 |---    |--- |---    |
-| tive_compaction_rounds_for_each_base_compaction_round | 每产生多少轮 cumulative compaction task 后产生一次 base compaction task，通过调节这个参数，可以调整 cumulative compaction task 和 base compaction task 的比例 | 9 |
+| cumulative_compaction_rounds_for_each_base_compaction_round | 每产生多少轮 cumulative compaction task 后产生一次 base compaction task，通过调节这个参数，可以调整 cumulative compaction task 和 base compaction task 的比例 | 9 |
 | compaction_task_num_per_fast_disk | 每块 SSD 盘上，最多可以有多少个并发的 compaction task | 8 |
 | compaction_task_num_per_disk | 每块 HDD 盘上，最多可以有多少个并发的 compaction task | 4 |
 | max_base_compaction_threads | Base compaction 线程池的工作线程数 | 4 |
-| max_cumu_compaction_threads | Cumulative compaction 线程池的工作线程数，-1 表示根据磁盘数量决定线程池的数量，每块盘一个线程 | -1 |
-| base_compaction_min_rowset_num | 触发 base compaction 的条件，当通过 rowset 的数量触发 compaction 时，满足做 base compaction 的 rowset 数量下限 | 5 |
-| base_compaction_max_compaction_score | 一次 base compaction 中，参与 compaction 的 rowset 的 compaction score 的上限 | 20 |
+| max_cumu_compaction_threads | Cumulative线程池大小；存算一体BE中，-1取数据目录数与CPU核数/6的较大值（至少1），不是CPU配额 | -1 |
+| base_compaction_min_rowset_num | Base候选数量触发阈值（与大小比例、等待时间条件为替代关系） | 5 |
+| base_compaction_max_compaction_score | 非MOW主键tablet的Base候选score预算，按完整rowset截取，不是严格rowset数量上限 | 20 |
+| mow_base_compaction_max_compaction_score | MOW主键tablet的Base候选score预算 | 200 |
 | cumulative_compaction_min_deltas | 一次 cumulative compaction 中，参与 compaction 的 rowset 的 compaction score 的下限 | 5 |
 | cumulative_compaction_max_deltas | 一次 cumulative compaction 中，参与 compaction 的 rowset 的 compaction score 的上限 | 1000 |
- 
 
+## 选择与手动触发 Compaction
 
+通常应由后台自动合并。手动干预前，先通过 [Compaction 状态 API](../open-api/be-http/compaction-status) 检查 tablet 的 rowset、`cumulative point`、当前任务和错误，再按需要合并的数据范围选择操作：
 
+| 操作 | 适用场景 | 限制 |
+| --- | --- | --- |
+| Cumulative | 减少 cumulative point 增量侧的小 rowset | 遵循表的 Compaction 策略及 rowset 选择规则，不合并全部历史数据 |
+| Base | 合并 cumulative point 之前符合条件的历史 rowset | 候选过滤与 score 预算可能只选中部分历史数据，一次 Base 任务不保证把整个 tablet 合成一个 rowset |
+| Full | 明确需要合并 tablet 完整的本地版本链 | 要求版本链完整、连续，不能补回丢失数据；重写数据更多，可能消耗较多 CPU、I/O 和内存 |
 
+因此 Base 与 Full 不能等同。即使多次执行 Base，cumulative point 之后仍可能存在新的增量 rowset。Full 选择的是该次任务的输入版本链；之后到达的导入仍会生成新的 rowset。
 
+Score 较低不代表只剩一个 rowset，也不代表完全没有可合并的数据。自动选择需要权衡读取成本、写放大、数据大小、时间与资源限制。例如，Base 可以由 rowset 数量、增量数据与 base 数据的大小比例，**或**等待时间条件触发，不能概括为“tablet 的 Score 不大于 5 后所有 Compaction 都停止”。手动请求 Base、Cumulative 仍需经过各自的选择检查，可能返回没有合适版本。只有在确实需要合并完整版本链且资源允许时才考虑 Full，不要在每次导入后都降低阈值或强制执行 Full。
 
+### 手动 HTTP 示例
 
+对于存算一体集群，使用具有 ADMIN 权限的账号，并确保可以访问 BE HTTP 端口。先通过 `SHOW TABLETS FROM db_name.table_name`、`SHOW TABLET tablet_id` 和 `SHOW BACKENDS` 确认 tablet 及副本所在 BE。BE HTTP 请求只作用于该 BE 上的副本，不会同时操作集群的全部副本。
 
+```shell
+# 选择操作前先查看 rowset 和 cumulative point。
+curl -u '<user>:<password>' \
+  'http://<be-host>:8040/api/compaction/show?tablet_id=<tablet-id>'
 
+# 示例：确认版本链连续且资源允许后，合并完整版本链。
+curl -u '<user>:<password>' -X POST \
+  'http://<be-host>:8040/api/compaction/run?tablet_id=<tablet-id>&compact_type=full'
 
+# 检查手动任务状态，之后再次查看 rowset。
+curl -u '<user>:<password>' \
+  'http://<be-host>:8040/api/compaction/run_status?tablet_id=<tablet-id>'
+```
 
+触发接口接受 `base`、`cumulative`、`full`。提交成功不代表合并完成：请检查任务状态、合并后的 rowset 及 BE 日志。版本缺口、任务冲突或没有有效输入都可能导致此次合并无法执行。响应字段详见[手动 Compaction API](../open-api/be-http/compaction-run)。
 
-
-
-
-
-
-
+从 Doris 4.1.4 起，也可以使用 `ADMIN COMPACT TABLET <tablet_id> WHERE TYPE='FULL'` 触发单个 tablet 的 Full Compaction，该语句支持存算一体和存算分离。分区级 `ADMIN COMPACT TABLE` 仍只支持 Base/Cumulative，且仅适用于存算一体。语法与权限见 [COMPACT TABLE](../../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE)。

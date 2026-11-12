@@ -147,3 +147,37 @@ Unique Key 模型的写时合并（Merge-on-Write，MOW）表在执行 Compactio
 - 建表或新增分区时，除压缩后数据大小外，还应根据预计行数合理设置分区、分桶，并选择分布均匀的分桶键，避免单个 Tablet 积累过多行。参见[数据分桶](../../table-design/data-partitioning/data-bucketing.md)。已有分区的分桶数不能直接修改，处理已有超大 Tablet 时需评估重建表并迁移数据的方案。
 - 内存紧张时，可适当降低 Base Compaction 并发，为单个任务保留更多可用内存。降低并发只能减少同一 BE 上多个任务叠加的内存峰值，不能减小单个任务的映射；如果单个映射本身已超过可用内存，仅降低并发仍可能失败。
 - Vertical Compaction、较小的 `compaction_batch_size` 或较少的 `vertical_compaction_num_columns_per_group` 可以降低读取和列组处理的内存，但不能减少完整行号映射的大小。`compaction_memory_bytes_limit` 用于估算读取批次大小，并非行号映射或整个 Compaction 任务的内存硬上限。
+
+## 选择与手动触发 Compaction
+
+通常应由后台自动合并。手动干预前，先通过 [Compaction 状态 API](../open-api/be-http/compaction-status) 检查 tablet 的 rowset、`cumulative point`、当前任务和错误，再按需要合并的数据范围选择操作：
+
+| 操作 | 适用场景 | 限制 |
+| --- | --- | --- |
+| Cumulative | 减少 cumulative point 增量侧的小 rowset | 遵循表的 Compaction 策略及 rowset 选择规则，不合并全部历史数据 |
+| Base | 合并 cumulative point 之前符合条件的历史 rowset | 候选过滤与 score 预算可能只选中部分历史数据，一次 Base 任务不保证把整个 tablet 合成一个 rowset |
+| Full | 明确需要合并 tablet 完整的本地版本链 | 要求版本链完整、连续，不能补回丢失数据；重写数据更多，可能消耗较多 CPU、I/O 和内存 |
+
+因此 Base 与 Full 不能等同。即使多次执行 Base，cumulative point 之后仍可能存在新的增量 rowset。Full 选择的是该次任务的输入版本链；之后到达的导入仍会生成新的 rowset。
+
+Score 较低不代表只剩一个 rowset，也不代表完全没有可合并的数据。自动选择需要权衡读取成本、写放大、数据大小、时间与资源限制。例如，Base 可以由 rowset 数量、增量数据与 base 数据的大小比例，**或**等待时间条件触发，不能概括为“tablet 的 Score 不大于 5 后所有 Compaction 都停止”。手动请求 Base、Cumulative 仍需经过各自的选择检查，可能返回没有合适版本。只有在确实需要合并完整版本链且资源允许时才考虑 Full，不要在每次导入后都降低阈值或强制执行 Full。
+
+### 手动 HTTP 示例
+
+对于存算一体集群，使用具有 ADMIN 权限的账号，并确保可以访问 BE HTTP 端口。先通过 `SHOW TABLETS FROM db_name.table_name`、`SHOW TABLET tablet_id` 和 `SHOW BACKENDS` 确认 tablet 及副本所在 BE。BE HTTP 请求只作用于该 BE 上的副本，不会同时操作集群的全部副本。
+
+```shell
+# 选择操作前先查看 rowset 和 cumulative point。
+curl -u '<user>:<password>' \
+  'http://<be-host>:8040/api/compaction/show?tablet_id=<tablet-id>'
+
+# 示例：确认版本链连续且资源允许后，合并完整版本链。
+curl -u '<user>:<password>' -X POST \
+  'http://<be-host>:8040/api/compaction/run?tablet_id=<tablet-id>&compact_type=full'
+
+# 检查手动任务状态，之后再次查看 rowset。
+curl -u '<user>:<password>' \
+  'http://<be-host>:8040/api/compaction/run_status?tablet_id=<tablet-id>'
+```
+
+触发接口接受 `base`、`cumulative`、`full`。提交成功不代表合并完成：请检查任务状态、合并后的 rowset 及 BE 日志。版本缺口、任务冲突或没有有效输入都可能导致此次合并无法执行。响应字段详见[手动 Compaction API](../open-api/be-http/compaction-run)。
