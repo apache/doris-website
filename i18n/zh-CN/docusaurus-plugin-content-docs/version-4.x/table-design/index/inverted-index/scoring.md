@@ -48,13 +48,15 @@ LIMIT 10;
 
 ## 启用条件
 
-要使打分计算生效，查询需同时满足以下三个条件：
+使用上述 Top-N 打分写法时，计算 `score()` 的 `SELECT` 需同时满足以下三个条件：
 
 1. `SELECT` 子句中显式调用 `score()` 函数
-2. `WHERE` 子句中至少包含一个 `MATCH_*` 条件
-3. 查询为 Top-N 类型，且 `ORDER BY` 基于 `score()` 结果排序
+2. 自身的 `WHERE` 子句中至少包含一个 `MATCH_*` 或 `SEARCH` 条件
+3. `ORDER BY` 仅按得分别名排序，并设置 `LIMIT`
 
-### Doris 4.0.1 中按相关性得分过滤
+Doris 4.0.x 和 4.1.0～4.1.5 需要使用此 Top-N 写法。
+
+### 按相关性得分过滤
 
 先准备一张带英文分词倒排索引的独立示例表。执行以下语句需要建库、建表、导入和查询权限：
 
@@ -78,7 +80,24 @@ INSERT INTO score_filter_demo VALUES
 (3, 'Search engine examples');
 ```
 
-Doris 4.0.1 不允许在 `WHERE` 子句中使用 `score()`。如需过滤计算后的得分，请先在子查询中获取数量受限的候选结果，并将 `MATCH_*` 条件、按得分别名的 `ORDER BY` 和 `LIMIT` 都放在该子查询内，再在外层查询中按别名过滤：
+从 Doris 4.0.4 开始，可以直接在 `WHERE` 中按最低得分过滤。以下 Top-N 写法适用于 Doris 4.0.4 及后续版本：
+
+```sql
+SELECT *, score() AS relevance
+FROM score_filter_demo
+WHERE content MATCH_ANY 'text search test'
+  AND score() > 5
+ORDER BY relevance DESC
+LIMIT 10;
+```
+
+此查询按得分从高到低返回最多 10 条得分大于 5 的匹配记录；没有匹配记录达到阈值时，返回空结果。得分取决于查询和数据集，5 只是示例阈值。
+
+在 `WHERE` 中直接使用 `score()`，在 `ORDER BY` 中使用查询列表里的得分别名。直接过滤仅支持一个最低得分条件，即 `score() > <threshold>` 或 `score() >= <threshold>`，阈值需为数值字面量。请用 `AND` 将其与检索条件组合。不支持得分上限（`<`、`<=`）、等值（`=`）、多个得分条件，或嵌套在 `OR` 中的得分条件。
+
+#### Doris 4.0.0～4.0.3 的兼容写法
+
+Doris 4.0.0～4.0.3 不允许在 `WHERE` 中使用 `score()`。在这些版本中，请先在子查询中获取数量受限的打分候选结果，并将 `MATCH_*` 条件、按得分别名的 `ORDER BY` 和 `LIMIT` 都放在该子查询内，再在外层查询中按别名过滤：
 
 ```sql
 SELECT a.*
@@ -96,7 +115,7 @@ LIMIT 10;
 
 此查询从得分最高的 1000 条候选记录中返回最多 10 条得分大于 5 的记录；候选记录均未达到阈值时，返回空结果。应按应用需求选择候选数量；该写法过滤的是候选结果集，而不是返回全部得分超过阈值的匹配记录。
 
-请保留内层 `LIMIT`：缺少它时，子查询不再具备所需的 Top-N 结构，优化器可能将外层得分条件移入计算得分的查询。仅在外层设置 `ORDER BY` 和 `LIMIT` 不能替代内层 Top-N 操作。得分取决于查询和数据集，5 只是示例阈值。
+在 Doris 4.0.0～4.0.3 中，请保留内层 `LIMIT`：缺少它时，子查询不再具备所需的 Top-N 结构，优化器可能将外层得分条件移入计算得分的查询。仅在外层设置 `ORDER BY` 和 `LIMIT` 不能替代内层 Top-N 操作。
 
 ### 支持的索引类型
 
@@ -187,8 +206,8 @@ VARIANT 子路径继承索引的 `norms` 属性，空间开销为 `行数 × 路
 请依次确认：
 
 1. `SELECT` 中是否调用了 `score()` 函数
-2. `WHERE` 中是否包含 `MATCH_*` 条件
-3. `ORDER BY` 是否基于 `score()` 排序
+2. 同一个 `SELECT` 的 `WHERE` 中是否包含 `MATCH_*` 或 `SEARCH` 条件
+3. 使用 Top-N 写法时，`ORDER BY` 是否按得分别名排序，并设置了 `LIMIT`
 4. 索引是否为分词型倒排索引
 
 **Q2：BM25 与 TF-IDF 有什么区别？**

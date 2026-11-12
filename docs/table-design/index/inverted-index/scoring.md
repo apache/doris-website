@@ -48,13 +48,13 @@ After execution, Doris computes the score for each row using the BM25 algorithm 
 
 ## Activation Conditions
 
-For score calculation to take effect, the query must meet all three of the following conditions:
+In the current development version, the `SELECT` that computes `score()` must read one Doris internal table and contain at least one `MATCH_*` or `SEARCH` predicate in its own `WHERE` clause. Joins, subqueries in that `SELECT`, and lateral views are not supported.
 
-1. The `SELECT` clause explicitly calls the `score()` function.
-2. The `WHERE` clause contains at least one `MATCH_*` condition.
-3. The query is a Top-N query, and `ORDER BY` is based on the `score()` result.
+For an outermost, non-aggregate `SELECT`, `score()` can appear in the select list, window functions, and `ORDER BY`; `ORDER BY` and `LIMIT` are optional. In a query with `GROUP BY`, aggregate functions, or `DISTINCT`, `score()` can only appear as a minimum-score filter in `WHERE`.
 
-### Filter by Relevance Score on Doris 4.0.1
+A scored `SELECT` inside a subquery, view, CTE, or set operation still requires ordering by its score with `LIMIT`. Correlated subqueries cannot call `score()`. The Top-N form in the quick start remains supported.
+
+### Filter by Relevance Score
 
 First prepare a separate example table with a tokenized inverted index. Run the following statements with permission to create the database and table, load data, and query it:
 
@@ -78,7 +78,37 @@ INSERT INTO score_filter_demo VALUES
 (3, 'Search engine examples');
 ```
 
-Doris 4.0.1 rejects `score()` in the `WHERE` clause. To filter the computed score, first select a bounded set of scored candidates in a subquery, with the `MATCH_*` predicate, `ORDER BY` on the score alias, and `LIMIT` all inside that subquery. Then filter the alias in the outer query:
+Doris 4.0.4 and later support filtering the minimum score directly in `WHERE`. The following Top-N form is compatible with Doris 4.0.4 and later:
+
+```sql
+SELECT *, score() AS relevance
+FROM score_filter_demo
+WHERE content MATCH_ANY 'text search test'
+  AND score() > 5
+ORDER BY relevance DESC
+LIMIT 10;
+```
+
+This returns up to 10 matching rows with a score greater than 5, ordered by score from highest to lowest. If no matching row passes the threshold, the result is empty. Scores depend on the query and corpus, so 5 is only an example threshold.
+
+Use `score()` itself in `WHERE` and the select-list alias in `ORDER BY`. Direct filtering supports one minimum-score predicate, `score() > <threshold>` or `score() >= <threshold>`, where the threshold is a numeric constant. Use a numeric literal for compatibility with released 4.x versions. Combine the score and search predicates using `AND`. Upper bounds (`<`, `<=`), equality (`=`), multiple score predicates, and score predicates nested inside `OR` are not supported.
+
+#### Filtering Without Top-N in the Development Version
+
+In the current development version, an outermost single-table `SELECT` can filter by score without `ORDER BY` or `LIMIT`:
+
+```sql
+SELECT id, content, score() AS relevance
+FROM score_filter_demo
+WHERE content MATCH_ANY 'text search test'
+  AND score() > 5;
+```
+
+This returns all matching rows with a score greater than 5, without imposing an order or row limit. A scored `SELECT` inside a subquery, view, CTE, or set operation still needs its own score ordering and `LIMIT`.
+
+#### Compatibility with Doris 4.0.0 to 4.0.3
+
+Doris 4.0.0 through 4.0.3 do not allow `score()` in `WHERE`. On these versions, first select a bounded set of scored candidates in a subquery, with the `MATCH_*` predicate, `ORDER BY` on the score alias, and `LIMIT` all inside that subquery. Then filter the alias in the outer query:
 
 ```sql
 SELECT a.*
@@ -96,7 +126,7 @@ LIMIT 10;
 
 This returns up to 10 rows with a score greater than 5 from the top 1000 candidates. It returns no rows if none of those candidates passes the threshold. Choose the candidate limit for your application; this pattern filters that candidate set rather than returning every matching row above the threshold.
 
-Keep the inner `LIMIT`: without it, the query no longer has the required inner Top-N shape, and the optimizer can move the outer score predicate into the scoring query. An outer `ORDER BY` and `LIMIT` alone do not supply the required inner Top-N operation. Scores depend on the query and corpus, so 5 is only an example threshold.
+On Doris 4.0.0 through 4.0.3, keep the inner `LIMIT`: without it, the query no longer has the required inner Top-N shape, and the optimizer can move the outer score predicate into the scoring query. An outer `ORDER BY` and `LIMIT` alone do not supply the required inner Top-N operation.
 
 ### Supported Index Types
 
@@ -186,9 +216,9 @@ Understanding the scoring results helps you use relevance ranking more accuratel
 
 Check the following in order:
 
-1. Whether the `score()` function is called in `SELECT`.
-2. Whether the `WHERE` clause contains a `MATCH_*` condition.
-3. Whether `ORDER BY` is based on `score()`.
+1. Whether `score()` is projected in `SELECT` when you want it in the output.
+2. Whether the same `SELECT` reads one internal table and contains a `MATCH_*` or `SEARCH` predicate in `WHERE`.
+3. For a scored `SELECT` inside a subquery, view, CTE, or set operation, whether it orders by its score and has its own `LIMIT`.
 4. Whether the index is a tokenized inverted index.
 
 **Q2: What is the difference between BM25 and TF-IDF?**
