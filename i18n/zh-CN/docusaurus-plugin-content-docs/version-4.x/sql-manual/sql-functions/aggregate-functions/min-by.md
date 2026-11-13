@@ -14,6 +14,8 @@ MIN_BY 函数用于根据指定列的最小值，返回对应的的关联值。
 
 版本差异：Doris 4.1 系列自 4.1.5 起，以及 Doris 4.2 及后续版本中，数组内的 `NULL` 元素大于非 `NULL` 元素；Doris 4.0 和 4.1.5 之前的 4.1 版本中数组内的 `NULL` 元素小于非 `NULL` 元素。整个数组值为 `NULL` 的输入在这些版本中均被忽略。
 
+当多行的 `<expr2>` 同为最小值时，`MIN_BY` 返回其中一行的 `<expr1>`，不保证选择哪一行，也不保证返回这些关联值中的最小值。若需要确定的结果，请显式指定并列值的处理规则，例如先筛选出 `<expr2>` 最小的行，再对 `<expr1>` 使用 `MIN`。
+
 ## 语法
 
 ```sql
@@ -58,6 +60,8 @@ insert into tbl values
 ```sql
 select min_by(k1, k2) from tbl;
 ```
+
+一种可能的结果如下；此示例中返回 `3` 或 `4` 都符合 `MIN_BY` 的定义。
 
 ```text
 +----------------+
@@ -124,4 +128,28 @@ SELECT min_by(1, CAST(NULL AS ARRAY<INT>)) AS result;
 
 ```text
 NULL
+```
+
+### 并列最小值的确定性处理
+
+下面的自包含示例返回最小 `k4` 所对应的最小 `k1`。即使最小的 `k4 = 1` 有两行，结果也固定为 `3`：
+
+```sql
+WITH data AS (
+    SELECT 0 AS k1, 100 AS k4
+    UNION ALL SELECT 1, 4
+    UNION ALL SELECT 4, 1
+    UNION ALL SELECT 3, 1
+)
+SELECT MIN(k1) AS min_k1
+FROM data
+WHERE k4 = (SELECT MIN(k4) FROM data);
+```
+
+```text
++--------+
+| min_k1 |
++--------+
+|      3 |
++--------+
 ```

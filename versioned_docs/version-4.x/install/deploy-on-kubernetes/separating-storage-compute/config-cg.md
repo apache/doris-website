@@ -2,7 +2,7 @@
 {
     "title": "Configuring Compute Groups",
     "language": "en",
-    "description": "A detailed guide to configuring Compute Groups, including replica configuration, multi-compute-group configuration, resource configuration, access mode configuration, startup parameter configuration, and persistent storage configuration.",
+    "description": "Configure Doris compute groups on Kubernetes: BE replicas, CPU and memory, service access, startup options, persistent storage, and scaling operations.",
     "keywords": ["Doris", "Storage-Compute Decoupling", "Kubernetes", "Compute Group", "BE", "NodePort", "LoadBalancer", "Persistent Storage", "ConfigMap"]
 }
 ---
@@ -14,6 +14,7 @@ A Compute Group is a collection of BE nodes that handle the same task. This docu
 - **Access control**: accessing BE services from inside or outside the cluster through different methods
 - **Startup customization**: customizing BE startup parameters through ConfigMap
 - **Data persistence**: persistent storage for cache, logs, and StreamLoad staging data
+- **Scaling**: add or remove BE nodes and compute groups, with scale-in checks
 
 ## Scenario 1: Quickly Set Up a Single Compute Group
 
@@ -311,3 +312,125 @@ spec:
   - uniqueId: cg1
     logNotStore: true
 ```
+
+## Scenario 7: Scale Compute Capacity {#scaling-compute-groups}
+
+Scale a compute group by changing the `DorisDisaggregatedCluster` resource. Its `replicas` field counts BE nodes, not copies of the data in object storage. Increasing this value adds compute capacity; reducing it removes BE nodes and their local cache.
+
+The procedures below follow [Doris Operator 26.0.1](https://github.com/apache/doris-operator/tree/26.0.1). Use the CRDs and Operator image from the same release. Scale-in behavior also depends on the BE image; do not assume that every image supports graceful shutdown.
+
+### 7.1 Prepare and Inspect the Cluster
+
+Before changing capacity:
+
+- Confirm that FE, MetaService, FoundationDB, and the current BE nodes are healthy. The Operator must be able to connect to FE with the management credentials configured in [Configure Authentication](config-cluster.md).
+- Check Kubernetes CPU, memory, and storage capacity, including whether new PVCs can be bound. Keep enough ready BE nodes to handle the remaining workload.
+- For scale-in, reduce or redirect traffic first and allow running queries and load jobs to finish. Check client retries and load-job status after the operation.
+
+The following examples use namespace `doris`, cluster `test-disaggregated-cluster`, and compute group `cg1`. Replace these names with your own:
+
+```shell
+kubectl get ddc test-disaggregated-cluster -n doris -o yaml
+kubectl get pods,sts,pvc -n doris
+```
+
+Connect to the FE SQL endpoint as an administrator and record the current compute groups and BE nodes:
+
+```sql
+SHOW COMPUTE GROUPS;
+SHOW BACKENDS;
+```
+
+Edit the complete manifest used to deploy the cluster, then apply it:
+
+```shell
+kubectl apply -n doris -f ddc-sample.yaml
+```
+
+The YAML fragments below show only the fields to change. Preserve the other fields and all other entries in `spec.computeGroups`. Omitting an existing group requests its removal. Change the Doris custom resource instead of directly scaling its StatefulSet, so the Operator can coordinate Doris metadata and Kubernetes resources.
+
+### 7.2 Scale Out an Existing Compute Group
+
+For example, change `cg1` from 2 BE nodes to 3 in the complete manifest:
+
+```yaml
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    image: ${beImage}
+    replicas: 3
+```
+
+Retain the existing `uniqueId`, image, resource settings, ConfigMaps, and persistent-volume configuration. Apply the manifest. The Operator increases the StatefulSet replica count, and the new BE registers with the cluster during startup.
+
+Verify that the group reaches 3 ready Pods and that `SHOW BACKENDS` lists the new BE with `Alive = true`. New nodes start with a cold cache; adding a node does not immediately give it the same cache as existing nodes.
+
+### 7.3 Scale In an Existing Compute Group
+
+The cluster-level Boolean `spec.enableDecommission` selects the BE removal path. Its default is `false`:
+
+| Value | Behavior when reducing a compute group's `replicas` |
+| --- | --- |
+| `true` | Submit Doris BE decommission operations and keep the original StatefulSet replica count while decommission is in progress. After the selected nodes are decommissioned, remove them from Doris and reduce the StatefulSet. |
+| `false` | Remove the selected BEs from Doris without the decommission step. Operator 26.0.1 first uses its graceful scale-in flow when the BE image supports it; otherwise it falls back to the direct-drop path. |
+
+For example, to reduce `cg1` from 3 nodes to 2 through the decommission path, update the complete manifest as follows and apply it:
+
+```yaml
+spec:
+  enableDecommission: true
+  computeGroups:
+  - uniqueId: cg1
+    image: ${beImage}
+    replicas: 2
+```
+
+The Operator selects nodes with Pod ordinals greater than or equal to the target replica count. Do not manually delete those Pods while decommission is running. Inspect progress with:
+
+```shell
+kubectl describe ddc test-disaggregated-cluster -n doris
+kubectl get sts,pods,pvc -n doris
+```
+
+In Doris, run `SHOW BACKENDS;`. The Operator's decommission check waits until the selected BEs have `SystemDecommissioned = true` and `TabletNum = 0`, or have already been removed. A group can remain in `Decommissioning` while this is in progress. Completion requires both the target number of ready Pods and the corresponding BE membership in Doris.
+
+:::caution Local storage during scale-in
+Operator 26.0.1 deletes PVCs belonging to removed Pod ordinals after the StatefulSet is reduced. The underlying PV's reclaim policy determines what happens to the storage. Persisting cache, logs, or Stream Load staging data does not guarantee that those volumes survive scale-in. Finish dependent load jobs and retain any logs you need before removing a BE. Scaling back out does not guarantee restoration of its previous local data.
+:::
+
+### 7.4 Add or Remove an Entire Compute Group
+
+To add a group, append a new entry with a new `uniqueId` while retaining every existing group. For example:
+
+```yaml
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    image: ${beImage}
+    replicas: 2
+  - uniqueId: cg2
+    image: ${beImage}
+    replicas: 2
+```
+
+Apply the complete manifest and wait until `cg2` is ready and visible in `SHOW COMPUTE GROUPS`. Configure user access and workload routing as described in [Managing Compute Groups](../../../compute-storage-decoupled/managing-compute-cluster.md) before sending traffic to it. Adding a group does not automatically move existing sessions to that group.
+
+To remove a group, first move its queries and loads to another available group and update any user defaults or application settings that refer to it. Remove only that group's entry from the complete manifest and apply it. The Operator removes its BEs from Doris metadata, then removes its managed Service and StatefulSet.
+
+:::caution Removing a group differs from reducing its replicas
+In Operator 26.0.1, removing an entire `computeGroups` entry uses the BE drop path, even when `enableDecommission` is `true`. Do not use entry removal to request gradual decommission. Check for leftover PVCs after deletion and handle them according to your retention policy; do not assume the cleanup behavior is the same as scale-in within an existing group.
+:::
+
+### 7.5 Resource Changes and Other Components
+
+| Change | Operation and constraint |
+| --- | --- |
+| Increase or decrease CPU/memory per BE | Change the group's `requests` and `limits` as described in Scenario 3, then apply the complete manifest. This changes the Pod template and can restart BEs. Check scheduling capacity before applying it. |
+| Scale FE | Change `spec.feSpec.replicas`. The value must be at least `electionNumber`; extra FE nodes are Observers. The Operator removes selected Observers from Doris before reducing the StatefulSet. Do not change `electionNumber` on an existing cluster. See [Configure FE](config-fe.md). |
+| Change MetaService, FoundationDB, or Storage Vault capacity | Manage these independently of compute-group replicas. Preserve their metadata and storage. BE scale-in is not a reason to delete their resources or object-storage data. See [Configure MetaService](config-ms.md) and [Deploy FoundationDB](install-fdb.md). |
+
+### 7.6 Verify and Troubleshoot
+
+After each change, check the compute group's phase in the custom resource, Pod readiness, and `SHOW BACKENDS` together. Confirm the target node count, `Alive = true` for retained nodes, removal of retired nodes, and successful queries and loads through the intended compute group.
+
+If the operation stalls, inspect `kubectl describe ddc`, Pod Events, PVC binding, and Operator logs. `Pending` Pods often require checking scheduling or storage; `Decommissioning` requires checking Doris decommission progress; `ScaleDownFailed` requires checking the Operator's SQL error and FE connectivity or permissions. Resolve the reported cause before retrying or forcing resource deletion. See [Status and Troubleshooting](../doris-operator/status-and-troubleshooting.md).

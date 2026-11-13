@@ -138,7 +138,7 @@ The process's `bvar_max_dump_multi_dimension_metric_num` setting limits multidim
 | `doris_fe_report_queue_size` |  | Num | Length of the queue on the FE side for various periodic report tasks from BE | This value reflects the degree of blocking of report tasks on the Master FE node. The larger the value, the more limited the FE's processing capacity | P0 |
 | `doris_fe_request_total` |  | Num | All operation requests (including queries and other statements) received through the MySQL port |  |  |
 | `doris_fe_routine_load_error_rows` |  | Num | Total number of error rows across all Routine Load jobs in the cluster |  |  |
-| `doris_fe_routine_load_receive_bytes` |  | Bytes | Total volume of data received by all Routine Load jobs in the cluster |  |  |
+| `doris_fe_routine_load_receive_bytes` |  | Bytes | Cumulative source-message payload bytes received by Routine Load jobs, measured before WHERE filtering. Includes data excluded by WHERE; does not measure bytes written to the table. |  |  |
 | `doris_fe_routine_load_rows` |  | Num | Total number of data rows received by all Routine Load jobs in the cluster |  |  |
 | `doris_fe_routine_load_get_meta_latency` |  | Milliseconds | Latency of metadata retrieval for all Routine Load Jobs in the cluster |  |  |
 | `doris_fe_routine_load_get_meta_count` |  | Num | Number of metadata retrieval operations for all Routine Load Jobs in the cluster |  |  |

@@ -129,66 +129,86 @@ MySQL> select * from test_table;
 
 In this load job, the value '2020-03-05' in the sequence column (modify_date) is the largest, so the keyword column retains 'c'.
 
-If `function_column.sequence_type` is used at table creation (without mapping the Sequence column to an ordinary table column), specify the mapping from a source-data column at load time.
-
-**1. Stream Load**
-
-In Stream Load, specify the sequence column mapping in the header:
-
-```shell
-curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load
-```
-
-**2. Broker Load**
-
-Set the hidden column mapping in the `ORDER BY` clause:
+When the table uses `function_column.sequence_type`, the Sequence column is hidden and must be mapped to an input field during loading. The following examples use a **separate table**, not the `test_table` whose Sequence column maps to `modify_date` above.
 
 ```sql
-LOAD LABEL db1.label1
+CREATE DATABASE IF NOT EXISTS test;
+CREATE TABLE test.test_sequence_hidden
 (
-    DATA INFILE("hdfs://host:port/user/data/*/test.txt")
-    INTO TABLE `tbl1`
-    COLUMNS TERMINATED BY ","
-    (k1,k2,source_sequence,v1,v2)
+    k1 BIGINT NOT NULL,
+    k2 DATE NOT NULL,
+    v1 BIGINT,
+    v2 VARCHAR(128)
+)
+UNIQUE KEY(k1, k2)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES (
+    "function_column.sequence_type" = "DATE",
+    "replication_num" = "1"
+);
+```
+
+Prepare `sequence_data.tsv` with the following tab-separated rows. The fourth input field, `source_sequence`, supplies the hidden Sequence column; it is not a visible table column.
+
+```text
+1	2020-02-22	1	2020-02-22	a
+1	2020-02-22	1	2020-03-23	w
+```
+
+**Stream Load**
+
+Map the input fields in file order and name the Sequence field in the request header:
+
+```shell
+curl --location-trusted -u root: \
+    -H "columns: k1,k2,v1,source_sequence,v2" \
+    -H "function_column.sequence_col: source_sequence" \
+    -T sequence_data.tsv http://host:port/api/test/test_sequence_hidden/_stream_load
+```
+
+**Broker Load**
+
+Upload the same file to HDFS and replace the path and Broker credentials below. Use a tab separator and the same field order, then select the fourth input field with `ORDER BY source_sequence`:
+
+```sql
+LOAD LABEL test.sequence_hidden_broker
+(
+    DATA INFILE("hdfs://host:port/user/data/sequence_data.tsv")
+    INTO TABLE `test_sequence_hidden`
+    COLUMNS TERMINATED BY "\t"
+    (k1,k2,v1,source_sequence,v2)
     ORDER BY source_sequence
 )
 WITH BROKER 'broker'
 (
-    "username"="user",
-    "password"="pass"
+    "username" = "user",
+    "password" = "pass"
 )
-PROPERTIES
-(
-    "timeout" = "3600"
-);
+PROPERTIES ("timeout" = "3600");
 ```
 
-**3. Routine Load**
+**Routine Load**
 
-The mapping method is the same as above. Example:
+Create the job with your Kafka broker and topic, then send each row above as a separate tab-separated Kafka message:
 
 ```sql
-CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
-    [WITH MERGE|APPEND|DELETE]
-    COLUMNS(k1, k2, source_sequence, v1, v2),
-    WHERE k1 > 100 and k2 like "%doris%"
-    [ORDER BY source_sequence]
+CREATE ROUTINE LOAD test.sequence_hidden_routine ON test_sequence_hidden
+    COLUMNS TERMINATED BY "\t",
+    COLUMNS(k1,k2,v1,source_sequence,v2),
+    ORDER BY source_sequence
     PROPERTIES
     (
-        "desired_concurrent_number"="3",
-        "max_batch_interval" = "20",
-        "max_batch_rows" = "300000",
-        "max_batch_size" = "209715200",
-        "strict_mode" = "false"
+        "desired_concurrent_number" = "1",
+        "format" = "csv"
     )
     FROM KAFKA
     (
-        "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-        "kafka_topic" = "my_topic",
-        "kafka_partitions" = "0,1,2,3",
-        "kafka_offsets" = "101,0,0,200"
+        "kafka_broker_list" = "broker1:9092",
+        "kafka_topic" = "my_topic"
     );
 ```
+
+After a load succeeds and its data becomes visible, the larger Sequence value (`2020-03-23`) keeps the row whose `v2` is `w`. The `modify_date` examples below continue to use the original `test_table` and its column mapping.
 
 **3. Ensuring Replacement Order**
 

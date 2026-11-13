@@ -17,6 +17,8 @@ DATE_TRUNC(<datetime>, <time_unit>)
 DATE_TRUNC(<time_unit>, <datetime>)
 ```
 
+从 Doris 3.0.5 起，`DATE_TRUNC` 支持以上两种参数顺序；Doris 3.1 也支持两种顺序。在 Doris 3.0.5 之前的 3.0 版本中，请使用 `DATE_TRUNC(<datetime>, <time_unit>)`，将时间单位放在第二个参数。
+
 ## 参数
 
 | 参数 | 说明 |
@@ -29,6 +31,32 @@ DATE_TRUNC(<time_unit>, <datetime>)
 按照指定的时间单位截断的时间
 
 ## 举例
+
+以下两种写法均适用于 Doris 3.0.5 及更高的 3.x 版本，结果相同：
+
+```sql
+SELECT DATE_TRUNC('2025-04-28 12:12:12', 'year') AS truncated;
+```
+
+```text
++---------------------+
+| truncated           |
++---------------------+
+| 2025-01-01 00:00:00 |
++---------------------+
+```
+
+```sql
+SELECT DATE_TRUNC('year', '2025-04-28 12:12:12') AS truncated;
+```
+
+```text
++---------------------+
+| truncated           |
++---------------------+
+| 2025-01-01 00:00:00 |
++---------------------+
+```
 
 ```sql
 select date_trunc('2010-12-02 19:28:30', 'second');
