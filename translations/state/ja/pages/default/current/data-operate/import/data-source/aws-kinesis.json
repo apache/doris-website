@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/aws-kinesis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/aws-kinesis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/data-source/aws-kinesis.md",
+    "sourceCommit": "e4875f34f7edf805c23d3dd1f646af3648e2ac2e",
+    "sourceHash": "3f8a12984de24ff2a17615892aedb1f6348fa7fa9bc3c8ffa07df60541d2ccfa",
+    "sourceTechnicalHash": "30efcd9ac5ca0ae37dc04c379cbc3972f95095ac4bf311ebfb042ee206bde4e7",
+    "targetHash": "f89d8a3fefebf4485eea87f8e7b1d05cac0387a48937588070c450c84815660b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-12T21:17:40.806Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3f8a12984de24ff2a17615892aedb1f6348fa7fa9bc3c8ffa07df60541d2ccfa",
+      "targetHash": "f89d8a3fefebf4485eea87f8e7b1d05cac0387a48937588070c450c84815660b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"2\",\"3\",\"4\"]; received [\"1\",\"1\",\"2\",\"2\",\"3\",\"4\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"kinesis_stream\"]; received [\"inlineCode\",null,null,\"aws.\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"aws.\"]; received [\"inlineCode\",null,null,\"kinesis_stream\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/data-source/aws-kinesis.md",
+        "blob": "3f3d4aa0adde1b2be320f9e56599f651047ac1f9"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/data-source/aws-kinesis.md",
+        "blob": "a289e35c553d56982484aeff270bf895a7ff9816"
+      }
+    }
+  }
+}
