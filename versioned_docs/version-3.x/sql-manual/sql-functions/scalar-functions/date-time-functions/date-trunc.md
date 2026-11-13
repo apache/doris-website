@@ -17,6 +17,8 @@ DATE_TRUNC(<datetime>, <time_unit>)
 DATE_TRUNC(<time_unit>, <datetime>)
 ```
 
+Since Doris 3.0.5, `DATE_TRUNC` supports both argument orders shown above; Doris 3.1 also supports both. In Doris 3.0 releases before 3.0.5, use `DATE_TRUNC(<datetime>, <time_unit>)`, with the time unit as the second argument.
+
 ## Parameters
 
 | Parameter	 | Description |
@@ -29,6 +31,32 @@ DATE_TRUNC(<time_unit>, <datetime>)
 The time truncated according to the specified time unit.
 
 ## Examples
+
+Both forms return the same result in Doris 3.0.5 and later 3.x releases:
+
+```sql
+SELECT DATE_TRUNC('2025-04-28 12:12:12', 'year') AS truncated;
+```
+
+```text
++---------------------+
+| truncated           |
++---------------------+
+| 2025-01-01 00:00:00 |
++---------------------+
+```
+
+```sql
+SELECT DATE_TRUNC('year', '2025-04-28 12:12:12') AS truncated;
+```
+
+```text
++---------------------+
+| truncated           |
++---------------------+
+| 2025-01-01 00:00:00 |
++---------------------+
+```
 
 ```sql
 select date_trunc('2010-12-02 19:28:30', 'second');
