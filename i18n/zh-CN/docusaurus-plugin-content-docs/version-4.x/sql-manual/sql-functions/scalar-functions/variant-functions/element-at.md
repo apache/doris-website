@@ -2,33 +2,32 @@
 {
     "title": "ELEMENT_AT",
     "language": "zh-CN",
-    "description": "ELEMENTAT 函数用于从数组或 map 中按指定的索引或键提取对应的元素值。"
+    "description": "ELEMENTAT 函数用于从数组、map、struct、variant 或 FILE 中按指定的索引或键提取对应的元素值。"
 }
 ---
 
-## 功能
+## 描述 {#功能}
 
-`ELEMENT_AT` 函数用于从数组、map、struct 或 variant 中按指定的索引或键提取对应的元素值。
+`ELEMENT_AT` 函数用于从数组、map、struct、variant 或 FILE 中按指定的索引、键或字段名提取对应的值。
 
 - 当作用于 **数组（ARRAY）** 时，返回指定位置的元素；
 - 当作用于 **MAP** 时，返回指定键对应的值。
 - 当作用于 **STRUCT** 时，返回指定位置（从 1 开始）或指定字段名对应的子列，等价于 `STRUCT_ELEMENT`。
 - 当作用于 **VARIANT** 时，返回指定子列对应的值。
+- 当作用于 **FILE** 时，返回指定字段的值。
 
 ## 语法
 
 ```sql
-ELEMENT_AT(container, key_or_index)
+ELEMENT_AT(<container>, <key_or_index>)
 ```
 
 ## 参数
 
-- `container`：可以是`ARRAY`, `MAP`, `STRUCT`, `VARIANT`。
-- `key_or_index`：
-  - 对于 `ARRAY`：为整数类型，索引从 **1** 开始；
-  - 对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。
-  - 对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。
-  - 对于 `VARIANT`： 为字符串类型
+| 参数 | 描述 |
+| --- | --- |
+| `<container>` | 可以是`ARRAY`, `MAP`, `STRUCT`, `VARIANT`, `FILE`。 |
+| `<key_or_index>` | 对于 `ARRAY`：为整数类型，索引从 **1** 开始；<br />对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。<br />对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。<br />对于 `VARIANT`： 为字符串类型<br />对于 `FILE`：为非 NULL 常量字符串，字段名为 `uri`、`offset`、`size`、`content_type` 或 `checksum`，不区分大小写。访问 `inline` 会报错；读取二进制内容请使用 [FL_GET_BINARY](../fl-get-binary.md)。 |
 
 ## 返回值
 
@@ -36,28 +35,38 @@ ELEMENT_AT(container, key_or_index)
 - 若为 `MAP`，返回对应键的值（`V` 类型）；
 - 若为 `STRUCT`，返回指定的子列值；
 - 若为 `VARIANT`， 返回 `VARIANT` 类型；
-- 如果索引或键不存在，返回 `NULL`（对于 `STRUCT`，位置越界或字段名不存在会报错）；
-- 如果参数为 `NULL`，返回 `NULL`。
+- 若为 `FILE`，返回对应字段类型的值；FILE 或字段为 `NULL` 时返回 `NULL`；
+- 如果索引或键不存在，返回 `NULL`（`STRUCT` 位置越界或 `STRUCT`、`FILE` 字段名不存在时会报错）；
+- 如果参数为 `NULL`，返回 `NULL`（FILE 的字段名参数必须为非 NULL 常量字符串）。
 
 ## 使用说明
 
 1. **数组索引从 1 开始**，不是从 0 开始；
 2. 支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
 3. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
+4. FILE 字段访问（自 4.2 起支持）：未知字段名、动态字段名及数字下标会报错。
 
 ## 示例
 
 1. `ELEMENT_AT` 函数的功能与 `[]` 作用一致。
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 2);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 2) |
     +--------------------------+
     |                        2 |
     +--------------------------+
+    ```
 
+    ```sql
     SELECT [1, 2, 3][2];
+    ```
+
+    ```text
     +--------------+
     | [1, 2, 3][2] |
     +--------------+
@@ -67,15 +76,23 @@ ELEMENT_AT(container, key_or_index)
 
 2. 数组下标从 1 开始，越界会返回 `NULL`。
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 0);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 0) |
     +--------------------------+
     |                     NULL |
     +--------------------------+
+    ```
 
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 4);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 4) |
     +--------------------------+
@@ -85,8 +102,11 @@ ELEMENT_AT(container, key_or_index)
 
 3. 访问 `MAP` 中不存在的 KEY，会返回 `NULL`。
 
-    ```SQL
-     SELECT ELEMENT_AT({"a": 1, "b": 2}, "c");
+    ```sql
+    SELECT ELEMENT_AT({"a": 1, "b": 2}, "c");
+    ```
+
+    ```text
     +-----------------------------------+
     | ELEMENT_AT({"a": 1, "b": 2}, "c") |
     +-----------------------------------+
@@ -96,15 +116,23 @@ ELEMENT_AT(container, key_or_index)
 
 4. 按位置或字段名访问 `STRUCT` 的子列（等价于 `STRUCT_ELEMENT`）。
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1);
+    ```
+
+    ```text
     +------------------------------------------------------------+
     | ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1) |
     +------------------------------------------------------------+
     | Jack                                                       |
     +------------------------------------------------------------+
+    ```
 
+    ```sql
     SELECT NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'];
+    ```
+
+    ```text
     +--------------------------------------------------+
     | NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'] |
     +--------------------------------------------------+
@@ -114,15 +142,23 @@ ELEMENT_AT(container, key_or_index)
 
 5. 访问 `VARIANT` 的某个子列，如果 `VARIANT` 的值不是 OBJECT，返回空
 
-    ```SQL
-     SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");
+    ```sql
+    SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");
+    ```
+
+    ```text
     +------------------------------------------------------+
     | ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a") |
     +------------------------------------------------------+
     | 1                                                    |
     +------------------------------------------------------+
+    ```
 
+    ```sql
     SELECT ELEMENT_AT(CAST('123' AS VARIANT), "");
+    ```
+
+    ```text
     +----------------------------------------+
     | ELEMENT_AT(CAST('123' AS VARIANT), "") |
     +----------------------------------------+
@@ -130,4 +166,20 @@ ELEMENT_AT(container, key_or_index)
     +----------------------------------------+
     ```
 
+6. 按字段名访问 `FILE`，字段名不区分大小写。
 
+    ```sql
+    SELECT ELEMENT_AT(f, 'URI') AS uri,
+           ELEMENT_AT(f, 'size') AS size
+    FROM (SELECT CAST(NAMED_STRUCT(
+        'uri', 's3://bucket/picture.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+        'content_type', NULL, 'checksum', NULL, 'inline', NULL
+    ) AS FILE) AS f) t;
+    ```
+    ```text
+    +-------------------------+------+
+    | uri                     | size |
+    +-------------------------+------+
+    | s3://bucket/picture.jpg |    3 |
+    +-------------------------+------+
+    ```
