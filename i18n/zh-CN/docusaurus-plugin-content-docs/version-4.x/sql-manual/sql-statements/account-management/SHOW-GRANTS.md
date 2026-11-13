@@ -2,7 +2,7 @@
 {
     "title": "SHOW GRANTS",
     "language": "zh-CN",
-    "description": "该语句用于查看用户权限。"
+    "description": "介绍 Apache Doris SHOW GRANTS 查看用户权限的语法、返回列和权限要求，以及自 4.2.1 起通过 Password 列的 Yes (dual) 标记识别保留次密码的账号。"
 }
 ---
 
@@ -32,7 +32,7 @@ SHOW [ALL] GRANTS [FOR <user_identity>];
   | -- | -- |
   | UserIdentity | 用户标识 |
   | Comment | 注释 |
-  | Password | 是否设置密码 |
+  | Password | `No` 表示没有可用的本地密码；`Yes` 表示仅有主密码；`Yes (dual)` 表示同时保留次密码（自 4.2.1 起支持）。 |
   | Roles | 拥有的角色 |
   | GlobalPrivs | 拥有的全局权限 |
   | CatalogPrivs | 拥有的 catalog 权限 |

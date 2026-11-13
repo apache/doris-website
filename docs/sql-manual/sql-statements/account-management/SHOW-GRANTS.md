@@ -2,7 +2,7 @@
 {
     "title": "SHOW GRANTS",
     "language": "en",
-    "description": "This statement is used to view user permissions."
+    "description": "View Apache Doris user privileges and identify accounts with retained secondary passwords using the SHOW GRANTS output."
 }
 ---
 
@@ -32,7 +32,7 @@ Whether to view the permissions of all users.
   | -- | -- |
   | UserIdentity | User identity |
   | Comment | Comment |
-  | Password | Whether the password is set |
+  | Password | `No` if no local password is available; `Yes` for a primary password only; `Yes (dual)` when a retained secondary also exists (since 4.2.1). |
   | Roles | Roles |
   | GlobalPrivs | Global privileges |
   | CatalogPrivs | Catalog privileges |
