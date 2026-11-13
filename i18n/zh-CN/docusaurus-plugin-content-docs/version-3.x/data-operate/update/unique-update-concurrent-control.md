@@ -129,66 +129,86 @@ MySQL> select * from test_table;
 
 在这次导入中，因 sequence column 的值（也就是 modify_date 中的值）中 '2020-03-05' 为最大值，所以 keyword 列中最终保留了 c。
 
-如果建表时使用了 `function_column.sequence_col` 方式来指定 sequence 列，在导入时需要指定 sequence 列到其他列的映射。
-
-**1. Stream Load**
-
-Stream Load 的写法是在 header 中的 `function_column.sequence_col` 字段添加隐藏列对应的 source_sequence 的映射，示例如下：
-
-```shell
-curl --location-trusted -u root -H "columns: k1,k2,source_sequence,v1,v2" -H "function_column.sequence_col: source_sequence" -T testData http://host:port/api/testDb/testTbl/_stream_load
-```
-
-**2. Broker Load**
-
-在 `ORDER BY` 处设置隐藏列映射的 source_sequence 字段
+当表使用 `function_column.sequence_type` 时，Sequence 列是隐藏列，导入时需要将输入字段映射到它。以下示例使用一张**独立的表**，与上文将 Sequence 列映射到 `modify_date` 的 `test_table` 不同。
 
 ```sql
-LOAD LABEL db1.label1
+CREATE DATABASE IF NOT EXISTS test;
+CREATE TABLE test.test_sequence_hidden
 (
-    DATA INFILE("hdfs://host:port/user/data/*/test.txt")
-    INTO TABLE `tbl1`
-    COLUMNS TERMINATED BY ","
-    (k1,k2,source_sequence,v1,v2)
+    k1 BIGINT NOT NULL,
+    k2 DATE NOT NULL,
+    v1 BIGINT,
+    v2 VARCHAR(128)
+)
+UNIQUE KEY(k1, k2)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES (
+    "function_column.sequence_type" = "DATE",
+    "replication_num" = "1"
+);
+```
+
+准备 `sequence_data.tsv`，内容为以下制表符分隔的数据。第四个输入字段 `source_sequence` 为隐藏 Sequence 列提供值，它不是表中的可见列。
+
+```text
+1	2020-02-22	1	2020-02-22	a
+1	2020-02-22	1	2020-03-23	w
+```
+
+**Stream Load**
+
+按照文件中的字段顺序设置映射，并在请求 header 中指定 Sequence 字段：
+
+```shell
+curl --location-trusted -u root: \
+    -H "columns: k1,k2,v1,source_sequence,v2" \
+    -H "function_column.sequence_col: source_sequence" \
+    -T sequence_data.tsv http://host:port/api/test/test_sequence_hidden/_stream_load
+```
+
+**Broker Load**
+
+将同一文件上传到 HDFS，并替换下方路径和 Broker 凭据。使用制表符分隔和相同的字段顺序，通过 `ORDER BY source_sequence` 指定第四个输入字段：
+
+```sql
+LOAD LABEL test.sequence_hidden_broker
+(
+    DATA INFILE("hdfs://host:port/user/data/sequence_data.tsv")
+    INTO TABLE `test_sequence_hidden`
+    COLUMNS TERMINATED BY "\t"
+    (k1,k2,v1,source_sequence,v2)
     ORDER BY source_sequence
 )
 WITH BROKER 'broker'
 (
-    "username"="user",
-    "password"="pass"
+    "username" = "user",
+    "password" = "pass"
 )
-PROPERTIES
-(
-    "timeout" = "3600"
-);
+PROPERTIES ("timeout" = "3600");
 ```
 
-**3. Routine Load**
+**Routine Load**
 
-映射方式同上，示例如下
+替换为实际的 Kafka broker 和 topic 创建任务，然后将上述每行数据分别作为一条制表符分隔的 Kafka 消息发送：
 
 ```sql
-CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
-    [WITH MERGE|APPEND|DELETE]
-    COLUMNS(k1, k2, source_sequence, v1, v2),
-    WHERE k1  100 and k2 like "%doris%"
-    [ORDER BY source_sequence]
+CREATE ROUTINE LOAD test.sequence_hidden_routine ON test_sequence_hidden
+    COLUMNS TERMINATED BY "\t",
+    COLUMNS(k1,k2,v1,source_sequence,v2),
+    ORDER BY source_sequence
     PROPERTIES
     (
-        "desired_concurrent_number"="3",
-        "max_batch_interval" = "20",
-        "max_batch_rows" = "300000",
-        "max_batch_size" = "209715200",
-        "strict_mode" = "false"
+        "desired_concurrent_number" = "1",
+        "format" = "csv"
     )
     FROM KAFKA
     (
-        "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-        "kafka_topic" = "my_topic",
-        "kafka_partitions" = "0,1,2,3",
-        "kafka_offsets" = "101,0,0,200"
+        "kafka_broker_list" = "broker1:9092",
+        "kafka_topic" = "my_topic"
     );
 ```
+
+导入成功且数据可见后，较大的 Sequence 值（`2020-03-23`）会保留 `v2` 为 `w` 的记录。下文的 `modify_date` 示例继续使用原来的 `test_table` 及其列映射。
 
 **3. 替换顺序的保证**
 
