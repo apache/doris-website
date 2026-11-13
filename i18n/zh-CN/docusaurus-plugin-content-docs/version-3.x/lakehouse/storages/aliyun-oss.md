@@ -14,6 +14,54 @@
 - Export 属性
 - Outfile 属性
 
+## 何时配置 OSS 访问参数
+
+这些参数用于访问 OSS 中的文件，应配置在实际读写文件的操作中：
+
+| 场景 | 配置位置 | 示例 |
+| --- | --- | --- |
+| 直接查询 CSV、Parquet 或 ORC 文件 | `S3(...)` 表值函数中 | 见下方查询示例 |
+| 将 OSS 文件导入已有的 Doris 表 | `INSERT INTO ... SELECT` 中的 `S3(...)`，或 Broker Load 的 `WITH S3` 子句中 | [OSS 数据导入](../../data-operate/import/data-source/aliyun-oss.md) |
+| 查询数据存储在 OSS 的 Hive 表 | `CREATE CATALOG` 的 Catalog 属性中 | [Hive Catalog](../catalogs/hive-catalog) |
+| 将查询结果导出到 OSS | 导出语句的属性中 | [SELECT INTO OUTFILE](../../data-operate/export/outfile.md) |
+
+例如，将不含表头的 UTF-8 文件 `users.csv` 上传到 OSS bucket：
+
+```text
+1,Alice
+2,Bob
+```
+
+确保 Doris FE、BE 节点可以访问 OSS endpoint，且所提供的凭据有该对象的读取权限。替换下方的 bucket、对象路径和凭据。此查询直接读取文件，无需先创建 Doris 表；示例使用兼容 S3 的 `s3.*` 参数名。
+
+```sql
+SELECT id, name
+FROM S3(
+    "uri" = "s3://your-bucket/users.csv",
+    "format" = "csv",
+    "s3.endpoint" = "oss-cn-beijing.aliyuncs.com",
+    "s3.region" = "cn-beijing",
+    "s3.access_key" = "<your-access-key>",
+    "s3.secret_key" = "<your-secret-key>",
+    "column_separator" = ",",
+    "csv_schema" = "id:int;name:string"
+)
+ORDER BY id;
+```
+
+上述文件的预期结果：
+
+```text
++------+-------+
+| id   | name  |
++------+-------+
+|    1 | Alice |
+|    2 | Bob   |
++------+-------+
+```
+
+如需将数据保存到 Doris，请先建目标表，再按上方 OSS 数据导入指南使用 `INSERT INTO ... SELECT`。其他场景则在对应的 Catalog、导入或导出语句中设置连接属性。
+
 ## OSS
 
 Doris 使用 S3 Client，通过 S3 兼容协议访问阿里云 OSS。
