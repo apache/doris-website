@@ -254,13 +254,13 @@ This time, the data in the table is replaced. In summary, during the load proces
 
 ### Note
 
-1. To prevent misuse, in Stream Load/Broker Load load tasks and row update insert statements, users must explicitly specify the sequence column (unless the default value of the sequence column is CURRENT_TIMESTAMP), otherwise, the following error message will be received:
+1. **Sequence requirements depend on the table definition**: with `function_column.sequence_col`, load the mapped ordinary column using the normal column rules; no extra load-time Sequence mapping parameter is needed. With `function_column.sequence_type`, configure the source-column mapping for Stream Load or Broker Load as shown above. For a full-row `INSERT` with an explicit target-column list, include the mapped ordinary column (unless its default is `CURRENT_TIMESTAMP`), or the hidden `__DORIS_SEQUENCE_COL__` when there is no mapped column. An `INSERT` without a target-column list already includes the mapped ordinary column. For partial column updates, see item 3 below. Missing a required Sequence input causes the following error:
 
 ```Plain
 Table test_tbl has sequence column, need to specify the sequence column
 ```
 
-2. When you use the Insert statement to insert data, you must display the specified sequence column; otherwise, the preceding exception is reported. In order to facilitate the use of Doris in some scenarios (table replication, internal data migration, etc.), Doris can be controlled by the session parameter to close the check constraint on the sequence column:
+2. In scenarios such as table replication or internal data migration, you can disable the Sequence check for full-row `INSERT` statements through a session variable:
 
 ```sql
 set require_sequence_in_insert = false;

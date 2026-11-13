@@ -302,7 +302,7 @@ Because the Sequence value `2020-03-23` of the newly imported data is greater th
 
 <!-- Knowledge type: Caveats -->
 
-1. **The Sequence column must be specified explicitly**: in import jobs such as Stream Load and Broker Load, as well as in row-update `INSERT` statements, you must explicitly specify the Sequence column (unless its default value is `CURRENT_TIMESTAMP`). Otherwise, you will receive the following error:
+1. **Sequence requirements depend on the table definition**: with `function_column.sequence_col`, load the mapped ordinary column using the normal column rules; no extra load-time Sequence mapping parameter is needed. With `function_column.sequence_type`, configure the source-column mapping for Stream Load or Broker Load as shown above. For a full-row `INSERT` with an explicit target-column list, include the mapped ordinary column (unless its default is `CURRENT_TIMESTAMP`), or the hidden `__DORIS_SEQUENCE_COL__` when there is no mapped column. An `INSERT` without a target-column list already includes the mapped ordinary column. For partial column updates, see item 3 below. Missing a required Sequence input causes the following error:
 
     ```Plain
     Table test_tbl has sequence column, need to specify the sequence column
