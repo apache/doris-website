@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/storages/aliyun-oss.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/aliyun-oss.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
-    "sourceTechnicalHash": "14194a30d59d401728ab85c5a31af341d62e67cfe49834dcb097ba5d139b32e7",
-    "targetHash": "86d4aafc73233687d5c37f514b4b3038a0639855a52ce30591ba16ebd7ded022",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "474df2216de0fb957a2b69b24e11322125c20c9dc581c38189d407cb41fd69af",
+    "sourceTechnicalHash": "f635231290ca4b4ade59dd8b263bfca6940fec2eebe312a300efefd3848ba6ac",
+    "targetHash": "8dd140408889bf92d4cc280e24d09b42285edb477ed665ab3e998e3f299dfdef",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T08:13:49.440Z",
+    "translatedAt": "2026-11-13T06:39:29.618Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
-      "targetHash": "86d4aafc73233687d5c37f514b4b3038a0639855a52ce30591ba16ebd7ded022",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "474df2216de0fb957a2b69b24e11322125c20c9dc581c38189d407cb41fd69af",
+      "targetHash": "8dd140408889bf92d4cc280e24d09b42285edb477ed665ab3e998e3f299dfdef",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"endpoint\"]; received [\"inlineCode\",null,null,\"oss-dls\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"oss-dls\"]; received [\"inlineCode\",null,null,\"endpoint\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"endpoint\"]; received [\"inlineCode\",null,null,\"oss-dls\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"oss-dls\"]; received [\"inlineCode\",null,null,\"endpoint\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"endpoint\"]; received [\"inlineCode\",null,null,\"oss-dls\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"oss-dls\"]; received [\"inlineCode\",null,null,\"endpoint\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"endpoint\"]; received [\"inlineCode\",null,null,\"oss-dls\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"oss-dls\"]; received [\"inlineCode\",null,null,\"endpoint\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/storages/aliyun-oss.md",
+        "blob": "565d924f1184122343fb93154815a4c475b8fd94"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/storages/aliyun-oss.md",
+        "blob": "f0dee55d73183908c1f612c1927f10f584faaf6c"
+      }
     }
   }
 }
