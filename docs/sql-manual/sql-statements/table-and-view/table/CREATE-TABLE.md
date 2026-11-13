@@ -344,6 +344,8 @@ The functionality of creating synchronized materialized views with rollup is lim
 
 ### Table Property Related Parameters
 
+The following references apply to OLAP tables. Set property values as quoted strings in `PROPERTIES ("name" = "value", ...)`. Properties are optional unless a feature requires them; deployment-specific restrictions are stated in the descriptions.
+
 **<table_property>**
 
 | Property Name | Function |
@@ -376,6 +378,43 @@ The functionality of creating synchronized materialized views with rollup is lim
 | changelog.enable | Enables [changelog](../../../../data-operate/incremental/changelog) on the table to record row-level changes for Table Stream consumption and `@incr` incremental queries. Only Duplicate Key tables and Unique Key Merge-on-Write tables (without cluster keys) are supported. Can only be enabled at table creation and cannot be disabled afterwards; cannot be combined with `binlog.enable` (CCR). Requires `enable_feature_changelog = true` on the FE. Available since 5.0.0. |
 | changelog.need_historical_value | Whether the changelog records the values before a change (the before image), default `false`. Only Unique Key Merge-on-Write tables can set it to `true`; `min_delta` / `detail` Table Streams depend on it. Cannot be changed after creation. |
 | changelog.ttl_seconds | Retention period of the change records in seconds, default `86400` (one day); must be greater than `0`. Can be changed with `ALTER TABLE`. |
+
+#### Additional OLAP Table Properties
+
+| Property | Value type | Default | Description |
+| --- | --- | --- | --- |
+| `short_key` | Integer | Automatically calculated | Number of leading sort columns used by the prefix index. Must be positive and no larger than the number of sort columns; a VARCHAR column can only be the last selected column. |
+| `bloom_filter_fpp` | Double | `0.05` | False-positive probability for `bloom_filter_columns`, in `[0.0001, 0.05]`. Effective only when Bloom Filter columns are configured. See [Bloom Filter](../../../../table-design/index/bloomfilter.md). |
+| `storage_type` | String | `COLUMN` | Storage organization. Only `COLUMN` is accepted. Enable an additional row-format copy with the row-store properties below. |
+| `storage_format` | String | `V2` | Segment storage format: `V2`, `V3`, or `default` (`V2`). `V3` is available since 4.1.0 and stores column metadata externally. See [Storage Format](../../../../table-design/storage-format.md). |
+| `inverted_index_storage_format` | String | FE configuration | Inverted index format: `V2`, `V3`, or `default`; `SNII` is also supported since 4.2.0. Omitted or `default` uses FE configuration `inverted_index_storage_format`. New V1 indexes are rejected since 4.1.5. See [Inverted Index](../../../../table-design/index/inverted-index/overview.md). |
+| `store_row_column` | Boolean | `false` | Stores an additional row-format copy of all columns. Requires `light_schema_change = true`; Aggregate Key tables are unsupported. See [Row Store](../../../../table-design/row-store.md). |
+| `row_store_columns` | String | Unset | Comma-separated existing column names, for example `k,v1,v2`, to store in row format. Setting this list enables row store for those columns; Aggregate Key tables are unsupported. See [Row Store](../../../../table-design/row-store.md). |
+| `row_store_page_size` | Long | `16384` | Row-store page size in bytes. Must be positive; rounded up to a multiple of 4096 bytes. |
+| `storage_page_size` | Long | `65536` | Column data page size in bytes, from `4096` to `10485760`; rounded up to a multiple of 4096 bytes. |
+| `storage_dict_page_size` | Long | `262144` | Dictionary page size in bytes, from `0` to `104857600`; rounded up to a multiple of 4096 bytes. |
+| `storage_policy` | String | Unset | Existing remote-storage policy for a compute-storage coupled table. Unsupported for Unique Key Merge-on-Write tables; ignored in compute-storage decoupled mode. See [Remote Storage](../../../../table-design/tiered-storage/remote-storage.md). |
+| `storage_vault_name` | String | Database vault, then default vault | Storage Vault name in compute-storage decoupled mode. The vault must exist, and the user needs `USAGE` on it. Table configuration overrides the database and default vault. See [Managing Storage Vault](../../../../compute-storage-decoupled/managing-storage-vault.md). |
+| `file_cache_ttl_seconds` | Long | `0` | TTL cache protection duration in seconds in compute-storage decoupled mode. `0` uses ordinary caching. Since 4.1.4, the validated range is `0` to `4611686018427387903`. This is not a data expiration setting. See [File Cache](../../../../compute-storage-decoupled/file-cache/file-cache.md). |
+| `estimate_partition_size` | String | Unset | Estimated uncompressed size of one partition, for example `10G`, used with `BUCKETS AUTO` to choose the initial bucket count. See [Bucketing](../../../../table-design/data-partitioning/data-bucketing.md). |
+| `mutable` | Boolean | `true` | Whether a partition accepts data loading. `false` makes it immutable. A table-level setting supplies the default for its partitions. |
+| `partition.retention_count` | Integer | Unset | Positive number of historical partitions to retain in an AUTO RANGE PARTITION table. Current and future partitions are retained. Cannot be combined with enabled dynamic partitioning since 4.1.4. See [Auto Partitioning](../../../../table-design/data-partitioning/auto-partitioning.md). |
+| `vertical_compaction_num_columns_per_group` | Integer | `5` | Number of columns per group during vertical compaction. Must be at least `1`. |
+| `time_series_compaction_empty_rowsets_threshold` | Long | `5` | Minimum number of consecutive empty rowsets for prioritized compaction. Must be at least `2`, and requires `compaction_policy = time_series`. |
+| `group_commit_mode` | String | `off_mode` | Default Group Commit mode for this table: `off_mode`, `sync_mode`, or `async_mode`. Supported since 4.1.0. A request or session setting takes precedence. See [Group Commit](../../../../data-operate/import/load-best-practices/group-commit-manual.md). |
+| `binlog.enable` | Boolean | `false` | Enables CCR binlog for this table. The FE must also enable `enable_feature_binlog`. |
+| `binlog.ttl_seconds` | Long | `86400` | CCR binlog retention threshold in seconds. |
+| `binlog.max_bytes` | Long | `9223372036854775807` | CCR binlog size threshold for garbage collection, in bytes. |
+| `binlog.max_history_nums` | Long | `9223372036854775807` | CCR binlog history-count threshold for garbage collection. |
+| `is_being_synced` | Boolean | `false` | Marks a CCR destination table as being synchronized. When `true`, Doris skips its dynamic partition scheduling and ignores colocate/storage-policy settings. Leave this to the CCR workflow. |
+| `partition.inverted_index_storage_format` | String | Unset | Since 4.2.0: format for newly created partitions in compute-storage decoupled mode: `V2`, `V3`, or `SNII`. Requires FE configuration `enable_partition_inverted_index_storage_format_rollout = true`; ignored when the switch is off. Does not convert existing partitions. |
+| `sequence_mapping.<sequence_col>` | String | Unset | Dev: comma-separated Value columns controlled by the named Sequence column. Requires a Unique Key Merge-on-Read table and `light_schema_change = true`. See [Multi-stream Update](../../../../data-operate/update/multi-stream-update-for-unique-model.md). |
+| `function_column.enable_row_ttl` | Boolean | `false` | Experimental, since 5.0.0: enables row-level TTL at table creation. Aggregate Key tables and Sequence-column combinations are unsupported. See [Row-level TTL](../../../../data-operate/delete/row-ttl.md). |
+| `function_column.ttl_col` | String | Unset | Source Value column for row-level TTL. Must be set together with `function_column.ttl`, and row-level TTL must be enabled. See the source-column constraints in [Row-level TTL](../../../../data-operate/delete/row-ttl.md). |
+| `function_column.ttl` | String | Unset | Nonnegative retention duration for source-column TTL, for example `86400` or `1 day`. A value without a unit is in seconds. `0` means expiration at the source timestamp. |
+| `function_column.ttl_time_zone` | String | Depends on source type | Time zone for the TTL source column: `UTC`, `Z`, or a fixed offset from `-12:00` to `+14:00`. Required for DATE/DATETIME-family source columns; TIMESTAMPTZ defaults to `+00:00` and accepts only zero offset. |
+
+For feature-specific properties, also see [Dynamic Partitioning](../../../../table-design/data-partitioning/dynamic-partitioning.md). Index `PROPERTIES`, VARIANT column `PROPERTIES`, and asynchronous materialized view properties are separate from these table properties. For automatic statistics collection, set `auto_analyze_policy` with `ALTER TABLE` as described in [Statistics](../../../../query-acceleration/optimization-technology-principle/statistics.md).
 
 ## Access Control Requirements
 
