@@ -10,6 +10,8 @@
 
 MIN_BY 函数用于根据指定列的最小值，返回对应的的关联值。
 
+当多行的 `<expr2>` 同为最小值时，`MIN_BY` 返回其中一行的 `<expr1>`，不保证选择哪一行，也不保证返回这些关联值中的最小值。若需要确定的结果，请显式指定并列值的处理规则，例如先筛选出 `<expr2>` 最小的行，再对 `<expr1>` 使用 `MIN`。
+
 ## 语法
 
 ```sql
@@ -47,10 +49,36 @@ select * from tbl;
 select min_by(k1, k4) from tbl;
 ```
 
+一种可能的结果如下；此示例中返回 `3` 或 `4` 都符合 `MIN_BY` 的定义。
+
 ```text
 +--------------------+
 | min_by(`k1`, `k4`) |
 +--------------------+
 |                  4 |
 +--------------------+ 
+```
+
+### 并列最小值的确定性处理
+
+下面的自包含示例返回最小 `k4` 所对应的最小 `k1`。即使最小的 `k4 = 1` 有两行，结果也固定为 `3`：
+
+```sql
+WITH data AS (
+    SELECT 0 AS k1, 100 AS k4
+    UNION ALL SELECT 1, 4
+    UNION ALL SELECT 4, 1
+    UNION ALL SELECT 3, 1
+)
+SELECT MIN(k1) AS min_k1
+FROM data
+WHERE k4 = (SELECT MIN(k4) FROM data);
+```
+
+```text
++--------+
+| min_k1 |
++--------+
+|      3 |
++--------+
 ```
