@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/export-set.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/export-set.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "e2615b26129a73082d1f5c23abf6561787a537a8001030d11a223a4b47a2079d",
-    "sourceTechnicalHash": "bf2b2b93476cee9f5dd60da0168b7468ebf892062968c5bd4d3eaa8a969428b6",
-    "targetHash": "662d3aa1ebd08049201edacc7b590159a2e387d9b6c36c1c5494b0d24560f280",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "ae53d757ecc0d97c51b5b656a0bf56160f2ead5eed0f71bf78060fa1952dd2b1",
+    "sourceTechnicalHash": "4e966d328b80be7b86042317de2c789612d1249433fc94d0eacbe8cf3ce91f0a",
+    "targetHash": "6c98519ec2731c04fd37090bac248d33eda55fb02477569dc5c950e384fe2854",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T06:49:08.577Z",
+    "translatedAt": "2026-11-13T21:01:48.730Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "e2615b26129a73082d1f5c23abf6561787a537a8001030d11a223a4b47a2079d",
-      "targetHash": "662d3aa1ebd08049201edacc7b590159a2e387d9b6c36c1c5494b0d24560f280",
+      "sourceHash": "ae53d757ecc0d97c51b5b656a0bf56160f2ead5eed0f71bf78060fa1952dd2b1",
+      "targetHash": "6c98519ec2731c04fd37090bac248d33eda55fb02477569dc5c950e384fe2854",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 29: expected [\"code\",\"text\",null,\"+-------------+--------+-------+-------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\\n| bits        | on     | off   | sep   | num_of_b | ans                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |\\n+-------------+--------+-------+-------+----------+------------------------------------------; received [\"code\",\"text\",null,\"+-------------+--------+-------+-------+----------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\\n| bits        | on     | off   | sep   | num_of_b | ans                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |\\n+-------------+--------+-------+-------+----------+------------------------------------------"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-functions/scalar-functions/string-functions/export-set.md",
+        "blob": "a9e48a5d5e7fc5c13d65626374d741f9d5ca44c5"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/export-set.md",
+        "blob": "9fc00572f385c83b4efd32f1cdc63d66d0fe0e7b"
+      }
     }
   }
 }
