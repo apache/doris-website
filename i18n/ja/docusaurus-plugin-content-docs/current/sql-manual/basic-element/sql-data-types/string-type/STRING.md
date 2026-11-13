@@ -2,15 +2,27 @@
 {
     "title": "STRING",
     "language": "ja",
-    "description": "可変長文字列。デフォルトでは10485760バイト（10 MiB）までサポートし、2147483643バイト（2G）まで調整できます。"
+    "description": "可変長文字列。デフォルトでは 10485760 バイト（10 MiB）までサポートし、2147483643 バイト（2G）まで拡張できます。",
 }
 ---
 
 ## STRING {#string}
 ### 説明 {#description}
-可変長文字列で、デフォルトの長さのソフトリミットは10485760バイト（10 MiB）です。BE の `string_type_length_soft_limit_bytes` を設定すると、この上限を2147483643バイト（約2 GiB）まで引き上げられます。STRING は値列でのみ使用でき、キー列、パーティション列、バケット列では使用できません。
+デフォルトの長さのソフトリミットが 10485760 バイト（10 MiB）の可変長文字列です。BE で `string_type_length_soft_limit_bytes` を設定すると、この上限を最大 2147483643 バイト（約 2 GiB）まで引き上げられます。STRING は value 列にのみ使用でき、key 列、パーティション列、バケット列には使用できません。
 
-注: 可変長文字列は UTF-8 エンコーディングで保存されるため、通常、英語の文字は1バイト、中国語の文字は3バイトを占めます。
+注：可変長文字列は UTF-8 エンコーディングで保存されるため、通常、英字は 1 バイト、中国語の文字は 3 バイトを占めます。
 
 ### キーワード {#keywords}
 STRING
+
+### 型の別名とメタデータの表示 {#type-aliases-and-metadata-display}
+
+`STRING` と `TEXT` は、同じ Doris の型を定義します。インターフェースによって、この型の表示は異なります。
+
+| インターフェース | `STRING` 列の表示 |
+| --- | --- |
+| `SHOW CREATE TABLE` と `DESC` | `text` |
+| `information_schema.columns.DATA_TYPE` | `varchar`。MySQL との互換性のため |
+| `information_schema.columns.COLUMN_TYPE` | `string` |
+
+これらの名称によって、保存される型やその長さの上限が変わることはありません。メタデータで Doris の `STRING` 列と長さに制限のある `VARCHAR` 列を区別するには、`COLUMN_TYPE` を確認してください。

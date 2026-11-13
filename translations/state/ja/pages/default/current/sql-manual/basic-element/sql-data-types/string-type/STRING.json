@@ -8,22 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/string-type/STRING.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/string-type/STRING.md",
-    "sourceCommit": "e3ba202a890e362eee5e4aafa507ffb4750c0078",
-    "sourceHash": "ae7d4809e87949be838c96574600ca5fb487bdced3e3de807ffd5137445118e9",
-    "sourceTechnicalHash": "2501e9e2c9b8de79737059e570d6db5cda7fa0768e53e93abd725fe91c266c53",
-    "targetHash": "5a2f9f60ac77c58c801eea31a03e87ddeb1727f779ae429dc7b7ae533b1adf42",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "121acf69384496fb08532142f5fea1bbf0bf9fdf17939fb1220896529f911c75",
+    "sourceTechnicalHash": "a05f5c6d042f974337f968b5f26d733b38ffc068b83130d26ea232f1ba569ab2",
+    "targetHash": "92ff81058e6f434eab1b1ddce0c09dfb362ef6bb75a5f2cb1c4e9262a28df5cf",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-23T07:47:36.129Z",
+    "translatedAt": "2026-11-13T19:49:28.017Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "glossary-version-changed",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "ae7d4809e87949be838c96574600ca5fb487bdced3e3de807ffd5137445118e9",
-      "targetHash": "5a2f9f60ac77c58c801eea31a03e87ddeb1727f779ae429dc7b7ae533b1adf42",
+      "sourceHash": "121acf69384496fb08532142f5fea1bbf0bf9fdf17939fb1220896529f911c75",
+      "targetHash": "92ff81058e6f434eab1b1ddce0c09dfb362ef6bb75a5f2cb1c4e9262a28df5cf",
       "warnings": [],
       "history": [
         {
@@ -31,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/basic-element/sql-data-types/string-type/STRING.md",
+        "blob": "e9a585415e966917590daf2971b3f8ab7e1f1968"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/string-type/STRING.md",
+        "blob": "7cdc529729b563e4de9337cd8f35b75f7452b2f2"
+      }
     }
   }
 }

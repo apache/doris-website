@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/update/unique-update-concurrent-control.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/update/unique-update-concurrent-control.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "ea7889a6d9289e2c92a51b6bb86e562bfaaacbe6ad27dfad943ace121524b92c",
-    "sourceTechnicalHash": "b5cc05ffd957e043957102af229d163d5ef2198f1aca583384b443b8120708bc",
-    "targetHash": "16af4d4a0a589f3cc6f8c2b23e2047529fb97b4fa422eb2ba73b3bad75bbb704",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "2d7fb2cc15cb26a49e67c7405c4093bd294f0038862eff1522f90c575426b08f",
+    "sourceTechnicalHash": "f62216e5ebbe69615f24d2c76ebe3d171e4c0f39b9c298ddd3120d499b8c41eb",
+    "targetHash": "7b1b7d1dc4f7e6c8fa699412ccec1cb2caa0251588279197e3c0ea50063dee2c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T16:06:57.643Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-13T19:22:28.700Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "2d7fb2cc15cb26a49e67c7405c4093bd294f0038862eff1522f90c575426b08f",
+      "targetHash": "7b1b7d1dc4f7e6c8fa699412ccec1cb2caa0251588279197e3c0ea50063dee2c",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"function_column.sequence_col\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"function_column.sequence_type\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"function_column.sequence_col\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"2.0\",\"3\",\"3\",\"4\"]; received [\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature description + Procedure -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 機能説明 + 手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: High-concurrency data ingestion / Out-of-order updates on the Unique Key model / UPDATE transaction control -->\"]; received [\"html\",null,null,\"<!-- 対象シナリオ: 高並行度のデータ取り込み / Unique Key モデルにおける順不同の更新 / UPDATE のトランザクション制御 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"2.0\",\"3\",\"3\",\"4\"]; received [\"1\",\"2\",\"2.0\",\"3\",\"3\",\"4\",\"4\",\"4\"]\nprotected node 18: expected [\"inlineCode\",null,null,\"function_column.sequence_col\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"function_column.sequence_type\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"function_column.sequence_col\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"function_column.sequence_type\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"function_column.sequence_col\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/update/unique-update-concurrent-control.md",
+        "blob": "66d405072f69c7fab5ab178ba33eb02710f97035"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/update/unique-update-concurrent-control.md",
+        "blob": "d1acca1c0f35191f99abdda3c57b7af0da6cf2ab"
+      }
+    }
   }
 }

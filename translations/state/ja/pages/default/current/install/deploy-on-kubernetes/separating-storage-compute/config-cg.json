@@ -8,24 +8,26 @@
     "sourceLocale": "en",
     "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
-    "sourceCommit": "5736ad75317fc096f00b6aaea3bc289a2862a41c",
-    "sourceHash": "9711b1d30068618cce932643f85ceb3329794f33d73fa4c5d6c5007f14adf584",
-    "sourceTechnicalHash": "188ff26abb3f50b15ab553ab0c54635682f803eaa3f6eed71e6566c099a71d67",
-    "targetHash": "3826913472cfa42b55978de74937401d6f3bf69482d61ab826e40dce6a3a59c0",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "0bd3311ad8c6b04e69e205b11b5cb6759029d4f83c45e83152dcee48c69a9e92",
+    "sourceTechnicalHash": "e7fb4295b281abf0336ffedaa4cd9e4c767330d59296d4e80402770d676af9de",
+    "targetHash": "68755ba8f18f7e91f7f3a3217c9a827bcb169105c3b4162dbcfcd7da8a3dde7f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-18T05:03:12.857Z",
+    "translatedAt": "2026-11-13T19:30:04.379Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
       "attempts": 3,
       "acceptedWithWarnings": true,
-      "sourceHash": "9711b1d30068618cce932643f85ceb3329794f33d73fa4c5d6c5007f14adf584",
-      "targetHash": "3826913472cfa42b55978de74937401d6f3bf69482d61ab826e40dce6a3a59c0",
+      "sourceHash": "0bd3311ad8c6b04e69e205b11b5cb6759029d4f83c45e83152dcee48c69a9e92",
+      "targetHash": "68755ba8f18f7e91f7f3a3217c9a827bcb169105c3b4162dbcfcd7da8a3dde7f",
       "warnings": [
         {
           "check": "protected-content",
-          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
         }
       ],
       "history": [
@@ -34,7 +36,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
             }
           ]
         },
@@ -43,7 +45,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]\nprotected node 31: expected [\"inlineCode\",null,null,\"doris\"]; received [\"inlineCode\",null,null,\"cg1\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 38: expected [\"inlineCode\",null,null,\"LoadBalancer\"]; received [\"inlineCode\",null,null,\"computeGroup.service\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"computeGroup.service\"]; received [\"inlineCode\",null,null,\"LoadBalancer\"]"
             }
           ]
         },
@@ -52,11 +54,21 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
             }
           ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
+        "blob": "7802d7f147aca487aaf0575887e2a4741f7348f6"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
+        "blob": "d67d2ba41b2b4090435bb1e6544785bc833ee4b0"
+      }
     }
   }
 }

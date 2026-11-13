@@ -8,29 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/storages/aliyun-oss.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/storages/aliyun-oss.md",
-    "sourceCommit": "a00ecb74bfde68f1858ff1b06a45b7025289e048",
-    "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
-    "sourceTechnicalHash": "14194a30d59d401728ab85c5a31af341d62e67cfe49834dcb097ba5d139b32e7",
-    "targetHash": "2c327bfe84703bbe0abdb557621dffbfe4d6d26d460c8ae095f4927fe8ceb191",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "474df2216de0fb957a2b69b24e11322125c20c9dc581c38189d407cb41fd69af",
+    "sourceTechnicalHash": "f635231290ca4b4ade59dd8b263bfca6940fec2eebe312a300efefd3848ba6ac",
+    "targetHash": "fbad46157a6d690990a8dce5c9b83d2c941fbcd863366972b82578db908f1b0e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-20T05:29:01.873Z",
+    "translatedAt": "2026-11-13T19:37:15.722Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "glossary-version-changed",
-      "attempts": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
-      "targetHash": "2c327bfe84703bbe0abdb557621dffbfe4d6d26d460c8ae095f4927fe8ceb191",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "474df2216de0fb957a2b69b24e11322125c20c9dc581c38189d407cb41fd69af",
+      "targetHash": "fbad46157a6d690990a8dce5c9b83d2c941fbcd863366972b82578db908f1b0e",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"S3(...)\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"S3(...)\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"S3(...)\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"S3(...)\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"hadoop/conf/core-site.xml,hadoop/conf/hdfs-site.xml\"]; received [\"inlineCode\",null,null,\"fe.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"S3(...)\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"S3(...)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"S3(...)\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"S3(...)\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/storages/aliyun-oss.md",
+        "blob": "565d924f1184122343fb93154815a4c475b8fd94"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/storages/aliyun-oss.md",
+        "blob": "f0dee55d73183908c1f612c1927f10f584faaf6c"
+      }
     }
   }
 }
