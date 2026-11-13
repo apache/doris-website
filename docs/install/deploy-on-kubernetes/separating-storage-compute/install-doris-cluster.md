@@ -346,3 +346,4 @@ After completing the 5 steps above, the cluster is ready for use. In production 
 | Adjust FE resources, change the number of Followers, customize startup configuration, configure access mode (NodePort / LoadBalancer), persistent storage | [Configure FE](config-fe.md) | All fields under `spec.feSpec.*` |
 | Single-group / multi-group Compute Groups, resource limits, access mode configuration, persistence of cache and logs | [Configure Compute Group](config-cg.md) | All fields under `spec.computeGroups[*]` |
 | Set root / non-root admin user passwords, Secret credentials, mount Kerberos authentication files | [Configure Authentication](config-cluster.md) | Cluster-level credentials and Kerberos |
+| Scale BE nodes, add or remove compute groups, check scale-in and PVC cleanup | [Scale Compute Capacity](config-cg.md#scaling-compute-groups) | Operating steps, decommission behavior, and validation |

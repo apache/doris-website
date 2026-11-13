@@ -467,6 +467,10 @@
     "message": "字符串函数",
     "description": "The label for category String Functions in sidebar docs"
   },
+  "sidebar.docs.category.URL Functions": {
+    "message": "URL 函数",
+    "description": "The label for category URL Functions in sidebar docs"
+  },
   "sidebar.docs.category.Date Functions": {
     "message": "时间日期函数",
     "description": "The label for category Date Functions in sidebar docs"

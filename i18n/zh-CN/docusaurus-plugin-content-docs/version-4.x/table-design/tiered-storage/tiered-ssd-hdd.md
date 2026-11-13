@@ -55,7 +55,7 @@ Doris 支持在 SSD 与 HDD 之间进行层级存储。通过结合动态分区�
 层级存储的执行流程如下：
 
 1. 创建表时启用动态分区，并指定 `dynamic_partition.storage_medium = HDD`。
-2. 通过 `dynamic_partition.hot_partition_num` 指定最近 N 个分区为热分区，存放在 SSD 上。
+2. 通过 `dynamic_partition.hot_partition_num` 将当前分区、之前 `N - 1` 个时间单位的分区和所有未来分区保留在 SSD 上。
 3. 系统为每个热分区设置 `storage_cooldown_time`（冷却时间）。
 4. 冷却时间到达后，分区数据从 SSD 自动迁移至 HDD。
 
@@ -69,12 +69,12 @@ Doris 支持在 SSD 与 HDD 之间进行层级存储。通过结合动态分区�
 
 | 参数                                 | 作用                                                       | 默认值 | 备注                                       |
 | ------------------------------------ | ---------------------------------------------------------- | ------ | ------------------------------------------ |
-| `dynamic_partition.hot_partition_num` | 指定最近多少个分区为热分区，存储在 SSD 上                  | 无     | 必须配合 `storage_medium = HDD` 使用       |
+| `dynamic_partition.hot_partition_num` | 当 `N > 0` 时，将当前分区、之前 `N - 1` 个时间单位的分区和所有未来分区保留在 SSD 上                  | 无     | 必须配合 `storage_medium = HDD` 使用       |
 | `dynamic_partition.storage_medium`    | 指定动态分区的最终存储介质                                 | HDD    | 设为 SSD 时 `hot_partition_num` 不再生效   |
 
 ### dynamic_partition.hot_partition_num
 
-- **功能**：指定最近 N 个分区为热分区，这些分区存储在 SSD 上，其余分区存储在 HDD 上。
+- **功能**：当取值 `N > 0` 时，将当前分区、之前 `N - 1` 个时间单位的分区和所有未来分区保留在 SSD 上，更早的分区使用 HDD。
 - **使用条件**：
     - 必须同时设置 `dynamic_partition.storage_medium = HDD`，否则该参数不会生效。
     - 存储路径下必须存在 SSD 设备，否则分区创建会失败。
@@ -101,6 +101,10 @@ p20210522：["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_tim
 p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
 ```
 
+对于按天分区的表，当天分区的偏移量为 `0`。当 `hot_partition_num = N > 0` 且最终存储介质为 `HDD` 时，偏移量大于 `-N` 的分区使用 SSD，包括当天、之前 `N - 1` 天，以及 `dynamic_partition.end` 创建的所有未来分区。偏移量为 `i` 的 SSD 分区，其冷却时间为相对当天第 `i + N` 天的起始时刻。
+
+本例中，偏移量 `-3`、`-2` 的分区使用 HDD，偏移量 `-1` 到 `3` 的分区使用 SSD。以 **2021-05-20** 为当前日期，`hot_partition_num = 2` 时有 5 个 SSD 分区。创建历史分区还需设置 `dynamic_partition.create_history_partition = true`，见下方完整建表示例。
+
 ### dynamic_partition.storage_medium
 
 - **功能**：指定动态分区的最终存储介质，可选 `HDD`（默认）或 `SSD`。
@@ -117,7 +121,7 @@ p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_tim
 
 ### 步骤一：创建分层存储表
 
-目的：建表并启用 SSD/HDD 分层存储，最近 2 个分区使用 SSD，其余使用 HDD。
+目的：建表并启用 SSD/HDD 分层存储。`hot_partition_num = 2` 时，当天、前一天和所有未来分区使用 SSD，更早的分区使用 HDD。
 
 ```sql
 CREATE TABLE tiered_table (k DATE)
@@ -145,7 +149,7 @@ PROPERTIES
 SHOW PARTITIONS FROM tiered_table;
 ```
 
-预期输出：共 7 个分区，其中 5 个使用 SSD，2 个使用 HDD。
+假设建表时当前日期仍为 **2021-05-20**，以下列出与存储分层相关的预期分区信息：共 7 个分区，其中 5 个使用 SSD，2 个使用 HDD。
 
 ```Plain
 p20210517：["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59
