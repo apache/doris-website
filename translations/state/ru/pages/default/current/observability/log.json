@@ -8,39 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/observability/log.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/observability/log.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "141d516841ffcee3592075571422b13e41bee0ae6544ffeefd5fde67b734c738",
-    "sourceTechnicalHash": "f0a3db0c4b86e295086d418ee73ebf31257347cc9a7006972f48a629e149cd16",
-    "targetHash": "c949d8fb8c559fe28b92663eaabf2873451a7215274c9fd7ce74d279bb50d94f",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "eaaca59b239bda40acf6410ef1bd7d3367724225c6f7c4fe5250a681886d4a5a",
+    "sourceTechnicalHash": "0151ccf22482c6bbeb3630c7dfc33598dd23c271e0d368905f3e59fa2c1ab985",
+    "targetHash": "d11b8e3e0c2636ad59f95135401f0d9fc1b70863c41df97ef2a706c9658f132f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T08:30:13.157Z",
+    "translatedAt": "2026-11-13T06:49:53.348Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
-      "modelCalls": 2,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "141d516841ffcee3592075571422b13e41bee0ae6544ffeefd5fde67b734c738",
-      "targetHash": "c949d8fb8c559fe28b92663eaabf2873451a7215274c9fd7ce74d279bb50d94f",
+      "sourceHash": "eaaca59b239bda40acf6410ef1bd7d3367724225c6f7c4fe5250a681886d4a5a",
+      "targetHash": "d11b8e3e0c2636ad59f95135401f0d9fc1b70863c41df97ef2a706c9658f132f",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
           "issues": [
             {
-              "check": "request",
-              "message": "Codex reported a failed turn"
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.5\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"100\",\"100\",\"100\",\"100\",\"10737418240\",\"12\",\"12\",\"1214\",\"15\",\"15\",\"15.2\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.2\",\"2.3\",\"20\",\"20\",\"200\",\"200\",\"200\",\"242.7\",\"2427\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.2\",\"3.3\",\"3.3.1\",\"3.3.2\",\"3.4\",\"3.4.1\",\"3.4.2\",\"3.4.3\",\"3.4.4\",\"3.4.5\",\"3.4.6\",\"3.5\",\"3.5.1\",\"3.5.2\",\"3.5.3\",\"3.5.4\",\"3.6\",\"3.6.1\",\"3.6.2\",\"30\",\"30\",\"30\",\"30\",\"32\",\"32\",\"32\",\"32\",\"32\",\"33\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5.7\",\"50\",\"50\",\"50\",\"50\",\"50\",\"50\",\"53687091200\",\"6\",\"60\",\"60\",\"600\",\"600\",\"600\",\"64\",\"70\",\"8\",\"80\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"100\",\"100\",\"100\",\"100\",\"10737418240\",\"12\",\"12\",\"1214\",\"15\",\"15\",\"15.2\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.2\",\"2.3\",\"20\",\"20\",\"200\",\"200\",\"200\",\"242.7\",\"2427\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.2\",\"3.3\",\"3.3.1\",\"3.3.2\",\"3.4\",\"3.4.1\",\"3.4.2\",\"3.4.3\",\"3.4.4\",\"3.4.5\",\"3.4.6\",\"3.5\",\"3.5.1\",\"3.5.2\",\"3.5.3\",\"3.5.4\",\"3.6\",\"3.6.1\",\"3.6.2\",\"30\",\"30\",\"30\",\"30\",\"32\",\"32\",\"32\",\"32\",\"32\",\"33\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5.7\",\"50\",\"50\",\"50\",\"50\",\"50\",\"50\",\"53687091200\",\"6\",\"60\",\"60\",\"600\",\"600\",\"600\",\"64\",\"70\",\"80\"]"
             }
           ]
         },
         {
           "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Solution overview + Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип материала: обзор решения + инструкция -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Log platform selection / Log storage and search analysis / Elasticsearch alternative -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: выбор платформы для логов / хранение и анализ логов / альтернатива Elasticsearch -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- Тип материала: выбор архитектуры -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/observability/log.md",
+        "blob": "f851115bd7bda4062b2aaacd0618f6b09864b9ea"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/observability/log.md",
+        "blob": "1660ae6f07a4b6ae7837705e40efe9876d6d9f11"
+      }
     }
   }
 }
