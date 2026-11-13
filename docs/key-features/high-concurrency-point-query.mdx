@@ -45,17 +45,16 @@ The Apache Doris high-concurrency point query is a four-layer optimization that 
 - **`store_row_column`**: a table property that adds a hidden column holding each row in a row-encoded blob, so the BE reads one column instead of N to return a whole row.
 - **`SHORT-CIRCUIT`**: a marker in `EXPLAIN` output that appears once the planner has skipped the normal distributed plan and routed the query through a single-tablet, single-RPC path.
 - **`PreparedStatement`**: server-side statement caching over the MySQL protocol. Apache Doris caches the parsed statement, output expressions, and descriptor table per session, then reuses them across `EXECUTE` calls.
-- **`Row Cache`**: a separate LRU cache that holds whole rows. It survives the eviction pressure that the columnar Page Cache suffers under mixed analytical and point-query workloads.
 
 ## How does the Apache Doris high-concurrency point query work? {#how}
 
-The Apache Doris high-concurrency point query path threads five layers together: storage layout, FE plan rewrite, short-circuit dispatch, server-side `PreparedStatement` reuse, and a BE row lookup with optional Row Cache.
+The Apache Doris high-concurrency point query path threads five layers together: storage layout, FE plan rewrite, short-circuit dispatch, server-side `PreparedStatement` reuse, and a BE row lookup.
 
 1. **Storage layout.** When you set `store_row_column=true` at table creation, the BE writes each row both into the columnar segments and into a row-encoded hidden column. From Apache Doris 3.0 onward you can scope this to a subset with `row_store_columns="k1,v1,v2"` to limit the storage overhead.
 2. **Plan rewrite (FE).** The Nereids rule `LogicalResultSinkToShortCircuitPointQuery` checks the query shape: single Unique table, equality conjuncts on every key column, no joins or subqueries, no aggregations. If everything matches, it flips the `isShortCircuitQuery` flag in the `StatementContext`.
 3. **Short-circuit dispatch.** Instead of building fragments and shipping them, the FE resolves the bucket through `PartitionPruneV2ForShortCircuitPlan`, picks the one tablet that can hold the key, and sends a single RPC to the BE that owns it.
 4. **Server-side `PreparedStatement` reuse.** With `useServerPrepStmts=true`, the FE caches the `ShortCircuitQueryContext` per session UUID. Subsequent `EXECUTE` calls skip parsing and planning entirely; only the parameter values change.
-5. **BE row lookup.** The `point_query_executor` locates the row by key, reads the row-format column, and returns the bytes. The optional Row Cache short-circuits even the segment read on a hit.
+5. **BE row lookup.** The `point_query_executor` locates the row by key, reads the row-format column, and returns the bytes.
 
 ## Quick start {#quick-start}
 
@@ -109,7 +108,7 @@ The Apache Doris high-concurrency point query fits any online service that reads
 
 ## Performance and verification {#performance}
 
-Apache Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. This is the same 4x cited from the prepared-statement angle in the [Prepared Statement card](./prepared-statement) — one combined gain, not two stackable ones. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
+Apache Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. This is the same 4x cited from the prepared-statement angle in the [Prepared Statement card](./prepared-statement) — one combined gain, not two stackable ones. Numbers depend on row width and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
 
 Two checks tell you the path is live:
 

@@ -217,25 +217,6 @@ resultSet = readStatement.executeQuery();
 ...
 ```
 
-### Row Storage Cache
-
-Apache Doris has a Page Cache feature, where each page caches the data of one column. 
-
-![page-cache](/images/high-concurrency_4.png)
-
-As mentioned above, we have introduced row storage in Doris. The problem with this is, one row of data consists of multiple columns, so in the case of big queries, the cached data might be erased. Thus, we also introduced row cache to increase row cache hit rate.
-
-Row cache reuses the LRU Cache mechanism in Apache Doris. When the caching starts, the system will initialize a threshold value. If that threshold is hit, the old cached rows will be phased out. For a primary key query statement, the performance gap between cache hit and cache miss can be huge (we are talking about dozens of times less disk I/O and memory access here). So the introduction of row cache can remarkably enhance point query performance.
-
-![row-cache](/images/high-concurrency_5.png)
-
-To enable row cache, you can specify the following configuration in BE:
-
-```JSON
-disable_storage_row_cache=false // This specifies whether to enable row cache; it is set to false by default.
-row_cache_mem_limit=20% // This specifies the percentage of row cache in the memory; it is set to 20% by default.
-```
-
 ## Benchmark Performance
 
 We tested Apache Doris with YCSB (Yahoo! Cloud Serving Benchmark) to see how all these optimizations work.
@@ -323,8 +304,8 @@ For a primary key-based point query like the one below, after table creation, yo
 select * from usertable where USER_KEY = xxx;
 ```
 
-To further unleash performance, you can apply prepared statement. If you have enough memory space, you can also enable row cache in the BE configuration.
+To further unleash performance, you can apply prepared statement.
 
 ## Conclusion
 
-In high-concurrency scenarios, Apache Doris realizes over 30,000 QPS per node after optimizations including row storage, short-circuit, prepared statement, and row cache. Also, Apache Doris is easily scaled out since it is built on MPP architecture, on top of which you can scale it up by upgrading the hardware and machine configuration. This is how Apache Doris manages to achieve both high throughput and high concurrency. It allows you to deal with various data analytic workloads on one single platform and experience quick data analytics for various scenarios. Thanks to the great efforts of the Apache Doris community and a group of excellent SelectDB engineers, Apache Doris 2.0 is about to be released soon.
+In high-concurrency scenarios, Apache Doris realizes over 30,000 QPS per node after optimizations including row storage, short-circuit, and prepared statements. Also, Apache Doris is easily scaled out since it is built on MPP architecture, on top of which you can scale it up by upgrading the hardware and machine configuration. This is how Apache Doris manages to achieve both high throughput and high concurrency. It allows you to deal with various data analytic workloads on one single platform and experience quick data analytics for various scenarios. Thanks to the great efforts of the Apache Doris community and a group of excellent SelectDB engineers, Apache Doris 2.0 is about to be released soon.

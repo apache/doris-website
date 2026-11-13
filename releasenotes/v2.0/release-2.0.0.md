@@ -53,7 +53,7 @@ A smartphone manufacturer tested Apache Doris 2.0.0 in their user behavior analy
 
 In scenarios like e-commerce order queries and express tracking, a huge number of end data users search for a certain data record simultaneously. These are what we call high-concurrency point queries, which can bring huge pressure on the system. A traditional solution is to introduce Key-Value stores like Apache HBase for such queries, and Redis as a cache layer to ease the burden, but that means redundant storage and higher maintenance costs.
 
-For a column-oriented DBMS like Apache Doris, the I/O usage of point queries will be multiplied. We need neater execution. Thus, on the basis of columnar storage, we added row storage format and row cache to increase row reading efficiency, short-circuit plans to speed up data retrieval, and prepared statements to reduce frontend overheads.
+For a column-oriented DBMS like Apache Doris, the I/O usage of point queries will be multiplied. We need neater execution. Thus, on the basis of columnar storage, we added a row storage format to increase row reading efficiency, short-circuit plans to speed up data retrieval, and prepared statements to reduce frontend overheads.
 
 After these optimizations, Apache Doris 2.0 reached a concurrency level of **30,000 QPS per node** on YCSB on a 16 Core 64G cloud server with 4×1T hard drives, representing an improvement of **20 times** compared to its older version. This makes Apache Doris a good alternative to HBase in high-concurrency scenarios, so that users don't need to endure extra maintenance costs and redundant storage brought by complicated tech stacks.
 
