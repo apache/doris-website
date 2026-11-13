@@ -32,7 +32,7 @@ WHERE TYPE={ BASE | CUMULATIVE }
 
 TYPE={ BASE | CUMULATIVE }
 
-> Where BASE refers to triggering a base compaction, and CUMULATIVE refers to triggering a cumulative compaction. For details, refer to the COMPACTION section.
+> Where BASE refers to triggering a base compaction, and CUMULATIVE refers to triggering a cumulative compaction. For details, refer to the [COMPACTION](../../../../admin-manual/trouble-shooting/compaction) section.
 
 ## Access Control Requirements
 

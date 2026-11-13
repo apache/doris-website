@@ -26,7 +26,7 @@ WHERE TYPE={ BASE | CUMULATIVE }
 
 2. `<partition_name>`：待触发 Compaction 的表名
 
-3. `TYPE={ BASE | CUMULATIVE }` : 其中 BASE 是指触发 Base Compaction，CUMULATIVE 是指触发 Cumulative Compaction，具体可以参考 COMPACTION 章节
+3. `TYPE={ BASE | CUMULATIVE }` : 其中 BASE 是指触发 Base Compaction，CUMULATIVE 是指触发 Cumulative Compaction，具体可以参考 [COMPACTION](../../../../admin-manual/trouble-shooting/compaction) 章节
 
 ## 权限控制
 

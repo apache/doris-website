@@ -15,6 +15,8 @@
 
 ## 描述
 
+如需了解 Base、Cumulative、Full 的选择和低 Score 时的合并行为，请先阅读 [Compaction 原理与手动操作](../../trouble-shooting/compaction-principles)。本页是 HTTP 接口参考。
+
 用于手动触发 Compaction 以及状态查询。
 
 ## 请求参数

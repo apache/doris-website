@@ -35,6 +35,10 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
     - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../../admin-manual/workload-management/job-scheduler) 可以异步写入。
 Doris 的每个导入默认都是一个隐式事务，事务相关的更多信息请参考[事务](../transaction.md)。
 
+## 导入后的查询性能
+
+导入事务提交且数据可见后，查询不需要等待后台 Compaction 完成。但大量导入、尤其高频小批次导入，可能积累较多 rowset/segment，使查询读取和归并开销上升。应合理合批并观察 Compaction 积压与资源占用；不要把每次导入后执行 Full Compaction 当作常规步骤。合并类型、Score 及手动操作的边界见 [Compaction 指南](../../admin-manual/trouble-shooting/compaction)。
+
 ## 导入方式快速浏览
 
 Doris 的导入主要涉及数据源、数据格式、导入方式、错误数据处理、数据转换、事务多个方面。您可以在如下表格中快速浏览各导入方式适合的场景和支持的文件格式。
