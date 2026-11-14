@@ -556,7 +556,7 @@ ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
 - NULL 許容の VARIANT カラムの `ADD COLUMN`。Schema Template とプロパティは指定してもしなくてもかまいません。
 - `DROP COLUMN`、`RENAME COLUMN`、`MODIFY COLUMN ... COMMENT '...'`。
 - `ADD INDEX` と `DROP INDEX`。`field_pattern` を持つインデックスは `CREATE TABLE` でのみ定義できます。
-- Schema Template のないカラムでは、`NOT NULL` から `NULL` への変更、および `variant_doc_materialization_min_rows` の変更。`MODIFY COLUMN` にはカラムの完全な定義を指定します。省略したプロパティには、対応する `default_variant_*` セッション変数の値が使われるため、異なる値を維持したいプロパティはすべて再指定してください。
+- Schema Template のないカラムでは、`NOT NULL` から `NULL` への変更、および `variant_doc_materialization_min_rows` の変更。`MODIFY COLUMN` にはカラムの完全な定義を指定します。省略したプロパティにはデフォルト値（[カラムのプロパティ](#column-properties)を参照）が使われるため、デフォルトと異なる値を維持したいプロパティはすべて再指定してください。
 
 次の操作はサポートされません。
 
@@ -606,21 +606,6 @@ CREATE TABLE example_table (
 | `variant_doc_hash_shard_count` | `64` | 不可 | DOC モード専用。格納するドキュメントを分割するカラムの数。範囲は 0～1024 で、`0` は `1` として扱われます。 |
 
 **ALTER** 列は、`ALTER TABLE ... MODIFY COLUMN` でそのプロパティを変更できるかどうかを示します。[ALTER TABLE](#alter-table) をご覧ください。スパースカラムと DOC モードのプロパティの使い方については、[ワイドカラム](#wide-columns)をご覧ください。
-
-### セッション変数 {#session-variables}
-
-| 変数 | デフォルト | 説明 |
-| --- | --- | --- |
-| `default_variant_max_subcolumns_count` | `2048` | このプロパティを指定せずに定義した VARIANT カラムの `variant_max_subcolumns_count` の値。 |
-| `default_variant_enable_typed_paths_to_sparse` | `false` | このプロパティを指定せずに定義したカラムの `variant_enable_typed_paths_to_sparse` の値。 |
-| `default_variant_sparse_hash_shard_count` | `0` | このプロパティを指定せずに定義したカラムの `variant_sparse_hash_shard_count` の値。`0` は `1` として扱われます。 |
-| `default_variant_max_sparse_column_statistics_size` | `10000` | このプロパティを指定せずに定義したカラムの `variant_max_sparse_column_statistics_size` の値。 |
-| `default_variant_enable_doc_mode` | `false` | このプロパティを指定せずに定義したカラムの `variant_enable_doc_mode` の値。 |
-| `default_variant_doc_materialization_min_rows` | `0` | このプロパティを指定せずに定義したカラムの `variant_doc_materialization_min_rows` の値。 |
-| `default_variant_doc_hash_shard_count` | `64` | このプロパティを指定せずに定義したカラムの `variant_doc_hash_shard_count` の値。 |
-| `describe_extend_variant_column` | `false` | `true` にすると、`DESC` に VARIANT カラムのサブカラムも表示されます。 |
-
-`default_variant_*` 変数は、`CREATE TABLE` または `ALTER TABLE` でカラムを定義するときに適用されます。これらの変数を変更しても既存のカラムには影響しませんが、後で `MODIFY COLUMN` を実行する際にプロパティを省略すると影響します。
 
 ### BE の設定 {#be-configuration}
 

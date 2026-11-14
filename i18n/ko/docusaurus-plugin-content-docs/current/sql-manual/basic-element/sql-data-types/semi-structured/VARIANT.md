@@ -556,7 +556,7 @@ ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
 - NULL을 허용하는 VARIANT 컬럼의 `ADD COLUMN`. Schema Template 및 속성의 유무와 관계없이 지원합니다.
 - `DROP COLUMN`, `RENAME COLUMN`, `MODIFY COLUMN ... COMMENT '...'`.
 - `ADD INDEX`와 `DROP INDEX`. `field_pattern`이 있는 인덱스는 `CREATE TABLE`에서만 정의할 수 있습니다.
-- Schema Template이 없는 컬럼에서 `NOT NULL`을 `NULL`로 변경하거나 `variant_doc_materialization_min_rows`를 변경하는 작업. `MODIFY COLUMN`에는 전체 컬럼 정의를 지정해야 합니다. 생략한 속성은 대응하는 `default_variant_*` 세션 변수의 값을 사용하므로, 값이 다른 속성은 모두 다시 명시하세요.
+- Schema Template이 없는 컬럼에서 `NOT NULL`을 `NULL`로 변경하거나 `variant_doc_materialization_min_rows`를 변경하는 작업. `MODIFY COLUMN`에는 전체 컬럼 정의를 지정해야 합니다. 생략한 속성은 기본값([컬럼 속성](#column-properties) 참조)을 사용하므로, 기본값과 다른 속성은 모두 다시 명시하세요.
 
 다음은 지원되지 않습니다.
 
@@ -606,21 +606,6 @@ CREATE TABLE example_table (
 | `variant_doc_hash_shard_count` | `64` | 아니요 | DOC 모드 전용입니다. 저장할 문서를 분할할 컬럼의 개수입니다. 범위는 0~1024이며, `0`은 `1`로 처리됩니다. |
 
 **ALTER** 열은 `ALTER TABLE ... MODIFY COLUMN`으로 해당 속성을 변경할 수 있는지 나타냅니다. [ALTER TABLE](#alter-table)을 참조하세요. 희소 컬럼 및 DOC 모드 속성의 사용법은 [와이드 컬럼](#wide-columns)을 참조하세요.
-
-### 세션 변수 {#session-variables}
-
-| 변수 | 기본값 | 설명 |
-| --- | --- | --- |
-| `default_variant_max_subcolumns_count` | `2048` | VARIANT 컬럼 정의에서 `variant_max_subcolumns_count`를 생략했을 때 사용하는 값입니다. |
-| `default_variant_enable_typed_paths_to_sparse` | `false` | 컬럼 정의에서 `variant_enable_typed_paths_to_sparse`를 생략했을 때 사용하는 값입니다. |
-| `default_variant_sparse_hash_shard_count` | `0` | 컬럼 정의에서 `variant_sparse_hash_shard_count`를 생략했을 때 사용하는 값입니다. `0`은 `1`로 처리됩니다. |
-| `default_variant_max_sparse_column_statistics_size` | `10000` | 컬럼 정의에서 `variant_max_sparse_column_statistics_size`를 생략했을 때 사용하는 값입니다. |
-| `default_variant_enable_doc_mode` | `false` | 컬럼 정의에서 `variant_enable_doc_mode`를 생략했을 때 사용하는 값입니다. |
-| `default_variant_doc_materialization_min_rows` | `0` | 컬럼 정의에서 `variant_doc_materialization_min_rows`를 생략했을 때 사용하는 값입니다. |
-| `default_variant_doc_hash_shard_count` | `64` | 컬럼 정의에서 `variant_doc_hash_shard_count`를 생략했을 때 사용하는 값입니다. |
-| `describe_extend_variant_column` | `false` | `true`이면 `DESC`가 VARIANT 컬럼의 하위 컬럼도 나열합니다. |
-
-`default_variant_*` 변수는 `CREATE TABLE` 또는 `ALTER TABLE`로 컬럼을 정의할 때 적용됩니다. 이 변수를 변경해도 기존 컬럼에는 영향을 주지 않지만, 이후 해당 속성을 생략한 `MODIFY COLUMN`에는 영향을 줍니다.
 
 ### BE 설정 {#be-configuration}
 
