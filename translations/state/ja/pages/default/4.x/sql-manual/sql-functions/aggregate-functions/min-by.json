@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
-    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
-    "sourceHash": "d7986eec336f27c7ca3e1bee54973c2a88ed14089664097b1246fe53ea5d6d5f",
-    "sourceTechnicalHash": "51cc0598c074689cfdec252363c8984e9e366b2a98c97f624cbb0c770a13aa2f",
-    "targetHash": "0537b2ba67b3de04907599988571831f3949ed1b3a4f2c967268afe0954b3c2b",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "78438fc7c1973a39f525a80f103f312e6b124b16b0bca0ed11f14eb3a509129e",
+    "sourceTechnicalHash": "7524574a89e7d9eddd7be449ddddb48eac539cb10cf9c8b12a47b2edd3d87002",
+    "targetHash": "bc7d933d8e86d6d09663648af2328c2b9edc052206479c12808329cc833258a5",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-31T17:16:11.347Z",
+    "translatedAt": "2026-11-14T16:50:44.959Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,12 +22,12 @@
       "reason": "chinese-reference-changed",
       "attempts": 3,
       "acceptedWithWarnings": true,
-      "sourceHash": "d7986eec336f27c7ca3e1bee54973c2a88ed14089664097b1246fe53ea5d6d5f",
-      "targetHash": "0537b2ba67b3de04907599988571831f3949ed1b3a4f2c967268afe0954b3c2b",
+      "sourceHash": "78438fc7c1973a39f525a80f103f312e6b124b16b0bca0ed11f14eb3a509129e",
+      "targetHash": "bc7d933d8e86d6d09663648af2328c2b9edc052206479c12808329cc833258a5",
       "warnings": [
         {
           "check": "protected-content",
-          "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"sql\",null,\"MIN_BY(<expr1>, <expr2>)\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"code\",\"sql\",null,\"MIN_BY(<expr1>, <expr2>)\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
+          "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"<expr2>\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"MIN_BY\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"MIN_BY\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
         }
       ],
       "history": [
@@ -36,7 +36,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"sql\",null,\"MIN_BY(<expr1>, <expr2>)\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"code\",\"sql\",null,\"MIN_BY(<expr1>, <expr2>)\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.0\",\"4.1\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\",\"4.2\"]; received [\"2\",\"4.0\",\"4.1\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\",\"4.2\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"MIN_BY\"]; received [\"inlineCode\",null,null,\"NULL\"]"
             }
           ]
         },
@@ -45,7 +45,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 11: expected [\"code\",\"text\",null,\"Table created and data inserted successfully.\"]; received [\"code\",\"text\",null,\"テーブルの作成とデータの挿入に成功しました。\"]"
+              "message": "Restore protected source content:\nprotected node 10: expected [\"inlineCode\",null,null,\"MIN\"]; received [\"inlineCode\",null,null,\"<expr1>\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"inlineCode\",null,null,\"MIN\"]\nprotected node 32: expected [\"inlineCode\",null,null,\"k1\"]; received [\"inlineCode\",null,null,\"k4\"]"
             }
           ]
         },
@@ -54,7 +54,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"sql\",null,\"MIN_BY(<expr1>, <expr2>)\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"code\",\"sql\",null,\"MIN_BY(<expr1>, <expr2>)\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"<expr2>\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"MIN_BY\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"MIN_BY\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
             }
           ]
         }
@@ -63,11 +63,11 @@
     "sourceRevisions": {
       "en": {
         "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
-        "blob": "cce5d69bfddd0ca31c9a6fc1264e4359a832e9bb"
+        "blob": "091e95a2c1789418ace140f01c09d3542fd25529"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
-        "blob": "2dbbaa5ee1c61bcb23a1fbd885ac134d7577b264"
+        "blob": "d4480b2748b8f0f209156e22666475780e9dbdb8"
       }
     }
   }
