@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
-    "sourceTechnicalHash": "01f90aff160c57d037316f9b13ef2305a3dc62d1eea050c1b0d6fe542c66cda3",
-    "targetHash": "41b8c07a1ca3bac9af9e8defd92164afe532534066c38b4824d2868ffb6d4237",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "06e039cc4a55005be8e96ea1de7a47c696aff2a18c7eae4dda3034c618cce213",
+    "sourceTechnicalHash": "6061cd0bb43160922e1631a64f32467e56906b11a5a3519aaa815429e2f5165c",
+    "targetHash": "b4da880ca476ca3e3c7da62338edae2914a0d13e2cdab72f39762b67da1f7466",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.602Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-14T17:26:49.462Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "06e039cc4a55005be8e96ea1de7a47c696aff2a18c7eae4dda3034c618cce213",
+      "targetHash": "b4da880ca476ca3e3c7da62338edae2914a0d13e2cdab72f39762b67da1f7466",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"N - 1\"]; received [\"inlineCode\",null,null,\"N > 0\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"N > 0\"]; received [\"inlineCode\",null,null,\"N - 1\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"05\",\"05\",\"05\",\"1\",\"1\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"2021\",\"2021\",\"2021\",\"3\",\"3\",\"4\",\"5\",\"7\"]; received [\"05\",\"05\",\"05\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"2021\",\"2021\",\"2021\",\"3\",\"3\",\"4\",\"5\",\"5\",\"7\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature introduction + Configuration parameters + Operation steps -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 機能紹介 + 設定パラメータ + 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Hot-cold data separation / Storage cost optimization / Query performance assurance -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: ホット・コールドデータの分離 / ストレージコストの最適化 / クエリ性能の確保 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"N - 1\"]; received [\"inlineCode\",null,null,\"N > 0\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"N > 0\"]; received [\"inlineCode\",null,null,\"N - 1\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"N - 1\"]; received [\"inlineCode\",null,null,\"N > 0\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"N > 0\"]; received [\"inlineCode\",null,null,\"N - 1\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
+        "blob": "0a4c0383276a4ee6ae6e0d873821030f12cd62b1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
+        "blob": "84797a69eafec13d9ce082812e7238263875fd0d"
+      }
+    }
   }
 }
