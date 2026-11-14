@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="620" viewBox="0 0 1440 620" role="img" aria-labelledby="title desc">
+  <title id="title">LineageInfo event model</title>
+  <desc id="desc">A LineageInfo event combines target and source tables, direct lineage per output column, indirect lineage, and query context.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4b6472"/></marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #173b4d; }
+      .label { font: 700 18px Arial, sans-serif; fill: #173b4d; }
+      .body { font: 16px Arial, sans-serif; fill: #3b5360; }
+      .small { font: 14px Arial, sans-serif; fill: #526b77; }
+      .edge { fill: none; stroke: #4b6472; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1440" height="620" fill="#f7faf9"/>
+  <text x="72" y="70" class="title">LineageInfo Event Model</text>
+  <text x="72" y="102" class="body">A plugin converts these in-memory Doris objects into a stable downstream event schema.</text>
+
+  <rect x="72" y="166" width="244" height="144" rx="8" fill="#e7f4f1" stroke="#2f8f83" stroke-width="2"/>
+  <text x="96" y="208" class="label">Target</text>
+  <text x="96" y="242" class="body">Target table</text>
+  <text x="96" y="270" class="body">Target output columns</text>
+
+  <rect x="72" y="386" width="244" height="144" rx="8" fill="#edf5fb" stroke="#4d86b7" stroke-width="2"/>
+  <text x="96" y="428" class="label">Sources</text>
+  <text x="96" y="462" class="body">Referenced source tables</text>
+  <text x="96" y="490" class="small">CTE and UNION resolved</text>
+
+  <rect x="416" y="118" width="284" height="192" rx="8" fill="#fff4df" stroke="#bf8329" stroke-width="2"/>
+  <text x="440" y="160" class="label">Direct lineage</text>
+  <text x="440" y="194" class="body">Per target output column</text>
+  <text x="440" y="228" class="body">IDENTITY: source column</text>
+  <text x="440" y="256" class="body">TRANSFORMATION: expression</text>
+  <text x="440" y="284" class="body">AGGREGATION: aggregate</text>
+
+  <rect x="416" y="358" width="284" height="192" rx="8" fill="#f3edf8" stroke="#8263a4" stroke-width="2"/>
+  <text x="440" y="400" class="label">Indirect lineage</text>
+  <text x="440" y="434" class="body">Dataset: JOIN, FILTER,</text>
+  <text x="440" y="460" class="body">GROUP_BY, SORT</text>
+  <text x="440" y="494" class="body">Output: WINDOW, CONDITIONAL</text>
+
+  <rect x="808" y="208" width="250" height="194" rx="8" fill="#eef3f5" stroke="#647d89" stroke-width="2"/>
+  <text x="832" y="250" class="label">LineageInfo</text>
+  <text x="832" y="286" class="body">Tables and columns</text>
+  <text x="832" y="314" class="body">Expression dependencies</text>
+  <text x="832" y="342" class="body">LineageContext</text>
+
+  <rect x="1166" y="136" width="202" height="154" rx="8" fill="#e7f4f1" stroke="#2f8f83" stroke-width="2"/>
+  <text x="1190" y="178" class="label">Plugin output</text>
+  <text x="1190" y="212" class="body">Stable dataset IDs</text>
+  <text x="1190" y="240" class="body">Column dependencies</text>
+  <text x="1190" y="268" class="body">Downstream schema</text>
+
+  <rect x="1166" y="370" width="202" height="154" rx="8" fill="#edf5fb" stroke="#4d86b7" stroke-width="2"/>
+  <text x="1190" y="412" class="label">Query context</text>
+  <text x="1190" y="446" class="body">Query ID, SQL, user</text>
+  <text x="1190" y="474" class="body">Time and catalog details</text>
+
+  <path d="M316 238 H416" class="edge"/>
+  <path d="M316 458 H416" class="edge"/>
+  <path d="M700 214 H808" class="edge"/>
+  <path d="M700 454 C756 454 756 354 808 354" class="edge"/>
+  <path d="M1058 278 H1166" class="edge"/>
+  <path d="M1058 342 C1112 342 1112 447 1166 447" class="edge"/>
+</svg>
