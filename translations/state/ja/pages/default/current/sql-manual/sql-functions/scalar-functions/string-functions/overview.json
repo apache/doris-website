@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/overview.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "3d7c10125d6dca7bbdccff395d80087670f5e073f8d1f5e5c7e9cbb4ef73d0b6",
-    "sourceTechnicalHash": "58369992a832136a6463abcded811fa28f39f3b304aefdb364eae35c185f1a60",
-    "targetHash": "9cab78f410e5fadfb2a7a1c4aaf09370d551d2c33c0caee945e10ea9abc2da29",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "d4af30d2b517c902c5a3fcadbd9a0d1b273d8ba38f44924418dd58b951f7934c",
+    "sourceTechnicalHash": "32882a30e1c4b526961b14bef9c8c267a6a6057716d66a90d9abb92f90ca704f",
+    "targetHash": "f8e7414c2dc170c6211ba591262c23ae197a21115d0a51b6da7880c5ade42dec",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T19:01:49.806Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-14T04:40:15.529Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d4af30d2b517c902c5a3fcadbd9a0d1b273d8ba38f44924418dd58b951f7934c",
+      "targetHash": "f8e7414c2dc170c6211ba591262c23ae197a21115d0a51b6da7880c5ade42dec",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-functions/scalar-functions/string-functions/overview.md",
+        "blob": "4ce7c7845b12632f3d820a3ee2083ce0f07148ad"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/overview.md",
+        "blob": "2fa8966673689414e7c7d0f11dc83549a94f4d55"
+      }
+    }
   }
 }
