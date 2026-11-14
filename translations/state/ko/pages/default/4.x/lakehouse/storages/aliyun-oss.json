@@ -8,41 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/aliyun-oss.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/aliyun-oss.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
-    "sourceTechnicalHash": "14194a30d59d401728ab85c5a31af341d62e67cfe49834dcb097ba5d139b32e7",
-    "targetHash": "562fde591452791ad30f568589321d5c1c08ae693cd33e292c0929874dc0f76e",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "474df2216de0fb957a2b69b24e11322125c20c9dc581c38189d407cb41fd69af",
+    "sourceTechnicalHash": "f635231290ca4b4ade59dd8b263bfca6940fec2eebe312a300efefd3848ba6ac",
+    "targetHash": "14f11dae98195c939baab8efbe9786759436fa000d35287f4f997d2d6b1c75f2",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T10:23:54.701Z",
+    "translatedAt": "2026-11-14T17:46:29.088Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
-      "targetHash": "562fde591452791ad30f568589321d5c1c08ae693cd33e292c0929874dc0f76e",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "474df2216de0fb957a2b69b24e11322125c20c9dc581c38189d407cb41fd69af",
+      "targetHash": "14f11dae98195c939baab8efbe9786759436fa000d35287f4f997d2d6b1c75f2",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"S3(...)\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"S3(...)\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"S3(...)\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"S3(...)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"S3(...)\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"S3(...)\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"hadoop/conf/core-site.xml,hadoop/conf/hdfs-site.xml\"]; received [\"inlineCode\",null,null,\"fe.conf/be.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"S3(...)\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"S3(...)\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "merged",
-        "version": "current",
-        "docId": "lakehouse/storages/aliyun-oss",
-        "sourcePath": "docs/lakehouse/storages/aliyun-oss.md",
-        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/storages/aliyun-oss.md",
-        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-        "sourceHash": "85e38456d382af4b7bbaac89fa54bc015355aa9bb29fbe6e7170e41fa912c3dd",
-        "targetHash": "562fde591452791ad30f568589321d5c1c08ae693cd33e292c0929874dc0f76e",
-        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/lakehouse/storages/aliyun-oss.md",
+        "blob": "565d924f1184122343fb93154815a4c475b8fd94"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/aliyun-oss.md",
+        "blob": "f0dee55d73183908c1f612c1927f10f584faaf6c"
       }
     }
   }
