@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "blog",
+    "version": "current",
+    "docId": "apache-doris-4-2-peer-read-cache-sharing.md",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "blog/apache-doris-4-2-peer-read-cache-sharing.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-blog/apache-doris-4-2-peer-read-cache-sharing.md",
+    "sourceCommit": "52a91a95e0603218b7576d2df352f39be6f2839e",
+    "sourceHash": "7f168f252a7ca3957879b119fad9a31d45ec91e4b1913fdf0d2d12c70135265e",
+    "sourceTechnicalHash": "6a4caa1a2f9083a6d23145ced9538ca0f2a8bbb07a323accad94667249547d6e",
+    "targetHash": "1caeb200f8df91dffd6246d566bd6f679254864a46d2a3d4c2e4c72884aa4287",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T06:35:56.259Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "blog/apache-doris-4-2-peer-read-cache-sharing.md",
+        "blob": "1218c985e1a7e620222b3bd8244f426dc759d392"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-blog/apache-doris-4-2-peer-read-cache-sharing.md",
+        "blob": null
+      }
+    }
+  }
+}

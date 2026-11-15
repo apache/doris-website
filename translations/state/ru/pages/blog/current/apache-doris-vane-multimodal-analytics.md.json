@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "blog",
+    "version": "current",
+    "docId": "apache-doris-vane-multimodal-analytics.md",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "blog/apache-doris-vane-multimodal-analytics.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-blog/apache-doris-vane-multimodal-analytics.md",
+    "sourceCommit": "52a91a95e0603218b7576d2df352f39be6f2839e",
+    "sourceHash": "5af67426dd844678b06ff1ee34219588e9a944e3145b4e4c1a2451d6200bd804",
+    "sourceTechnicalHash": "52dd1ab2e34409b83b86d2824146b16664fcbe3ea343d2568d9da11d9abe0ce6",
+    "targetHash": "0babaf3fd1de54155f34a09f2c6029da5bb7d9e050841867e824ff6004a006d8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T06:49:18.418Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "blog/apache-doris-vane-multimodal-analytics.md",
+        "blob": "5a79a07cf57a2fec8a5069be9a368504ee92c8b0"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-blog/apache-doris-vane-multimodal-analytics.md",
+        "blob": null
+      }
+    }
+  }
+}
