@@ -2,15 +2,27 @@
 {
     "title": "STRING",
     "language": "ko",
-    "description": "가변 길이 문자열입니다. 기본적으로 10485760바이트(10 MiB)를 지원하며, 최대 2147483643바이트(2G)까지 조정할 수 있습니다."
+    "description": "가변 길이 문자열입니다. 기본 지원 길이는 10485760바이트(10 MiB)이며, 최대 2147483643바이트(2G)까지 늘릴 수 있습니다."
 }
 ---
 
 ## STRING {#string}
 ### 설명 {#description}
-기본 소프트 길이 제한이 10485760바이트(10 MiB)인 가변 길이 문자열입니다. BE에서 `string_type_length_soft_limit_bytes`를 설정하면 이 제한을 최대 2147483643바이트(약 2 GiB)까지 늘릴 수 있습니다. STRING은 값 컬럼에만 사용할 수 있으며, 키, 파티션 또는 버킷 컬럼에는 사용할 수 없습니다.
+기본 소프트 길이 제한이 10485760바이트(10 MiB)인 가변 길이 문자열입니다. BE에서 `string_type_length_soft_limit_bytes`를 설정하면 이 제한을 최대 2147483643바이트(약 2 GiB)까지 늘릴 수 있습니다. STRING은 값 컬럼에만 사용할 수 있으며 키, 파티션 또는 버킷 컬럼에는 사용할 수 없습니다.
 
-참고: 가변 길이 문자열은 UTF-8 인코딩으로 저장되므로 일반적으로 영문자는 1바이트, 한자는 3바이트를 차지합니다.
+참고: 가변 길이 문자열은 UTF-8 인코딩으로 저장되므로 일반적으로 영문자는 1바이트, 중국어 문자는 3바이트를 차지합니다.
 
 ### 키워드 {#keywords}
 STRING
+
+### 타입 별칭과 메타데이터 표시 {#type-aliases-and-metadata-display}
+
+`STRING`과 `TEXT`는 동일한 Doris 타입을 정의합니다. 인터페이스에 따라 이 타입의 표시 방식이 다릅니다.
+
+| 인터페이스 | `STRING` 컬럼의 표시 값 |
+| --- | --- |
+| `SHOW CREATE TABLE` 및 `DESC` | `text` |
+| `information_schema.columns.DATA_TYPE` | MySQL 호환성을 위해 `varchar`로 표시 |
+| `information_schema.columns.COLUMN_TYPE` | `string` |
+
+이러한 이름은 저장된 타입이나 길이 제한을 바꾸지 않습니다. 메타데이터에서 Doris `STRING` 컬럼과 길이 제한이 있는 `VARCHAR` 컬럼을 구분하려면 `COLUMN_TYPE`을 확인하세요.
