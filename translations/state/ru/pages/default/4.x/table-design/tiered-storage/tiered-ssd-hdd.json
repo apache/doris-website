@@ -8,42 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
-    "sourceTechnicalHash": "01f90aff160c57d037316f9b13ef2305a3dc62d1eea050c1b0d6fe542c66cda3",
-    "targetHash": "9a3243eb70426c4b6b6a84cdeb955ddec6efd29a680113a5c03e494f2be66704",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "06e039cc4a55005be8e96ea1de7a47c696aff2a18c7eae4dda3034c618cce213",
+    "sourceTechnicalHash": "6061cd0bb43160922e1631a64f32467e56906b11a5a3519aaa815429e2f5165c",
+    "targetHash": "39cd32c74f395812b99f36bb335f6f3079e4dba86b8e5cbb7540fe4374f01a2a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-23T02:04:09.693Z",
+    "translatedAt": "2026-11-14T19:18:24.359Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
-      "targetHash": "9a3243eb70426c4b6b6a84cdeb955ddec6efd29a680113a5c03e494f2be66704",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "06e039cc4a55005be8e96ea1de7a47c696aff2a18c7eae4dda3034c618cce213",
+      "targetHash": "39cd32c74f395812b99f36bb335f6f3079e4dba86b8e5cbb7540fe4374f01a2a",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"N - 1\"]; received [\"inlineCode\",null,null,\"N > 0\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"N > 0\"]; received [\"inlineCode\",null,null,\"N - 1\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"05\",\"05\",\"05\",\"1\",\"1\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"2021\",\"2021\",\"2021\",\"3\",\"3\",\"4\",\"5\",\"7\"]; received [\"05\",\"05\",\"05\",\"1\",\"1\",\"2\",\"2\",\"20\",\"20\",\"20\",\"2021\",\"2021\",\"2021\",\"3\",\"3\",\"4\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature introduction + Configuration parameters + Operation steps -->\"]; received [\"html\",null,null,\"<!-- Тип материала: описание функции + параметры конфигурации + порядок действий -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Hot-cold data separation / Storage cost optimization / Query performance assurance -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: разделение горячих и холодных данных / снижение стоимости хранения / обеспечение производительности запросов -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"N - 1\"]; received [\"inlineCode\",null,null,\"N > 0\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"N > 0\"]; received [\"inlineCode\",null,null,\"N - 1\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"hot_partition_num\"]; received [\"inlineCode\",null,null,\"SSD\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"N - 1\"]; received [\"inlineCode\",null,null,\"N > 0\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"N > 0\"]; received [\"inlineCode\",null,null,\"N - 1\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "table-design/tiered-storage/tiered-ssd-hdd",
-        "sourcePath": "docs/table-design/tiered-storage/tiered-ssd-hdd.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/tiered-storage/tiered-ssd-hdd.md",
-        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-        "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
-        "targetHash": "9a3243eb70426c4b6b6a84cdeb955ddec6efd29a680113a5c03e494f2be66704",
-        "commit": "aa2a9993a3f68b04675dba12f6054562b5817c76",
-        "pr": "https://github.com/apache/doris-website/pull/4457"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
+        "blob": "0a4c0383276a4ee6ae6e0d873821030f12cd62b1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
+        "blob": "84797a69eafec13d9ce082812e7238263875fd0d"
       }
     }
   }

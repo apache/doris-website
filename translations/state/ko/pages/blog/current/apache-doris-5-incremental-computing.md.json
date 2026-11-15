@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "blog",
+    "version": "current",
+    "docId": "apache-doris-5-incremental-computing.md",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "blog/apache-doris-5-incremental-computing.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-blog/apache-doris-5-incremental-computing.md",
+    "sourceCommit": "52a91a95e0603218b7576d2df352f39be6f2839e",
+    "sourceHash": "5fa4f1b06a2942a88bbccb1739a19de2a702d6124a633866fa955f24b2e56022",
+    "sourceTechnicalHash": "413ac45fe97f8cfc3a910a126afb2ff88b125644b3a0c6e8e74817c2d1791653",
+    "targetHash": "685f3e41d83dbd2f9fb70acb753c84f36cf1ae57d722df370ecd2adab05c982f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T06:05:42.639Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "blog/apache-doris-5-incremental-computing.md",
+        "blob": "4e7cf179d4601c0462484f12220ffabbdd471295"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-blog/apache-doris-5-incremental-computing.md",
+        "blob": null
+      }
+    }
+  }
+}

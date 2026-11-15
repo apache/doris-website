@@ -10,6 +10,8 @@
 
 String functions are built-in functions used to process and manipulate string data. They help perform various string operations, such as concatenation, splitting, replacement, searching, etc.
 
+For URL parsing, domain extraction, and URL encoding or decoding, see [URL Functions](../url-functions/overview.md).
+
 ## UTF-8 Encoding Support
 
 UTF-8 encoding is a variable-length character encoding that can represent almost all characters in the world, including Cyrillic, Greek, Chinese characters, emojis, and more.

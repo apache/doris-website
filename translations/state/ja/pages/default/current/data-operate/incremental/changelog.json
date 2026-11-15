@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/changelog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/changelog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/changelog.md",
+    "sourceCommit": "e4875f34f7edf805c23d3dd1f646af3648e2ac2e",
+    "sourceHash": "bf1fe9c08aa2a9e2fce782be2f5f9c41c7f2d31dab6868dc94ee8b11a6a5287d",
+    "sourceTechnicalHash": "61ad6350cd1177b83dcb2e78b4fbfc29c42796e8af06ddcb58da7b3dda11c041",
+    "targetHash": "ca39b465cb33923ec17db893704fc359ead2e01da0e5d429c4b312e947168f77",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-12T21:49:51.757Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "bf1fe9c08aa2a9e2fce782be2f5f9c41c7f2d31dab6868dc94ee8b11a6a5287d",
+      "targetHash": "ca39b465cb33923ec17db893704fc359ead2e01da0e5d429c4b312e947168f77",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"26.4.0\",\"30\",\"5.0.0\",\"5.0.0\",\"5.0.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"26.4.0\",\"30\",\"5.0.0\",\"5.0.0\",\"5.0.0\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"enable_feature_changelog = true\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"enable_feature_changelog = true\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"26.4.0\",\"30\",\"5.0.0\",\"5.0.0\",\"5.0.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"26.4.0\",\"30\",\"5.0.0\",\"5.0.0\",\"5.0.0\",\"7\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature description + Parameter reference -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 機能説明 + パラメータリファレンス -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use cases: Enabling row-level change recording on a table / Checking whether a table model is supported / Inspecting change records -->\"]; received [\"html\",null,null,\"<!-- 用途: テーブルでの行レベル変更記録の有効化 / テーブルモデルがサポートされているかの確認 / 変更レコードの調査 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"26.4.0\",\"30\",\"5.0.0\",\"5.0.0\",\"5.0.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"26.4.0\",\"30\",\"5.0.0\",\"5.0.0\",\"5.0.0\",\"7\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"enable_feature_changelog = true\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"enable_feature_changelog = true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"26.4.0\",\"30\",\"5.0.0\",\"5.0.0\",\"5.0.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"26.4.0\",\"30\",\"5.0.0\",\"5.0.0\",\"5.0.0\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"enable_feature_changelog = true\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"enable_feature_changelog = true\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/incremental/changelog.md",
+        "blob": "d6127ecd84dd9f336190c72f05b91d737c454599"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/incremental/changelog.md",
+        "blob": "73f5df212dd49cb0ed0dbad4fdf95119114ac328"
+      }
+    }
+  }
+}

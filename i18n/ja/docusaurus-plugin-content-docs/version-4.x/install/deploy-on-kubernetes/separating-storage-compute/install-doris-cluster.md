@@ -1,22 +1,22 @@
 ---
 {
-    "title": "コンピュートとストレージを分離した Doris クラスターのデプロイ",
+    "title": "Doris のコンピュート・ストレージ分離型クラスターを一式デプロイする",
     "language": "ja",
-    "description": "Kubernetes 上でコンピュートとストレージを分離した Doris クラスターを一から構築するためのチュートリアルです。FoundationDB と Doris Operator のデプロイ、Doris クラスターのデプロイ、Storage Vault の作成までを説明します。",
-    "keywords": ["Doris", "コンピュートとストレージの分離", "Kubernetes", "クラスターのデプロイ", "FoundationDB", "Doris Operator", "Storage Vault"]
+    "description": "Kubernetes 上で、利用可能な Doris のコンピュート・ストレージ分離型クラスターをゼロから構築するエンドツーエンドのチュートリアルです。FoundationDB、Doris Operator、Doris クラスターをデプロイし、Storage Vault を作成します。",
+    "keywords": ["Doris", "compute-storage decoupled", "Kubernetes", "deploy cluster", "FoundationDB", "Doris Operator", "Storage Vault"]
 }
 ---
 
-このドキュメントは、Kubernetes 上でコンピュートとストレージを分離した Doris クラスターを初めて構築するユーザーを対象としています。デプロイ前の状態からデータを書き込める状態になるまでの手順を説明します。このドキュメントを読むと、次の作業を行えるようになります。
+このドキュメントは、Kubernetes 上で初めて Doris のコンピュート・ストレージ分離型クラスターを構築する方向けに、ゼロからのデプロイからデータの書き込みまでを説明するエンドツーエンドのチュートリアルです。読み終えると、次のことができるようになります。
 
-- FoundationDB（メタデータストレージ）のデプロイ、または既存の FoundationDB への接続
-- Kubernetes 上への Doris Operator のデプロイ
-- Doris Operator を使用した、コンピュートとストレージを分離したクラスター全体のデプロイ
-- SQL を使用したオブジェクトストレージのバックエンド（Storage Vault）の作成
+- FoundationDB（メタデータストレージ）をデプロイするか、既存の FoundationDB に接続する
+- Kubernetes 上に Doris Operator をデプロイする
+- Doris Operator を使用して、コンピュート・ストレージ分離型クラスターを一式デプロイする
+- SQL を使用してオブジェクトストレージのバックエンド（Storage Vault）を作成する
 
 ## デプロイ後の構成 {#deployment-outcome}
 
-このチュートリアルを完了すると、次のコンポーネントで構成される、コンピュートとストレージを分離した Doris クラスターが稼働します。
+このチュートリアルを完了すると、以下のコンポーネントで構成される Doris のコンピュート・ストレージ分離型クラスターが利用できます。
 
 | コンポーネント | 説明 | デフォルトのレプリカ数 |
 |------|------|-----------|
@@ -28,30 +28,30 @@
 
 ## デプロイ手順の概要 {#deployment-path-overview}
 
-全体の流れは、順番に実行する 5 つのステップで構成されます。各ステップの入力と出力は次のとおりです。
+全体の作業は、順番に実行する 5 つのステップに分かれています。各ステップの入力と出力は次のとおりです。
 
 | ステップ | 目的 | 入力 | 出力 |
 |------|----------|------|------|
-| ステップ 1 | FoundationDB をデプロイする | K8s クラスター／利用可能なマシン | 利用可能な FDB クラスターと接続情報 |
+| ステップ 1 | FoundationDB をデプロイする | K8s クラスター / 利用可能なマシン | 利用可能な FDB クラスターと接続情報 |
 | ステップ 2 | Doris Operator をデプロイする | K8s クラスターへのアクセス | 稼働中の Operator と CRD |
-| ステップ 3 | コンピュートとストレージを分離した Doris クラスターをデプロイする | `ddc-sample.yaml` と FDB 接続情報 | 稼働中のクラスター |
+| ステップ 3 | Doris のコンピュート・ストレージ分離型クラスターをデプロイする | `ddc-sample.yaml` と FDB の接続情報 | 稼働中のコンピュート・ストレージ分離型クラスター |
 | ステップ 4 | リモートストレージのバックエンドを作成する | 稼働中のクラスターと S3 互換オブジェクトストレージの認証情報 | データの永続化に使用できる Storage Vault |
-| ステップ 5 | クラスターに接続し、エンドツーエンドで検証する | ステップ 4 で確立した MySQL 接続 | 読み書きで動作確認済みのクラスター |
+| ステップ 5 | クラスターに接続し、エンドツーエンドで検証する | ステップ 4 で確立した MySQL 接続 | 読み書きによって動作を確認したクラスター |
 
-ステップ 4 の後、クラスターは書き込みを受け付けられる状態になります。ステップ 5 では SQL を使用してエンドツーエンドの動作を検証します。FE／MS／Compute Group の詳細なカスタマイズについては、このドキュメントの最後にある[詳細設定](#advanced-configuration)を参照してください。
+ステップ 4 を完了すると、クラスターは書き込みを受け付けられる状態になります。ステップ 5 では、SQL を使用してエンドツーエンドの動作を検証します。FE / MS / Compute Group の詳細なカスタマイズについては、このドキュメントの末尾にある[高度な設定](#advanced-configuration)を参照してください。
 
 ## ステップ 1：FoundationDB をデプロイする {#step-1-deploy-foundationdb}
 
-コンピュートとストレージを分離したクラスターは、メタデータの保存に FoundationDB（FDB）を使用します。デプロイ前に、利用可能な FDB を用意する必要があります。既存のインフラストラクチャに応じてデプロイ方法を選択してください。
+コンピュート・ストレージ分離型クラスターは、メタデータの保存に FoundationDB（FDB）を使用します。クラスターをデプロイする前に、利用可能な FDB を用意する必要があります。既存のインフラストラクチャに応じて、デプロイ方法を選択してください。
 
-| デプロイ方法 | 適した状況 | 次に行う作業 |
+| デプロイ方法 | 適した状況 | 次の作業 |
 |----------|----------|----------|
-| マシンへの直接デプロイ（推奨） | 利用可能な物理マシン／仮想マシンがすでにある | [コンピュートとストレージの分離：デプロイ前の準備](../../deploy-manually/separating-storage-compute-deploy-manually)を参照してデプロイを完了します。デプロイ先のマシンと K8s クラスターが同じ LAN 内にあることを確認してください |
-| Kubernetes 上へのデプロイ | K8s 内で FDB を一元管理したい | 以下の「K8s でのクイックデプロイ」を直接実行します |
+| マシンに直接デプロイする（推奨） | 利用可能な物理マシンまたは仮想マシンがある | [コンピュートとストレージの分離：デプロイ前の準備](../../deploy-manually/separating-storage-compute-deploy-manually)を参照してデプロイを完了し、デプロイ先のマシンと K8s クラスターが同じ LAN 内にあることを確認する |
+| Kubernetes 上にデプロイする | FDB を K8s 内で一元管理したい | 以下の「K8s でのクイックデプロイ」をそのまま実行する |
 
 ### K8s でのクイックデプロイ（最も簡単な方法） {#k8s-quick-deployment-simplest-path}
 
-次の 4 つの手順を順番に実行すると、K8s 上に最小構成の FDB クラスター（単一レプリカ）が起動します。
+以下の 4 つの手順を順番に実行すると、K8s 上に最小構成の FDB クラスター（単一レプリカ）を起動できます。
 
 **1. FoundationDB の CRD を適用する：**
 
@@ -79,10 +79,10 @@ kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/refs/he
 kubectl get fdb
 ```
 
-`AVAILABLE` 列が `kubectl get fdb` の結果で `true` になっていれば、FDB クラスターは利用可能です。
+`AVAILABLE` 列が `kubectl get fdb` の出力で `true` になれば、FDB クラスターの準備は完了です。
 
-:::tip 詳細な選択肢
-単一レプリカ構成は開発とテストにのみ適しています。本番環境にはレプリカを二つ使う構成を推奨し、Kubernetes クラスターには少なくとも三台のホストマシンが必要です。その他のデプロイ方法（レプリカを二つ使う構成、本番環境へのデプロイ、プライベートリポジトリのイメージ、FQDN モードなど）については、[FoundationDB のデプロイ](install-fdb.md)を参照してください。
+:::tip 高度なオプション
+単一レプリカ構成は開発とテストにのみ適しています。本番環境では二つのレプリカを使用する構成を推奨します。また、Kubernetes クラスターには少なくとも三台のホストマシンが必要です。その他のデプロイ形態（二つのレプリカ、本番環境へのデプロイ、プライベートリポジトリのイメージ、FQDN モードなど）については、[FoundationDB のデプロイ](install-fdb.md)を参照してください。
 :::
 
 ## ステップ 2：Doris Operator をデプロイする {#step-2-deploy-doris-operator}
@@ -93,15 +93,15 @@ kubectl get fdb
 
 ### 1. CRD のリソース定義を適用する {#1-apply-crd-resource-definitions}
 
-現在のクラスターの状態に応じてコマンドを選択してください。
+現在のクラスターの状態に応じて、該当するコマンドを選択してください。
 
-- **シナリオ A：初回のデプロイ（またはコンピュートとストレージを分離したクラスターのみをデプロイする場合）**：すべての CRD を適用します。
+- **シナリオ A：初めてデプロイする場合（またはコンピュート・ストレージ分離型クラスターのみをデプロイする場合）**：すべての CRD を適用します。
 
   ```shell
   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/crds.yaml
   ```
 
-- **シナリオ B：コンピュートとストレージを分離していないクラスターをすでにデプロイしている場合**：コンピュートとストレージの分離に関係する CRD のみを追加します。
+- **シナリオ B：分離型ではないクラスターをすでにデプロイしている場合**：コンピュート・ストレージ分離型クラスターに関連する CRD のみを追加します。
 
   ```shell
   kubectl create -f https://raw.githubusercontent.com/apache/doris-operator/master/config/crd/bases/disaggregated.cluster.doris.com_dorisdisaggregatedclusters.yaml
@@ -109,7 +109,7 @@ kubectl get fdb
 
 ### 2. Operator と RBAC ルールをデプロイする {#2-deploy-the-operator-and-rbac-rules}
 
-次のコマンドを実行し、Doris Operator と、それが依存する RBAC ルールをデプロイします。
+次のコマンドを実行して、Doris Operator と、それが必要とする RBAC ルールをデプロイします。
 
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/disaggregated-operator.yaml
@@ -123,17 +123,17 @@ NAME                              READY   STATUS    RESTARTS   AGE
 doris-operator-6b97df65c4-xwvw8   1/1     Running   0          19s
 ```
 
-`STATUS` が `Running` なら、Operator を使用できます。
+`STATUS` が `Running` であれば、Operator の準備は完了です。
 
-## ステップ 3：コンピュートとストレージを分離したクラスターをデプロイする {#step-3-deploy-the-compute-storage-decoupled-cluster}
+## ステップ 3：コンピュート・ストレージ分離型クラスターをデプロイする {#step-3-deploy-the-compute-storage-decoupled-cluster}
 
-**入力**：デプロイ例 `ddc-sample.yaml` と FoundationDB の接続情報
+**入力**：デプロイ例の `ddc-sample.yaml` と FoundationDB の接続情報
 **操作**：サンプルをダウンロードし、必要に応じて主要なフィールドを変更してクラスターをデプロイする
-**出力**：稼働中の、コンピュートとストレージを分離した Doris クラスター
+**出力**：稼働中の Doris コンピュート・ストレージ分離型クラスター
 
 ### 1. デプロイ例をダウンロードする {#1-download-the-deployment-example}
 
-Doris Operator リポジトリからデフォルトのデプロイ例をダウンロードします。
+Doris Operator リポジトリから、デフォルトのデプロイ例をダウンロードします。
 
 ```shell
 curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/cluster/ddc-sample.yaml
@@ -141,18 +141,18 @@ curl -O https://raw.githubusercontent.com/apache/doris-operator/master/doc/examp
 
 ### 2. 主要な設定を変更する {#2-modify-key-configurations}
 
-サンプルをダウンロードしたら、デプロイ前に少なくとも次の二種類のフィールドを変更する必要があります。その他のフィールドはデフォルト値のままにしてください。
+サンプルをダウンロードしたら、デプロイ前に少なくとも以下の二種類のフィールドを変更する必要があります。その他のフィールドはデフォルト値のままにしてください。
 
-| フィールド | 必須／任意 | 説明 |
+| フィールド | 必須 / 任意 | 説明 |
 |------|-------------|------|
-| `spec.metaService.fdb` | **必須** | ステップ 1 でデプロイした FDB の接続情報（アドレスまたは ConfigMap のいずれかを選択） |
-| `spec.computeGroups[].image` | **必須** | BE イメージのバージョン。使用する Doris のバージョンと一致させる必要があります |
-| `spec.metaService.image` | 任意 | MetaService イメージのバージョン。デフォルトではサンプル内のバージョンを使用します |
-| `spec.feSpec.electionNumber` | 任意 | FE Follower の数。デフォルトは 1 で、**デプロイ後には変更できません** |
-| `spec.computeGroups[].replicas` | 任意 | Compute Group 内のレプリカ数。デフォルトではサンプルの値を使用します |
-| `spec.feSpec.requests` / `limits` | 任意 | FE のコンピュートリソースの制限（本番環境では設定を推奨） |
+| `spec.metaService.fdb` | **必須** | ステップ 1 でデプロイした FDB の接続情報（アドレスまたは ConfigMap を選択） |
+| `spec.computeGroups[].image` | **必須** | BE イメージのバージョン。使用する Doris のバージョンと一致させる必要がある |
+| `spec.metaService.image` | 任意 | MetaService イメージのバージョン。デフォルトではサンプル内のバージョンを使用する |
+| `spec.feSpec.electionNumber` | 任意 | FE Follower の数。デフォルトは 1。**デプロイ後は変更できない** |
+| `spec.computeGroups[].replicas` | 任意 | Compute Group のレプリカ数。デフォルトではサンプル内の値を使用する |
+| `spec.feSpec.requests` / `limits` | 任意 | FE のコンピュートリソース制限（本番環境では設定を推奨） |
 
-変更後の `spec` セクションは、おおむね次のようになります（**方法 A：マシン上に FDB をデプロイした場合**）。
+変更後の `spec` セクションは、おおむね次のようになります（**方法 A：FDB をマシンにデプロイした場合**）。
 
 ```yaml
 spec:
@@ -179,7 +179,7 @@ spec:
         memory: 8Gi
 ```
 
-**方法 B：K8s 上に FDB をデプロイした場合**：`metaService.fdb` セクションを次の内容に置き換えます。
+**方法 B：FDB を K8s 上にデプロイした場合**：`metaService.fdb` セクションを次の内容に置き換えます。
 
 ```yaml
 spec:
@@ -190,15 +190,15 @@ spec:
         namespace: ${namespace}               # Required: Namespace where the ConfigMap resides
 ```
 
-ConfigMap を取得するには、`kubectl get configmap` を実行します（詳細は、[FoundationDB のデプロイ：接続情報を含む ConfigMap の取得](install-fdb.md#get-the-configmap-that-contains-foundationdb-access-information)を参照してください）。
+ConfigMap を確認するには `kubectl get configmap` を実行します。詳しくは、[FoundationDB のデプロイ：接続情報を含む ConfigMap の取得](install-fdb.md#get-the-configmap-that-contains-foundationdb-access-information)を参照してください。
 
 パラメーターの説明：
 
 | パラメーター | 説明 |
 |------|------|
-| `${fdbEndpoint}` | FoundationDB クライアントの接続アドレス。デフォルトの Linux VM デプロイでは、`/etc/foundationdb/fdb.cluster` に保存されます。詳細は [FoundationDB のクラスターファイルに関するドキュメント](https://apple.github.io/foundationdb/administration.html#foundationdb-cluster-file)を参照してください |
-| `${beImage}` | BE イメージ。[Apache Doris 公式イメージリポジトリ](https://hub.docker.com/r/apache/doris)が提供するイメージを使用します |
-| `${foundationdbConfigMapName}` | `fdb-kubernetes-operator` が生成する ConfigMap の名前 |
+| `${fdbEndpoint}` | FoundationDB クライアントの接続先アドレス。Linux VM にデフォルトの方法でデプロイした場合は、`/etc/foundationdb/fdb.cluster` に保存される。詳しくは、[FoundationDB クラスターファイルのドキュメント](https://apple.github.io/foundationdb/administration.html#foundationdb-cluster-file)を参照 |
+| `${beImage}` | BE イメージ。[Apache Doris の公式イメージリポジトリ](https://hub.docker.com/r/apache/doris)で提供されるイメージを使用する |
+| `${foundationdbConfigMapName}` | `fdb-kubernetes-operator` が生成した ConfigMap の名前 |
 | `${namespace}` | ConfigMap が存在する名前空間 |
 
 ### 3. デプロイして確認する {#3-deploy-and-verify}
@@ -207,7 +207,7 @@ ConfigMap を取得するには、`kubectl get configmap` を実行します（�
 kubectl apply -f ddc-sample.yaml
 ```
 
-リソースの適用後、クラスターが自動的に構築されるまで待ちます。次のコマンドでクラスターの状態を確認します。
+リソースを適用したら、クラスターの自動構築が完了するまで待ちます。次のコマンドでクラスターの状態を確認します。
 
 ```shell
 kubectl get ddc
@@ -215,7 +215,7 @@ NAME                         CLUSTERHEALTH   FEPHASE   CGCOUNT   CGAVAILABLECOUN
 test-disaggregated-cluster   green           Ready     2         2                  2
 ```
 
-**利用可能と判断する条件：** `CLUSTERHEALTH` が `green` で、`CGAVAILABLECOUNT` が `CGCOUNT` と等しいこと。
+**準備完了の判定基準：** `CLUSTERHEALTH` が `green` で、`CGAVAILABLECOUNT` が `CGCOUNT` と等しいこと。
 
 ## ステップ 4：リモートストレージのバックエンドを作成する {#step-4-create-the-remote-storage-backend}
 
@@ -223,9 +223,9 @@ test-disaggregated-cluster   green           Ready     2         2              
 **操作**：MySQL クライアントから SQL を実行し、Vault を作成して有効にする
 **出力**：データの永続化に使用できる、設定済みのストレージバックエンド
 
-クラスターの起動に成功したら、SQL を使用してオブジェクトストレージを永続ストレージのバックエンド（Doris では Vault と呼びます）として登録し、デフォルトの Vault に設定する必要があります。これにより、書き込んだデータを永続化できます。
+クラスターが正常に起動したら、SQL を使用してオブジェクトストレージを永続ストレージのバックエンドとして登録し、デフォルトの Vault に設定する必要があります。Doris では、このバックエンドを Vault と呼びます。この設定によって、書き込んだデータを永続化できます。
 
-### 1. FE Service の接続アドレスを取得する {#1-get-the-access-address-of-the-fe-service}
+### 1. FE Service の接続先アドレスを取得する {#1-get-the-access-address-of-the-fe-service}
 
 次のコマンドを実行し、FE に接続できる Service を探します。
 
@@ -244,17 +244,17 @@ test-disaggregated-cluster-cg1           ClusterIP   10.96.47.90    <none>      
 test-disaggregated-cluster-cg2           ClusterIP   10.96.50.199   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   14m
 ```
 
-`-internal` 接尾辞のない Service は、外部からのアクセスに使用します。
+`-internal` という接尾辞のない Service は、外部からのアクセスに使用します。
 
 ### 2. MySQL クライアントから接続する {#2-connect-through-a-mysql-client}
 
-Kubernetes クラスター内で MySQL Client を含む一時 Pod を起動し、その中に入ります。
+Kubernetes クラスター内で MySQL Client を含む一時的な Pod を起動し、その中に入ります。
 
 ```shell
 kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never -- /bin/bash
 ```
 
-Pod 内で FE Service 名を指定し、Doris クラスターに接続します。
+Pod 内で FE Service の名前を指定し、Doris クラスターに接続します。
 
 ```shell
 mysql -uroot -P9030 -h test-disaggregated-cluster-fe
@@ -262,7 +262,7 @@ mysql -uroot -P9030 -h test-disaggregated-cluster-fe
 
 ### 3. Storage Vault を作成する {#3-create-a-storage-vault}
 
-SQL を使用して、S3 プロトコルに対応したオブジェクトストレージを Vault として作成します。次の例では Alibaba Cloud OSS を使用します。
+SQL を使用し、S3 プロトコルに対応するオブジェクトストレージを Vault として作成します。次の例では Alibaba Cloud OSS を使用します。
 
 ```mysql
 CREATE STORAGE VAULT IF NOT EXISTS s3_vault
@@ -278,7 +278,7 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     );
 ```
 
-その他のストレージバックエンドの作成方法と各フィールドの詳しい説明については、コンピュートとストレージの分離に関するドキュメントの [Storage Vault の管理](../../deploy-manually/separating-storage-compute-deploy-manually)を参照してください。
+ほかのストレージバックエンドの作成方法や各フィールドの詳しい説明については、コンピュート・ストレージ分離のドキュメントにある[Storage Vault の管理](../../deploy-manually/separating-storage-compute-deploy-manually)を参照してください。
 
 ### 4. デフォルトの Storage Vault を設定する {#4-set-the-default-storage-vault}
 
@@ -286,37 +286,37 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
 SET ${vaultName} AS DEFAULT STORAGE VAULT;
 ```
 
-`${vaultName}` には、使用する Vault の名前（前の手順の `s3_vault` など）を指定します。
+`${vaultName}` には、使用する Vault の名前（前の手順で作成した `s3_vault` など）を指定します。
 
-これで、クラスターは書き込みを受け付けられる状態になります。次のステップでは、SQL を使用してエンドツーエンドの動作を検証します。
+これでクラスターは書き込みを受け付けられる状態になります。次のステップでは、SQL を使用してエンドツーエンドの動作を検証します。
 
 ## ステップ 5：クラスターに接続し、エンドツーエンドで検証する {#step-5-connect-to-the-cluster-and-verify-end-to-end}
 
 **入力**：ステップ 4 で確立した MySQL 接続
-**操作**：検証用 SQL を実行し、クラスターが利用可能で正常に読み書きできることを確認する
+**操作**：検証用の SQL を実行し、クラスターの準備が完了して正常に読み書きできることを確認する
 **出力**：エンドツーエンドの検証に合格した、利用可能なクラスター
 
-ステップ 4 で確立した MySQL クライアント接続を使用し（すでに終了している場合は、[ステップ 4：MySQL クライアントから接続する](#2-connect-through-a-mysql-client)を繰り返してください）、次のコマンドを順番に実行して検証します。
+ステップ 4 で確立した MySQL クライアント接続を引き続き使用し、以下のコマンドを順番に実行して検証します。すでに接続を終了した場合は、[ステップ 4：MySQL クライアントから接続する](#2-connect-through-a-mysql-client)を繰り返してください。
 
-### 1. BE ノードが稼働していることを確認する {#1-confirm-that-be-nodes-are-alive}
+### 1. BE ノードの稼働を確認する {#1-confirm-that-be-nodes-are-alive}
 
 ```mysql
 SHOW BACKENDS;
 ```
 
-出力で各 BE ノードの `Alive` 列が `true` になっていれば、Compute Group 内の BE が使用可能で、FE に認識されています。
+出力にある各 BE ノードの `Alive` 列が `true` であれば、Compute Group 内の BE の準備が完了し、FE に認識されていることを示します。
 
-### 2. Storage Vault が有効になっていることを確認する {#2-confirm-that-the-storage-vault-is-in-effect}
+### 2. Storage Vault が有効であることを確認する {#2-confirm-that-the-storage-vault-is-in-effect}
 
 ```mysql
 SHOW STORAGE VAULTS;
 ```
 
-出力にステップ 4 で作成した Vault（`s3_vault` など）が表示され、`IsDefault` が `true` になっていれば、ストレージバックエンドを使用できます。
+出力にステップ 4 で作成した Vault（`s3_vault` など）が表示され、その `IsDefault` が `true` であれば、ストレージバックエンドの準備は完了です。
 
-### 3. テストデータを書き込んでクエリする {#3-write-and-query-test-data}
+### 3. テストデータを書き込んでクエリを実行する {#3-write-and-query-test-data}
 
-次の SQL を実行し、「データベースの作成、テーブルの作成、書き込み、クエリ」という一連の処理を確認します。
+次の SQL を順番に実行し、「データベースの作成、テーブルの作成、書き込み、クエリ」という一連の処理を確認します。
 
 ```mysql
 CREATE DATABASE IF NOT EXISTS demo;
@@ -333,16 +333,17 @@ INSERT INTO hello VALUES (1, 'hello doris');
 SELECT * FROM hello;
 ```
 
-`SELECT` で書き込んだデータが返されれば、FE から MetaService、Compute Group、Storage Vault までの経路が正常に機能しており、クラスターを使用できます。
+`SELECT` で書き込んだデータが返されれば、FE から MetaService、Compute Group、Storage Vault に至るエンドツーエンドの経路が正常に動作しており、クラスターを使用できます。
 
-## 詳細設定 {#advanced-configuration}
+## 高度な設定 {#advanced-configuration}
 
-上記の 5 つのステップが完了すると、クラスターを使用できます。本番環境では、通常、さらにカスタマイズが必要です。該当するドキュメントを次の一覧から参照してください。
+上記の 5 つのステップを完了すると、クラスターを使用できます。本番環境では、通常、要件に応じた追加のカスタマイズが必要です。該当するドキュメントを以下の一覧から参照してください。
 
 | トピック | 参照ドキュメント | 主な内容 |
 |--------|----------|----------|
-| FoundationDB のデプロイの詳細、レプリカを二つ使う構成／本番環境向け構成、FQDN でのデプロイ、プライベートイメージリポジトリ | [FoundationDB のデプロイ](install-fdb.md) | FDB の全体的な仕組みとすべてのデプロイ方法 |
-| MetaService イメージの切り替え、リソースの調整、起動パラメーターのカスタマイズ、liveness probe のタイムアウトの調整 | [MetaService の設定](config-ms.md) | `spec.metaService.*` 以下のすべてのフィールド |
-| FE リソースの調整、Follower 数の変更、起動設定のカスタマイズ、アクセスモード（NodePort／LoadBalancer）の設定、永続ストレージ | [FE の設定](config-fe.md) | `spec.feSpec.*` 以下のすべてのフィールド |
-| 単一／複数グループの Compute Group、リソース制限、アクセスモードの設定、キャッシュとログの永続化 | [Compute Group の設定](config-cg.md) | `spec.computeGroups[*]` 以下のすべてのフィールド |
-| root／root 以外の管理者ユーザーのパスワード設定、Secret の認証情報、Kerberos 認証ファイルのマウント | [認証の設定](config-cluster.md) | クラスターレベルの認証情報と Kerberos |
+| FoundationDB のデプロイの詳細、二つのレプリカを使用する構成と本番環境向け構成、FQDN を使用したデプロイ、プライベートイメージリポジトリ | [FoundationDB のデプロイ](install-fdb.md) | FDB の仕組みとすべてのデプロイ形態 |
+| MetaService イメージの切り替え、リソースの調整、起動パラメーターのカスタマイズ、liveness probe のタイムアウト調整 | [MetaService の設定](config-ms.md) | `spec.metaService.*` 以下のすべてのフィールド |
+| FE のリソースの調整、Follower 数の変更、起動設定のカスタマイズ、アクセス方式（NodePort / LoadBalancer）の設定、永続ストレージ | [FE の設定](config-fe.md) | `spec.feSpec.*` 以下のすべてのフィールド |
+| 単一または複数の Compute Group、リソース制限、アクセス方式の設定、キャッシュとログの永続化 | [Compute Group の設定](config-cg.md) | `spec.computeGroups[*]` 以下のすべてのフィールド |
+| root および root 以外の管理者ユーザーのパスワード設定、Secret の認証情報、Kerberos 認証ファイルのマウント | [認証の設定](config-cluster.md) | クラスター全体の認証情報と Kerberos |
+| BE ノードのスケーリング、Compute Group の追加と削除、スケールインと PVC のクリーンアップの確認 | [コンピュート容量の調整](config-cg.md#scaling-compute-groups) | 操作手順、廃止時の動作、検証方法 |

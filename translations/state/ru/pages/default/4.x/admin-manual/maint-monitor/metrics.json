@@ -8,42 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/admin-manual/maint-monitor/metrics.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/metrics.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "06e6d8f742e844e8db27d46ff49040fae8b713d4e1305a5ad6ec501b4976c5f9",
     "sourceTechnicalHash": "a4487a8d869dc8c9819c186219230c8329c7ebeddd9bfee93ec3f1893981097b",
-    "targetHash": "4831ccc446f3c3b7e6bd2c1a70ba332a96d2c8a69b6d2c0ed9ab94672b5081cf",
+    "targetHash": "02631d0cb8afce01cf44da2dff6e23c12610e00d28d3951693d29873fe58a714",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:14:52.144Z",
+    "translatedAt": "2026-11-13T22:40:32.814Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
-      "targetHash": "4831ccc446f3c3b7e6bd2c1a70ba332a96d2c8a69b6d2c0ed9ab94672b5081cf",
+      "sourceHash": "06e6d8f742e844e8db27d46ff49040fae8b713d4e1305a5ad6ec501b4976c5f9",
+      "targetHash": "02631d0cb8afce01cf44da2dff6e23c12610e00d28d3951693d29873fe58a714",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters / Parameter reference -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: параметры конфигурации / справочник параметров -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Cluster health monitoring / Alert configuration / Performance troubleshooting -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: мониторинг состояния кластера / настройка оповещений / диагностика производительности -->\"]\nprotected node 31: expected [\"html\",null,null,\"<!-- Knowledge type: Best practices -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: рекомендации -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "admin-manual/maint-monitor/metrics",
-        "sourcePath": "docs/admin-manual/maint-monitor/metrics.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/metrics.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
-        "targetHash": "4831ccc446f3c3b7e6bd2c1a70ba332a96d2c8a69b6d2c0ed9ab94672b5081cf",
-        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
-        "pr": "https://github.com/apache/doris-website/pull/4432"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/admin-manual/maint-monitor/metrics.md",
+        "blob": "c429ad716f09e5a020af4f8170f2cc7485d0ebd6"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/metrics.md",
+        "blob": "7d60458b66c6a18790d38a0d29f1074f4d12be34"
       }
     }
   }

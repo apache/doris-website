@@ -48,11 +48,74 @@ After execution, Doris computes the score for each row using the BM25 algorithm 
 
 ## Activation Conditions
 
-For score calculation to take effect, the query must meet all three of the following conditions:
+To use the Top-N scoring form shown above, the `SELECT` that computes `score()` must meet all three of the following conditions:
 
 1. The `SELECT` clause explicitly calls the `score()` function.
-2. The `WHERE` clause contains at least one `MATCH_*` condition.
-3. The query is a Top-N query, and `ORDER BY` is based on the `score()` result.
+2. Its `WHERE` clause contains at least one `MATCH_*` or `SEARCH` predicate.
+3. It has a single `ORDER BY` key referencing the score alias, together with `LIMIT`.
+
+Doris 4.0.x and 4.1.0 through 4.1.5 require this Top-N form.
+
+### Filter by Relevance Score
+
+First prepare a separate example table with a tokenized inverted index. Run the following statements with permission to create the database and table, load data, and query it:
+
+```sql
+CREATE DATABASE IF NOT EXISTS score_filter_example;
+USE score_filter_example;
+
+CREATE TABLE score_filter_demo (
+    id BIGINT,
+    content TEXT,
+    INDEX idx_content (content) USING INVERTED
+        PROPERTIES("parser" = "english", "support_phrase" = "true")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO score_filter_demo VALUES
+(1, 'Full text search engine test demo'),
+(2, 'Database performance analysis'),
+(3, 'Search engine examples');
+```
+
+Doris 4.0.4 and later support filtering the minimum score directly in `WHERE`. The following Top-N form is compatible with Doris 4.0.4 and later:
+
+```sql
+SELECT *, score() AS relevance
+FROM score_filter_demo
+WHERE content MATCH_ANY 'text search test'
+  AND score() > 5
+ORDER BY relevance DESC
+LIMIT 10;
+```
+
+This returns up to 10 matching rows with a score greater than 5, ordered by score from highest to lowest. If no matching row passes the threshold, the result is empty. Scores depend on the query and corpus, so 5 is only an example threshold.
+
+Use `score()` itself in `WHERE` and the select-list alias in `ORDER BY`. Direct filtering supports one minimum-score predicate, `score() > <threshold>` or `score() >= <threshold>`, where the threshold is a numeric literal. Combine it with the search predicate using `AND`. Upper bounds (`<`, `<=`), equality (`=`), multiple score predicates, and score predicates nested inside `OR` are not supported.
+
+#### Compatibility with Doris 4.0.0 to 4.0.3
+
+Doris 4.0.0 through 4.0.3 do not allow `score()` in `WHERE`. On these versions, first select a bounded set of scored candidates in a subquery, with the `MATCH_*` predicate, `ORDER BY` on the score alias, and `LIMIT` all inside that subquery. Then filter the alias in the outer query:
+
+```sql
+SELECT a.*
+FROM (
+    SELECT *, score() AS relevance
+    FROM score_filter_demo
+    WHERE content MATCH_ANY 'text search test'
+    ORDER BY relevance DESC
+    LIMIT 1000
+) AS a
+WHERE a.relevance > 5
+ORDER BY a.relevance DESC
+LIMIT 10;
+```
+
+This returns up to 10 rows with a score greater than 5 from the top 1000 candidates. It returns no rows if none of those candidates passes the threshold. Choose the candidate limit for your application; this pattern filters that candidate set rather than returning every matching row above the threshold.
+
+On Doris 4.0.0 through 4.0.3, keep the inner `LIMIT`: without it, the query no longer has the required inner Top-N shape, and the optimizer can move the outer score predicate into the scoring query. An outer `ORDER BY` and `LIMIT` alone do not supply the required inner Top-N operation.
 
 ### Supported Index Types
 
@@ -143,8 +206,8 @@ Understanding the scoring results helps you use relevance ranking more accuratel
 Check the following in order:
 
 1. Whether the `score()` function is called in `SELECT`.
-2. Whether the `WHERE` clause contains a `MATCH_*` condition.
-3. Whether `ORDER BY` is based on `score()`.
+2. Whether the same `SELECT` contains a `MATCH_*` or `SEARCH` predicate in `WHERE`.
+3. For the Top-N form, whether `ORDER BY` references the score alias and the query has `LIMIT`.
 4. Whether the index is a tokenized inverted index.
 
 **Q2: What is the difference between BM25 and TF-IDF?**

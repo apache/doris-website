@@ -14,6 +14,54 @@ This document describes the parameters required to access Alibaba Cloud OSS, whi
 - Export properties
 - Outfile properties
 
+## When to Configure OSS Access
+
+These properties configure access to files in OSS. Set them on the operation that reads or writes those files:
+
+| Scenario | Where to configure access | Example |
+| --- | --- | --- |
+| Query a CSV, Parquet, or ORC file directly | In the `S3(...)` table-valued function | Query example below |
+| Import OSS files into an existing Doris table | In `S3(...)` for `INSERT INTO ... SELECT`, or in the `WITH S3` clause of Broker Load | [OSS data import](../../data-operate/import/data-source/aliyun-oss.md) |
+| Query Hive tables whose data is stored in OSS | In the catalog properties when running `CREATE CATALOG` | [Hive Catalog](../catalogs/hive-catalog) |
+| Export query results to OSS | In the properties of the export command | [SELECT INTO OUTFILE](../../data-operate/export/outfile.md) |
+
+For example, upload a UTF-8 file `users.csv` to your OSS bucket, without a header row:
+
+```text
+1,Alice
+2,Bob
+```
+
+Ensure the Doris FE and BE nodes can reach the OSS endpoint and that the supplied credentials can read the object. Replace the bucket, object path, and credentials below. This query reads the file directly; it does not require creating a Doris table. It uses the S3-compatible `s3.*` property names.
+
+```sql
+SELECT id, name
+FROM S3(
+    "uri" = "s3://your-bucket/users.csv",
+    "format" = "csv",
+    "s3.endpoint" = "oss-cn-beijing.aliyuncs.com",
+    "s3.region" = "cn-beijing",
+    "s3.access_key" = "<your-access-key>",
+    "s3.secret_key" = "<your-secret-key>",
+    "column_separator" = ",",
+    "csv_schema" = "id:int;name:string"
+)
+ORDER BY id;
+```
+
+Expected result for the file above:
+
+```text
++------+-------+
+| id   | name  |
++------+-------+
+|    1 | Alice |
+|    2 | Bob   |
++------+-------+
+```
+
+To persist the data in Doris, create a target table and use `INSERT INTO ... SELECT` as shown in the OSS data-import guide linked above. For other operations, place the connection properties in the corresponding catalog, load, or export statement.
+
 ## OSS
 
 Doris uses S3 Client to access Alibaba Cloud OSS through S3-compatible protocol.

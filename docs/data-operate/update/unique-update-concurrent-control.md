@@ -173,69 +173,86 @@ Because `2020-03-05` is the largest value in the Sequence column (`modify_date`)
 
 #### 3. Specifying the Sequence Column in Different Import Methods
 
-When you use `function_column.sequence_type` at table creation (that is, when the Sequence column is not directly mapped to a column in the table), you must explicitly specify the mapping from the Sequence column to a data column at import time.
+When the table uses `function_column.sequence_type`, the Sequence column is hidden and must be mapped to an input field during loading. The following examples use a **separate table**, not the `test_table` whose Sequence column maps to `modify_date` above.
+
+```sql
+CREATE DATABASE IF NOT EXISTS test;
+CREATE TABLE test.test_sequence_hidden
+(
+    k1 BIGINT NOT NULL,
+    k2 DATE NOT NULL,
+    v1 BIGINT,
+    v2 VARCHAR(128)
+)
+UNIQUE KEY(k1, k2)
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES (
+    "function_column.sequence_type" = "DATE",
+    "replication_num" = "1"
+);
+```
+
+Prepare `sequence_data.tsv` with the following tab-separated rows. The fourth input field, `source_sequence`, supplies the hidden Sequence column; it is not a visible table column.
+
+```text
+1	2020-02-22	1	2020-02-22	a
+1	2020-02-22	1	2020-03-23	w
+```
 
 **Stream Load**
 
-In the header, use `function_column.sequence_col` to specify the `source_sequence` mapping for the hidden column:
+Map the input fields in file order and name the Sequence field in the request header:
 
 ```shell
-curl --location-trusted -u root \
-    -H "columns: k1,k2,source_sequence,v1,v2" \
+curl --location-trusted -u root: \
+    -H "columns: k1,k2,v1,source_sequence,v2" \
     -H "function_column.sequence_col: source_sequence" \
-    -T testData http://host:port/api/testDb/testTbl/_stream_load
+    -T sequence_data.tsv http://host:port/api/test/test_sequence_hidden/_stream_load
 ```
 
 **Broker Load**
 
-Specify the `source_sequence` field for the hidden column mapping in the `ORDER BY` clause:
+Upload the same file to HDFS and replace the path and Broker credentials below. Use a tab separator and the same field order, then select the fourth input field with `ORDER BY source_sequence`:
 
 ```sql
-LOAD LABEL db1.label1
+LOAD LABEL test.sequence_hidden_broker
 (
-    DATA INFILE("hdfs://host:port/user/data/*/test.txt")
-    INTO TABLE `tbl1`
-    COLUMNS TERMINATED BY ","
-    (k1,k2,source_sequence,v1,v2)
+    DATA INFILE("hdfs://host:port/user/data/sequence_data.tsv")
+    INTO TABLE `test_sequence_hidden`
+    COLUMNS TERMINATED BY "\t"
+    (k1,k2,v1,source_sequence,v2)
     ORDER BY source_sequence
 )
 WITH BROKER 'broker'
 (
-    "username"="user",
-    "password"="pass"
+    "username" = "user",
+    "password" = "pass"
 )
-PROPERTIES
-(
-    "timeout" = "3600"
-);
+PROPERTIES ("timeout" = "3600");
 ```
 
 **Routine Load**
 
-The mapping is the same as above. Example:
+Create the job with your Kafka broker and topic, then send each row above as a separate tab-separated Kafka message:
 
 ```sql
-CREATE ROUTINE LOAD example_db.test1 ON example_tbl 
-    [WITH MERGE|APPEND|DELETE]
-    COLUMNS(k1, k2, source_sequence, v1, v2),
-    WHERE k1  100 and k2 like "%doris%"
-    [ORDER BY source_sequence]
+CREATE ROUTINE LOAD test.sequence_hidden_routine ON test_sequence_hidden
+    COLUMNS TERMINATED BY "\t",
+    COLUMNS(k1,k2,v1,source_sequence,v2),
+    ORDER BY source_sequence
     PROPERTIES
     (
-        "desired_concurrent_number"="3",
-        "max_batch_interval" = "20",
-        "max_batch_rows" = "300000",
-        "max_batch_size" = "209715200",
-        "strict_mode" = "false"
+        "desired_concurrent_number" = "1",
+        "format" = "csv"
     )
     FROM KAFKA
     (
-        "kafka_broker_list" = "broker1:9092,broker2:9092,broker3:9092",
-        "kafka_topic" = "my_topic",
-        "kafka_partitions" = "0,1,2,3",
-        "kafka_offsets" = "101,0,0,200"
+        "kafka_broker_list" = "broker1:9092",
+        "kafka_topic" = "my_topic"
     );
 ```
+
+After a load succeeds and its data becomes visible, the larger Sequence value (`2020-03-23`) keeps the row whose `v2` is `w`. The `modify_date` examples below continue to use the original `test_table` and its column mapping.
 
 #### 4. Verify the Replacement Order Guarantee
 
@@ -285,7 +302,7 @@ Because the Sequence value `2020-03-23` of the newly imported data is greater th
 
 <!-- Knowledge type: Caveats -->
 
-1. **The Sequence column must be specified explicitly**: in import jobs such as Stream Load and Broker Load, as well as in row-update `INSERT` statements, you must explicitly specify the Sequence column (unless its default value is `CURRENT_TIMESTAMP`). Otherwise, you will receive the following error:
+1. **Sequence requirements depend on the table definition**: with `function_column.sequence_col`, load the mapped ordinary column using the normal column rules; no extra load-time Sequence mapping parameter is needed. With `function_column.sequence_type`, configure the source-column mapping for Stream Load or Broker Load as shown above. For a full-row `INSERT` with an explicit target-column list, include the mapped ordinary column (unless its default is `CURRENT_TIMESTAMP`), or the hidden `__DORIS_SEQUENCE_COL__` when there is no mapped column. An `INSERT` without a target-column list already includes the mapped ordinary column. For partial column updates, see item 3 below. Missing a required Sequence input causes the following error:
 
     ```Plain
     Table test_tbl has sequence column, need to specify the sequence column

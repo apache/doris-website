@@ -8,42 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/table-design/index/inverted-index/scoring.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/table-design/index/inverted-index/scoring.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "a2d5fa1e6746a3381c2e12e75c5ba691e4393f054531aaf6bdf34ee591532766",
-    "sourceTechnicalHash": "98553e917bb8cb5862ecadaf20f0e4a742aefa7d82c45789c547b9cba347ef7e",
-    "targetHash": "203345675c7c35a7cd63909410ff730a3be43a645fa9082627b9d22d5fbe286d",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "4e3b506e4b473f8e4bab60f81c384415b2d7a55e7cd07b87e5c95b956b4ced83",
+    "sourceTechnicalHash": "a9930a014f2280389c3c90d739a792b3103910b6b98c06b83e188234456177b7",
+    "targetHash": "412ee6fa9d1457d229195f14e1685c5b87d65568970613b5244bc39e4b1e5c57",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T15:13:41.867Z",
+    "translatedAt": "2026-11-14T18:20:13.914Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "a2d5fa1e6746a3381c2e12e75c5ba691e4393f054531aaf6bdf34ee591532766",
-      "targetHash": "203345675c7c35a7cd63909410ff730a3be43a645fa9082627b9d22d5fbe286d",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "4e3b506e4b473f8e4bab60f81c384415b2d7a55e7cd07b87e5c95b956b4ced83",
+      "targetHash": "412ee6fa9d1457d229195f14e1685c5b87d65568970613b5244bc39e4b1e5c57",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"SELECT\"]; received [\"inlineCode\",null,null,\"score()\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"score()\"]; received [\"inlineCode\",null,null,\"SELECT\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"score()\"]; received [\"inlineCode\",null,null,\"WHERE\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0.75\",\"1\",\"1.0\",\"1.2\",\"10\",\"10\",\"10\",\"1000\",\"2\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"4.0\",\"4.0.0\",\"4.0.0\",\"4.0.0\",\"4.0.3\",\"4.0.3\",\"4.0.3\",\"4.0.4\",\"4.0.4\",\"4.1.0\",\"4.1.5\",\"4.1.5\",\"5\",\"5\",\"5\"]; received [\"0\",\"0.75\",\"1\",\"1\",\"1.0\",\"1.2\",\"10\",\"10\",\"10\",\"1000\",\"2\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"4.0\",\"4.0.0\",\"4.0.0\",\"4.0.0\",\"4.0.3\",\"4.0.3\",\"4.0.3\",\"4.0.4\",\"4.0.4\",\"4.1.0\",\"4.1.5\",\"4.1.5\",\"5\",\"5\",\"5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature / Query usage -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 기능 / 쿼리 사용법 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Full-text search result ranking / Search relevance optimization -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 전문 검색 결과 순위 지정 / 검색 관련성 최적화 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"SELECT\"]; received [\"inlineCode\",null,null,\"score()\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"score()\"]; received [\"inlineCode\",null,null,\"SELECT\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"WHERE\"]; received [\"inlineCode\",null,null,\"SELECT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"SELECT\"]; received [\"inlineCode\",null,null,\"score()\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"score()\"]; received [\"inlineCode\",null,null,\"SELECT\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"score()\"]; received [\"inlineCode\",null,null,\"WHERE\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "table-design/index/inverted-index/scoring",
-        "sourcePath": "docs/table-design/index/inverted-index/scoring.md",
-        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/scoring.md",
-        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-        "sourceHash": "a2d5fa1e6746a3381c2e12e75c5ba691e4393f054531aaf6bdf34ee591532766",
-        "targetHash": "203345675c7c35a7cd63909410ff730a3be43a645fa9082627b9d22d5fbe286d",
-        "commit": "c5b54b1cd03719e14c660f23a1ea79359c00d843",
-        "pr": "https://github.com/apache/doris-website/pull/4387"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/table-design/index/inverted-index/scoring.md",
+        "blob": "83f7802864cbef03260525d14abe2a56d8c5c0a2"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/table-design/index/inverted-index/scoring.md",
+        "blob": "0fa8536c9e4dddbe0f63d800559ce0b5bca1a8f5"
       }
     }
   }

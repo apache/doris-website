@@ -55,7 +55,7 @@ Tiered storage is implemented based on dynamic partitions. Doris automatically c
 The execution flow of tiered storage is as follows:
 
 1. Enable dynamic partitions when creating the table, and set `dynamic_partition.storage_medium = HDD`.
-2. Use `dynamic_partition.hot_partition_num` to designate the most recent N partitions as hot partitions, stored on SSD.
+2. Use `dynamic_partition.hot_partition_num` to keep the current partition, partitions for the previous `N - 1` time intervals, and all future partitions on SSD.
 3. The system sets a `storage_cooldown_time` for each hot partition.
 4. Once the cooldown time is reached, partition data is automatically migrated from SSD to HDD.
 
@@ -69,12 +69,12 @@ Tiered storage relies on the following two dynamic partition parameters:
 
 | Parameter                              | Purpose                                                                  | Default | Notes                                                            |
 | -------------------------------------- | ------------------------------------------------------------------------ | ------- | ---------------------------------------------------------------- |
-| `dynamic_partition.hot_partition_num`  | Specifies how many of the most recent partitions are hot, stored on SSD  | None    | Must be used together with `storage_medium = HDD`                |
+| `dynamic_partition.hot_partition_num`  | Keeps the current partition, partitions for the previous `N - 1` time intervals, and all future partitions on SSD when `N > 0`  | None    | Must be used together with `storage_medium = HDD`                |
 | `dynamic_partition.storage_medium`     | Specifies the final storage medium for dynamic partitions                | HDD     | When set to SSD, `hot_partition_num` no longer takes effect      |
 
 ### dynamic_partition.hot_partition_num
 
-- **Function**: Specifies the most recent N partitions as hot partitions. These partitions are stored on SSD, while the remaining partitions are stored on HDD.
+- **Function**: For a positive value `N`, keeps the current partition, partitions for the previous `N - 1` time intervals, and all future partitions on SSD. Older partitions use HDD.
 - **Conditions for use**:
     - You must also set `dynamic_partition.storage_medium = HDD`. Otherwise this parameter does not take effect.
     - An SSD device must exist under the storage path. Otherwise partition creation fails.
@@ -101,6 +101,10 @@ p20210522: ["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time
 p20210523: ["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
 ```
 
+For daily partitions, the current day has offset `0`. With `hot_partition_num = N > 0` and final storage medium `HDD`, partitions whose offset is greater than `-N` use SSD. This includes the current day, the previous `N - 1` days, and all future partitions created by `dynamic_partition.end`. An SSD partition at offset `i` has a cooldown time at the start of day `i + N` relative to the current day.
+
+In this example, offsets `-3` and `-2` use HDD; offsets `-1` through `3` use SSD. On **2021-05-20**, five partitions use SSD even though `hot_partition_num = 2`. Creating the historical partitions also requires `dynamic_partition.create_history_partition = true`, as in the complete table definition below.
+
 ### dynamic_partition.storage_medium
 
 - **Function**: Specifies the final storage medium for dynamic partitions. Valid values are `HDD` (default) or `SSD`.
@@ -117,7 +121,7 @@ The following steps show how to create a table that supports tiered storage and 
 
 ### Step 1: Create a Tiered Storage Table
 
-Goal: Create a table with SSD/HDD tiered storage enabled, where the most recent 2 partitions use SSD and the rest use HDD.
+Goal: Create a table with SSD/HDD tiered storage enabled. With `hot_partition_num = 2`, the current day, the previous day, and all future partitions use SSD. Older partitions use HDD.
 
 ```sql
 CREATE TABLE tiered_table (k DATE)
@@ -145,7 +149,7 @@ Goal: Confirm that partitions are assigned to SSD and HDD as expected.
 SHOW PARTITIONS FROM tiered_table;
 ```
 
-Expected output: 7 partitions in total, of which 5 use SSD and 2 use HDD.
+Assuming the table is created on **2021-05-20**, the relevant partition properties are summarized below: 7 partitions in total, of which 5 use SSD and 2 use HDD.
 
 ```Plain
 p20210517: ["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59

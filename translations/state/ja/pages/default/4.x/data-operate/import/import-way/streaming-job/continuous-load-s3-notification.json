@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3-notification",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
+    "sourceCommit": "e4875f34f7edf805c23d3dd1f646af3648e2ac2e",
+    "sourceHash": "0d4504f2c2bb150c90c5760fcb7785c5c1c31f6cf24effb859c04aacb66ac365",
+    "sourceTechnicalHash": "0ef9f4675554c67eef4de46fc24f2b723dd88727d7733988dfbf4ca44d07d96c",
+    "targetHash": "4d409d4d8a407ba8ff88c27698472162c2777f93435144df9fadfd5bb065bf56",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-12T21:27:20.336Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0d4504f2c2bb150c90c5760fcb7785c5c1c31f6cf24effb859c04aacb66ac365",
+      "targetHash": "4d409d4d8a407ba8ff88c27698472162c2777f93435144df9fadfd5bb065bf56",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"14\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.6\",\"5\",\"6\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"14\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.6\",\"5\",\"6\"]\nprotected node 45: expected [\"inlineCode\",null,null,\"offset\"]; received [\"inlineCode\",null,null,\"ALTER JOB\"]\nprotected node 46: expected [\"inlineCode\",null,null,\"ALTER JOB\"]; received [\"inlineCode\",null,null,\"offset\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"14\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.6\",\"5\",\"6\"]; received [\"1\",\"1\",\"1\",\"1\",\"14\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.6\",\"5\",\"6\"]\nprotected node 2: expected [\"inlineCode\",null,null,\"s3://example-bucket/data/*.csv\"]; received [\"inlineCode\",null,null,\"us-east-1\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"us-east-1\"]; received [\"inlineCode\",null,null,\"s3://example-bucket/data/*.csv\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 45: expected [\"inlineCode\",null,null,\"offset\"]; received [\"inlineCode\",null,null,\"ALTER JOB\"]\nprotected node 46: expected [\"inlineCode\",null,null,\"ALTER JOB\"]; received [\"inlineCode\",null,null,\"offset\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"14\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.6\",\"5\",\"6\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"14\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.6\",\"5\",\"6\"]\nprotected node 45: expected [\"inlineCode\",null,null,\"offset\"]; received [\"inlineCode\",null,null,\"ALTER JOB\"]\nprotected node 46: expected [\"inlineCode\",null,null,\"ALTER JOB\"]; received [\"inlineCode\",null,null,\"offset\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
+        "blob": "fbee49706bbbaa46dd2a47f015e16773cd0d4bcd"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
+        "blob": "078de88aec2016d8d4e74c51723a22bfa5140d94"
+      }
+    }
+  }
+}

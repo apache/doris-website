@@ -8,23 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "community/source-install/compilation-with-docker.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/source-install/compilation-with-docker.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "5a1eb2b58ab6125ed5cf8ad953f970abc79d380854778245b00393ab0f4d6e48",
-    "sourceTechnicalHash": "5aca82ee484f3ef00d45063253cf63ac4764fd87117566e956949b471170ae8d",
-    "targetHash": "cf7db5c681a997480fc1a4bef5760048c05e7de1f39ae67b5f79ea56b9553bc6",
+    "sourceCommit": "52a91a95e0603218b7576d2df352f39be6f2839e",
+    "sourceHash": "814fc6b4b5dd833ec5c947840624151d57cb92b3cfcbbec9e010a88156a4a819",
+    "sourceTechnicalHash": "a0e075332eb7b5c33159d00bfd9f92d4216c0688f14517a4693eb7181614896a",
+    "targetHash": "828d76a2f3f72707a2c47faab48853f9a3855e514c9a9ef15c42eff422247a23",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T15:41:57.199Z",
+    "translatedAt": "2026-11-15T05:57:51.125Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "5a1eb2b58ab6125ed5cf8ad953f970abc79d380854778245b00393ab0f4d6e48",
-      "targetHash": "cf7db5c681a997480fc1a4bef5760048c05e7de1f39ae67b5f79ea56b9553bc6",
+      "sourceHash": "814fc6b4b5dd833ec5c947840624151d57cb92b3cfcbbec9e010a88156a4a819",
+      "targetHash": "828d76a2f3f72707a2c47faab48853f9a3855e514c9a9ef15c42eff422247a23",
       "warnings": [],
       "history": [
         {
@@ -32,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "community/source-install/compilation-with-docker.md",
+        "blob": "1f0e42330992421f4d5746e47f325e61811b75d9"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-community/current/source-install/compilation-with-docker.md",
+        "blob": "e197f00096ca69f58d77e194d4600212dcd064ca"
+      }
     }
   }
 }

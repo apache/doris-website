@@ -2,7 +2,7 @@
 {
     "title": "配置计算组",
     "language": "zh-CN",
-    "description": "详细介绍计算组（Compute Group）的配置方法，包括副本配置、多计算组配置、资源配置、访问模式配置、启动参数配置和持久化存储配置。",
+    "description": "介绍 Kubernetes 上 Doris 存算分离计算组的配置与扩缩容方法，包括 BE 节点数量、资源限制、访问模式、启动参数、持久化存储，以及缩容退役、PVC 清理和结果验证。",
     "keywords": ["Doris", "存算分离", "Kubernetes", "计算组", "Compute Group", "BE", "NodePort", "LoadBalancer", "持久化存储", "ConfigMap"]
 }
 ---
@@ -14,6 +14,7 @@
 - **访问控制**：集群内、外通过不同方式访问 BE 服务
 - **启动定制**：通过 ConfigMap 自定义 BE 启动参数
 - **数据持久化**：缓存、日志、StreamLoad 暂存数据的持久化存储
+- **扩缩容**：增减 BE 节点和计算组，并检查缩容结果
 
 ## 场景 1：快速搭建单个计算组
 
@@ -311,3 +312,125 @@ spec:
   - uniqueId: cg1
     logNotStore: true
 ```
+
+## 场景 7：调整计算容量 {#scaling-compute-groups}
+
+通过修改 `DorisDisaggregatedCluster` 资源扩缩容计算组。`replicas` 表示 BE 节点数，不是对象存储中数据的副本数。增大该值会增加计算容量，减小该值会移除 BE 节点及其本地缓存。
+
+以下流程以 [Doris Operator 26.0.1](https://github.com/apache/doris-operator/tree/26.0.1) 为依据。请使用同一发行版本的 CRD 和 Operator 镜像。缩容行为也取决于 BE 镜像，不能假定所有镜像都支持优雅退出。
+
+### 7.1 准备并检查集群
+
+调整容量前：
+
+- 确认 FE、MetaService、FoundationDB 和现有 BE 节点健康。Operator 必须能够使用[配置认证](config-cluster.md)中的管理凭证连接 FE。
+- 检查 Kubernetes 的 CPU、内存和存储容量，包括新 PVC 能否绑定。为剩余业务保留足够的就绪 BE 节点。
+- 缩容前先降低或迁移流量，等待正在执行的查询和导入任务完成。操作后检查客户端重试情况和导入任务状态。
+
+以下示例使用命名空间 `doris`、集群 `test-disaggregated-cluster` 和计算组 `cg1`，请替换为实际名称：
+
+```shell
+kubectl get ddc test-disaggregated-cluster -n doris -o yaml
+kubectl get pods,sts,pvc -n doris
+```
+
+以管理员身份连接 FE 的 SQL 端口，记录现有计算组和 BE 节点：
+
+```sql
+SHOW COMPUTE GROUPS;
+SHOW BACKENDS;
+```
+
+修改部署集群时使用的完整清单，然后执行：
+
+```shell
+kubectl apply -n doris -f ddc-sample.yaml
+```
+
+以下 YAML 片段仅展示需要修改的字段。请保留其他字段和 `spec.computeGroups` 中的所有其他计算组。省略已有计算组会请求删除该组。请修改 Doris 自定义资源，由 Operator 协调 Doris 元数据和 Kubernetes 资源，不要直接缩放其 StatefulSet。
+
+### 7.2 扩容已有计算组
+
+例如，将完整清单中 `cg1` 的 BE 节点数从 2 调整为 3：
+
+```yaml
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    image: ${beImage}
+    replicas: 3
+```
+
+保留原有 `uniqueId`、镜像、资源配置、ConfigMap 和持久卷配置。应用清单后，Operator 增加 StatefulSet 副本数，新 BE 在启动时注册到集群。
+
+确认该组有 3 个就绪 Pod，且 `SHOW BACKENDS` 中新增 BE 的 `Alive = true`。新节点需要逐步建立缓存，增加节点不会立即获得与已有节点相同的缓存。
+
+### 7.3 缩容已有计算组
+
+集群级布尔字段 `spec.enableDecommission` 决定 BE 的移除流程，默认值为 `false`：
+
+| 取值 | 减小计算组 `replicas` 时的行为 |
+| --- | --- |
+| `true` | 先提交 Doris BE 退役操作，退役期间保持 StatefulSet 原有副本数。待选中节点退役完成后，从 Doris 移除节点并缩减 StatefulSet。 |
+| `false` | 不执行退役步骤，直接从 Doris 移除选中的 BE。Operator 26.0.1 在 BE 镜像支持时会先使用优雅缩容流程，否则回退到直接移除流程。 |
+
+例如，通过退役流程将 `cg1` 从 3 个节点缩减为 2 个，在完整清单中进行如下修改并应用：
+
+```yaml
+spec:
+  enableDecommission: true
+  computeGroups:
+  - uniqueId: cg1
+    image: ${beImage}
+    replicas: 2
+```
+
+Operator 选择 Pod 序号大于等于目标副本数的节点。退役过程中不要手动删除这些 Pod。通过以下命令查看进度：
+
+```shell
+kubectl describe ddc test-disaggregated-cluster -n doris
+kubectl get sts,pods,pvc -n doris
+```
+
+在 Doris 中执行 `SHOW BACKENDS;`。Operator 的退役检查会等待选中 BE 的 `SystemDecommissioned = true` 且 `TabletNum = 0`，或节点已经被移除。期间计算组可能保持 `Decommissioning` 状态。只有就绪 Pod 数量和 Doris 中的 BE 成员均符合目标，才表示缩容完成。
+
+:::caution 缩容时的本地存储
+Operator 26.0.1 在 StatefulSet 缩容后会删除被移除 Pod 序号对应的 PVC。底层 PV 的回收策略决定存储的后续处理。将缓存、日志或 Stream Load 暂存数据持久化，并不保证这些卷会在缩容后保留。移除 BE 前，请完成依赖该节点的导入任务，并保存所需日志。再次扩容不保证恢复原有本地数据。
+:::
+
+### 7.4 新增或移除整个计算组
+
+新增计算组时，保留所有已有组，追加一个具有新 `uniqueId` 的条目。例如：
+
+```yaml
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    image: ${beImage}
+    replicas: 2
+  - uniqueId: cg2
+    image: ${beImage}
+    replicas: 2
+```
+
+应用完整清单，等待 `cg2` 就绪并出现在 `SHOW COMPUTE GROUPS` 中。向新组发送流量前，按照[管理计算组](../../../compute-storage-decoupled/managing-compute-cluster.md)配置用户权限和业务路由。新增计算组不会自动将已有会话迁移到该组。
+
+移除计算组前，先将其查询和导入迁移到其他可用计算组，并更新引用该组的用户默认值或应用配置。仅从完整清单中删除该组条目并应用。Operator 先从 Doris 元数据中移除该组 BE，再移除其管理的 Service 和 StatefulSet。
+
+:::caution 移除整个组与减少组内节点不同
+Operator 26.0.1 在移除整个 `computeGroups` 条目时使用 BE 直接移除流程，即使 `enableDecommission` 为 `true` 也是如此。不要通过删除条目来请求逐步退役。删除后检查是否有残留 PVC，并按保留策略处理，不能假定其清理行为与已有组内的缩容相同。
+:::
+
+### 7.5 调整资源和其他组件
+
+| 调整目标 | 操作与约束 |
+| --- | --- |
+| 增减单个 BE 的 CPU/内存 | 按场景 3 修改该组的 `requests` 和 `limits`，然后应用完整清单。这会改变 Pod 模板，可能导致 BE 重启。应用前确认调度容量。 |
+| FE 扩缩容 | 修改 `spec.feSpec.replicas`，取值必须大于等于 `electionNumber`，超出的 FE 为 Observer。Operator 在缩减 StatefulSet 前，先从 Doris 移除选中的 Observer。不要修改已有集群的 `electionNumber`。参见[配置 FE](config-fe.md)。 |
+| 调整 MetaService、FoundationDB 或 Storage Vault 容量 | 独立于计算组副本数管理，保留其元数据和存储。BE 缩容不需要删除这些组件的资源或对象存储中的数据。参见[配置 MetaService](config-ms.md)和[部署 FoundationDB](install-fdb.md)。 |
+
+### 7.6 验证与排查
+
+每次变更后，结合自定义资源中的计算组阶段、Pod 就绪状态和 `SHOW BACKENDS` 验证结果。确认节点数量符合目标、保留节点的 `Alive = true`、退役节点已被移除，并通过预期计算组执行查询和导入验证。
+
+如果操作停滞，检查 `kubectl describe ddc`、Pod Events、PVC 绑定状态和 Operator 日志。Pod 为 `Pending` 时通常需要检查调度或存储；`Decommissioning` 需要检查 Doris 退役进度；`ScaleDownFailed` 需要检查 Operator 记录的 SQL 错误以及 FE 连通性和权限。解决报告的原因后再重试，不要直接强制删除资源。参见[状态与故障排查](../doris-operator/status-and-troubleshooting.md)。

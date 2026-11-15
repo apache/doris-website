@@ -79,16 +79,88 @@ yum install docker
 | `apache/doris:build-env-ldb-toolchain-latest` | master | 跟随主干更新 |
 | `apache/doris:build-env-ldb-toolchain-no-avx2-latest` | master | 兼容不支持 AVX2 的 CPU |
 
-以编译 Doris 2.0 为例，下载并检查镜像：
+以下命令在宿主机上执行。示例编译 `master`；编译发布分支时，请根据上表同时修改分支和镜像。后续宿主机命令在同一个 shell 中执行，以复用这些变量。ARM64 与 JDK 的额外说明见[镜像选择注意事项](#镜像选择注意事项)。
 
 ```bash
-# 也可以使用 docker.io/apache/doris:build-env-for-2.0
-docker pull apache/doris:build-env-for-2.0
+DORIS_BRANCH=master
+DORIS_BUILD_IMAGE=apache/doris:build-env-ldb-toolchain-latest
+DORIS_SOURCE_DIR="$PWD/doris"
 
-# 确认镜像下载成功
-docker images
-# REPOSITORY      TAG                  IMAGE ID        CREATED       SIZE
-# apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
+docker pull "$DORIS_BUILD_IMAGE"
+```
+
+## 3. 编译 Doris
+
+<!-- 知识类型: 操作步骤 -->
+
+### 3.1 下载 Doris 源码
+
+在宿主机上，将所选分支克隆到上一步设置的目录：
+
+```bash
+git clone --branch "$DORIS_BRANCH" https://github.com/apache/doris.git "$DORIS_SOURCE_DIR"
+```
+
+### 3.2 启动构建容器
+
+```bash
+mkdir -p "$HOME/.m2"
+
+docker run -it --network=host \
+    --name doris-build \
+    -v "$HOME/.m2:/root/.m2" \
+    -v "$DORIS_SOURCE_DIR:/root/doris" \
+    --workdir /root/doris \
+    "$DORIS_BUILD_IMAGE"
+```
+
+容器启动后会自动进入 Bash，工作目录为挂载的源码目录 `/root/doris`。
+
+`docker run` 关键参数说明：
+
+| 参数 | 作用 |
+| ---- | ---- |
+| `-v` | 将宿主机目录挂载到容器，用于持久化源码与依赖 |
+| `--name` | 指定容器名称，便于后续管理 |
+| `--workdir` | 指定容器中的工作目录，直接进入挂载的源码目录 |
+| `--network` | 容器网络模式。`host` 表示与宿主机共享网络栈，无需端口映射 |
+
+建议：
+
+- 始终挂载 Doris 源码目录，保证编译产物保留在宿主机，容器退出后不丢失。
+- 挂载 `.m2` 目录，避免每次启动容器都重新下载 Maven 依赖。
+- 容器内下载三方库需要访问外网，推荐使用 `--network=host` 模式。
+
+### 3.3 执行构建
+
+在容器内执行默认构建：
+
+```bash
+bash build.sh
+```
+
+编译完成后，产物位于源码目录下的 `output/`。
+
+:::tip
+**如何检查机器是否支持 AVX2 指令集？**
+
+```bash
+cat /proc/cpuinfo | grep avx2
+```
+
+输出非空即代表支持 AVX2。
+:::
+
+### 其他构建选项
+
+按需选择以下命令替代默认构建命令：
+
+```bash
+# CPU 不支持 AVX2 时使用
+USE_AVX2=0 bash build.sh
+
+# 编译 Debug 版本 BE
+BUILD_TYPE=Debug bash build.sh
 ```
 
 ### 镜像选择注意事项
@@ -111,77 +183,6 @@ export JAVA_HOME=/usr/lib/jvm/jdk-17.0.2/
 export PATH=$JAVA_HOME/bin/:$PATH
 ```
 
-## 3. 编译 Doris
-
-<!-- 知识类型: 操作步骤 -->
-
-### 3.1 下载 Doris 源码
-
-在宿主机上获取目标分支代码（以 branch-2.0 为例）：
-
-```bash
-git clone -b branch-2.0 https://github.com/apache/doris.git
-```
-
-假设源码目录为 `~/doris-branch-2.0`。
-
-### 3.2 启动构建容器
-
-```bash
-# 提前在宿主机准备 maven 的 .m2 目录，便于多次构建复用 Java 依赖
-mkdir ~/.m2
-
-# 挂载源码与 .m2 目录，启动构建镜像
-docker run -it --network=host \
-    --name mydocker \
-    -v ~/.m2:/root/.m2 \
-    -v ~/doris-branch-2.0:/root/doris-branch-2.0/ \
-    apache/doris:build-env-for-2.0
-
-# 命令执行成功后将自动进入容器
-```
-
-`docker run` 关键参数说明：
-
-| 参数 | 作用 |
-| ---- | ---- |
-| `-v` | 将宿主机目录挂载到容器，用于持久化源码与依赖 |
-| `--name` | 指定容器名称，便于后续管理 |
-| `--network` | 容器网络模式。`host` 表示与宿主机共享网络栈，无需端口映射 |
-
-建议：
-
-- 始终挂载 Doris 源码目录，保证编译产物保留在宿主机，容器退出后不丢失。
-- 挂载 `.m2` 目录，避免每次启动容器都重新下载 Maven 依赖。
-- 容器内下载三方库需要访问外网，推荐使用 `--network=host` 模式。
-
-### 3.3 执行构建
-
-容器内进入源码目录后运行：
-
-```bash
-# 默认编译支持 AVX2 的产物
-sh build.sh
-
-# CPU 不支持 AVX2 时需附加 USE_AVX2=0
-USE_AVX2=0 sh build.sh
-
-# 编译 Debug 版本 BE
-BUILD_TYPE=Debug sh build.sh
-```
-
-编译完成后，产物位于源码目录下的 `output/`。
-
-:::tip
-**如何检查机器是否支持 AVX2 指令集？**
-
-```bash
-cat /proc/cpuinfo | grep avx2
-```
-
-输出非空即代表支持 AVX2。
-:::
-
 ## 4. 自行构建开发镜像
 
 如需自定义基础镜像（例如更换基础发行版、增加调试工具），请参考源码中的 `docker/README.md`。
@@ -203,6 +204,16 @@ cat /proc/cpuinfo | grep avx2
 ### Q4: 容器内 Java 库下载失败？
 
 确认容器启动时使用了 `--network=host`，并将 `~/.m2` 目录挂载到容器，避免代理或网络隔离导致 Maven 中央仓库不可达。
+
+### Q5: Git 提示 `detected dubious ownership in repository`？
+
+挂载的源码目录可能属于宿主机上的另一个用户。确认该目录是你信任的源码仓库后，在容器内为该挂载路径添加例外：
+
+```bash
+git config --global --add safe.directory /root/doris
+```
+
+如果修改了容器内的挂载路径，请相应替换 `/root/doris`。
 
 ## 相关文档
 

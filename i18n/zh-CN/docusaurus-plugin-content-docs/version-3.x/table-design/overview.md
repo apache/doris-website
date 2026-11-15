@@ -2,7 +2,7 @@
 {
     "title": "概览 | Table Design",
     "language": "zh-CN",
-    "description": "使用 CREATE TABLE 语句在 Doris 中创建一个表，也可以使用 CREATE TABKE LIKE 或 CREATE TABLE AS 子句从另一个表派生表定义。",
+    "description": "使用 CREATE TABLE 语句在 Doris 中创建一个表，也可以使用 CREATE TABLE LIKE 或 CREATE TABLE AS 子句从另一个表派生表定义。",
     "sidebar_label": "概览"
 }
 ---
@@ -11,7 +11,7 @@
 
 ## 创建表
 
-使用 [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 语句在 Doris 中创建一个表，也可以使用 [CREATE TABKE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#create-table--like) 或 [CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#create-table--as-select也称为-ctas) 子句从另一个表派生表定义。
+使用 [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 语句在 Doris 中创建一个表，也可以使用 [CREATE TABLE LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#create-table--like) 或 [CREATE TABLE AS](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#create-table--as-select也称为-ctas) 子句从另一个表派生表定义。
 
 ## 表名
 

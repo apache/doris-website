@@ -22,7 +22,7 @@ For more information on dynamic partitioning, please refer to: [Data Partitionin
 ### `dynamic_partition.hot_partition_num`
 
 - **Function**:
-  - Specifies how many of the most recent partitions are hot partitions, which are stored on SSD, while the remaining partitions are stored on HDD.
+  - For a positive value `N`, keeps the current partition, partitions for the previous `N - 1` time intervals, and all future partitions on SSD. Older partitions use HDD.
 
 - **Note**:
   - `"dynamic_partition.storage_medium" = "HDD"` must be set simultaneously; otherwise, this parameter will not take effect.
@@ -49,6 +49,10 @@ The system will automatically create the following partitions and configure thei
   p20210522：["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time=2021-05-24 00:00:00
   p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
   ```
+
+For daily partitions, the current day has offset `0`. With `hot_partition_num = N > 0` and final storage medium `HDD`, partitions whose offset is greater than `-N` use SSD. This includes the current day, the previous `N - 1` days, and all future partitions created by `dynamic_partition.end`. An SSD partition at offset `i` has a cooldown time at the start of day `i + N` relative to the current day.
+
+In this example, offsets `-3` and `-2` use HDD; offsets `-1` through `3` use SSD. On **2021-05-20**, five partitions use SSD even though `hot_partition_num = 2`. Creating the historical partitions also requires `dynamic_partition.create_history_partition = true`, as in the complete table definition below.
 
 ### `dynamic_partition.storage_medium`
 
@@ -86,7 +90,7 @@ The system will automatically create the following partitions and configure thei
     SHOW PARTITIONS FROM tiered_table;
 ```
 
-You should have 7 partitions, 5 of which use SSD as the storage medium, while the other 2 use HDD.
+Assuming the table is created on **2021-05-20**, the relevant partition properties are summarized below: 7 partitions in total, of which 5 use SSD and 2 use HDD.
 
 ```Plain
   p20210517：["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59

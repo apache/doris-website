@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3-one-time",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md",
+    "sourceCommit": "e4875f34f7edf805c23d3dd1f646af3648e2ac2e",
+    "sourceHash": "3489926bd2b49fedecb945092c22d851bbce873727283730e1d704752db533cb",
+    "sourceTechnicalHash": "46059895ce2aef612ed46e485db08dae9d282078e9e48c5f319a45c35fca8f26",
+    "targetHash": "dfb7119a764622233860db6c02b87a24f28ad66aaa13621de6f04eba5f68528a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-12T21:31:32.957Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3489926bd2b49fedecb945092c22d851bbce873727283730e1d704752db533cb",
+      "targetHash": "dfb7119a764622233860db6c02b87a24f28ad66aaa13621de6f04eba5f68528a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1.6\"]; received [\"1\",\"1\",\"1\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1.6\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md",
+        "blob": "4f330a4724c132288b992e6f877817de82079b91"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md",
+        "blob": "b055a779656259e5e37b3370247932f12b7bfac9"
+      }
+    }
+  }
+}

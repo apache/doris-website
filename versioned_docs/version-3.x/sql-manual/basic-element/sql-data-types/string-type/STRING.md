@@ -14,3 +14,15 @@ Note: Variable length strings are stored in UTF-8 encoding, so usually English c
 
 ### keywords
 STRING
+
+### Type aliases and metadata display
+
+`STRING` and `TEXT` define the same Doris type. Different interfaces display that type differently:
+
+| Interface | Display for a `STRING` column |
+| --- | --- |
+| `SHOW CREATE TABLE` and `DESC` | `text` |
+| `information_schema.columns.DATA_TYPE` | `varchar`, for MySQL compatibility |
+| `information_schema.columns.COLUMN_TYPE` | `string` |
+
+These names do not change the stored type or its length limit. To distinguish a Doris `STRING` column from a length-limited `VARCHAR` column in metadata, check `COLUMN_TYPE`.

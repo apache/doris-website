@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "8fc9b3dd5064182a2947f0802559e1d69e9ba7083550df3b3b2b150837b8b5d9",
-    "sourceTechnicalHash": "26fa915299bc1e675d374472167f3a8a4b40b74d99e321fb6a67d8a89b5c20b9",
-    "targetHash": "fb069ba3a84ade98fef1f311623277e5577e2477f8dddaf868ea268594ec4003",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "7ef74e70cc57e25b4225855a335bac9df226fb6c3c4328cfc38b806c352663ac",
+    "sourceTechnicalHash": "56a61faac921c8359778ad0dd3cf60ba89a0ac9719e115600f61928382840ac0",
+    "targetHash": "98a632d4be23975258881ea1ac4b43cab352d54bb759709b982fe49d33593d3f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.606Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-14T05:25:20.361Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "7ef74e70cc57e25b4225855a335bac9df226fb6c3c4328cfc38b806c352663ac",
+      "targetHash": "98a632d4be23975258881ea1ac4b43cab352d54bb759709b982fe49d33593d3f",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"2.0\",\"3\",\"3\",\"4\"]; received [\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\"]\nprotected node 18: expected [\"inlineCode\",null,null,\"function_column.sequence_col\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"function_column.sequence_type\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"2.0\",\"3\",\"3\",\"4\"]; received [\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature description + Procedure -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 機能説明 + 手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: High-concurrency data ingestion / Out-of-order updates on the Unique Key model / UPDATE transaction control -->\"]; received [\"html\",null,null,\"<!-- 適用場面: 高い同時実行性が求められるデータ取り込み / Unique Key モデルでの順序が前後した更新 / UPDATE のトランザクション制御 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"function_column.sequence_col\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"function_column.sequence_type\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"function_column.sequence_col\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"2.0\",\"3\",\"3\",\"4\"]; received [\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\"]\nprotected node 18: expected [\"inlineCode\",null,null,\"function_column.sequence_col\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"function_column.sequence_type\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
+        "blob": "f3450204025af7d9fc53f8a0300086c7c87fb710"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
+        "blob": "1ff439d76daf1a9bcdb6dc0587f0edaee69f4fd8"
+      }
+    }
   }
 }

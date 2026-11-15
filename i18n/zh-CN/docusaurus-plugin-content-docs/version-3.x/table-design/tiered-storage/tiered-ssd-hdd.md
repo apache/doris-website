@@ -23,7 +23,7 @@ Doris 支持在不同磁盘类型（SSD 和 HDD）之间进行分层存储，结
 ### `dynamic_partition.hot_partition_num`
 
 - **功能**：
-  - 指定最近的多少个分区为热分区，这些分区存储在 SSD 上，其余分区存储在 HDD 上。
+  - 当取值 `N > 0` 时，将当前分区、之前 `N - 1` 个时间单位的分区和所有未来分区保留在 SSD 上，更早的分区使用 HDD。
 
 - **注意**：
   - 必须同时设置 `dynamic_partition.storage_medium = HDD`，否则此参数不会生效。
@@ -49,6 +49,10 @@ dynamic_partition.end = 3
   p20210522：["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time=2021-05-24 00:00:00
   p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
   ```
+
+对于按天分区的表，当天分区的偏移量为 `0`。当 `hot_partition_num = N > 0` 且最终存储介质为 `HDD` 时，偏移量大于 `-N` 的分区使用 SSD，包括当天、之前 `N - 1` 天，以及 `dynamic_partition.end` 创建的所有未来分区。偏移量为 `i` 的 SSD 分区，其冷却时间为相对当天第 `i + N` 天的起始时刻。
+
+本例中，偏移量 `-3`、`-2` 的分区使用 HDD，偏移量 `-1` 到 `3` 的分区使用 SSD。以 **2021-05-20** 为当前日期，`hot_partition_num = 2` 时有 5 个 SSD 分区。创建历史分区还需设置 `dynamic_partition.create_history_partition = true`，见下方完整建表示例。
 
 ### `dynamic_partition.storage_medium`
 
@@ -86,7 +90,7 @@ dynamic_partition.end = 3
     SHOW PARTITIONS FROM tiered_table;
 ```
 
-可以看见 7 个分区，5 个使用 SSD, 其它的 2 个使用 HDD。
+假设建表时当前日期仍为 **2021-05-20**，以下列出与存储分层相关的预期分区信息：共 7 个分区，其中 5 个使用 SSD，2 个使用 HDD。
 
 ```Plain
   p20210517：["2021-05-17", "2021-05-18") storage_medium=HDD storage_cooldown_time=9999-12-31 23:59:59

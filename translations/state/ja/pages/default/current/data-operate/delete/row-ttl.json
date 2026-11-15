@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/delete/row-ttl",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/delete/row-ttl.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/delete/row-ttl.md",
+    "sourceCommit": "e4875f34f7edf805c23d3dd1f646af3648e2ac2e",
+    "sourceHash": "70c2ecde0c056eb0396c8be44a77d497a624e2b3951d78e72c707b5a711590a8",
+    "sourceTechnicalHash": "0d26dfe54a7c06155e041af85882282e56827f0d9ff92f71e5c60f5ce81d5b99",
+    "targetHash": "934a453e37acf1779146b182ba064c7dda5d7955d647f54382c4022d811f612a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-12T21:12:17.323Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "70c2ecde0c056eb0396c8be44a77d497a624e2b3951d78e72c707b5a711590a8",
+      "targetHash": "934a453e37acf1779146b182ba064c7dda5d7955d647f54382c4022d811f612a",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]; received [\"0\",\"0\",\"0\",\"1\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]; received [\"0\",\"0\",\"0\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge Type: Feature Overview -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 機能概要 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use Case: Row-level Data Expiration -->\"]; received [\"html\",null,null,\"<!-- ユースケース: 行レベルのデータ期限切れ -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]; received [\"0\",\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]\nprotected node 59: expected [\"code\",\"bash\",null,\"curl --location-trusted -u '<user>:<password>' \\\\\\n  -H 'label:row_ttl_expirations_example_1' \\\\\\n  -H 'column_separator:,' \\\\\\n  -H 'timezone:+00:00' \\\\\\n  -H 'columns:id,message,expiration,__DORIS_TTL_COL__=cast(expiration as datetime(6))' \\\\\\n  -T - 'http://<fe_host>:<http_port>/api/<database>/row_ttl_expirations/_stream_load' <<'DATA'\\n10,stream-live,2099-01-01 00:00:00.000000\\n11,stream-expired,2000-01-01 00:00:00.000000\\nDATA\"]; received [\"code\",\"bash\",null,\"curl --location-trusted -u '<user>:<password>' \\\\\\\\\\n  -H 'label:row_ttl_expirations_example_1' \\\\\\\\\\n  -H 'column_separator:,' \\\\\\\\\\n  -H 'timezone:+00:00' \\\\\\\\\\n  -H 'columns:id,message,expiration,__DORIS_TTL_COL__=cast(expiration as datetime(6))' \\\\\\\\\\n  -T - 'http://<fe_host>:<http_port>/api/<database>/row_ttl_expirations/_stream_load' <<'DATA'\\n10,stream-live,2099-01-01 00:00:00.000000\\n11,stream-expired,2000-01-01 00:00:00.000000\\nDATA\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]; received [\"0\",\"0\",\"0\",\"1\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/delete/row-ttl.md",
+        "blob": "f03fb16a7346487f9a8a882cd4c8d492db5630d5"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/delete/row-ttl.md",
+        "blob": "41d144d2e6e489864eea5771cc9ac03b81607f56"
+      }
+    }
+  }
+}

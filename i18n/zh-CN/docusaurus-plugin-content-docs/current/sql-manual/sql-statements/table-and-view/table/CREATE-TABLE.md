@@ -231,7 +231,7 @@ CREATE TABLE <table_name> LIKE <source_table>
 
 **<distribute_cols> 和 <bucket_count>**
 
-> 分桶列和分桶数。明细模型的分桶列可以是任意的列，聚合模型和主键模型的分桶列必须和 key 列保持一致。分桶数是任意的正整数。有关分桶的详细信息，请参阅[手动分桶](../../../../table-design/data-partitioning/data-bucketing#手动设置分桶数)和[自动分桶](../../../../table-design/data-partitioning/data-bucketing#自动设置分桶数)章节。
+> 分桶列和分桶数。明细模型的分桶列可以是任意的列，聚合模型和主键模型的分桶列必须和 key 列保持一致。分桶数是任意的正整数。有关分桶的详细信息，请参阅[手动分桶](../../../../table-design/data-partitioning/data-bucketing#1-手动设置分桶数)和[自动分桶](../../../../table-design/data-partitioning/data-bucketing#2-自动设置分桶数)章节。
 
 ### 列的默认值相关参数
 
@@ -345,6 +345,8 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 
 ### 表属性相关参数
 
+以下属性参考适用于 OLAP 内表，在 `PROPERTIES ("name" = "value", ...)` 中以字符串形式设置属性值。除特定功能要求外，属性均为可选项；部署模式限制见各项说明。
+
 **<table_property>**
 
 | 属性名                                        | 作用                                                         |
@@ -373,10 +375,47 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | group_commit_data_bytes                       | 配置这个表的 Group Commit 攒批数据大小。单位为 bytes，默认值为 134217728，即 128MB。Group Commit 的下刷时机取决于 `group_commit_interval_ms`以及`group_commit_data_bytes` 哪个先到设置的值。 |
 | enable_mow_light_delete                       | 是否在 Unique 表 Mow 上开启 Delete 语句写 Delete predicate。若开启，会提升 Delete 语句的性能，但 Delete 后进行部分列更新可能会出现部分数据错误的情况。若关闭，会降低 Delete 语句的性能来保证正确性。此属性的默认值为 `false`。此属性只能在 Unique Merge-on-Write 表上开启。 |
 | 动态分区相关属性                              | 动态分区相关参考[数据划分 - 动态分区](../../../../table-design/data-partitioning/dynamic-partitioning) |
-| enable_unique_key_skip_bitmap_column | 是否在 Unique Merge-on-Write 表上开启[灵活列更新功能](../../../../data-operate/update/update-of-unique-model.md#灵活部分列更新)。此属性只能在 Unique Merge-on-Write 表上开启。 |
+| enable_unique_key_skip_bitmap_column | 是否在 Unique Merge-on-Write 表上开启[灵活列更新功能](../../../../data-operate/update/partial-column-update.md#灵活列更新)。此属性只能在 Unique Merge-on-Write 表上开启。 |
 | changelog.enable | 为该表开启 [Changelog](../../../../data-operate/incremental/changelog)，记录行级变更，用于 Table Stream 增量消费和 `@incr` 增量查询。仅 Duplicate Key 表和 Unique Key Merge-on-Write 表（无 cluster key）支持。只能在建表时开启，开启后不可关闭；不能与 `binlog.enable`（CCR）同时开启。需要 FE 开启 `enable_feature_changelog = true`。5.0.0 版本起支持。 |
 | changelog.need_historical_value | 是否在 Changelog 中记录变更前的值（before 镜像），默认 `false`。仅 Unique Key Merge-on-Write 表可设为 `true`；`min_delta` / `detail` 类型的 Table Stream 依赖它。建表后不可修改。 |
 | changelog.ttl_seconds | 变更记录的保留时长（秒），默认 `86400`（一天），必须大于 `0`。可以通过 `ALTER TABLE` 修改。 |
+#### 其他 OLAP 表属性
+
+| 属性 | 值类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `short_key` | 整数 | 自动计算 | 前缀索引包含的前导排序列数量。必须为正整数且不超过排序列数量；VARCHAR 列只能是所选列中的最后一列。 |
+| `bloom_filter_fpp` | 浮点数 | `0.05` | `bloom_filter_columns` 的误判率，范围为 `[0.0001, 0.05]`，仅在配置 Bloom Filter 列时生效。详见 [Bloom Filter 索引](../../../../table-design/index/bloomfilter.md)。 |
+| `storage_type` | 字符串 | `COLUMN` | 存储组织方式，仅接受 `COLUMN`。如需额外存储行格式副本，使用下方的行存属性。 |
+| `storage_format` | 字符串 | `V2` | Segment 存储格式，可选 `V2`、`V3` 或 `default`（即 `V2`）。`V3` 自 4.1.0 起支持，将列元数据存储在外部。详见[存储格式](../../../../table-design/storage-format.md)。 |
+| `inverted_index_storage_format` | 字符串 | FE 配置 | 倒排索引格式，可选 `V2`、`V3` 或 `default`，自 4.2.0 起还支持 `SNII`。不设置或使用 `default` 时遵循 FE 配置 `inverted_index_storage_format`。自 4.1.5 起不再允许新建 V1 索引。详见[倒排索引](../../../../table-design/index/inverted-index/overview.md)。 |
+| `store_row_column` | 布尔值 | `false` | 额外以行格式存储全部列。要求 `light_schema_change = true`，不支持 Aggregate Key 表。详见[行存](../../../../table-design/row-store.md)。 |
+| `row_store_columns` | 字符串 | 不设置 | 以逗号分隔的已存在列名，例如 `k,v1,v2`。设置后为这些列启用行存，不支持 Aggregate Key 表。详见[行存](../../../../table-design/row-store.md)。 |
+| `row_store_page_size` | 长整数 | `16384` | 行存页大小，单位为字节。必须为正数，向上取整到 4096 字节的整数倍。 |
+| `storage_page_size` | 长整数 | `65536` | 列存数据页大小，单位为字节，范围为 `4096` 至 `10485760`，向上取整到 4096 字节的整数倍。 |
+| `storage_dict_page_size` | 长整数 | `262144` | 字典页大小，单位为字节，范围为 `0` 至 `104857600`，向上取整到 4096 字节的整数倍。 |
+| `storage_policy` | 字符串 | 不设置 | 存算一体表使用的已存在远程存储策略。不支持 Unique Key Merge-on-Write 表，在存算分离模式中被忽略。详见[远程存储](../../../../table-design/tiered-storage/remote-storage.md)。 |
+| `storage_vault_name` | 字符串 | 数据库的 Vault，其次为默认 Vault | 存算分离模式使用的 Storage Vault 名称。Vault 必须已存在，用户须拥有其 `USAGE` 权限。表级配置优先于数据库和默认 Vault。详见[管理 Storage Vault](../../../../compute-storage-decoupled/managing-storage-vault.md)。 |
+| `file_cache_ttl_seconds` | 长整数 | `0` | 存算分离模式下 TTL 缓存的保护时长，单位为秒。`0` 表示使用普通缓存；自 4.1.4 起校验的取值范围为 `0` 至 `4611686018427387903`。此属性不控制数据过期删除。详见[文件缓存](../../../../compute-storage-decoupled/file-cache/file-cache.md)。 |
+| `estimate_partition_size` | 字符串 | 不设置 | 单个分区未压缩数据大小的预估值，例如 `10G`，与 `BUCKETS AUTO` 一起用于确定初始分桶数。详见[数据分桶](../../../../table-design/data-partitioning/data-bucketing.md)。 |
+| `mutable` | 布尔值 | `true` | 分区是否允许导入数据。`false` 将分区设为不可写；表级设置作为各分区的默认值。 |
+| `partition.retention_count` | 整数 | 不设置 | AUTO RANGE PARTITION 表保留的历史分区数量，必须为正整数；当前和未来分区继续保留。自 4.1.4 起不能与已启用的动态分区同时使用。详见[自动分区](../../../../table-design/data-partitioning/auto-partitioning.md)。 |
+| `vertical_compaction_num_columns_per_group` | 整数 | `5` | 垂直 Compaction 每组处理的列数，必须大于等于 `1`。 |
+| `time_series_compaction_empty_rowsets_threshold` | 长整数 | `5` | 优先合并连续空 Rowset 的数量阈值，必须大于等于 `2`，要求 `compaction_policy = time_series`。 |
+| `group_commit_mode` | 字符串 | `off_mode` | 表的默认 Group Commit 模式，可选 `off_mode`、`sync_mode` 或 `async_mode`，自 4.1.0 起支持。请求或会话中的设置优先。详见 [Group Commit](../../../../data-operate/import/load-best-practices/group-commit-manual.md)。 |
+| `binlog.enable` | 布尔值 | `false` | 为表启用 CCR Binlog，FE 还须开启 `enable_feature_binlog`。 |
+| `binlog.ttl_seconds` | 长整数 | `86400` | CCR Binlog 保留时长阈值，单位为秒。 |
+| `binlog.max_bytes` | 长整数 | `9223372036854775807` | CCR Binlog 垃圾回收的大小阈值，单位为字节。 |
+| `binlog.max_history_nums` | 长整数 | `9223372036854775807` | CCR Binlog 垃圾回收的历史记录数量阈值。 |
+| `is_being_synced` | 布尔值 | `false` | 标记 CCR 目标表正在同步。设为 `true` 时跳过该表的动态分区调度，并忽略 Colocate 和存储策略设置，由 CCR 流程管理此属性。 |
+| `partition.inverted_index_storage_format` | 字符串 | 不设置 | 自 4.2.0 起支持：存算分离模式下新建分区的索引格式，可选 `V2`、`V3` 或 `SNII`。须开启 FE 配置 `enable_partition_inverted_index_storage_format_rollout = true`，否则忽略。不转换已有分区。 |
+| `sequence_mapping.<sequence_col>` | 字符串 | 不设置 | Dev：由指定 Sequence 列控制的 Value 列列表，以逗号分隔。要求 Unique Key Merge-on-Read 表且 `light_schema_change = true`。详见[多流更新](../../../../data-operate/update/multi-stream-update-for-unique-model.md)。 |
+| `function_column.enable_row_ttl` | 布尔值 | `false` | 实验性功能，5.0.0 起支持：建表时开启行级 TTL。不支持 Aggregate Key 表，不能与 Sequence 列同时使用。详见[行级 TTL](../../../../data-operate/delete/row-ttl.md)。 |
+| `function_column.ttl_col` | 字符串 | 不设置 | 行级 TTL 的源 Value 列，必须与 `function_column.ttl` 一起设置且已开启行级 TTL。列类型等限制详见[行级 TTL](../../../../data-operate/delete/row-ttl.md)。 |
+| `function_column.ttl` | 字符串 | 不设置 | 源列模式的非负保留时长，例如 `86400` 或 `1 day`；无单位时按秒解释。`0` 表示在源列时间到达时过期。 |
+| `function_column.ttl_time_zone` | 字符串 | 取决于源列类型 | TTL 源列的时区，可选 `UTC`、`Z` 或 `-12:00` 至 `+14:00` 的固定偏移。DATE/DATETIME 系列源列必须显式设置；TIMESTAMPTZ 默认 `+00:00` 且只接受零偏移。 |
+
+特定功能的属性另见[动态分区](../../../../table-design/data-partitioning/dynamic-partitioning.md)。索引 `PROPERTIES`、VARIANT 列的 `PROPERTIES` 及异步物化视图属性与上述表属性分开配置。如需设置自动统计信息收集策略，请按照[统计信息](../../../../query-acceleration/optimization-technology-principle/statistics.md)中的说明，通过 `ALTER TABLE` 设置 `auto_analyze_policy`。
+
 ## 权限控制
 
 执行此 SQL 命令的[用户](../../../../admin-manual/auth/security-overview)必须至少具有以下[权限](../../../../admin-manual/auth/authorization/internal)：
