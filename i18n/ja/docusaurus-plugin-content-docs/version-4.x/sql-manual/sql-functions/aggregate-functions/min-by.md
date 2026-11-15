@@ -2,17 +2,19 @@
 {
     "title": "MIN_BY",
     "language": "ja",
-    "description": "MINBY 関数は、指定した列の最小値に基づいて対応する値を返します。"
+    "description": "MINBY 関数は、指定した列の最小値に対応する値を返します。"
 }
 ---
 
 ## 説明 {#description}
 
-MIN_BY 関数は、指定した列の最小値に基づいて対応する値を返します。
+MIN_BY 関数は、指定した列の最小値に対応する値を返します。
 
-`<expr2>` が Array の場合、配列は要素ごとに辞書順で比較され、NULL 要素は NULL 以外の要素より大きい値として扱われます。NULL の配列値は無視されます。
+`<expr2>` が Array の場合、配列は要素ごとに辞書順で比較されます。NULL 要素は NULL 以外のどの要素よりも大きく、配列全体の値が NULL の場合は無視されます。
 
-バージョンの違い：Doris 4.1 系列の 4.1.5 以降、および Doris 4.2 以降では、配列内の `NULL` 要素は `NULL` 以外の要素より大きい値として比較されます。Doris 4.0 および 4.1.5 より前の Doris 4.1 では、配列内の `NULL` 要素は `NULL` 以外の要素より小さい値として比較されます。配列値が `NULL` の場合は、これらすべてのバージョンで無視されます。
+バージョンによる違い: Doris 4.1 系列の 4.1.5 以降、および Doris 4.2 以降では、配列内の `NULL` 要素は NULL 以外の要素よりも大きいとみなされます。Doris 4.0 および Doris 4.1 系列の 4.1.5 より前のバージョンでは、配列内の `NULL` 要素は NULL 以外の要素よりも小さいとみなされます。これらすべてのバージョンで、配列全体の値が `NULL` の場合は無視されます。
+
+複数の行で `<expr2>` が同じ最小値になる場合、`MIN_BY` はそれらの行のいずれかから `<expr1>` を返します。どの行が選ばれるかは保証されず、返される値が対応する値の中で最小とは限りません。結果を一意に定めるには、たとえば `<expr2>` が最小の行に絞り、`MIN` を `<expr1>` に適用するなど、同値の場合の処理規則を指定してください。
 
 ## 構文 {#syntax}
 
@@ -24,12 +26,12 @@ MIN_BY(<expr1>, <expr2>)
 
 | パラメータ | 説明 |
 | --- | --- |
-| `<expr1>` | 対応する値の式。サポートされる型: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, Array, Map, Struct。 |
-| `<expr2>` | 最小値の式。サポートされる型: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, Array。 |
+| `<expr1>` | 対応する値を表す式。対応する型: Bool、TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、Array、Map、Struct。 |
+| `<expr2>` | 最小値の判定に使用する式。対応する型: Bool、TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、Array。 |
 
 ## 戻り値 {#return-value}
 
-戻り値は <expr1> と同じデータ型です。
+<expr1> と同じデータ型の値を返します。
 グループ内に有効なデータがない場合は NULL を返します。
 
 ## 例 {#example}
@@ -58,6 +60,8 @@ Table created and data inserted successfully.
 ```sql
 select min_by(k1, k2) from tbl;
 ```
+
+以下は結果の一例です。この例では `3` と `4` のどちらが返されても有効です。
 
 ```text
 +----------------+
@@ -103,7 +107,7 @@ select min_by(k1, k2) from tbl where k1 is null;
 +----------------+
 ```
 
-次の配列比較の例は、Doris 4.1 系列の 4.1.5 以降、および Doris 4.2 以降に適用されます。
+以下の配列比較の例は、Doris 4.1 系列の 4.1.5 以降、および Doris 4.2 以降に適用されます。
 
 ```sql
 SELECT min_by(label, sort_key) AS result
@@ -124,4 +128,28 @@ SELECT min_by(1, CAST(NULL AS ARRAY<INT>)) AS result;
 
 ```text
 NULL
+```
+
+### 最小値が同じ場合に結果を一意に定める方法 {#deterministic-handling-of-tied-minimum-values}
+
+以下の単独で実行できる例では、`k4` が最小となる行の中から、最小の `k1` を返します。最小値 `k4 = 1` に該当する行が複数あっても、結果は常に `3` です。
+
+```sql
+WITH data AS (
+    SELECT 0 AS k1, 100 AS k4
+    UNION ALL SELECT 1, 4
+    UNION ALL SELECT 4, 1
+    UNION ALL SELECT 3, 1
+)
+SELECT MIN(k1) AS min_k1
+FROM data
+WHERE k4 = (SELECT MIN(k4) FROM data);
+```
+
+```text
++--------+
+| min_k1 |
++--------+
+|      3 |
++--------+
 ```
