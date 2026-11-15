@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/url-functions/overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/url-functions/overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/url-functions/overview.md",
+    "sourceCommit": "52a91a95e0603218b7576d2df352f39be6f2839e",
+    "sourceHash": "66e267ca91a32f0a2d0c0716657c28ee0f1ab8e5ca7b37d8302d24f774360c1f",
+    "sourceTechnicalHash": "405d1acc6a2ef28e9579f64adba7b9c238fe03995fa1260856a5875e84ac1fd6",
+    "targetHash": "4bea94f74544059c2911a88e8f05b6408a8e1e207eff6010522ca8d1510ef63d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T06:00:03.631Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "66e267ca91a32f0a2d0c0716657c28ee0f1ab8e5ca7b37d8302d24f774360c1f",
+      "targetHash": "4bea94f74544059c2911a88e8f05b6408a8e1e207eff6010522ca8d1510ef63d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-functions/scalar-functions/url-functions/overview.md",
+        "blob": "c3de6f8abf3cd0cbcd1de32d95eabc0964623ab1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/url-functions/overview.md",
+        "blob": "4aaa50dc2c5667c79dd2b2f23fb5ba77c08705f5"
+      }
+    }
+  }
+}

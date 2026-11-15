@@ -1,0 +1,320 @@
+---
+title: '실시간 데이터 수집부터 최신 결과까지: Apache Doris 5.0의 증분 컴퓨팅'
+summary: 'Changelog, Table Stream, 증분 뷰 유지 관리를 활용해 지표와 조인된 테이블을 최신 상태로 유지하고, Doris 내부에서 변경 사항을 처리하며, 다른 시스템으로 업데이트를 스트리밍합니다.'
+description: 'Apache Doris 5.0이 Changelog, Table Stream, 증분 뷰 유지 관리를 주문 지표, 조인된 테이블, ETL, Flink 변경 스트림에 어떻게 활용하는지 알아봅니다.'
+keywords:
+  - 'Apache Doris 5.0'
+  - 'Changelog'
+  - 'Table Stream'
+  - '증분 뷰 유지 관리'
+  - 'Flink Doris Connector'
+date: '2026-10-22'
+author: 'Apache Doris · Mingyu Chen'
+tags:
+  - 'Tech Sharing'
+image: '/images/blogs/apache-doris-5-incremental-computing/cover.jpg'
+---
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements. See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership. The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+실시간 분석에는 새 데이터를 빠르게 수집하는 것만으로는 충분하지 않습니다. 후속 단계의 지표와 비정규화된 테이블에도 최신 비즈니스 상태가 반영되어야 합니다.
+
+온라인 주문을 생각해 보겠습니다. 고객이 결제하거나, 고객 지원 담당자가 주소를 변경하거나, 운영팀이 금액을 수정할 수 있습니다. 대시보드와 조인된 비즈니스 테이블에는 이런 변경 사항이 각각 반영되어야 합니다. 데이터셋이 커질수록 정기적인 전체 재계산에는 비용이 많이 듭니다. 실행 간격이 길면 결과가 오래된 상태로 남고, 자주 실행하면 소수의 업데이트를 처리하기 위해 큰 테이블을 반복해서 스캔해야 합니다.
+
+**Apache Doris 5.0은 Changelog와 Table Stream을 기반으로 하는 증분 컴퓨팅 프레임워크를 도입합니다.** 이 구성 요소들은 행 단위 변경 사항을 기록하고 소비합니다. 증분 뷰 유지 관리는 이러한 변경 사항을 사용해 저장된 쿼리 결과를 업데이트합니다.
+
+이 글에서는 네 가지 주문 처리 시나리오를 통해 프레임워크를 소개하고 각 접근 방식을 언제 사용할지 설명합니다. 이 기능들은 실험적이며 명시적인 설정이 필요합니다. 원문은 Doris 5.0을 미리 소개한 글로, 출시 전에 기능을 사용하려면 관련 변경 사항이 포함된 빌드가 필요합니다.
+
+## Changelog와 Table Stream: 기본 구성 요소 {#changelog-and-table-stream-the-foundation}
+
+![orders 테이블이 Changelog를 생성하고, 두 Table Stream이 변경 사항을 각각 독립적으로 소비하는 모습](/images/blogs/apache-doris-5-incremental-computing/changelog-and-streams.jpg)
+
+주문이 변경된 후 지표와 조인된 테이블을 업데이트하려면 무엇이 바뀌었고 각 후속 소비자가 어디까지 처리했는지 알아야 합니다. Changelog와 Table Stream이 이 두 가지 역할을 맡습니다.
+
+### Changelog는 행 단위 변경 사항을 기록합니다 {#changelog-records-row-level-changes}
+
+orders 테이블은 현재 상태를 저장합니다. Changelog는 삽입, 업데이트, 삭제를 기록합니다. 테이블을 쿼리하면 주문의 현재 상태를 알 수 있고, Changelog를 읽으면 그 상태에 이르기까지의 변경 내역을 알 수 있습니다.
+
+주문 1이 `created` , 금액이 100인 상태에서 `paid` , 금액이 120인 상태로 변경된다고 가정해 보겠습니다. 테이블에는 새 상태가 저장되지만, 상태별 집계에서는 기존 금액 100을 `created`  그룹에서 차감해야 합니다. Changelog는 변경 전후의 행을 모두 보관할 수 있습니다. 변경 전 행을 **변경 전 이미지(before image)**라고 합니다. 삭제할 때도 집계에서 무엇을 제거할지 판단하려면 이전 값이 필요합니다.
+
+지원되는 내부 테이블에서 Doris는 후속 소비자가 변경 사항을 순서대로 읽을 수 있도록 행의 변경 사항을 커밋 타임스탬프와 레코드 시퀀스 번호와 함께 영구 저장합니다. 여기의 예제는 업데이트와 삭제를 처리하므로, 테이블 생성 시 Changelog와 이전 값 저장을 활성화한 Unique Key 테이블을 사용합니다.
+
+### Table Stream이 소비 상태를 추적하는 방법 {#table-stream-tracks-consumption}
+
+Table Stream은 Changelog가 활성화된 기본 테이블을 참조하며, 아직 소비하지 않은 변경 사항을 제공합니다. 고객 지원 파이프라인과 감사 작업은 주문 테이블에 각각 별도의 스트림을 만들 수 있습니다. 한 스트림의 소비 위치가 진행되어도 다른 스트림에는 영향을 주지 않습니다.
+
+각 스트림은 파티션별로 자체 소비 위치를 추적합니다. 일반적인 `SELECT` 는 소비 위치를 진행시키지 않고 대기 중인 변경 사항을 조회합니다. `INSERT INTO ... SELECT ... FROM <stream>`에서는 대상 테이블에 쓰는 작업과 소비 위치를 진행시키는 작업이 동일한 트랜잭션에서 커밋되며, 실패하면 둘 다 롤백됩니다.
+
+소비자는 다음 스트림 유형 중에서 선택합니다:
+
+- `append_only` 추가된 레코드를 읽습니다.
+- `min_delta` 동일한 키에 대한 반복적인 변경을 하나의 최종 변경분으로 합칩니다.
+- `detail` 개별 변경 사항을 그대로 유지합니다.
+
+Changelog는 **무엇이 변경되었는지** 기록하고, Table Stream은 **무엇이 소비되었는지** 추적합니다. 증분 뷰 유지 관리는 이 두 기능을 기반으로 합니다.
+
+## 증분 뷰 유지 관리 {#incremental-view-maintenance}
+
+### IVM의 역할 {#what-ivm-does}
+
+구체화된 뷰는 SQL 쿼리의 결과를 저장합니다. 기본 테이블이 변경되면 저장된 결과도 변경되어야 합니다. **증분 뷰 유지 관리(IVM)는** 삽입, 업데이트, 삭제가 해당 결과에 미치는 영향을 계산한 뒤 그에 맞는 변경 사항을 적용합니다.
+
+뷰는 계속 SQL로 정의합니다. 지원되는 집계와 조인의 경우 Doris가 Changelog와 Table Stream을 통해 변경 사항을 읽고, 증분 실행 계획을 생성해 결과를 유지합니다. 변경 처리 규칙을 일일이 직접 작성하거나 새로 고칠 때마다 전체 데이터셋을 다시 계산할 필요가 없습니다.
+
+### IVM이 결과를 업데이트하는 방법 {#how-ivm-updates-a-result}
+
+![IVM은 주문의 기존 기여분을 제거하고 새 기여분을 더한 뒤, 결과와 스트림의 소비 위치를 함께 커밋합니다](/images/blogs/apache-doris-5-incremental-computing/ivm.jpg)
+
+1번 주문이 `created, 100` 에서 `paid, 120` 로 변경되면 주문 한 건과 100을 `created` 그룹에서 빼고, 주문 한 건과 120을 `paid` 그룹에 더해야 합니다.
+
+IVM은 세 단계로 처리합니다:
+
+1. **기본 테이블의 변경 사항 읽기.** Doris는 참여하는 기본 테이블에 내부 Table Stream을 생성합니다. 새로 고침 작업은 변경 전후 이미지를 포함한 대기 중인 변경 사항을 읽습니다.
+2. **결과의 변경 사항 계산.** Doris는 뷰 정의에서 증분 실행 계획을 도출합니다. 이 예에서 실행 계획은 이전 행의 기여분을 제거하고 새 행의 기여분을 더합니다.
+3. **결과와 진행 상태 커밋.** 구체화된 뷰의 업데이트와 스트림의 소비 위치는 하나의 트랜잭션에서 함께 커밋됩니다. 실패하면 둘 다 롤백되므로 결과와 소비 진행 상태가 일치합니다.
+
+증분 변경 사항을 적용하려면 먼저 첫 새로 고침으로 기준 상태를 만들어야 합니다. 새로 고침은 비동기식이므로 완료될 때까지 뷰가 기본 테이블보다 뒤처질 수 있습니다. Doris 내부에서 사용자 정의 처리를 하려면 Table Stream을 직접 만들고 소비할 수 있습니다.
+
+## 네 가지 실용적인 시나리오 {#four-practical-scenarios}
+
+### 1. 주문 지표를 최신 상태로 유지하기 {#1-keep-order-metrics-current}
+
+![주문 상태가 변경되면 created 그룹에서 레코드 한 건을 빼고 paid 그룹에 더합니다](/images/blogs/apache-doris-5-incremental-computing/order-metrics.jpg)
+
+운영 대시보드는 상태별 주문 건수, 총금액, 평균 금액을 보여 줍니다. 결제가 이루어지면 주문이 다른 그룹으로 이동하며, 금액 수정과 삭제도 기존 지표에 반영되어야 합니다. 새 주문만 집계하면 결과가 틀립니다.
+
+지원되는 집계의 경우 IVM은 Changelog의 이전 값과 새 값을 사용해 영향을 받은 그룹을 갱신합니다. 팀은 SQL로 지표를 정의하고 과거 데이터를 반복해서 스캔하는 작업을 줄일 수 있습니다.
+
+먼저 `enable_feature_changelog = true` 와 `enable_table_stream = true` 를 `fe.conf` 에서 모든 FE에 설정합니다. 이어서 `enable_feature_changelog = true` 를 `be.conf` 에서 BE의 Changelog 정리를 위해 설정한 뒤 해당 노드를 다시 시작합니다. 자세한 내용은 [IVM 사전 요구 사항](https://doris.apache.org/docs/dev/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view/#prerequisites)을 참조하세요. Changelog와 변경 전 이미지가 활성화된 Unique Key 주문 테이블을 생성합니다:
+
+```sql
+CREATE DATABASE incr_article_demo;
+USE incr_article_demo;
+
+CREATE TABLE orders (
+    order_id BIGINT,
+    customer_id BIGINT,
+    order_status VARCHAR(16),
+    amount DECIMAL(12, 2)
+)
+UNIQUE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
+);
+
+INSERT INTO orders VALUES
+    (1, 10, 'created', 100.00),
+    (2, 20, 'paid',    200.00),
+    (3, 10, 'paid',    300.00);
+```
+
+집계 뷰를 생성하고 전체 새로 고침을 실행합니다. **주문을 수정하기 전에 전체 새로 고침이 성공할 때까지 기다리세요.** 그런 다음 변경 사항을 적용하고 증분 새로 고침을 요청합니다:
+
+```sql
+CREATE MATERIALIZED VIEW orders_by_status
+BUILD DEFERRED
+REFRESH INCREMENTAL FALLBACK ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT order_status,
+       COUNT(*) AS order_count,
+       SUM(amount) AS total_amount,
+       AVG(amount) AS avg_amount
+FROM orders
+GROUP BY order_status;
+
+REFRESH MATERIALIZED VIEW orders_by_status COMPLETE;
+
+-- Wait for the complete refresh to succeed before continuing.
+
+INSERT INTO orders VALUES
+    (1, 10, 'paid', 120.00),
+    (2, 20, 'paid', 180.00);
+DELETE FROM orders WHERE order_id = 3;
+INSERT INTO orders VALUES (4, 30, 'created', 400.00);
+
+REFRESH MATERIALIZED VIEW orders_by_status INCREMENTAL FALLBACK;
+```
+
+`FALLBACK` 을 사용하면 변경 사항을 증분 방식으로 유지할 수 없을 때 파티션 단위 또는 전체 재계산으로 새로 고칠 수 있습니다. 지원되지 않는 뷰 정의를 IVM 대상으로 만들어 주지는 않습니다.
+
+새로 고침이 완료되면 `paid` 그룹에는 1번과 2번 주문이 포함되어 합계가 300이며, `created` 그룹에는 4번 주문만 포함됩니다. 예상 값은 다음과 같습니다:
+
+| order_status | order_count | total_amount | avg_amount |
+| --- | ---: | ---: | ---: |
+| created | 1 | 400.00 | 400.00 |
+| paid | 2 | 300.00 | 150.00 |
+
+이 지표는 예시에 나온 주문 금액을 요약한 것입니다. 총매출, 환불액 및 기타 실제 운영 지표는 비즈니스 규칙에 따라 정의하세요. 환불은 단순히 주문을 삭제하는 것과 다릅니다.
+
+### 2. 비정규화된 고객-주문 테이블 유지 관리 {#2-maintain-a-denormalized-customer-order-table}
+
+![주문이나 고객 정보가 변경되면 수정된 도시 정보와 뒤늦게 도착한 고객 레코드까지 반영해 LEFT JOIN으로 결합한 와이드 테이블을 업데이트합니다](/images/blogs/apache-doris-5-incremental-computing/customer-order-table.jpg)
+
+운영팀과 지원팀은 주문에 고객 상세 정보를 결합해 확인해야 할 때가 많습니다. 주문 테이블의 변경분만 처리하면 고객이 이사하거나 주문 이후에 고객 정보가 도착했을 때의 변경 사항을 놓칩니다. IVM은 조인의 양쪽 테이블에서 발생한 변경 사항을 모두 반영합니다.
+
+앞선 시나리오의 주문 테이블을 계속 사용합니다. 고객 테이블과 조인한 뷰를 만들고 기준 상태를 설정한 다음, 고객 10의 도시를 변경하고 고객 30을 추가합니다:
+
+```sql
+CREATE TABLE customers (
+    customer_id BIGINT,
+    customer_name VARCHAR(32),
+    city VARCHAR(32)
+)
+UNIQUE KEY(customer_id)
+DISTRIBUTED BY HASH(customer_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
+);
+
+INSERT INTO customers VALUES
+    (10, 'Alice', 'Beijing'),
+    (20, 'Bob',   'Shanghai');
+
+CREATE MATERIALIZED VIEW orders_with_customer
+BUILD DEFERRED
+REFRESH INCREMENTAL FALLBACK ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 1
+PROPERTIES ("replication_num" = "1")
+AS
+SELECT o.order_id, o.order_status, o.amount,
+       c.customer_name, c.city
+FROM orders o
+LEFT JOIN customers c ON o.customer_id = c.customer_id;
+
+REFRESH MATERIALIZED VIEW orders_with_customer COMPLETE;
+
+-- Wait for the complete refresh to succeed before continuing.
+
+INSERT INTO customers VALUES
+    (10, 'Alice', 'Hangzhou'),
+    (30, 'Carol', 'Shenzhen');
+
+REFRESH MATERIALIZED VIEW orders_with_customer INCREMENTAL FALLBACK;
+```
+
+새로고침이 끝나면 주문 1에는 새 도시인 Hangzhou가 표시되고, 주문 4에는 이전에 없던 고객 정보가 추가됩니다. 이 뷰는 **현재** 고객 속성을 사용합니다. 주문 당시의 도시가 필요한 보고서라면 데이터 모델에 해당 과거 속성을 보존해야 합니다.
+
+### 3. 데이터 웨어하우스 계층 간 변경 사항 처리 {#3-process-changes-between-warehouse-layers}
+
+![Table Stream은 min_delta로 ODS 변경 사항을 합쳐 순변경 사항을 DWD 테이블에 소비 위치와 함께 원자적으로 기록합니다](/images/blogs/apache-doris-5-incremental-computing/warehouse-layers.jpg)
+
+IVM은 지원되는 SQL에 대해 뷰 유지 관리를 자동화합니다. ODS-to-DWD 처리처럼 맞춤형 데이터 웨어하우스 파이프라인에는 명시적인 데이터 정제 로직, 반복된 업데이트의 통합, 재시도 제어가 필요할 수 있습니다. Table Stream은 Doris 내부에서 이런 파이프라인을 구축할 기반을 제공합니다.
+
+초기 주문 상태를 포함하는 스트림을 만든 다음, 현재 행과 이후 변경 사항을 다운스트림 Unique Key 테이블에 기록합니다:
+
+```sql
+CREATE STREAM orders_dwd_stream ON TABLE orders
+PROPERTIES (
+    "type" = "min_delta",
+    "show_initial_rows" = "true"
+);
+
+CREATE TABLE dwd_orders (
+    order_id BIGINT,
+    order_status VARCHAR(16),
+    amount DECIMAL(12, 2)
+)
+UNIQUE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true"
+);
+
+INSERT INTO dwd_orders (order_id, order_status, amount, __DORIS_DELETE_SIGN__)
+SELECT order_id, order_status, amount,
+       CASE WHEN __DORIS_STREAM_CHANGE_TYPE_COL__ = 'DELETE' THEN 1 ELSE 0 END
+FROM orders_dwd_stream
+WHERE __DORIS_STREAM_CHANGE_TYPE_COL__ IN ('APPEND', 'UPDATE_AFTER', 'DELETE');
+```
+
+첫 실행에서는 현재 주문이 적재됩니다. 이후 순변경 사항은 `INSERT`  문을 반복 실행해 처리합니다. `UPDATE_AFTER` 는 이전 상태를 대체하고, `DELETE` 는 삭제 마커를 사용해 다운스트림 행을 제거합니다. 이 상태 동기화 파이프라인은 `UPDATE_BEFORE` 를 대상 테이블에 기록하지 않습니다. 개별 변경 사항을 모두 감사하려면 별도의 `detail` 스트림을 만들고 그 출력을 감사 테이블에 저장합니다.
+
+### 4. Flink를 사용해 Doris의 변경 사항을 다른 시스템으로 전송 {#4-send-doris-changes-to-other-systems-with-flink}
+
+![Doris 스냅샷과 Changelog가 Flink 소스와 작업에 데이터를 제공하고, Flink 작업은 데이터베이스, Kafka 또는 레이크 테이블에 기록할 수 있습니다](/images/blogs/apache-doris-5-incremental-computing/flink-changelog.jpg)
+
+일부 주문 변경 사항은 Kafka, 데이터 레이크 또는 다른 비즈니스 시스템에도 전달해야 합니다. Flink Doris Connector는 Doris 테이블을 증분 소스로 사용할 수 있습니다.
+
+Flink SQL Client에서 주문 테이블을 소스로 설정합니다:
+
+```sql
+SET 'execution.checkpointing.interval' = '10s';
+SET 'table.exec.source.cdc-events-duplicate' = 'true';
+
+CREATE TABLE orders_from_doris (
+    order_id BIGINT,
+    customer_id BIGINT,
+    order_status STRING,
+    amount DECIMAL(12, 2),
+    PRIMARY KEY (order_id) NOT ENFORCED
+) WITH (
+    'connector' = 'doris',
+    'fenodes' = '<fe-host>:8030',
+    'table.identifier' = 'incr_article_demo.orders',
+    'username' = '<doris-user>',
+    'password' = '<doris-password>',
+    'source.scan.mode' = 'initial',
+    'source.changelog.increment-type' = 'detail'
+);
+
+-- Start the source, then run the following changes in a separate Doris SQL session.
+SELECT * FROM orders_from_doris;
+```
+
+스냅샷 처리가 완료되면 Doris에서 다음 변경 사항을 실행합니다:
+
+```sql
+INSERT INTO orders VALUES (5, 30, 'created', 50.00);
+INSERT INTO orders VALUES (5, 30, 'paid',    50.00);
+DELETE FROM orders WHERE order_id = 5;
+```
+
+그러면 삽입, 결제 상태 업데이트, 삭제가 Flink 작업으로 전달됩니다. `initial` 은 이후 변경 사항을 소비하기 전에 기존 스냅샷을 읽습니다.
+
+이 예제의 대상 버전은 **Doris 5.0.0+ 및 Flink Doris Connector 26.4.0+입니다**. 미리 사용해 보려면 Changelog 인터페이스 변경 사항이 포함된 Doris 및 커넥터 빌드가 필요합니다. 대상 싱크는 업데이트와 삭제를 지원해야 합니다. 복구와 데이터 전달 보장 수준은 체크포인팅, 로그 보존, 중복 제거, 싱크의 동작에도 달려 있습니다. 소스 설정만으로는 종단 간 전달이 보장되지 않습니다.
+
+## 접근 방식 선택하기 {#choosing-an-approach}
+
+![대규모 데이터셋에 적은 양의 변경이 자주 발생할 때 IVM, Table Stream, Flink 소스 중에서 선택합니다](/images/blogs/apache-doris-5-incremental-computing/selection-guide.jpg)
+
+증분 컴퓨팅은 저장된 대규모 데이터셋에 변경이 자주 발생할 때 가장 유용합니다. 전체 재계산을 대체하기보다는 보완합니다.
+
+| 접근 방식 | 적합한 용도 | 제어할 수 있는 항목 |
+| --- | --- | --- |
+| Table Stream | 데이터베이스 내 맞춤형 ETL 및 데이터 웨어하우스 계층 | 변경 사항 소비, 변환, 실행 일정 관리; `min_delta` 는 중간 업데이트를 최종 변경분으로 합칠 수 있으며, 추적되는 소비 위치를 통해 재시도를 지원합니다 |
+| IVM | 지원되는 SQL 집계 및 여러 테이블 간 조인 | SQL 뷰 정의. Doris가 증분 실행 계획과 내부 스트림을 관리하며, 구체화된 뷰는 투명한 쿼리 가속에도 사용할 수 있습니다 |
+| Flink Doris Connector | Kafka, 데이터 레이크 테이블 또는 다른 시스템으로 변경 사항 전송 | Changelog를 직접 소비하는 Flink 파이프라인과 싱크 |
+
+![주문 지표를 대상으로 시범 적용을 시작해 정확성과 최신성을 확인한 뒤, 조인된 테이블과 더 넓은 범위의 파이프라인으로 확장합니다](/images/blogs/apache-doris-5-incremental-computing/pilot.jpg)
+
+Changelog의 기본 보존 기간은 하루입니다.  `changelog.ttl_seconds` 값은 예상되는 최장 소비 지연 시간을 감당할 수 있도록 설정하세요. 처리가 늦어진 소비자는 이미 만료된 변경 기록에 의존할 수 없습니다. 지원되는 작업과 복구 지침은 [Changelog](https://doris.apache.org/docs/dev/data-operate/incremental/changelog/) 및 [Table Stream](https://doris.apache.org/docs/dev/data-operate/incremental/table-stream/) 문서를 참조하세요.
+
+상태별 주문 건수처럼 명확히 정의된 단일 테이블 집계부터 시작하세요. 더 복잡한 파이프라인으로 확장하기 전에 정확성, 새로 고침 소요 시간, 데이터 변경부터 결과가 표시되기까지의 지연 시간, 컴퓨팅 자원 사용량을 확인하세요. 후속 기술 문서에서는 Changelog 저장 방식과 증분 실행 계획 생성 과정을 살펴봅니다.
+
+Doris 5.0의 증분 컴퓨팅 프레임워크는 실시간 데이터 적재의 범위를 후속 처리 결과까지 확장합니다. Changelog는 변경 사항을 기록하고, Table Stream은 소비를 관리하며, IVM은 지원되는 쿼리 결과를 최신 상태로 유지합니다. 이 기능들을 함께 사용하면 반복 작업을 줄이고 비즈니스 데이터 변경이 관련 결과에 반영되기까지의 시간을 단축할 수 있습니다. 이 기능들은 Doris 5.0 출시 전에 발표되었습니다. 사용 가능 여부는 프로젝트 문서와 출시 공지를 확인하세요.
