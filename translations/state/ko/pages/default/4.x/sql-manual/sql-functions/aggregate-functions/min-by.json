@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "d7986eec336f27c7ca3e1bee54973c2a88ed14089664097b1246fe53ea5d6d5f",
-    "sourceTechnicalHash": "51cc0598c074689cfdec252363c8984e9e366b2a98c97f624cbb0c770a13aa2f",
-    "targetHash": "5b5260197d11d8db62fb74e682de83a749ef738c56aa15aa90503117e38a47ec",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "78438fc7c1973a39f525a80f103f312e6b124b16b0bca0ed11f14eb3a509129e",
+    "sourceTechnicalHash": "7524574a89e7d9eddd7be449ddddb48eac539cb10cf9c8b12a47b2edd3d87002",
+    "targetHash": "a769e150fadf05171f078368d3f8f3ccaeec5b10de23a93a388588fa456f6225",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T13:12:02.431Z",
+    "translatedAt": "2026-11-14T17:59:31.650Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "d7986eec336f27c7ca3e1bee54973c2a88ed14089664097b1246fe53ea5d6d5f",
-      "targetHash": "5b5260197d11d8db62fb74e682de83a749ef738c56aa15aa90503117e38a47ec",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "78438fc7c1973a39f525a80f103f312e6b124b16b0bca0ed11f14eb3a509129e",
+      "targetHash": "a769e150fadf05171f078368d3f8f3ccaeec5b10de23a93a388588fa456f6225",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 4: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"<expr2>\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"MIN_BY\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"MIN_BY\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"inlineCode\",null,null,\"NULL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 4: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"<expr2>\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"MIN_BY\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 4: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"<expr2>\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"MIN_BY\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
+        "blob": "091e95a2c1789418ace140f01c09d3542fd25529"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
+        "blob": "d4480b2748b8f0f209156e22666475780e9dbdb8"
+      }
     }
   }
 }
