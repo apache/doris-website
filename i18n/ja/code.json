@@ -8880,5 +8880,20 @@
   },
   "docs.archive.current": {
     "message": "現在の安定版のドキュメントを読む"
+  },
+  "homepage.blogs.recent": {
+    "message": "最近のブログ記事"
+  },
+  "homepage.blogs.browse": {
+    "message": "横にスクロールして最近の記事を表示"
+  },
+  "homepage.blogs.all": {
+    "message": "すべての記事"
+  },
+  "homepage.blogs.previous": {
+    "message": "前の記事"
+  },
+  "homepage.blogs.next": {
+    "message": "次の記事"
   }
 }

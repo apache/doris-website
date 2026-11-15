@@ -8686,5 +8686,20 @@
   },
   "docs.archive.current": {
     "message": "Документация текущей стабильной версии"
+  },
+  "homepage.blogs.recent": {
+    "message": "Последние статьи блога"
+  },
+  "homepage.blogs.browse": {
+    "message": "Прокрутите по горизонтали, чтобы просмотреть последние статьи"
+  },
+  "homepage.blogs.all": {
+    "message": "Все статьи"
+  },
+  "homepage.blogs.previous": {
+    "message": "Предыдущие статьи"
+  },
+  "homepage.blogs.next": {
+    "message": "Следующие статьи"
   }
 }
