@@ -8,30 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "8fc9b3dd5064182a2947f0802559e1d69e9ba7083550df3b3b2b150837b8b5d9",
-    "sourceTechnicalHash": "26fa915299bc1e675d374472167f3a8a4b40b74d99e321fb6a67d8a89b5c20b9",
-    "targetHash": "d67d5f083bda867756f9edb20941b84efaf097160f9982ec8ad6da8cfa05f9a7",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "7ef74e70cc57e25b4225855a335bac9df226fb6c3c4328cfc38b806c352663ac",
+    "sourceTechnicalHash": "56a61faac921c8359778ad0dd3cf60ba89a0ac9719e115600f61928382840ac0",
+    "targetHash": "5ca8cedf9184c681758d89039a442025276e7af0a881a0824deb8b7820d869ce",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:34:41.047Z",
+    "translatedAt": "2026-11-13T22:45:43.535Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "8fc9b3dd5064182a2947f0802559e1d69e9ba7083550df3b3b2b150837b8b5d9",
-      "targetHash": "d67d5f083bda867756f9edb20941b84efaf097160f9982ec8ad6da8cfa05f9a7",
+      "sourceHash": "7ef74e70cc57e25b4225855a335bac9df226fb6c3c4328cfc38b806c352663ac",
+      "targetHash": "5ca8cedf9184c681758d89039a442025276e7af0a881a0824deb8b7820d869ce",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature description + Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип материала: описание функции и порядок действий -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: High-concurrency data ingestion / Out-of-order updates on the Unique Key model / UPDATE transaction control -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: загрузка данных с высокой степенью параллелизма / обновления модели Unique Key с нарушением порядка поступления данных / управление транзакциями UPDATE -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Knowledge type: Concept description -->\"]; received [\"html\",null,null,\"<!-- Тип материала: описание концепции -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 56: expected [\"inlineCode\",null,null,\"v2\"]; received [\"inlineCode\",null,null,\"w\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"w\"]; received [\"inlineCode\",null,null,\"v2\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
+        "blob": "f3450204025af7d9fc53f8a0300086c7c87fb710"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
+        "blob": "1ff439d76daf1a9bcdb6dc0587f0edaee69f4fd8"
+      }
     }
   }
 }

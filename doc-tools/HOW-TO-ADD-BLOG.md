@@ -180,6 +180,13 @@ Put the complete article body after the license comment. The page already render
 
 Keep the source article's heading hierarchy, links, code blocks, tables, lists, and other Markdown content in this file. Update image references as described in the next section. Do not add the imports used by external-link stubs. A `<!-- truncate -->` marker is not required because the Blog list uses the front matter `summary`.
 
+### Final editorial checks for converted articles
+
+When converting an article from another source for publication here, complete both checks after the final English draft is ready:
+
+- [ ] Read and analyze the final English article, then selectively bold the information readers care about most, such as the problem in a specific use case, the solution, and the resulting benefits. Emphasize short, meaningful phrases or sentences. Keep bold text sparse so the key points stand out; avoid bolding entire paragraphs or every mention of a term.
+- [ ] Select no more than 10 distinct keywords in the article body, such as key features or technical terms, and link them to relevant Apache Doris official documentation or other authoritative documentation. Prefer the specific documentation page that explains the term, and verify that each destination is accessible and relevant. Link each selected keyword only once, and do not repeat the same destination URL for different keywords. Count existing keyword links toward this limit. These links should strengthen the article's authority and connect it with related documentation. This limit applies to linked keywords in the body, separately from the front matter `keywords` field.
+
 ## Step 6: Add images
 
 Create one image directory for the article:

@@ -8,42 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "9711b1d30068618cce932643f85ceb3329794f33d73fa4c5d6c5007f14adf584",
-    "sourceTechnicalHash": "188ff26abb3f50b15ab553ab0c54635682f803eaa3f6eed71e6566c099a71d67",
-    "targetHash": "39b8582baac1396e44121d198bff511d6dfd2c872a2b10241ad47051f6cba789",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "0bd3311ad8c6b04e69e205b11b5cb6759029d4f83c45e83152dcee48c69a9e92",
+    "sourceTechnicalHash": "e7fb4295b281abf0336ffedaa4cd9e4c767330d59296d4e80402770d676af9de",
+    "targetHash": "788f7407694dbf208ceafecafbafee09e7862a41bcca8c0c501b6c69f3ed5b12",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:48:29.289Z",
+    "translatedAt": "2026-11-13T22:49:52.624Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "9711b1d30068618cce932643f85ceb3329794f33d73fa4c5d6c5007f14adf584",
-      "targetHash": "39b8582baac1396e44121d198bff511d6dfd2c872a2b10241ad47051f6cba789",
+      "sourceHash": "0bd3311ad8c6b04e69e205b11b5cb6759029d4f83c45e83152dcee48c69a9e92",
+      "targetHash": "788f7407694dbf208ceafecafbafee09e7862a41bcca8c0c501b6c69f3ed5b12",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"26.0.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"7\",\"7.1\",\"7.2\",\"7.3\",\"7.4\",\"7.5\",\"7.6\",\"8\",\"8\",\"8040\",\"8040\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "install/deploy-on-kubernetes/separating-storage-compute/config-cg",
-        "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "9711b1d30068618cce932643f85ceb3329794f33d73fa4c5d6c5007f14adf584",
-        "targetHash": "39b8582baac1396e44121d198bff511d6dfd2c872a2b10241ad47051f6cba789",
-        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
-        "pr": "https://github.com/apache/doris-website/pull/4436"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
+        "blob": "7802d7f147aca487aaf0575887e2a4741f7348f6"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
+        "blob": "d67d2ba41b2b4090435bb1e6544785bc833ee4b0"
       }
     }
   }

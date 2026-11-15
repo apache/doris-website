@@ -8,23 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "docs/connection-integration/mysql-proto.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/mysql-proto.mdx",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "975c5cfb3026f413dc6fb2e2060cdb583c6297c7c1d92a2f405963d73f2b8aac",
-    "sourceTechnicalHash": "f9a831498dd822476c1ba275e2da8490763e65449fc4814249d36b530b1784db",
-    "targetHash": "ab5b0e1d56dc447c8789ac51e2beb6086b156e2d0c3bf60dfb85d305cd2a1de3",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "6893b14d3a84d4adf41b658df18009eb2092c05ec855ef8cb20ca986133416dd",
+    "sourceTechnicalHash": "223a56d25fd19955f4bb97e72f172d493f84375da2dd2d77efda82a8ba9d1614",
+    "targetHash": "c9b6e3f9c3495f6cac70527c35a4ccfaa8a14c89d7b1de2fe9634a512c5ad65c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T17:07:01.971Z",
+    "translatedAt": "2026-11-13T06:21:11.347Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "975c5cfb3026f413dc6fb2e2060cdb583c6297c7c1d92a2f405963d73f2b8aac",
-      "targetHash": "ab5b0e1d56dc447c8789ac51e2beb6086b156e2d0c3bf60dfb85d305cd2a1de3",
+      "sourceHash": "6893b14d3a84d4adf41b658df18009eb2092c05ec855ef8cb20ca986133416dd",
+      "targetHash": "c9b6e3f9c3495f6cac70527c35a4ccfaa8a14c89d7b1de2fe9634a512c5ad65c",
       "warnings": [],
       "history": [
         {
@@ -32,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/connection-integration/mysql-proto.mdx",
+        "blob": "67d86eaea8d9c82b6a39deab4606dcc91627f0c4"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/connection-integration/mysql-proto.mdx",
+        "blob": "ffd299e7a0519d205ce5491173f4743aeaaeb83a"
+      }
     }
   }
 }

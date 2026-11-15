@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "8fc9b3dd5064182a2947f0802559e1d69e9ba7083550df3b3b2b150837b8b5d9",
-    "sourceTechnicalHash": "26fa915299bc1e675d374472167f3a8a4b40b74d99e321fb6a67d8a89b5c20b9",
-    "targetHash": "5ed728bdcfc32516fdd6da69d92ca44a7ba3cf70fb39be94e7ea1034bb2ef156",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "7ef74e70cc57e25b4225855a335bac9df226fb6c3c4328cfc38b806c352663ac",
+    "sourceTechnicalHash": "56a61faac921c8359778ad0dd3cf60ba89a0ac9719e115600f61928382840ac0",
+    "targetHash": "42d7e8fa2965a9fc8e8b1685018a0a7ada65011914e63c9e76a824d6be728ef5",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:21:57.499Z",
+    "translatedAt": "2026-11-13T21:44:40.676Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "8fc9b3dd5064182a2947f0802559e1d69e9ba7083550df3b3b2b150837b8b5d9",
-      "targetHash": "5ed728bdcfc32516fdd6da69d92ca44a7ba3cf70fb39be94e7ea1034bb2ef156",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "7ef74e70cc57e25b4225855a335bac9df226fb6c3c4328cfc38b806c352663ac",
+      "targetHash": "42d7e8fa2965a9fc8e8b1685018a0a7ada65011914e63c9e76a824d6be728ef5",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 45: expected [\"inlineCode\",null,null,\"test_table\"]; received [\"inlineCode\",null,null,\"modify_date\"]\nprotected node 46: expected [\"inlineCode\",null,null,\"modify_date\"]; received [\"inlineCode\",null,null,\"test_table\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"function_column.sequence_col\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"function_column.sequence_type\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"function_column.sequence_col\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature description + Procedure -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 기능 설명 + 절차 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: High-concurrency data ingestion / Out-of-order updates on the Unique Key model / UPDATE transaction control -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 높은 동시성의 데이터 적재 / Unique Key 모델에서 순서가 뒤바뀐 업데이트 / UPDATE 트랜잭션 제어 -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Knowledge type: Concept description -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 개념 설명 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 45: expected [\"inlineCode\",null,null,\"test_table\"]; received [\"inlineCode\",null,null,\"modify_date\"]\nprotected node 46: expected [\"inlineCode\",null,null,\"modify_date\"]; received [\"inlineCode\",null,null,\"test_table\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
+        "blob": "f3450204025af7d9fc53f8a0300086c7c87fb710"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/update/unique-update-concurrent-control.md",
+        "blob": "1ff439d76daf1a9bcdb6dc0587f0edaee69f4fd8"
+      }
     }
   }
 }
