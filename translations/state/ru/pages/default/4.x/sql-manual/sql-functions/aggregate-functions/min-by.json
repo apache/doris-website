@@ -8,30 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "d7986eec336f27c7ca3e1bee54973c2a88ed14089664097b1246fe53ea5d6d5f",
-    "sourceTechnicalHash": "51cc0598c074689cfdec252363c8984e9e366b2a98c97f624cbb0c770a13aa2f",
-    "targetHash": "1d124373c3a466ec83f1935e15bab76c363f72157af1b0c886c7a779df6d9d03",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "78438fc7c1973a39f525a80f103f312e6b124b16b0bca0ed11f14eb3a509129e",
+    "sourceTechnicalHash": "7524574a89e7d9eddd7be449ddddb48eac539cb10cf9c8b12a47b2edd3d87002",
+    "targetHash": "47a45f06102dc1d459943ff592cbd1c2fedf12e1d5e78b1aaa4319294337413e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T15:48:06.672Z",
+    "translatedAt": "2026-11-14T18:53:45.840Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "d7986eec336f27c7ca3e1bee54973c2a88ed14089664097b1246fe53ea5d6d5f",
-      "targetHash": "1d124373c3a466ec83f1935e15bab76c363f72157af1b0c886c7a779df6d9d03",
+      "sourceHash": "78438fc7c1973a39f525a80f103f312e6b124b16b0bca0ed11f14eb3a509129e",
+      "targetHash": "47a45f06102dc1d459943ff592cbd1c2fedf12e1d5e78b1aaa4319294337413e",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 17: expected [\"code\",\"text\",null,\"Table created and data inserted successfully.\"]; received [\"code\",\"text\",null,\"Таблица создана, данные успешно добавлены.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"MIN_BY\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"inlineCode\",null,null,\"NULL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
+        "blob": "091e95a2c1789418ace140f01c09d3542fd25529"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
+        "blob": "d4480b2748b8f0f209156e22666475780e9dbdb8"
+      }
     }
   }
 }
