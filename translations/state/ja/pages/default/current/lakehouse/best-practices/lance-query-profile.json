@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/lance-query-profile",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/lance-query-profile.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/lance-query-profile.md",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "c0d80a3593fe1ba0c2e2e87d3c23c68369561303cbcf0678af44e41de7f448a2",
+    "sourceTechnicalHash": "82eab4a5109f26e49d07fe14dc271ce92f2dca13f427f7e1372a4f8532274d47",
+    "targetHash": "fbbed37c219ef03bf92b37cbf0d417040e11ff952f633db9d8fb567d2e966234",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T05:06:07.259Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c0d80a3593fe1ba0c2e2e87d3c23c68369561303cbcf0678af44e41de7f448a2",
+      "targetHash": "fbbed37c219ef03bf92b37cbf0d417040e11ff952f633db9d8fb567d2e966234",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.2\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"4.2\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]; received [\"inlineCode\",null,null,\"Execution Summary\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"Execution Summary\"]; received [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 16: expected [\"inlineCode\",null,null,\"Calls\"]; received [\"inlineCode\",null,null,\"DatasetOpenCalls\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"DatasetOpenCalls\"]; received [\"inlineCode\",null,null,\"Calls\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/best-practices/lance-query-profile.md",
+        "blob": "936dd7574d6fa9d0b39685f3cb5d56a0395da897"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/best-practices/lance-query-profile.md",
+        "blob": "41a012c57cda4cd711832178073c74fc7fb1d92a"
+      }
+    }
+  }
+}

@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "community/source-install/compilation-with-docker.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/source-install/compilation-with-docker.md",
-    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
-    "sourceHash": "5a1eb2b58ab6125ed5cf8ad953f970abc79d380854778245b00393ab0f4d6e48",
-    "sourceTechnicalHash": "5aca82ee484f3ef00d45063253cf63ac4764fd87117566e956949b471170ae8d",
-    "targetHash": "1625dc18aea84f867dd9af359ed62e302de7b99552255ec16ba57a4fa6716c9c",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "814fc6b4b5dd833ec5c947840624151d57cb92b3cfcbbec9e010a88156a4a819",
+    "sourceTechnicalHash": "a0e075332eb7b5c33159d00bfd9f92d4216c0688f14517a4693eb7181614896a",
+    "targetHash": "6aa7fa4601bcc8105cf96b382f99ff90d63c9c42211abb810379816af08c08f8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T08:41:51.552Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-15T04:40:35.398Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "814fc6b4b5dd833ec5c947840624151d57cb92b3cfcbbec9e010a88156a4a819",
+      "targetHash": "6aa7fa4601bcc8105cf96b382f99ff90d63c9c42211abb810379816af08c08f8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 手順 -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Applicable scenario: First-time compilation / Environment validation -->\"]; received [\"html\",null,null,\"<!-- 適用場面: 初回のコンパイル / 環境の検証 -->\"]\nprotected node 7: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 設定パラメーター -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "community/source-install/compilation-with-docker.md",
+        "blob": "1f0e42330992421f4d5746e47f325e61811b75d9"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-community/current/source-install/compilation-with-docker.md",
+        "blob": "e197f00096ca69f58d77e194d4600212dcd064ca"
+      }
+    }
   }
 }
