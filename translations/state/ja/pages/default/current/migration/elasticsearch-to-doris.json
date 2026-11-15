@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "migration/elasticsearch-to-doris",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/migration/elasticsearch-to-doris.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/migration/elasticsearch-to-doris.md",
+    "sourceCommit": "4efcd278dc3632d2b03732edf2ad1be1267aa63d",
+    "sourceHash": "20b11ecf1f5db2e62a2008a1804a3e4a7f9b5aea65289fad5926664759b45a3b",
+    "sourceTechnicalHash": "9c6a73479cc71c75c8c44ab87f2627603ec2d07f2c537f9c4de1eeffef979fd8",
+    "targetHash": "4e80a5b7ca74e9e508cd8beb81b59d0608e6224ef19c327b83fecd6fcdef1fab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T17:17:24.461Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "20b11ecf1f5db2e62a2008a1804a3e4a7f9b5aea65289fad5926664759b45a3b",
+      "targetHash": "4e80a5b7ca74e9e508cd8beb81b59d0608e6224ef19c327b83fecd6fcdef1fab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2\",\"2\",\"7\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"7\",\"8\"]\nprotected node 28: expected [\"link\",\"./overview.md\",null]; received [\"inlineCode\",null,null,\"INSERT\"]\nprotected node 29: expected missing; received [\"link\",\"./overview.md\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/migration/elasticsearch-to-doris.md",
+        "blob": "574093fce9f01d0c390fce24a5696309ecba372e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/migration/elasticsearch-to-doris.md",
+        "blob": "5e90b3de4fe6c2e0c2d326b1885a9570fe1b60fd"
+      }
+    }
+  }
+}
