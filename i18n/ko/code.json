@@ -8686,5 +8686,20 @@
   },
   "docs.archive.current": {
     "message": "현재 안정 버전 문서 읽기"
+  },
+  "homepage.blogs.recent": {
+    "message": "최근 블로그 글"
+  },
+  "homepage.blogs.browse": {
+    "message": "가로로 스크롤하여 최근 글 보기"
+  },
+  "homepage.blogs.all": {
+    "message": "모든 글"
+  },
+  "homepage.blogs.previous": {
+    "message": "이전 글"
+  },
+  "homepage.blogs.next": {
+    "message": "다음 글"
   }
 }

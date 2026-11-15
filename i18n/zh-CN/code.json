@@ -16033,5 +16033,20 @@
     },
     "docs.archive.current": {
         "message": "阅读当前稳定版本文档"
+    },
+    "homepage.blogs.recent": {
+        "message": "最近的博客文章"
+    },
+    "homepage.blogs.browse": {
+        "message": "左右滑动浏览最近的博客文章"
+    },
+    "homepage.blogs.all": {
+        "message": "所有文章"
+    },
+    "homepage.blogs.previous": {
+        "message": "上一篇"
+    },
+    "homepage.blogs.next": {
+        "message": "下一篇"
     }
 }
