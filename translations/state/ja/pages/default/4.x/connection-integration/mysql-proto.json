@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/connection-integration/mysql-proto.mdx",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/mysql-proto.mdx",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "975c5cfb3026f413dc6fb2e2060cdb583c6297c7c1d92a2f405963d73f2b8aac",
-    "sourceTechnicalHash": "f9a831498dd822476c1ba275e2da8490763e65449fc4814249d36b530b1784db",
-    "targetHash": "2bcf10112ca62ef073f00f5f41588347e902e145c8ba853d1f523abd9d7cde12",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "6893b14d3a84d4adf41b658df18009eb2092c05ec855ef8cb20ca986133416dd",
+    "sourceTechnicalHash": "223a56d25fd19955f4bb97e72f172d493f84375da2dd2d77efda82a8ba9d1614",
+    "targetHash": "f5b5bf8fce5e957da2388820c1a490a23a620ec54edf69504e8fcc4b4b8839d6",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T01:12:08.629Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-14T05:20:13.083Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "6893b14d3a84d4adf41b658df18009eb2092c05ec855ef8cb20ca986133416dd",
+      "targetHash": "f5b5bf8fce5e957da2388820c1a490a23a620ec54edf69504e8fcc4b4b8839d6",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"query_port\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"query_port\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"query_port\"]; received [\"inlineCode\",null,null,\"fe.conf\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"5.1.49\",\"5.7\",\"8\"]; received [\"1\",\"1\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"5.1.49\",\"5.7\",\"8\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"query_port\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"query_port\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"query_port\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"query_port\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"query_port\"]; received [\"inlineCode\",null,null,\"fe.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"query_port\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"query_port\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"query_port\"]; received [\"inlineCode\",null,null,\"fe.conf\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/connection-integration/mysql-proto.mdx",
+        "blob": "67d86eaea8d9c82b6a39deab4606dcc91627f0c4"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/connection-integration/mysql-proto.mdx",
+        "blob": "ffd299e7a0519d205ce5491173f4743aeaaeb83a"
+      }
+    }
   }
 }

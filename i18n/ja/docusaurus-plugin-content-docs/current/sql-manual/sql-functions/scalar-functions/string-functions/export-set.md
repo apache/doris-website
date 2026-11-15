@@ -2,45 +2,45 @@
 {
     "title": "EXPORT-SET",
     "language": "ja",
-    "description": "EXPORT_SET は整数の各ビットを指定された文字列に変換し、連結して結果の文字列を生成します。bits の各ビットが 1 の場合は on、0 の場合は off を使用します。"
+    "description": "EXPORTSET は整数の各ビットを指定された文字列に変換し、連結して結果の文字列を生成します。bits の各ビットが 1 の場合、"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-`EXPORT_SET` は、整数の各ビットを指定された文字列に変換し、それらを連結して結果の文字列を生成します。`bits` のビットが 1 の位置には `on` の文字列、0 の位置には `off` の文字列が表示されます。ビットは右から左へ（最下位ビットから最上位ビットへ）順に調べ、結果の文字列には左から右へ連結されます。各ビットの文字列は `separator`（デフォルトはカンマ `,`）で区切られます。
+`EXPORT_SET` は整数の各ビットを指定された文字列に変換し、連結して結果の文字列を生成します。`bits` の各ビットが 1 の場合、結果の対応する位置に `on` 文字列が表示され、0 の場合は `off` 文字列が表示されます。ビットは右から左へ（つまり、最下位ビットから最上位ビットへ）順に調べますが、結果の文字列には左から右へ連結されます。各ビットは `separator` で区切られます（デフォルトはカンマ `,` です）。
 
-表示するビット数は `number_of_bits` パラメータで指定し、デフォルトは 64 ビットです。指定しない場合、または範囲外（64 を超える場合）は、自動的に 64 ビットとして扱われます。
+表示するビット数は `number_of_bits` パラメータで決まり、デフォルトは 64 ビットです。指定しない場合、または範囲外の場合（64 を超える場合）は、自動的に 64 ビットとして扱われます。
 
-この関数は、MySQL の [EXPORT_SET 関数](https://dev.mysql.com/doc/refman/8.4/en/string-functions.html#function_export-set) と同様に動作します。
+この関数の動作は、MySQL の [EXPORT_SET 関数](https://dev.mysql.com/doc/refman/8.4/en/string-functions.html#function_export-set) と似ています。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 EXPORT_SET(bits, on, off[, separator[, number_of_bits]])
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 
 | パラメータ        | 説明 |
 |-------------------|-------------|
-| `bits`            | 変換に使用する整数型（LARGEINT）の値。-2^63 未満の場合は -2^63 として、2^64 - 1 を超える場合は 2^63 - 1 として扱います。 |
-| `on`              | ビットが 1 の場合に表示する文字列。 |
-| `off`             | ビットが 0 の場合に表示する文字列。 |
-| `separator`       | 省略可能。ビット間の区切りに使用する文字列。デフォルトは ',' です。 |
-| `number_of_bits`  | 省略可能。結果に表示するビット数を指定する整数型（INT）の値。デフォルトは 64 で、[0, 64] の範囲外の場合は自動的にデフォルト値が使用されます。 |
+| `bits`            | 変換に使用する整数型（LARGEINT）の値。値が -2^63 より小さい場合は -2^63 として扱い、2^64 - 1 より大きい場合は 2^63 - 1 として扱います。 |
+| `on`              | ビットが 1 のときに表示する文字列 |
+| `off`             | ビットが 0 のときに表示する文字列 |
+| `separator`       | 省略可能。各ビットを区切る文字列。デフォルトは ',' です。 |
+| `number_of_bits`  | 省略可能。結果に表示するビット数。整数型（INT）をサポートします。デフォルト値は 64 で、範囲 [0, 64] を超える場合は自動的にデフォルト値として扱われます。 |
 
-## 戻り値
+## 戻り値 {#return-value}
 
-文字列を返します。`bits` の各ビットを最下位ビットから最上位ビットの順に、1 の場合は `on`、0 の場合は `off` に置き換えて連結します。各ビットは `separator` で区切られ、最終結果には `number_of_bits` 個のビットが表示されます。
+文字列を返します。`bits` の各ビットを最下位ビットから最上位ビットへ順に調べ、1 なら `on`、0 なら `off` に置き換えて、その順に連結します。各ビットは `separator` で区切られ、最終的な結果には `number_of_bits` ビット分が表示されます。
 
-`number_of_bits` が [-2^31, 2^31 - 1] の範囲外の場合、または関数のいずれかの引数が NULL の場合は、NULL を返します。
-## 例
+`number_of_bits` が範囲 [-2^31, 2^31 - 1] 外の場合、または関数のいずれかのパラメータが NULL の場合は、NULL を返します。
+## 例 {#example}
 
-<!-- setup-sql
+```sql
 CREATE TABLE test_export_set (`bits` BIGINT, `on` VARCHAR(20), `off` VARCHAR(20), `sep` VARCHAR(20), `num_of_b` INT) DISTRIBUTED BY HASH(`bits`) BUCKETS 1 PROPERTIES("replication_num"="1");
-INSERT INTO test_export_set VALUES (-1,'1','0',',',50),(-2,'1','0','',64),(5,'Y','N',',',5),(5,'1','0','',64),(5,'','0','',65),(6,'1','','',63),(19284249819,'1','0',',',64),(9,'apache','doris','|123|',64),(NULL,'1','0',',',5),(5,NULL,'0','',5),(5,'1',NULL,',',10),(5,'1','0',NULL,10),(5,'1','0',',',NULL);
--->
+INSERT INTO test_export_set VALUES (-1,'1','0',',',50),(-2,'1','0','',64),(5,'Y','N',',5),(5,'1','0','',64),(5,'','0','',65),(6,'1','','',63),(19284249819,'1','0',',',64),(9,'apache','doris','|123|',64),(NULL,'1','0',',',5),(5,NULL,'0','',5),(5,'1',NULL,',',10),(5,'1','0',NULL,10),(5,'1','0',',',NULL);
+```
 
 ```sql
 SELECT EXPORT_SET(-2, '1', '0');
@@ -89,7 +89,8 @@ FROM `test_export_set`;
 ```
 
 ```sql
-SELECT EXPORT_SET(`bits`, `on`, `off`, `sep`, `num_of_b`)
+SELECT `bits`, `on`, `off`, `sep`, `num_of_b`,
+       EXPORT_SET(`bits`, `on`, `off`, `sep`, `num_of_b`) AS ans
 FROM `test_export_set`;
 ```
 ```text
@@ -103,7 +104,7 @@ FROM `test_export_set`;
 |           5 |        | 0     |       |       65 | 00000000000000000000000000000000000000000000000000000000000000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |           6 | 1      |       |       |       63 | 11                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | 19284249819 | 1      | 0     | ,     |       64 | 1,1,0,1,1,0,1,1,0,0,1,1,0,0,1,0,0,1,1,1,0,1,1,0,1,0,1,1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-|           9 | apache | doris | |123| |       64 | apache|123|doris|123|doris|123|apache|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris |
+|           9 | apache | doris | |123| |       64 | apache|123|doris|123|doris|123|apache|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris|123|doris |
 |        NULL | 1      | 0     | ,     |        5 | NULL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |           5 | NULL   | 0     |       |        5 | NULL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |           5 | 1      | NULL  | ,     |       10 | NULL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
