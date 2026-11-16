@@ -159,7 +159,7 @@ INSERT INTO VALUES is generally only used for demos and is not recommended for p
 | --- | --- | --- |
 | `insert_timeout` | 14400 (4 hours) | Timeout when INSERT INTO is executed as a SQL statement, in seconds. |
 | `enable_insert_strict` | true | When set to `true`, the load fails if any unqualified data is encountered. When set to `false`, unqualified rows are ignored, and the load is considered successful as long as at least one row is loaded correctly. In versions 2.1.4 and earlier, INSERT INTO cannot control the error rate; this parameter only allows strict data quality checking or completely ignoring erroneous data. |
-| `insert_max_filter_ratio` | 1.0 | Supported since version 2.1.5. **Takes effect only when `enable_insert_strict=false`.** Used to control the error tolerance ratio for `INSERT INTO FROM S3/HDFS/LOCAL()`. The value range is 0 to 1. The default 1.0 means tolerating all errors. When the proportion of error rows exceeds this value, the INSERT task fails. |
+| `insert_max_filter_ratio` | 1.0 | Supported since version 2.1.5. Takes effect only when `enable_insert_strict = false`. Controls the maximum proportion of filtered rows for `INSERT INTO ... VALUES` and `INSERT INTO ... SELECT`, including queries from Doris tables, external tables, and file TVFs such as S3, HDFS, and LOCAL. The range is 0 to 1; the default is 1.0. The INSERT fails when `filtered_rows / (loaded_rows + filtered_rows)` exceeds this value. A value of 1.0 allows all rows to be filtered; it does not suppress other execution errors. |
 
 :::info Common causes of unqualified data
 The source column length exceeds the target column length, column types do not match, partitions do not match, column order does not match, and so on.
