@@ -19,6 +19,27 @@ spec:
 ```
 `${beImage}` 为部署 BE 服务的镜像地址，请使用 [apache doris 官方镜像仓库](https://hub.docker.com/r/apache/doris)提供的镜像。`${uniqueId}` 为计算组的唯一标识也是计算组的名称，匹配规则为`[a-zA-Z][0-9a-zA-Z_]+`。replicas 为计算组内 BE 服务节点的数量。
 
+### 节点系统初始化 {#be-system-initialization}
+
+`skipDefaultSystemInit` 默认为 `false`。Doris Operator 会添加以特权模式运行的 BE init container，执行：
+
+```shell
+sysctl -w vm.max_map_count=2000000 && swapoff -a
+```
+
+这些命令修改底层 Linux 节点的系统设置，会影响共享该设置的其他工作负载。在桌面环境使用 kind 时，受影响的 Linux 内核可能属于容器运行时的虚拟机。初始化的作用范围不限于 BE 进程。
+
+如果节点管理员已完成所需的系统配置，可以在已有计算组条目中设置 `skipDefaultSystemInit: true`。编辑清单时保留其他字段及其他计算组：
+
+```yaml
+spec:
+  computeGroups:
+    - uniqueId: cg1
+      skipDefaultSystemInit: true
+```
+
+对于 Doris 3.0.4 及以上版本，该开关还会注入 `SKIP_CHECK_ULIMIT=true`，跳过部分系统参数的启动检查。启用前应自行确认节点设置满足运行要求。
+
 ## 配置多计算组
 `DorisDisaggregatedCluster` 资源支持部署多套计算组，每套计算组之间相互独立。以下展示了部署名称为 `cg1` 和 `cg2` 两套计算组的配置示例：
 ```yaml

@@ -140,3 +140,15 @@ explain SQL 拿到 query plan 可以确认这个 sql 是否启用 TOPN 查询优
           -  UncompressedBytesRead:  137.99  MB
           -  VectorPredEvalTime:  0ns
 ```
+
+### 能否提高 1024 阈值以优化更大的 LIMIT？ {#larger-topn-limits}
+
+可以。`topn_opt_limit_threshold` 默认为 1024，控制多条 TopN 优化路径。它不是 SQL `LIMIT` 的最大值，各条路径对边界值是否包含的判断也不完全相同。例如，评估 `LIMIT 5000` 的查询时，可以先提高当前会话的阈值：
+
+```sql
+SET topn_opt_limit_threshold = 10000;
+```
+
+对同一查询调整前后的 `EXPLAIN` 和 Profile 进行比较。候选集变大可能增加排序 CPU、峰值内存及两阶段物化需要回读的行数。在存算分离模式下，离散的第二阶段读取还可能增加远端 I/O。表类型、排序键、选择性及其他优化条件仍需满足；提高阈值不会强制启用所有 TopN 优化。
+
+在具有代表性的并发负载下，对比查询延迟、扫描行数、峰值内存，以及可用的第二阶段回读时间和远端读取字节数。实验结束后可用 `SET topn_opt_limit_threshold = 1024;` 恢复默认值。确认实际负载受益后，再考虑提高全局值。

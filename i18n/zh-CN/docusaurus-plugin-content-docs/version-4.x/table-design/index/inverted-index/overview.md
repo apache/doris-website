@@ -221,9 +221,36 @@ CREATE TABLE t (
 -- 在现有表上创建
 CREATE INDEX idx_content ON docs(content) USING INVERTED PROPERTIES ("parser" = "chinese");
 
--- 为现有数据构建索引
+-- 存算一体模式：为现有数据构建索引
 BUILD INDEX idx_content ON docs;
 ```
+
+#### 存算分离模式下的历史数据 {#cloud-index-build}
+
+在 Doris 4.1.5 中，新增分词倒排索引（如上方 `parser="chinese"` 的索引）会通过 Schema Change 任务构建历史数据。等待任务达到 `FINISHED` 即可，该索引不需要再单独执行 `BUILD INDEX`：
+
+```sql
+SHOW ALTER TABLE COLUMN WHERE TableName = 'docs';
+```
+
+对于不分词倒排索引（`parser="none"`）和 NGram BloomFilter 索引，默认的 `enable_add_index_for_new_data=false` 也会通过 Schema Change 构建历史数据。如果希望先为新增数据添加索引，再单独补建历史数据，可以将该变量设为 `true`。请在已选择可用计算组的会话中执行以下示例：
+
+```sql
+CREATE TABLE cloud_index_example (
+    id INT,
+    tag VARCHAR(64)
+) DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1;
+
+INSERT INTO cloud_index_example VALUES (1, 'doris'), (2, 'database');
+SET enable_add_index_for_new_data = true;
+CREATE INDEX idx_tag ON cloud_index_example(tag)
+USING INVERTED PROPERTIES("parser" = "none");
+BUILD INDEX ON cloud_index_example;
+SHOW BUILD INDEX WHERE TableName = 'cloud_index_example';
+```
+
+构建任务异步执行。等待 `SHOW BUILD INDEX` 显示 `FINISHED` 后，历史数据才能使用该索引。云模式语法不指定索引名，`BUILD INDEX idx_tag ON cloud_index_example` 会被拒绝。以上 Doris 4.1.5 说明针对该版本已有的索引格式，不描述较新内核中独立的 SNII 构建路径。
 
 ### 删除索引
 
@@ -237,6 +264,14 @@ DROP INDEX idx_content ON docs;
 SHOW CREATE TABLE docs;
 SHOW INDEX FROM docs;
 ```
+
+## 常见问题 {#inverted-index-faq}
+
+### Doris 4.1.5 是否支持日文分词和拼写容错？
+
+Doris 4.1.5 不支持内置 Kuromoji 分词器。可以用具有代表性的日文文本评估 `icu` 或 `unicode` 分词器，并通过 `TOKENIZE()` 检查输出；它们的分词方式与 Kuromoji 形态素分析不同。选择较新的分词器前，应核对实际部署版本的文档。
+
+[搜索算子](./search-operators.md)支持前缀、正则及短语 slop 匹配，但这些能力不提供基于编辑距离的拼写纠错，不会自动将拼错的词扩展为词典中相近的词。
 
 ## 延伸阅读
 
