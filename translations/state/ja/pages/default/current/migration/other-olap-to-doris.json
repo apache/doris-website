@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "migration/other-olap-to-doris",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/migration/other-olap-to-doris.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/migration/other-olap-to-doris.md",
+    "sourceCommit": "4efcd278dc3632d2b03732edf2ad1be1267aa63d",
+    "sourceHash": "e851bb0124dd4d85c1035413af22e1627f61162144036b4c5b4dbb9432a45152",
+    "sourceTechnicalHash": "c9dbb99d2c360cc75641c2a07265c29c3a33b3055119e08ce88905fc9514fed3",
+    "targetHash": "52b768c824c3bf4a022a3e7c536f155ea4fe63c7c51a009c3c2ed70ad133f50e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T17:21:48.151Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e851bb0124dd4d85c1035413af22e1627f61162144036b4c5b4dbb9432a45152",
+      "targetHash": "52b768c824c3bf4a022a3e7c536f155ea4fe63c7c51a009c3c2ed70ad133f50e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"3\"]; received [\"1\",\"1\",\"2\",\"3\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/migration/other-olap-to-doris.md",
+        "blob": "40484b1e1fa80baff51835111cdf03ca589c5244"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/migration/other-olap-to-doris.md",
+        "blob": "4a5456e709814f722922612a33b57b9851af599c"
+      }
+    }
+  }
+}
