@@ -556,7 +556,7 @@ ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
 - `ADD COLUMN` 新增可为 NULL 的 VARIANT 列，可以带 Schema Template 和属性。
 - `DROP COLUMN`、`RENAME COLUMN` 和 `MODIFY COLUMN ... COMMENT '...'`。
 - `ADD INDEX` 和 `DROP INDEX`。带 `field_pattern` 的索引只能在 `CREATE TABLE` 中定义。
-- 对没有 Schema Template 的列：把 `NOT NULL` 改为 `NULL`，以及修改 `variant_doc_materialization_min_rows`。`MODIFY COLUMN` 需要给出完整的列定义，未写出的属性取对应 `default_variant_*` 会话变量的值，因此取值与会话变量不同的属性都要写出。
+- 对没有 Schema Template 的列：把 `NOT NULL` 改为 `NULL`，以及修改 `variant_doc_materialization_min_rows`。`MODIFY COLUMN` 需要给出完整的列定义，未写出的属性取默认值（参见[列属性](#column-properties)），因此取值与默认值不同的属性都要写出。
 
 不支持：
 
@@ -606,21 +606,6 @@ CREATE TABLE example_table (
 | `variant_doc_hash_shard_count` | `64` | 否 | 仅用于 DOC mode。存储的文档被拆分到的列数。取值范围 0 到 1024，`0` 按 `1` 处理。 |
 
 表中 **ALTER** 列表示 `ALTER TABLE ... MODIFY COLUMN` 能否修改该属性，参见 [ALTER TABLE](#alter-table)。稀疏列和 DOC mode 相关属性的用法参见[宽列](#wide-columns)。
-
-### 会话变量 {#session-variables}
-
-| 变量 | 默认值 | 描述 |
-| --- | --- | --- |
-| `default_variant_max_subcolumns_count` | `2048` | 定义 VARIANT 列时未指定 `variant_max_subcolumns_count` 所使用的值。 |
-| `default_variant_enable_typed_paths_to_sparse` | `false` | 未指定 `variant_enable_typed_paths_to_sparse` 时使用的值。 |
-| `default_variant_sparse_hash_shard_count` | `0` | 未指定 `variant_sparse_hash_shard_count` 时使用的值；`0` 按 `1` 处理。 |
-| `default_variant_max_sparse_column_statistics_size` | `10000` | 未指定 `variant_max_sparse_column_statistics_size` 时使用的值。 |
-| `default_variant_enable_doc_mode` | `false` | 未指定 `variant_enable_doc_mode` 时使用的值。 |
-| `default_variant_doc_materialization_min_rows` | `0` | 未指定 `variant_doc_materialization_min_rows` 时使用的值。 |
-| `default_variant_doc_hash_shard_count` | `64` | 未指定 `variant_doc_hash_shard_count` 时使用的值。 |
-| `describe_extend_variant_column` | `false` | 为 `true` 时，`DESC` 还会列出 VARIANT 列的子列。 |
-
-`default_variant_*` 变量在定义列时生效，包括 `CREATE TABLE` 和 `ALTER TABLE`。修改这些变量不影响已有的列，但会影响之后省略了该属性的 `MODIFY COLUMN`。
 
 ### BE 配置 {#be-configuration}
 

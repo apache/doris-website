@@ -556,7 +556,7 @@ ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
 - `ADD COLUMN` для столбца VARIANT, допускающего NULL, с Schema Template и свойствами или без них.
 - `DROP COLUMN`, `RENAME COLUMN` и `MODIFY COLUMN ... COMMENT '...'`.
 - `ADD INDEX` и `DROP INDEX`. Индекс с `field_pattern` можно определить только в `CREATE TABLE`.
-- Для столбца без Schema Template: изменение `NOT NULL` на `NULL` и изменение `variant_doc_materialization_min_rows`. `MODIFY COLUMN` принимает полное определение столбца; пропущенное свойство получает значение соответствующей переменной сеанса `default_variant_*`, поэтому повторно указывайте каждое свойство, значение которого отличается.
+- Для столбца без Schema Template: изменение `NOT NULL` на `NULL` и изменение `variant_doc_materialization_min_rows`. `MODIFY COLUMN` принимает полное определение столбца; пропущенное свойство получает значение по умолчанию (см. [Свойства столбца](#column-properties)), поэтому повторно указывайте каждое свойство, значение которого отличается от значения по умолчанию.
 
 Не поддерживается:
 
@@ -606,21 +606,6 @@ CREATE TABLE example_table (
 | `variant_doc_hash_shard_count` | `64` | Нет | Только для режима DOC. Число столбцов, на которые разбивается хранимый документ. Диапазон от 0 до 1024; `0` трактуется как `1`. |
 
 Столбец **ALTER** показывает, можно ли изменить свойство через `ALTER TABLE ... MODIFY COLUMN`; см. [ALTER TABLE](#alter-table). О применении свойств разреженных столбцов и режима DOC см. в разделе [Широкие столбцы](#wide-columns).
-
-### Переменные сеанса {#session-variables}
-
-| Переменная | По умолчанию | Описание |
-| --- | --- | --- |
-| `default_variant_max_subcolumns_count` | `2048` | Значение `variant_max_subcolumns_count` для столбца VARIANT, в определении которого это свойство не указано. |
-| `default_variant_enable_typed_paths_to_sparse` | `false` | Значение `variant_enable_typed_paths_to_sparse` для столбца, в определении которого это свойство не указано. |
-| `default_variant_sparse_hash_shard_count` | `0` | Значение `variant_sparse_hash_shard_count` для столбца, в определении которого это свойство не указано; `0` трактуется как `1`. |
-| `default_variant_max_sparse_column_statistics_size` | `10000` | Значение `variant_max_sparse_column_statistics_size` для столбца, в определении которого это свойство не указано. |
-| `default_variant_enable_doc_mode` | `false` | Значение `variant_enable_doc_mode` для столбца, в определении которого это свойство не указано. |
-| `default_variant_doc_materialization_min_rows` | `0` | Значение `variant_doc_materialization_min_rows` для столбца, в определении которого это свойство не указано. |
-| `default_variant_doc_hash_shard_count` | `64` | Значение `variant_doc_hash_shard_count` для столбца, в определении которого это свойство не указано. |
-| `describe_extend_variant_column` | `false` | При значении `true` вывод `DESC` также включает подстолбцы столбцов VARIANT. |
-
-Переменные `default_variant_*` применяются при определении столбца через `CREATE TABLE` или `ALTER TABLE`. Их изменение не влияет на существующие столбцы, но влияет на последующий `MODIFY COLUMN`, в котором свойство не указано.
 
 ### Настройки BE {#be-configuration}
 
