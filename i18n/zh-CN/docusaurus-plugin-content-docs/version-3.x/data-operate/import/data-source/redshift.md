@@ -16,22 +16,22 @@
 
 ## 数据类型映射
 
-| Redshift         | Doris          | 备注                 |
-| ---------------- | -------------- | -------------------- |
-| SMALLINT         | SMALLINT       |                      |
-| INTEGER          | INT            |                      |
-| BIGINT           | BIGINT         |                      |
-| DECIMAL          | DECIMAL        |                      |
-| REAL             | FLOAT          |                      |
-| DOUBLE PRECISION | DOUBLE         |                      |
-| BOOLEAN          | BOOLEAN        |                      |
-| CHAR             | CHAR           |                      |
-| VARCHAR          | VARCHAR/STRING | VARCHAR 长度最大 65535 |
-| DATE             | DATE           |                      |
-| TIMESTAMP        | DATETIME       |                      |
-| TIME/TIMEZ       | STRING         |                      |
-| SUPER            | VARIANT        |                      |
-| OTHER            | UNSUPPORTED    |                      |
+|     Redshift     |     Doris      |          备注          |
+| ---------------- | -------------- | ---------------------- |
+| SMALLINT         | SMALLINT       |                        |
+| INTEGER          | INT            |                        |
+| BIGINT           | BIGINT         |                        |
+| DECIMAL          | DECIMAL        |                        |
+| REAL             | FLOAT          |                        |
+| DOUBLE PRECISION | DOUBLE         |                        |
+| BOOLEAN          | BOOLEAN        |                        |
+| CHAR             | CHAR           |                        |
+| VARCHAR          | VARCHAR/STRING | VARCHAR 长度最大 65533 |
+| DATE             | DATE           |                        |
+| TIMESTAMP        | DATETIME       |                        |
+| TIME/TIMETZ      | STRING         |                        |
+| SUPER            | VARIANT        |                        |
+| OTHER            | UNSUPPORTED    |                        |
 
 ## 1. 创建表
 
@@ -200,7 +200,7 @@ Reason: column_name[country], the length of input is too long than schema. first
 Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
 ```
 
- 同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/broker-load-manual#导入配置参数)。
+ 同时对于数据质量的错误，如果可以允许错误数据跳过的，可以通过在 S3 Load 任务中 Properties 设置容错率，具体可参考[导入配置参数](../../import/import-way/broker-load-manual.md#导入配置参数)。
 
 **3.4 导入多个分区的数据**
 

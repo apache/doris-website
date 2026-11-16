@@ -56,7 +56,6 @@ Doris 自己管理的 Cache 目前均为 LRU 淘汰策略，均支持单独通�
 加速点查询执行，主要用于日志分析。
 
 ```
-- PointQueryRowCache
 - PointQueryLookupConnectionCache
 ```
 

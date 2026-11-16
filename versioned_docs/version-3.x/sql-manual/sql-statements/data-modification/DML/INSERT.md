@@ -201,9 +201,9 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
 4. Filter Threshold
 
-   Unlike other import methods, INSERT operations cannot specify a filter threshold (`max_filter_ratio`). The default filter threshold is 1, which means that rows with errors can be ignored.
+   INSERT uses the session variable `insert_max_filter_ratio` to control the filter threshold, rather than the load property `max_filter_ratio`. Supported since version 2.1.5, `insert_max_filter_ratio` ranges from 0 to 1, defaults to 1.0, and takes effect only when `enable_insert_strict = false`. It applies to `INSERT INTO ... VALUES` and `INSERT INTO ... SELECT`, including Doris tables, external tables, and file TVFs. The INSERT fails when `filtered_rows / (loaded_rows + filtered_rows)` exceeds this value.
 
-   For business scenarios that require data not to be filtered, you can set [session variable](../../session/variable/SET-VARIABLE) `enable_insert_strict` to `true` to ensure that when there is data When filtered out, `INSERT` will not be executed successfully.
+   To reject any filtered data, set the [session variable](../../session/variable/SET-VARIABLE) `enable_insert_strict` to `true` (the default). INSERT then fails if any row is filtered. The filter threshold does not suppress other execution errors, such as SQL analysis errors or data source access failures.
 
 5. Performance issues
 

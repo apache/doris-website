@@ -57,8 +57,10 @@ test('uses native localized permalinks and identifies English fallback titles', 
     ], 'zh-CN');
 
     assert.deepEqual(data.posts, [
-        {title: '最新文章', permalink: '/zh-CN/blog/translated/', contentLocale: 'zh-CN'},
-        {title: 'fallback', permalink: '/zh-CN/blog/fallback/', contentLocale: 'en'},
+        {title: '最新文章', permalink: '/zh-CN/blog/translated/', contentLocale: 'zh-CN',
+            date: '2026-11-03T00:00:00.000Z', image: null},
+        {title: 'fallback', permalink: '/zh-CN/blog/fallback/', contentLocale: 'en',
+            date: '2026-10-29T00:00:00.000Z', image: null},
     ]);
 });
 
@@ -70,6 +72,20 @@ test('deduplicates native routes and gives equal publication dates a stable orde
     ]);
 
     assert.deepEqual(data.posts.map(item => item.title), ['a', 'z']);
+});
+
+test('provides publication dates and cover images for the homepage without filtering out posts without covers', () => {
+    const data = collect([
+        post('covered', new Date('2026-11-03T12:00:00Z'), {
+            frontMatter: {image: '/images/blogs/covered.jpg'},
+        }),
+        post('without-cover', '2026-10-29'),
+    ]);
+
+    assert.equal(data.posts[0].date, '2026-11-03T12:00:00.000Z');
+    assert.equal(data.posts[0].image, '/images/blogs/covered.jpg');
+    assert.equal(data.posts[1].image, null);
+    assert.equal(data.posts[1].permalink, '/blog/without-cover');
 });
 
 test('handles empty blogs and refreshes after an article is added', () => {

@@ -134,7 +134,7 @@ The SELECT statement above is similar to a regular SELECT query, allowing operat
 | --- | --- | --- |
 | insert_timeout | 14400s (4 hours) | Timeout for INSERT INTO as an SQL statement, in seconds. |
 | enable_insert_strict | true | If this is set to true, INSERT INTO will fail when the task involves invalid data. If set to false, INSERT INTO will ignore invalid rows, and the import will be considered successful as long as at least one row is imported successfully. Until version 2.1.4. INSERT INTO cannot control the error rate, so this parameter is used to either strictly check data quality or completely ignore invalid data. Common reasons for data invalidity include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch. |
-| insert_max_filter_ratio | 1.0 | Since version 2.1.5. Only effective when `enable_insert_strict` is false. Used to control the error tolerance when using `INSERT INTO FROM S3/HDFS/LOCAL()`. The default value is 1.0, which means all errors are tolerated. It can be a decimal between 0 and 1. It means that when the number of error rows exceeds this ratio, the INSERT task will fail. |
+| insert_max_filter_ratio | 1.0 | Supported since version 2.1.5. Takes effect only when `enable_insert_strict = false`. Controls the maximum proportion of filtered rows for `INSERT INTO ... VALUES` and `INSERT INTO ... SELECT`, including queries from Doris tables, external tables, and file TVFs such as S3, HDFS, and LOCAL. The range is 0 to 1; the default is 1.0. The INSERT fails when `filtered_rows / (loaded_rows + filtered_rows)` exceeds this value. A value of 1.0 allows all rows to be filtered; it does not suppress other execution errors. |
 
 ### Return values
 

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "observability/dogstack/docker",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/observability/dogstack/docker.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/observability/dogstack/docker.md",
+    "sourceCommit": "4efcd278dc3632d2b03732edf2ad1be1267aa63d",
+    "sourceHash": "63bcc817370f4dc939cb327f46b514ca244afe0407091bd5a8bff52ff7ab9213",
+    "sourceTechnicalHash": "54d11f9d87592c068691e9406b9270ad02a6a5e7edb7f45f4510e61e7c227edd",
+    "targetHash": "25800787b64f3646964ce9da96d00c0c4bcc82a3fe84ed0992102c65d19e5b6b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T17:27:02.647Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "63bcc817370f4dc939cb327f46b514ca244afe0407091bd5a8bff52ff7ab9213",
+      "targetHash": "25800787b64f3646964ce9da96d00c0c4bcc82a3fe84ed0992102c65d19e5b6b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: operational steps -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: observability platform / DOG Stack single-host deployment -->\"]; received [\"html\",null,null,\"<!-- 対象シナリオ: 可観測性プラットフォーム / DOG Stack の単一ホストへのデプロイ -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/observability/dogstack/docker.md",
+        "blob": "664de884d7cf9a8a2238e283654005850b8fde29"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/observability/dogstack/docker.md",
+        "blob": "91b41c91fb8689434a3e6a2bc819a3add9168482"
+      }
+    }
+  }
+}

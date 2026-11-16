@@ -23,6 +23,8 @@ module.exports = function recentBlogsPlugin(context) {
                     title: metadata.title,
                     permalink: metadata.permalink,
                     contentLocale: metadata.dorisContent?.contentLocale ?? context.i18n.currentLocale,
+                    date: new Date(metadata.date).toISOString(),
+                    image: metadata.frontMatter.image ?? null,
                 }));
 
             actions.setGlobalData({posts, count: RECENT_POSTS_COUNT});

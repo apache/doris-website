@@ -2,7 +2,7 @@
 {
     "title": "高并发点查",
     "language": "zh-CN",
-    "description": "如何在 Doris 中开启高并发点查？通过行存、短路径、PreparedStatement 与行缓存，显著提升主键点查 QPS 与响应延迟。",
+    "description": "如何在 Doris 中开启高并发点查？通过行存、短路径和 PreparedStatement，显著提升主键点查 QPS 与响应延迟。",
     "keywords": [
         "Doris 高并发点查",
         "主键点查优化",
@@ -10,7 +10,6 @@
         "行存 store_row_column",
         "Merge-On-Write 点查",
         "SHORT-CIRCUIT 短路径",
-        "行缓存 row cache",
         "FE CPU 高 点查瓶颈"
     ]
 }
@@ -30,7 +29,6 @@
 | 行存（Row Store）    | 列存对宽表整行读取会放大随机 IO，引入行存减少 IO 开销       |
 | 短查询路径（SHORT-CIRCUIT） | FE 的查询规划/解析对简单查询过重，短路径绕过常规规划流程     |
 | PreparedStatement    | SQL 解析与表达式计算占用 FE CPU，缓存计划/表达式以降低开销   |
-| 行缓存（Row Cache）  | Page Cache 易被大查询淘汰，引入独立行缓存提高命中率         |
 
 ## 快速开启清单
 
@@ -41,7 +39,6 @@
 - 建表时开启 `light_schema_change = true`
 - 查询语句仅包含 **Key 列等值条件**，无 join 与嵌套子查询
 - JDBC URL 开启 `useServerPrepStmts=true` 使用 PreparedStatement
-- （可选）BE 配置 `disable_storage_row_cache = false` 开启行缓存
 - 通过 `EXPLAIN` 验证执行计划中存在 `SHORT-CIRCUIT` 标记
 
 ## 行存（Row Store）
@@ -142,20 +139,6 @@ readStatement.setInt(1, 1235);
 resultSet = readStatement.executeQuery();
 ...
 ```
-
-## 开启行缓存（Row Cache）
-
-<!-- 知识类型: 配置参数 -->
-<!-- 适用场景: 行存命中率低、Page Cache 易被淘汰 -->
-
-Doris 默认提供 **Page 级别的 Cache**，每个 Page 中存储某一列的数据，因此 Page Cache 是面向列的缓存。对于行存而言，一行包括多列数据，缓存可能被大查询冲刷掉。
-
-为提升命中率，Doris 单独引入了**行缓存（Row Cache）**，复用 LRU Cache 机制保障内存使用。通过以下 BE 配置开启：
-
-| 配置项                       | 默认值     | 说明                              |
-| ---------------------------- | ---------- | --------------------------------- |
-| `disable_storage_row_cache`  | `true`（默认不开启）| 是否关闭行缓存，设置为 `false` 开启 |
-| `row_cache_mem_limit`        | `20%`      | Row Cache 占用内存的百分比         |
 
 ## 性能优化建议
 

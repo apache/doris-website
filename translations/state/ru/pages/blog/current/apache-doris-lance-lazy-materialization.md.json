@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "blog",
+    "version": "current",
+    "docId": "apache-doris-lance-lazy-materialization.md",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "blog/apache-doris-lance-lazy-materialization.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-blog/apache-doris-lance-lazy-materialization.md",
+    "sourceCommit": "52a91a95e0603218b7576d2df352f39be6f2839e",
+    "sourceHash": "a14675a157f2c9fed48d93b75dad0008cd953b0f2bb66363c6f92af4318065a1",
+    "sourceTechnicalHash": "7dd6e88a50a415390d5feba99cf2050ddac523ea4e134ef8100e356137a8ec90",
+    "targetHash": "6cd7d3c7ccb85aea7b843263d458acc40545fcb9837d8a450b0870ecaf724f7f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T06:44:07.622Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "blog/apache-doris-lance-lazy-materialization.md",
+        "blob": "26d2341e7881030cd9544e037552fa0248c3f25c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-blog/apache-doris-lance-lazy-materialization.md",
+        "blob": null
+      }
+    }
+  }
+}

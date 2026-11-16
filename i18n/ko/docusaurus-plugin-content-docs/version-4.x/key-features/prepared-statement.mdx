@@ -114,7 +114,7 @@ Apache Doris의 Prepared Statement는 Unique Key 테이블에 대한 높은 QPS�
 
 ## 성능 및 검증 {#performance}
 
-Doris에 따르면 FE CPU가 병목인 포인트 쿼리 워크로드에서 PreparedStatement를 사용하면 [처리량이 4x 이상 개선됩니다](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/). 이는 [고동시성 포인트 쿼리 기능 카드](./high-concurrency-point-query)에서 short-circuit 관점으로 설명한 4x와 동일한 수치입니다. 두 효과를 합친 개선 폭이므로 각각을 곱해서 계산하면 안 됩니다. 전체 고동시성 구성(Unique Key + Merge-on-Write + 행 저장소 + 행 캐시 + short-circuit + PreparedStatement)은 16코어 / 64GB 머신의 YCSB에서 [노드당 30,000+ QPS](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/)에 도달하며, 최적화하지 않은 기준 구성보다 평균 지연 시간이 96% 줄어듭니다. 나머지 구성과 분리하여 PreparedStatement만의 기여도를 측정하기는 어렵습니다. FE가 처리량을 제한하는 상황에서는 4x를 계획 수립 시 개선 폭의 하한으로 보세요.
+Doris에 따르면 FE CPU가 병목인 포인트 쿼리 워크로드에서 PreparedStatement를 사용하면 [처리량이 4x 이상 개선됩니다](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/). 이는 [고동시성 포인트 쿼리 기능 카드](./high-concurrency-point-query)에서 short-circuit 관점으로 설명한 4x와 동일한 수치입니다. 두 효과를 합친 개선 폭이므로 각각을 곱해서 계산하면 안 됩니다. 전체 고동시성 구성은 16코어 / 64GB 머신의 YCSB에서 [노드당 30,000+ QPS](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/)에 도달하며, 최적화하지 않은 기준 구성보다 평균 지연 시간이 96% 줄어듭니다. 나머지 구성과 분리하여 PreparedStatement만의 기여도를 측정하기는 어렵습니다. FE가 처리량을 제한하는 상황에서는 4x를 계획 수립 시 개선 폭의 하한으로 보세요.
 
 다음 두 가지를 확인하면 해당 경로가 사용 중인지 알 수 있습니다.
 

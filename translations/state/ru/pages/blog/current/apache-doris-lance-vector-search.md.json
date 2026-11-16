@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "blog",
+    "version": "current",
+    "docId": "apache-doris-lance-vector-search.md",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "blog/apache-doris-lance-vector-search.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-blog/apache-doris-lance-vector-search.md",
+    "sourceCommit": "52a91a95e0603218b7576d2df352f39be6f2839e",
+    "sourceHash": "6610f496ca0b28909a8f1a20fa228c71b9b365f86f5262f597faf2d1f97683aa",
+    "sourceTechnicalHash": "a2b8936c8f486c028ac3992f1f21394da10f6ce618b60a82797cbb2016785ffd",
+    "targetHash": "c741070c0ae879ef231c7ded37078d570b9c776844d43252c67d62db2fe220f0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T06:47:19.446Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "blog/apache-doris-lance-vector-search.md",
+        "blob": "72f94982b37a1b610a83ef84b96d4bbc2872d126"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-blog/apache-doris-lance-vector-search.md",
+        "blob": null
+      }
+    }
+  }
+}
