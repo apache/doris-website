@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/key-features/columnar-storage.mdx",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/columnar-storage.mdx",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "be9b301dc2106c6722d08b0b52cc0c55482f68d0330da4093cc2fad323fabb5b",
+    "sourceCommit": "e86ca9bf114ced02e9b5f884e70e307aa90236c0",
+    "sourceHash": "324e121fa22dc67f5e2482cf5be1533b824f91bac3864214236db8f64d66654f",
     "sourceTechnicalHash": "c42f941b4a19c25c106b1ac2b52ea3c5bf9e7311f54c8b29857304729528af41",
-    "targetHash": "df1e426d661eedb3217652683220e40650af4b5764b5b755169bff6ecfaf6504",
+    "targetHash": "d7b36a837b3b7823edbb1c0697c4e58bf16fbad38918155952866e84603f32b1",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:50:40.613Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-16T07:13:11.573Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "324e121fa22dc67f5e2482cf5be1533b824f91bac3864214236db8f64d66654f",
+      "targetHash": "d7b36a837b3b7823edbb1c0697c4e58bf16fbad38918155952866e84603f32b1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1.1.0\",\"1.1.0\",\"10\",\"10\",\"10\",\"10000\",\"110\",\"16\",\"16\",\"2\",\"25\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"30\",\"4\",\"4\",\"4\",\"4\",\"4.1\",\"4.1\",\"4.1\",\"49\",\"5\",\"50\",\"53\",\"60\",\"60\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"65\",\"7000\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1.0\",\"1.1.0\",\"10\",\"10\",\"10\",\"1000\",\"10000\",\"16\",\"16\",\"2\",\"2\",\"25\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"30\",\"4\",\"4\",\"4\",\"4\",\"4.1\",\"4.1\",\"4.1\",\"49\",\"5\",\"50\",\"53\",\"60\",\"60\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"65\",\"7000\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/key-features/columnar-storage.mdx",
+        "blob": "80b53bb96af1e89b7daefeda5ba9405fb6c02f67"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/key-features/columnar-storage.mdx",
+        "blob": null
+      }
+    }
   }
 }
