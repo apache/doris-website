@@ -135,7 +135,7 @@ data:
     brpc_listen_port = 5000
     brpc_num_threads = -1
     brpc_idle_timeout_sec = 30
-    http_token = greedisgood9999
+    http_token = ${httpToken}
 
     # // doris txn config
     label_keep_max_second = 259200
@@ -176,6 +176,21 @@ Parameter description:
 - `mountPath`: the mount point must be `/etc/doris`
 
 Apply the above configuration to the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#2-modify-key-configurations) you want to deploy.
+
+### Configure and change the HTTP token
+
+`http_token` authenticates MetaService HTTP management API requests. It is independent of the [Doris management account credentials in `authSecret`](config-cluster.md). Replace `${httpToken}` in the example above with a custom random string and reference the ConfigMap through `spec.metaService.configMaps`. When updating an existing configuration, preserve the other settings in `doris_cloud.conf`.
+
+Normal RPC access from FE and BE to MetaService does not use this HTTP token. For images that register nodes through FE SQL, such as Doris 4.1.5, you do not need to configure the same token in FE or BE, or restart them for this change.
+
+You can also change the token after deployment:
+
+1. Update `http_token` in `doris_cloud.conf` in the referenced ConfigMap, preserving the other settings.
+2. Restart MetaService Pods one at a time, waiting for each Pod to become Ready before proceeding to the next. A single-replica deployment temporarily loses MetaService availability during the restart.
+3. Verify the new token on each MetaService replica using a read-only HTTP management API that requires token authentication. Pod readiness alone does not confirm that the token has changed.
+4. Update operations tools that call these HTTP management APIs.
+
+`http_token` is a non-dynamic setting loaded at startup. Updating the ConfigMap alone does not change the token in a running MetaService process; do not rely on that update to restart Pods automatically. During the rolling change, replicas may temporarily use different tokens and HTTP management requests may fail authentication. Avoid node management operations that depend on these APIs during this interval.
 
 ## 5. Configure service probe timeouts
 

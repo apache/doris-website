@@ -18,9 +18,15 @@
 
 ### 为什么需要配置管理凭证
 
-Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/security-overview)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authorization/internal#所有权限) 权限。
+Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/security-overview)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authorization/internal#所有权限项) 权限。
 
 Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisDisaggregatedCluster 资源配置的集群进行部署和管理。当 root 用户添加密码后，需要在 DorisDisaggregatedCluster 资源中显式配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
+
+:::caution root 设置密码后的管理凭据
+root 设置密码后，必须向 Operator 和节点启动脚本提供有效的管理凭据，推荐使用 `spec.authSecret`。对于通过 FE SQL 注册的 BE，凭据缺失或不匹配可能导致节点无法加入集群。Secret 必须与 `DorisDisaggregatedCluster` 位于同一命名空间，并包含与数据库有效管理账户一致的 `username` 和 `password`。修改 Secret 不会修改已有数据库账户的密码；数据库改密时也需要同步更新 Secret。
+
+root 已有密码时，如需使用专用管理账户，应由管理员预先创建并授权，不要依赖启动脚本自动创建。
+:::
 
 ### 三种密码配置场景对比
 
@@ -138,9 +144,15 @@ Doris Operator 提供使用 [Basic Authentication Secret](https://kubernetes.io/
 按照如下格式配置需要使用的 Basic Authentication Secret：
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: root
-    password: ${password}
+  username: root
+  password: "${password}"
 ```
 
 其中，`${password}` 为 root 设置的非加密密码。
@@ -196,9 +208,15 @@ spec:
 按照如下格式配置需要使用的 Basic Authentication Secret：
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: ${DB_ADMIN_USER}
-    password: ${DB_ADMIN_PASSWD}
+  username: ${DB_ADMIN_USER}
+  password: "${DB_ADMIN_PASSWD}"
 ```
 
 | 参数 | 说明 |
@@ -234,7 +252,7 @@ spec:
 
 ## 场景三：集群部署后设置 root 用户密码
 
-Doris 集群在部署后若未设置 root 用户的密码，需要配置一个具有 [Node_priv](../../../admin-manual/auth/authorization/internal#所有权限) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户，请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，再通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisDisaggregatedCluster 资源中配置。
+Doris 集群在部署后若未设置 root 用户的密码，需要配置一个具有 [Node_priv](../../../admin-manual/auth/authorization/internal#所有权限项) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户，请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，再通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisDisaggregatedCluster 资源中配置。
 
 配置流程概览：
 
@@ -294,9 +312,15 @@ spec:
 按照如下格式创建 Basic Authentication Secret：
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: ${DB_ADMIN_USER}
-    password: ${DB_ADMIN_PASSWD}
+  username: ${DB_ADMIN_USER}
+  password: "${DB_ADMIN_PASSWD}"
 ```
 
 | 参数 | 说明 |
@@ -327,7 +351,7 @@ spec:
 其中，`${secretName}` 为部署的 Basic Authentication Secret 的名称。
 
 :::tip 提示
-部署后设置 root 密码，并配置新的拥有管理节点的用户名和密码后，会引起存量服务滚动重启一次。
+修改 CR 中的 `spec.authSecret` 引用或 `spec.adminUser` 会改变相关 Pod 模板，可能触发滚动更新；仅修改数据库密码或同名 Secret 的内容，不等于触发 Pod 滚动重启。通过 FE SQL 注册的 BE 启动脚本在启动时读取 Secret 到变量，注册重试期间不会重新读取。修正凭据并验证能够登录 FE 后，如果 BE 仍因旧凭据注册失败，应逐个重建这些注册失败的 BE Pod，再通过 `SHOW BACKENDS` 确认节点已加入且 `Alive` 为 `true`。具体排查步骤见 [authSecret 配置问题](../doris-operator/status-and-troubleshooting.md#authsecret-配置问题)。
 :::
 
 ## 挂载 Kerberos 认证文件
@@ -395,4 +419,4 @@ spec:
 
 ### 第 4 步：在 Hive Catalog 中使用 Kerberos 认证
 
-Kerberos 配置完成后，你可以在创建 Hive Catalog 时启用 Kerberos 认证。具体配置请参考 [Hive Catalog 配置文档](../../../lakehouse/catalogs/hive-catalog#配置-catalog)。
+Kerberos 配置完成后，你可以在创建 Hive Catalog 时启用 Kerberos 认证。具体配置请参考 [Hive Catalog 配置文档](../../../lakehouse/catalogs/hive-catalog.mdx#配置-catalog)。
