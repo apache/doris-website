@@ -2,7 +2,7 @@
 {
     "title": "Metrics Action",
     "language": "en",
-    "description": "Used to obtain doris metrics infomation."
+    "description": "Used to obtain Doris metrics information."
 }
 ---
 
@@ -14,7 +14,7 @@
 
 ## Description
 
-Used to obtain doris metrics infomation.
+Used to obtain Doris metrics information.
     
 ## Path parameters
 
