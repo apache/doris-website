@@ -19,6 +19,27 @@ spec:
 ```
 Here, `${beImage}` is the image used to deploy the BE service; please use the image provided by the [Apache Doris official repository](https://hub.docker.com/r/apache/doris). `${uniqueId}` is the unique identifier and name of the compute group, which must match the pattern `[a-zA-Z][0-9a-zA-Z_]+`. The `replicas` field specifies the number of BE nodes within the compute group.
 
+### Node system initialization {#be-system-initialization}
+
+By default, `skipDefaultSystemInit` is `false`. Doris Operator adds a privileged BE init container that runs:
+
+```shell
+sysctl -w vm.max_map_count=2000000 && swapoff -a
+```
+
+These commands change the underlying Linux node's settings, including settings shared by other workloads. With kind on a desktop, the affected Linux kernel can belong to the container runtime's virtual machine. This initialization is not limited to the BE process.
+
+When node administrators have already prepared the required settings, set `skipDefaultSystemInit: true` on the existing compute-group entry. Keep the other fields and compute groups in your manifest:
+
+```yaml
+spec:
+  computeGroups:
+    - uniqueId: cg1
+      skipDefaultSystemInit: true
+```
+
+For Doris 3.0.4 and later, this switch also injects `SKIP_CHECK_ULIMIT=true`, which skips startup checks for some system parameters. Verify the node settings yourself before enabling the switch.
+
 ## Configuring Multiple Compute Groups
 The `DorisDisaggregatedCluster` resource supports the deployment of multiple independent compute groups. The following example shows a configuration with two compute groups, `cg1` and `cg2`:
 ```yaml

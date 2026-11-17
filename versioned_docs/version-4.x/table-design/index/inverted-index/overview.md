@@ -221,9 +221,36 @@ CREATE TABLE t (
 -- Create on an existing table
 CREATE INDEX idx_content ON docs(content) USING INVERTED PROPERTIES ("parser" = "chinese");
 
--- Build the index for existing data
+-- Compute-storage integrated mode: build the index for existing data
 BUILD INDEX idx_content ON docs;
 ```
+
+#### Existing data in compute-storage decoupled mode {#cloud-index-build}
+
+In Doris 4.1.5, adding a tokenized inverted index, such as the `parser="chinese"` index above, builds historical data through a schema-change job. Wait for the job to reach `FINISHED`; a separate `BUILD INDEX` is not needed for that index:
+
+```sql
+SHOW ALTER TABLE COLUMN WHERE TableName = 'docs';
+```
+
+For non-tokenized inverted indexes (`parser="none"`) and NGram BloomFilter indexes, the default `enable_add_index_for_new_data=false` also builds historical data through schema change. Set it to `true` when you want to add the index for new data first and backfill historical data separately. Run the following example in a session with an available compute group:
+
+```sql
+CREATE TABLE cloud_index_example (
+    id INT,
+    tag VARCHAR(64)
+) DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1;
+
+INSERT INTO cloud_index_example VALUES (1, 'doris'), (2, 'database');
+SET enable_add_index_for_new_data = true;
+CREATE INDEX idx_tag ON cloud_index_example(tag)
+USING INVERTED PROPERTIES("parser" = "none");
+BUILD INDEX ON cloud_index_example;
+SHOW BUILD INDEX WHERE TableName = 'cloud_index_example';
+```
+
+The build is asynchronous. Wait for `SHOW BUILD INDEX` to report `FINISHED` before expecting historical rows to use the index. The cloud syntax omits the index name: `BUILD INDEX idx_tag ON cloud_index_example` is rejected. These Doris 4.1.5 instructions describe its existing index formats, not the separate SNII build path in newer kernels.
 
 ### Drop an index
 
@@ -237,6 +264,14 @@ DROP INDEX idx_content ON docs;
 SHOW CREATE TABLE docs;
 SHOW INDEX FROM docs;
 ```
+
+## Frequently asked questions {#inverted-index-faq}
+
+### Does Doris 4.1.5 support Japanese tokenization and typo tolerance?
+
+Doris 4.1.5 does not support the built-in Kuromoji tokenizer. Evaluate the `icu` or `unicode` parser with representative Japanese text and inspect its output with `TOKENIZE()`; their segmentation is different from Kuromoji morphological analysis. Check the documentation for the exact deployed release before selecting a newer parser.
+
+Prefix, regular-expression, and phrase-slop matching are supported by the [search operators](./search-operators.md). They do not provide edit-distance spelling correction: a misspelled term is not automatically expanded to nearby dictionary terms.
 
 ## Further reading
 

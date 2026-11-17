@@ -202,9 +202,9 @@ INSERT INTO test WITH LABEL `label1` (c1, c2) SELECT * from test2;
 
 4. 过滤阈值
 
-   与其他导入方式不同，INSERT 操作不能指定过滤阈值（`max_filter_ratio`）。默认的过滤阈值为 1，即忽略所有错误行。
+   INSERT 使用会话变量 `insert_max_filter_ratio` 控制过滤阈值，而不是导入属性 `max_filter_ratio`。`insert_max_filter_ratio` 自 2.1.5 版本起支持，取值范围为 0 ~ 1，默认值为 1.0，仅在 `enable_insert_strict = false` 时生效。它适用于 `INSERT INTO ... VALUES` 和 `INSERT INTO ... SELECT`，包括从 Doris 表、外部表及文件 TVF 读取数据的场景。当 `filtered_rows / (loaded_rows + filtered_rows)` 超过该值时，INSERT 失败。
 
-   对于有要求数据不能够被过滤的业务场景，可以通过设置 [会话变量](../../session/variable/SET-VARIABLE) `enable_insert_strict` 为 `true` 来确保当有数据被过滤掉的时候，`INSERT` 不会被执行成功。
+   如不允许过滤任何数据，可将[会话变量](../../session/variable/SET-VARIABLE) `enable_insert_strict` 设为 `true`（默认值）；此时只要有行被过滤，INSERT 就会失败。过滤阈值不用于忽略 SQL 分析、数据源访问等其他执行错误。
 
 5. 性能问题
 

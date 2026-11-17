@@ -140,7 +140,7 @@ In addition to the required parameters above, the tool provides a series of opti
 | `--workers` | Concurrency level for the import | `0` | When set to `0`, the tool runs in automatic mode and computes the value based on the size of the imported data, the disk throughput, and the Stream Load import speed. You can also set it manually. For high-performance clusters, you may increase it appropriately, but **preferably no more than 10**. If the import memory is too high (observed via Memtracker or Exceed logs), you can lower it appropriately |
 | `--disk_throughput` | Disk throughput, in MB/s | `800` | Usually keep the default. This value participates in the automatic calculation of `--workers`. If you want the tool to compute an appropriate `workers` count, you can set this based on the actual disk throughput |
 | `--streamload_throughput` | Actual Stream Load import throughput, in MB/s | `100` | Usually keep the default. This value participates in the automatic calculation of `--workers`. The default value is derived from a daily performance test environment. If you want the tool to compute an appropriate `workers` count, you can set this based on the measured throughput, using the formula: `(LoadBytes*1000) / (LoadTimeMs*1024*1024)` |
-| `--max_byte_per_task` | Upper limit on the data volume per import task. When exceeded, the data is split into a new task | `107374182400` (100 GB) | A larger value is recommended to reduce the number of import versions. However, if you encounter a `body exceed max size` error and do not want to adjust `streaming_load_max_mb` (which requires restarting the BE), or if you encounter `-238 TOO MANY SEGMENT`, you can lower it temporarily |
+| `--max_byte_per_task` | Upper limit on the data volume per import task. When exceeded, the data is split into a new task | `107374182400` (100 GB) | A larger value is recommended to reduce the number of import versions. However, if you encounter a `body exceed max size` error and do not want to adjust `streaming_load_max_mb`, or if you encounter `-238 TOO MANY SEGMENT`, you can lower it temporarily |
 
 ### Data Validation and Logs
 
@@ -250,7 +250,7 @@ Load Result: {
 
 2. **`workers`**: The default value is `0`, which enables automatic mode (the tool computes a value from the import size, `disk_throughput`, and `streamload_throughput`, typically yielding 1, 2, 4, or 8). You can also set it manually — for high-performance clusters you may increase it, but **no more than 10 is recommended**. **A common manual value is `8`**.
 
-3. **`max_byte_per_task`**: A larger value reduces the number of import versions. However, if you encounter a `body exceed max size` error and do not want to adjust `streaming_load_max_mb` (which requires restarting the BE), or if you encounter the `-238 TOO MANY SEGMENT` error, you can lower this value temporarily. **The default usually works.**
+3. **`max_byte_per_task`**: A larger value reduces the number of import versions. However, if you encounter a `body exceed max size` error and do not want to adjust `streaming_load_max_mb`, or if you encounter the `-238 TOO MANY SEGMENT` error, you can lower this value temporarily. **The default usually works.**
 
 4. **Two key parameters that affect the number of versions**:
 
@@ -284,12 +284,12 @@ The tool retries automatically. If the retries still fail, it prints a manual re
 
 ### 2. What if a single import exceeds the BE default `streaming_load_max_mb` threshold?
 
-The tool's default upper limit per import is 100 GB, which may exceed the BE `streaming_load_max_mb` threshold. To avoid restarting the BE, lower the `--max_byte_per_task` parameter.
+The tool's default upper limit per task is 100 GB, matching the source-code default of `streaming_load_max_mb` (102400 MB) in Doris 3.0.2 and later (2.1.7 and later in the 2.1 series). The BE default is 10 GB in Doris 3.0.0 and 3.0.1, and 100 GB in 4.x and dev. The effective BE configuration may differ. If a task exceeds the effective limit, reduce `--max_byte_per_task` to split it into smaller batches, or ask the administrator to adjust the dynamically modifiable `streaming_load_max_mb` parameter. A BE restart is not required.
 
-To check the value of `streaming_load_max_mb`:
+Users with ADMIN_PRIV can check the effective configuration on each BE through SQL. For managed cloud services, use the configuration mechanism provided by the service or contact the administrator; direct BE host access is not required:
 
-```shell
-curl "http://127.0.0.1:8040/api/show_config"
+```sql
+SHOW BACKEND CONFIG LIKE 'streaming_load_max_mb';
 ```
 
 ### 3. What should I do when the `-238 TOO MANY SEGMENT` error occurs?

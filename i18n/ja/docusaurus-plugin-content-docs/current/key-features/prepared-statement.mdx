@@ -115,7 +115,7 @@ Apache Doris のプリペアドステートメントは、Unique Key テーブ�
 
 ## 性能と検証 {#performance}
 
-Doris は、FE の CPU がボトルネックとなる一点検索のワークロードで、PreparedStatement によって[スループットが 4 倍以上向上する](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/)と報告しています。これは[高並行性の一点検索の機能紹介](./high-concurrency-point-query)でショートサーキットの観点から示される 4 倍と同じ値であり、二つを掛け合わせられるわけではありません。高並行性に向けた構成全体（Unique Key + Merge-on-Write + 行ストア + 行キャッシュ + ショートサーキット + PreparedStatement）では、16 コア / 64GB のマシンで YCSB を実行し、[ノードあたり 30,000+ QPS](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/)に達し、最適化前のベースラインと比べて平均レイテンシーが 96% 減少しました。PreparedStatement 単体の寄与をほかの構成要素から切り分けるのは困難です。FE が性能の上限を決めている場合、4 倍をプランニング上の最低目安として扱ってください。
+Doris は、FE の CPU がボトルネックとなる一点検索のワークロードで、PreparedStatement によって[スループットが 4 倍以上向上する](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/)と報告しています。これは[高並行性の一点検索の機能紹介](./high-concurrency-point-query)でショートサーキットの観点から示される 4 倍と同じ値であり、二つを掛け合わせられるわけではありません。高並行性に向けた構成全体では、16 コア / 64GB のマシンで YCSB を実行し、[ノードあたり 30,000+ QPS](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/)に達し、最適化前のベースラインと比べて平均レイテンシーが 96% 減少しました。PreparedStatement 単体の寄与をほかの構成要素から切り分けるのは困難です。FE が性能の上限を決めている場合、4 倍をプランニング上の最低目安として扱ってください。
 
 次の二点を確認すると、この経路が有効かどうかを判断できます。
 

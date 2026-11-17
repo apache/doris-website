@@ -56,7 +56,6 @@ Speed ​​up inverted index.
 Speed ​​up point query execution, mainly used for log analysis.
 
 ```
-- PointQueryRowCache
 - PointQueryLookupConnectionCache
 ```
 

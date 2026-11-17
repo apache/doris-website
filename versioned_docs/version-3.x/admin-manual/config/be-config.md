@@ -783,10 +783,18 @@ BaseCompaction:546859:
 #### `streaming_load_max_mb`
 
 * Type: int64
-* Description: Used to limit the maximum amount of csv data allowed in one Stream load.
+* Description: Limits the maximum request body size for a single Stream Load. JSON loads without `read_json_by_line=true` are also subject to `streaming_load_json_max_mb`.
   - Stream Load is generally suitable for loading data less than a few GB, not suitable for loading too large data.
-* Default value: 10240 (MB)
+* Default value: 102400 MB (3.0.2 and later); 10240 MB (3.0.0 and 3.0.1)
 * Dynamically modifiable: Yes
+
+This is the source-code default; the effective value depends on the deployment configuration. Users with ADMIN_PRIV can run `SHOW BACKEND CONFIG LIKE 'streaming_load_max_mb';` to check the effective value on each BE. This parameter can be changed dynamically without restarting the BE. For managed cloud services, use the configuration mechanism provided by the service or contact the administrator to confirm or adjust the value.
+
+**Version history:**
+
+- In the 3.x series, the default for `streaming_load_max_mb` increased from 10240 MB (10 GB) to 102400 MB (100 GB) in Doris 3.0.2. Doris 3.0.0 and 3.0.1 use the 10 GB default.
+- In the 2.1 series, the same change took effect in 2.1.7.
+- Doris 4.x and dev retain the 100 GB default. The effective value depends on your deployment configuration.
 
 #### `streaming_load_json_max_mb`
 

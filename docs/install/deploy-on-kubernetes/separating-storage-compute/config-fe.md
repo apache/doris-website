@@ -46,6 +46,14 @@ spec:
 
 Apply this configuration to the [`DorisDisaggregatedCluster` resource you want to deploy](./install-doris-cluster.md#configure-the-dorisdisaggregatedcluster-resource).
 
+### JVM heap and Pod memory {#fe-jvm-memory}
+
+Kubernetes `requests.memory` controls scheduling, while `limits.memory` limits the container's total memory. Doris Operator does not calculate the FE JVM heap from either value. The heap, Metaspace, thread stacks, direct memory, and other native allocations must fit within the container limit.
+
+Before lowering the memory limit, copy `fe.conf` from the image you deploy and adjust both `-Xms` and `-Xmx` in its JVM options. For JDK 17 images, edit `JAVA_OPTS_FOR_JDK_17` and preserve its other options. For example, the ConfigMap below uses a 4 GiB heap within the 8 GiB container limit above; size production heaps for the metadata and workload. Mount the file through `feSpec.configMaps` as described in Custom startup configuration, then restart the FE to apply it.
+
+If Kubernetes reports `OOMKilled`, compare the effective JVM options with the Pod memory limit. Leave room for non-heap memory when increasing the limit; when reducing the heap, do not lower only `-Xmx` while leaving a larger `-Xms`.
+
 ## Configure the number of Follower nodes
 
 The FE service has two roles, with the following responsibilities:
@@ -93,7 +101,7 @@ data:
         # Log dir
         LOG_DIR = ${DORIS_HOME}/log
         # For jdk 17, this JAVA_OPTS will be used as default JVM options
-        JAVA_OPTS_FOR_JDK_17="-Djavax.security.auth.useSubjectCredsOnly=false -Xmx8192m -Xms8192m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$LOG_DIR -Xlog:gc*:$LOG_DIR/fe.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens java.base/jdk.internal.ref=ALL-UNNAMED"
+        JAVA_OPTS_FOR_JDK_17="-Djavax.security.auth.useSubjectCredsOnly=false -Xmx4096m -Xms4096m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$LOG_DIR -Xlog:gc*:$LOG_DIR/fe.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens java.base/jdk.internal.ref=ALL-UNNAMED"
         # INFO, WARN, ERROR, FATAL
         sys_log_level = INFO
         # NORMAL, BRIEF, ASYNC

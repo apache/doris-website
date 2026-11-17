@@ -135,7 +135,7 @@ data:
     brpc_listen_port = 5000
     brpc_num_threads = -1
     brpc_idle_timeout_sec = 30
-    http_token = greedisgood9999
+    http_token = <custom-http-token>
 
     # // doris txn config
     label_keep_max_second = 259200
@@ -176,6 +176,14 @@ spec:
 - `mountPath`：挂载点必须为 `/etc/doris`
 
 将上述配置更新到需要部署的 [DorisDisaggregatedCluster 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中。
+
+### 自定义管理 HTTP token {#ms-http-token}
+
+`http_token` 用于校验 MetaService 管理 HTTP API 的请求，默认值为 `greedisgood9999`。请将示例中的 `<custom-http-token>` 替换为自己的值，并保留 `doris_cloud.conf` 中的其他配置。将文件放在 ConfigMap 的 `doris_cloud.conf` 键下，再按上方步骤通过 `spec.metaService.configMaps` 引用该 ConfigMap。
+
+所有 MetaService 副本应使用相同 token，并重启以加载启动配置。API 客户端通过 `token` 查询参数传入该值。Doris Operator 也会从引用的 MS ConfigMap 中读取 `http_token`，用于管理 HTTP 请求；只修改 Pod 内的文件会导致 Operator 与 MS 配置不一致。
+
+FE、BE 的元数据 RPC 不需要在其配置中设置这个管理 HTTP token。`spec.authSecret` 中的 SQL 管理凭据与 `http_token` 相互独立。
 
 ## 5. 配置服务探测超时
 

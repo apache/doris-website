@@ -110,13 +110,6 @@ In order to reduce CPU cost for parsing query SQL and SQL expressions, we provid
    ...
    ```
 
-## Enable row cache
-Doris has a page-level cache that stores data for a specific column in each page. Therefore, the page cache is a column-based cache. For the row storage mentioned earlier, a row contains data for multiple columns, and the cache may be evicted by large queries, which can reduce the hit rate. To increase the hit rate of the row cache, a separate row cache is introduced, which reuses the LRU cache mechanism in Doris to ensure memory usage. You can enable it by specifying the following BE configuration:
-
-- `disable_storage_row_cache` : Whether to enable the row cache. It is not enabled by default.
-
-- `row_cache_mem_limit` : Specifies the percentage of memory occupied by the row cache. The default is 20% of memory.
-
 ## Performance Optimization
 
 1. Generally, it is effective to improve query processing capabilities by increasing the number of Observers.

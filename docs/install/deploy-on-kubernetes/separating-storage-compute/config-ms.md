@@ -135,7 +135,7 @@ data:
     brpc_listen_port = 5000
     brpc_num_threads = -1
     brpc_idle_timeout_sec = 30
-    http_token = greedisgood9999
+    http_token = <custom-http-token>
 
     # // doris txn config
     label_keep_max_second = 259200
@@ -176,6 +176,14 @@ Parameter description:
 - `mountPath`: the mount point must be `/etc/doris`
 
 Apply the above configuration to the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#2-modify-key-configurations) you want to deploy.
+
+### Customize the management HTTP token {#ms-http-token}
+
+`http_token` authenticates MetaService management HTTP API requests. Its default value is `greedisgood9999`. Replace `<custom-http-token>` in the example with your own value and keep the rest of your `doris_cloud.conf` settings. Store the file under the ConfigMap key `doris_cloud.conf` and reference that ConfigMap through `spec.metaService.configMaps`, as shown above.
+
+Apply the same token to all MetaService replicas and restart them to load the startup configuration. API clients must pass that value in the `token` query parameter. Doris Operator also reads `http_token` from the referenced MS ConfigMap for its management HTTP requests; changing only a file inside a Pod leaves the Operator's configuration out of sync.
+
+FE and BE metadata RPCs do not require this management HTTP token in their configuration. The SQL management credentials in `spec.authSecret` are separate from `http_token`.
 
 ## 5. Configure service probe timeouts
 

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/dogstack/kubernetes",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/dogstack/kubernetes.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/observability/dogstack/kubernetes.md",
+    "sourceCommit": "4efcd278dc3632d2b03732edf2ad1be1267aa63d",
+    "sourceHash": "b0b2b3326593b6bee686e3d88d99cde5521dda7a1ec155f647fc47d05c6c0be3",
+    "sourceTechnicalHash": "30b5b80e6440fc5378b89038584c40aeeed4d4c1dd3084e2f4131525022f9c53",
+    "targetHash": "a02792ff28d5d674a25932ee8f09d65bd2cd48e4007be45df99834f6e50b5cf4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T17:36:48.061Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "b0b2b3326593b6bee686e3d88d99cde5521dda7a1ec155f647fc47d05c6c0be3",
+      "targetHash": "a02792ff28d5d674a25932ee8f09d65bd2cd48e4007be45df99834f6e50b5cf4",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1.24\",\"10\",\"100\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20000\",\"3\",\"3\",\"3.8\",\"30\",\"30\",\"3000\",\"4\",\"4317\",\"512\",\"7\",\"8\",\"8030\",\"8030\",\"8030\",\"8040\",\"9030\",\"9030\",\"9030\",\"9030\"]; received [\"1\",\"1\",\"1\",\"1\",\"1.24\",\"10\",\"100\",\"128\",\"2\",\"2\",\"2\",\"2\",\"20000\",\"3\",\"3\",\"3.8\",\"30\",\"30\",\"3000\",\"4\",\"4317\",\"512\",\"7\",\"8\",\"8030\",\"8030\",\"8030\",\"8040\",\"9030\",\"9030\",\"9030\",\"9030\"]\nprotected node 23: expected [\"inlineCode\",null,null,\"gateway.image.repository\"]; received [\"inlineCode\",null,null,\"ai-observe-stack\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"grafana.image.repository\"]; received [\"inlineCode\",null,null,\"gateway.image.repository\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1.24\",\"10\",\"100\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20000\",\"3\",\"3\",\"3.8\",\"30\",\"30\",\"3000\",\"4\",\"4317\",\"512\",\"7\",\"8\",\"8030\",\"8030\",\"8030\",\"8040\",\"9030\",\"9030\",\"9030\",\"9030\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.24\",\"10\",\"100\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20000\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.8\",\"30\",\"30\",\"3000\",\"4\",\"4317\",\"5\",\"512\",\"7\",\"8\",\"8030\",\"8030\",\"8030\",\"8040\",\"9030\",\"9030\",\"9030\",\"9030\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: operational steps -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 運用手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: observability platform / DOG Stack Kubernetes deployment and cluster collection -->\"]; received [\"html\",null,null,\"<!-- 対象シナリオ: オブザーバビリティプラットフォーム / DOG Stack の Kubernetes デプロイとクラスターからの収集 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"inlineCode\",null,null,\"global.imagePullSecrets\"]; received [\"inlineCode\",null,null,\"ai-observe-stack\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"ai-observe-stack\"]; received [\"inlineCode\",null,null,\"global.imagePullSecrets\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"imagePullSecrets\"]; received [\"inlineCode\",null,null,\"dog-k8s-collector\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1.24\",\"10\",\"100\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20000\",\"3\",\"3\",\"3.8\",\"30\",\"30\",\"3000\",\"4\",\"4317\",\"512\",\"7\",\"8\",\"8030\",\"8030\",\"8030\",\"8040\",\"9030\",\"9030\",\"9030\",\"9030\"]; received [\"1\",\"1\",\"1\",\"1\",\"1.24\",\"10\",\"100\",\"128\",\"2\",\"2\",\"2\",\"2\",\"20000\",\"3\",\"3\",\"3.8\",\"30\",\"30\",\"3000\",\"4\",\"4317\",\"512\",\"7\",\"8\",\"8030\",\"8030\",\"8030\",\"8040\",\"9030\",\"9030\",\"9030\",\"9030\"]\nprotected node 23: expected [\"inlineCode\",null,null,\"gateway.image.repository\"]; received [\"inlineCode\",null,null,\"ai-observe-stack\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"grafana.image.repository\"]; received [\"inlineCode\",null,null,\"gateway.image.repository\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/observability/dogstack/kubernetes.md",
+        "blob": "06eb74bc1477cdf03bc5129a8ce6198fda5fc88b"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/observability/dogstack/kubernetes.md",
+        "blob": "11aa32f351a57f0a752d5b82621c7479444992a1"
+      }
+    }
+  }
+}
