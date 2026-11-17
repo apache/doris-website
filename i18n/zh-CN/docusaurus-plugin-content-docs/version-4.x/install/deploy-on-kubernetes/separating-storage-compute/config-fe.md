@@ -46,6 +46,14 @@ spec:
 
 将上述配置信息更新到[需要部署的 `DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#配置-dorisdisaggregatedcluster-资源)中。
 
+### JVM 堆与 Pod 内存 {#fe-jvm-memory}
+
+Kubernetes 的 `requests.memory` 用于调度，`limits.memory` 限制容器总内存。Doris Operator 不会根据这两个值自动计算 FE 的 JVM 堆大小。堆、Metaspace、线程栈、直接内存及其他本地内存分配都必须计入容器内存预算。
+
+降低内存限制前，先从待部署镜像中复制 `fe.conf`，同时调整 JVM 参数中的 `-Xms` 和 `-Xmx`。使用 JDK 17 的镜像应修改 `JAVA_OPTS_FOR_JDK_17`，并保留其中的其他参数。例如，下方 ConfigMap 在上方 8 GiB 容器限制内使用 4 GiB 堆；生产环境应按元数据规模和负载确定堆大小。按“自定义启动配置”中的步骤，通过 `feSpec.configMaps` 挂载文件并重启 FE，使其生效。
+
+如果 Kubernetes 报告 `OOMKilled`，请对比实际 JVM 参数与 Pod 内存限制。提高容器限制后仍需为非堆内存留出空间；降低堆大小时，不能只减小 `-Xmx` 而保留更大的 `-Xms`。
+
 ## 配置 Follower 节点数量
 
 FE 服务包含两种角色，分工如下：
@@ -93,7 +101,7 @@ data:
         # Log dir
         LOG_DIR = ${DORIS_HOME}/log
         # For jdk 17, this JAVA_OPTS will be used as default JVM options
-        JAVA_OPTS_FOR_JDK_17="-Djavax.security.auth.useSubjectCredsOnly=false -Xmx8192m -Xms8192m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$LOG_DIR -Xlog:gc*:$LOG_DIR/fe.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens java.base/jdk.internal.ref=ALL-UNNAMED"
+        JAVA_OPTS_FOR_JDK_17="-Djavax.security.auth.useSubjectCredsOnly=false -Xmx4096m -Xms4096m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$LOG_DIR -Xlog:gc*:$LOG_DIR/fe.gc.log.$CUR_DATE:time,uptime:filecount=10,filesize=50M --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens java.base/jdk.internal.ref=ALL-UNNAMED"
         # INFO, WARN, ERROR, FATAL
         sys_log_level = INFO
         # NORMAL, BRIEF, ASYNC

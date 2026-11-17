@@ -38,6 +38,27 @@ spec:
 | `image` | The image address for deploying the BE service. Use the images provided by the [Apache Doris official image registry](https://hub.docker.com/r/apache/doris) |
 | `replicas` | The number of BE service nodes in the compute group |
 
+### Node system initialization {#be-system-initialization}
+
+By default, `skipDefaultSystemInit` is `false`. Doris Operator adds a privileged BE init container that runs:
+
+```shell
+sysctl -w vm.max_map_count=2000000 && swapoff -a
+```
+
+These commands change the underlying Linux node's settings, including settings shared by other workloads. With kind on a desktop, the affected Linux kernel can belong to the container runtime's virtual machine. This initialization is not limited to the BE process.
+
+When node administrators have already prepared the required settings, set `skipDefaultSystemInit: true` on the existing compute-group entry. Keep the other fields and compute groups in your manifest:
+
+```yaml
+spec:
+  computeGroups:
+    - uniqueId: cg1
+      skipDefaultSystemInit: true
+```
+
+For Doris 3.0.4 and later, this switch also injects `SKIP_CHECK_ULIMIT=true`, which skips startup checks for some system parameters. Verify the node settings yourself before enabling the switch.
+
 ## Scenario 2: Deploy Multiple Compute Groups for Business Isolation
 
 The `DorisDisaggregatedCluster` resource supports deploying multiple compute groups, and each compute group is independent of the others. The following example shows the configuration for deploying two compute groups named `cg1` and `cg2`:
@@ -434,3 +455,23 @@ In Operator 26.0.1, removing an entire `computeGroups` entry uses the BE drop pa
 After each change, check the compute group's phase in the custom resource, Pod readiness, and `SHOW BACKENDS` together. Confirm the target node count, `Alive = true` for retained nodes, removal of retired nodes, and successful queries and loads through the intended compute group.
 
 If the operation stalls, inspect `kubectl describe ddc`, Pod Events, PVC binding, and Operator logs. `Pending` Pods often require checking scheduling or storage; `Decommissioning` requires checking Doris decommission progress; `ScaleDownFailed` requires checking the Operator's SQL error and FE connectivity or permissions. Resolve the reported cause before retrying or forcing resource deletion. See [Status and Troubleshooting](../doris-operator/status-and-troubleshooting.md).
+
+## Planned BE restarts {#planned-be-restarts}
+
+For a temporary restart, retain the BE registration and use graceful shutdown. In Doris 4.1.5 compute-storage decoupled mode, `DECOMMISSION BACKEND` is a persistent scale-in operation: restarting the Pod does not cancel it, and `CANCEL DECOMMISSION BACKEND` is unsupported. Use the scale-in workflow above when permanently removing a BE.
+
+The rejection of plain `DROP BACKEND` is an intentional safeguard; see [DROP BACKEND](../../../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND.md) for the explicit `DROPP BACKEND` syntax. For permanent removal, prefer the Operator scale-in workflow to keep Doris metadata and Kubernetes resources consistent.
+
+Doris Operator installs a BE `preStop` hook. The stock Doris 4.1.5 image's hook calls `stop_be.sh --grace`; the BE reports its shutdown state through heartbeats and waits for running queries. Before restarting:
+
+1. Confirm that the other BEs in the compute group are healthy and have enough capacity.
+2. Check the generated Pod's `terminationGracePeriodSeconds`. It must cover the query wait, the post-shutdown delay, and execution overhead. Doris 4.1.5 defaults to `grace_shutdown_wait_seconds=120` and `grace_shutdown_post_delay_seconds=30`. Operator 26.0.1 defaults the BE Pod grace period to 200 seconds, but an explicit `grace_shutdown_wait_seconds` in `be.conf` also changes the generated Pod value; check both settings together.
+3. Use normal Pod deletion, which runs `preStop`, rather than force deletion:
+
+   ```shell
+   kubectl delete pod ${be_pod} -n ${namespace}
+   ```
+
+4. Wait for the replacement Pod to become Ready and for `SHOW BACKENDS` to report the BE alive with its shutdown state cleared. Verify queries and loads before restarting another BE.
+
+Operator 26.0.1 also has a two-phase graceful rollout that requires a compatible BE image. The stock Doris 4.1.5 image does not meet that flow's compatibility check, so upgrading the Operator alone does not enable it for this image. The existing `preStop` hook remains the graceful-stop mechanism. Graceful shutdown reduces disruption; it cannot protect running queries after an abrupt node loss or forced termination.
