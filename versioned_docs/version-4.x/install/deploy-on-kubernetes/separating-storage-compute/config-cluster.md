@@ -22,6 +22,12 @@ Managing Doris nodes requires connecting to a live FE node over the MySQL protoc
 
 By default, Doris Operator uses the root user with all privileges and no password to deploy and manage the cluster configured by the DorisDisaggregatedCluster resource. After a password is added to the root user, you must explicitly configure a username and password with the Node_priv privilege in the DorisDisaggregatedCluster resource so that Doris Operator can perform automated management operations on the cluster.
 
+:::caution Management credentials after setting a root password
+Once root has a password, provide valid management credentials to Operator and the node startup scripts, preferably through `spec.authSecret`. For BE nodes that register through FE SQL, missing or mismatched credentials can prevent them from joining the cluster. The Secret must be in the same namespace as `DorisDisaggregatedCluster` and contain a `username` and `password` that match a valid management account in Doris. Updating the Secret does not change an existing database account password; database password changes must also be reflected in the Secret.
+
+If root already has a password, an administrator must create and grant privileges to a dedicated management account before using it. Do not rely on the startup scripts to create it automatically.
+:::
+
 ### Comparison of the three password configuration scenarios
 
 Depending on the cluster's stage and management requirements, there are three configuration scenarios. Refer to the table below to choose:
@@ -138,9 +144,15 @@ Doris Operator supports using a [Basic Authentication Secret](https://kubernetes
 Configure the Basic Authentication Secret to be used in the following format:
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: root
-    password: ${password}
+  username: root
+  password: "${password}"
 ```
 
 Here, `${password}` is the unencrypted password set for root.
@@ -196,9 +208,15 @@ spec:
 Configure the Basic Authentication Secret to be used in the following format:
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: ${DB_ADMIN_USER}
-    password: ${DB_ADMIN_PASSWD}
+  username: ${DB_ADMIN_USER}
+  password: "${DB_ADMIN_PASSWD}"
 ```
 
 | Parameter | Description |
@@ -294,9 +312,15 @@ spec:
 Create a Basic Authentication Secret in the following format:
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: ${DB_ADMIN_USER}
-    password: ${DB_ADMIN_PASSWD}
+  username: ${DB_ADMIN_USER}
+  password: "${DB_ADMIN_PASSWD}"
 ```
 
 | Parameter | Description |
@@ -327,7 +351,7 @@ spec:
 Here, `${secretName}` is the name of the deployed Basic Authentication Secret.
 
 :::tip Tip
-After deployment, setting the root password and configuring the new username and password with node management privileges will trigger one rolling restart of the existing services.
+Changing the `spec.authSecret` reference or `spec.adminUser` in the CR changes the affected Pod templates and may trigger a rolling update. Changing only the database password or the contents of a Secret with the same name does not imply a rolling restart. BE startup scripts that register through FE SQL read the Secret into variables at startup and do not reread it during registration retries. After correcting the credentials and verifying that they can log in to FE, recreate BE Pods that still fail registration because of the old credentials, one at a time. Use `SHOW BACKENDS` to confirm that each node has joined and its `Alive` field is `true`. See [authSecret problems](../doris-operator/status-and-troubleshooting.md#authsecret-problems) for troubleshooting steps.
 :::
 
 ## Mounting Kerberos authentication files
@@ -395,4 +419,4 @@ spec:
 
 ### Step 4: Use Kerberos authentication in Hive Catalog
 
-Once Kerberos is configured, you can enable Kerberos authentication when creating a Hive Catalog. For specific configuration, refer to the [Hive Catalog configuration documentation](../../../lakehouse/catalogs/hive-catalog#配置-catalog).
+Once Kerberos is configured, you can enable Kerberos authentication when creating a Hive Catalog. For specific configuration, refer to the [Hive Catalog configuration documentation](../../../lakehouse/catalogs/hive-catalog.mdx#configuring-catalog).

@@ -2,147 +2,234 @@
 {
     "title": "Install FoundationDB",
     "language": "en",
-    "description": "FoundationDB is an open-source distributed database released under the Apache 2.0 license, it provides strong consistency for structured data storage."
+    "description": "Install a version-pinned FoundationDB Operator and database on Kubernetes, with mirrored images, resource planning, client compatibility and readiness checks.",
+    "keywords": [
+        "Doris",
+        "Kubernetes",
+        "FoundationDB",
+        "fdb-kubernetes-operator",
+        "resources",
+        "VeloDB"
+    ]
 }
 ---
 
-FoundationDB is an open-source distributed database released under the Apache 2.0 license, it provides strong consistency for structured data storage. In the Doris compute-storage decoupling model, FoundationDB is used as the metadata store, with the meta-service component managing the metadata within FoundationDB. When deploying a compute-storage decoupled cluster on Kubernetes, FoundationDB must be deployed in advance. Two deployment options are recommended:  
-- Deploying FoundationDB directly on virtual machines (including physical machines).  
-- Using the [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) to deploy FoundationDB on Kubernetes.  
+[FoundationDB](https://apple.github.io/foundationdb/#overview) (FDB) is a distributed database that provides strong consistency. Doris uses FoundationDB to store metadata in compute-storage decoupled mode.
 
-For VM deployments, refer to the Doris [compute-storage decoupling documentation's Pre-deployment section](../../../compute-storage-decoupled/before-deployment) to set up the FoundationDB cluster. Before deployment, ensure that FoundationDB can be accessed by the Doris Kubernetes cluster, i.e., the Kubernetes nodes should be on the same subnet as the machine where FoundationDB is deployed.  
+Prepare a FoundationDB service before deploying Doris. Choose a deployment method based on your environment:
+
+- Deploy directly on machines by following the [manual deployment guide](../../deploy-manually/separating-storage-compute-deploy-manually.md). Make sure MetaService can access FoundationDB after deployment.
+- Deploy on Kubernetes with fdb-kubernetes-operator by following the steps below.
+
+## Before you start
+
+To deploy FoundationDB on Kubernetes, prepare:
+
+- A Kubernetes account with permissions to create CRDs, RBAC resources and workloads.
+- A writable SSD-backed StorageClass and nodes with enough capacity for the resources listed below.
+- Working cluster DNS and connectivity from MetaService to FDB Pods.
+
+The examples use FDB 7.3.69, which requires a compatible 7.3 client library in MetaService. If your Doris version uses a 7.1 client, follow the [FDB 7.1 instructions](#fdb-71). The Operator's client is used by the controller and does not update the client library in MetaService.
+
+:::tip
+This guide describes a new FDB installation. If an FDB Operator is already installed, check whether it can be reused to avoid multiple controllers managing the same namespace. CRDs are cluster-wide, so check compatibility with existing FDB clusters before updating them. Plan upgrades to existing clusters separately.
+:::
+
+## Versions and image sources
+
+This guide uses the [deployment examples provided by VeloDB FDB Operator](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/samples/velodb). CRDs are downloaded from the [VeloDB FDB Operator repository on branch-2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/crd/bases), matching Operator v2.35.0. Compatibility and deployment customizations are described in the [sample guide](https://github.com/velodb/fdb-kubernetes-operator/blob/branch-2.35.0/config/samples/velodb/README.md). The examples use the following images:
+
+| Component | Version | VeloDB image |
+| --- | --- | --- |
+| FDB Operator / matching CRDs | v2.35.0 | `velodb/fdb-kubernetes-operator:v2.35.0` |
+| Controller client initializer / FDB database | 7.3.69 | `velodb/fdb-kubernetes-monitor:7.3.69` |
+
+These images support linux/amd64 and linux/arm64. The examples use `imageType: unified`, so the FDB main container and sidecar share the Monitor image. The controller also uses this image to initialize its client.
+
+Use the CRDs, Operator and cluster examples provided in this guide together. The generic examples directly under `config/samples/` and the Helm chart are separate installation paths; do not mix their controller, client or database settings with these versioned profiles.
+
+## Resource planning {#resource-planning}
+
+Plan resources for both the FDB Operator and the FDB cluster. The Operator requests and limits are **500m CPU / 256Mi**, and its client initializer requests and limits are **10m CPU / 50Mi**.
+
+The VeloDB FDB Operator repository provides single- and double-replica cluster examples. Choose one based on your usage:
+
+| Setting | Single replica (development) | Double replica |
+| --- | --- | --- |
+| storage / log / stateless Pods | 1 / 1 / 2 | 3 / 4 / 9 |
+| Main container requests per Pod | 1 CPU / 1Gi | 1 CPU / 8Gi |
+| Main container limits per Pod | 1 CPU / 2Gi | 2 CPU / 8Gi |
+| Sidecar requests = limits per Pod | 100m CPU / 256Mi | 100m CPU / 256Mi |
+| PVC per storage / log Pod | 10Gi / 10Gi | 200Gi / 100Gi |
+| Total Pods / PVCs | 4 / 2 | 16 / 7 |
+| Total requests including sidecars | **4.4 CPU / 5Gi** | **17.6 CPU / 132Gi** |
+| Total requested PVC capacity | 20Gi | 1000Gi |
+
+The totals include sidecars and exclude the Operator, MS/FE/BE and Kubernetes overhead. Stateless Pods do not need persistent data PVCs. Reserve extra Pod and storage capacity for rolling replacements.
+
+The single-replica example is intended for small functional tests. It uses reduced memory settings, so check memory/cache configuration and watch for OOM errors under your workload. The upstream default is 1 CPU / 8Gi per main container, with equal requests and limits; see [resource requirements](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/v2.35.0/docs/manual/warnings.md#resource-requirements).
+
+A double-replica cluster needs at least three independent host failure domains. After deployment, check that storage, log and coordinator processes are distributed appropriately across nodes. The examples use preferred anti-affinity, which allows multiple Pods of the same role on a node. If you require one Pod of each role per node, the nine stateless Pods need at least nine schedulable nodes. See [fault domain configuration](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/v2.35.0/docs/manual/fault_domains.md).
+
+For production, use SSD storage and adjust resources based on metadata size, write load and recovery space. The example allocates 200Gi per storage Pod and 100Gi per log Pod; change these values as needed. When several Doris clusters share FDB, plan for their combined load and validate capacity before production use. Each storage/log Pod runs one server; adjust CPU and memory if you increase the number of processes.
 
 ## Deploy FoundationDB on Kubernetes
-The deployment of a FoundationDB cluster on Kubernetes involves four main steps:
-1. Create FoundationDBCluster CRDs.  
-2. Deploy fdb-kubernetes-operator service.  
-3. Deploy FoundationDB cluster.  
-4. Check FoundationDB status.  
 
-### Step 1: Create FoundationDBCluster CRDs
-```shell
-kubectl create -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbclusters.yaml
-kubectl create -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbbackups.yaml
-kubectl create -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbrestores.yaml
-```
+Deploying FoundationDB on Kubernetes involves four steps:
 
-### Step 2: Deploy fdb-kubernetes-operator service
+1. Download the deployment files.
+2. Deploy the CRDs, FDB Operator and Monitor RBAC.
+3. Deploy the FoundationDB cluster.
+4. Check the cluster status.
 
-The fdb-kubernetes-operator repository provides deployment samples for setting up an FoundationDB cluster in IP mode. The Doris-operator repository offers FoundationDB cluster deployment examples in `FQDN` mode, which can be downloaded as needed.
+The following steps use the `fdb-system` namespace. The Operator manages FDB clusters only in this namespace. To use another namespace, update the object namespaces and RBAC subject namespaces in the deployment files together.
 
-1. Download the deployment sample:   
+### Step 1: Download the installation assets
 
-   - From the fdb-kubernetes-operator official repository:  
-     The fdb-kubernetes-operator by default deploys FoundationDB in IP mode. You can download the [default deployment configuration](https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml) in YAML format. If you wish to deploy using FQDN mode, refer to the [official documentation's DNS section](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#using-dns) for customization.
-
-     ```shell
-     wget -O fdb-operator.yaml https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/deployment.yaml
-     ```
-
-   - From the doris-operator repository:   
-
-     The doris-operator repository provides deployment examples based on fdb-kubernetes-operator version 1.46.0. These examples can be used directly to deploy FoundationDB clusters.
-
-     ```shell
-     wget https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml
-     ```
-
-2. Deploy the fdb-kubernetes-operator Service:
-
-   After customizing the fdb-kubernetes-operator deployment YAML, use the following command to deploy the `fdb-kubernetes-operator`:
-   ```shell
-   kubectl apply -f fdb-operator.yaml
-   ```
-
-   Expected Results:
-
-   ```shell
-   serviceaccount/fdb-kubernetes-operator-controller-manager created
-   clusterrole.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-clusterrole created
-   clusterrole.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-role created
-   rolebinding.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-rolebinding created
-   clusterrolebinding.rbac.authorization.k8s.io/fdb-kubernetes-operator-manager-clusterrolebinding created
-   deployment.apps/fdb-kubernetes-operator-controller-manager created
-   ```
-
-### Step 3: Deploy FoundationDB cluster
-
-Deployment examples for FoundationDB are available in the fdb-kubernetes-operator repository. You can download and use them directly.  
-
-1. Download the IP mode deployment sample from the FoundationDB official website:
-
-   ```shell
-   wget https://raw.githubusercontent.com/foundationdb/fdb-kubernetes-operator/main/config/samples/cluster.yaml
-   ```
-
-2. Customized deployment example:  
-
-   - For environments with access to Docker Hub:  
-
-     Customize the final deployment state according to the [User Manual](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/index.md) provided by the official website. If you use FQDN deployment, please set the `routing.useDNSInClusterFile` field to true and configure as follows:  
-
-     Doris Operator's official repository provides a sample for deploying FoundationDB with [FQDN](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-sethostnameasfqdn-field), which can be downloaded directly from [here](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/fdb/).
-
-     ```yaml
-     spec:
-       routing:
-       useDNSInClusterFile: true
-     ```
-
-   - For private networks:  
-
-     If the environment cannot directly access Docker Hub, download the necessary images from the official FoundationDB repository and push them to a private registry.  
-     The fdb-kubernetes-operator depends on the following Docker images:  [foundationdb/fdb-kubernetes-operator](https://hub.docker.com/r/foundationdb/fdb-kubernetes-operator),[foundationdb/foundationdb-kubernetes-sidecar](https://hub.docker.com/r/foundationdb/foundationdb-kubernetes-sidecar).
-
-     The FoundationDB images include: [foundationdb/fdb-kubernetes-monitor](https://hub.docker.com/r/foundationdb/fdb-kubernetes-monitor/tags).
-
-     After pushing the images to your private registry, follow the official fdb-kubernetes-operator documentation to [customize the image configuration](https://github.com/FoundationDB/fdb-kubernetes-operator/blob/main/docs/manual/customization.md#customizing-the-foundationdb-image).
-     
-     Example configuration to add private registry image configurations:
-     
-     ```yaml
-     spec:
-       mainContainer:
-         imageConfigs:
-         - baseImage: foundationdb/fdb-kubernetes-monitor
-           tag: 7.1.38
-       sidecarContainer:
-         imageConfigs:
-         - baseImage: foundationdb/fdb-kubernetes-monitor
-           tag: 7.1.38
-       version: 7.1.38
-     ```
-   The Doris Operator repository provides four deployment configurations for FoundationDB: [Minimal single-replica deployment](https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/cluster-single.yaml), [Minimal two-replica deployment](https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/cluster.yaml), [Production-grade two-replica deployment](https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/fdb_product.yaml), [Production-grade two-replica deployment using a private image registry](https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/fdb_product_private_env.yaml).
-
-:::tip Tip
-- When deploying FoundationDB, FoundationDBCluster resources, `.spec.version` must be configured.
-- When FoundationDB is deployed based on fdb-kubernetes-operator, at least three hosts are required to meet the high availability requirements of the production environment.  
-::: 
-
-### Step 4: Check FoundationDB status
-
-After deploying FoundationDB via the fdb-kubernetes-operator, check the status of the FoundationDB cluster with the following command:
+Replace `/path/to/kubeconfig` with the configuration file for your Kubernetes cluster, then check existing FDB resources, controllers and StorageClasses:
 
 ```shell
-kubectl get fdb
+export KUBECONFIG=/path/to/kubeconfig
+kubectl --kubeconfig "$KUBECONFIG" get crd foundationdbclusters.apps.foundationdb.org
+kubectl --kubeconfig "$KUBECONFIG" get deployments -A
+kubectl --kubeconfig "$KUBECONFIG" get storageclass
 ```
 
-The expected results are as follows. If `AVAILABLE` is `true`, the cluster is available:
+If FDB CRDs or a controller already exist, first check whether they can be reused. For a new environment, download the deployment files with the following commands:
 
 ```shell
-NAME           GENERATION   RECONCILED   AVAILABLE   FULLREPLICATION   VERSION   AGE
-test-cluster   1            1            true        true              7.1.26    13m
+mkdir fdb-install-v2.35.0
+cd fdb-install-v2.35.0
+FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/crd/bases
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/samples/velodb
+for resource in clusters backups restores; do
+  curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
+done
+curl -fSL "$FDB_ASSETS/operator.yaml" -o fdb-operator.yaml
+curl -fSL "$FDB_ASSETS/monitor-rbac.yaml" -o fdb-monitor-rbac.yaml
+# Development profile. Use cluster-double.yaml instead for the double profile.
+curl -fSL "$FDB_ASSETS/cluster-single.yaml" -o fdb-cluster.yaml
 ```
 
-## Retrieve the ConfigMap containing FoundationDB access information
-When using the fdb-kubernetes-operator to deploy FoundationDB, a specific ConfigMap containing the access information for FoundationDB will be created in the namespace where FoundationDB is deployed. The name of this ConfigMap will be the resource name of the FoundationDB deployment, with "-config" appended. Use the following command to view the ConfigMap:
+### Step 2: Install CRDs, the controller and Monitor RBAC
+
+The downloaded Operator, initializer and database profiles already use the VeloDB images listed above.
+
+Deploy the CRDs, Operator and Monitor RBAC with the following commands:
 
 ```shell
-kubectl get configmap
+kubectl --kubeconfig "$KUBECONFIG" create namespace fdb-system
+kubectl --kubeconfig "$KUBECONFIG" apply --server-side \
+  -f fdb-clusters-crd.yaml -f fdb-backups-crd.yaml -f fdb-restores-crd.yaml
+kubectl --kubeconfig "$KUBECONFIG" wait --for=condition=Established --timeout=60s \
+  crd/foundationdbclusters.apps.foundationdb.org \
+  crd/foundationdbbackups.apps.foundationdb.org \
+  crd/foundationdbrestores.apps.foundationdb.org
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system apply -f fdb-operator.yaml
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
+  deployment/fdb-kubernetes-operator-controller-manager --timeout=300s
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system apply -f fdb-monitor-rbac.yaml
 ```
 
-Expected output:
+When all three CRDs are Established and the Operator Deployment has rolled out successfully, continue with the FDB cluster. The CRDs use `--server-side` because the files are too large for the client-side last-applied annotation. If an existing resource conflicts, check its version and ownership before proceeding rather than overwriting it with `--force-conflicts`.
+
+`fdb-monitor-rbac.yaml` creates a dedicated `fdb-monitor` ServiceAccount for FDB Pods, with get/list/watch/patch permissions on Pods in this namespace.
+
+### Step 3: Configure and create the database
+
+Open `fdb-cluster.yaml` and replace both `REPLACE_WITH_SSD_STORAGE_CLASS` values with your StorageClass. Adjust CPU, memory and PVC capacity using the resource planning section above. The single-replica example is for development; for production, choose double replication and size it for your workload.
+
+The example already configures the Monitor ServiceAccount, host failure domain, FQDN routing and one server per Pod. When changing the configuration:
+
+- Keep `spec.version`, `mainContainer.imageConfigs[].version` and `tag` consistent with the FDB version in the image. For 7.1, complete the [FDB 7.1 configuration](#fdb-71) first.
+- The containers run with UID/GID 4059 and use `fsGroup: 4059` for volume permissions. Check that your CSI driver supports writes by this group. For custom images, adjust the identity to match the image.
+
+After updating the configuration, deploy the cluster:
 
 ```shell
-test-cluster-config   5      15d
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system apply -f fdb-cluster.yaml
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get fdb
 ```
+
+The single example creates `fdb-single`; the double example creates `fdb-double`. The following commands use `fdb-single`; substitute `fdb-double` when appropriate.
+
+### Step 4: Verify availability and reconciliation
+
+```shell
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get pods,pvc
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get fdb fdb-single -o yaml
+```
+
+After deployment, check the following:
+
+- Volumes are bound and the database containers start successfully. Pod Running alone is insufficient.
+- `status.configured`, `status.health.available` and `status.health.fullReplication` are `true`.
+- `status.generations.reconciled` has caught up with `metadata.generation`. An available database may still be reconciling replacements or shrink operations.
+
+Once these checks pass, configure MetaService with the generated ConfigMap and verify that it connects to FDB before creating tables. Before production use, also validate cluster health, coordinator placement and availability during host failures.
+
+## Get the ConfigMap that contains FoundationDB access information {#get-the-configmap-that-contains-foundationdb-access-information}
+
+The Operator creates `<FoundationDBCluster name>-config` in the database namespace:
+
+```shell
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get configmap fdb-single-config -o yaml
+```
+
+Configure the Doris resource as follows; use `fdb-double-config` for the double example:
+
+```yaml
+spec:
+  metaService:
+    fdb:
+      configMapNamespaceName:
+        namespace: fdb-system
+        name: fdb-single-config
+```
+
+Add this configuration to your `DorisDisaggregatedCluster` resource. For details, see [Configure MetaService](config-ms.md).
+
+:::tip
+Several Doris clusters can share one FDB. Keep the shared FDB when deleting an individual Doris cluster. Deleting FDB resources or PVCs can cause metadata loss, so prepare a backup and recovery plan.
+:::
+
+## Option for MetaService builds requiring FDB 7.1 {#fdb-71}
+
+If MetaService uses a 7.1 client, you can create an FDB 7.1.67 cluster on amd64 nodes. Add the 7.1 client to the Operator with the following commands before deploying the FDB cluster:
+
+```shell
+curl -fSL "$FDB_ASSETS/operator-client-7.1.patch.yaml" -o fdb-client-7.1.patch.yaml
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system patch \
+  deployment fdb-kubernetes-operator-controller-manager --type=strategic \
+  --patch-file fdb-client-7.1.patch.yaml
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
+  deployment/fdb-kubernetes-operator-controller-manager --timeout=300s
+```
+
+Change `spec.version` and the main image config's `version` and `tag` to `7.1.67` in the copied cluster YAML. The 7.1.67 image is amd64-only: in mixed-architecture clusters, set `nodeSelector: {kubernetes.io/arch: amd64}` on the controller and every database Pod template. Use this configuration to create a new cluster compatible with your MetaService; it is not a procedure for downgrading an existing FDB cluster.
+
+## Private registries and troubleshooting
+
+If your environment cannot access Docker Hub, copy the required images to a private registry and update the deployment files:
+
+- Operator and initializer: change `image`.
+- FDB cluster: change `mainContainer.imageConfigs[].baseImage`, keeping the FDB version inside the image consistent with `spec.version`. In unified mode, the main container and sidecar share this image.
+- If the registry requires authentication, configure `imagePullSecrets` in both the Operator and FDB Pod templates.
+
+Include all enabled client initializer images and select platforms that match your nodes. Common deployment issues and checks are listed below:
+
+| Symptom | Checks |
+| --- | --- |
+| Controller init fails / image cannot run | Mirror access, tag, node architecture; the optional 7.1 initializer is amd64-only |
+| PVC or Pod Pending | StorageClass, CSI provisioning, capacity, resource requests, node selectors and anti-affinity |
+| `File could not be written` | Volume ownership, UID/GID/fsGroup and CSI permission handling |
+| FDB is not reconciled | Controller watch namespace/RBAC, Events, controller logs, replacement capacity and recovery progress |
+| FDB is available but MS cannot connect | MetaService client compatibility, generated connection information, DNS and Pod networking |
+
+```shell
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get events --sort-by=.metadata.creationTimestamp
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system logs \
+  deployment/fdb-kubernetes-operator-controller-manager -c manager --tail=100
+```
+
+Keep shared CRDs, FDB clusters and PVCs while troubleshooting to protect data used by existing clusters.

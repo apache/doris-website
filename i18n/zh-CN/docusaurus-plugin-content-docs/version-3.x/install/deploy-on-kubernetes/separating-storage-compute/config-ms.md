@@ -6,6 +6,8 @@
 }
 ---
 
+配置 FDB 连接前，确认 MetaService 构建产物中的客户端兼容 FDB 服务端系列；安装 Operator 客户端不会更新 MetaService。固定版本安装及兼容方案见[部署 FoundationDB](install-fdb.md)。删除单个 Doris 集群时应保留共享 FDB。
+
 MetaService 是 Doris 存算分离集群元数据管理组件，不对外暴漏，仅用于内部使用。MetaService 属于无状态服务，通常采用主备模式部署。下面介绍如何在 `DorisDisaggregatedCluster` 资源中配置 MetaService。 
 
 ## 配置 FoundationDB 访问

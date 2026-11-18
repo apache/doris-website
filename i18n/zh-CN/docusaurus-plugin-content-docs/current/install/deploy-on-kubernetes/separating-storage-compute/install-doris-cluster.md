@@ -49,41 +49,15 @@
 | 机器直接部署（推荐） | 已有可用物理机 / 虚拟机 | 参考 [存算分离 - 部署前准备](../../deploy-manually/separating-storage-compute-deploy-manually) 完成部署，确保部署机与 K8s 集群在同一局域网 |
 | Kubernetes 上部署 | 希望统一在 K8s 中管理 FDB | 直接执行下方"K8s 快速部署" |
 
-### K8s 快速部署（最简通道）
+### K8s 快速部署（开发测试）
 
-依次执行以下 4 步即可在 K8s 上拉起一个最简 FDB 集群（单副本）：
+按照[部署 FoundationDB](install-fdb.md)安装固定版本的 CRD、FDB Operator、Monitor RBAC 和**单副本开发测试配置**。快速路径和完整指南共用同一套版本资源，不要将旧部署 YAML 与新 CRD 混用。
 
-**1. 下发 FoundationDB CRD：**
+1. 核对 MetaService 客户端兼容性：仅在客户端兼容时使用 7.3.69 配置，否则按指南中的 [7.1 方案](install-fdb.md#fdb-71)准备。
+2. 选择 SSD StorageClass 并核对[资源规划](install-fdb.md#resource-planning)：单副本包含 sidecar 的 requests 为 4.4 CPU / 5Gi，PVC 为 20Gi，不用于生产。
+3. 完成指南中的安装及可用性、完整复制、调谐检查，记录 `fdb-system` 中生成的 `fdb-single-config` ConfigMap，供下方第 3 步使用；还需验证实际 MetaService 连接。
 
-```shell
-kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbclusters.yaml
-kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbbackups.yaml
-kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbrestores.yaml
-```
-
-**2. 部署 fdb-kubernetes-operator：**
-
-```shell
-kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml
-```
-
-**3. 部署 FoundationDB 集群（单副本最简模式）：**
-
-```shell
-kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/cluster-single.yaml
-```
-
-**4. 验证 FDB 状态：**
-
-```shell
-kubectl get fdb
-```
-
-`kubectl get fdb` 返回的 `AVAILABLE` 列为 `true` 时，表示 FDB 集群已就绪。
-
-:::tip 进阶选项
-单副本模式仅适合开发测试。生产环境推荐使用两副本模式，并且 Kubernetes 集群至少需要三台宿主机。其他部署形态（两副本、生产部署、私有仓库镜像、FQDN 模式等）请参考 [部署 FoundationDB](install-fdb.md)。
-:::
+双副本基础配置使用独立样例，包含 sidecar 的 requests 为 17.6 CPU / 132Gi，PVC 为 1000Gi，不包含 Operator 和 Doris 资源。生产使用前需规划独立宿主机故障域、实际负载容量和替换余量。
 
 ## 第 2 步：部署 Doris Operator
 

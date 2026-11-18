@@ -202,6 +202,45 @@ kubectl logs deployment/${operator_deployment_name} -n ${operator_namespace}
 
 如果集群已设置 root 密码，或者使用了非默认管理账号，需要确认 `authSecret` 与实际 Doris 凭证一致。
 
+#### 存算分离集群中 BE 因凭据错误无法注册
+
+以下步骤适用于使用 `authSecret` 登录 FE、通过 SQL 注册节点的 BE 镜像（例如 Doris 4.1.5）。
+
+| 现象 | 排查方向 |
+|------|----------|
+| Pod 事件出现 `FailedMount`，提示 Secret 不存在 | 检查 Secret 名称及命名空间；Secret 必须与集群位于同一命名空间 |
+| BE 注册日志持续出现 `Access denied` / `1045`，节点未加入 | 检查 Secret 的 `username`、`password` 是否与数据库一致；脚本先尝试 root 空密码，单次报错不一定表示后续凭据认证失败 |
+| 使用管理账户可以登录 FE，但节点管理 SQL 被拒绝 | 检查账户是否具备所需节点管理权限 |
+| Secret 已修正，但 BE 仍使用旧凭据注册失败 | 启动脚本已将凭据读入变量，注册重试不会重新读取 Secret |
+
+先查看目标 BE Pod 的事件和注册日志：
+
+```shell
+kubectl describe pod ${be_pod_name} -n ${namespace}
+kubectl logs ${be_pod_name} -c compute -n ${namespace}
+```
+
+恢复步骤：
+
+1. 按 [配置认证](../separating-storage-compute/config-cluster.md) 修正 Secret 及 `spec.authSecret` 引用。Secret 类型为 `kubernetes.io/basic-auth`，包含 `username` 和 `password`。如果 root 已设置密码，使用已有的有效账户，或由管理员预先创建并授权管理账户；更新 Secret 不会修改数据库密码。
+2. 从能够访问 FE 的环境使用同一账户连接 FE，验证密码及 `SHOW BACKENDS` 等所需管理操作。以下命令通过提示输入密码，`${fe_query_port}` 为 FE 查询端口（默认 9030）：
+
+   ```shell
+   mysql -h ${fe_host} -P ${fe_query_port} -u ${management_user} -p
+   ```
+
+3. 如果 BE 仍因旧凭据注册失败，逐个重建这些 Pod，使启动脚本重新读取 Secret。`${be_pod_name}` 必须是已确认注册失败的目标 Pod，不要批量重启正常运行的计算组：
+
+   ```shell
+   kubectl delete pod ${be_pod_name} -n ${namespace}
+   ```
+
+4. 等待 StatefulSet 重建该 Pod、Pod 恢复 Ready，并在 FE 执行以下 SQL，确认对应节点已加入且 `Alive` 为 `true`，再处理下一个失败 Pod：
+
+   ```sql
+   SHOW BACKENDS;
+   ```
+
 ### ComputeGroup 缩容未完成
 
 在存算分离集群中，ComputeGroup 缩容可能长时间停留在 `Decommissioning` 或 `ScaleDownFailed`。
