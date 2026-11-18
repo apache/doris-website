@@ -59,7 +59,7 @@ SET fetch_all_fe_for_system_table = false;
 SHOW PROCESSLIST;
 ```
 
-В версиях до 4.0.0 `SHOW PROCESSLIST` по умолчанию отображает только сеансы на текущем узле FE, а переменная называется `show_all_fe_connection` (по умолчанию `false`).
+В версиях до 4.0.0 `SHOW PROCESSLIST` по умолчанию отображает только сеансы на текущем узле FE, а переменная называется `show_all_fe_connection` (по умолчанию `false`). `information_schema.processlist` подчиняется той же переменной.
 
 Также можно использовать системную таблицу `information_schema`, которая по умолчанию отображает сеансы на всех узлах FE и не требует дополнительной настройки:
 

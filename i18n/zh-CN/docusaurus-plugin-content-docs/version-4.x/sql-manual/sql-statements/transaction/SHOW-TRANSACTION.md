@@ -86,3 +86,9 @@ WHERE
     ```sql
     SHOW TRANSACTION WHERE LABEL = 'label_name';
     ```
+
+4. 查看 label 以 `insert_` 开头的事务（存算分离模式不支持）：
+
+    ```sql
+    SHOW TRANSACTION FROM db WHERE LABEL LIKE 'insert_%';
+    ```

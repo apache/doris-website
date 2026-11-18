@@ -85,3 +85,9 @@ WHERE
    ```sql
    SHOW TRANSACTION WHERE LABEL = 'label_name';
    ```
+
+4. Просмотр транзакций, метки которых начинаются с `insert_` (не поддерживается в режиме разделения хранения и вычислений):
+
+   ```sql
+   SHOW TRANSACTION FROM db WHERE LABEL LIKE 'insert_%';
+   ```

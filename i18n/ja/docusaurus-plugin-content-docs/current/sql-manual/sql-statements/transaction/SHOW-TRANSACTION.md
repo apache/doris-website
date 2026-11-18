@@ -85,3 +85,9 @@ WHERE
    ```sql
    SHOW TRANSACTION WHERE LABEL = 'label_name';
    ```
+
+4. ラベルが `insert_` で始まるトランザクションを表示します（ストレージ・コンピュート分離モードではサポートされていません）。
+
+   ```sql
+   SHOW TRANSACTION FROM db WHERE LABEL LIKE 'insert_%';
+   ```

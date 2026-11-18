@@ -85,3 +85,9 @@ WHERE
    ```sql
    SHOW TRANSACTION WHERE LABEL = 'label_name';
    ```
+
+4. 레이블이 `insert_`로 시작하는 트랜잭션을 조회합니다(컴퓨팅-스토리지 분리 모드에서는 지원되지 않음):
+
+   ```sql
+   SHOW TRANSACTION FROM db WHERE LABEL LIKE 'insert_%';
+   ```

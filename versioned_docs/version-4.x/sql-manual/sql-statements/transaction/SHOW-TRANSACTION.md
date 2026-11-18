@@ -85,3 +85,9 @@ The database whose transaction details need to be viewed.
    ```sql
    SHOW TRANSACTION WHERE LABEL = 'label_name';
    ```
+
+4. View the transactions whose labels start with `insert_` (not supported in compute-storage decoupled mode):
+
+   ```sql
+   SHOW TRANSACTION FROM db WHERE LABEL LIKE 'insert_%';
+   ```

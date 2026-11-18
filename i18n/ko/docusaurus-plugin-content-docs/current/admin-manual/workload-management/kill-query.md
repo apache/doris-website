@@ -59,7 +59,7 @@ SET fetch_all_fe_for_system_table = false;
 SHOW PROCESSLIST;
 ```
 
-4.0.0 이전 버전에서는 `SHOW PROCESSLIST`가 기본적으로 현재 연결된 FE 노드의 세션만 표시하며, 해당 변수는 `show_all_fe_connection`(기본값 `false`)입니다.
+4.0.0 이전 버전에서는 `SHOW PROCESSLIST`가 기본적으로 현재 연결된 FE 노드의 세션만 표시하며, 해당 변수는 `show_all_fe_connection`(기본값 `false`)입니다. `information_schema.processlist`도 같은 변수를 따릅니다.
 
 `information_schema` 시스템 테이블을 사용할 수도 있습니다. 이 테이블은 기본적으로 모든 FE 노드의 세션을 표시하므로 별도의 설정이 필요하지 않습니다.
 
