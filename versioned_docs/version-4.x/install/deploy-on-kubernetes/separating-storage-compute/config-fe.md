@@ -44,7 +44,7 @@ spec:
             memory: 8Gi
 ```
 
-Apply this configuration to the [`DorisDisaggregatedCluster` resource you want to deploy](./install-doris-cluster.md#configure-the-dorisdisaggregatedcluster-resource).
+Apply this configuration to the [`DorisDisaggregatedCluster` resource you want to deploy](./install-doris-cluster.md#2-modify-key-configurations).
 
 ### JVM heap and Pod memory {#fe-jvm-memory}
 
@@ -131,7 +131,7 @@ Parameter description:
 
 ### Step 3: Reference the ConfigMap in DorisDisaggregatedCluster
 
-Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#configure-the-dorisdisaggregatedcluster-resource) and mount the ConfigMap through the `feSpec.configMaps` array, as shown below:
+Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#2-modify-key-configurations) and mount the ConfigMap through the `feSpec.configMaps` array, as shown below:
 
 ```yaml
 spec:

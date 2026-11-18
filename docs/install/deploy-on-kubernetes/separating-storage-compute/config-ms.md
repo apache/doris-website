@@ -7,6 +7,8 @@
 }
 ---
 
+Before configuring FDB access, confirm that the MetaService build contains a client compatible with the FDB server series; installing an Operator client does not update MetaService. See [Deploy FoundationDB](install-fdb.md) for the pinned installation and compatibility options. Preserve a shared FDB when deleting an individual Doris cluster.
+
 ## What you will learn in this chapter
 
 - Configure the connection information that MetaService uses to access FoundationDB
