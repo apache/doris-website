@@ -8,29 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/insert-into-manual.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-manual.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
-    "sourceTechnicalHash": "aafbe862faafb879d27048e0ffbf1af4024d94f395bd9dbfc14dd913e9e1c2e6",
-    "targetHash": "062b509ebd0d528b1a458b49231c821016d10d562d4500a5789cce86af82a318",
+    "sourceCommit": "a3be05907cb03a32905c451a9bd9bd61ae5b7e24",
+    "sourceHash": "b22c676279353bf82e159b9ddeaa8ff2e0d513063428be8f4f8afb1686fa77fe",
+    "sourceTechnicalHash": "2b1f3067087f9f9e66030746457b1a8157798af87fc8c587b80263c09dc11585",
+    "targetHash": "f8646f98f6d048061c7f562ab02687e7bd1805396fc2739c98f9c5fd3a20a3bb",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T02:57:41.628Z",
+    "translatedAt": "2026-11-18T19:23:58.915Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
-      "targetHash": "062b509ebd0d528b1a458b49231c821016d10d562d4500a5789cce86af82a318",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "b22c676279353bf82e159b9ddeaa8ff2e0d513063428be8f4f8afb1686fa77fe",
+      "targetHash": "f8646f98f6d048061c7f562ab02687e7bd1805396fc2739c98f9c5fd3a20a3bb",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 103: expected [\"inlineCode\",null,null,\"committed\"]; received [\"inlineCode\",null,null,\"visible\"]\nprotected node 104: expected [\"inlineCode\",null,null,\"visible\"]; received [\"inlineCode\",null,null,\"committed\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operation steps + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 작업 단계 + 구성 매개변수 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data import / ETL transformation / External data source integration -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 데이터 적재 / ETL 변환 / 외부 데이터 소스 연동 -->\"]\nprotected node 21: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 구성 매개변수 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 94: expected [\"inlineCode\",null,null,\"Import timeout >= Data volume / Estimated import speed\"]; received [\"inlineCode\",null,null,\"적재 제한 시간 >= 데이터 양 / 예상 적재 속도\"]\nprotected node 103: expected [\"inlineCode\",null,null,\"committed\"]; received [\"inlineCode\",null,null,\"visible\"]\nprotected node 104: expected [\"inlineCode\",null,null,\"visible\"]; received [\"inlineCode\",null,null,\"committed\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 103: expected [\"inlineCode\",null,null,\"committed\"]; received [\"inlineCode\",null,null,\"visible\"]\nprotected node 104: expected [\"inlineCode\",null,null,\"visible\"]; received [\"inlineCode\",null,null,\"committed\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/insert-into-manual.md",
+        "blob": "500dceb8014c6a67bea058a300de7884f28d829b"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-manual.md",
+        "blob": "2d490006062960959649ae52197ee8acf509f470"
+      }
     }
   }
 }
