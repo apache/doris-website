@@ -42,7 +42,7 @@ SHOW [FULL] PROCESSLIST
 | State | 线程的状态                                |
 | QueryId | 当前查询语句的 ID                           |
 | Info | 一般记录的是线程执行的语句，默认只显示前 100 个字符         |
-| FE | 连接所在的 FE（4.0.0 起） |
+| FE | 连接所在的 FE |
 
 常见的 Command 类型如下：
 

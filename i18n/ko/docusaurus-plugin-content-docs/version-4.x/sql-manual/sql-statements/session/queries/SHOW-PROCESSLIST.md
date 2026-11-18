@@ -44,7 +44,7 @@ SHOW [FULL] PROCESSLIST
 | State            | 스레드의 상태                                |
 | QueryId          | 현재 쿼리 문의 ID                           |
 | Info             | 일반적으로 스레드가 실행하는 문이 기록되며, 기본적으로 처음 100자만 표시됩니다.         |
-| FE               | 연결이 있는 FE(4.0.0부터) |
+| FE               | 연결이 있는 FE |
 
 주요 Command 유형은 다음과 같습니다:
 

@@ -44,7 +44,7 @@ SHOW [FULL] PROCESSLIST
 | State            | State of thread                                |
 | QueryId          | ID of the current query statement                           |
 | Info             | Generally, the statement executed by the thread is recorded, and only the first 100 characters are displayed by default         |
-| FE               | The FE that the connection is on (since 4.0.0) |
+| FE               | The FE that the connection is on |
 
 Common Command types are as follows:
 
