@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/paimon-catalog/doris-type-mapping",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/paimon-catalog/doris-type-mapping.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/paimon-catalog/doris-type-mapping.md",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "603230759e638480b6dc920c5d0c9771bae6bf89f4e81b67051a8153bbf7cb67",
+    "sourceTechnicalHash": "328a5855fbc029abcf25bbbf7ae6b29136b3d07a67c13f444313ca807133bbba",
+    "targetHash": "4d06cb82c082fe1de0769648e1449c0787f821f04532eb0256914647849bc3c1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T05:39:38.427Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "603230759e638480b6dc920c5d0c9771bae6bf89f4e81b67051a8153bbf7cb67",
+      "targetHash": "4d06cb82c082fe1de0769648e1449c0787f821f04532eb0256914647849bc3c1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.1.5\",\"4.2\",\"4.2\",\"4.2\",\"6\"]; received [\"4.1.5\",\"4.2\",\"4.2\",\"4.2\",\"6\",\"6\"]\nprotected node 2: expected [\"inlineCode\",null,null,\"VARCHAR(N)\"]; received [\"inlineCode\",null,null,\"N <= 65533\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"N <= 65533\"]; received [\"inlineCode\",null,null,\"VARCHAR(N)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"DATETIME(P)\"]; received [\"inlineCode\",null,null,\"P <= 6\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"P <= 6\"]; received [\"inlineCode\",null,null,\"DATETIME(P)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/lakehouse/catalogs/paimon-catalog/doris-type-mapping.md",
+        "blob": "4da8d128642d1caffaca78ab91d2e26ef90cc7b9"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/paimon-catalog/doris-type-mapping.md",
+        "blob": "ebf11e5508b576a94b0c8d2af217de3e6a7e36ee"
+      }
+    }
+  }
+}

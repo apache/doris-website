@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/hive-catalog/doris-type-mapping",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/hive-catalog/doris-type-mapping.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/hive-catalog/doris-type-mapping.md",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "cf102ddfeaf2c88817c3b16a1db1387e7a3e148a5f034fe282dfc6ef156b0d66",
+    "sourceTechnicalHash": "748b106e7178b222ca8093abc016e385cf8bfe94fd0bae4937ed127f129ffffc",
+    "targetHash": "11d9b8ce8b7a53e3195a7239552ee9a5b6cbec17a7cfea7ec47e463fb47ca121",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T05:06:31.298Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cf102ddfeaf2c88817c3b16a1db1387e7a3e148a5f034fe282dfc6ef156b0d66",
+      "targetHash": "11d9b8ce8b7a53e3195a7239552ee9a5b6cbec17a7cfea7ec47e463fb47ca121",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/lakehouse/catalogs/hive-catalog/doris-type-mapping.md",
+        "blob": "baaf40f2f85e0d903fc552cc6550411be738a68f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/hive-catalog/doris-type-mapping.md",
+        "blob": "c5cee00ca0188d11760c98e6c775abf67ce5f4bd"
+      }
+    }
+  }
+}

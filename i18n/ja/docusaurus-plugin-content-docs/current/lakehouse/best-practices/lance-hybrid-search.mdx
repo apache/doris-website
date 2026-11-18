@@ -1,0 +1,199 @@
+---
+{
+    "title": "Lance ハイブリッド検索の性能最適化のベストプラクティス",
+    "language": "ja",
+    "description": "Apache Doris で Lance のフィルタ付きベクトル検索と全文検索を調整するために、インデックスのカバレッジを揃え、セグメントのサイズを決め、共有キャッシュを配分し、クエリ Profile を診断します。"
+}
+---
+
+Lance でのベクトル検索や全文検索にスカラー条件を組み合わせる場合に、このガイドを使用してください。フィルタの配置、インデックスセグメントの構成、フィルタ処理の重複を見つける方法を説明します。ここでいうハイブリッド検索は、検索とスカラーフィルタリングの組み合わせを指します。ベクトル検索と全文検索の TVF を別々に呼び出しても、両者のランキングが自動的に統合されるわけではありません。
+
+:::note
+Lance Catalog は実験的な機能で、Apache Doris 4.2 以降でサポートされています。まず [Lance Catalog](../catalogs/lance-catalog.mdx) を参照してアクセスを設定し、リーダーとライターの互換性要件を確認してください。Doris は既存の Lance インデックスを読み取ります。インデックスの構築と保守には、互換性のある Lance ツールを使用してください。最新の Lance SDK やアップストリームの提案にある機能が、使用中の Doris ビルドに同梱されたリーダーでサポートされるとは限りません。
+:::
+
+## 1. 候補生成に必要なフィルタを検索の内部に配置する {#candidate-filters}
+
+整数の `id`、文字列の `category` と `content`、四次元ベクトルの `embedding` を含む設定済みのテーブルでは、候補生成に影響させる必要がある条件を TVF の `filter` パラメータに指定します。ベクトルインデックスは次元数と距離尺度が一致している必要があり、テキスト列にはコミット済みの FTS インデックスが必要です。
+
+```sql
+SELECT id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1,0.2,0.3,0.4]",
+    "metric" = "l2",
+    "top_k" = "20",
+    "filter" = "category = 'book'",
+    "use_index" = "true"
+)
+ORDER BY _distance ASC, id;
+```
+
+このクエリは、条件に一致する行から最大 20 件の近傍を検索します。これは近似検索であり、20 行が返っても再現率が保証されるわけではありません。フィルタ付きの全文検索は次のとおりです。
+
+```sql
+SELECT id, _score
+FROM full_text_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "content",
+    "query" = "storage engine",
+    "query_type" = "match",
+    "operator" = "and",
+    "top_k" = "20",
+    "filter" = "category = 'book'",
+    "coverage_mode" = "strict"
+)
+ORDER BY _score DESC, id;
+```
+
+このクエリは、一致する文書を BM25 の順位に従って最大 20 件返します。外側の `WHERE category = 'book'` は意味が異なります。Doris は、Lance が生成した候補をグローバル TopN の前にフィルタリングします。除外された候補は自動的には補充されません。`EXPLAIN` で条件が Doris Scan オペレーターの内部に表示される場合でも、検索後に適用する意図がある条件だけを TVF の外側に配置してください。
+
+## 2. 並列処理の単位を理解する {#execution-and-splits}
+
+```text
+Query snapshot
+  -> FE plans physical search-index segment splits
+  -> Each split: scalar Prefilter -> vector or full-text candidates
+  -> Doris residual filtering -> local TopN -> global TopN
+  -> Optional deferred fetch of output columns
+```
+
+| クエリの経路 | Split の基準 | 影響 |
+|---|---|---|
+| インデックスを使うベクトル検索 | 選択された物理ベクトルインデックスのセグメント。カバーされない Fragment には Flat Search の Split が割り当てられる | スカラーインデックスのセグメントが、ベクトルクエリの Split 数を独立に決めることはありません。インデックスのないデータがレイテンシーを左右する場合があります。 |
+| 全文検索 | 選択された物理 FTS インデックスのセグメント | デフォルトの `strict` カバレッジでは、カバーされない Fragment があるとクエリを拒否します。`index_only` ではそれらを除外します。全文検索には Flat Search へのフォールバックがありません。 |
+| 通常のスカラースキャン | 独自のスキャン計画。スカラーインデックスのセグメントや Fragment のグループを使う場合がある | スカラー条件だけのクエリ計画から、フィルタ付きベクトルクエリの並列度を推測しないでください。 |
+
+`lance_fragments_per_split` が制御するのは通常の Fragment スキャンのグループ分けであり、物理ベクトルインデックスのセグメント数ではありません。Pipeline インスタンスや Scanner の同時実行数を増やしても、プランナーが生成した数を超えるベクトルセグメントの Split は作れません。Lance Scanner は内部でも処理を並列実行できるため、Doris Scanner 一つが CPU スレッド一つに相当するわけでもありません。
+
+検索 Split が `S` 個ある場合、それぞれが返せる候補は最大 `top_k + offset` 件です。したがって、残余フィルタリングとグローバル TopN の前の候補数の上限は `S * (top_k + offset)` です。セグメントを増やすと処理を分散しやすくなる一方、セグメントごとの初期化、フィルタリング、候補のマージ、同時実行時のメモリ需要も増えます。
+
+## 3. セグメント数ではなく Fragment のカバレッジを揃える {#fragment-alignment}
+
+Fragment はデータの単位です。インデックスセグメントは、一組の Fragment をカバーする独立したインデックスです。論理インデックスは、一つのインデックス名の下に物理セグメントをまとめます。IVF パーティション、BTree ページ、FTS の Posting ブロックはインデックス内部の単位であり、いずれも Doris の検索 Split を定義しません。
+
+次の例では、八つのデータ Fragment を使用します。
+
+| レイアウト | ベクトルのカバレッジ | スカラーのカバレッジ | Fragment 単位で読み取るスカラーリーダーにおけるフィルタリングへの影響 |
+|---|---|---|---|
+| 境界が一致 | `V0={0,1,2,3}`, `V1={4,5,6,7}` | `B0={0,1,2,3}`, `B1={4,5,6,7}` | 各ベクトル Split に必要なのは、対応するスカラーセグメントだけです。 |
+| スカラー側が細かい | 上と同じ | Fragment ごとに一つ、計八つのセグメント | 各 Split は四つのスカラーセグメントを選択します。ベクトル側の境界をまたぐセグメントはありません。 |
+| スカラー側が粗い | 上と同じ | `B0={0,1,2,3,4,5,6,7}` | 両方のベクトル Split が同じスカラーセグメントを検索する可能性があります。 |
+| 数は同じでも境界が交差 | 上と同じ | `B0={0,1,4,5}`, `B1={2,3,6,7}` | 両方のスカラーセグメントが、両方のベクトル Split と重なります。数が同じでも境界が揃うとは限りません。 |
+
+Fragment 単位のプルーニングでは、重なりのないスカラーセグメントをスキップします。一部でも重なれば、そのセグメントは残ります。述語の評価前に小さな BTree を自動で再構築したり、すべての Posting リストを切り分けたりはしません。繰り返しのクエリではキャッシュ済みのインデックス内容を再利用できても、検索と行 ID 集合の構築は繰り返される場合があります。残された BTree セグメントへのルックアップが、そのすべてのページをスキャンするとは限りません。コストは述語と一致件数によって変わります。
+
+:::important
+この効果は実際のリーダー経路に依存します。Fragment 単位でスカラーインデックスを読み込む Lance の V2 filtered-read 経路では、無関係なスカラーセグメントを検索前に除外できます。従来の V1 データファイル経路では、論理スカラーインデックスをより広い範囲で評価してから行 ID を制限する場合があります。ここでの V1/V2 は **データファイル形式** を指し、Doris のリリースやベクトルインデックスの種類ではありません。すべてのリーダーバージョンや FTS 経路で同じプルーニングが行われると仮定せず、クエリの種類ごとに計画と Profile を確認してください。
+:::
+
+頻繁に組み合わせて使う列については、ベクトル、スカラー、FTS インデックスの構築に同じ Fragment グループを使用します。スカラーセグメントは、それが対応する検索セグメントの内側に収まるなら、さらに細かくできます。ベクトルと FTS で異なるセグメントサイズが必要な場合は、共通の基本グループをそれぞれまとめ、スカラーセグメントが双方の境界をまたがないようにすることを検討してください。これは重なりを減らすためのレイアウト方針であり、すべての実行経路がその利点を利用する保証はありません。
+
+### 初期の粒度を選ぶ {#choose-a-starting-granularity}
+
+セグメントあたりの行数やバイト数に、普遍的な最適値はありません。ワークロードを実行できる BE の数を起点に、再現率と目標の同時実行数を固定して、BE あたり均等な検索セグメントを一つ置く構成と、少数のセグメントを置く構成を比較してください。これらは実験の出発点であり、必須の比率ではありません。
+
+| ワークロード | 構築時の優先事項 | 測定すべき主なトレードオフ |
+|---|---|---|
+| 低レイテンシーが必要なフィルタ付きベクトル検索 | 均等なベクトルグループと、その内側に収まるスカラーのカバレッジ | 最も遅い Split と、重複するフィルタリングや候補の増加によるコスト |
+| 同時実行数の多い検索 | クエリごとの Split を増やしすぎず、再利用できるパーティションを維持する | QPS、P95 レイテンシー、CPU キュー、ピークメモリを併せて測る |
+| 広範囲のスカラーフィルタや頻出する FTS 用語 | 一致件数、テキスト長、Posting のサイズを考慮してグループを均等にする | 行数が等しくても、フィルタリングや検索のコストは等しくならない場合がある |
+| 頻繁なデータ追加 | 同じ新規 Fragment グループに対して、関連するインデックスをすべて構築する | 新しいデータのカバレッジと、小さなセグメントの蓄積 |
+| 個々の Fragment が非常に大きい | インデックス構築前にデータファイルのサイズを設計する | Fragment 単位のカバレッジでは、一つの Fragment を互いに重ならない複数のカバレッジグループに分割できない |
+
+行数に加えて、エンコード後のベクトルとグラフのサイズ、スカラー値の分布、テキストと Posting のサイズも測定してください。各ベクトルセグメントには、その IVF/PQ 設定の学習に十分なデータを確保します。`nlist`（IVF パーティション数）と物理セグメント数は別々に決める項目です。一方を変更しても、他方は自動的には調整されません。
+
+## 4. 共通のグループ分け計画から関連インデックスを構築する {#build-aligned-indexes}
+
+Doris には、列間でインデックスを自動的に揃えるパラメータはありません。互換性のある SDK がサポートする場合は、Lance の分散構築 API を使用してください。次の例は処理を調整するためのパターンであり、そのまま実行できるデータセット生成器やベンチマーク設定ではありません。
+
+```python
+# ds is an existing LanceDataset at the chosen build snapshot.
+# groups contains non-empty, disjoint lists of actual fragment IDs.
+# vector_params and fts_params are validated for the schema and SDK version.
+# Keep writes and compaction paused for this simple coordinator example.
+visible = {fragment.fragment_id for fragment in ds.get_fragments()}
+assigned = [fragment_id for group in groups for fragment_id in group]
+assert groups and all(groups)
+assert len(assigned) == len(set(assigned))
+assert set(assigned) == visible
+
+specs = [
+    ("embedding_idx", "embedding", "IVF_PQ", vector_params),
+    ("category_idx", "category", "BTREE", {}),
+    ("content_idx", "content", "INVERTED", fts_params),
+]
+segments = {name: [] for name, _, _, _ in specs}
+for fragment_ids in groups:
+    for name, column, index_type, params in specs:
+        segment = ds.create_index_uncommitted(
+            column,
+            index_type,
+            name=name,
+            fragment_ids=fragment_ids,
+            **params,
+        )
+        segments[name].append(segment)
+
+# These are three separate commits, not an atomic multi-index publication.
+for name, column, _, _ in specs:
+    ds.commit_existing_index_segments(name, column, segments[name])
+```
+
+入力は次の手順で準備し、検証します。
+
+1. **構築計画を固定する。** 一つのスナップショットから実際の Fragment ID を列挙します。ID は連続しているとは限りません。行数と推定インデックスサイズに基づいてグループを均等にし、関連するすべての列でそのグループを正確に再利用します。分散ワーカーはすべて同じ構築バージョンを開く必要があります。
+2. **互換性のある設定を選ぶ。** IVF_PQ には、ベクトルの次元数とサンプルサイズに適した距離尺度、`num_partitions`、`num_sub_vectors` を指定します。同じ論理インデックス内では設定を統一します。FTS ではアナライザーとトークナイザーの設定を統一し、フレーズ検索が必要な場合は `with_position` を有効にします。
+3. **ベクトルモデルの方針を決める。** サポートされている複数セグメントの構築では、セグメントごとに独立して学習できます。後で物理セグメントをマージする際にモデルの共有が必要なら、各ワーカーに同じ IVF セントロイドと PQ コードブックを渡します。独立して学習したセグメントを無条件にマージしたり、マージ後も HNSW グラフが保持されると仮定したりせず、SDK がサポートする手順を確認してください。
+4. **構築してから公開する。** 構築ごとに固有の UUID を持つ物理セグメントが返されます。成功した出力を集め、カバレッジと互換性を確認してから、各論理インデックスをコミットします。異なる列やワーカーの出力に同じ物理 UUID を割り当てないでください。この例は新しい論理インデックス名を前提としています。置き換え、再試行、失敗時のクリーンアップには、別途コーディネーターの方針が必要です。
+5. **完成した Manifest を確認する。** 各インデックスについて、セグメントから Fragment への実際のカバレッジを計画したグループと比較し、欠落や重複がないか確認します。セグメント数が一致するだけでは不十分です。Lance のインデックスメタデータを使用してください。Filesystem Catalog のテーブルに対する Doris の `SHOW INDEX` は、論理インデックス名、種類、フィールドの確認には役立ちますが、このカバレッジ監査の代わりにはなりません。
+
+共通のグループ分け計画を使っても、すべてのワーカーの出力を一つのセグメントにマージする必要はありません。マージすると、維持したかった境界が失われます。構築とコミットの API、およびサポートされるマージ手順については、[Lance の分散インデックス構築](https://lance.org/guide/distributed_indexing/) を参照してください。
+
+### 保守中も境界を揃える {#preserve-alignment-during-maintenance}
+
+- 同じ新規 Fragment グループに対し、関連するベクトル、スカラー、FTS のセグメントを追加します。公開のたびに、クエリで使用するスナップショットのカバレッジを確認してください。データの追加からインデックスの公開が完了するまでの間、FTS の `strict` モードではクエリが拒否される場合があります。
+- コンパクション、データの書き換え、インデックスの最適化はレイアウト変更として扱います。操作やリーダーバージョンによって、インデックスが再マッピングまたは再構築される場合があります。以前の境界が維持されると仮定せず、処理後のカバレッジを確認してください。
+- 一つのレイアウト計画に従って小さなグループを統合します。混合クエリの性能が境界の一致に依存する場合、インデックスごとに無関係なグループへ独立して最適化しないでください。
+- オンライン保守では、スナップショットと競合の処理、および復旧に対応するコーディネーターを使用します。インデックスごとの個別のコミットでは、すべての列を原子的に切り替えることはできません。TVF は最新の `main` スナップショットを読み取ります。`table` 引数で過去のバージョンやタグを選ぶことはできません。
+
+### 論理インデックスとアップストリームの計画 {#logical-indexes-and-upstream-planning}
+
+Lance の[インデックス形式](https://lance.org/format/index/)は、論理インデックスと物理セグメントを定義しています。[分散インデックスに関する追跡 Issue](https://github.com/lance-format/lance/issues/6309) では、インデックスの種類をまたぐ共通のセグメントライフサイクルが追跡されています。このモデルは、異なる列に**同一の Fragment 境界を要求しません**。列間のグループ分けと保守は引き続きオーケストレーション側の責任です。アップストリームの計画を、Doris に自動的な境界合わせ機能があるという意味に捉えないでください。
+
+## 5. フィルタとメモリを併せて調整する {#workload-tuning}
+
+| 観測結果 | 次に試すこと | 正確性またはリソース上の制約 |
+|---|---|---|
+| 選択性の非常に高いフィルタで、ベクトル検索の結果が少ない、または再現率が低い | フィルタの配置とインデックスのカバレッジを確認し、Probe の設定と、範囲を限定したデータセットでの厳密検索による基準値を比較する | レイテンシーを下げるために Probe を減らすと、再現率が低下する場合があります。Probe を増やしても、フィルタに一致しない行は結果に含められません。 |
+| 広範囲のフィルタで大きな Prefilter 集合が生じる | 境界を揃えたレイアウトと、スカラー述語の実際の選択性を比較する | インデックスを使っても、多数の一致する行 ID を具体化するコストはなくなりません。 |
+| ベクトル Split の増加に伴い、スカラー処理が繰り返される | セグメントのカバレッジの交差とリーダー経路を比較する | キャッシュが温まっていても、Split を増やすとフィルタリングが増幅する場合があります。 |
+| キャッシュが冷えた状態のクエリが遅い | 代表的なベクトルと用語を使い、コールド実行とウォーム実行の Profile を比較する | 一つのクエリをウォームアップしても、本番のワーキングセット全体はカバーできません。 |
+| キャッシュが温まった状態で、混合トラフィックが遅くなる | 目標の同時実行数で共有キャッシュのミスと CPU キューを測定する | 同じ BE 上で、スカラー、ベクトル、FTS のインデックス内容が同一の Session インデックスキャッシュ容量を奪い合う場合があります。 |
+| `top_k` が大きい、`offset` が深い、または出力が広い | 意味を変えずに済む範囲で要求候補数を減らし、遅延取得を調べる | 候補ヒープ、行 ID マスク、結果の精緻化、取得バッファにもクエリメモリが必要です。 |
+
+再利用するインデックスのワーキングセットを**全種類合わせて**見積もり、同時実行するクエリのメモリに余裕を残してください。キャッシュ容量はプロセスメモリの上限ではなく、メタデータキャッシュを増やしてもインデックスキャッシュは増えません。インデックス別のデータ量の計算式、HNSW グラフのコスト、キャッシュの適用範囲、Doris BE の設定例については、[Lance クエリのベストプラクティス](doris-lance.mdx) を参照してください。
+
+## 6. 計画と Profile で検証する {#validation}
+
+同じクエリ群、データセットのスナップショット、インデックスの種類と設定、`top_k`、再現率の目標を使って比較します。一度に変更するレイアウトまたはパラメータは一つにしてください。選択性の高いフィルタと広範囲のフィルタ、多様なベクトルや用語、コールド実行とウォーム実行、想定する同時実行数を含めます。P50/P95、スループット、結果件数、再現率、BE ごとのピークメモリを記録してください。
+
+| 段階 | 確認する情報 | 解釈 |
+|---|---|---|
+| FE のメタデータと計画 | `Execution Summary` → `Lance Metadata Metrics` の `MetadataReadTime`、`IndexMetadataReadTime`、`SplitPlanningTime` と、対応する `Calls` | Catalog メタデータへのアクセスと Split の計画を、BE での検索と区別します。メタデータの合計時間には内訳の処理時間が含まれます。 |
+| 計画とカバレッジ | `EXPLAIN` の `lanceSearchIndexSegments`、`lanceSearchIndexFragments`、`lanceSearchUnindexedFragments`。`LanceSearchPlan` の `LancePlannedIndexSegmentCount`、`LancePlannedIndexedFragmentCount`、`LancePlannedFlatSearchFragmentCount` | これらは計画または割り当てられた検索処理を示し、完了した検索を示すものではありません。Flat Search の件数はベクトルクエリに適用され、FTS には適用されません。 |
+| リーダーの初期化とバッチ読み取り | `LanceTiming` の `LanceDatasetOpenTime`、`LanceScannerConfigureTime`、`LanceScannerNextTime`、`LanceArrowToDorisBlockTime` | オープンと設定、Lance による読み取り、Doris 形式への変換を区別します。バッチ読み取り時間には内部の検索、I/O、デコード、待機が含まれます。 |
+| 行 ID Prefilter | `LanceScan` の `RowIdPrefilterLoads`、`RowIdPrefilterInputRows`、`RowIdPrefilterInputBatches`、`RowIdPrefilterIds`、`RowIdPrefilterLoadTime`、`RowIdPrefilterInputTime`、`RowIdPrefilterBuildTime` | 入力待機と読み取り、マスクの構築は、総ロード時間の一部です。これらは行 ID ローダーを表し、すべてのスカラー述語や最終的な候補集合を表すものではありません。 |
+| スカラーセグメントの経路 | `LanceScalarIndex` の `LanceScalarIndexSegmentsRequested`、`LanceScalarIndexSegmentsSearched`、`LanceScalarIndexSegmentFallbacks`、`LanceScalarIndexCandidateRows`、`LanceScalarIndexCandidateEvaluationTime`、`LanceScalarIndexSegmentSearchTime` | 候補評価時間にはセグメント検索時間が含まれます。候補数は Fragment による制限と完全なフィルタリングの前に数えられます。繰り返されたタスクで候補が再度数えられる場合があり、件数を取得できないとゼロのままになる場合もあります。 |
+| インデックスの再利用と I/O | `LanceIndex` の `LanceIndexCacheHits`、`LanceIndexCacheMisses`、`LanceIndexObjectLoads`、`LanceIndexComponentsLoaded`、`LanceIndexComparisons`。`LanceIO` の `LanceIOReadBytes`、`LanceIOReadOps`、`LanceIOReadRequests` | オブジェクトやコンポーネントの読み込み、キャッシュ参照、検索処理を区別します。読み込み回数はキャッシュミスの回数ではなく、実行時の I/O もリモート通信量の全体を表すものではありません。 |
+| ベクトルパーティションの選択と検索 | `LanceIVFPartitionsConsidered`、`LanceIVFPartitionSelectionTime`、`LanceIndexPartitionsSearched`、`LanceVectorIndexDeltasSearched`、`LanceIndexPartitionLoadTime`、`LanceIndexSearchTime`、`LanceIndexDistanceTopKTime` | パーティションの選択と実際の検索を区別します。距離計算と Top-K の時間にはフィルタリングやヒープ操作が含まれ、検索時間とも重なります。FTS でも検索したパーティション数が報告されます。 |
+| 待機と同時実行 | `LanceIndexPrefilterWaitTime`、`LanceIndexCpuQueueWaitTime`、`LanceScanTaskWaitTime` | インデックスの Prefilter 待機、CPU タスクキューの待機、FilteredRead タスクの待機を区別します。いずれも I/O 待機全体や Doris のスケジューリング時間全体を表しません。 |
+| 出力列の取得 | Row ID Fetch/Materialization の情報である `LanceRowIdFetchCalls`、`LanceRowIdFetchRows`、`LanceRowIdFetchTotalTime`、`LanceRowIdTakeReadTime`、`LanceArrowToDorisBlockTime` と、データキャッシュのバイト数カウンター | 取得時間の合計には読み取りと変換の内訳が含まれ、別の統計経路を使用します。エクスポートされた同じ値を、独立した処理時間として再度加算しないでください。 |
+| クエリ全体のレイテンシー | 最も遅い Scanner、依存関係の待機、FE の待機・取得・書き込み、クライアントで測定した経過時間 | 重なりのあるオペレーターや並列 Scanner すべての時間を足してクエリのレイテンシーとしないでください。 |
+
+指標の定義と適用範囲については [Lance Query Profile のリファレンス](lance-query-profile.md)、Dataset のデータキャッシュのバイト数と BE 全体の Session 指標については [キャッシュの有効性の確認](../catalogs/lance-catalog.mdx#checking-cache-effectiveness) を参照してください。クエリ単位のインデックスキャッシュカウンターは、Session の合計値の差分ではありません。
+
+Profile の詳細度は、稼働中の FE/BE と同梱された Lance の計測機能に依存します。Scanner の指標は事前に登録されているため、値がゼロでも、ネイティブ経路からその指標が報告されなかっただけの可能性があります。また、実行時のコールバックにはストリームの完了が必要です。失敗、キャンセル、早期終了したスキャンでは、件数が不完全になる場合があります。値が欠けている、またはゼロであることだけを根拠に、インデックスやフィルタが使われなかったと判断しないでください。`LanceScannerNextTime` は内部検索や待機の計測時間と重なります。この値が大きいだけでは、ストレージがボトルネックとは判断できません。これらの指標で読み取り区間を説明できない場合は、残りの時間をストレージに起因すると判断する前に CPU/I/O のトレースを取得してください。
+
+フィルタのないベクトルクエリでは、セグメント単位の最適化を備えたリーダーを使用し、選択されたインデックスセグメントがスキャン対象の Fragment 範囲に完全に収まる場合、すべての行 ID の列挙を回避できます。実際のスカラー述語は引き続き評価が必要で、削除や可視性の処理も残る場合があります。境界を揃えることで不要な処理は減らせますが、フィルタ付き検索で Prefilter のコストがゼロになるとは限りません。
