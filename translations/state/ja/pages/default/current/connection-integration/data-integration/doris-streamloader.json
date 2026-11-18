@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/connection-integration/data-integration/doris-streamloader.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/doris-streamloader.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "7acc01b42a31a5bfce304c0b2d3358723f846feb2e507c09456d4c021b7d4223",
-    "sourceTechnicalHash": "a86693a509552566f5e0e82d32185567ef3d6d7be9f285772214d9680fa42b21",
-    "targetHash": "016c16c7404dc2f7b444141da133a01f2d2510021568af7bf187f7a508c08bb9",
+    "sourceCommit": "e86ca9bf114ced02e9b5f884e70e307aa90236c0",
+    "sourceHash": "d032584a2eacb6524c6b53bdb7bc902c86e0d7565e162217b10c3e5178cd5de7",
+    "sourceTechnicalHash": "f636b725edc556d70c68d1284dcf68be1196cb6f62f678ad33e4116ff8f44bd4",
+    "targetHash": "b4e94eac6e3a13000142a16b8ed8685fd87fea40e038fdccb25065093b3288de",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T12:26:49.466Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-16T05:52:00.684Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d032584a2eacb6524c6b53bdb7bc902c86e0d7565e162217b10c3e5178cd5de7",
+      "targetHash": "b4e94eac6e3a13000142a16b8ed8685fd87fea40e038fdccb25065093b3288de",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"102400\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"3\",\"3\",\"3.0.0\",\"3.0.1\",\"3.0.2\",\"4\",\"4\",\"4\",\"5\",\"8\",\"8\",\"900\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"102400\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"3\",\"3\",\"3.0.0\",\"3.0.1\",\"3.0.2\",\"4\",\"4\",\"4\",\"5\",\"5\",\"8\",\"8\",\"900\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/connection-integration/data-integration/doris-streamloader.md",
+        "blob": "9f05c38779b5560e510590b2d3243733d5008f5c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/connection-integration/data-integration/doris-streamloader.md",
+        "blob": "3608942c052e4f4a61ccaafa141d357a04b31026"
+      }
+    }
   }
 }
