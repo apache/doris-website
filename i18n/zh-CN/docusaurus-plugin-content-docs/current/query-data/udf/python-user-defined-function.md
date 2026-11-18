@@ -57,6 +57,20 @@ Python UDF/UDAF/UDTF 是 Apache Doris 提供的自定义函数扩展机制，允
 所有创建语句都必须显式指定 `runtime_version`，并填写完整版本号（如 `"3.10.12"`），不能只写主次版本号（如 `"3.10"`），否则函数调用时会报错。
 :::
 
+## 模块包命名限制 {#module-package-naming}
+
+模块模式的 Python UDF、UDAF 和 UDTF，其 ZIP 内顶层 Python 模块和目录的名称，必须与所选 `runtime_version` 环境中的 Python 标准库、已安装第三方包保持不同。
+
+顶层名称指 ZIP 最外面一层对应的导入名称：`numpy.py` 和 `numpy/` 目录的顶层名称都是 `numpy`。检查覆盖所有顶层模块和目录，包括入口函数没有导入的模块。
+
+- 运行环境中可用的标准库名称，如 `types`、`json`、`logging`、`os`、`sys`、`zoneinfo`，属于保留名称。
+- 已安装第三方包的导入名称，如 `numpy`、`pandas`、`pyarrow`，属于保留名称。额外安装的包也会保留各自的导入名称。
+- 可以在名称唯一的顶层包内部使用 `my_udf/numpy.py`，通过 `my_udf.numpy` 导入，或者在 `my_udf` 内部使用相对导入。
+
+Doris 在 worker 加载用户代码前检查名称，检查范围包含尚未导入的运行环境包。发生冲突时，函数调用报错，例如 `Python UDF package has conflicting top-level module names: numpy, zoneinfo`。需要重命名冲突模块，或者将其放入名称唯一的包，更新 `symbol` 和导入语句，然后重新上传 ZIP。运行环境依赖继续使用原有的模块缓存。
+
+升级到执行该检查的版本之前，需要重新打包顶层名称存在冲突的已有 ZIP。各 BE 节点应安装相同的依赖，保证名称限制一致。
+
 ## Python UDF（标量函数）
 
 <!-- 知识类型: 操作指南 -->
@@ -232,7 +246,7 @@ zip python_udf_scalar_ops.zip python_udf_scalar_ops.py utils.py helper.py ...
 - 若指定了 `package_name`，则整个路径需构成一个合法的 Python 导入路径，且 ZIP 包结构必须与该路径一致。
 
 :::caution Warning
-命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常。
+顶层模块和目录的名称必须遵守[模块包命名限制](#module-package-naming)。Doris 在加载用户代码前拒绝存在名称冲突的 ZIP。
 :::
 
 **示例 A：无包结构（两段式）**
@@ -1448,7 +1462,7 @@ zip stats_udaf.zip stats_udaf.py
     - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `ClassName`。
 
 :::caution Warning
-命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常。
+顶层模块和目录的名称必须遵守[模块包命名限制](#module-package-naming)。Doris 在加载用户代码前拒绝存在名称冲突的 ZIP。
 :::
 
 **步骤 5：创建 UDAF 函数**
@@ -2415,7 +2429,7 @@ zip text_udtf.zip text_udtf.py
     - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `function_name`。
 
 :::caution Warning
-命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常。
+顶层模块和目录的名称必须遵守[模块包命名限制](#module-package-naming)。Doris 在加载用户代码前拒绝存在名称冲突的 ZIP。
 :::
 
 **步骤 5：创建 UDTF 函数**

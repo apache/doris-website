@@ -57,6 +57,20 @@ Before creating any Python UDF/UDAF/UDTF, complete the following preparations:
 All CREATE statements must explicitly specify `runtime_version` with a complete version number (such as `"3.10.12"`). You cannot specify only the major and minor version (such as `"3.10"`); otherwise the function call will fail.
 :::
 
+## Module package naming {#module-package-naming}
+
+For module-mode Python UDFs, UDAFs and UDTFs, the top-level Python module and directory names in the ZIP must be distinct from the Python standard library and third-party packages installed in the selected `runtime_version` environment.
+
+The top-level name is the import name directly under the ZIP root: `numpy.py` and a `numpy/` directory both use the name `numpy`. The restriction covers every top-level module and directory, including those the entry function never imports.
+
+- Standard-library names such as `types`, `json`, `logging`, `os`, `sys` and `zoneinfo` are reserved when available in the runtime.
+- Installed third-party import names such as `numpy`, `pandas` and `pyarrow` are reserved. Additional installed packages reserve their own import names.
+- Nested modules such as `my_udf/numpy.py` are allowed under a uniquely named top-level package. Import that module as `my_udf.numpy` or use a relative import inside `my_udf`.
+
+Doris checks the names before a worker loads user code, including runtime packages that have not yet been imported. A conflict fails the function call with an error such as `Python UDF package has conflicting top-level module names: numpy, zoneinfo`. Rename the conflicting modules or move them into a uniquely named package, update `symbol` and imports, and upload the ZIP again. Runtime libraries retain their original cached modules.
+
+Existing ZIPs with conflicting top-level names must be repackaged before upgrading to a build that enforces this check. Keep the installed dependencies consistent across BE nodes so the same names are reserved on every node.
+
 ## Python UDF (Scalar Function)
 
 <!-- Knowledge type: Operations guide -->
@@ -232,7 +246,7 @@ Resolution rules:
 - When `package_name` is specified, the entire path must form a valid Python import path, and the ZIP package structure must match the path.
 
 :::caution Warning
-The namespace should be unique. Avoid names that collide with the Python standard library or common third-party libraries to prevent dependency conflicts and runtime exceptions caused by module shadowing.
+Top-level module and directory names must follow the [module package naming rules](#module-package-naming). Doris rejects conflicts before loading user code.
 :::
 
 **Example A: No package structure (two-part)**
@@ -1448,7 +1462,7 @@ Resolution rules:
     - If the result has **three or more** substrings, the first is `package_name`, the middle is `module_name`, and the last is `ClassName`.
 
 :::caution Warning
-The namespace should be unique. Avoid names that collide with the Python standard library or common third-party libraries to prevent dependency conflicts and runtime exceptions caused by module shadowing.
+Top-level module and directory names must follow the [module package naming rules](#module-package-naming). Doris rejects conflicts before loading user code.
 :::
 
 **Step 5: Create the UDAF**
@@ -2415,7 +2429,7 @@ Resolution rules:
     - If the result has **three or more** substrings, the first is `package_name`, the middle is `module_name`, and the last is `function_name`.
 
 :::caution Warning
-The namespace should be unique. Avoid names that collide with the Python standard library or common third-party libraries to prevent dependency conflicts and runtime exceptions caused by module shadowing.
+Top-level module and directory names must follow the [module package naming rules](#module-package-naming). Doris rejects conflicts before loading user code.
 :::
 
 **Step 5: Create the UDTF**
