@@ -44,10 +44,10 @@ SHOW [FULL] PROCESSLIST
 | Time             | Time when the previous command is submitted to the current status, in seconds                 |
 | State            | State of thread                                |
 | QueryId          | ID of the current query statement                           |
-| TraceId          | Trace ID that the client set for the current query; empty if none |
+| TraceId          | Trace ID that the client set for the session with `SET session_context = 'trace_id:<id>'`; empty if not set |
 | Info             | Generally, the statement executed by the thread is recorded, and only the first 100 characters are displayed by default         |
 | FE               | The FE that the connection is on |
-| CloudCluster     | Compute group of the connection in compute-storage decoupled mode; NULL if none |
+| CloudCluster     | In compute-storage decoupled mode, the compute group that was selected automatically for the connection; NULL otherwise, including when the group comes from a session setting or the user's default compute group |
 
 Common Command types are as follows:
 

@@ -41,10 +41,10 @@ SHOW [FULL] PROCESSLIST
 | Time | 上一条命令提交到当前状态的时间，单位为秒                 |
 | State | 线程的状态                                |
 | QueryId | 当前查询语句的 ID                           |
-| TraceId | 客户端为当前查询设置的 Trace ID，未设置时为空 |
+| TraceId | 客户端通过 `SET session_context = 'trace_id:<id>'` 为会话设置的 Trace ID，未设置时为空 |
 | Info | 一般记录的是线程执行的语句，默认只显示前 100 个字符         |
 | FE | 连接所在的 FE |
-| CloudCluster | 存算分离模式下连接所使用的计算组，没有时为 NULL |
+| CloudCluster | 存算分离模式下为连接自动选择的计算组；其他情况为 NULL，包括计算组来自会话设置或用户默认计算组时 |
 
 常见的 Command 类型如下：
 

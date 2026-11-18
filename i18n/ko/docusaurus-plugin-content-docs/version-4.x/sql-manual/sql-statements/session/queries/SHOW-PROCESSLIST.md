@@ -44,10 +44,10 @@ SHOW [FULL] PROCESSLIST
 | Time             | 이전 명령이 제출된 시점부터 현재 상태까지 경과한 시간(초)                 |
 | State            | 스레드의 상태                                |
 | QueryId          | 현재 쿼리 문의 ID                           |
-| TraceId          | 클라이언트가 현재 쿼리에 설정한 Trace ID이며, 설정하지 않은 경우 비어 있습니다 |
+| TraceId          | 클라이언트가 `SET session_context = 'trace_id:<id>'`로 세션에 설정한 Trace ID이며, 설정하지 않은 경우 비어 있습니다 |
 | Info             | 일반적으로 스레드가 실행하는 문이 기록되며, 기본적으로 처음 100자만 표시됩니다.         |
 | FE               | 연결이 있는 FE |
-| CloudCluster     | 스토리지-컴퓨트 분리 모드에서 연결이 사용하는 컴퓨트 그룹이며, 없으면 NULL입니다 |
+| CloudCluster     | 스토리지-컴퓨트 분리 모드에서 연결에 자동으로 선택된 컴퓨트 그룹이며, 그 외에는 NULL입니다. 세션 설정이나 사용자의 기본 컴퓨트 그룹을 사용하는 경우도 포함됩니다 |
 
 주요 Command 유형은 다음과 같습니다:
 
