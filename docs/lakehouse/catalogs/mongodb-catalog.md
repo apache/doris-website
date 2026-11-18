@@ -266,7 +266,7 @@ The default `mongodb_split_strategy=single` creates **one split per table scan**
 | `max_initial_file_split_num` | INT, `200` | Threshold in the shared size heuristic. |
 | `max_file_split_num` | INT, `100000` | Count cap; nonpositive removes the user cap, while internal limits remain. Also caps the frozen MongoDB plan in streaming mode. |
 
-Range reads require a qualified common snapshot, ordinary collection, and suitable visible index with the split field as its first key. Partial, sparse, hidden, hashed, or non-simple-collation indexes are not eligible. Boundary families are scalar ObjectId, signed int32/int64, or Date. Decimal/string/double values are not coerced into boundaries.
+Range planning requires a qualified common snapshot and ordinary collection. Multiple partitions additionally require a suitable visible index with the split field as its first key. Setting `max_file_split_num=1`, or a per-plan descriptor limit of one, keeps a single scan without a boundary probe. Partial, sparse, hidden, hashed, or non-simple-collation indexes are not eligible. Boundary families are scalar ObjectId, signed int32/int64, or Date. Decimal/string/double values are not coerced into boundaries.
 
 FE estimates a total from logical collection bytes and the target size, then reads at most 4096 fixed-width candidate values along the index at `T`. This is bounded index-prefix sampling, **not random sampling or schema inference**. It sorts the candidates, chooses quantile boundaries, and reserves a disjoint complement. The plan freezes before any split is published. Sampling affects balance, not coverage.
 

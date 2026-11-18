@@ -267,7 +267,7 @@ CROSS JOIN (SELECT count(*) n FROM mongo_catalog.analytics.orders) r;
 | `max_initial_file_split_num` | INT，`200` | 通用大小估算规则的阈值。 |
 | `max_file_split_num` | INT，`100000` | 数量上限，非正数取消用户上限但保留内部限制；流式模式也会限制 MongoDB 冻结计划的大小。 |
 
-Range 需要符合条件的共同快照、普通集合，以及以切分字段为首键的可见索引。Partial、sparse、hidden、hashed 和非 simple collation 索引不适用。边界类型支持标量 ObjectId、有符号 int32/int64、Date，不会将 Decimal、字符串或 double 强制转换为边界。
+Range 规划需要符合条件的共同快照和普通集合。生成多个分区还需要以切分字段为首键的可见索引；设置 `max_file_split_num=1`，或单个计划的描述符上限只能容纳一个分区时，保持 single 扫描，不进行边界探测。Partial、sparse、hidden、hashed 和非 simple collation 索引不适用。边界类型支持标量 ObjectId、有符号 int32/int64、Date，不会将 Decimal、字符串或 double 强制转换为边界。
 
 FE 按集合逻辑大小和目标大小估算总数，再沿索引在 `T` 下读取最多 4096 个固定宽度候选值。这是有界的索引前缀采样，**不是均匀随机采样，也不用于推断 Schema**。FE 排序候选值、选择分位点，并保留互斥的补集；完整计划在发布首个 split 前冻结。采样影响负载均衡，不决定数据覆盖范围。
 
