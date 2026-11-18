@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
-    "sourceHash": "de97f7d0b2319c502aa33ebe6553d92e0db0a546233e3838aae400d89a2cc5a7",
-    "sourceTechnicalHash": "97f2a3eebc1eee23ab8e7492c0b5469f4d5f3b9615b17b26a47ba9ab483147df",
-    "targetHash": "8a6421d178c99452930657235e1b14d3e2c149c1cdca4505954df1f26b41fa09",
+    "sourceCommit": "d8f1f2a5c7a8462cb16d49d71719bb7d8fce9c43",
+    "sourceHash": "60828ccfa1abd4c7c363446d5a65ab269801e09d3e279e092d22e932b0551a09",
+    "sourceTechnicalHash": "86fcefb8afe917f81601cda800812bbd752fe939f870f624193e856d6daa25ce",
+    "targetHash": "d53f6a9c4b3ad3756558ab58eac367d7caca5d75d033cd64183c123353b6ffd5",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-11-13T19:33:57.354Z",
+    "translatedAt": "2026-11-18T08:58:27.128Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,8 +22,8 @@
       "reason": "chinese-reference-changed",
       "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "de97f7d0b2319c502aa33ebe6553d92e0db0a546233e3838aae400d89a2cc5a7",
-      "targetHash": "8a6421d178c99452930657235e1b14d3e2c149c1cdca4505954df1f26b41fa09",
+      "sourceHash": "60828ccfa1abd4c7c363446d5a65ab269801e09d3e279e092d22e932b0551a09",
+      "targetHash": "d53f6a9c4b3ad3756558ab58eac367d7caca5d75d033cd64183c123353b6ffd5",
       "warnings": [],
       "history": [
         {
@@ -31,7 +31,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"AVAILABLE\"]; received [\"inlineCode\",null,null,\"kubectl get fdb\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"kubectl get fdb\"]; received [\"inlineCode\",null,null,\"AVAILABLE\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1000\",\"132\",\"17.6\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4.4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"7.1\",\"7.3.69\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1000\",\"132\",\"17.6\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4.4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"7.1\",\"7.3.69\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"fdb-single-config\"]; received [\"inlineCode\",null,null,\"fdb-system\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"fdb-system\"]; received [\"inlineCode\",null,null,\"fdb-single-config\"]"
             }
           ]
         },
@@ -44,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-        "blob": "19846e3aa259958a1031a63310830e81abd9e25e"
+        "blob": "34bedcb9b4525b99021742671fc6bff50cea6272"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-        "blob": "0ed0d2c753390f3940b12b96945419ff2852d331"
+        "blob": "8788faa3126c0451aabffe862a8d9a01b73b028c"
       }
     }
   }
