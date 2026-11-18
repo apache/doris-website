@@ -16,7 +16,7 @@ Use this guide when you are deciding how to model a new `VARIANT` workload. It h
 - If the JSON is very wide, should I start with default behavior, sparse columns, or DOC mode?
 - Which settings should I leave at defaults, and which ones should I change first?
 
-If you already know you want `VARIANT` and only need syntax or type rules, go to [VARIANT](./VARIANT.md). If you want the smallest runnable import example, go to [Import Variant Data](../../../../data-operate/import/complex-types/variant.md).
+If you already know you want `VARIANT` and only need syntax or type rules, go to [VARIANT](./VARIANT.md). If you want the smallest runnable import example, go to [Import Variant Data](../../../../data-operate/import/complex-types/variant.md). To understand how subcolumns and sparse encoding store data, and how to set the properties for each scenario, see [VARIANT Storage and Tuning](./variant-storage-tuning.md).
 
 :::tip Why choose VARIANT
 `VARIANT` keeps JSON flexible, but Doris can still apply Subcolumnization to frequently used paths. That lets common filters, aggregations, and path-level indexes work well without freezing the whole document schema in advance. On very wide JSON, storage-layer optimizations keep Subcolumnization practical at much larger path counts.
@@ -80,19 +80,19 @@ As shown above, hot paths (such as `user_id`, `page`) stay as independent column
 
 <img src="/images/variant/variant-sparse-sharding.png" alt="Sparse Sharding: Parallel Read for Long-Tail Paths" width="720" />
 
-**DOC mode.** Delays Subcolumnization at write time and additionally stores the original JSON as a map-format stored field (the **doc map**). This gives fast ingest and efficient whole-document return at the cost of extra storage. Subcolumnization still happens later during compaction.
+**DOC mode.** Additionally stores the original JSON as a map-format stored field (the **doc map**), which whole-document queries read directly, at the cost of extra storage. As in the default mode, Subcolumnization is controlled by `variant_max_subcolumns_count` and `variant_subcolumn_extraction_min_rows`: once a data file reaches the row threshold, at most `variant_max_subcolumns_count` paths are extracted. With a larger row threshold, small batches only write the doc map, which speeds up ingest, and Subcolumnization is deferred to later compaction.
 
 <img src="/images/variant/variant-doc-mode.png" alt="DOC Mode: Deferred Extraction + Fast Document Return" width="700" />
 
-As illustrated above, during write the JSON is preserved as-is into a Doc Store for fast ingest. Subcolumns are extracted later during compaction. At read time, path-based queries (e.g. `SELECT v['user_id']`) read from materialized subcolumns at full columnar speed, while whole-document queries (`SELECT v`) read directly from the Doc Store without reconstructing from subcolumns.
+As illustrated above, during write the JSON is preserved as-is into a Doc Store for fast ingest. When a row threshold is set, subcolumns are extracted later during compaction. At read time, path-based queries (e.g. `SELECT v['user_id']`) read from materialized subcolumns at full columnar speed, while whole-document queries (`SELECT v`) read directly from the Doc Store without reconstructing from subcolumns.
 
 DOC mode has three distinct read paths depending on whether the queried path has been materialized:
 
 <img src="/images/variant/variant-doc-mode-readpaths.png" alt="DOC Mode: Read Path Details" width="720" />
 
-- **DOC Materialized**: The queried path has already been extracted into a subcolumn (after compaction or when `variant_doc_materialization_min_rows` is met). Reads at full columnar speed, same as default VARIANT.
+- **DOC Materialized**: The queried path has already been extracted into a subcolumn (after compaction or when `variant_subcolumn_extraction_min_rows` is met). Reads at full columnar speed, same as default VARIANT.
 - **DOC Map**: The queried path has not been materialized yet. The query falls back to scanning the entire doc map to find the value — significantly slower on wide JSON.
-- **DOC Map (Sharded)**: Same fallback, but with `variant_doc_hash_shard_count` the doc map is distributed across multiple physical columns, enabling parallel scan and much faster recovery.
+- **DOC Map (Sharded)**: Same fallback, but with `variant_sparse_hash_shard_count` the doc map is distributed across multiple physical columns, enabling parallel scan and much faster recovery.
 
 **Storage Format V3.** Decouples column metadata from the segment footer. Recommended for any `VARIANT` table, especially wide JSON, because it eliminates the metadata bottleneck when thousands of subcolumns exist.
 
@@ -108,7 +108,7 @@ Use the table below to pick a starting point, then read the matching section.
 |---|---|---|---|
 | **A** | Event logs, audit logs | Default VARIANT + V3 | Keep defaults |
 | **B** | Advertising / telemetry / user profiles (wide, hot paths few) | Sparse + V3 | `variant_max_subcolumns_count`, `variant_sparse_hash_shard_count` |
-| **C** | Model output / trace / archives (ingest-first or whole-doc return) | DOC mode + V3 | `variant_enable_doc_mode`, `variant_doc_materialization_min_rows` |
+| **C** | Model output / trace / archives (ingest-first or whole-doc return) | DOC mode + V3 | `variant_enable_doc_mode`, `variant_subcolumn_extraction_min_rows` |
 | **D** | Orders / payments / devices (key paths need stable types) | Schema Template + A or B | Define only key paths |
 
 ### Default Mode
@@ -194,8 +194,8 @@ CREATE TABLE IF NOT EXISTS trace_archive (
         'service_name' : STRING,
         properties(
             'variant_enable_doc_mode' = 'true',
-            'variant_doc_materialization_min_rows' = '10000',
-            'variant_doc_hash_shard_count' = '64'
+            'variant_subcolumn_extraction_min_rows' = '10000',
+            'variant_sparse_hash_shard_count' = '64'
         )
     >
 )
@@ -211,8 +211,8 @@ Use it when ingest throughput is the first priority, the workload frequently nee
 
 Watch for:
 - DOC mode is not the default answer for every wide-JSON workload. If hot-path analytics dominates, sparse columns usually fit better.
-- DOC mode and sparse columns are mutually exclusive. They cannot be enabled at the same time.
-- Apart from `DROP`, `RENAME`, and comment changes, a column that has a Schema Template cannot be altered, so its `variant_doc_materialization_min_rows` cannot change later. Choose the value when you create the table.
+- DOC mode can be set together with `variant_max_subcolumns_count` and `variant_sparse_hash_shard_count`; see [VARIANT Storage and Tuning](./variant-storage-tuning.md).
+- Apart from `DROP`, `RENAME`, and comment changes, a column that has a Schema Template cannot be altered, so its `variant_subcolumn_extraction_min_rows` cannot change later. Choose the value when you create the table.
 
 ### Schema Template
 

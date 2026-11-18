@@ -1372,6 +1372,7 @@ const sidebars: SidebarsConfig = {
                                                     id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide',
                                                     label: 'VARIANT Internal',
                                                 },
+                                                'sql-manual/basic-element/sql-data-types/semi-structured/variant-storage-tuning',
                                             ],
                                         },
                                     ],

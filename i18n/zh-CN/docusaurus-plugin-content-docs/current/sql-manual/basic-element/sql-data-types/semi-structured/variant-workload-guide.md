@@ -16,7 +16,7 @@
 - JSON 很宽时，应该先用默认模式、Sparse，还是 DOC mode？
 - 哪些配置先保持默认，哪些配置才值得优先调整？
 
-如果你已经确定要使用 `VARIANT`，只是想查语法或类型规则，请直接看 [VARIANT](./VARIANT.md)。如果你只需要一个最小可运行的导入示例，请看 [导入 Variant 数据](../../../../data-operate/import/complex-types/variant.md)。
+如果你已经确定要使用 `VARIANT`，只是想查语法或类型规则，请直接看 [VARIANT](./VARIANT.md)。如果你只需要一个最小可运行的导入示例，请看 [导入 Variant 数据](../../../../data-operate/import/complex-types/variant.md)。如果想了解子列和稀疏编码的存储原理，以及各参数在不同场景下怎么取值，请看 [VARIANT 存储原理与场景调优](./variant-storage-tuning.md)。
 
 :::tip 为什么使用 VARIANT
 `VARIANT` 保留了 JSON 的灵活性，同时又能让常用路径通过子列列式提取（Subcolumnization）获得类似普通列的裁剪、聚合和索引能力，不必先把整份文档固化成静态 schema。对超宽 JSON，存储层优化也让更大规模的 Subcolumnization 保持可控。
@@ -80,19 +80,19 @@
 
 <img src="/images/variant/variant-sparse-sharding.png" alt="Sparse Sharding：长尾路径并行读取" width="720" />
 
-**DOC mode。** 写入时延迟子列列式提取（Subcolumnization），并额外存储一份 map 格式的原始 JSON（即 **doc map**）。这带来了快速导入和高效整条文档返回能力，代价是额外存储。后续 Compaction 时仍会完成 Subcolumnization。
+**DOC mode。** 额外存储一份 map 格式的原始 JSON（即 **doc map**），整条文档查询直接读取它，代价是额外存储。子列列式提取（Subcolumnization）与默认模式一样由 `variant_max_subcolumns_count` 和 `variant_subcolumn_extraction_min_rows` 控制：数据文件达到行数阈值后，最多提取 `variant_max_subcolumns_count` 个路径。调大行数阈值时，小批量写入只写 doc map，导入更快，Subcolumnization 推迟到后续 Compaction。
 
 <img src="/images/variant/variant-doc-mode.png" alt="DOC Mode：延迟提取 + 快速文档返回" width="700" />
 
-如上图所示，写入时 JSON 被原样保存到 Doc Store 以实现快速导入。子列在后续 Compaction 过程中提取。读取时，按路径查询（如 `SELECT v['user_id']`）从物化子列中以列式速度读取；而整条文档查询（`SELECT v`）则直接从 Doc Store 中读取，无需从大量子列重组文档。
+如上图所示，写入时 JSON 被原样保存到 Doc Store 以实现快速导入。设置了行数阈值时，子列在后续 Compaction 过程中提取。读取时，按路径查询（如 `SELECT v['user_id']`）从物化子列中以列式速度读取；而整条文档查询（`SELECT v`）则直接从 Doc Store 中读取，无需从大量子列重组文档。
 
 DOC mode 的读取路径取决于被查询的路径是否已经物化：
 
 <img src="/images/variant/variant-doc-mode-readpaths.png" alt="DOC Mode：读取路径详情" width="720" />
 
-- **DOC Materialized**：被查询的路径已经提取为 subcolumn（Compaction 后或 `variant_doc_materialization_min_rows` 条件满足后）。以列式速度读取，与默认 VARIANT 一样快。
+- **DOC Materialized**：被查询的路径已经提取为 subcolumn（Compaction 后或 `variant_subcolumn_extraction_min_rows` 条件满足后）。以列式速度读取，与默认 VARIANT 一样快。
 - **DOC Map**：被查询的路径尚未物化。查询回退到扫描整个 doc map 来查找值 —— 在宽 JSON 上显著变慢。
-- **DOC Map（分片）**：同样的回退路径，但通过 `variant_doc_hash_shard_count` 将 doc map 分散到多个物理列，实现并行扫描，大幅加速恢复速度。
+- **DOC Map（分片）**：同样的回退路径，但通过 `variant_sparse_hash_shard_count` 将 doc map 分散到多个物理列，实现并行扫描，大幅加速恢复速度。
 
 **Storage Format V3。** 把列元数据从 Segment Footer 中解耦出来。推荐在所有 `VARIANT` 表上使用，尤其是宽 JSON 场景，因为它消除了上千子列同时存在时的元数据瓶颈。
 
@@ -108,7 +108,7 @@ DOC mode 的读取路径取决于被查询的路径是否已经物化：
 |---|---|---|---|
 | **A** | 事件日志、审计日志 | 默认 VARIANT + V3 | 保持默认 |
 | **B** | 广告/遥测/用户画像（宽、热点少） | Sparse + V3 | `variant_max_subcolumns_count`、`variant_sparse_hash_shard_count` |
-| **C** | 模型输出/Trace/归档（写入优先或整条返回） | DOC mode + V3 | `variant_enable_doc_mode`、`variant_doc_materialization_min_rows` |
+| **C** | 模型输出/Trace/归档（写入优先或整条返回） | DOC mode + V3 | `variant_enable_doc_mode`、`variant_subcolumn_extraction_min_rows` |
 | **D** | 订单/支付/设备（关键路径需稳定类型） | Schema Template + A 或 B | 只定义关键路径 |
 
 ### 默认模式
@@ -194,8 +194,8 @@ CREATE TABLE IF NOT EXISTS trace_archive (
         'service_name' : STRING,
         properties(
             'variant_enable_doc_mode' = 'true',
-            'variant_doc_materialization_min_rows' = '10000',
-            'variant_doc_hash_shard_count' = '64'
+            'variant_subcolumn_extraction_min_rows' = '10000',
+            'variant_sparse_hash_shard_count' = '64'
         )
     >
 )
@@ -211,8 +211,8 @@ PROPERTIES (
 
 注意：
 - DOC mode 不是所有宽 JSON 场景的默认答案。若核心诉求是热点路径分析，通常还是 Sparse 更合适。
-- DOC mode 和 Sparse 互斥，不能同时开启。
-- 带 Schema Template 的列除了 `DROP`、`RENAME` 和修改注释之外不能 ALTER，因此之后也无法修改它的 `variant_doc_materialization_min_rows`，请在建表时确定这个值。
+- DOC mode 可以与 `variant_max_subcolumns_count`、`variant_sparse_hash_shard_count` 一起设置，参见 [VARIANT 存储原理与场景调优](./variant-storage-tuning.md)。
+- 带 Schema Template 的列除了 `DROP`、`RENAME` 和修改注释之外不能 ALTER，因此之后也无法修改它的 `variant_subcolumn_extraction_min_rows`，请在建表时确定这个值。
 
 ### Schema Template 模式
 
