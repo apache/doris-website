@@ -52,18 +52,22 @@ Key field descriptions:
 - `Id`: Connection ID, the unique identifier of the connection.
 - `QueryId`: Query ID, the unique identifier of the most recently executed or currently running SQL.
 
-**Default behavior**: `SHOW PROCESSLIST` only displays sessions on the FE node that the current connection is attached to, and does not include other FE nodes. To view sessions on all FE nodes, set the following variable before running the query:
+**Default behavior**: since 4.0.0, `SHOW PROCESSLIST` displays sessions on all FE nodes, and the `FE` column shows the FE node each session is on. To display only the sessions on the FE node that the current connection is attached to, set the following variable before running the query:
 
 ```sql
-SET show_all_fe_connection = true;
+SET fetch_all_fe_for_system_table = false;
 SHOW PROCESSLIST;
 ```
+
+Before 4.0.0, `SHOW PROCESSLIST` displays only the sessions on the current FE node by default, and the variable is `show_all_fe_connection` (default `false`).
 
 You can also use the `information_schema` system table, which displays sessions on all FE nodes by default and requires no additional setup:
 
 ```sql
 SELECT * FROM information_schema.processlist;
 ```
+
+Setting `fetch_all_fe_for_system_table = false` also limits `information_schema.processlist` to the current FE node.
 
 ### Identify Queries by Trace ID
 

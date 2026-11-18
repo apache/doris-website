@@ -8,10 +8,11 @@
 
 ## 描述
 
-显示用户正在运行的线程。该命令只能看到当前FE的连接信息，如果需要看到整个集群的连接信息，则需要添加session variable:
+显示用户正在运行的线程。从 4.0.0 开始，该命令默认显示集群中所有 FE 的连接信息，`FE` 列表示连接所在的 FE。如果只需要查看当前 FE 的连接信息，可以设置会话变量：
 ```
-SET SHOW_ALL_FE_CONNECTION = TRUE;
+SET fetch_all_fe_for_system_table = false;
 ```
+4.0.0 之前的版本默认只显示当前 FE 的连接信息，对应的会话变量为 `show_all_fe_connection`（默认值为 `false`）。
 
 ## 语法
 

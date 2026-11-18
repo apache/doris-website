@@ -16,7 +16,7 @@
 SHOW TRANSACTION
 [FROM <db_name>]
 WHERE
-[id = <transaction_id> | label = <label_name>];
+[id = <transaction_id> | label = <label_name> | label LIKE '<label_pattern>'];
 ```
 
 ## 필수 매개변수 {#required-parameters}
@@ -28,6 +28,10 @@ WHERE
 **2. `<label_name>`**
 
 트랜잭션 세부 정보를 조회할 레이블입니다.
+
+**3. `<label_pattern>`**
+
+트랜잭션 세부 정보를 조회할 레이블 전체와 일치해야 하는 패턴입니다. Doris는 모든 `%`를 `.*`로 바꾼 뒤 그 결과를 Java 정규 표현식(`String.matches()`)으로 레이블 전체와 비교하므로, `%`는 임의의 문자열과 일치하고 `_`는 와일드카드가 아닙니다. 컴퓨팅-스토리지 분리 모드에서는 지원되지 않습니다.
 
 ## 선택적 매개변수 {#optional-parameters}
 

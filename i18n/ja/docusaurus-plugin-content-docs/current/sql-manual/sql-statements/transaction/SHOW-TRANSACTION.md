@@ -16,7 +16,7 @@
 SHOW TRANSACTION
 [FROM <db_name>]
 WHERE
-[id = <transaction_id> | label = <label_name>];
+[id = <transaction_id> | label = <label_name> | label LIKE '<label_pattern>'];
 ```
 
 ## 必須パラメータ
@@ -28,6 +28,10 @@ WHERE
 **2. `<label_name>`**
 
 詳細を表示するトランザクションのラベルです。
+
+**3. `<label_pattern>`**
+
+詳細を表示するトランザクションのラベル全体に一致するパターンです。Doris はすべての `%` を `.*` に置き換え、その結果を Java の正規表現（`String.matches()`）としてラベル全体と照合します。そのため `%` は任意の文字列に一致し、`_` はワイルドカードではありません。ストレージ・コンピュート分離モードではサポートされていません。
 
 ## オプションパラメータ
 

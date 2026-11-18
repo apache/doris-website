@@ -52,18 +52,22 @@ SHOW PROCESSLIST;
 - `Id`：Connection ID，连接的唯一标识。
 - `QueryId`：Query ID，显示最近执行或正在执行的 SQL 的唯一标识。
 
-**默认行为**：`SHOW PROCESSLIST` 仅显示当前连接的 FE 节点上的会话，不包含其他 FE 节点。若需查看所有 FE 节点的会话，先设置以下变量再执行查询：
+**默认行为**：从 4.0.0 开始，`SHOW PROCESSLIST` 显示所有 FE 节点上的会话，`FE` 列表示会话所在的 FE 节点。若只需查看当前连接的 FE 节点上的会话，先设置以下变量再执行查询：
 
 ```sql
-SET show_all_fe_connection = true;
+SET fetch_all_fe_for_system_table = false;
 SHOW PROCESSLIST;
 ```
+
+4.0.0 之前的版本中，`SHOW PROCESSLIST` 默认仅显示当前 FE 节点上的会话，对应的变量为 `show_all_fe_connection`（默认值为 `false`）。
 
 也可通过 `information_schema` 系统表查看，该表默认显示所有 FE 节点的会话，无需额外设置：
 
 ```sql
 SELECT * FROM information_schema.processlist;
 ```
+
+设置 `fetch_all_fe_for_system_table = false` 后，`information_schema.processlist` 同样只显示当前 FE 节点上的会话。
 
 ### 通过 Trace ID 标识查询
 

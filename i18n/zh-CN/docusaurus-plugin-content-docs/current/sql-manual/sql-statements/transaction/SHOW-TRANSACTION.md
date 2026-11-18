@@ -16,7 +16,7 @@
 SHOW TRANSACTION
 [FROM <db_name>]
 WHERE
-[id = <transaction_id> | label = <label_name>];
+[id = <transaction_id> | label = <label_name> | label LIKE '<label_pattern>'];
 ```
 
 ## 必选参数
@@ -27,6 +27,10 @@ WHERE
 **2. `<label_name>`**
 
 需要查看事务详情的 label
+
+**3. `<label_pattern>`**
+
+用于匹配事务 label 的模式，必须匹配完整的 label。Doris 会将每个 `%` 替换为 `.*`，然后将结果作为 Java 正则表达式（`String.matches()`）匹配完整的 label，因此 `%` 匹配任意字符序列，`_` 不是通配符。存算分离模式不支持。
 
 ## 可选参数
 

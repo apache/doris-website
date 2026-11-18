@@ -16,7 +16,7 @@ This syntax is used to view transaction details for the specified transaction id
 SHOW TRANSACTION
 [FROM <db_name>]
 WHERE
-[id = <transaction_id> | label = <label_name>];
+[id = <transaction_id> | label = <label_name> | label LIKE '<label_pattern>'];
 ```
 
 ## Required Parameters
@@ -28,6 +28,10 @@ The transaction ID whose details need to be viewed.
 **2. `<label_name>`**
 
 The label whose transaction details need to be viewed.
+
+**3. `<label_pattern>`**
+
+A pattern that must match the whole label of each transaction to view. Doris replaces every `%` with `.*` and matches the result against the whole label as a Java regular expression (`String.matches()`), so `%` matches any sequence of characters and `_` is not a wildcard. Not supported in compute-storage decoupled mode.
 
 ## Optional Parameters
 

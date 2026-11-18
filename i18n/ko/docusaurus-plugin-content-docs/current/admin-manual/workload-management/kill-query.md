@@ -52,18 +52,22 @@ SHOW PROCESSLIST;
 - `Id`: Connection ID로, 연결의 고유 식별자입니다.
 - `QueryId`: Query ID로, 가장 최근에 실행했거나 현재 실행 중인 SQL의 고유 식별자입니다.
 
-**기본 동작**: `SHOW PROCESSLIST`는 현재 연결된 FE 노드의 세션만 표시하며, 다른 FE 노드의 세션은 포함하지 않습니다. 모든 FE 노드의 세션을 보려면 쿼리를 실행하기 전에 다음 변수를 설정합니다.
+**기본 동작**: 4.0.0부터 `SHOW PROCESSLIST`는 모든 FE 노드의 세션을 표시하며, `FE` 열은 각 세션이 있는 FE 노드를 나타냅니다. 현재 연결된 FE 노드의 세션만 보려면 쿼리를 실행하기 전에 다음 변수를 설정합니다.
 
 ```sql
-SET show_all_fe_connection = true;
+SET fetch_all_fe_for_system_table = false;
 SHOW PROCESSLIST;
 ```
+
+4.0.0 이전 버전에서는 `SHOW PROCESSLIST`가 기본적으로 현재 연결된 FE 노드의 세션만 표시하며, 해당 변수는 `show_all_fe_connection`(기본값 `false`)입니다.
 
 `information_schema` 시스템 테이블을 사용할 수도 있습니다. 이 테이블은 기본적으로 모든 FE 노드의 세션을 표시하므로 별도의 설정이 필요하지 않습니다.
 
 ```sql
 SELECT * FROM information_schema.processlist;
 ```
+
+`fetch_all_fe_for_system_table = false`를 설정하면 `information_schema.processlist`도 현재 FE 노드의 세션만 표시합니다.
 
 ### Trace ID로 쿼리 식별 {#identify-queries-by-trace-id}
 

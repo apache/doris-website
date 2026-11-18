@@ -9,11 +9,12 @@
 ## Description
 
 Displays the thread that the user is running.  
-This command can only display the connection information of the current FE.  
-If you need to view the connection information of the entire cluster, you need to add a session variable:
+Since 4.0.0, the command lists the connections of all FEs in the cluster by default, and the `FE` column shows the FE each connection belongs to.
+To list only the connections of the current FE, set the session variable:
 ```
-SET SHOW_ALL_FE_CONNECTION = TRUE;
+SET fetch_all_fe_for_system_table = false;
 ```
+Before 4.0.0, the command lists only the connections of the current FE by default, and the session variable is `show_all_fe_connection` (default `false`).
 
 ## Syntax
 

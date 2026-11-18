@@ -9,11 +9,12 @@
 ## 설명 {#description}
 
 사용자가 실행 중인 스레드를 표시합니다.
-이 명령은 현재 FE의 연결 정보만 표시할 수 있습니다.
-전체 클러스터의 연결 정보를 보려면 다음 세션 변수를 설정해야 합니다:
+4.0.0부터 이 명령은 기본적으로 클러스터에 있는 모든 FE의 연결 정보를 표시하며, `FE` 열은 각 연결이 속한 FE를 나타냅니다.
+현재 FE의 연결 정보만 보려면 다음 세션 변수를 설정합니다:
 ```
-SET SHOW_ALL_FE_CONNECTION = TRUE;
+SET fetch_all_fe_for_system_table = false;
 ```
+4.0.0 이전 버전에서는 기본적으로 현재 FE의 연결 정보만 표시되며, 해당 세션 변수는 `show_all_fe_connection`(기본값 `false`)입니다.
 
 ## 구문 {#syntax}
 
