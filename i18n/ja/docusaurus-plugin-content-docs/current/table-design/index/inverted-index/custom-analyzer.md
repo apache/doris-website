@@ -2,7 +2,7 @@
 {
     "title": "カスタムアナライザー",
     "language": "ja",
-    "description": "Dorisのカスタムアナライザーは、文字フィルター、トークナイザー、トークンフィルターを組み合わせ、テキストの分割方法を柔軟に制御することで、転置インデックスの検索関連性と精度を高めます。",
+    "description": "Doris のカスタムアナライザーは、文字フィルター、トークナイザー、トークンフィルターを組み合わせてテキストの分割方法を柔軟に制御し、転置インデックスの検索関連性と精度を高めます。",
     "keywords": [
         "custom analyzer",
         "inverted index tokenizer",
@@ -23,7 +23,7 @@
 <!-- Knowledge type: Feature overview + Configuration parameters + Operating procedures -->
 <!-- Applicable scenarios: Inverted index text tokenization customization / Multilingual search / Auto-completion / Exact match -->
 
-カスタムアナライザーは、**文字フィルター（char_filter）**、**トークナイザー**、**トークンフィルター（token_filter）**を組み合わせ、業務上の要件に応じてテキストを検索可能な語に分割する方法を細かく定義できます。組み込みアナライザーの制約を補い、検索の関連性とデータ分析の精度に直接影響します。
+カスタムアナライザーは、**文字フィルター（char_filter）**、**トークナイザー**、**トークンフィルター（token_filter）**を組み合わせ、業務要件に応じてテキストを検索可能な語に分割する方法を細かく定義できます。組み込みアナライザーの制約を補い、検索結果の関連性とデータ分析の精度に直接影響します。
 
 ![カスタムアナライザーの図](/images/analyzer.png)
 
@@ -31,27 +31,27 @@
 
 | シナリオ | 推奨する組み合わせ |
 | --- | --- |
-| 多言語が混在するテキストの検索 | `icu`トークナイザー + `icu_normalizer`フィルター |
-| 電話番号やコードの前方一致 | `edge_ngram`トークナイザー |
-| 複雑な英語テキストの分割（キャメルケース、ハイフンなど） | `standard`トークナイザー + `word_delimiter`フィルター |
-| オートコンプリートや入力候補 | `edge_ngram`トークナイザー + `lowercase`フィルター |
-| 完全一致（元の語を保持） | `keyword`トークナイザー + `lowercase` / `asciifolding`フィルター |
+| 多言語が混在するテキストの検索 | `icu` トークナイザー + `icu_normalizer` フィルター |
+| 電話番号やコードの前方一致 | `edge_ngram` トークナイザー |
+| 複雑な英語テキストの分割（キャメルケース、ハイフンなど） | `standard` トークナイザー + `word_delimiter` フィルター |
+| 自動補完や入力候補 | `edge_ngram` トークナイザー + `lowercase` フィルター |
+| 完全一致（元の語を保持） | `keyword` トークナイザー + `lowercase` / `asciifolding` フィルター |
 
 ---
 
-## 基本コンポーネント {#core-components}
+## 主要コンポーネント {#core-components}
 
-カスタムアナライザーは、元のテキストに順番に適用される以下の4種類のオブジェクトで構成されます。
+カスタムアナライザーは、元のテキストに順番に適用される次の種類のオブジェクトで構成されます。
 
 ```
 Original text ──► [char_filter] ──► [tokenizer] ──► [token_filter] ──► Terms
 ```
 
-| コンポーネント | 役割 | 個数 |
+| コンポーネント | 役割 | 数 |
 | --- | --- | --- |
-| `char_filter` | トークン化前に文字を前処理する（置換や正規化など） | 0 ~ N |
+| `char_filter` | トークン化の前に文字を前処理する（置換や正規化など） | 0 ~ N |
 | `tokenizer` | テキストを語に分割する | 1 |
-| `token_filter` | 分割後の語を処理する（小文字化やASCIIへの変換など） | 0 ~ N |
+| `token_filter` | 分割後の語を処理する（小文字化や ASCII への変換など） | 0 ~ N |
 | `analyzer` | 上記のコンポーネントを組み合わせ、完全なトークン化パイプラインを構成する | 1 |
 
 ---
@@ -68,16 +68,16 @@ PROPERTIES (
 );
 ```
 
-サポートされる文字フィルターの種類は次のとおりです。
+サポートされる文字フィルターの種類：
 
-- **`char_replace`**: トークン化前に、指定した文字を別の文字に置換します。
-    - `char_filter_pattern`: 置換対象の文字のリスト
-    - `char_filter_replacement`: 置換後の文字（デフォルト: スペース）
+- **`char_replace`**：トークン化の前に、指定した文字を別の文字に置換します。
+    - `char_filter_pattern`：置換する文字のリスト
+    - `char_filter_replacement`：置換後の文字（デフォルト：スペース）
 
-- **`icu_normalizer`**: ICUによる正規化を使ってテキストを前処理します。
-    - `name`: 正規化形式（デフォルトは`nfkc_cf`）。選択肢: `nfc`、`nfkc`、`nfkc_cf`、`nfd`、`nfkd`
-    - `mode`: 正規化モード（デフォルトは`compose`）。選択肢: `compose`、`decompose`
-    - `unicode_set_filter`: 正規化する文字集合を指定します（`[a-z]`など）。
+- **`icu_normalizer`**：ICU 正規化を使用してテキストを前処理します。
+    - `name`：正規化形式（デフォルトは `nfkc_cf`）。選択肢：`nfc`、`nfkc`、`nfkc_cf`、`nfd`、`nfkd`
+    - `mode`：正規化モード（デフォルトは `compose`）。選択肢：`compose`、`decompose`
+    - `unicode_set_filter`：正規化する文字集合を指定します（`[a-z]` など）。
 
 ### 2. トークナイザー {#2-tokenizer}
 
@@ -88,41 +88,41 @@ PROPERTIES (
 );
 ```
 
-サポートされるトークナイザーの種類は次のとおりです。
+サポートされるトークナイザーの種類：
 
 | 種類 | 説明 | 主なパラメーター |
 | --- | --- | --- |
-| `standard` | Unicodeのテキスト分割規則に従う標準的なトークン化。多くの言語に適しています | なし |
-| `ngram` | N-gramに分割します | `min_gram`、`max_gram`、`max_ngram_diff`、`token_chars` |
-| `edge_ngram` | 単語の先頭から始まるN-gramを生成します | `min_gram`、`max_gram`、`token_chars` |
-| `keyword` | テキスト全体を単一の語として出力します。多くの場合、token_filterと組み合わせます | なし |
+| `standard` | Unicode のテキスト分割に従う標準的なトークン化。多くの言語に適しています | なし |
+| `ngram` | N-gram に分割します | `min_gram`、`max_gram`、`max_ngram_diff`、`token_chars` |
+| `edge_ngram` | 単語の先頭から始まる N-gram を生成します | `min_gram`、`max_gram`、`token_chars` |
+| `keyword` | テキスト全体を単一の語として出力します。通常は token_filter と組み合わせます | なし |
 | `char_group` | 指定した文字で分割します | `tokenize_on_chars` |
-| `basic` | 英語、数字、中国語、Unicodeの簡易的なトークン化 | `extra_chars` |
-| `icu` | ICUによる国際化対応のトークン化。複数言語の複雑な文字体系をサポートします | なし |
-| `ik_smart` | 完全な単語を優先するIKの中国語トークン化。4.1.5以降、カスタムアナライザーで使用できます | なし |
-| `ik_max_word` | 重複する可能性のある語をより多く生成する、IKの細粒度な中国語トークン化。4.1.5以降、カスタムアナライザーで使用できます | なし |
+| `basic` | 英語、数字、中国語、Unicode を単純にトークン化します | `extra_chars` |
+| `icu` | ICU を使用した国際化対応のトークン化。複数言語の複雑な文字体系をサポートします | なし |
+| `ik_smart` | 語のまとまりを優先する IK の中国語スマート分かち書き。4.1.5 以降、カスタムアナライザーで使用できます | なし |
+| `ik_max_word` | 重複する可能性のある語をより多く生成する、IK の細粒度な中国語分かち書き。4.1.5 以降、カスタムアナライザーで使用できます | なし |
 
-パラメーターの説明:
+パラメーターの説明：
 
-- `min_gram`: 最小長（デフォルトは1）
-- `max_gram`: 最大長（デフォルトは2）
-- `token_chars`: 保持する文字カテゴリ（デフォルトはすべて保持）。選択肢: `letter`、`digit`、`whitespace`、`punctuation`、`symbol`
-- `tokenize_on_chars`: 文字のリストまたはカテゴリ。カテゴリには`whitespace`、`letter`、`digit`、`punctuation`、`symbol`、`cjk`を指定できます
-- `extra_chars`: 分割に使用する追加のASCII文字（`[]().`など）
+- `min_gram`：最小長（デフォルトは 1）
+- `max_gram`：最大長（デフォルトは 2）
+- `token_chars`：保持する文字のカテゴリ（デフォルトではすべて保持）。選択肢：`letter`、`digit`、`whitespace`、`punctuation`、`symbol`
+- `tokenize_on_chars`：文字のリストまたはカテゴリ。カテゴリとして `whitespace`、`letter`、`digit`、`punctuation`、`symbol`、`cjk` を指定できます
+- `extra_chars`：追加で分割に使用する ASCII 文字（`[]().` など）
 
-#### Ngramの長さの範囲に関する制限（4.1.5以降） {#ngram-range-limits-since-415}
+#### Ngram の長さの範囲に関する制限（4.1.5 以降） {#ngram-range-limits-since-415}
 
-4.1.5以降、`ngram`トークナイザーでは`max_ngram_diff`を指定することで、gramの最大長と最小長の差に関する従来の上限`1`を緩和できます。`mode`プロパティを指定しない通常の`ngram`トークナイザーを作成する際には、次の条件が検証されます。
+4.1.5 以降、`ngram` トークナイザーでは `max_ngram_diff` を使用して、gram の最大長と最小長の差に対する従来の `1` という制限を緩和できます。`mode` プロパティを指定しない通常の `ngram` トークナイザーを作成する際には、次の条件が検証されます。
 
 | パラメーター | デフォルト | 制約 |
 | --- | --- | --- |
-| `min_gram` | `1` | `max_gram`以下の正の整数。新しい`ngram`トークナイザーでは最大`1024`。 |
-| `max_gram` | `2` | `min_gram`以上の正の整数。新しい`ngram`トークナイザーでは最大`1024`。 |
-| `max_ngram_diff` | `1` | `0`から`255`までの整数で、`max_gram - min_gram <= max_ngram_diff`を満たす必要があります。`0`を指定すると、固定長のN-gramだけが許可されます。 |
+| `min_gram` | `1` | `max_gram` 以下の正の整数。新規の `ngram` トークナイザーでは `1024` 以下。 |
+| `max_gram` | `2` | `min_gram` 以上の正の整数。新規の `ngram` トークナイザーでは `1024` 以下。 |
+| `max_ngram_diff` | `1` | `0` から `255` までの整数。`max_gram - min_gram <= max_ngram_diff` を満たす必要があります。`0` を指定すると、固定長の N-gram のみが許可されます。 |
 
-たとえば、`min_gram=1`と`max_gram=8`を指定する場合、`max_ngram_diff`は少なくとも`7`にする必要があります。省略すると、作成時に`The difference between max_gram and min_gram in NGram Tokenizer must be less than or equal to: [ 1 ] but was [7]`というエラーが発生します。使用方法全体については[例5](#example-5-expand-the-ngram-length-range-since-415)を参照してください。
+たとえば、`min_gram=1` と `max_gram=8` を指定するには、`max_ngram_diff` に少なくとも `7` が必要です。省略すると、`The difference between max_gram and min_gram in NGram Tokenizer must be less than or equal to: [ 1 ] but was [7]` というエラーで作成に失敗します。詳しい使い方は[例 5](#example-5-expand-the-ngram-length-range-since-415)を参照してください。
 
-これらの制限と`max_ngram_diff`は、`mode`プロパティを指定しない通常の`ngram`トークナイザーに適用されます。`mode`を指定したトークナイザーには別の検証が適用され、これらの制限は無視されます。`edge_ngram`はこのパラメーターを受け付けません。電話番号とオートコンプリートの例では、それぞれの`min_gram`と`max_gram`の設定を使用します。範囲を広げると、入力位置ごとに生成される語が増えます。不要なインデックスの肥大化を避けるため、検索要件に合わせて範囲を設定してください。
+これらの制限と `max_ngram_diff` は、`mode` プロパティを指定しない通常の `ngram` トークナイザーに適用されます。`mode` を指定したトークナイザーには別の検証が適用され、これらの制限は無視されます。`edge_ngram` はこのパラメーターを受け付けません。電話番号と自動補完の例では、それぞれの `min_gram` と `max_gram` の設定を使用します。範囲を広げると、入力位置ごとに生成される語が増えます。不要なインデックスの肥大化を避けるため、検索要件に合わせて範囲を設定してください。
 
 ### 3. トークンフィルター {#3-token-filter}
 
@@ -133,52 +133,52 @@ PROPERTIES (
 );
 ```
 
-サポートされるトークンフィルターの種類は次のとおりです。
+サポートされるトークンフィルターの種類：
 
 | 種類 | 役割 |
 | --- | --- |
 | `word_delimiter` | 英数字以外の文字で分割し、正規化も行えます |
-| `ascii_folding` | 非ASCII文字を対応するASCII文字に変換します |
+| `ascii_folding` | 非 ASCII 文字を対応する ASCII 文字に変換します |
 | `lowercase` | トークンのテキストを小文字に変換します |
-| `icu_normalizer` | ICUによる正規化を使ってトークンを処理します |
+| `icu_normalizer` | ICU 正規化を使用してトークンを処理します |
 
-#### word_delimiterの詳細 {#word_delimiter-details}
+#### word_delimiter の詳細 {#word_delimiter-details}
 
-デフォルトの動作:
+デフォルトの動作：
 
-1. 英数字以外の文字を区切り文字として使用します（例: `Super-Duper`を`Super`、`Duper`に分割）。
-2. トークンの先頭と末尾の区切り文字を削除します（例: `XL---42+'Autocoder'`を`XL`、`42`、`Autocoder`に分割）。
-3. 大文字と小文字が切り替わる位置で分割します（例: `PowerShot`を`Power`、`Shot`に分割）。
-4. 文字と数字の境界で分割します（例: `XL500`を`XL`、`500`に分割）。
-5. 英語の所有格を表す`'s`を削除します（例: `Neil's`を`Neil`に変換）。
+1. 英数字以外の文字を区切り文字として使用します（例：`Super-Duper` を `Super`、`Duper` に分割）。
+2. トークンの先頭と末尾にある区切り文字を除去します（例：`XL---42+'Autocoder'` から `XL`、`42`、`Autocoder` を生成）。
+3. 大文字と小文字の切り替わりで分割します（例：`PowerShot` を `Power`、`Shot` に分割）。
+4. 英字と数字の境界で分割します（例：`XL500` を `XL`、`500` に分割）。
+5. 英語の所有格の `'s` を除去します（例：`Neil's` から `Neil` を生成）。
 
-オプションのパラメーター:
+オプションのパラメーター：
 
 | パラメーター | デフォルト | 説明 |
 | --- | --- | --- |
 | `generate_number_parts` | `true` | 数字部分を出力するかどうか |
 | `generate_word_parts` | `true` | 単語部分を出力するかどうか |
-| `protected_words` | なし | 分割しない保護対象の単語 |
-| `split_on_case_change` | `true` | 大文字と小文字が切り替わる位置で分割するかどうか |
-| `split_on_numerics` | `true` | 文字と数字の境界で分割するかどうか |
-| `stem_english_possessive` | `true` | 英語の所有格を表す`'s`を削除するかどうか |
+| `protected_words` | なし | 分割しない保護対象の語 |
+| `split_on_case_change` | `true` | 大文字と小文字の切り替わりで分割するかどうか |
+| `split_on_numerics` | `true` | 英字と数字の境界で分割するかどうか |
+| `stem_english_possessive` | `true` | 英語の所有格の `'s` を除去するかどうか |
 | `type_table` | なし | カスタムの文字種マッピングテーブル |
 
-`type_table`は次のマッピング種別をサポートします。
+`type_table` は次のマッピング種別をサポートします。
 
-- `ALPHA`（文字）
+- `ALPHA`（英字）
 - `ALPHANUM`（英数字）
 - `DIGIT`（数字）
 - `LOWER`（小文字）
 - `SUBWORD_DELIM`（英数字以外の区切り文字）
 - `UPPER`（大文字）
 
-例: `["+ => ALPHA", "- => ALPHA"]`を指定すると、`+`と`-`は文字として扱われ、分割位置には使用されません。
+例：`["+ => ALPHA", "- => ALPHA"]` は `+` と `-` を英字として扱い、分割位置として使用しません。
 
-#### icu_normalizerのパラメーター {#icu_normalizer-parameters}
+#### icu_normalizer のパラメーター {#icu_normalizer-parameters}
 
-- `name`: 正規化形式（デフォルトは`nfkc_cf`）。選択肢: `nfc`、`nfkc`、`nfkc_cf`、`nfd`、`nfkd`
-- `unicode_set_filter`: 正規化する文字集合を指定します
+- `name`：正規化形式（デフォルトは `nfkc_cf`）。選択肢：`nfc`、`nfkc`、`nfkc_cf`、`nfd`、`nfkd`
+- `unicode_set_filter`：正規化する文字集合を指定します
 
 ### 4. アナライザー {#4-analyzer}
 
@@ -196,7 +196,7 @@ PROPERTIES (
 
 ## テーブルでのカスタムアナライザーの使用 {#using-a-custom-analyzer-in-a-table}
 
-作成したカスタムアナライザーは、インデックスの`PROPERTIES`にある`analyzer`フィールドで参照します。
+作成済みのカスタムアナライザーは、インデックスの `PROPERTIES` にある `analyzer` フィールドで参照します。
 
 ```sql
 CREATE TABLE tbl (
@@ -207,22 +207,22 @@ CREATE TABLE tbl (
 table_properties;
 ```
 
-注意事項:
+注意事項：
 
-1. カスタムアナライザーは、インデックスの`PROPERTIES`に`analyzer`で設定します。
-2. `analyzer`と併用できるプロパティは`support_phrase`のみです。
+1. カスタムアナライザーは、インデックスの `PROPERTIES` で `analyzer` を使用して設定します。
+2. `analyzer` と併用できるプロパティは `support_phrase` のみです。
 
 ---
 
-## 単一カラムへの複数のアナライザーインデックス {#multiple-analyzer-indexes-on-a-single-column}
+## 単一列に対する複数のアナライザーインデックス {#multiple-analyzer-indexes-on-a-single-column}
 
-Dorisでは、同じカラムに異なるトークナイザーを使用する複数の転置インデックスを作成できます。これにより、同じデータを異なるトークン化方法で検索できます。
+Doris では、同じ列に異なるトークナイザーを使用する複数の転置インデックスを作成できます。これにより、同じデータを異なるトークン化方法で検索できます。
 
 ### ユースケース {#use-cases}
 
-- **多言語対応**: 同じテキストカラムに、言語ごとのトークナイザーを使用します。
-- **検索精度と再現率の両立**: 完全一致にはkeywordトークナイザー、あいまい検索にはstandardトークナイザーを使用します。
-- **オートコンプリート**: 前方一致にはedge_ngramトークナイザー、通常の検索にはstandardトークナイザーを使用します。
+- **多言語対応**：同じテキスト列に、言語ごとに異なるトークナイザーを使用します。
+- **検索精度と再現率の調整**：完全一致には `keyword` トークナイザーを、あいまい検索には `standard` トークナイザーを使用します。
+- **自動補完**：前方一致には `edge_ngram` トークナイザーを、通常の検索には `standard` トークナイザーを使用します。
 
 ### 複数のインデックスの作成 {#creating-multiple-indexes}
 
@@ -266,7 +266,7 @@ PROPERTIES ("replication_allocation" = "tag.location.default: 1");
 
 ### クエリ時のアナライザーの指定 {#specifying-an-analyzer-at-query-time}
 
-`USING ANALYZER`句を使用して、使用するインデックスを指定します。
+`USING ANALYZER` 句を使用して、どのインデックスを使用するか指定します。
 
 ```sql
 -- Insert test data
@@ -310,30 +310,28 @@ SHOW ALTER TABLE COLUMN WHERE TableName='articles';
 
 ### インデックスの構築 {#building-an-index}
 
-インデックスを追加した後は、既存データに対してインデックスを構築する必要があります。
+コンピュートとストレージを統合したモードでは、追加した転置インデックスを既存データに対して明示的に構築します。
 
 ```sql
--- Build a specific index (non-cloud mode)
 BUILD INDEX idx_content_chinese ON articles;
-
--- Build all indexes (cloud mode)
-BUILD INDEX ON articles;
-
--- Check the build progress
-SHOW BUILD INDEX WHERE TableName='articles';
+SHOW BUILD INDEX WHERE TableName = 'articles';
 ```
 
-### 主な注意事項 {#key-notes}
+Doris 4.1.5 のコンピュートとストレージを分離したモードでは、前の例で追加したトークン化インデックスの過去のデータはスキーマ変更によって構築されます。`SHOW ALTER TABLE COLUMN` が `FINISHED` を返すまで待ってください。そのインデックスに対する追加の `BUILD INDEX` は不要であり、必要がないとして拒否されます。
 
-1. **トークナイザーの同一性**: `tokenizer`と`token_filter`の設定が同じトークナイザーは、同一と見なされます。同じカラムに、トークナイザーの構成が同一のインデックスを複数作成することはできません。
-2. **インデックスの選択動作**:
-    - `USING ANALYZER`を指定した場合、指定したトークナイザーに対応するインデックスが存在し、構築済みであれば、そのインデックスが使用されます。
-    - インデックスが構築されていない場合、クエリはインデックスを使わない実行経路に切り替わります（結果は正しいものの、性能は低下します）。
-    - `USING ANALYZER`を指定しない場合は、利用可能ないずれかのインデックスが使用されることがあります。
-3. **性能上の考慮事項**:
+`enable_add_index_for_new_data=true` を指定して追加した、トークン化を行わない転置インデックスと NGram BloomFilter インデックスでは、過去のデータを別途構築できます。この場合のクラウド環境での構文は、インデックス名を指定しない `BUILD INDEX ON table_name` です。[デプロイ形態別の構築例](./overview.md#cloud-index-build)を参照してください。この Doris 4.1.5 の動作は、新しいカーネルにおける SNII の構築方法を説明するものではありません。
+
+### 重要な注意事項 {#key-notes}
+
+1. **トークナイザーの同一性**：`tokenizer` と `token_filter` の設定が同じ場合、トークナイザーは同一と見なされます。同じ列に、同一と見なされるトークナイザーを共有する複数のインデックスは作成できません。
+2. **インデックス選択の動作**：
+    - `USING ANALYZER` を指定した場合、指定したトークナイザーのインデックスが存在し、構築済みであれば、そのインデックスが使用されます。
+    - インデックスが構築されていない場合、クエリはインデックスを使わない経路に切り替わります（結果は正しいものの、性能は低下します）。
+    - `USING ANALYZER` を指定しない場合、使用可能な任意のインデックスが使用されることがあります。
+3. **性能上の考慮事項**：
     - インデックスを追加するたびに、ストレージ使用量と書き込み時の負荷が増えます。
-    - 実際のクエリパターンに基づいてトークナイザーを選択してください。
-    - クエリパターンが予測できる場合は、インデックスの数を抑えることを検討してください。
+    - 実際のクエリの傾向に基づいてトークナイザーを選択してください。
+    - クエリの傾向が予測できる場合は、インデックスの数を減らすことを検討してください。
 
 ---
 
@@ -357,11 +355,11 @@ DROP INVERTED INDEX ANALYZER IF EXISTS x_analyzer;
 
 ---
 
-## 完全な使用例 {#complete-examples}
+## 完全な例 {#complete-examples}
 
-### 例1: 電話番号の前方一致 {#example-1-phone-number-prefix-matching}
+### 例 1：電話番号の前方一致 {#example-1-phone-number-prefix-matching}
 
-`edge_ngram`を使用して電話番号のすべての先頭部分を生成し、入力途中でも検索できるようにします。
+`edge_ngram` を使用して電話番号のすべての先頭部分を生成し、入力中に検索できるようにします。
 
 ```sql
 CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS edge_ngram_phone_number_tokenizer
@@ -393,7 +391,7 @@ PROPERTIES (
 SELECT tokenize('13891972631', '"analyzer"="edge_ngram_phone_number"');
 ```
 
-結果:
+結果：
 
 ```json
 [
@@ -408,9 +406,9 @@ SELECT tokenize('13891972631', '"analyzer"="edge_ngram_phone_number"');
 ]
 ```
 
-### 例2: 複雑な英語テキストの細粒度なトークン化 {#example-2-fine-grained-tokenization-for-complex-english-text}
+### 例 2：複雑な英語テキストの細粒度なトークン化 {#example-2-fine-grained-tokenization-for-complex-english-text}
 
-`standard`トークナイザーと`word_delimiter`を組み合わせてテキストをより細かく分割し、さらに大文字と小文字の正規化とASCIIへの変換を行います。
+`standard` トークナイザーと `word_delimiter` を組み合わせて細かくトークン化し、さらに大文字と小文字の正規化と ASCII への変換を行います。
 
 ```sql
 CREATE INVERTED INDEX TOKEN_FILTER IF NOT EXISTS word_splitter
@@ -442,7 +440,7 @@ PROPERTIES (
 SELECT tokenize('The server at IP 192.168.1.15 sent a confirmation to user_123@example.com, requiring a quickResponse before the deadline.', '"analyzer"="lowercase_delimited"');
 ```
 
-結果:
+結果：
 
 ```json
 [
@@ -471,9 +469,9 @@ SELECT tokenize('The server at IP 192.168.1.15 sent a confirmation to user_123@e
 ]
 ```
 
-### 例3: 元の語を保持した完全一致 {#example-3-exact-match-with-original-term-preserved}
+### 例 3：元の語を保持する完全一致 {#example-3-exact-match-with-original-term-preserved}
 
-`keyword`トークナイザーでテキスト全体を保持し、その後に`lowercase`と`asciifolding`で正規化します。これは、文字列の大文字と小文字を区別しない完全一致によく使用されます。
+`keyword` トークナイザーでテキスト全体を保持し、続いて `lowercase` と `asciifolding` で正規化します。大文字と小文字を区別せずに文字列を完全一致検索する場合によく使用します。
 
 ```sql
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS keyword_lowercase
@@ -497,7 +495,7 @@ PROPERTIES (
 SELECT tokenize('hÉllo World', '"analyzer"="keyword_lowercase"');
 ```
 
-結果:
+結果：
 
 ```json
 [
@@ -505,11 +503,11 @@ SELECT tokenize('hÉllo World', '"analyzer"="keyword_lowercase"');
 ]
 ```
 
-### 例4: IK Smartと細粒度な中国語トークン化（4.1.5以降） {#example-4-ik-smart-and-fine-grained-chinese-tokenization-since-415}
+### 例 4：IK による中国語のスマート分かち書きと細粒度な分かち書き（4.1.5 以降） {#example-4-ik-smart-and-fine-grained-chinese-tokenization-since-415}
 
-4.1.5以降、カスタムアナライザーでは、組み込みの`ik_smart`トークナイザーと`ik_max_word`トークナイザーを直接参照できます。また、いずれかを`type`に指定した名前付きトークナイザーを作成し、文字フィルターやトークンフィルターと組み合わせることもできます。どちらのIKトークナイザーにも追加のトークナイザーパラメーターはありません。両方とも、BEの設定項目`inverted_index_dict_path`が指すディレクトリ内の`ik`ディレクトリにある辞書を使用します。トークン化とインデックス構築に関わるすべてのBEが、これらのコンポーネントをサポートし、辞書を読み取れる必要があります。
+4.1.5 以降、カスタムアナライザーは組み込みの `ik_smart` と `ik_max_word` のトークナイザーを直接参照できます。また、いずれかを `type` に指定した名前付きトークナイザーを作成し、文字フィルターやトークンフィルターと組み合わせることもできます。どちらの IK トークナイザーにも追加のトークナイザーパラメーターはありません。両者は BE 設定の `inverted_index_dict_path` で指定された場所にある `ik` ディレクトリ内の辞書を使用します。トークン化とインデックス構築に関わるすべての BE は、これらのコンポーネントをサポートし、辞書を読み取れる必要があります。
 
-以下の例では、直接参照する方法と名前付きトークナイザーを使用する方法を示します。これらのコンポーネントの作成にはグローバルな`ADMIN`権限が必要です。テーブルの作成、データロード、クエリの実行には、対象のデータベースとテーブルに対する対応する権限も必要です。
+以下の例では、直接参照する方法と名前付きトークナイザーを使用する方法を示します。これらのコンポーネントを作成するには、グローバルな `ADMIN` 権限が必要です。テーブルの作成、データロード、クエリの実行には、対象のデータベースとテーブルに対する対応する権限も必要です。
 
 ```sql
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS cn_ik_smart
@@ -522,7 +520,7 @@ CREATE INVERTED INDEX ANALYZER IF NOT EXISTS cn_ik_max
 PROPERTIES ("tokenizer" = "cn_ik_max_tokenizer");
 ```
 
-作成に成功すると`Query OK`が返されます。コンポーネントがBEに同期されたら、`TOKENIZE`で出力を比較します。以下の結果は組み込み辞書を使用したものです。辞書を変更すると、生成されるトークンも変わる場合があります。
+作成に成功すると `Query OK` が返されます。コンポーネントが BE に同期されたら、`TOKENIZE` で出力を比較します。以下は組み込み辞書を使用した結果です。辞書を変更すると、生成されるトークンが変わる場合があります。
 
 ```sql
 SELECT TOKENIZE('中华人民共和国', '"analyzer"="cn_ik_smart"');
@@ -578,11 +576,11 @@ ORDER BY id;
 +----+
 ```
 
-中国語の完全な単語を維持して検索したい場合は`ik_smart`を使用し、単語の一部との一致を増やしたい場合は`ik_max_word`を使用します。さらにトークンを処理する必要がある場合は、アナライザーの`token_filter`プロパティでトークンフィルターを追加してください。
+中国語の語をまとまった形で保持して検索したい場合は `ik_smart` を使用します。より多くの部分語との一致が必要な場合は `ik_max_word` を使用します。語をさらに処理する必要があれば、アナライザーの `token_filter` プロパティでトークンフィルターを追加します。
 
-### 例5: Ngramの長さの範囲を拡張する（4.1.5以降） {#example-5-expand-the-ngram-length-range-since-415}
+### 例 5：Ngram の長さの範囲を拡大する（4.1.5 以降） {#example-5-expand-the-ngram-length-range-since-415}
 
-このトークナイザーは、`max_ngram_diff=7`を明示的に設定することで、長さが`1`から`8`までのN-gramを生成します。
+次のトークナイザーは、`max_ngram_diff=7` を明示的に設定し、長さ `1` から `8` までの N-gram を生成します。
 
 ```sql
 CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS ngram_1_8_tokenizer
@@ -597,7 +595,7 @@ CREATE INVERTED INDEX ANALYZER IF NOT EXISTS ngram_1_8_analyzer
 PROPERTIES ("tokenizer" = "ngram_1_8_tokenizer");
 ```
 
-作成とBEへの同期が成功したら、次を実行します。
+作成に成功し、BE への同期が完了したら、次を実行します。
 
 ```sql
 SELECT TOKENIZE('abcdefgh', '"analyzer"="ngram_1_8_analyzer"');
@@ -623,15 +621,15 @@ SELECT TOKENIZE('abcdefgh', '"analyzer"="ngram_1_8_analyzer"');
 
 ## 制限事項 {#limitations}
 
-1. `tokenizer`と`token_filter`の`type`およびパラメーターには、現在サポートされているトークナイザーとトークンフィルターのみを使用できます。それ以外を指定すると、テーブルの作成に失敗します。
-2. `analyzer`を削除できるのは、どのテーブルでも使用されていない場合に限ります。
-3. `tokenizer`または`token_filter`を削除できるのは、どの`analyzer`でも使用されていない場合に限ります。
-4. カスタムアナライザーのDDLは、実行から10秒後にBEへ同期されます。その後のデータインポートではエラーは発生しません。
+1. `tokenizer` と `token_filter` の `type` とパラメーターには、現在サポートされているトークナイザーとトークンフィルターのみを指定できます。それ以外を指定すると、テーブルの作成に失敗します。
+2. `analyzer` を削除できるのは、使用しているテーブルがない場合だけです。
+3. `tokenizer` または `token_filter` を削除できるのは、使用している `analyzer` がない場合だけです。
+4. カスタムアナライザーの DDL は、実行から 10 秒後に BE に同期されます。その後のデータインポートではエラーは発生しません。
 
 ---
 
 ## 注意事項 {#notes}
 
-1. カスタム`analyzer`に複数のコンポーネントを組み込むと、トークン化の性能が低下する場合があります。
-2. `select tokenize`トークン化関数はカスタムアナライザーに対応しており、トークン化結果のデバッグに使用できます。
-3. 同じインデックスには、事前定義済みの`built_in_analyzer`とカスタム`analyzer`のどちらか一方のみを設定できます。
+1. カスタム `analyzer` に複数のコンポーネントを組み込むと、トークン化の性能が低下する場合があります。
+2. `select tokenize` トークン化関数はカスタムアナライザーをサポートしており、トークン化結果のデバッグに使用できます。
+3. 同じインデックスには、定義済みの `built_in_analyzer` とカスタム `analyzer` のいずれか一方のみを設定できます。
