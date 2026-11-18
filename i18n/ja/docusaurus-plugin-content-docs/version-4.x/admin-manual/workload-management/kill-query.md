@@ -67,7 +67,7 @@ SHOW PROCESSLIST;
 SELECT * FROM information_schema.processlist;
 ```
 
-`fetch_all_fe_for_system_table = false` を設定すると、`information_schema.processlist` も現在の FE ノード上のセッションのみを表示します。
+`information_schema.processlist` も同じ変数に従います。このセッションで先に `SET fetch_all_fe_for_system_table = false` を実行した場合、このテーブルにも現在の FE ノードのセッションのみが表示されます。すべての FE ノードを表示するには、先に `SET fetch_all_fe_for_system_table = true;` を実行してください。
 
 ### Trace ID でクエリを特定する
 

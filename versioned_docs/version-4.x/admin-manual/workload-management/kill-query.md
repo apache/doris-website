@@ -67,7 +67,7 @@ You can also use the `information_schema` system table, which displays sessions 
 SELECT * FROM information_schema.processlist;
 ```
 
-Setting `fetch_all_fe_for_system_table = false` also limits `information_schema.processlist` to the current FE node.
+`information_schema.processlist` follows the same variable. If you ran `SET fetch_all_fe_for_system_table = false` earlier in the session, the table also shows only the current FE node; run `SET fetch_all_fe_for_system_table = true;` first to see all FE nodes again.
 
 ### Identify Queries by Trace ID
 

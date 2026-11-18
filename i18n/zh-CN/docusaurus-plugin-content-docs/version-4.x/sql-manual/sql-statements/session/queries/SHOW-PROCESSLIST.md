@@ -9,7 +9,7 @@
 ## 描述
 
 显示用户正在运行的线程。从 4.0.0 开始，该命令默认显示集群中所有 FE 的连接信息，`FE` 列表示连接所在的 FE。如果只需要查看当前 FE 的连接信息，可以设置会话变量：
-```
+```sql
 SET fetch_all_fe_for_system_table = false;
 ```
 4.0.0 之前的版本默认只显示当前 FE 的连接信息，对应的会话变量为 `show_all_fe_connection`（默认值为 `false`）。
@@ -42,6 +42,7 @@ SHOW [FULL] PROCESSLIST
 | State | 线程的状态                                |
 | QueryId | 当前查询语句的 ID                           |
 | Info | 一般记录的是线程执行的语句，默认只显示前 100 个字符         |
+| FE | 连接所在的 FE（4.0.0 起） |
 
 常见的 Command 类型如下：
 

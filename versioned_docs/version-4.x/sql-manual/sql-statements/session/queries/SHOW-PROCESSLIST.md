@@ -11,7 +11,7 @@
 Displays the thread that the user is running.  
 Since 4.0.0, the command lists the connections of all FEs in the cluster by default, and the `FE` column shows the FE each connection belongs to.
 To list only the connections of the current FE, set the session variable:
-```
+```sql
 SET fetch_all_fe_for_system_table = false;
 ```
 Before 4.0.0, the command lists only the connections of the current FE by default, and the session variable is `show_all_fe_connection` (default `false`).
@@ -44,6 +44,7 @@ SHOW [FULL] PROCESSLIST
 | State            | State of thread                                |
 | QueryId          | ID of the current query statement                           |
 | Info             | Generally, the statement executed by the thread is recorded, and only the first 100 characters are displayed by default         |
+| FE               | The FE that the connection is on (since 4.0.0) |
 
 Common Command types are as follows:
 

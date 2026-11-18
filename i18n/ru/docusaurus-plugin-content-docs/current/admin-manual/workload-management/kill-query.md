@@ -67,7 +67,7 @@ SHOW PROCESSLIST;
 SELECT * FROM information_schema.processlist;
 ```
 
-Если задать `fetch_all_fe_for_system_table = false`, `information_schema.processlist` также будет отображать только сеансы на текущем узле FE.
+`information_schema.processlist` подчиняется той же переменной. Если ранее в сеансе выполнялась команда `SET fetch_all_fe_for_system_table = false`, таблица также покажет только сеансы текущего узла FE; чтобы снова увидеть все узлы FE, сначала выполните `SET fetch_all_fe_for_system_table = true;`.
 
 ### Идентификация запросов по Trace ID {#identify-queries-by-trace-id}
 

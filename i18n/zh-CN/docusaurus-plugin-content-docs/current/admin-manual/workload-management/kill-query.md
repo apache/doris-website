@@ -67,7 +67,7 @@ SHOW PROCESSLIST;
 SELECT * FROM information_schema.processlist;
 ```
 
-设置 `fetch_all_fe_for_system_table = false` 后，`information_schema.processlist` 同样只显示当前 FE 节点上的会话。
+`information_schema.processlist` 同样受该变量控制。如果在当前会话中执行过 `SET fetch_all_fe_for_system_table = false`，该表也只显示当前 FE 节点上的会话；需要先执行 `SET fetch_all_fe_for_system_table = true;` 才能再次查看所有 FE 节点。
 
 ### 通过 Trace ID 标识查询
 

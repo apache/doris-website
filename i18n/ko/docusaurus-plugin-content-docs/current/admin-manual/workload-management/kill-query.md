@@ -67,7 +67,7 @@ SHOW PROCESSLIST;
 SELECT * FROM information_schema.processlist;
 ```
 
-`fetch_all_fe_for_system_table = false`를 설정하면 `information_schema.processlist`도 현재 FE 노드의 세션만 표시합니다.
+`information_schema.processlist`도 같은 변수를 따릅니다. 현재 세션에서 앞서 `SET fetch_all_fe_for_system_table = false`를 실행했다면 이 테이블도 현재 FE 노드의 세션만 표시하므로, 모든 FE 노드를 다시 보려면 먼저 `SET fetch_all_fe_for_system_table = true;`를 실행하세요.
 
 ### Trace ID로 쿼리 식별 {#identify-queries-by-trace-id}
 
