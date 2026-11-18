@@ -44,7 +44,7 @@ SHOW [FULL] PROCESSLIST
 | TraceId | 客户端通过 `SET session_context = 'trace_id:<id>'` 为会话设置的 Trace ID，未设置时为空 |
 | Info | 一般记录的是线程执行的语句，默认只显示前 100 个字符         |
 | FE | 连接所在的 FE |
-| CloudCluster | 存算分离模式下 Doris 最近一次为连接自动选择的计算组，未自动选择过时为 NULL。如果为会话设置了计算组或使用用户默认计算组，该值可能与实际使用的计算组不同 |
+| CloudCluster | 存算分离模式下为连接记录的计算组，没有记录时为 NULL |
 
 常见的 Command 类型如下：
 

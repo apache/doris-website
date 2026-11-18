@@ -47,7 +47,7 @@ SHOW [FULL] PROCESSLIST
 | TraceId          | Trace ID that the client set for the session with `SET session_context = 'trace_id:<id>'`; empty if not set |
 | Info             | Generally, the statement executed by the thread is recorded, and only the first 100 characters are displayed by default         |
 | FE               | The FE that the connection is on |
-| CloudCluster     | In compute-storage decoupled mode, the compute group that Doris last selected automatically for the connection, or NULL if it has not selected one. It can differ from the group in use when a compute group is set for the session or as the user's default |
+| CloudCluster     | In compute-storage decoupled mode, the compute group recorded for the connection; NULL if none is recorded |
 
 Common Command types are as follows:
 
