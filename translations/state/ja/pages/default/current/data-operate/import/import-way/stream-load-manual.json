@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/stream-load-manual.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/stream-load-manual.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "cff2d420abd71efab12e2f44969c5f285adce517211bfb3a60ca57e20b89d06c",
-    "sourceTechnicalHash": "0947e7b195f38d954ff6e7d8a347fe53392c57fbd417a6582a06382e8b7ff6df",
-    "targetHash": "56bcf1cb33c09e5f306591b10390e37527d827761a9e991db485059e55340220",
+    "sourceCommit": "e86ca9bf114ced02e9b5f884e70e307aa90236c0",
+    "sourceHash": "d18875396461f78754237a0072fa583541c45efe9c93abd857c217ea85661b20",
+    "sourceTechnicalHash": "5e39569d687fe7f5b2a33f7b9c90db3d9c0fb377ba71efbf79e52703dfd679f6",
+    "targetHash": "d36b34798b49ab046ae21dc3016bbe0dc5522dacfa6d9813fb0bc7bd5323702d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T14:56:43.008Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-16T06:57:07.428Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "d18875396461f78754237a0072fa583541c45efe9c93abd857c217ea85661b20",
+      "targetHash": "d36b34798b49ab046ae21dc3016bbe0dc5522dacfa6d9813fb0bc7bd5323702d",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 30: expected [\"inlineCode\",null,null,\"enable_stream_load_record=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 31: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_stream_load_record=true\"]\nprotected node 49: expected [\"inlineCode\",null,null,\"LOAD_PRIV\"]; received [\"inlineCode\",null,null,\"LOAD\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.4\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"100\",\"100\",\"10240\",\"102400\",\"102400\",\"102400\",\"1200\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"20\",\"20180601\",\"259200\",\"259200\",\"3\",\"3\",\"3\",\"3.0.0\",\"3.0.1\",\"3.0.2\",\"3000\",\"4\",\"4\",\"4.0\",\"4.0.0\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"50\",\"600\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.4\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"100\",\"100\",\"10240\",\"102400\",\"102400\",\"102400\",\"1200\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"20\",\"20180601\",\"259200\",\"259200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"3.0.1\",\"3.0.2\",\"3000\",\"4\",\"4\",\"4.0\",\"4.0.0\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"50\",\"600\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operation guide + Configuration parameter reference -->\"]; received [\"html\",null,null,\"<!-- ナレッジ種別: 操作ガイド + 設定パラメータリファレンス -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Data import / Local file import / Streaming data write -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: データロード / ローカルファイルのロード / ストリーミングデータの書き込み -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.4\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"100\",\"100\",\"10240\",\"102400\",\"102400\",\"102400\",\"1200\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"20\",\"20180601\",\"259200\",\"259200\",\"3\",\"3\",\"3\",\"3.0.0\",\"3.0.1\",\"3.0.2\",\"3000\",\"4\",\"4\",\"4.0\",\"4.0.0\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"50\",\"600\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.4\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"100\",\"100\",\"10240\",\"102400\",\"102400\",\"102400\",\"1200\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"20\",\"20180601\",\"259200\",\"259200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"3.0.1\",\"3.0.2\",\"3000\",\"4\",\"4\",\"4.0\",\"4.0.0\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"50\",\"600\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"enable_stream_load_record=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 31: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_stream_load_record=true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 30: expected [\"inlineCode\",null,null,\"enable_stream_load_record=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 31: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_stream_load_record=true\"]\nprotected node 49: expected [\"inlineCode\",null,null,\"LOAD_PRIV\"]; received [\"inlineCode\",null,null,\"LOAD\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/stream-load-manual.md",
+        "blob": "2ad564dd04c29503e125c2454c92d0a9a8f0492e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/stream-load-manual.md",
+        "blob": "ad74b925cdb37935547cd2440f71f816600d744a"
+      }
+    }
   }
 }

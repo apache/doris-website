@@ -7,6 +7,8 @@
 }
 ---
 
+Before configuring FDB access, confirm that the MetaService build contains a client compatible with the FDB server series; installing an Operator client does not update MetaService. See [Deploy FoundationDB](install-fdb.md) for the pinned installation and compatibility options. Preserve a shared FDB when deleting an individual Doris cluster.
+
 ## What you will learn in this chapter
 
 - Configure the connection information that MetaService uses to access FoundationDB
@@ -135,7 +137,7 @@ data:
     brpc_listen_port = 5000
     brpc_num_threads = -1
     brpc_idle_timeout_sec = 30
-    http_token = ${httpToken}
+    http_token = <custom-http-token>
 
     # // doris txn config
     label_keep_max_second = 259200
@@ -177,20 +179,20 @@ Parameter description:
 
 Apply the above configuration to the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#2-modify-key-configurations) you want to deploy.
 
-### Configure and change the HTTP token
+### Customize the management HTTP token {#ms-http-token}
 
-`http_token` authenticates MetaService HTTP management API requests. It is independent of the [Doris management account credentials in `authSecret`](config-cluster.md). Replace `${httpToken}` in the example above with a custom random string and reference the ConfigMap through `spec.metaService.configMaps`. When updating an existing configuration, preserve the other settings in `doris_cloud.conf`.
+`http_token` authenticates MetaService management HTTP API requests. Its default value is `greedisgood9999`. Replace `<custom-http-token>` in the example with a custom random string. Store `doris_cloud.conf` under the ConfigMap key of the same name and reference that ConfigMap through `spec.metaService.configMaps`, as shown above.
 
-Normal RPC access from FE and BE to MetaService does not use this HTTP token. For images that register nodes through FE SQL, such as Doris 4.1.5, you do not need to configure the same token in FE or BE, or restart them for this change.
+API clients pass the token in the `token` query parameter. Doris Operator reads `http_token` from the referenced ConfigMap for management HTTP requests, so update the ConfigMap to keep the Operator and MetaService in sync. FE and BE metadata RPCs do not use this token. For images that register nodes through FE SQL, such as Doris 4.1.5, changing this token requires no changes or restarts in FE or BE. The [Doris management account credentials in `spec.authSecret`](config-cluster.md) are independent of `http_token`.
 
-You can also change the token after deployment:
+To rotate the token after deployment:
 
-1. Update `http_token` in `doris_cloud.conf` in the referenced ConfigMap, preserving the other settings.
-2. Restart MetaService Pods one at a time, waiting for each Pod to become Ready before proceeding to the next. A single-replica deployment temporarily loses MetaService availability during the restart.
-3. Verify the new token on each MetaService replica using a read-only HTTP management API that requires token authentication. Pod readiness alone does not confirm that the token has changed.
-4. Update operations tools that call these HTTP management APIs.
+1. Update `http_token` in `doris_cloud.conf` in the referenced ConfigMap, preserving the other settings. Use the same new token for all MetaService replicas.
+2. Restart MetaService Pods one at a time and wait for each Pod to become Ready before proceeding to the next. A single-replica deployment temporarily loses MetaService availability during the restart.
+3. Verify the new token on each MetaService replica using a read-only management HTTP API that requires token authentication. Pod readiness alone does not confirm that the token has changed.
+4. Update the operations tools that call these APIs.
 
-`http_token` is a non-dynamic setting loaded at startup. Updating the ConfigMap alone does not change the token in a running MetaService process; do not rely on that update to restart Pods automatically. During the rolling change, replicas may temporarily use different tokens and HTTP management requests may fail authentication. Avoid node management operations that depend on these APIs during this interval.
+MetaService loads `http_token` at startup. An update to the ConfigMap alone does not change the token in a running process or guarantee an automatic restart. During rotation, replicas may temporarily use different tokens and management HTTP requests may fail authentication. Avoid node management operations that depend on these APIs during this interval.
 
 ## 5. Configure service probe timeouts
 

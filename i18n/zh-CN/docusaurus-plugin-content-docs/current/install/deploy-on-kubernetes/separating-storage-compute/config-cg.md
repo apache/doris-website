@@ -38,6 +38,27 @@ spec:
 | `image` | 部署 BE 服务的镜像地址。请使用 [Apache Doris 官方镜像仓库](https://hub.docker.com/r/apache/doris) 提供的镜像 |
 | `replicas` | 计算组内 BE 服务节点的数量 |
 
+### 节点系统初始化 {#be-system-initialization}
+
+`skipDefaultSystemInit` 默认为 `false`。Doris Operator 会添加以特权模式运行的 BE init container，执行：
+
+```shell
+sysctl -w vm.max_map_count=2000000 && swapoff -a
+```
+
+这些命令修改底层 Linux 节点的系统设置，会影响共享该设置的其他工作负载。在桌面环境使用 kind 时，受影响的 Linux 内核可能属于容器运行时的虚拟机。初始化的作用范围不限于 BE 进程。
+
+如果节点管理员已完成所需的系统配置，可以在已有计算组条目中设置 `skipDefaultSystemInit: true`。编辑清单时保留其他字段及其他计算组：
+
+```yaml
+spec:
+  computeGroups:
+    - uniqueId: cg1
+      skipDefaultSystemInit: true
+```
+
+对于 Doris 3.0.4 及以上版本，该开关还会注入 `SKIP_CHECK_ULIMIT=true`，跳过部分系统参数的启动检查。启用前应自行确认节点设置满足运行要求。
+
 ## 场景 2：部署多个计算组实现业务隔离
 
 `DorisDisaggregatedCluster` 资源支持部署多套计算组，每套计算组之间相互独立。以下示例展示了部署名称为 `cg1` 和 `cg2` 两套计算组的配置：
@@ -84,7 +105,7 @@ spec:
       memory: 8Gi
 ```
 
-将上述配置更新到需要部署的 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)中即可生效。
+将上述配置更新到需要部署的 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#2-修改关键配置)中即可生效。
 
 ## 场景 4：配置计算组的访问方式
 
@@ -229,7 +250,7 @@ kubectl apply -n ${namespace} -f ${beConfigMapFileName}.yaml
 
 ### 第 3 步：更新 DorisDisaggregatedCluster 资源
 
-更新 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源)以挂载 ConfigMap，配置如下：
+更新 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#2-修改关键配置)以挂载 ConfigMap，配置如下：
 
 ```yaml
 spec:
@@ -434,3 +455,23 @@ Operator 26.0.1 在移除整个 `computeGroups` 条目时使用 BE 直接移除�
 每次变更后，结合自定义资源中的计算组阶段、Pod 就绪状态和 `SHOW BACKENDS` 验证结果。确认节点数量符合目标、保留节点的 `Alive = true`、退役节点已被移除，并通过预期计算组执行查询和导入验证。
 
 如果操作停滞，检查 `kubectl describe ddc`、Pod Events、PVC 绑定状态和 Operator 日志。Pod 为 `Pending` 时通常需要检查调度或存储；`Decommissioning` 需要检查 Doris 退役进度；`ScaleDownFailed` 需要检查 Operator 记录的 SQL 错误以及 FE 连通性和权限。解决报告的原因后再重试，不要直接强制删除资源。参见[状态与故障排查](../doris-operator/status-and-troubleshooting.md)。
+
+## 计划重启 BE {#planned-be-restarts}
+
+临时重启应保留 BE 的注册信息，并使用优雅停止。在 Doris 4.1.5 存算分离模式下，`DECOMMISSION BACKEND` 是持久化的缩容操作：重启 Pod 不会取消该状态，且不支持 `CANCEL DECOMMISSION BACKEND`。永久移除 BE 时，应使用上方的缩容流程。
+
+普通 `DROP BACKEND` 被拒绝是主动保护；显式删除语法 `DROPP BACKEND` 参见 [DROP BACKEND](../../../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND.md)。永久删除节点时，优先使用 Operator 的缩容流程，使 Doris 元数据和 Kubernetes 资源保持一致。
+
+Doris Operator 会配置 BE 的 `preStop` hook。Doris 4.1.5 原始镜像中的 hook 调用 `stop_be.sh --grace`；BE 通过心跳上报 shutdown 状态，并等待正在运行的查询退出。重启前：
+
+1. 确认计算组内其他 BE 健康且有足够容量。
+2. 检查生成的 Pod 的 `terminationGracePeriodSeconds`，使其覆盖查询等待、退出后的延迟及执行开销。Doris 4.1.5 默认 `grace_shutdown_wait_seconds=120`、`grace_shutdown_post_delay_seconds=30`。Operator 26.0.1 默认给 BE Pod 设置 200 秒宽限期，但在 `be.conf` 中显式设置 `grace_shutdown_wait_seconds` 也会改变生成的 Pod 值，应同时检查两处设置。
+3. 正常删除 Pod 以执行 `preStop`，不要强制删除：
+
+   ```shell
+   kubectl delete pod ${be_pod} -n ${namespace}
+   ```
+
+4. 等待替换 Pod 变为 Ready，并通过 `SHOW BACKENDS` 确认 BE 存活且 shutdown 状态已清除。验证查询和导入正常后，再重启另一个 BE。
+
+Operator 26.0.1 另有两阶段优雅滚动流程，需要兼容的 BE 镜像。Doris 4.1.5 原始镜像不满足该流程的兼容性检查，因此仅升级 Operator 无法让该镜像启用新流程；已有的 `preStop` hook 仍是其优雅停止机制。优雅停止可以减少影响，但无法保护节点突然丢失或被强制终止时正在运行的查询。

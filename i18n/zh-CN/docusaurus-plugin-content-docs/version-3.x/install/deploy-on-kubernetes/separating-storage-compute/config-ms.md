@@ -6,6 +6,8 @@
 }
 ---
 
+配置 FDB 连接前，确认 MetaService 构建产物中的客户端兼容 FDB 服务端系列；安装 Operator 客户端不会更新 MetaService。固定版本安装及兼容方案见[部署 FoundationDB](install-fdb.md)。删除单个 Doris 集群时应保留共享 FDB。
+
 MetaService 是 Doris 存算分离集群元数据管理组件，不对外暴漏，仅用于内部使用。MetaService 属于无状态服务，通常采用主备模式部署。下面介绍如何在 `DorisDisaggregatedCluster` 资源中配置 MetaService。 
 
 ## 配置 FoundationDB 访问
@@ -67,7 +69,7 @@ Doris-Operator 通过 ConfigMap 挂载组件的启动配置文件。Doris-Operat
         brpc_listen_port = 5000
         brpc_num_threads = -1
         brpc_idle_timeout_sec = 30
-        http_token = greedisgood9999
+        http_token = <custom-http-token>
   
         # // doris txn config
         label_keep_max_second = 259200
@@ -103,6 +105,14 @@ Doris-Operator 通过 ConfigMap 挂载组件的启动配置文件。Doris-Operat
 :::tip 提示
 在 Kubernetes 部署中，定制化 MetaService 启动配置时请不要填写 `fdb_cluster` 配置，Doris Operator 会自动处理相关信息。
 :::
+
+### 自定义管理 HTTP token {#ms-http-token}
+
+`http_token` 用于校验 MetaService 管理 HTTP API 的请求，默认值为 `greedisgood9999`。请将示例中的 `<custom-http-token>` 替换为自己的值，并保留 `doris_cloud.conf` 中的其他配置。将文件放在 ConfigMap 的 `doris_cloud.conf` 键下，再按上方步骤通过 `spec.metaService.configMaps` 引用该 ConfigMap。
+
+所有 MetaService 副本应使用相同 token，并重启以加载启动配置。API 客户端通过 `token` 查询参数传入该值。Doris Operator 也会从引用的 MS ConfigMap 中读取 `http_token`，用于管理 HTTP 请求；只修改 Pod 内的文件会导致 Operator 与 MS 配置不一致。
+
+FE、BE 的元数据 RPC 不需要在其配置中设置这个管理 HTTP token。`spec.authSecret` 中的 SQL 管理凭据与 `http_token` 相互独立。
 
 ## 配置服务探测超时
 Doris Operator 为存算分离集群服务提供两种超时参数配置：存活探测超时和启动超时。

@@ -2,22 +2,22 @@
 {
     "title": "Routine Load",
     "language": "ja",
-    "description": "Apache Doris の Routine Load は Kafka からデータを継続的に取り込みます。CSV/JSON 形式、Exactly-Once セマンティクス、SSL/Kerberos 認証、ジョブのライフサイクル管理、トラブルシューティングを説明します。",
+    "description": "Apache Doris Routine Load は Kafka からデータを継続的に取り込みます。CSV/JSON 形式、Exactly-Once セマンティクス、SSL/Kerberos 認証、ジョブのライフサイクル管理、トラブルシューティングについて説明します。",
     "keywords": [
         "Routine Load",
-        "Kafka リアルタイム取り込み",
-        "Doris ストリーミング取り込み",
-        "継続的な取り込み",
+        "Kafka リアルタイムインポート",
+        "Doris ストリーミングインポート",
+        "継続的なインポート",
         "Exactly-Once",
         "Kafka SSL",
         "Kafka Kerberos",
         "Kafka SASL",
         "SASL_PLAINTEXT",
         "SASL_SSL",
-        "JSON 取り込み",
-        "CSV 取り込み",
-        "動的テーブル取り込み",
-        "単一ストリームから複数テーブルへの取り込み",
+        "JSON インポート",
+        "CSV インポート",
+        "動的テーブルインポート",
+        "単一ストリームから複数テーブルへのインポート",
         "柔軟な部分列更新",
         "UPDATE_FLEXIBLE_COLUMNS",
         "PAUSED",
@@ -39,85 +39,85 @@
 <!-- Knowledge type: Procedures + Configuration parameters + Examples + FAQ -->
 <!-- Applicable scenarios: Continuously consume data from Kafka into Doris / Real-time data ingestion / CDC streaming sync -->
 
-Routine Load は、Kafka トピックからデータを継続的に読み取り、Doris テーブルに書き込む Apache Doris の**ストリーミング取り込み**ジョブです。ジョブを作成すると、Doris は取り込みジョブを継続的に実行し、指定した Kafka トピックのメッセージを読み取るタスクをリアルタイムで生成します。**Exactly-Once** セマンティクスにより、データの欠落や重複を防ぎます。
+Routine Load は、Apache Doris が提供する**ストリーミングインポート**ジョブです。Kafka トピックからデータを継続的に読み取り、Doris テーブルに書き込みます。Routine Load ジョブを送信すると、Doris はインポートジョブを継続して実行し、Kafka クラスター内の指定されたトピックからメッセージを読み取るインポートタスクをリアルタイムで生成します。また、データの欠落や重複を防ぐ **Exactly-Once** セマンティクスを提供します。
 
 ## クイックナビゲーション {#quick-navigation}
 
-目的に応じて、該当するセクションに進んでください。
+目的に応じて、該当するセクションに直接移動できます。
 
 | 目的 | セクション |
 | ------- | ------- |
 | 最小構成の例をすぐに実行する | [クイックスタート](#quick-start) |
-| 動作原理、状態遷移、自動復旧の仕組みを理解する | [基本原理](#basic-principles) |
-| 設定可能な FE/BE/ジョブ/Kafka パラメータを調べる | [リファレンス](#reference-manual) |
-| 耐障害性、フィルタリング、JSON、Kerberos など、用途別の例を探す | [取り込み例](#import-examples) |
-| ジョブが `PAUSED` になる、`out of range` が報告される、SSL エラーが発生する | [よくある質問（FAQ）](#frequently-asked-questions-faq) |
+| 仕組み、状態遷移、自動復旧の仕組みを理解する | [基本原理](#basic-principles) |
+| 設定可能なパラメータ（FE/BE/ジョブ/Kafka）を調べる | [リファレンスマニュアル](#reference-manual) |
+| シナリオ別の例（障害許容、フィルタリング、JSON、Kerberos など）を探す | [インポート例](#import-examples) |
+| ジョブが `PAUSED` になる、`out of range` が報告される、または SSL エラーが発生する | [よくある質問（FAQ）](#frequently-asked-questions-faq) |
 
 ## ユースケース {#use-cases}
 
 <!-- Knowledge type: Scenario description -->
 
-Routine Load は、次のような場合に適しています。
+Routine Load は、次のシナリオに適しています。
 
 - Kafka トピックのリアルタイムデータを Doris に継続的に同期する。
-- データの欠落や重複を防ぐために **Exactly-Once** セマンティクスが必要である。
-- 取り込むデータに列マッピング、フィルタリング、派生列の計算などの変換を適用する。
-- 一つの Kafka トピックから複数の Doris テーブルにデータを動的に振り分ける（単一ストリーム、複数テーブル）。
+- データの欠落や重複を避けるために **Exactly-Once** セマンティクスが必要な場合。
+- インポートするデータに対して列マッピング、フィルタリング、派生列の計算などの変換を行う場合。
+- 単一の Kafka トピックから複数の Doris テーブルにデータを動的に振り分ける場合（単一ストリーム、複数テーブル）。
 
-### 対応するデータソースと形式 {#supported-data-sources-and-formats}
+### サポートされるデータソースと形式 {#supported-data-sources-and-formats}
 
-Routine Load が読み取れるデータソースは **Kafka クラスター**のみで、次の二種類のメッセージ形式に対応します。
+Routine Load がデータを読み取れるのは **Kafka クラスター**のみで、次のメッセージ形式をサポートします。
 
 | 形式 | 説明 |
 | ---- | ---- |
-| CSV  | 各メッセージは一行で、行末に改行文字を**含めません**。 |
-| JSON | 一つの JSON オブジェクト、または複数のオブジェクトを含む JSON 配列。 |
+| CSV  | 各メッセージは単一行で、行末に改行文字を**含めません**。 |
+| JSON | 単一の JSON オブジェクト、または複数のオブジェクトを含む JSON 配列。 |
 
-CSV 形式を取り込む際は、NULL 値と空文字列を区別してください。
+CSV 形式をインポートする際は、NULL 値と空文字列を明確に区別してください。
 
-- NULL 値は `\n` で表します。たとえば `a,\n,b` では、中央の列が NULL 値です。
-- 空文字列はそのまま空のデータとして設定されます。たとえば `a,,b` では、中央の列が空文字列（`''`）です。
+- NULL 値は `\n` で表します。たとえば `a,\n,b` は、中央の列が NULL 値であることを示します。
+- 空文字列は、データをそのまま空に設定します。たとえば `a,,b` は、中央の列が空文字列（`''`）であることを示します。
 
 ### 制限事項 {#limitations}
 
-Kafka からデータを読み取る Routine Load には、次の制限があります。
+Routine Load で Kafka からデータを読み取る場合、次の制限があります。
 
 | 制限 | 説明 |
 | ------ | ---- |
-| メッセージ形式 | CSV と JSON のテキスト形式のみをサポートします。各 CSV メッセージは一行で、行末に改行文字を**含めません**。 |
-| Kafka のバージョン | デフォルトでは Kafka 0.10.0.0 以降に対応します。0.10.0.0 より前のバージョン（0.9.0、0.8.2、0.8.1、0.8.0）を使うには、BE の設定 `kafka_broker_version_fallback` を対象バージョンに変更するか、ジョブ作成時に `property.broker.version.fallback` を設定します。古いバージョンでは、時刻による Kafka パーティションのオフセット指定など、Routine Load の新しい機能が使えない場合があります。 |
+| メッセージ形式 | CSV と JSON のテキスト形式のみをサポートします。各 CSV メッセージは単一行で、行末に改行文字を**含めません**。 |
+| Kafka のバージョン | デフォルトでは Kafka 0.10.0.0 以降をサポートします。Kafka 0.10.0.0 より前のバージョン（0.9.0、0.8.2、0.8.1、0.8.0）を使用するには、BE 設定の `kafka_broker_version_fallback` を互換性を持たせたい旧バージョンに変更するか、ジョブ作成時に `property.broker.version.fallback` を直接設定します。旧バージョンを使用すると、時刻を指定して Kafka パーティションのオフセットを設定する機能など、Routine Load の一部の新機能が利用できない場合があります。 |
 
 ## 基本原理 {#basic-principles}
 
-Routine Load は Kafka トピックからデータを継続的に読み取り、Doris に書き込みます。Doris で Routine Load ジョブを作成すると、複数の取り込みタスクを含む長時間実行ジョブが生成されます。
+Routine Load は Kafka トピックからデータを継続的に読み取り、Doris に書き込みます。Doris で Routine Load ジョブを作成すると、複数のインポートタスクを含む常駐のインポートジョブが生成されます。
 
-- **取り込みジョブ（Load Job）**: データソースからデータを継続的に読み取る、長時間実行の Routine Load ジョブです。
-- **取り込みタスク（Load Task）**: 実際の読み取りのためにジョブを分割したタスクです。各タスクは独立したトランザクションです。
+- **Load Job**: Routine Load Job は、データソースからデータを継続的に読み取る常駐のインポートジョブです。
+- **Load Task**: インポートジョブは、実際のデータ読み取りを行う複数のインポートタスクに分割されます。各タスクは独立したトランザクションです。
 
-Routine Load の詳しい処理の流れを次の図に示します。
+Routine Load の詳細なフローを次の図に示します。
 
-![Routine Load の処理の流れ](/images/routine-load.png)
+![Routine Load](/images/routine-load.png)
 
 全体の流れは次のとおりです。
 
-1. クライアントが FE に Routine Load ジョブの作成を要求します。FE は Routine Load Manager を通じて、長時間実行の取り込みジョブ（Routine Load Job）を生成します。
-2. FE は Job Scheduler を通じてジョブを複数の Routine Load Task に分割します。Task Scheduler がタスクを BE ノードに割り当てます。
-3. BE でタスクが取り込みを終えると、FE にトランザクションをコミットし、ジョブのメタデータを更新します。
-4. タスクのコミット後、新しいタスクを生成するか、タイムアウトしたタスクを再試行します。
-5. 新しいタスクは Task Scheduler によって継続的にスケジュールされます。
+1. クライアントが Routine Load ジョブの作成要求を FE に送信します。FE は Routine Load Manager を通じて、常駐のインポートジョブ（Routine Load Job）を生成します。
+2. FE は Job Scheduler を通じて Routine Load Job を複数の Routine Load Task に分割します。その後、Task Scheduler がタスクを BE ノードに割り当てます。
+3. BE 上で Routine Load Task がインポートを終えると、FE にトランザクションをコミットし、ジョブのメタデータを更新します。
+4. Routine Load Task のコミット後、新しいタスクを生成するか、タイムアウトしたタスクを再試行します。
+5. 新しく生成された Routine Load Task は Task Scheduler によって繰り返しスケジュールされます。
 
 ### 自動復旧の仕組み {#auto-recovery-mechanism}
 
 <!-- Knowledge type: State machine / Operations rules -->
 
-ジョブの可用性を高めるため、Routine Load には自動復旧の仕組みがあります。ジョブが予期せず一時停止すると、Routine Load Scheduler スレッドが自動的に復旧を試みます。Kafka 側の予期しない停止などで処理できなくなった場合も、Kafka の復旧後は通常、手動操作なしで取り込みジョブを再開できます。
+ジョブの高可用性を確保するため、Routine Load には自動復旧の仕組みがあります。ジョブが予期せず一時停止した場合、Routine Load Scheduler スレッドが自動復旧を試みます。Kafka 側の予期しない停止などで処理を続行できなくなった場合でも、Kafka が復旧すれば、手動操作なしでインポートジョブの通常運転を再開できます。
 
 次の表に、自動復旧するケースと手動対応が必要なケースを示します。
 
 | 一時停止の原因 | 自動復旧 | 推奨される対応 |
 | -------------- | ------------ | -------- |
-| Kafka ブローカーへの一時的な接続不可、ネットワークの不安定さ | はい | Scheduler が `period_of_auto_resume_min` の間隔で自動的に再試行します。 |
-| ユーザーが `PAUSE ROUTINE LOAD` を実行した | いいえ | `RESUME ROUTINE LOAD` を手動で実行します。 |
+| Kafka broker に一時的に接続できない、ネットワークが不安定 | はい | Scheduler が `period_of_auto_resume_min` の間隔で自動的に再試行します。 |
+| ユーザーが `PAUSE ROUTINE LOAD` を手動で実行した | いいえ | `RESUME ROUTINE LOAD` を手動で実行します。 |
 | データ品質の問題（`max_filter_ratio` または `max_error_number` を超過） | いいえ | `ErrorLogUrls` を調査し、データまたはパラメータを調整してから `RESUME` します。 |
 | データベースやテーブルの削除など、復旧できないメタデータの例外 | いいえ | テーブルを再作成するか、ジョブを作り直します。 |
 
@@ -125,15 +125,15 @@ Routine Load の詳しい処理の流れを次の図に示します。
 
 <!-- Knowledge type: Procedures -->
 
-このセクションでは、Kafka から Routine Load ジョブを作成する最小構成の例と、ジョブの表示、一時停止、再開、変更、停止の基本操作を説明します。
+このセクションでは、最小構成で実行できる例を通じて、Kafka からの Routine Load ジョブの作成と、ジョブの表示、一時停止、再開、変更、停止の基本操作を説明します。
 
-### 取り込みジョブの作成 {#create-an-import-job}
+### インポートジョブの作成 {#create-an-import-job}
 
-[CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD) コマンドで、長時間実行する Routine Load 取り込みジョブを作成できます。Routine Load は CSV と JSON のデータを読み取れます。
+[CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD) コマンドで、常駐の Routine Load インポートタスクを作成できます。Routine Load は CSV データと JSON データを読み取れます。
 
-#### CSV データの取り込み {#import-csv-data}
+#### CSV データのインポート {#import-csv-data}
 
-1. Kafka データのサンプルを用意します。
+1. Kafka のサンプルデータを用意します。
 
     ```bash
     kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
@@ -149,7 +149,7 @@ Routine Load の詳しい処理の流れを次の図に示します。
     10,Liam,64
     ```
 
-2. 取り込み先のテーブルを作成します。
+2. インポート先のテーブルを作成します。
 
     ```sql
     CREATE TABLE testdb.test_routineload_tbl(
@@ -161,7 +161,7 @@ Routine Load の詳しい処理の流れを次の図に示します。
     DISTRIBUTED BY HASH(user_id) BUCKETS 10;
     ```
 
-3. Routine Load 取り込みジョブを作成します。
+3. Routine Load インポートジョブを作成します。
 
     ```sql
     CREATE ROUTINE LOAD testdb.example_routine_load_csv ON test_routineload_tbl
@@ -174,9 +174,9 @@ Routine Load の詳しい処理の流れを次の図に示します。
     );
     ```
 
-#### JSON データの取り込み {#import-json-data}
+#### JSON データのインポート {#import-json-data}
 
-1. Kafka データのサンプルを用意します。
+1. Kafka のサンプルデータを用意します。
 
     ```bash
     kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-json --from-beginning
@@ -192,7 +192,7 @@ Routine Load の詳しい処理の流れを次の図に示します。
     {"user_id":10,"name":"Liam","age":64}
     ```
 
-2. 取り込み先のテーブルを作成します。
+2. インポート先のテーブルを作成します。
 
     ```sql
     CREATE TABLE testdb.test_routineload_tbl(
@@ -204,7 +204,7 @@ Routine Load の詳しい処理の流れを次の図に示します。
     DISTRIBUTED BY HASH(user_id) BUCKETS 10;
     ```
 
-3. Routine Load 取り込みジョブを作成します。
+3. Routine Load インポートジョブを作成します。
 
     ```sql
     CREATE ROUTINE LOAD testdb.example_routine_load_json ON test_routineload_tbl
@@ -221,21 +221,21 @@ Routine Load の詳しい処理の流れを次の図に示します。
     ```
 
 :::info 注記
-JSON ファイルのルートにある JSON オブジェクトを取り込むには、`jsonpaths` を `$.` に設定します。例: `PROPERTIES("jsonpaths"="$.")`。
+JSON ファイルのルートにある JSON オブジェクトをインポートするには、`jsonpaths` を `$.` に設定します。例: `PROPERTIES("jsonpaths"="$. ")`。
 :::
 
-### 取り込み状態の確認 {#view-import-status}
+### インポート状態の確認 {#view-import-status}
 
-Routine Load の状態は、次の二つの単位で確認します。
+Routine Load の状態は、次の観点から確認できます。
 
-- **取り込みジョブ**: 取り込み先テーブル、サブタスク数、取り込みの遅延、設定、結果を確認します。
-- **取り込みタスク**: サブタスクの状態、読み取りの進捗、割り当て先の BE ノードを確認します。
+- **Load Job**: インポート先テーブル、サブタスク数、インポートの遅延状況、インポート設定、インポート結果などを確認します。
+- **Load Task**: インポートサブタスクの状態、読み取りの進捗、タスクの割り当て先 BE ノードを確認します。
 
-#### 取り込みジョブの確認 {#view-the-load-job}
+#### Load Job の確認 {#view-the-load-job}
 
-[SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) コマンドで取り込みジョブを確認します。このコマンドには、取り込み先テーブル、遅延、設定、エラー情報など、現在のジョブの基本状態が表示されます。
+[SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) コマンドで Load Job を確認します。このコマンドは、インポート先テーブル、遅延状況、設定、エラー情報など、現在のジョブの基本状態を表示します。
 
-次のコマンドは `testdb.example_routine_load_csv` の状態を表示します。
+次のコマンドは `testdb.example_routine_load_csv` のジョブ状態を表示します。
 
 ```sql
 mysql> SHOW ROUTINE LOAD FOR testdb.example_routine_load\G
@@ -265,9 +265,9 @@ ReasonOfStateChanged:
 1 row in set (0.00 sec)
 ```
 
-#### 取り込みサブタスクの確認 {#view-the-load-subtasks}
+#### Load Subtask の確認 {#view-the-load-subtasks}
 
-[SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) コマンドで取り込みサブタスクを確認します。対象ジョブは `WHERE JobName = <job_name>` または `FOR [<db>.]<job_name>` で指定できます（`<db>` を省略した場合は現在のデータベースを使用）。このコマンドには、サブタスクの状態や割り当て先の BE ID などが表示されます。
+[SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) コマンドでインポートサブタスクを確認します。`WHERE JobName = <job_name>` または `FOR [<db>.]<job_name>` で Routine Load ジョブを指定できます（`<db>` を省略すると、現在のデータベースを使用します）。このコマンドは、サブタスクの状態や割り当て先の BE ID など、現在のジョブに属するサブタスクの情報を表示します。
 
 次のコマンドは `testdb.example_routine_load_csv` のサブタスク情報を表示します。
 
@@ -290,27 +290,27 @@ mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
 mysql> SHOW ROUTINE LOAD TASK FOR testdb.example_routine_load_csv;
 ```
 
-### 取り込みジョブの一時停止 {#pause-an-import-job}
+### インポートジョブの一時停止 {#pause-an-import-job}
 
-[PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD) コマンドで取り込みジョブを一時停止できます。一時停止したジョブは `PAUSED` 状態になりますが、終了はしません。`RESUME ROUTINE LOAD` コマンドで再開できます。
+[PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD) コマンドでインポートジョブを一時停止できます。一時停止後、ジョブは `PAUSED` 状態になりますが、終了はしません。`RESUME ROUTINE LOAD` コマンドで再開できます。
 
 ```sql
 PAUSE ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
-### 取り込みジョブの再開 {#resume-an-import-job}
+### インポートジョブの再開 {#resume-an-import-job}
 
-`PAUSED` 状態のジョブは、[RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD) コマンドで再開できます。
+`PAUSED` 状態のインポートジョブは、[RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD) コマンドで再開できます。
 
 ```sql
 RESUME ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
-### 取り込みジョブの変更 {#modify-an-import-job}
+### インポートジョブの変更 {#modify-an-import-job}
 
-作成済みのジョブは [ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD) コマンドで変更できます。変更前に `PAUSE ROUTINE LOAD` で一時停止し、変更後に `RESUME ROUTINE LOAD` で再開します。
+作成済みのインポートジョブは、[ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD) コマンドで変更できます。変更前に `PAUSE ROUTINE LOAD` でジョブを一時停止し、変更後に `RESUME ROUTINE LOAD` で再開します。
 
-たとえば、希望する並列度のパラメータ `desired_concurrent_number` と Kafka トピックの情報を変更するには、次のようにします。
+たとえば、希望する並行処理数を表すパラメータ `desired_concurrent_number` と Kafka トピックの情報を変更するには、次のようにします。
 
 ```sql
 ALTER ROUTINE LOAD FOR testdb.example_routine_load_csv
@@ -323,9 +323,9 @@ FROM KAFKA(
 );
 ```
 
-### 取り込みジョブの停止 {#cancel-an-import-job}
+### インポートジョブの取り消し {#cancel-an-import-job}
 
-[STOP ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD) コマンドで Routine Load 取り込みジョブを停止、削除できます。**削除したジョブは復旧できず**、`SHOW ROUTINE LOAD` コマンドでも表示できません。
+[STOP ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD) コマンドで Routine Load インポートジョブを停止し、削除できます。**削除したインポートジョブは復旧できず**、`SHOW ROUTINE LOAD` コマンドでも表示できません。
 
 ```sql
 STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
@@ -333,25 +333,25 @@ STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 ### Compute Group のバインド {#bind-a-compute-group}
 
-**ストレージとコンピュートが分離したモード**では、Routine Load は次の優先順位で Compute Group を選択します。
+**ストレージとコンピュートの分離モード**では、Routine Load の Compute Group は次の優先順位で選択されます。
 
-1. `use db@cluster` 文で指定された Compute Group。
-2. ユーザープロパティ `default_compute_group` で指定された Compute Group。
-3. 現在のユーザーがアクセス権を持つ Compute Group のいずれか。
+1. `use db@cluster` ステートメントで指定された Compute Group を選択します。
+2. ユーザープロパティ `default_compute_group` で指定された Compute Group を選択します。
+3. 現在のユーザーにアクセス権限がある Compute Group から選択します。
 
-**ストレージとコンピュートが一体のモード**では、ユーザープロパティ `resource_tags.location` で指定された Compute Group を選択します。指定がなければ、`default` という名前の Compute Group を使用します。
+**ストレージとコンピュートの統合モード**では、ユーザープロパティ `resource_tags.location` で指定された Compute Group を選択します。ユーザープロパティに指定がない場合は、`default` という名前の Compute Group を使用します。
 
-:::caution 注記
-Routine Load ジョブの Compute Group は**作成時にのみ指定できます**。作成後にバインド先の Compute Group を変更することはできません。
+:::caution 注意
+Routine Load ジョブの Compute Group は**作成時にしか指定できません**。ジョブ作成後に、バインドされた Compute Group を変更することはできません。
 :::
 
-## リファレンス {#reference-manual}
+## リファレンスマニュアル {#reference-manual}
 
 <!-- Knowledge type: Configuration parameters + Syntax reference -->
 
-### 取り込みコマンドの構文 {#import-command-syntax}
+### インポートコマンドの構文 {#import-command-syntax}
 
-長時間実行する Routine Load 取り込みジョブを作成する構文は次のとおりです。
+常駐の Routine Load インポートジョブを作成する構文は次のとおりです。
 
 ```sql
 CREATE ROUTINE LOAD [<db_name>.]<job_name> [ON <tbl_name>]
@@ -362,62 +362,62 @@ FROM KAFKA [data_source_properties]
 [COMMENT "<comment>"]
 ```
 
-各要素の説明は次のとおりです。
+各モジュールの説明は次のとおりです。
 
-| 要素                  | 説明                                                  |
+| モジュール | 説明 |
 | ---------------------- | ------------------------------------------------------------ |
-| db_name                | 取り込みタスクを作成するデータベースを指定します。   |
-| job_name               | 作成する取り込みタスクの名前を指定します。同じデータベース内に同名のタスクは作成できません。 |
-| tbl_name               | データの取り込み先テーブルを指定します。省略可能です。省略すると動的テーブル方式になり、Kafka のデータにテーブル名を含める必要があります。 |
-| merge_type             | データのマージ種別です。デフォルトは APPEND です。<p>次の三種類があります。</p><p>- APPEND: 追加して取り込みます。</p><p>- MERGE: マージして取り込みます。</p><p>- DELETE: 取り込んだデータをすべて削除対象として扱います。</p> |
-| load_properties        | 取り込み内容を指定する要素で、次の句を含みます。<p>- column_separator 句</p><p>- columns_mapping 句</p><p>- preceding_filter 句</p><p>- where_predicates 句</p><p>- partitions 句</p><p>- delete_on 句</p><p>- order_by 句</p> |
-| job_properties         | Routine Load の共通の取り込みパラメータを指定します。      |
-| data_source_properties | Kafka データソースのプロパティを指定します。           |
-| comment                | 取り込みジョブのコメントを指定します。                    |
+| db_name | インポートタスクを作成するデータベースを指定します。 |
+| job_name | 作成するインポートタスクの名前を指定します。同じデータベース内に同名のタスクは作成できません。 |
+| tbl_name | データのインポート先テーブル名を指定します。省略可能です。省略すると動的テーブル方式になり、Kafka のデータにテーブル名を含める必要があります。 |
+| merge_type | データのマージ方式です。デフォルトは APPEND です。<p>次の選択肢があります。</p><p>- APPEND: 追加インポート。</p><p>- MERGE: マージインポート。</p><p>- DELETE: インポートするすべてのデータを削除対象とします。</p> |
+| load_properties | インポートの記述モジュールで、次の要素を含みます。<p>- column_separator 句</p><p>- columns_mapping 句</p><p>- preceding_filter 句</p><p>- where_predicates 句</p><p>- partitions 句</p><p>- delete_on 句</p><p>- order_by 句</p> |
+| job_properties | Routine Load に共通するインポートパラメータを指定します。 |
+| data_source_properties | Kafka データソースのプロパティを記述します。 |
+| comment | インポートジョブのコメントを記述します。 |
 
-### 取り込みパラメータの説明 {#import-parameter-description}
+### インポートパラメータの説明 {#import-parameter-description}
 
 #### FE 設定パラメータ {#fe-configuration-parameters}
 
-| パラメータ | デフォルト値 | 動的変更 | FE Master のみ | 説明 |
+| パラメータ | デフォルト | 動的変更 | FE Master のみ | 説明 |
 | -------- | ------ | -------- | ------------------ | -------- |
-| max_routine_load_task_concurrent_num | 256 | はい | はい | Routine Load 取り込みジョブのサブタスク並列度の上限です。デフォルト値を維持することを推奨します。大きすぎる値を設定すると、同時実行タスクが増え、クラスターのリソースを消費する可能性があります。 |
-| max_routine_load_task_num_per_be | 1024 | はい | はい | BE ごとに同時実行できる Routine Load タスクの最大数です。`max_routine_load_task_num_per_be` は `routine_load_thread_pool_size` より小さくしてください。 |
-| max_routine_load_job_num | 100 | はい | はい | NEED_SCHEDULED、RUNNING、PAUSE 状態のジョブを含む Routine Load ジョブ数の上限です。 |
-| max_tolerable_backend_down_num | 0 | はい | はい | BE が一台でも停止すると、Routine Load は自動復旧できません。一定の条件を満たすと、Doris は PAUSED タスクを再スケジュールして RUNNING 状態に切り替えられます。値が 0 の場合、すべての BE ノードが稼働している場合にのみ再スケジュールできます。 |
+| max_routine_load_task_concurrent_num | 256 | はい | はい | Routine Load インポートジョブのサブタスクの最大並行実行数を制限します。デフォルト値の維持を推奨します。値が大きすぎると、並行タスクが増えすぎてクラスターのリソースを消費する場合があります。 |
+| max_routine_load_task_num_per_be | 1024 | はい | はい | 各 BE で同時に実行できる Routine Load タスクの最大数です。`max_routine_load_task_num_per_be` は `routine_load_thread_pool_size` より小さくしてください。 |
+| max_routine_load_job_num | 100 | はい | はい | NEED_SCHEDULED、RUNNING、PAUSE 状態のジョブを含め、Routine Load ジョブの最大数を制限します。 |
+| max_tolerable_backend_down_num | 0 | はい | はい | BE が停止すると、Routine Load は自動復旧できません。一定の条件を満たすと、Doris は PAUSED 状態のタスクを再スケジュールし、RUNNING 状態に切り替えることができます。値が 0 の場合、すべての BE ノードが稼働しているときにのみ再スケジュールできます。 |
 | period_of_auto_resume_min | 5（分） | はい | はい | Routine Load の自動復旧を試みる間隔です。 |
 
 #### BE 設定パラメータ {#be-configuration-parameters}
 
-| パラメータ | デフォルト値 | 動的変更 | 説明 |
+| パラメータ | デフォルト | 動的変更 | 説明 |
 | -------- | ------ | -------- | ---- |
-| max_consumer_num_per_group | 3 | はい | 一つのサブタスクが読み取り用に生成できるコンシューマーの最大数です。 |
+| max_consumer_num_per_group | 3 | はい | 単一のサブタスクがデータの読み取り用に生成できる consumer の最大数です。 |
 
-#### 取り込み設定パラメータ {#import-configuration-parameters}
+#### インポート設定パラメータ {#import-configuration-parameters}
 
-Routine Load ジョブを作成する際、`CREATE ROUTINE LOAD` コマンドで各要素の取り込み設定パラメータを指定できます。
+Routine Load ジョブを作成する際、`CREATE ROUTINE LOAD` コマンドの各モジュールでインポート設定パラメータを指定できます。
 
 ##### tbl_name 句 {#tbl_name-clause}
 
-取り込み先テーブルの名前を指定します。省略可能です。
+インポート先のテーブル名を指定します。省略可能です。
 
-省略すると**動的テーブル**方式になり、Kafka のデータにテーブル名を含める必要があります。現在、動的テーブル名は Kafka Value からの抽出にのみ対応しており、データは次の形式に従う必要があります。JSON の場合は `table_name|{"col1": "val1", "col2": "val2"}` です。ここで `tbl_name` はテーブル名、`|` はテーブル名とデータの区切り文字です。CSV 形式も同様で、たとえば `table_name|val1,val2,val3` です。
+省略すると**動的テーブル**方式になり、Kafka のデータにテーブル名を含める必要があります。現在、動的なテーブル名は Kafka の Value から抽出する方式のみをサポートしており、データは所定の形式に従う必要があります。JSON の場合は `table_name|{"col1": "val1", "col2": "val2"}` です。ここで `tbl_name` はテーブル名、`|` はテーブル名とテーブルデータの区切り文字です。CSV 形式のデータも同様で、たとえば `table_name|val1,val2,val3` となります。
 
-:::caution 注記
-ここでの `table_name` は Doris のテーブル名と完全に一致する必要があります。一致しないと取り込みに失敗します。動的テーブルでは `column_mapping` を使用できません。
+:::caution 注意
+ここでの `table_name` は Doris のテーブル名と完全に一致する必要があります。一致しないとインポートに失敗します。動的テーブルでは `column_mapping` をサポートしません。
 :::
 
 ##### merge_type 句 {#merge_type-clause}
 
-`merge_type` でデータのマージ種別を指定できます。次の三種類があります。
+`merge_type` モジュールでデータのマージ方式を指定できます。選択肢は次のとおりです。
 
-- **APPEND**: 追加して取り込みます。
-- **MERGE**: マージして取り込みます。Unique Key モデルにのみ適用できます。削除フラグ列を示すには `[DELETE ON]` 句も必要です。
-- **DELETE**: 取り込んだデータをすべて削除対象として扱います。
+- **APPEND**: 追加インポート。
+- **MERGE**: マージインポート。Unique Key モデルにのみ適用できます。Delete Flag 列を指定するため、`[DELETE ON]` モジュールと併用する必要があります。
+- **DELETE**: インポートするすべてのデータを削除対象とします。
 
 ##### load_properties 句 {#load_properties-clause}
 
-`load_properties` で取り込むデータのプロパティを指定できます。構文は次のとおりです。
+`load_properties` モジュールでインポートデータのプロパティを記述できます。構文は次のとおりです。
 
 ```sql
 [COLUMNS TERMINATED BY <column_separator>,]
@@ -428,73 +428,79 @@ Routine Load ジョブを作成する際、`CREATE ROUTINE LOAD` コマンドで
 [ORDER BY <order_by_column1>[, <order_by_column2>, <order_by_column3>, ...]]
 ```
 
-各要素に対応するパラメータは次のとおりです。
+各モジュールのパラメータは次のとおりです。
 
-| サブ要素            | パラメータ          | 説明                                                  |
+| サブモジュール | パラメータ | 説明 |
 | --------------------- | ------------------ | ------------------------------------------------------------ |
-| COLUMNS TERMINATED BY | `<column_separator>` | 列の区切り文字を指定します。デフォルトは `\t` です。たとえばカンマを指定する場合は `COLUMN TERMINATED BY ","` とします。NULL の扱いは次のとおりです。<p>- NULL 値は `\n` で表します。`a,\n,b` では中央の列が NULL 値です。</p><p>- 空文字列はそのまま空のデータとして設定されます。`a,,b` では中央の列が空文字列（`''`）です。</p> |
-| COLUMNS               | `<column_name>`    | 対応する列名を指定します。たとえば取り込み列 `(k1, k2, k3)` を指定する場合は `COLUMNS(k1, k2, k3)` とします。次の場合、COLUMNS 句は省略できます。<p>- CSV の列とテーブルの列が 一対一 で対応する。</p><p>- JSON のキー名とテーブルの列名が一致する。</p> |
-| &nbsp;                | `<column_mapping>` | 列マッピングによって、取り込み時に列のフィルタリングや変換ができます。たとえば、対象列 k4 を列 k3 の値に式 k3+1 を適用して計算する場合は `COLUMNS(k1, k2, k3, k4 = k3 + 1)` とします。詳細は [データ変換](../../import/load-data-convert) を参照してください。 |
-| WHERE                 | `<where_expr>`     | 条件に基づいて取り込むデータをフィルタリングします。たとえば age > 30 のデータのみを取り込むには `WHERE age > 30` とします。 |
-| PARTITION             | `<partition_name>` | 取り込み先テーブルのパーティションを指定します。省略すると、データは対応するパーティションに自動的に取り込まれます。たとえば p1 と p2 に取り込むには `PARTITION(p1, p2)` とします。 |
-| DELETE ON             | `<delete_expr>`    | MERGE 取り込みモードで、`delete_expr` により削除対象を指定します。たとえば MERGE 時に age > 30 の行を削除するには `DELETE ON age > 30` とします。 |
-| ORDER BY              | `<order_by_column>` | Unique Key モデルでのみ有効です。取り込むデータの Sequence Column を指定して順序を保証します。たとえば `create_time` を指定するには `ORDER BY create_time` とします。詳細は [データ更新 / Sequence Column](../../../data-operate/update/update-of-unique-model) を参照してください。 |
+| COLUMNS TERMINATED BY | `<column_separator>` | 列区切り文字を指定します。デフォルトは `\t` です。たとえばカンマを指定する場合は `COLUMN TERMINATED BY ","` とします。NULL 値の扱いには注意してください。<p>- NULL 値は `\n` で表します。`a,\n,b` は中央の列が NULL 値であることを示します。</p><p>- 空文字列はデータをそのまま空に設定します。`a,,b` は中央の列が空文字列（`''`）であることを示します。</p> |
+| COLUMNS | `<column_name>` | 対応する列名を指定します。インポートする列を `(k1, k2, k3)` とする場合は `COLUMNS(k1, k2, k3)` と指定します。次の場合、COLUMNS 句は省略できます。<p>- CSV 内の列がテーブルの列と一対一に対応する場合。</p><p>- JSON 内のキー名がテーブルの列名と同じ場合。</p> |
+| &nbsp; | `<column_mapping>` | インポート時に列マッピングを使って列をフィルタリング、変換できます。たとえば、対象列 k4 を k3 列から式 k3+1 で計算する場合は `COLUMNS(k1, k2, k3, k4 = k3 + 1)` とします。詳しくは[データ変換](../../import/load-data-convert)を参照してください。 |
+| WHERE | `<where_expr>` | 条件によってインポート元のデータをフィルタリングします。たとえば age > 30 のデータだけをインポートする場合は `WHERE age > 30` とします。 |
+| PARTITION | `<partition_name>` | インポート先テーブルのパーティションを指定します。省略すると、データは対応するパーティションに自動的にインポートされます。たとえば p1 と p2 にインポートする場合は `PARTITION(p1, p2)` とします。 |
+| DELETE ON | `<delete_expr>` | MERGE インポートモードで `delete_expr` を使用し、削除対象の列を指定します。たとえば MERGE 中に age > 30 の列を削除する場合は `DELETE ON age > 30` とします。 |
+| ORDER BY | `<order_by_column>` | Unique Key モデルでのみ有効です。データの順序を保証するため、インポートデータ内の Sequence Column を指定します。たとえば `create_time` を Sequence Column に指定する場合は `ORDER BY create_time` とします。詳しくは[データ更新 / Sequence Column](../../../data-operate/update/update-of-unique-model)を参照してください。 |
 
 ##### job_properties 句 {#job_properties-clause}
 
-Routine Load 取り込みジョブの作成時に、`job_properties` 句でジョブのプロパティを指定できます。構文は次のとおりです。
+Routine Load インポートジョブの作成時に、`job_properties` 句でジョブのプロパティを指定できます。構文は次のとおりです。
 
 ```sql
 PROPERTIES ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 ```
 
-`job_properties` 句のパラメータは次のとおりです。
+`job_properties` 句で指定できるパラメータは次のとおりです。
+
+**バージョン履歴:**
+
+- Doris 2.1.1 で、`max_batch_size` の上限が 1 GB から 10 GB に引き上げられました。
+- Doris 2.1.5 および 3.0.0 で、デフォルト値が 100 MB から 1 GB に引き上げられました。
+- 3.x、4.x、dev では、上限 10 GB、デフォルト値 1 GB が適用されます。
 
 | パラメータ | 説明 |
 | ---- | ---- |
-| desired_concurrent_number | <p>デフォルト値: 256</p><p>一つの取り込みタスクに対して希望する並列度です。取り込み時、希望するサブタスク並列度と実際の並列度は一致しない場合があります。実際の並列度は次のように計算します。</p><p>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`。各値の意味は次のとおりです。</p><p>- `topic_partition_num`: Kafka トピックのパーティション数。</p><p>- `desired_concurrent_number`: このパラメータの値。</p><p>- `max_routine_load_task_concurrent_num`: FE に設定された Routine Load のタスク並列度の上限。</p> |
-| max_batch_interval | 各サブタスクの最大実行時間（秒）です。0 より大きい値を指定します。デフォルトは 60 です。`max_batch_interval`、`max_batch_rows`、`max_batch_size` はサブタスクの終了条件です。いずれかに達するとサブタスクが終了し、新しいサブタスクが生成されます。 |
-| max_batch_rows | 各サブタスクが読み取れる最大行数です。200000 以上を指定します。デフォルトは 20000000 です。`max_batch_interval`、`max_batch_rows`、`max_batch_size` はサブタスクの終了条件です。いずれかに達するとサブタスクが終了し、新しいサブタスクが生成されます。 |
-| max_batch_size | 各サブタスクが読み取れる最大バイト数です。単位はバイト、範囲は 100 MB～1 GB、デフォルトは 1 GB です。`max_batch_interval`、`max_batch_rows`、`max_batch_size` はサブタスクの終了条件です。いずれかに達するとサブタスクが終了し、新しいサブタスクが生成されます。 |
-| max_error_number | サンプリングウィンドウ内で許容するエラー行の最大数です。0 以上を指定します。デフォルトは 0（エラー行を許容しない）です。サンプリングウィンドウは `max_batch_rows * 10` です。ウィンドウ内のエラー行数が `max_error_number` を超えると、Routine Load ジョブは一時停止します。データ品質の問題を手動で確認する必要があります。`ErrorLogUrls` フィールドは [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) コマンドで確認できます。WHERE 条件で除外された行はエラー行に数えません。 |
-| strict_mode | 厳密モードを有効にするかどうかを指定します。デフォルトは無効です。厳密モードでは、取り込み時の列型変換を厳密にチェックします。有効にすると、元の値が NULL でないのに型変換後に NULL になった行は除外されます。<p>除外ルール:</p><p>- 厳密モードは派生列（関数による変換で生成した列）に影響しません。</p><p>- 列型の変換が必要な場合、型が不正なデータは除外されます。`ErrorLogUrls` は [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) で確認できます。</p><p>- 範囲制限のある列型では、元データが型変換を通過しても範囲制限を満たさない場合、厳密モードは影響しません。たとえば型が `decimal(1,0)` で元データが 10 の場合、型変換は通過しますが列の宣言範囲には収まりません。詳細は [厳密モード](../../../data-operate/import/handling-messy-data#strict-mode-strict_mode) を参照してください。</p> |
-| timezone | 取り込みジョブで使うタイムゾーンを指定します。デフォルトはセッションのタイムゾーンパラメータです。取り込みで使用するすべてのタイムゾーン関連関数の結果に影響します。 |
-| format | 取り込むデータの形式を指定します。デフォルトは CSV です。JSON 形式にも対応します。 |
-| jsonpaths | データ形式が JSON の場合、`jsonpaths` で JSON データから抽出するフィールドを指定できます。例: `"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
-| json_root | データ形式が JSON の場合、`json_root` で JSON データのルートノードを指定できます。Doris は `json_root` で指定したルートノードから要素を抽出して解析します。デフォルトは空です。例: `"json_root" = "$.RECORDS"` |
-| strip_outer_array | データ形式が JSON の場合、`strip_outer_array` を true にすると、JSON データを配列として扱い、各要素を一行として処理します。デフォルトは false です。Kafka の JSON データは最外層が `[]` で囲まれた配列であることがよくあります。その場合は `"strip_outer_array" = "true"` を指定できます。たとえば、次のデータは二行に解析されます: `[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
-| send_batch_parallelism | バッチデータ送信の並列度を設定します。指定値が BE の設定 `max_send_batch_parallelism_per_job` を超える場合、コーディネーターを務める BE は `max_send_batch_parallelism_per_job` の値を使用します。 |
-| load_to_single_tablet | タスクのデータを対応するパーティションの一つのタブレットにのみ取り込めるようにします。デフォルトは false です。このパラメータはランダムバケットを使用する OLAP テーブルへの取り込み時にのみ設定できます。 |
-| partial_columns | 部分列更新を有効にするかどうかを指定します。デフォルトは false です。テーブルモデルが Unique で、Merge on Write を使用する場合にのみ設定できます。単一ストリームから複数テーブルへの取り込みでは使用できません。詳細は [部分列更新](../../../data-operate/update/partial-column-update.md) を参照してください。 |
-| unique_key_update_mode | Unique Key テーブルの更新モードを指定します。選択肢:<ul><li>`UPSERT`（デフォルト）: 行全体の通常の挿入または更新。</li><li>`UPDATE_FIXED_COLUMNS`: 全行で同じ列を更新する部分列更新。`partial_columns=true` と同等です。</li><li>`UPDATE_FLEXIBLE_COLUMNS`: 行ごとに異なる列を更新できる柔軟な部分列更新。JSON 形式が必要で、テーブルで `enable_unique_key_skip_bitmap_column=true` が有効である必要があります。`jsonpaths`、`fuzzy_parse`、`COLUMNS` 句、`WHERE` 句とは併用できません。</li></ul>詳細は [部分列更新](../../../data-operate/update/partial-column-update#flexible-column-update) を参照してください。 |
-| partial_update_new_key_behavior | Unique Merge on Write テーブルの部分列更新で新しい行を挿入する場合の処理です。`APPEND` と `ERROR` の二種類があります。<br/>- `APPEND`: 新しい行の挿入を許可します。<br/>- `ERROR`: 新しい行を挿入しようとすると、取り込みが失敗してエラーを報告します。 |
-| max_filter_ratio | サンプリングウィンドウ内で許容する最大除外率です。0 以上 1 以下を指定します。デフォルト値は 1.0 で、どのエラー行も許容します。サンプリングウィンドウは `max_batch_rows * 10` です。ウィンドウ内のエラー行数 / 総行数が `max_filter_ratio` を超えると、Routine Load ジョブは一時停止します。データ品質の問題を手動で確認する必要があります。WHERE 条件で除外された行はエラー行に数えません。 |
-| enclose | 囲み文字を指定します。CSV のフィールドに行区切りや列区切りが含まれる場合、単一バイトの囲み文字を指定すると、意図しない分割を防げます。たとえば列区切りが `,`、囲み文字が `'` の場合、データ `a,'b,c'` の `b,c` は 一つのフィールドとして解析されます。 |
-| escape | エスケープ文字を指定します。フィールド内で囲み文字と同じ文字をエスケープするために使用します。たとえばデータ `a,'b,'c'` の囲み文字が `'` で `b,'c` を 一つのフィールドとして解析するには、単一バイトのエスケープ文字（`\` など）を指定し、データを `a,'b,\'c'` に変更します。 |
+| desired_concurrent_number | <p>デフォルト値: 256</p><p>単一のインポートタスクに対して希望する並行処理数です。インポート時、希望するサブタスクの並行処理数と実際の数は一致しない場合があります。実際の並行処理数は次の式で計算します。</p><p>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`。各項目は次のとおりです。</p><p>- `topic_partition_num`: Kafka トピックのパーティション数。</p><p>- `desired_concurrent_number`: このパラメータの値。</p><p>- `max_routine_load_task_concurrent_num`: FE で設定した Routine Load タスクの最大並列数。</p> |
+| max_batch_interval | 各サブタスクの最大実行時間です。単位は秒で、0 より大きい値が必要です。デフォルト値は 60 です。`max_batch_interval`、`max_batch_rows`、`max_batch_size` を合わせてサブタスクの実行しきい値とします。いずれかに達すると、インポートサブタスクは終了し、新しいサブタスクが生成されます。 |
+| max_batch_rows | 各サブタスクが読み取れる最大行数です。200000 以上の値が必要です。デフォルトは 20000000 です。`max_batch_interval`、`max_batch_rows`、`max_batch_size` を合わせてサブタスクの実行しきい値とします。いずれかに達すると、インポートサブタスクは終了し、新しいサブタスクが生成されます。 |
+| max_batch_size | 各サブタスクが読み取れる最大バイト数です。単位はバイトで、範囲は 100 MB～10 GB（104857600～10737418240 バイト、両端を含む）、デフォルトは 1 GB です。`max_batch_interval`、`max_batch_rows`、`max_batch_size` を合わせてサブタスクの実行しきい値とします。いずれかに達すると、インポートサブタスクは終了し、新しいサブタスクが生成されます。 |
+| max_error_number | サンプリングウィンドウ内で許容するエラー行の最大数です。0 以上の値が必要で、デフォルトは 0（エラー行を許容しない）です。サンプリングウィンドウは `max_batch_rows * 10` です。ウィンドウ内のエラー行数が `max_error_number` を超えると Routine Load ジョブは一時停止します。データ品質の問題は手動で調査する必要があります。[SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) コマンドの `ErrorLogUrls` フィールドから調査できます。where 条件で除外された行はエラー行に数えません。 |
+| strict_mode | 厳格モードを有効にするかどうかを指定します。デフォルトでは無効です。厳格モードでは、インポート時の列の型変換を厳密にフィルタリングします。有効にすると、元の値が NULL ではないのに型変換後に NULL になるデータが除外されます。<p>フィルタリングの規則:</p><p>- Strict Mode は派生列（関数による変換で生成された列）には影響しません。</p><p>- 列の型変換が必要な場合、型が正しくないデータは除外されます。[SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) の `ErrorLogUrls` で確認できます。</p><p>- インポート先の列の型に範囲制限があり、元のデータが型変換に成功しても範囲制限を満たさない場合、厳格モードは影響しません。たとえば型が `decimal(1,0)` で元のデータが 10 の場合、型変換は成功しますが、列に宣言された範囲には収まりません。詳しくは[厳格モード](../../../data-operate/import/handling-messy-data#strict-mode-strict_mode)を参照してください。</p> |
+| timezone | インポートジョブで使用するタイムゾーンを指定します。デフォルトはセッションのタイムゾーンパラメータです。インポートで使用する、タイムゾーンに関係するすべての関数の結果に影響します。 |
+| format | インポートデータの形式を指定します。デフォルトは CSV です。JSON 形式もサポートします。 |
+| jsonpaths | インポートデータの形式が JSON の場合、`jsonpaths` で JSON データから抽出するフィールドを指定できます。例: `"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
+| json_root | インポートデータの形式が JSON の場合、`json_root` で JSON データのルートノードを指定できます。Doris は `json_root` で指定されたルートノードの要素を抽出して解析します。デフォルトは空です。例: `"json_root" = "$.RECORDS"` |
+| strip_outer_array | インポートデータの形式が JSON の場合、`strip_outer_array` を true に設定すると、JSON データを配列として扱い、各要素を個別の行として処理します。デフォルトは false です。Kafka 内の JSON データは、最外層が `[]` で囲まれた配列である場合があります。その場合は `"strip_outer_array" = "true"` を指定できます。たとえば次のデータは 2 行として解析されます: `[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
+| send_batch_parallelism | バッチデータを送信する際の並列数を設定します。値が BE 設定の `max_send_batch_parallelism_per_job` を超える場合、コーディネーターとして動作する BE は `max_send_batch_parallelism_per_job` の値を使用します。 |
+| load_to_single_tablet | タスクからのデータを対応するパーティションの単一の tablet にのみインポートできます。デフォルトは false です。このパラメータを設定できるのは、ランダムバケットを使用する OLAP テーブルにインポートする場合だけです。 |
+| partial_columns | 部分列更新を有効にするかどうかを指定します。デフォルトは false です。テーブルモデルが Unique で Merge on Write を使用する場合にのみ設定できます。単一ストリームから複数テーブルへのインポートではサポートしません。詳しくは[部分列更新](../../../data-operate/update/partial-column-update.md)を参照してください。 |
+| unique_key_update_mode | Unique Key テーブルの更新モードを指定します。選択肢は次のとおりです。<ul><li>`UPSERT`（デフォルト）: 行全体を標準的な方法で挿入または更新します。</li><li>`UPDATE_FIXED_COLUMNS`: すべての行で同じ列を更新する部分列更新です。`partial_columns=true` と同等です。</li><li>`UPDATE_FLEXIBLE_COLUMNS`: 行ごとに異なる列を更新できる柔軟な部分列更新です。JSON 形式を使用し、テーブルに `enable_unique_key_skip_bitmap_column=true` を設定する必要があります。`jsonpaths`、`fuzzy_parse`、`COLUMNS` 句、`WHERE` 句とは併用できません。</li></ul>詳しくは[部分列更新](../../../data-operate/update/partial-column-update#flexible-column-update)を参照してください。 |
+| partial_update_new_key_behavior | Unique Merge on Write テーブルで部分列更新を行う際に、新規挿入行をどう扱うかを指定します。`APPEND` と `ERROR` の二種類があります。<br/>- `APPEND`: 新しい行の挿入を許可します。<br/>- `ERROR`: 新しい行を挿入するとインポートが失敗し、エラーを報告します。 |
+| max_filter_ratio | サンプリングウィンドウ内で許容する最大フィルタリング率です。0 以上 1 以下でなければなりません。デフォルト値は 1.0 で、エラー行を許容します。サンプリングウィンドウは `max_batch_rows * 10` です。ウィンドウ内のエラー行数を総行数で割った値が `max_filter_ratio` を超えると、Routine Load ジョブは一時停止します。データ品質の問題は手動で調査する必要があります。where 条件で除外された行はエラー行に数えません。 |
+| enclose | 囲み文字を指定します。CSV データのフィールドに行区切り文字や列区切り文字が含まれる場合、意図しない分割を防ぐため、単一バイトの文字を囲み文字に指定できます。たとえば列区切り文字が `,`、囲み文字が `'` の場合、`a,'b,c'` の `b,c` は単一のフィールドとして解析されます。 |
+| escape | エスケープ文字を指定します。フィールド内で囲み文字と同じ文字をエスケープするために使用します。たとえば囲み文字が `'` でデータが `a,'b,'c'` の場合、`b,'c` を単一のフィールドとして解析するには、単一バイトのエスケープ文字（`\` など）を指定し、データを `a,'b,\'c'` に変更する必要があります。 |
 
 #### data_source_properties 句 {#data_source_properties-clause}
 
-`data_source_properties` 句で Kafka データソースのプロパティを指定できます。構文は次のとおりです。
+Routine Load インポートジョブの作成時に、`data_source_properties` 句で Kafka データソースのプロパティを指定できます。構文は次のとおりです。
 
 ```sql
 FROM KAFKA ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 ```
 
-`data_source_properties` 句のパラメータは次のとおりです。
+`data_source_properties` 句で指定できるパラメータは次のとおりです。
 
 | パラメータ | 説明 |
 | ---- | ---- |
-| kafka_broker_list | Kafka ブローカーへの接続情報を指定します。形式は `<kafka_broker_ip>:<kafka port>` です。複数のブローカーはカンマで区切ります。例: `"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
-| kafka_topic | 購読する Kafka トピックを指定します。一つの取り込みジョブが読み取れる Kafka トピックは 一つだけです。 |
-| kafka_partitions | 購読する Kafka パーティションを指定します。省略すると、デフォルトですべてのパーティションを読み取ります。 |
-| kafka_offsets | 読み取る Kafka パーティションの開始オフセットです。時刻を指定すると、その時刻以降の最新のオフセットから読み取ります。0 以上の具体的なオフセット値、または次の形式を指定できます。<p>- `OFFSET_BEGINNING`: データが存在する位置から購読します。</p><p>- `OFFSET_END`: 末尾から購読します。</p><p>- 時刻形式。例: `"2021-05-22 11:00:00"`。</p><p>省略すると、デフォルトではトピックの全パーティションを `OFFSET_END` から購読します。開始オフセットを複数指定する場合はカンマで区切ります。例: `"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"` または `"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`。</p><p>注: 時刻形式と OFFSET 形式は混在できません。</p> |
-| property | Kafka シェルの `--property` パラメータと同等の、カスタム Kafka パラメータを指定します。値がファイルの場合は先頭に `FILE:` を付けます。ファイルの作成については [CREATE FILE](../../../sql-manual/sql-statements/security/CREATE-FILE) コマンドを参照してください。対応する他のカスタムパラメータについては、librdkafka 公式ドキュメントのクライアント設定 [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) を参照してください。例: `"property.client.id" = "12345"`、`"property.group.id" = "group_id_0"`、`"property.ssl.ca.location" = "FILE:ca.pem"`。 |
+| kafka_broker_list | Kafka broker の接続情報を指定します。形式は `<kafka_broker_ip>:<kafka port>` です。複数の broker はカンマで区切ります。例: `"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
+| kafka_topic | サブスクライブする Kafka トピックを指定します。単一のインポートジョブが読み取れる Kafka トピックは一つだけです。 |
+| kafka_partitions | サブスクライブする Kafka パーティションを指定します。省略すると、デフォルトですべてのパーティションを読み取ります。 |
+| kafka_offsets | 読み取る Kafka パーティションの開始オフセットです。時刻を指定すると、その時刻以降で最も近いオフセットから読み取りを開始します。オフセットには 0 以上の具体的な値、または次の形式を指定できます。<p>- `OFFSET_BEGINNING`: データが存在する位置からサブスクライブします。</p><p>- `OFFSET_END`: 末尾からサブスクライブします。</p><p>- 時刻形式。例: `"2021-05-22 11:00:00"`。</p><p>省略すると、デフォルトでトピックの全パーティションを `OFFSET_END` からサブスクライブします。開始オフセットを複数指定する場合は、カンマで区切ります。例: `"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"` または `"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`。</p><p>注意: 時刻形式と OFFSET 形式は混在させられません。</p> |
+| property | カスタム Kafka パラメータを指定します。Kafka シェルの `--property` パラメータに相当します。パラメータ値がファイルの場合は、値の先頭に `FILE:` を付けます。ファイルの作成については [CREATE FILE](../../../sql-manual/sql-statements/security/CREATE-FILE) コマンドを参照してください。サポートされるその他のカスタムパラメータについては、librdkafka の公式 [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) 文書のクライアント側設定を参照してください。例: `"property.client.id" = "12345"`、`"property.group.id" = "group_id_0"`、`"property.ssl.ca.location" = "FILE:ca.pem"`。 |
 
-`data_source_properties` に Kafka の property パラメータを設定すると、安全なアクセス方法を構成できます。Doris は現在、plaintext（デフォルト）、SSL、PLAIN、Kerberos などの Kafka セキュリティプロトコルに対応しています。
+`data_source_properties` で Kafka の property パラメータを設定すると、安全なアクセスのためのオプションを設定できます。現在、Doris は plaintext（デフォルト）、SSL、PLAIN、Kerberos など、複数の Kafka セキュリティプロトコルをサポートしています。
 
-### 取り込み状態 {#import-status}
+### インポート状態 {#import-status}
 
-`SHOW ROUTINE LOAD` コマンドで取り込みジョブの状態を確認できます。
+`SHOW ROUTINE LOAD` コマンドでインポートジョブの状態を確認できます。
 
 ```sql
 SHOW [ALL] ROUTINE LOAD [FOR jobName];
@@ -530,71 +536,71 @@ ReasonOfStateChanged:
 1 row in set (0.00 sec)
 ```
 
-結果の列について、次の表で説明します。
+結果の各列について説明します。
 
-| 結果の列        | 説明                                                  |
+| 結果の列 | 説明 |
 | -------------------- | ------------------------------------------------------------ |
-| Id                   | Doris が自動生成したジョブ ID。                |
-| Name                 | ジョブ名。                                                |
-| CreateTime           | ジョブの作成日時。                                       |
-| PauseTime            | ジョブを最後に一時停止した日時。                              |
-| EndTime              | ジョブの終了日時。                                            |
-| DbName               | 対応するデータベース名。                             |
-| TableName            | 対応するテーブル名。複数テーブルのジョブ（動的テーブル）では個別のテーブル名は表示されず、代わりに `multi-table` と表示されます。 |
-| IsMultiTable         | 複数テーブルのジョブ（単一ストリーム、複数テーブル）かどうか。 |
-| State                | ジョブの実行状態。状態は 5 種類あります。後述の [ジョブの状態遷移](#job-state-machine) を参照してください。 |
-| DataSourceType       | データソースの種類: KAFKA。                                 |
-| CurrentTaskNum       | 現在のサブタスク数。                              |
-| JobProperties        | ジョブ設定の詳細。                                   |
-| DataSourceProperties | データソース設定の詳細。                           |
-| CustomProperties     | カスタム設定。                                        |
-| Statistic            | ジョブの実行状態に関する統計情報。                         |
-| Progress             | ジョブの実行進捗。Kafka データソースでは、各パーティションの現在の読み取りオフセットを表示します。たとえば `{"0":"2"}` は Kafka パーティション 0 の読み取り進捗が 2 であることを意味します。 |
-| Lag                  | ジョブの遅延状況。Kafka データソースでは、各パーティションの読み取り遅延を表示します。たとえば `{"0":10}` は Kafka パーティション 0 の読み取り遅延が 10 であることを意味します。 |
-| ReasonOfStateChanged | ジョブの状態が変わった理由。                         |
-| ErrorLogUrls         | 除外された品質の低いデータを確認できる URL。    |
-| OtherMsg             | その他のエラー情報。                                     |
+| Id | Doris が自動生成するジョブ ID。 |
+| Name | ジョブ名。 |
+| CreateTime | ジョブの作成時刻。 |
+| PauseTime | ジョブが最後に一時停止した時刻。 |
+| EndTime | ジョブの終了時刻。 |
+| DbName | 対応するデータベース名。 |
+| TableName | 対応するテーブル名。複数テーブルを扱うジョブ（動的テーブル）の場合、具体的なテーブル名の代わりに `multi-table` が表示されます。 |
+| IsMultiTable | 複数テーブルを扱うジョブ（単一ストリーム、複数テーブル）かどうか。 |
+| State | ジョブの実行状態。状態は 5 種類あります。後述の[ジョブの状態遷移](#job-state-machine)を参照してください。 |
+| DataSourceType | データソースの種類: KAFKA。 |
+| CurrentTaskNum | 現在のサブタスク数。 |
+| JobProperties | ジョブ設定の詳細。 |
+| DataSourceProperties | データソース設定の詳細。 |
+| CustomProperties | カスタム設定。 |
+| Statistic | ジョブの実行状態に関する統計。 |
+| Progress | ジョブの実行進捗。Kafka データソースの場合、各パーティションで現在読み取り済みのオフセットを表示します。たとえば `{"0":"2"}` は、Kafka パーティション 0 の読み取り進捗が 2 であることを示します。 |
+| Lag | ジョブの遅延状況。Kafka データソースの場合、各パーティションの読み取り遅延を表示します。たとえば `{"0":10}` は、Kafka パーティション 0 の読み取り遅延が 10 であることを示します。 |
+| ReasonOfStateChanged | ジョブの状態が変わった理由。 |
+| ErrorLogUrls | フィルタリングされた低品質データを確認するための URL。 |
+| OtherMsg | その他のエラー情報。 |
 
 ### ジョブの状態遷移 {#job-state-machine}
 
 <!-- Knowledge type: State machine -->
 
-Routine Load ジョブには 5 つの状態があります。状態間の遷移は次のとおりです。
+Routine Load ジョブには 5 種類の状態があります。状態間の遷移は次のとおりです。
 
-| 状態 | 意味 | 契機 | 次に遷移可能な状態 |
+| 状態 | 意味 | 発生条件 | 次に遷移し得る状態 |
 | ---- | ---- | -------- | -------------- |
-| `NEED_SCHEDULE` | ジョブはスケジュール待ちです。 | `CREATE ROUTINE LOAD` または `RESUME ROUTINE LOAD` の直後の初期状態。 | `RUNNING` |
-| `RUNNING` | ジョブは実行中で、Kafka から継続的に読み取っています。 | スケジュールに成功した後。 | `PAUSED` / `STOPPED` |
-| `PAUSED` | ジョブは一時停止していますが、終了していません。 | 手動の `PAUSE ROUTINE LOAD`、または例外による自動停止。 | `NEED_SCHEDULE`（手動の `RESUME` または自動復旧）/ `CANCELLED` |
-| `STOPPED` | ジョブは停止し、**再開できません**。 | `STOP ROUTINE LOAD`。 | 終端状態。 |
-| `CANCELLED` | ジョブは取り消されました。 | データベースやテーブルの削除、その他の例外。 | 終端状態。 |
+| `NEED_SCHEDULE` | ジョブはスケジュール待ちです。 | `CREATE ROUTINE LOAD` または `RESUME ROUTINE LOAD` の後の初期状態です。 | `RUNNING` |
+| `RUNNING` | ジョブは実行中で、Kafka から継続的にデータを読み取っています。 | スケジュールに成功すると遷移します。 | `PAUSED` / `STOPPED` |
+| `PAUSED` | ジョブは一時停止していますが、終了していません。 | 手動の `PAUSE ROUTINE LOAD`、または例外による自動停止で遷移します。 | `NEED_SCHEDULE`（手動の `RESUME` または自動復旧）/ `CANCELLED` |
+| `STOPPED` | ジョブは停止しており、**再開できません**。 | `STOP ROUTINE LOAD` で遷移します。 | 終了状態。 |
+| `CANCELLED` | ジョブは取り消されています。 | データベースやテーブルの削除、その他の例外で遷移します。 | 終了状態。 |
 
-## 取り込み例 {#import-examples}
+## インポート例 {#import-examples}
 
 <!-- Knowledge type: Procedures + Examples -->
 
-次の表は、このセクションの主な例を用途別にまとめたものです。
+このセクションの代表的な例を用途別に示します。各例へすぐに移動できます。
 
-| 分類 | シナリオ | 対象となる課題 |
+| カテゴリ | シナリオ | 対象となる課題 |
 | ---- | ---- | -------- |
-| データ品質とフィルタリング | [取り込みエラーの最大許容値を設定する](#set-maximum-import-fault-tolerance) | ダーティデータを許容する必要があるなど、データ品質が安定しない場合。 |
-| データ品質とフィルタリング | [取り込み時のフィルター条件を設定する](#set-import-filter-conditions) | 条件を満たすデータのみを取り込む場合。 |
-| データ品質とフィルタリング | [厳密モードでの取り込み](#strict-mode-import) | 型変換エラーを厳密に除外する場合。 |
-| 読み取り制御 | [指定したオフセットからデータを読み取る](#consume-data-from-a-specified-offset) | Kafka のオフセットを正確に制御する場合。 |
-| 読み取り制御 | [Consumer Group の group.id と client.id を指定する](#specify-the-groupid-and-clientid-of-the-consumer-group) | Kafka コンシューマーの識別子をカスタマイズする場合。 |
-| データの書き込み制御 | [指定したパーティションにデータを取り込む](#import-data-into-a-specified-partition) | 取り込み先テーブルの特定のパーティションにのみ書き込む場合。 |
-| データの書き込み制御 | [取り込みのタイムゾーンを設定する](#set-the-import-timezone) | タイムゾーンをまたぐ時刻フィールドを扱う場合。 |
-| データの書き込み制御 | [merge_type を設定する](#set-merge_type) | Unique Key テーブルで削除またはマージを行う場合。 |
-| データ変換 | [取り込み時の列マッピングと派生列の計算](#column-mapping-and-derived-column-computation-in-import) | 取り込み時にフィールドを計算する場合。 |
-| データ変換 | [囲み文字を使ってデータを取り込む](#import-data-with-enclosing-characters) | CSV のフィールドに区切り文字が含まれる場合。 |
-| 複雑な形式 | [JSON 形式の取り込み](#json-format-import) | Kafka のデータが JSON 形式の場合。 |
-| 複雑な形式 | [複合型の取り込み](#import-complex-types) | Array、Map、Bitmap、HLL などの型を扱う場合。 |
-| セキュリティと複数テーブル | [Kafka セキュリティ認証](#kafka-security-authentication) | SSL、Kerberos、PLAIN などの認証が必要な場合。 |
-| セキュリティと複数テーブル | [単一ストリームから複数テーブルへの取り込み](#single-stream-multi-table-import) | 一つのトピックのデータを複数の Doris テーブルに書き込む場合。 |
+| データ品質とフィルタリング | [インポート時の最大エラー許容値を設定する](#set-maximum-import-fault-tolerance) | 品質が不安定なデータに含まれる不正なデータを許容する。 |
+| データ品質とフィルタリング | [インポートのフィルター条件を設定する](#set-import-filter-conditions) | 条件を満たすデータだけをインポートする。 |
+| データ品質とフィルタリング | [厳格モードでインポートする](#strict-mode-import) | 型変換エラーを厳密に除外する。 |
+| データ読み取りの制御 | [指定したオフセットからデータを読み取る](#consume-data-from-a-specified-offset) | Kafka オフセットを正確に制御する。 |
+| データ読み取りの制御 | [Consumer Group の group.id と client.id を指定する](#specify-the-groupid-and-clientid-of-the-consumer-group) | Kafka consumer の識別子をカスタマイズする。 |
+| データ書き込みの制御 | [指定したパーティションにデータをインポートする](#import-data-into-a-specified-partition) | 対象テーブルの指定したパーティションだけに書き込む。 |
+| データ書き込みの制御 | [インポート時のタイムゾーンを設定する](#set-the-import-timezone) | 異なるタイムゾーンにまたがる時刻フィールドを扱う。 |
+| データ書き込みの制御 | [merge_type を設定する](#set-merge_type) | Unique Key テーブルでデータの削除やマージ書き込みを行う。 |
+| データ変換 | [インポート時に列マッピングと派生列を計算する](#column-mapping-and-derived-column-computation-in-import) | インポート時にフィールドを計算する。 |
+| データ変換 | [囲み文字を含むデータをインポートする](#import-data-with-enclosing-characters) | CSV フィールドに区切り文字が含まれる。 |
+| 複雑な形式 | [JSON 形式でインポートする](#json-format-import) | Kafka のデータが JSON 形式である。 |
+| 複雑な形式 | [複雑な型をインポートする](#import-complex-types) | Array、Map、Bitmap、HLL などの型を扱う。 |
+| セキュリティと複数テーブル | [Kafka のセキュリティ認証](#kafka-security-authentication) | SSL、Kerberos、PLAIN などで認証する。 |
+| セキュリティと複数テーブル | [単一ストリームから複数テーブルにインポートする](#single-stream-multi-table-import) | 一つのトピックから複数の Doris テーブルに書き込む。 |
 
-### 取り込みエラーの最大許容値を設定する {#set-maximum-import-fault-tolerance}
+### インポート時の最大エラー許容値を設定する {#set-maximum-import-fault-tolerance}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,Benjamin,18
@@ -602,7 +608,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3,Alexander,dirty_data
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test01 (
@@ -614,7 +620,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
@@ -633,7 +639,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test01;
@@ -648,7 +654,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
 
 ### 指定したオフセットからデータを読み取る {#consume-data-from-a-specified-offset}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,Benjamin,18
@@ -659,7 +665,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     6,Charlotte,28
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test02 (
@@ -671,7 +677,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
@@ -685,7 +691,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test02;
@@ -701,7 +707,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
 
 ### Consumer Group の group.id と client.id を指定する {#specify-the-groupid-and-clientid-of-the-consumer-group}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,Benjamin,18
@@ -709,7 +715,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3,Alexander,22
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test03 (
@@ -721,7 +727,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
@@ -736,7 +742,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test03;
@@ -750,9 +756,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.01 sec)
     ```
 
-### 取り込み時のフィルター条件を設定する {#set-import-filter-conditions}
+### インポートのフィルター条件を設定する {#set-import-filter-conditions}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,Benjamin,18
@@ -763,7 +769,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     6,Charlotte,28
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test04 (
@@ -775,7 +781,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
@@ -789,7 +795,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test04;
@@ -803,9 +809,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.01 sec)
     ```
 
-### 指定したパーティションにデータを取り込む {#import-data-into-a-specified-partition}
+### 指定したパーティションにデータをインポートする {#import-data-into-a-specified-partition}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,Benjamin,18,2024-02-04 10:00:00
@@ -813,7 +819,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3,Alexander,22,2024-02-06 12:00:00
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test05 (
@@ -830,7 +836,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
@@ -844,7 +850,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test05;
@@ -856,9 +862,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     1 rows in set (0.01 sec)
     ```
 
-### 取り込みのタイムゾーンを設定する {#set-the-import-timezone}
+### インポート時のタイムゾーンを設定する {#set-the-import-timezone}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,Benjamin,18,2024-02-04 10:00:00
@@ -866,7 +872,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3,Alexander,22,2024-02-06 12:00:00
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test06 (
@@ -879,7 +885,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
@@ -896,7 +902,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test06;
@@ -914,14 +920,14 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
 
 #### merge_type を指定して削除する {#specify-merge_type-to-perform-delete}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     3,Alexander,22
     5,William,26
     ```
 
-    取り込み前のテーブルのデータ:
+    インポート前のテーブルデータ:
 
     ```sql
     mysql> SELECT * FROM routine_test07;
@@ -937,7 +943,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     +------+----------------+------+
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test07 (
@@ -949,7 +955,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job07 ON routine_test07
@@ -963,7 +969,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> SELECT * FROM routine_test07;
@@ -979,7 +985,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
 
 #### merge_type を指定してマージする {#specify-merge_type-to-perform-merge}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,xiaoxiaoli,28
@@ -990,7 +996,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     6,dadaliu,38
     ```
 
-    取り込み前のテーブルのデータ:
+    インポート前のテーブルデータ:
 
     ```sql
     mysql> SELECT * FROM routine_test08;
@@ -1007,7 +1013,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     6 rows in set (0.01 sec)
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test08 (
@@ -1019,7 +1025,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job08 ON routine_test08
@@ -1034,7 +1040,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> SELECT * FROM routine_test08;
@@ -1050,9 +1056,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     5 rows in set (0.00 sec)
     ```
 
-#### マージ取り込みで Sequence Column を指定する {#specify-the-sequence-column-for-merge-imports}
+#### マージインポート用の Sequence Column を指定する {#specify-the-sequence-column-for-merge-imports}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,xiaoxiaoli,28
@@ -1063,7 +1069,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     6,dadaliu,38
     ```
 
-    取り込み前のテーブルのデータ:
+    インポート前のテーブルデータ:
 
     ```sql
     mysql> SELECT * FROM routine_test09;
@@ -1080,7 +1086,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     6 rows in set (0.01 sec)
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test08 (
@@ -1095,7 +1101,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     );
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job09 ON routine_test09
@@ -1117,7 +1123,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> SELECT * FROM routine_test09;
@@ -1133,9 +1139,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     5 rows in set (0.00 sec)
     ```
 
-### 取り込み時の列マッピングと派生列の計算 {#column-mapping-and-derived-column-computation-in-import}
+### インポート時の列マッピングと派生列の計算 {#column-mapping-and-derived-column-computation-in-import}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,Benjamin,18
@@ -1143,7 +1149,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3,Alexander,22
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test10 (
@@ -1156,7 +1162,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
@@ -1170,7 +1176,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> SELECT * FROM routine_test10;
@@ -1184,9 +1190,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.01 sec)
     ```
 
-### 囲み文字を使ってデータを取り込む {#import-data-with-enclosing-characters}
+### 囲み文字を含むデータのインポート {#import-data-with-enclosing-characters}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     1,"Benjamin",18
@@ -1194,7 +1200,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3,"Alexander",22
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test11 (
@@ -1207,7 +1213,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job11 ON routine_test11
@@ -1225,7 +1231,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> SELECT * FROM routine_test11;
@@ -1239,11 +1245,11 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.02 sec)
     ```
 
-### JSON 形式の取り込み {#json-format-import}
+### JSON 形式でのインポート {#json-format-import}
 
-#### シンプルモードで JSON データを取り込む {#import-json-data-in-simple-mode}
+#### シンプルモードで JSON データをインポートする {#import-json-data-in-simple-mode}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1251,7 +1257,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test12 (
@@ -1263,7 +1269,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
@@ -1279,7 +1285,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test12;
@@ -1293,9 +1299,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.02 sec)
     ```
 
-#### マッチモードで複雑な JSON データを取り込む {#import-complex-json-data-in-match-mode}
+#### マッチモードで複雑な JSON データをインポートする {#import-complex-json-data-in-match-mode}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     { "name" : "Benjamin", "id" : 1, "num":180 , "age":18 }
@@ -1303,7 +1309,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     { "name" : "Alexander", "id" : 3, "num":220 , "age":22 }
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test13 (
@@ -1316,7 +1322,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job13 ON routine_test13
@@ -1334,7 +1340,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test13;
@@ -1348,9 +1354,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.01 sec)
     ```
 
-#### JSON のルートノードを指定して取り込む {#import-data-with-a-specified-json-root-node}
+#### JSON のルートノードを指定してデータをインポートする {#import-data-with-a-specified-json-root-node}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     {"id": 1231, "source" :{ "id" : 1, "name" : "Benjamin", "age":18 }}
@@ -1358,7 +1364,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     {"id": 1233, "source" :{ "id" : 3, "name" : "Alexander", "age":22 }}
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test14 (
@@ -1370,7 +1376,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
@@ -1387,7 +1393,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test14;
@@ -1401,9 +1407,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.01 sec)
     ```
 
-#### 取り込み時の列マッピングと派生列の計算（JSON） {#column-mapping-and-derived-column-computation-in-import-json}
+#### インポート時の列マッピングと派生列の計算（JSON） {#column-mapping-and-derived-column-computation-in-import-json}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1411,7 +1417,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test15 (
@@ -1424,7 +1430,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job15 ON routine_test15
@@ -1441,7 +1447,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test15;
@@ -1457,9 +1463,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
 
 #### 柔軟な部分列更新 {#flexible-partial-column-update}
 
-この例では、行ごとに異なる列を更新できる柔軟な部分列更新の使用方法を示します。変更レコードに含まれるフィールドが異なる場合があるため、**CDC のシナリオ**で役立ちます。
+この例では、行ごとに異なる列を更新できる柔軟な部分列更新の使い方を示します。変更レコードに含まれるフィールドが異なることのある **CDC シナリオ**で役立ちます。
 
-1. 取り込みデータのサンプル（JSON レコードごとに更新する列が異なります）。
+1. インポートするサンプルデータ（各 JSON レコードが異なる列を更新します）:
 
     ```json
     {"id": 1, "balance": 150.00, "last_active": "2024-01-15 10:30:00"}
@@ -1499,7 +1505,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     (4, 'Tom', 40, 'Nanjing', 400.00, '2024-01-04 11:00:00');
     ```
 
-4. 取り込みコマンド:
+4. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job_flexible ON routine_test_flexible
@@ -1516,7 +1522,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-5. 取り込み結果:
+5. インポート結果:
 
     ```sql
     mysql> SELECT * FROM demo.routine_test_flexible ORDER BY id;
@@ -1531,14 +1537,14 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     ```
 
     :::info 注記
-    `id=4` の行は `__DORIS_DELETE_SIGN__` により削除されます。各行では、対応する JSON レコードに含まれる列だけが更新されます。
+    `id=4` の行は `__DORIS_DELETE_SIGN__` によって削除されます。各行では、対応する JSON レコードに含まれる列だけが更新されます。
     :::
 
-### 複合型の取り込み {#import-complex-types}
+### 複雑な型のインポート {#import-complex-types}
 
-#### Array 型の取り込み {#import-array-data-type}
+#### Array 型のインポート {#import-array-data-type}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "array":[1,2,3,4,5]}
@@ -1546,7 +1552,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     { "id" : 3, "name" : "Alexander", "age":22, "array":[11,12,13,14,15]}
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test16
@@ -1560,7 +1566,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
@@ -1576,7 +1582,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test16;
@@ -1590,9 +1596,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.00 sec)
     ```
 
-#### Map 型の取り込み {#import-map-data-type}
+#### Map 型のインポート {#import-map-data-type}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "map":{"a": 100, "b": 200}}
@@ -1600,7 +1606,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     { "id" : 3, "name" : "Alexander", "age":22, "map":{"e": 500, "f": 600}}
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test17 (
@@ -1613,7 +1619,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
@@ -1629,7 +1635,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test17;
@@ -1643,9 +1649,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.01 sec)
     ```
 
-#### Bitmap 型の取り込み {#import-bitmap-data-type}
+#### Bitmap 型のインポート {#import-bitmap-data-type}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "bitmap_id":243}
@@ -1653,7 +1659,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     { "id" : 3, "name" : "Alexander", "age":22, "bitmap_id":8573}
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     CREATE TABLE demo.routine_test18 (
@@ -1667,7 +1673,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job18 ON routine_test18
@@ -1684,7 +1690,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select id, BITMAP_UNION_COUNT(pv) over(order by id) uv from(
@@ -1702,9 +1708,9 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     3 rows in set (0.00 sec)
     ```
 
-#### HLL 型の取り込み {#import-hll-data-type}
+#### HLL 型のインポート {#import-hll-data-type}
 
-1. 取り込みデータのサンプル:
+1. インポートするサンプルデータ:
 
     ```sql
     2022-05-05,10001,Test01,Beijing,windows
@@ -1717,7 +1723,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     2022-05-06,10004,Test01,Shaanxi,windows
     ```
 
-2. テーブルのスキーマ:
+2. テーブル定義:
 
     ```sql
     create table demo.routine_test19 (
@@ -1732,7 +1738,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     distributed by hash(id) buckets 10;
     ```
 
-3. 取り込みコマンド:
+3. インポートコマンド:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
@@ -1746,7 +1752,7 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
             );
     ```
 
-4. 取り込み結果:
+4. インポート結果:
 
     ```sql
     mysql> select * from routine_test19;
@@ -1773,13 +1779,13 @@ Routine Load ジョブには 5 つの状態があります。状態間の遷移�
     1 row in set (0.01 sec)
     ```
 
-### Kafka セキュリティ認証 {#kafka-security-authentication}
+### Kafka のセキュリティ認証 {#kafka-security-authentication}
 
-Doris は次の Kafka セキュリティプロトコルによるアクセスに対応します。以下に取り込み例とパラメータの説明を示します。
+Doris は次の Kafka セキュリティプロトコルによるアクセスをサポートします。以下にインポート例とパラメータの説明を示します。
 
-#### SSL 認証を使用した Kafka データの取り込み {#import-kafka-data-with-ssl-authentication}
+#### SSL 認証を使用した Kafka データのインポート {#import-kafka-data-with-ssl-authentication}
 
-取り込みコマンドの例:
+インポートコマンドの例:
 
 ```sql
 CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
@@ -1801,17 +1807,17 @@ CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
 
 パラメータの説明:
 
-| パラメータ                         | 説明                                                  |
+| パラメータ | 説明 |
 | --------------------------------- | ------------------------------------------------------------ |
-| property.security.protocol        | 使用するセキュリティプロトコルです。上の例では SSL を使用します。 |
-| property.ssl.ca.location          | CA（認証局）証明書の場所です。  |
-| property.ssl.certificate.location | （Kafka サーバー側でクライアント認証が有効な場合のみ必須）クライアントの公開鍵の場所です。 |
-| property.ssl.key.location         | （Kafka サーバー側でクライアント認証が有効な場合のみ必須）クライアントの秘密鍵の場所です。 |
-| property.ssl.key.password         | （Kafka サーバー側でクライアント認証が有効な場合のみ必須）クライアントの秘密鍵のパスワードです。 |
+| property.security.protocol | 使用するセキュリティプロトコル。上の例では SSL を使用します。 |
+| property.ssl.ca.location | CA（Certificate Authority）証明書の場所。 |
+| property.ssl.certificate.location | Kafka サーバー側でクライアント認証を有効にしている場合にのみ必要です。クライアントの公開鍵の場所。 |
+| property.ssl.key.location | Kafka サーバー側でクライアント認証を有効にしている場合にのみ必要です。クライアントの秘密鍵の場所。 |
+| property.ssl.key.password | Kafka サーバー側でクライアント認証を有効にしている場合にのみ必要です。クライアントの秘密鍵のパスワード。 |
 
-#### Kerberos 認証を使用した Kafka データの取り込み {#import-kafka-data-with-kerberos-authentication}
+#### Kerberos 認証を使用した Kafka データのインポート {#import-kafka-data-with-kerberos-authentication}
 
-取り込みコマンドの例:
+インポートコマンドの例:
 
 ```sql
 CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
@@ -1832,20 +1838,20 @@ CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
 
 パラメータの説明:
 
-| パラメータ                           | 説明                                         |
+| パラメータ | 説明 |
 | ----------------------------------- | --------------------------------------------------- |
-| property.security.protocol          | 使用するセキュリティプロトコルです。上の例では SASL_PLAINTEXT を使用します。 |
-| property.sasl.kerberos.service.name | ブローカーのサービス名を指定します。デフォルトは Kafka です。 |
-| property.sasl.kerberos.keytab       | keytab ファイルの場所です。                    |
-| property.sasl.kerberos.principal    | Kerberos プリンシパルを指定します。                   |
+| property.security.protocol | 使用するセキュリティプロトコル。上の例では SASL_PLAINTEXT を使用します。 |
+| property.sasl.kerberos.service.name | broker のサービス名を指定します。デフォルトは Kafka です。 |
+| property.sasl.kerberos.keytab | keytab ファイルの場所。 |
+| property.sasl.kerberos.principal | Kerberos principal を指定します。 |
 
 :::tip ヒント
-`rdnbs=true` を `krb5.conf` に設定することを推奨します。設定しない場合、`Server kafka/15.5.4.68@EXAMPLE.COM not found in Kerberos database` というエラーが発生することがあります。
+`krb5.conf` に `rdnbs=true` を設定することを推奨します。設定しないと、次のエラーが発生する場合があります: `Server kafka/15.5.4.68@EXAMPLE.COM not found in Kerberos database`
 :::
 
-#### PLAIN 認証を使用した Kafka クラスターの取り込み {#import-a-kafka-cluster-with-plain-authentication}
+#### PLAIN 認証を使用した Kafka クラスターのインポート {#import-a-kafka-cluster-with-plain-authentication}
 
-取り込みコマンドの例:
+インポートコマンドの例:
 
 ```sql
 CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
@@ -1866,16 +1872,16 @@ CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
 
 パラメータの説明:
 
-| パラメータ                  | 説明                                         |
+| パラメータ | 説明 |
 | -------------------------- | --------------------------------------------------- |
-| property.security.protocol | 使用するセキュリティプロトコルです。上の例では SASL_PLAINTEXT を使用します。 |
-| property.sasl.mechanism    | SASL 認証メカニズムとして PLAIN を指定します。 |
-| property.sasl.username     | SASL ユーザー名です。                                  |
-| property.sasl.password     | SASL パスワードです。                                  |
+| property.security.protocol | 使用するセキュリティプロトコル。上の例では SASL_PLAINTEXT を使用します。 |
+| property.sasl.mechanism | SASL 認証メカニズムを PLAIN に指定します。 |
+| property.sasl.username | SASL ユーザー名。 |
+| property.sasl.password | SASL パスワード。 |
 
-#### 暗号化認証を使用した Kafka サービスへの接続（StreamNative の例） {#connect-to-a-kafka-service-with-encrypted-authentication-streamnative-example}
+#### 暗号化認証を使用する Kafka サービスへの接続（StreamNative の例） {#connect-to-a-kafka-service-with-encrypted-authentication-streamnative-example}
 
-StreamNative メッセージングサービスへの接続を例に説明します。
+StreamNative のメッセージングサービスに接続する例を示します。
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
@@ -1893,16 +1899,16 @@ FROM KAFKA (
 );
 ```
 
-:::caution 注記
-- BE 側に信頼済み CA 証明書のパスが設定されていない場合は、`"property.enable.ssl.certificate.verification" = "false"` を設定してサーバー証明書の検証を省略します。
-- 証明書を検証する場合は、信頼済み CA 証明書のパスを設定します: `"property.ssl.ca.location" = "/path/to/ca-cert.pem"`。
+:::caution 注意
+- BE 側に信頼済み CA 証明書のパスを設定していない場合、`"property.enable.ssl.certificate.verification" = "false"` を設定すると、サーバー証明書の検証をスキップできます。
+- それ以外の場合は、信頼済み CA 証明書のパスを設定します: `"property.ssl.ca.location" = "/path/to/ca-cert.pem"`。
 :::
 
-### 単一ストリームから複数テーブルへの取り込み {#single-stream-multi-table-import}
+### 単一ストリームから複数テーブルへのインポート {#single-stream-multi-table-import}
 
-`test1` という名前の Kafka Routine Load 動的複数テーブル取り込みタスクを `example_db` に作成します。`group.id` と `client.id` を指定し、デフォルトですべてのパーティションを自動的に読み取り、データが存在する位置（`OFFSET_BEGINNING`）から購読します。
+`example_db` に `test1` という名前の Kafka 動的複数テーブルインポートタスクを作成します。デフォルトで全パーティションを自動的に読み取り、データが存在する位置（`OFFSET_BEGINNING`）からサブスクライブします。
 
-Kafka から `tbl1` と `tbl2` がある `example_db` にデータを取り込む場合を考えます。`test1` という Routine Load タスクを作成し、Kafka トピック `my_topic` のデータを `tbl1` と `tbl2` の両方に取り込めます。
+Kafka のデータを `example_db` の `tbl1` と `tbl2` にインポートする場合を考えます。`test1` という Routine Load タスクを作成すると、Kafka トピック `my_topic` のデータを `tbl1` と `tbl2` の両方にインポートできます。
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1
@@ -1914,15 +1920,15 @@ FROM KAFKA
 );
 ```
 
-この場合、Kafka のデータにテーブル名を含める必要があります。現在、動的テーブル名は Kafka Value からの抽出にのみ対応しており、データは次の形式に従う必要があります。JSON の場合は `table_name|{"col1": "val1", "col2": "val2"}` です。ここで `tbl_name` はテーブル名、`|` はテーブル名とデータの区切り文字です。CSV 形式も同様で、たとえば `table_name|val1,val2,val3` です。
+この場合、Kafka のデータにテーブル名を含める必要があります。現在、動的なテーブル名は Kafka の Value から抽出する方式のみをサポートしており、データは所定の形式に従う必要があります。JSON の場合は `table_name|{"col1": "val1", "col2": "val2"}` です。ここで `tbl_name` はテーブル名、`|` はテーブル名とテーブルデータの区切り文字です。CSV 形式のデータも同様で、たとえば `table_name|val1,val2,val3` となります。
 
-:::caution 注記
-ここでの `table_name` は Doris のテーブル名と完全に一致する必要があります。一致しないと取り込みに失敗します。動的テーブルでは `column_mapping` を使用できません。
+:::caution 注意
+ここでの `table_name` は Doris のテーブル名と完全に一致する必要があります。一致しないとインポートに失敗します。動的テーブルでは `column_mapping` をサポートしません。
 :::
 
-### 厳密モードでの取り込み {#strict-mode-import}
+### 厳格モードでのインポート {#strict-mode-import}
 
-`test1` という名前で、`example_tbl` を対象とする Kafka Routine Load タスクを `example_db` に作成し、厳密モードを有効にします。
+`example_db` の `example_tbl` に対して、厳格モードを有効にした `test1` という Kafka Routine Load タスクを作成します。
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
@@ -1950,52 +1956,52 @@ FROM KAFKA
 通常、データ品質の問題か Kafka 側の例外が原因です。
 
 1. `SHOW ROUTINE LOAD FOR <job_name>` を実行し、`ReasonOfStateChanged` と `ErrorLogUrls` を確認します。
-2. ダーティデータが原因の場合は、必要に応じて `max_filter_ratio` と `max_error_number` を増やします。
-3. Kafka 側の例外が原因の場合は、ブローカーとトピックにアクセスできることを確認してから、`RESUME ROUTINE LOAD` を実行して復旧します。
+2. 不正なデータが原因なら、必要に応じて `max_filter_ratio` と `max_error_number` を増やします。
+3. Kafka の例外が原因なら、broker と topic に接続できることを確認してから `RESUME ROUTINE LOAD` を実行して復旧します。
 
-### `Offset out of range` または `out of range` エラーにはどう対処しますか？ {#how-to-handle-the-offset-out-of-range-or-out-of-range-error}
+### `Offset out of range` または `out of range` エラーにはどう対処すればよいですか？ {#how-to-handle-the-offset-out-of-range-or-out-of-range-error}
 
-通常、記録されたオフセットが Kafka の保持期間を過ぎて削除されたことを意味します。
+通常、記録されたオフセットが Kafka の保持期間によりすでに削除されたことを意味します。
 
 1. `PAUSE ROUTINE LOAD FOR <job_name>` でジョブを一時停止します。
-2. `ALTER ROUTINE LOAD` で `kafka_offsets` を有効な位置（`OFFSET_BEGINNING` や特定のオフセット）に設定し直します。
+2. `ALTER ROUTINE LOAD` で `kafka_offsets` を有効な位置（`OFFSET_BEGINNING` や具体的なオフセット）にリセットします。
 3. `RESUME ROUTINE LOAD` を実行してジョブを復旧します。
 
-### `Server kafka/xxx@EXAMPLE.COM not found in Kerberos database` エラーにはどう対処しますか？ {#server-kafkaxxxexamplecom-not-found-in-kerberos-database}
+### `Server kafka/xxx@EXAMPLE.COM not found in Kerberos database` が表示された場合は？ {#server-kafkaxxxexamplecom-not-found-in-kerberos-database}
 
-Kerberos 認証では、`rdnbs=true` を `krb5.conf` に設定します。
+Kerberos 認証を使用する場合は、`krb5.conf` に `rdnbs=true` を設定します。
 
-### `Server certificate verification failed` などの SSL エラーにはどう対処しますか？ {#server-certificate-verification-failed-or-other-ssl-errors}
+### `Server certificate verification failed` などの SSL エラーが発生した場合は？ {#server-certificate-verification-failed-or-other-ssl-errors}
 
-BE 側に信頼済み CA 証明書が設定されていない場合は、`"property.enable.ssl.certificate.verification" = "false"` を設定するか、`"property.ssl.ca.location" = "/path/to/ca-cert.pem"` を明示的に指定します。
+BE 側に信頼済み CA 証明書を設定していない場合は、`"property.enable.ssl.certificate.verification" = "false"` を設定するか、`"property.ssl.ca.location" = "/path/to/ca-cert.pem"` を明示的に指定します。
 
-### 希望した並列度（`desired_concurrent_number`）が反映されないのはなぜですか？ {#the-desired-concurrency-desired_concurrent_number-does-not-take-effect}
+### 希望する並行処理数（`desired_concurrent_number`）が反映されない場合は？ {#the-desired-concurrency-desired_concurrent_number-does-not-take-effect}
 
-実際の並列度は、次の三つの値の最小値で決まります。
+実際の並行処理数は、次の項目の最小値で決まります。
 
 ```text
 min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)
 ```
 
-Kafka トピックのパーティション数と FE 設定 `max_routine_load_task_concurrent_num` を確認します。
+Kafka トピックのパーティション数と FE 設定の `max_routine_load_task_concurrent_num` を確認してください。
 
-### 古い Kafka バージョン（< 0.10.0.0）を使用するには？ {#how-to-use-an-older-kafka-version-01000}
+### 古い Kafka バージョン（< 0.10.0.0）を使用するには？ {#how-to-use-an-older-kafka-version--01000}
 
-BE 設定に `kafka_broker_version_fallback` を指定するか、ジョブ作成時に `property.broker.version.fallback` で対応するバージョンを指定します。
+BE 設定で `kafka_broker_version_fallback` を設定するか、ジョブ作成時に `property.broker.version.fallback` で互換バージョンを指定します。
 
-### 単一ストリームから複数テーブルに取り込む際、取り込み先テーブルを指定するには？ {#how-to-specify-the-target-table-for-single-stream-multi-table-import}
+### 単一ストリームから複数テーブルへのインポートで、対象テーブルを指定するには？ {#how-to-specify-the-target-table-for-single-stream-multi-table-import}
 
-Kafka メッセージの Value に `table_name|<data>` の形式でテーブル名を含める必要があり、その名前は Doris のテーブル名と完全に一致させてください。動的テーブルでは `column_mapping` を使用できません。
+Kafka メッセージの Value に `table_name|<data>` の形式でテーブル名を含めます。テーブル名は Doris のテーブル名と厳密に一致する必要があります。動的テーブルでは `column_mapping` をサポートしません。
 
-### 取り込みに失敗したダーティデータを確認するには？ {#how-to-view-the-dirty-data-that-failed-to-import}
+### インポートに失敗した不正なデータを確認するには？ {#how-to-view-the-dirty-data-that-failed-to-import}
 
-`SHOW ROUTINE LOAD FOR <job_name>` を実行し、結果の `ErrorLogUrls` フィールドを確認します。ブラウザーまたは `wget` でその URL にアクセスし、除外されたエラーデータのサンプルとエラーの原因を確認できます。
+`SHOW ROUTINE LOAD FOR <job_name>` を実行し、結果の `ErrorLogUrls` フィールドを確認します。その URL にブラウザーまたは `wget` でアクセスすると、フィルタリングされたエラーデータのサンプルとエラーの原因を取得できます。
 
 ### Routine Load ジョブを変更する前に一時停止する必要がありますか？ {#must-i-pause-a-routine-load-job-before-modifying-it}
 
-はい。`ALTER ROUTINE LOAD` コマンドを実行するには、ジョブが `PAUSED` 状態である必要があります。変更の手順は、`PAUSE ROUTINE LOAD` → `ALTER ROUTINE LOAD` → `RESUME ROUTINE LOAD` です。
+はい。`ALTER ROUTINE LOAD` コマンドを実行するには、ジョブが `PAUSED` 状態である必要があります。変更手順は `PAUSE ROUTINE LOAD` → `ALTER ROUTINE LOAD` → `RESUME ROUTINE LOAD` です。
 
-## 関連情報 {#more-help}
+## その他のヘルプ {#more-help}
 
 - SQL マニュアル: [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)
-- クライアントのコマンドラインで `HELP ROUTINE LOAD` を実行すると、詳しいヘルプが表示されます。
+- クライアントのコマンドラインで `HELP ROUTINE LOAD` を実行すると、さらに詳しいヘルプを確認できます。

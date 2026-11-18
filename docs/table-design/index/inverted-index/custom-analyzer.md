@@ -310,18 +310,16 @@ SHOW ALTER TABLE COLUMN WHERE TableName='articles';
 
 ### Building an Index
 
-After adding an index, you must build the index for existing data:
+In compute-storage integrated mode, build an added inverted index for existing data explicitly:
 
 ```sql
--- Build a specific index (non-cloud mode)
 BUILD INDEX idx_content_chinese ON articles;
-
--- Build all indexes (cloud mode)
-BUILD INDEX ON articles;
-
--- Check the build progress
-SHOW BUILD INDEX WHERE TableName='articles';
+SHOW BUILD INDEX WHERE TableName = 'articles';
 ```
+
+In Doris 4.1.5 compute-storage decoupled mode, adding the tokenized index in the previous example builds historical data through schema change. Wait for `SHOW ALTER TABLE COLUMN` to report `FINISHED`; an additional `BUILD INDEX` for that index is unnecessary and is rejected as not needed.
+
+Separate historical backfill is supported for non-tokenized inverted indexes and NGram BloomFilter indexes added with `enable_add_index_for_new_data=true`. In this case, the cloud syntax is `BUILD INDEX ON table_name`, without an index name. See the [deployment-specific build example](./overview.md#cloud-index-build). This Doris 4.1.5 behavior does not describe the SNII build path in newer kernels.
 
 ### Key Notes
 

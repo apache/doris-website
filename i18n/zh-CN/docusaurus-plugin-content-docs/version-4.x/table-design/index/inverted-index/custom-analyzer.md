@@ -311,18 +311,16 @@ SHOW ALTER TABLE COLUMN WHERE TableName='articles';
 
 ### 构建索引
 
-添加索引后，需要为已有数据构建索引：
+在存算一体模式下，新增倒排索引后，应显式为历史数据构建索引：
 
 ```sql
--- 构建指定索引（非云模式）
 BUILD INDEX idx_content_chinese ON articles;
-
--- 构建所有索引（云模式）
-BUILD INDEX ON articles;
-
--- 查看构建进度
-SHOW BUILD INDEX WHERE TableName='articles';
+SHOW BUILD INDEX WHERE TableName = 'articles';
 ```
+
+在 Doris 4.1.5 存算分离模式下，前一个示例中新增的分词索引会通过 Schema Change 构建历史数据。等待 `SHOW ALTER TABLE COLUMN` 显示 `FINISHED` 即可，再为该索引执行 `BUILD INDEX` 会被判断为不需要构建而拒绝。
+
+通过 `enable_add_index_for_new_data=true` 添加的不分词倒排索引和 NGram BloomFilter 索引支持单独补建历史数据。此时云模式语法为 `BUILD INDEX ON table_name`，不指定索引名。参见[按部署模式构建索引的示例](./overview.md#cloud-index-build)。上述 Doris 4.1.5 行为不描述较新内核中的 SNII 构建路径。
 
 ### 关键说明
 

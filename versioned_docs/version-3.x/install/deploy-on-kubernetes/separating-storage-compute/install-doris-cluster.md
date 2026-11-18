@@ -22,6 +22,8 @@ Before deploying a decoupled cluster on Kubernetes, it is essential to have Foun
 - Deployment on Kubernetes:
     For deploying FoundationDB on Kubernetes, please refer to [Deploying FoundationDB on Kubernetes](install-fdb.md).
 
+Before installing FDB, check the client library included in your MetaService build. Do not assume that a 7.3 server is compatible with older builds; see the [7.1 installation option](install-fdb.md#fdb-71) and [resource planning](install-fdb.md#resource-planning).
+
 ## Step 2: Deploying the Doris Operator
 1. Create the resource definitions:
     ```shell

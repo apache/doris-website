@@ -327,6 +327,18 @@ Confirm that TOPN optimization is not enabled on the MOR table. For MOR tables, 
 
 The policy controls only phase 2 of TOPN lazy materialization for Doris internal tables. Phase 1, other operators, and external-table reads may still write to File Cache. Use `TopNLazyMaterializationSecondPhaseWriteCacheBytes` to determine whether phase 2 performed cache writes instead of relying on the query's total write volume.
 
+### Can I raise the 1024 threshold for larger LIMIT queries? {#larger-topn-limits}
+
+Yes. `topn_opt_limit_threshold` defaults to 1024 and controls several TopN optimization paths. It is not the maximum supported SQL `LIMIT`, and different paths do not all use the same inclusive boundary. To evaluate a query with `LIMIT 5000`, first raise the threshold in the current session:
+
+```sql
+SET topn_opt_limit_threshold = 10000;
+```
+
+Compare the same query before and after the change with `EXPLAIN` and Profile. A larger candidate set can increase sort CPU, peak memory, and the rows fetched during two-phase materialization. In compute-storage decoupled mode, scattered second-phase reads can also increase remote I/O. Table type, sort keys, selectivity, and the other optimization conditions still apply; raising the threshold does not force every TopN optimization to activate.
+
+Check the query latency, scan rows, peak memory, and, where available, second-read time and remote-read bytes under representative concurrency. Restore the default with `SET topn_opt_limit_threshold = 1024;` after the experiment. Avoid increasing the global value until the workload benefits have been measured.
+
 ## Quick Reference for Related Parameters
 
 | Desired Effect | Setting |

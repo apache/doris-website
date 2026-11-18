@@ -2,64 +2,64 @@
 {
     "title": "高並行データロードの最適化（Group Commit）",
     "language": "ja",
-    "description": "Doris Group Commit は、高頻度の小規模な書き込みトランザクションをまとめ、FE での解析処理とバージョン数の増加による負荷を抑えることで、INSERT と Stream Load の高並行時の性能を向上させます。",
+    "description": "Doris Group Commit は、高頻度の小規模バッチ書き込みトランザクションを統合し、FE の解析処理とバージョン数の増加による負荷を抑えて、INSERT と Stream Load の高並行時の性能を向上させます。",
     "keywords": [
         "Group Commit",
-        "High-concurrency load",
-        "High-frequency small-batch writes",
-        "INSERT INTO optimization",
-        "Stream Load optimization",
-        "Doris load performance",
+        "高並行データロード",
+        "高頻度の小規模バッチ書き込み",
+        "INSERT INTO の最適化",
+        "Stream Load の最適化",
+        "Doris のデータロード性能",
         "PreparedStatement",
         "WAL"
     ]
 }
 ---
 
-<!-- Knowledge type: Feature capability + Operational steps + Configuration parameters -->
-<!-- Applicable scenarios: High-concurrency small-batch writes / Real-time load / Performance tuning -->
+<!-- 知識の種類: 機能 + 操作手順 + 設定パラメータ -->
+<!-- 適用場面: 高並行の小規模バッチ書き込み / リアルタイムデータロード / 性能チューニング -->
 
-高頻度で少量ずつ書き込む場合、従来のデータロード方法には次の問題があります。
+高頻度の小規模バッチ書き込みでは、従来のデータロード方式に次の問題があります。
 
-- データロードのたびに独立したトランザクションが作成され、FE で SQL の解析と実行プランの生成が行われるため、全体の性能が低下します。
-- データロードのたびに新しいバージョンが生成され、バージョン数が急増して、バックグラウンドの Compaction の負荷が高まります。
+- データロードごとに独立したトランザクションが作成され、そのたびに FE で SQL の解析と実行計画の生成が必要になるため、全体の性能が低下します。
+- データロードごとに新しいバージョンが生成されるため、バージョン数が急増し、バックグラウンドの Compaction にかかる負荷が増します。
 
-これらの問題を解決するため、Doris は Group Commit を導入しています。Group Commit は新しいデータロード方法ではなく、既存のデータロード方法を最適化する拡張機能です。主に次の方法を対象とします。
+これらの問題を解決するため、Doris は Group Commit を導入しています。Group Commit は新しいデータロード方式ではなく、既存のデータロード方式を最適化する拡張機能で、主に次を対象とします。
 
 - `INSERT INTO tbl VALUES(...)` 文
 - Stream Load
 
-Group Commit は、複数の小規模なデータロードをバックグラウンドでまとめて大きなトランザクションとしてコミットし、高並行で少量ずつ書き込む場合の性能を大幅に向上させます。PreparedStatement と組み合わせると、さらに高い性能向上が得られます。
+Group Commit は、複数の小規模バッチのデータロードをバックグラウンドで単一の大きなトランザクションにまとめてコミットし、高並行の小規模バッチ書き込みの性能を大幅に向上させます。PreparedStatement と組み合わせると、さらに高い性能向上が得られます。
 
-## 適用シナリオとモードの選択 {#applicable-scenarios-and-selection}
+## 適用場面とモードの選択 {#applicable-scenarios-and-selection}
 
-| シナリオ | 推奨モード | 説明 |
+| 場面 | 推奨モード | 説明 |
 | --- | --- | --- |
-| 書き込み完了後、直ちにデータが参照できる必要がある高並行の書き込み | `sync_mode` | 複数のデータロードを単一のトランザクションにまとめ、コミット後に呼び出しが返ります。 |
-| 遅延に敏感な高頻度の書き込み | `async_mode` | まずデータを WAL に書き込んで直ちに呼び出しが返り、コミットはバックグラウンドで非同期に行われます。 |
+| 完了直後にデータが参照可能であることを求める高並行書き込み | `sync_mode` | 複数のデータロードを単一のトランザクションにまとめ、コミット後に呼び出しが戻ります。 |
+| 遅延に敏感な高頻度書き込み | `async_mode` | 先にデータを WAL に書き込んで呼び出しがすぐに戻り、バックグラウンドで非同期にコミットします。 |
 | Group Commit が不要な場合 | `off_mode` | Group Commit を無効にし、通常のデータロード経路を使用します。 |
 
 ## Group Commit のモード {#group-commit-modes}
 
-Group Commit による書き込みには、次のモードがあります。
+Group Commit による書き込みには、次の3つのモードがあります。
 
-- **オフモード（`off_mode`）**
+- **無効モード（`off_mode`）**
 
     Group Commit を無効にします。
 
 - **同期モード（`sync_mode`）**
 
-    Doris は、データロードの状況とテーブルプロパティ `group_commit_interval` に基づき、複数のデータロードを単一のトランザクションとしてコミットします。各データロードは、トランザクションのコミット後に返ります。このモードは、データロードの完了直後にデータが参照できる必要がある高並行の書き込みに適しています。
+    Doris は負荷とテーブルの `group_commit_interval` プロパティに基づいて複数のデータロードを単一のトランザクションにまとめてコミットし、各データロードはコミット後に戻ります。データロードの完了直後にデータが参照可能であることを求める、高並行書き込みに適しています。
 
 - **非同期モード（`async_mode`）**
 
-    Doris はまずデータを WAL（`Write Ahead Log`）に書き込み、データロードは直ちに返ります。その後、データロードの状況とテーブルプロパティ `group_commit_interval` に基づいて非同期にコミットし、コミット後にデータを参照できるようになります。WAL がディスク容量を過度に占有しないよう、単一のデータロードで大量のデータが取り込まれると、Doris は自動的に `sync_mode` に切り替えます。このモードは、遅延に敏感な高頻度の書き込みに適しています。
+    Doris はまずデータを WAL（`Write Ahead Log`）に書き込み、データロードはすぐに戻ります。その後、負荷とテーブルの `group_commit_interval` プロパティに基づいてデータを非同期にコミットし、コミット後にデータが参照可能になります。WAL によるディスク容量の過剰な使用を防ぐため、1回のデータロードで大量のデータを取り込む場合、Doris は自動的に `sync_mode` に切り替えます。遅延に敏感な高頻度書き込みに適しています。
 
-    WAL ファイル数は FE の HTTP インターフェースで確認できます。詳しくは[こちら](../../../admin-manual/open-api/fe-http/get-wal-size-action)を参照してください。BE のメトリクスでキーワード `wal` を検索することもできます。
+    WAL ファイルの数は FE の HTTP インターフェースで確認できます。詳しくは[こちら](../../../admin-manual/open-api/fe-http/get-wal-size-action)を参照してください。BE のメトリクスで `wal` を検索することもできます。
 
 ## クイックスタート {#quick-start}
 
-以下の例では、すべて次のテーブルスキーマを使用します。
+以下の例では、いずれも次のテーブル定義を使用します。
 
 ```sql
 CREATE TABLE `dt` (
@@ -77,10 +77,10 @@ PROPERTIES (
 ### テーブルプロパティの設定 {#table-property-configuration}
 
 :::info
-テーブルプロパティ `group_commit_mode` は、バージョン **4.1.0** 以降でサポートされています。
+テーブルプロパティ `group_commit_mode` は、バージョン **4.1.0** 以降でサポートされます。
 :::
 
-テーブル単位で Group Commit のデフォルトモードを設定できます。Stream Load で `group_commit` HTTP Header を指定しない場合は、テーブルプロパティのモードが使用されます。
+テーブル単位で Group Commit のデフォルトモードを設定できます。Stream Load で `group_commit` HTTP Header を指定しなかった場合は、テーブルプロパティのモードが使用されます。
 
 **1. テーブル作成時に設定する：**
 
@@ -133,7 +133,7 @@ PROPERTIES (
 
 **4. 優先順位：**
 
-| データロード方法 | 優先順位（高い順） |
+| データロード方式 | 優先順位（高い順） |
 | --- | --- |
 | Stream Load | `group_commit` HTTP Header > テーブルプロパティ `group_commit_mode` |
 | INSERT INTO VALUES | セッション変数 `group_commit` > テーブルプロパティ `group_commit_mode` |
@@ -142,7 +142,7 @@ PROPERTIES (
 
 ### INSERT INTO VALUES {#insert-into-values}
 
-セッション変数 `group_commit` を設定すると、Group Commit が有効になります。セッション変数はテーブルプロパティより優先されます。
+セッション変数 `group_commit` を設定すると、Group Commit を有効にできます。セッション変数はテーブルプロパティより優先されます。
 
 **非同期モード：**
 
@@ -201,7 +201,7 @@ mysql> select * from dt;
 5 rows in set (0.03 sec)
 ```
 
-**オフモード：**
+**無効モード：**
 
 ```sql
 mysql> set group_commit = off_mode;
@@ -209,9 +209,9 @@ mysql> set group_commit = off_mode;
 
 ### JDBC（PreparedStatement）の使用 {#using-jdbc-preparedstatement}
 
-JDBC の `insert into values` でデータを書き込む際、SQL の解析とプラン生成の負荷を減らすため、Doris は FE 側で MySQL プロトコルの `PreparedStatement` 機能をサポートしています。`PreparedStatement` を使用すると、SQL とそのデータロードプランがセッション単位のメモリキャッシュに保存されます。以降のデータロードではキャッシュされたオブジェクトを直接使用するため、FE の CPU 使用率が下がります。
+JDBC の `insert into values` でデータを書き込む場合、SQL の解析と実行計画の生成にかかる負荷を減らすため、Doris は FE 側で MySQL プロトコルの `PreparedStatement` 機能をサポートします。`PreparedStatement` を使用すると、SQL とそのデータロード計画がセッション単位のメモリキャッシュに保存され、以降のデータロードではキャッシュされたオブジェクトが直接使用されるため、FE の CPU 使用量を抑えられます。
 
-**1. JDBC URL を設定し、サーバー側の PreparedStatement を有効にする：**
+**1. JDBC URL を設定し、サーバー側で PreparedStatement を有効にする：**
 
 ```text
 url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500
@@ -219,13 +219,13 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
 
 **2. 次のいずれかの方法でセッション変数 `group_commit` を設定する：**
 
-- JDBC URL に `sessionVariables=group_commit=async_mode` を追加して設定します。
+- JDBC URL に `sessionVariables=group_commit=async_mode` を追加する：
 
     ```text
     url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false
     ```
 
-- SQL 文を実行して設定します。
+- SQL 文を実行する：
 
     ```java
     try (Statement statement = conn.createStatement()) {
@@ -233,7 +233,7 @@ url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionStat
     }
     ```
 
-**3. `PreparedStatement` を使用してバッチ書き込みを行う：**
+**3. `PreparedStatement` でバッチ書き込みを行う：**
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -281,11 +281,11 @@ set enable_prepared_stmt_audit_log=true;
 ```
 :::
 
-JDBC の使用方法について詳しくは、[INSERT を使用したデータ同期](../import-way/insert-into-manual.md)を参照してください。
+JDBC の使い方について詳しくは、[INSERT によるデータ同期](../import-way/insert-into-manual.md)を参照してください。
 
-### Golang クライアントでのバッチ処理 {#batching-with-the-golang-client}
+### Golang クライアントでのバッチ化 {#batching-with-the-golang-client}
 
-Golang の PreparedStatement サポートには制限があるため、クライアント側で手動でバッチ処理を行うと、Group Commit の性能を向上させることができます。次にプログラムの例を示します。
+Golang ではプリペアドステートメントのサポートに制限があるため、クライアント側で手動でバッチ化すると Group Commit の性能を向上させられます。次にプログラム例を示します。
 
 ```Golang
 package main
@@ -393,10 +393,10 @@ func logInsertStatistics() {
 Stream Load でデータをロードする場合は、HTTP Header に `group_commit` パラメータを設定して Group Commit を有効にできます。
 
 :::note
-`group_commit` Header を設定せず、テーブルプロパティに `group_commit_mode` を設定している場合は、テーブルプロパティのモードが自動的に使用されます。
+`group_commit` Header を指定せず、テーブルプロパティに `group_commit_mode` が設定されている場合は、テーブルプロパティのモードが自動的に使用されます。
 :::
 
-`data.csv` の内容を次のように仮定します。
+`data.csv` の内容が次のとおりだとします。
 
 ```text
 6,Amy,60
@@ -463,45 +463,51 @@ Stream Load の構文とベストプラクティスについて詳しくは、[S
 
 ## 自動コミットの条件 {#auto-commit-conditions}
 
-<!-- Knowledge type: Configuration parameters -->
+<!-- 知識の種類: 設定パラメータ -->
 
-時間間隔（デフォルトは 10 秒）かデータサイズ（デフォルトは 64 MB）のいずれかの条件を満たすと、データは自動的にコミットされます。これらのパラメータは連動するため、実際のシナリオに合わせて調整してください。
+コミット間隔（デフォルトは10秒）が経過するか、蓄積データがデフォルトのサイズしきい値である128 MBに達すると、コミットが実行されます。ワークロードに応じて、テーブル単位の2つのしきい値を調整してください。
 
 ### コミット間隔の調整 {#adjusting-the-commit-interval}
 
-コミット間隔のデフォルトは 10 秒です。テーブル設定を変更すると調整できます。
+デフォルトのコミット間隔は10秒です。テーブル設定を変更して調整できます。
 
 ```sql
 # Change the commit interval to 2 seconds
 ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 ```
 
-**調整の目安：**
+**チューニングの目安：**
 
-| 設定値の例 | 利点 | 欠点 |
+| 設定例 | 利点 | 欠点 |
 | --- | --- | --- |
-| 短い間隔（2 秒など） | データが参照できるようになるまでの遅延が短くなり、高いリアルタイム性が必要な場合に適しています | コミットが頻繁になり、バージョン数の増加が速まり、バックグラウンドの Compaction の負荷が高まります |
-| 長い間隔（30 秒など） | コミットするバッチが大きくなり、バージョン数の増加が遅く、システムの負荷が低くなります | データが参照できるようになるまでの遅延が長くなります |
+| 短い間隔（例：2秒） | データが参照可能になるまでの遅延が小さく、リアルタイム性が求められる場合に適している | コミット頻度が増え、バージョン数がより速く増加し、バックグラウンドの Compaction の負荷が高まる |
+| 長い間隔（例：30秒） | コミットするバッチが大きくなり、バージョン数の増加とシステム負荷を抑えられる | データが参照可能になるまでの遅延が大きくなる |
 
-業務上許容できる参照可能になるまでの遅延に応じて値を設定してください。システムの負荷が高い場合は、必要に応じて間隔を長くできます。
+業務で許容できるデータの可視化遅延に基づいて設定してください。システムの負荷が高い場合は、必要に応じて間隔を長くできます。
 
-### コミットするデータサイズの調整 {#adjusting-the-commit-data-size}
+### コミットするデータ量の調整 {#adjusting-the-commit-data-size}
 
-Group Commit でコミットするデータサイズのデフォルトは 64 MB です。テーブル設定を変更すると調整できます。
+**バージョン履歴：**
+
+- テーブルプロパティ `group_commit_data_bytes` は Doris 2.1.0 で導入され、デフォルト値は134217728バイト（128 MB）です。
+- 3.x、4.x、dev でも、このデフォルト値は変わりません。
+- BE パラメータ `group_commit_queue_mem_limit` のデフォルト値は64 MBで、キューメモリのバックプレッシャーを制御します。コミットを起動するしきい値とは別の設定です。
+
+Group Commit でコミットを起動するデータ量のデフォルトのしきい値は128 MBです。テーブル設定を変更して調整できます。
 
 ```sql
-# Change the commit data size to 128MB
-ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
+# Set the commit data-size trigger threshold to 256 MB
+ALTER TABLE dt SET ("group_commit_data_bytes" = "268435456");
 ```
 
-**調整の目安：**
+**チューニングの目安：**
 
-| 設定値の例 | 利点 | 欠点 |
+| 設定例 | 利点 | 欠点 |
 | --- | --- | --- |
-| 小さいしきい値（32 MB など） | メモリ使用量が少なく、リソースが限られた環境に適しています | コミットするバッチが小さくなり、スループットが制限される場合があります |
-| 大きいしきい値（256 MB など） | バッチコミットの効率とシステムのスループットが向上します | メモリ使用量が増えます |
+| 小さいしきい値（例：32 MB） | メモリ使用量が少なく、リソースが限られた環境に適している | コミットするバッチが小さくなり、スループットが制限される可能性がある |
+| 大きいしきい値（例：256 MB） | バッチコミットの効率とシステムのスループットが向上する | メモリ使用量が増える |
 
-メモリリソースとデータの信頼性に関する要件のバランスを考慮して値を選んでください。メモリが十分にあり、より高いスループットが必要な場合は、128 MB 以上に増やせます。
+メモリリソースとデータの信頼性要件のバランスを考えて値を選択してください。メモリに余裕があり、より高いスループットが必要な場合は、256 MB以上に増やせます。
 
 ## 関連するシステム設定 {#related-system-configuration}
 
@@ -510,29 +516,29 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 **`group_commit_wal_path`**
 
 - 説明：Group Commit が WAL ファイルを保存するディレクトリです。
-- デフォルト値：`storage_root_path` に設定した各ディレクトリの下に、`wal` というディレクトリが作成されます。設定例：
+- デフォルト値：`storage_root_path` に設定された各ディレクトリの下に、`wal` というディレクトリが作成されます。設定例：
 
     ```text
     group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
     ```
 
-### コンピュートとストレージを分離したモードでの Stream Load の転送 {#stream-load-forwarding-in-compute-storage-decoupled-mode}
+### コンピュートとストレージの分離モードでの Stream Load の転送 {#stream-load-forwarding-in-compute-storage-decoupled-mode}
 
-コンピュートとストレージを分離したモードで、ロードバランサーが Stream Load リクエストをランダムに振り分けると、同じテーブルへのリクエストが異なる BE ノードに届き、Group Commit で効率よくバッチ処理できません。BE 転送を有効にすると、リクエストを受け取った BE がそのテーブルの転送先 BE にリクエストを転送するため、同じテーブルへのリクエストが単一の BE に集まります。
+コンピュートとストレージの分離モードで、ロードバランサーが Stream Load リクエストをランダムに振り分けると、同じテーブルへのリクエストが異なる BE ノードに届き、Group Commit で効率的にバッチ化できません。BE の転送を有効にすると、リクエストを受け取った BE がそのテーブルの転送先 BE にリクエストを転送するため、同じテーブルへのリクエストが1つの BE に集まります。
 
-| 設定 | 設定箇所 | デフォルト | 説明 |
+| 設定項目 | 設定先 | デフォルト値 | 説明 |
 | --- | --- | --- | --- |
-| `enable_group_commit_streamload_be_forward` | FE | `false` | Stream Load の BE 転送を有効にするかどうかを指定します。分離モードで、リクエストに Group Commit を使用する場合にのみ有効です |
-| `enable_group_commit_streamload_be_forward` | BE | `false` | BE エンドポイント `/api/{db}/{table}/_stream_load_forward` へのリクエストを許可するかどうかを指定します。**Doris 4.0 系では 4.0.8、Doris 4.1 系では 4.1.4 で追加されました** |
+| `enable_group_commit_streamload_be_forward` | FE | `false` | Stream Load の BE 転送を有効にするかどうか。分離モードで、リクエストが Group Commit を使用する場合にのみ有効 |
+| `enable_group_commit_streamload_be_forward` | BE | `false` | BE のエンドポイント `/api/{db}/{table}/_stream_load_forward` へのリクエストを許可するかどうか。**Doris 4.0 系列では4.0.8、Doris 4.1 系列では4.1.4で追加** |
 
-FE と BE の**両方**で、この設定を `true` にする必要があります。
+この設定は FE と BE の**両方**で `true` にする必要があります。
 
-:::caution 動作変更（4.0.8 / 4.1.4）
+:::caution 動作の変更（4.0.8 / 4.1.4）
 
-Doris 4.0 系の 4.0.8、および Doris 4.1 系の 4.1.4 以降では、BE の `_stream_load_forward` エンドポイントに次の制限があります。
+Doris 4.0 系列の4.0.8以降、および Doris 4.1 系列の4.1.4以降、BE の `_stream_load_forward` エンドポイントには次の2つの制限があります。
 
-- エンドポイントは BE 設定 `enable_group_commit_streamload_be_forward` によって制御されます。`false`（デフォルト）の場合、リクエストには `Stream load forward is disabled` というメッセージとともに `403 Forbidden` が返されます。
-- この設定を有効にした後も、エンドポイントへのリクエストには認証の通過とグローバルな `LOAD` 権限が必要です。
+- エンドポイントは BE の設定 `enable_group_commit_streamload_be_forward` で制御されます。`false`（デフォルト）の場合、リクエストには `Stream load forward is disabled` を伴う `403 Forbidden` が返されます。
+- この設定を有効にした場合も、エンドポイントへのリクエストには認証とグローバルな `LOAD` 権限が必要です。
 
 アップグレード前に FE でのみこの機能を有効にしていた場合、アップグレード後は転送に失敗します。すべての `be.conf` に `enable_group_commit_streamload_be_forward=true` を追加し、データロードに使用するアカウントに `LOAD` 権限があることを確認してください。
 
@@ -540,76 +546,76 @@ Doris 4.0 系の 4.0.8、および Doris 4.1 系の 4.1.4 以降では、BE の 
 
 ### Follower FE への転送 {#forwarding-to-a-follower-fe}
 
-> バージョン 4.1.4 以降でサポートされています。
+> バージョン4.1.4以降でサポートされます。
 
-上記の BE 転送に加え、FE は Group Commit を使用する Stream Load リクエストをラウンドロビン方式で Follower FE に転送し、バッチ処理の負荷を複数の FE に分散できます。
+上記の BE 転送に加えて、FE は Group Commit を使用する Stream Load リクエストをラウンドロビン方式で Follower FE に転送できます。これにより、バッチ化の負荷を複数の FE に分散できます。
 
-| 設定 | 設定箇所 | デフォルト | 説明 |
+| 設定項目 | 設定先 | デフォルト値 | 説明 |
 | --- | --- | --- | --- |
-| `enable_forward_group_commit_stream_load_to_follower` | FE | `false` | Group Commit を使用する Stream Load リクエストをラウンドロビン方式で Follower FE に転送するかどうかを指定します |
+| `enable_forward_group_commit_stream_load_to_follower` | FE | `false` | Group Commit を使用する Stream Load リクエストをラウンドロビン方式で Follower FE に転送するかどうか |
 
-注意：転送先のテーブルで `light_schema_change` が `false` に設定されている場合、この転送はサポートされず、リクエストはエラーになります。
+注：対象テーブルの `light_schema_change` が `false` の場合、この転送はサポートされず、リクエストはエラーになります。
 
-### WAL ファイル数の上限 {#wal-count-limit}
+### WAL ファイル数の制限 {#wal-count-limit}
 
-> バージョン 4.1.4 以降でサポートされています。
+> バージョン4.1.4以降でサポートされます。
 
-`async_mode` の Group Commit では、まずデータを WAL に書き込み、非同期に再生します。WAL の再生に失敗し続けると、WAL ファイルが蓄積してディスクがいっぱいになる可能性があります。バージョン 4.1.4 以降、BE 設定 `group_commit_max_wal_num_per_table` でテーブルごとの WAL ファイル数を制限できます。
+`async_mode` の Group Commit は、まずデータを WAL に書き込み、非同期に再生します。WAL の再生が失敗し続けると、WAL ファイルが蓄積してディスク容量を使い切る可能性があります。バージョン4.1.4以降、BE の設定 `group_commit_max_wal_num_per_table` で、テーブルごとの WAL ファイル数を制限できます。
 
-| 設定 | 設定箇所 | デフォルト | 説明 |
+| 設定項目 | 設定先 | デフォルト値 | 説明 |
 | --- | --- | --- | --- |
-| `group_commit_max_wal_num_per_table` | BE | `10` | 単一のテーブルに許可する Group Commit の WAL ファイル数の上限です。`0` は無制限を意味します。動的な変更をサポートします |
+| `group_commit_max_wal_num_per_table` | BE | `10` | 1つのテーブルで許容される Group Commit の WAL ファイル数の上限。`0` は制限なしを意味する。動的に変更可能 |
 
-上限を超えると、そのテーブルに対する `async_mode` の Group Commit データロードは、次のような `EXCEEDED_LIMIT` エラーで拒否されます。
+上限を超えると、そのテーブルの `async_mode` による Group Commit のデータロードは、次のような `EXCEEDED_LIMIT` エラーで拒否されます。
 
 ```text
 Too many group commit async WALs for table <table_name>
 ```
 
-このエラーは、WAL の再生で問題が発生していることを示します（スキーマ変更やディスク障害など）。単に上限を引き上げるのではなく、原因を調査して WAL の再生を復旧してください。
+このエラーは、WAL の再生に問題（スキーマ変更やディスク障害など）が発生していることを示します。単に上限を引き上げるのではなく、原因を調査して WAL の再生を復旧してください。
 
 ## 制限事項 {#limitations}
 
-### Group Commit が使用されず通常のデータロードに切り替わるケース {#group-commit-fallback-scenarios}
+### Group Commit が適用されなくなる場合 {#group-commit-fallback-scenarios}
 
-| データロード方法 | Group Commit を使用しない条件 |
+| データロード方式 | Group Commit が適用されなくなる条件 |
 | --- | --- |
-| `INSERT INTO VALUES` | トランザクション書き込みを使用する（`Begin; INSERT INTO VALUES; COMMIT`）<br/>ラベルを指定する（`INSERT INTO dt WITH LABEL {label} VALUES`）<br/>VALUES に式が含まれる（`INSERT INTO dt VALUES (1 + 100)`）<br/>列更新の書き込みを行う<br/>軽量スキーマ変更をサポートしないテーブルを使用する |
-| `Stream Load` | 2 フェーズコミットを使用する<br/>ラベルを指定する（`-H "label:my_label"`）<br/>列更新の書き込みを行う<br/>軽量スキーマ変更をサポートしないテーブルを使用する |
+| `INSERT INTO VALUES` | トランザクション書き込みを使用する（`Begin; INSERT INTO VALUES; COMMIT`）<br/>ラベルを指定する（`INSERT INTO dt WITH LABEL {label} VALUES`）<br/>VALUES に式が含まれる（`INSERT INTO dt VALUES (1 + 100)`）<br/>列更新による書き込み<br/>軽量スキーマ変更をサポートしないテーブル |
+| `Stream Load` | 2フェーズコミットを使用する<br/>ラベルを指定する（`-H "label:my_label"`）<br/>列更新による書き込み<br/>軽量スキーマ変更をサポートしないテーブル |
 
 ### Unique モデル {#unique-model}
 
-- Group Commit はコミット順序を保証しません。データの整合性を確保するには Sequence 列を使用してください。
+- Group Commit はコミット順序を保証しません。データの整合性を確保するには、Sequence 列を使用してください。
 
-### WAL の制限事項 {#wal-limitations}
+### WAL の制限 {#wal-limitations}
 
-4.1.5 以降、WAL の再生では、末尾の長さフィールドまたはペイロードが不完全な場合、その位置をファイルの終端として扱います。データブロック自体が完全であれば、末尾のチェックサムフィールドが完全に書き込まれていなくても再生できます。末尾の未完了レコードを完全なレコードとして復元することはできません。WAL ファイルが欠落または破損している場合も、データの完全性は保証できません。
+4.1.5以降、WAL の再生では、末尾の長さ情報またはペイロードが不完全な場合、それをファイルの終端として扱います。データブロックが完全であれば、末尾のチェックサムフィールドが最後まで書き込まれていなくても再生できます。書き込みが完了していない末尾のレコードは、完全なレコードとして復元されません。WAL ファイルが欠落または破損している場合も、データの完全性は保証できません。
 
-- `async_mode` はデータを WAL に書き込み、成功すると WAL を削除し、失敗すると WAL から復旧します。
-- WAL ファイルは単一のレプリカとして保存されます。対応するディスクが損傷した場合や、ファイルが誤って削除された場合は、データが失われる可能性があります。
-- BE ノードをオフラインにする場合は、データ損失を防ぐために `DECOMMISSION` コマンドを使用してください。
-- `async_mode` は、次の場合に自動的に `sync_mode` に切り替わります。
-    - 単一のデータロードに含まれるデータが多すぎる場合（単一の WAL ディレクトリの容量の 80% を超える場合）
-    - データサイズが不明なチャンク形式の Stream Load の場合
-    - 使用可能なディスク容量が不足している場合
-- 大規模な Schema Change の実行中は Group Commit による書き込みが拒否されるため、クライアント側で再試行する必要があります。
+- `async_mode` はデータを WAL に書き込み、成功時に WAL を削除し、失敗時には WAL から復旧します。
+- WAL ファイルは単一レプリカで保存されます。対応するディスクが破損したり、ファイルが誤って削除されたりすると、データが失われる可能性があります。
+- BE ノードを停止する際は、データ損失を防ぐために `DECOMMISSION` コマンドを使用してください。
+- 次の場合、`async_mode` は自動的に `sync_mode` に切り替わります。
+    - 1回のデータロードのデータ量が多すぎる場合（単一の WAL ディレクトリの容量の80%を超える場合）
+    - データサイズが不明なチャンク化された Stream Load の場合
+    - ディスクの空き容量が不足している場合
+- 大規模な Schema Change の実行中は Group Commit による書き込みが拒否されるため、クライアントは再試行する必要があります。
 
 ## 性能 {#performance}
 
-高並行かつデータ量の少ないシナリオで、`Stream Load` と `JDBC` を使用し、`group commit`（`async_mode`）の書き込み性能をテストしました。
+高並行かつデータ量が少ない場面での `group commit`（`async_mode` を使用）の書き込み性能を、`Stream Load` と `JDBC` でテストしました。
 
-### Stream Load のログデータを使用したテスト {#stream-load-log-scenario-test}
+### Stream Load のログデータを使ったテスト {#stream-load-log-scenario-test}
 
 **マシン構成：**
 
-- FE 1 台：Alibaba Cloud、8 コア CPU、16 GB メモリ、100 GB の ESSD PL1 クラウドディスク 1 台
-- BE 3 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、1 TB の ESSD PL1 クラウドディスク 1 台
-- テストクライアント 1 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、100 GB の ESSD PL1 クラウドディスク 1 台
+- FE 1台：Alibaba Cloud、8コア CPU、16 GBメモリ、100 GB ESSD PL1 クラウドディスク × 1
+- BE 3台：Alibaba Cloud、16コア CPU、64 GBメモリ、1 TB ESSD PL1 クラウドディスク × 1
+- テストクライアント1台：Alibaba Cloud、16コア CPU、64 GBメモリ、100 GB ESSD PL1 クラウドディスク × 1
 - テストバージョン：Doris-3.0.1
 
 **データセット：**
 
-- `httplogs` データセット、合計 31 GB、247 million 行
+- `httplogs` データセット。合計31 GB、247 million行
 
 **テストツール：**
 
@@ -617,11 +623,11 @@ Too many group commit async WALs for table <table_name>
 
 **テスト方法：**
 
-- 並行処理ごとのデータサイズと並行数を変え、`247249096` 行をロードして、`non-group_commit` モードと `group_commit` の `async_mode` を比較します。
+- 同時実行ごとのデータ量と並行数を変えて `247249096` 行をロードし、`non-group_commit` モードと `group_commit` の `async_mode` を比較します。
 
 **テスト結果：**
 
-| データロード方法 | 並行処理ごとのデータサイズ | 並行数 | 時間（秒） | データロード速度（行/秒） | データロードスループット（MB/秒） |
+| データロード方式 | 同時実行ごとのデータ量 | 並行数 | 所要時間（秒） | データロード速度（行/秒） | データロードスループット（MB/秒） |
 | --- | --- | --- | --- | --- | --- |
 | `group_commit` | 10 KB | 10 | 2204 | 112,181 | 14.8 |
 | `group_commit` | 10 KB | 30 | 2176 | 113,625 | 15.0 |
@@ -636,23 +642,23 @@ Too many group commit async WALs for table <table_name>
 | `non-group_commit` | 10 MB | 10 | 294 | 840,983 | 105.4 |
 | `non-group_commit` | 10 MB | 30 | 118 | 2,095,331 | 276.1 |
 
-上記の `group_commit` のテストでは、BE の CPU 使用率は 10%～40% でした。
+上記の `group_commit` のテストでは、BE の CPU 使用率は10%から40%の範囲でした。
 
-結果から、`group_commit` モードは、少量データを並行してロードする場合の性能を効果的に向上させるとともに、バージョン数を減らし、バックグラウンドでのデータマージの負荷を下げることが分かります。
+結果から、`group_commit` モードは少量データの並行データロードで性能を効果的に向上させるとともに、バージョン数を減らし、バックグラウンドでのデータ統合の負荷を軽減できることが分かります。
 
 ### JDBC {#jdbc}
 
 **マシン構成：**
 
-- FE 1 台：Alibaba Cloud、8 コア CPU、16 GB メモリ、100 GB の ESSD PL1 クラウドディスク 1 台
-- BE 1 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、500 GB の ESSD PL1 クラウドディスク 1 台
-- テストクライアント 1 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、100 GB の ESSD PL1 クラウドディスク 1 台
+- FE 1台：Alibaba Cloud、8コア CPU、16 GBメモリ、100 GB ESSD PL1 クラウドディスク × 1
+- BE 1台：Alibaba Cloud、16コア CPU、64 GBメモリ、500 GB ESSD PL1 クラウドディスク × 1
+- テストクライアント1台：Alibaba Cloud、16コア CPU、64 GBメモリ、100 GB ESSD PL1 クラウドディスク × 1
 - テストバージョン：Doris-3.0.1
-- 性能を向上させるため、PreparedStatement の監査ログ出力は無効にしています
+- 性能向上のため、プリペアドステートメントの監査ログ出力は無効
 
 **データセット：**
 
-- TPC-H sf10 の `lineitem` テーブルのデータセット。30 ファイル、合計約 22 GB、180 million 行
+- TPC-H sf10 の `lineitem` テーブルのデータセット。30ファイル、合計約22 GB、180 million行
 
 **テストツール：**
 
@@ -660,7 +666,7 @@ Too many group commit async WALs for table <table_name>
 
 **テスト方法：**
 
-- 並行数と `INSERT` ごとの行数を変え、`txtfilereader` から `mysqlwriter` へデータを書き込みます。
+- 並行数と `INSERT` あたりの行数を変え、`txtfilereader` から `mysqlwriter` にデータを書き込みます。
 
 **テスト結果：**
 
@@ -670,15 +676,15 @@ Too many group commit async WALs for table <table_name>
 | 100 | 20 | 210,476 | 22.19 |
 | 100 | 30 | 214,323 | 22.92 |
 
-上記のテストでは、FE の CPU 使用率は約 60～70%、BE の CPU 使用率は約 10～20% でした。
+上記のテストでは、FE の CPU 使用率は約60-70%、BE の CPU 使用率は約10-20%でした。
 
-### INSERT INTO 同期モード、小規模バッチ {#insert-into-sync-mode-small-batches}
+### INSERT INTO の同期モード：小規模バッチ {#insert-into-sync-mode-small-batches}
 
 **マシン構成：**
 
-- FE 1 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、500 GB の ESSD PL1 クラウドディスク 1 台
-- BE 5 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、1 TB の ESSD PL1 クラウドディスク 1 台
-- テストクライアント 1 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、100 GB の ESSD PL1 クラウドディスク 1 台
+- FE 1台：Alibaba Cloud、16コア CPU、64 GBメモリ、500 GB ESSD PL1 クラウドディスク × 1
+- BE 5台：Alibaba Cloud、16コア CPU、64 GBメモリ、1 TB ESSD PL1 クラウドディスク × 1
+- テストクライアント1台：Alibaba Cloud、16コア CPU、64 GBメモリ、100 GB ESSD PL1 クラウドディスク × 1
 - テストバージョン：Doris-3.0.1
 
 **データセット：**
@@ -716,13 +722,13 @@ Too many group commit async WALs for table <table_name>
 
 - [Jmeter](https://jmeter.apache.org/)
 
-設定する Jmeter のパラメータを以下に示します。
+設定する Jmeter のパラメータを次の図に示します。
 
 ![jmeter1](/images/group-commit/jmeter1.jpg)
 ![jmeter2](/images/group-commit/jmeter2.jpg)
 
-1. テスト前に初期化文として `set group_commit=async_mode` と `set enable_nereids_planner=false` を設定します。
-2. JDBC PreparedStatement を有効にします。完全な URL は次のとおりです。
+1. テスト前の init 文として `set group_commit=async_mode` と `set enable_nereids_planner=false` を設定します。
+2. JDBC PreparedStatement を有効にします。URL 全体は次のとおりです。
 
     ```text
     jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false`.
@@ -730,44 +736,44 @@ Too many group commit async WALs for table <table_name>
 
 3. データロードの種類を prepared update statement に設定します。
 4. データロード文を設定します。
-5. 毎回ロードする値を設定します。各値がデータロード先の値の型と順番に一致することを確認してください。
+5. 毎回ロードする値を設定します。各値が対応するデータ型と一致することを確認してください。
 
 **テスト方法：**
 
-- `Jmeter` を使用して `Doris` にデータを書き込みます。各並行処理で、`INSERT INTO` ごとに 1 行を書き込みます。
+- `Jmeter` を使用して `Doris` にデータを書き込みます。各並行処理で、`INSERT INTO` 1回につき1行を書き込みます。
 
 **テスト結果（単位：行/秒）：**
 
-以下のテストでは、並行数 30、100、500 を使用します。
+以下では並行数30、100、500でテストします。
 
-**並行数 30、同期モード、BE 5 台、3 レプリカ：**
+**並行数30、同期モード、5台の BE と3レプリカ：**
 
 | Group Commit の間隔 | 10ms | 20ms | 50ms | 100ms |
 | --- | --- | --- | --- | --- |
 | `enable_nereids_planner=true` | 891.8 | 701.1 | 400.0 | 237.5 |
 | `enable_nereids_planner=false` | 885.8 | 688.1 | 398.7 | 232.9 |
 
-**並行数 100、同期モード、BE 5 台、3 レプリカ：**
+**並行数100、同期モード、5台の BE と3レプリカ：**
 
 | Group Commit の間隔 | 10ms | 20ms | 50ms | 100ms |
 | --- | --- | --- | --- | --- |
 | `enable_nereids_planner=true` | 2427.8 | 2068.9 | 1259.4 | 764.9 |
 | `enable_nereids_planner=false` | 2320.4 | 1899.3 | 1206.2 | 749.7 |
 
-**並行数 500、同期モード、BE 5 台、3 レプリカ：**
+**並行数500、同期モード、5台の BE と3レプリカ：**
 
 | Group Commit の間隔 | 10ms | 20ms | 50ms | 100ms |
 | --- | --- | --- | --- | --- |
 | `enable_nereids_planner=true` | 5567.5 | 5713.2 | 4681.0 | 3131.2 |
 | `enable_nereids_planner=false` | 4471.6 | 5042.5 | 4932.2 | 3641.1 |
 
-### INSERT INTO 同期モード、大規模バッチ {#insert-into-sync-mode-large-batches}
+### INSERT INTO の同期モード：大規模バッチ {#insert-into-sync-mode-large-batches}
 
 **マシン構成：**
 
-- FE 1 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、500 GB の ESSD PL1 クラウドディスク 1 台
-- BE 5 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、1 TB の ESSD PL1 クラウドディスク 1 台。注意：テストではそれぞれ BE 1 台、3 台、5 台を使用しました。
-- テストクライアント 1 台：Alibaba Cloud、16 コア CPU、64 GB メモリ、100 GB の ESSD PL1 クラウドディスク 1 台
+- FE 1台：Alibaba Cloud、16コア CPU、64 GBメモリ、500 GB ESSD PL1 クラウドディスク × 1
+- BE 5台：Alibaba Cloud、16コア CPU、64 GBメモリ、1 TB ESSD PL1 クラウドディスク × 1。注：テストでは BE をそれぞれ1台、3台、5台使用しました。
+- テストクライアント1台：Alibaba Cloud、16コア CPU、64 GBメモリ、100 GB ESSD PL1 クラウドディスク × 1
 - テストバージョン：Doris-3.0.1
 
 **データセット：**
@@ -807,27 +813,27 @@ Too many group commit async WALs for table <table_name>
 
 **テスト方法：**
 
-- `Jmeter` を使用して `Doris` にデータを書き込みます。各並行処理で、`INSERT INTO` ごとに 1000 行を書き込みます。
+- `Jmeter` を使用して `Doris` にデータを書き込みます。各並行処理で、`INSERT INTO` 1回につき1000行を書き込みます。
 
 **テスト結果（単位：行/秒）：**
 
-以下のテストでは、並行数 30、100、500 を使用します。
+以下では並行数30、100、500でテストします。
 
-**並行数 30、同期モード、BE 5 台、3 レプリカ：**
+**並行数30、同期モード、5台の BE と3レプリカ：**
 
 | Group Commit の間隔 | 10ms | 20ms | 50ms | 100ms |
 | --- | --- | --- | --- | --- |
 | `enable_nereids_planner=true` | 9.1K | 11.1K | 11.4K | 11.1K |
 | `enable_nereids_planner=false` | 157.8K | 159.9K | 154.1K | 120.4K |
 
-**並行数 100、同期モード、BE 5 台、3 レプリカ：**
+**並行数100、同期モード、5台の BE と3レプリカ：**
 
 | Group Commit の間隔 | 10ms | 20ms | 50ms | 100ms |
 | --- | --- | --- | --- | --- |
 | `enable_nereids_planner=true` | 10.0K | 9.2K | 8.9K | 8.9K |
 | `enable_nereids_planner=false` | 130.4K | 131.0K | 130.4K | 124.1K |
 
-**並行数 500、同期モード、BE 5 台、3 レプリカ：**
+**並行数500、同期モード、5台の BE と3レプリカ：**
 
 | Group Commit の間隔 | 10ms | 20ms | 50ms | 100ms |
 | --- | --- | --- | --- | --- |
@@ -836,31 +842,31 @@ Too many group commit async WALs for table <table_name>
 
 ## FAQ {#faq}
 
-<!-- Knowledge type: FAQ / Troubleshooting -->
+<!-- 知識の種類: FAQ / トラブルシューティング -->
 
-**Q1：データロードに Group Commit が使用されているか、どうすれば確認できますか？**
+**Q1：データロードに Group Commit が使われているか、どうすれば確認できますか？**
 
-- INSERT INTO VALUES：返された結果の `label` が `group_commit_` で始まり、複数のデータロードで同じ `label` と `txnId` が共有される場合があります。
+- INSERT INTO VALUES：返された結果の `label` が `group_commit_` で始まります。複数のデータロードで同じ `label` と `txnId` が共有される場合もあります。
 - Stream Load：返された JSON の `GroupCommit` フィールドが `true` で、`Label` が `group_commit_` で始まります。
 
 **Q2：`async_mode` を有効にした後、いつデータをクエリできますか？**
 
-- データが参照できるようになるまでの遅延は、テーブルプロパティ `group_commit_interval_ms`（デフォルトは 10 秒）と `group_commit_data_bytes`（デフォルトは 64 MB）によって決まります。いずれかの条件を満たした時点でコミットされます。
+- データが参照可能になるまでの遅延は、テーブルプロパティ `group_commit_interval_ms`（デフォルトは10秒）と `group_commit_data_bytes`（デフォルトのコミット起動しきい値は128 MB）で決まります。いずれかのしきい値に達した時点でコミットが実行されます。
 
-**Q3：`async_mode` はどのような場合に自動的に `sync_mode` に切り替わりますか？**
+**Q3：`async_mode` が自動的に `sync_mode` に切り替わるのはいつですか？**
 
-- 単一のデータロードに含まれるデータが、単一の WAL ディレクトリの容量の 80% を超える場合。
-- データサイズが不明なチャンク形式の Stream Load の場合。
-- 使用可能なディスク容量が不足している場合。
+- 1回のデータロードのデータ量が、単一の WAL ディレクトリの容量の80%を超える場合。
+- データサイズが不明なチャンク化された Stream Load の場合。
+- ディスクの空き容量が不足している場合。
 
-**Q4：`INSERT INTO VALUES` で Group Commit が使用されないのはなぜですか？**
+**Q4：`INSERT INTO VALUES` に Group Commit が適用されないのはなぜですか？**
 
-- 明示的なトランザクション内かどうか、ラベルを指定しているか、VALUES に式が含まれるか、列更新の書き込みか、テーブルが軽量スキーマ変更をサポートしているかを確認してください。詳しくは、[Group Commit が使用されず通常のデータロードに切り替わるケース](#group-commit-fallback-scenarios)を参照してください。
+- 明示的なトランザクション内か、ラベルが指定されているか、VALUES に式が含まれるか、列更新による書き込みか、またはテーブルが軽量スキーマ変更をサポートしていないかを確認してください。詳しくは[Group Commit が適用されなくなる場合](#group-commit-fallback-scenarios)を参照してください。
 
-**Q5：`async_mode` の使用時にデータが失われるリスクはありますか？**
+**Q5：`async_mode` を使用するとデータ損失のリスクがありますか？**
 
-- WAL ファイルは単一のレプリカとして保存されます。対応するディスクが損傷した場合や、ファイルが誤って削除された場合は、データが失われる可能性があります。BE ノードをオフラインにする場合は、データ損失を防ぐために必ず `DECOMMISSION` コマンドを使用してください。
+- WAL ファイルは単一レプリカで保存されます。対応するディスクが破損したり、ファイルが誤って削除されたりすると、データが失われる可能性があります。BE ノードを停止する際は、データ損失を防ぐために必ず `DECOMMISSION` コマンドを使用してください。
 
-**Q6：Unique モデルで Group Commit を使用する際、何に注意すべきですか？**
+**Q6：Unique モデルで Group Commit を使用する際の注意点は何ですか？**
 
-- Group Commit はコミット順序を保証しません。データの整合性を確保するには Sequence 列を使用してください。
+- Group Commit はコミット順序を保証しません。データの整合性を確保するには、Sequence 列を使用してください。

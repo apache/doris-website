@@ -7,6 +7,8 @@
 }
 ---
 
+配置 FDB 连接前，确认 MetaService 构建产物中的客户端兼容 FDB 服务端系列；安装 Operator 客户端不会更新 MetaService。固定版本安装及兼容方案见[部署 FoundationDB](install-fdb.md)。删除单个 Doris 集群时应保留共享 FDB。
+
 ## 学完本章节你将能够
 
 - 配置 MetaService 访问 FoundationDB 的连接信息
@@ -57,7 +59,7 @@ spec:
 - `${foundationdbConfigMapName}`：ConfigMap 的名称
 - `${namespace}`：FoundationDB 部署所在的命名空间
 
-查找 `fdb-kubernetes-operator` 生成的 ConfigMap，请参考部署 FoundationDB 章节的 [获取包含 FoundationDB 访问信息的 ConfigMap](install-fdb.md#获取包含-foundationdb-访问信息的-configmap)。
+查找 `fdb-kubernetes-operator` 生成的 ConfigMap，请参考部署 FoundationDB 章节的 [获取包含 FoundationDB 访问信息的 ConfigMap](install-fdb.md#get-the-configmap-that-contains-foundationdb-access-information)。
 
 ### 方式二：直接配置访问地址
 
@@ -135,7 +137,7 @@ data:
     brpc_listen_port = 5000
     brpc_num_threads = -1
     brpc_idle_timeout_sec = 30
-    http_token = ${httpToken}
+    http_token = <custom-http-token>
 
     # // doris txn config
     label_keep_max_second = 259200
@@ -177,20 +179,20 @@ spec:
 
 将上述配置更新到需要部署的 [DorisDisaggregatedCluster 资源](./install-doris-cluster.md#2-修改关键配置)中。
 
-### 配置和修改 HTTP token
+### 自定义管理 HTTP token {#ms-http-token}
 
-`http_token` 用于 MetaService HTTP 管理接口鉴权，与 [Doris 管理账户凭据 `authSecret`](config-cluster.md) 相互独立。请将上方示例中的 `${httpToken}` 替换为自定义随机字符串，并通过 `spec.metaService.configMaps` 引用该 ConfigMap。修改已有配置时，保留 `doris_cloud.conf` 中的其他配置项。
+`http_token` 用于 MetaService 管理 HTTP API 的请求鉴权，默认值为 `greedisgood9999`。请将示例中的 `<custom-http-token>` 替换为自定义随机字符串。将 `doris_cloud.conf` 放在 ConfigMap 的同名键下，再按上方步骤通过 `spec.metaService.configMaps` 引用该 ConfigMap。
 
-FE、BE 正常访问 MetaService 的 RPC 不使用该 HTTP token。对于通过 FE SQL 注册节点的镜像（例如 Doris 4.1.5），无需在 FE、BE 中配置相同的 token，也无需因此重启 FE、BE。
+API 客户端通过 `token` 查询参数传入该值。Doris Operator 从引用的 ConfigMap 读取 `http_token`，用于管理 HTTP 请求，因此请更新 ConfigMap，使 Operator 与 MetaService 的配置保持一致。FE、BE 的元数据 RPC 不使用此 token。对于通过 FE SQL 注册节点的镜像（例如 Doris 4.1.5），修改此 token 无需修改或重启 FE、BE。[Doris 管理账户凭据 `spec.authSecret`](config-cluster.md) 与 `http_token` 相互独立。
 
-部署后也可以修改 token，操作步骤如下：
+部署后可按以下步骤轮换 token：
 
-1. 更新被引用的 ConfigMap 中 `doris_cloud.conf` 的 `http_token`，保留其他配置。
+1. 更新引用的 ConfigMap 中 `doris_cloud.conf` 的 `http_token`，保留其他配置项。所有 MetaService 副本使用相同的新 token。
 2. 逐个重启 MetaService Pod，等待当前 Pod 恢复 Ready 后再处理下一个。单副本部署在重启期间会暂时无法提供 MetaService 服务。
-3. 使用需要 token 鉴权的只读 HTTP 管理接口，逐个验证各 MetaService 副本的新 token 已生效；仅检查 Pod Ready 不能确认 token 已切换。
-4. 同步更新调用这些 HTTP 管理接口的运维工具。
+3. 使用需要 token 鉴权的只读管理 HTTP API，逐个验证各 MetaService 副本的新 token 已生效。仅检查 Pod Ready 不能确认 token 已切换。
+4. 同步更新调用这些 API 的运维工具。
 
-`http_token` 是启动时加载的非动态配置，仅更新 ConfigMap 不会修改运行中 MetaService 进程的 token，也不要依赖该操作自动触发 Pod 重启。滚动切换期间，各副本可能暂时使用不同的 token，HTTP 管理调用可能认证失败，应避开依赖这些接口的节点管理操作。
+MetaService 在启动时加载 `http_token`。仅更新 ConfigMap 不会修改运行中进程的 token，也不能保证自动重启 Pod。轮换期间，各副本可能暂时使用不同的 token，管理 HTTP API 请求可能认证失败。请在此期间避开依赖这些 API 的节点管理操作。
 
 ## 5. 配置服务探测超时
 

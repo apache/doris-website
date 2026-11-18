@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/lance-hybrid-search",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/lance-hybrid-search.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/lance-hybrid-search.mdx",
+    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
+    "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
+    "sourceTechnicalHash": "3f05cc51c538369f5d60fe1dfc25e6d30d7e027759d221c3bb25664d9257b9ac",
+    "targetHash": "8f349631cb66d327b3823176f8684c9bc69bbd198af422ef93f9f178e458447c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-15T05:00:08.885Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
+      "targetHash": "8f349631cb66d327b3823176f8684c9bc69bbd198af422ef93f9f178e458447c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"25\",\"3\",\"4\",\"4.2\",\"5\",\"50\",\"6\",\"95\",\"95\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"20\",\"20\",\"20\",\"25\",\"3\",\"4\",\"4\",\"4\",\"4.2\",\"5\",\"50\",\"6\",\"8\",\"8\",\"95\",\"95\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 11: expected [\"code\",\"text\",null,\"Query snapshot\\n  -> FE plans physical search-index segment splits\\n  -> Each split: scalar Prefilter -> vector or full-text candidates\\n  -> Doris residual filtering -> local TopN -> global TopN\\n  -> Optional deferred fetch of output columns\"]; received [\"code\",\"text\",null,\"クエリのスナップショット\\n  -> FE が物理検索インデックスセグメントのスプリットを計画\\n  -> 各スプリット: スカラー Prefilter -> ベクトル検索または全文検索の候補\\n  -> Doris の残余フィルタリング -> ローカル TopN -> グローバル TopN\\n  -> 必要に応じて出力列を遅延取得\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/best-practices/lance-hybrid-search.mdx",
+        "blob": "8273b82fb27db03da454ed509ae4501a1f744c72"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/best-practices/lance-hybrid-search.mdx",
+        "blob": "042f8ed89735ffd4590323d1f787fb0ad6ca3d8f"
+      }
+    }
+  }
+}
