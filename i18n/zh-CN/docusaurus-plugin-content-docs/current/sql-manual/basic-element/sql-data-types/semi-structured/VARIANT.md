@@ -538,7 +538,7 @@ v1 VARIANT<
 > NULL
 ```
 
-匹配成功的路径默认参与子列列式提取（Subcolumnization）。如果匹配的路径过多、生成了过多子列，可以考虑开启 `variant_enable_typed_paths_to_sparse`（参见[列属性](#column-properties)）。
+匹配成功的路径始终参与子列列式提取（Subcolumnization），且不计入 `variant_max_subcolumns_count`，因此请避免使用会匹配大量路径的过宽通配符。
 
 列创建后不能修改 Schema Template，参见 [ALTER TABLE](#alter-table)。
 
@@ -720,7 +720,7 @@ CREATE TABLE IF NOT EXISTS tbl (
    );
    SELECT * FROM tbl WHERE v_str MATCH 'Doris';
    ```
-4. 路径存储在稀疏列中：子路径索引依赖子列。超出 `variant_max_subcolumns_count` 的路径没有子列；`variant_max_subcolumns_count = 0` 时，所有动态路径都没有子列。可以用 Schema Template 固定路径，或参见[稀疏列机制](#sparse-columns)。
+4. 路径存储在稀疏列中：子路径索引依赖子列。超出 `variant_max_subcolumns_count` 的路径没有子列；`variant_max_subcolumns_count = 0` 时，所有动态路径都没有子列；行数少于 `variant_subcolumn_extraction_min_rows` 的数据文件也没有动态子列，直到 Compaction 写出的数据文件达到该阈值。路径没有子列时，`SEARCH()` 会报错 “SEARCH index unavailable for Variant field”，`MATCH` 默认回退为读取值逐行匹配（`enable_match_without_inverted_index = false` 时报错）。可以用 Schema Template 固定路径，或参见[稀疏列机制](#sparse-columns)。
 
 ## 宽列 {#wide-columns}
 
@@ -764,6 +764,8 @@ CREATE TABLE IF NOT EXISTS tbl (
   DESC old_t;  -- 列出子列 v.a 和 v.b，因为 old_t 保持原有语义
   DESC new_t;  -- 不列出子列，因为 new_t 把 a 和 b 存入稀疏列
   ```
+
+  `CREATE TABLE AS SELECT` 把查询计算出的 VARIANT（如 `PARSE_TO_VARIANT(...)`、`TRY_PARSE_TO_VARIANT(...)`、子路径 `v['a']`）存为新列时，`variant_max_subcolumns_count` 取表达式类型的值：`PARSE_TO_VARIANT` 和 `TRY_PARSE_TO_VARIANT` 为 `0`，动态路径都存入稀疏列；子路径取源列的值。需要默认上限时，把表达式 CAST 为 VARIANT，例如 `CAST(PARSE_TO_VARIANT(s) AS VARIANT)` 的上限为 `2048`。
 - 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
 
 **参考说明**
@@ -802,6 +804,9 @@ CREATE TABLE example_table (
 - 需开启 `variant_enable_doc_mode`。
 - DOC mode 下，Schema Template 字段只能是字符串、整数、`FLOAT`、`DOUBLE`、`BOOLEAN` 以及由这些类型组成的数组。
 - 开启 DOC mode 时，`variant_sparse_hash_shard_count` 的设置可按 “JSON key 的总个数 / 128” 粗略估算。
+- 新建的 DOC mode 列默认分片数为 `1`（4.2 版本之前为 64）。
+- 4.2 版本起，`variant_doc_materialization_min_rows` 和 `variant_doc_hash_shard_count` 分别改为 `variant_subcolumn_extraction_min_rows` 和 `variant_sparse_hash_shard_count`，不再接受旧名称。4.2 版本之前创建的 DOC mode 表，其 `SHOW CREATE TABLE` 输出需要先替换这两个属性名再执行。
+- 4.2 版本之前创建的 DOC mode 列保持原有行为：数据文件达到行数阈值后提取所有路径，分片数保持建表时的值。
 
 ### 达到上限后的行为与调优建议 {#behavior-at-limits-and-tuning-suggestions}
 

@@ -250,6 +250,6 @@ WHERE CAST(payload['user_id'] AS BIGINT) = 101;
 
 ## 3. 高级设置
 
-**`variant_sparse_hash_shard_count`：调整稀疏编码的分片数。** 这个参数控制稀疏编码使用的物理分片数，未拆列路径按 hash 映射到对应分片，默认值为 1。它与表的 BUCKETS、Tablet 数量无关。
+**`variant_sparse_hash_shard_count`：调整稀疏编码的分片数。** 这个参数控制稀疏编码使用的物理分片数，未拆列路径按 hash 映射到对应分片，默认值为 1。它与表的 BUCKETS、Tablet 数量无关。开启 `variant_enable_doc_mode` 时，完整文档同样按这个分片数拆分存储。
 
 例如，有 18 个长尾路径采用稀疏编码保存。设置为 `4` 时，这些路径映射到 4 个可用 shard；设置为 `16` 时，映射到 16 个可用 shard。查询一个长尾路径时，Doris 可以定位它所在的 shard，减少读取其他路径的数据。查询整条文档仍可能需要读取多个 shard。

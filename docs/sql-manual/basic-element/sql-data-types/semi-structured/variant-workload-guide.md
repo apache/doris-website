@@ -108,7 +108,7 @@ Use the table below to pick a starting point, then read the matching section.
 |---|---|---|---|
 | **A** | Event logs, audit logs | Default VARIANT + V3 | Keep defaults |
 | **B** | Advertising / telemetry / user profiles (wide, hot paths few) | Sparse + V3 | `variant_max_subcolumns_count`, `variant_sparse_hash_shard_count` |
-| **C** | Model output / trace / archives (ingest-first or whole-doc return) | DOC mode + V3 | `variant_enable_doc_mode`, `variant_subcolumn_extraction_min_rows` |
+| **C** | Model output / trace / archives (ingest-first or whole-doc return) | DOC mode + V3 | `variant_enable_doc_mode`, `variant_subcolumn_extraction_min_rows`, `variant_sparse_hash_shard_count` |
 | **D** | Orders / payments / devices (key paths need stable types) | Schema Template + A or B | Define only key paths |
 
 ### Default Mode
@@ -212,6 +212,7 @@ Use it when ingest throughput is the first priority, the workload frequently nee
 Watch for:
 - DOC mode is not the default answer for every wide-JSON workload. If hot-path analytics dominates, sparse columns usually fit better.
 - DOC mode can be set together with `variant_max_subcolumns_count` and `variant_sparse_hash_shard_count`; see [VARIANT Storage and Tuning](./variant-storage-tuning.md).
+- The default shard count of DOC mode (`variant_sparse_hash_shard_count`) is `1`. When queries often read paths of very wide JSON that are not materialized yet, set the shard count explicitly, such as `64` in the example above.
 - Apart from `DROP`, `RENAME`, and comment changes, a column that has a Schema Template cannot be altered, so its `variant_subcolumn_extraction_min_rows` cannot change later. Choose the value when you create the table.
 
 ### Schema Template

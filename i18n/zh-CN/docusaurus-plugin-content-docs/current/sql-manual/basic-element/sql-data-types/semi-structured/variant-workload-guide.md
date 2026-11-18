@@ -108,7 +108,7 @@ DOC mode 的读取路径取决于被查询的路径是否已经物化：
 |---|---|---|---|
 | **A** | 事件日志、审计日志 | 默认 VARIANT + V3 | 保持默认 |
 | **B** | 广告/遥测/用户画像（宽、热点少） | Sparse + V3 | `variant_max_subcolumns_count`、`variant_sparse_hash_shard_count` |
-| **C** | 模型输出/Trace/归档（写入优先或整条返回） | DOC mode + V3 | `variant_enable_doc_mode`、`variant_subcolumn_extraction_min_rows` |
+| **C** | 模型输出/Trace/归档（写入优先或整条返回） | DOC mode + V3 | `variant_enable_doc_mode`、`variant_subcolumn_extraction_min_rows`、`variant_sparse_hash_shard_count` |
 | **D** | 订单/支付/设备（关键路径需稳定类型） | Schema Template + A 或 B | 只定义关键路径 |
 
 ### 默认模式
@@ -212,6 +212,7 @@ PROPERTIES (
 注意：
 - DOC mode 不是所有宽 JSON 场景的默认答案。若核心诉求是热点路径分析，通常还是 Sparse 更合适。
 - DOC mode 可以与 `variant_max_subcolumns_count`、`variant_sparse_hash_shard_count` 一起设置，参见 [VARIANT 存储原理与场景调优](./variant-storage-tuning.md)。
+- DOC mode 的默认分片数（`variant_sparse_hash_shard_count`）为 `1`。超宽 JSON 中经常查询尚未物化的路径时，请显式设置分片数，例如上面示例中的 `64`。
 - 带 Schema Template 的列除了 `DROP`、`RENAME` 和修改注释之外不能 ALTER，因此之后也无法修改它的 `variant_subcolumn_extraction_min_rows`，请在建表时确定这个值。
 
 ### Schema Template 模式

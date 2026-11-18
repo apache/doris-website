@@ -250,6 +250,6 @@ If `user_id` and `action` are already subcolumns, the filter of this SQL can rea
 
 ## 3. Advanced settings
 
-**`variant_sparse_hash_shard_count`: the number of shards of the sparse encoding.** This property sets the number of physical shards that the sparse encoding uses; paths that are not extracted are mapped to a shard by hash. The default is 1. It is unrelated to the BUCKETS of the table and to the number of tablets.
+**`variant_sparse_hash_shard_count`: the number of shards of the sparse encoding.** This property sets the number of physical shards that the sparse encoding uses; paths that are not extracted are mapped to a shard by hash. The default is 1. It is unrelated to the BUCKETS of the table and to the number of tablets. With `variant_enable_doc_mode`, the complete document is split into the same number of shards.
 
 For example, 18 long-tail paths are stored in sparse encoding. With `4`, these paths are mapped to 4 available shards; with `16`, to 16 available shards. To query one long-tail path, Doris can locate the shard that holds it and read less data of other paths. Querying a whole document may still read several shards.
