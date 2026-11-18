@@ -61,7 +61,7 @@ SHOW PROCESSLIST;
 
 4.0.0 之前的版本中，`SHOW PROCESSLIST` 默认仅显示当前 FE 节点上的会话，对应的变量为 `show_all_fe_connection`（默认值为 `false`）。`information_schema.processlist` 同样受该变量控制。
 
-也可通过 `information_schema` 系统表查看，该表默认显示所有 FE 节点的会话，无需额外设置：
+也可通过 `information_schema` 系统表查看，自 4.0.0 起该表默认显示所有 FE 节点的会话，无需额外设置：
 
 ```sql
 SELECT * FROM information_schema.processlist;

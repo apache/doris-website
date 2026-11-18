@@ -44,8 +44,10 @@ SHOW [FULL] PROCESSLIST
 | Time             | Time when the previous command is submitted to the current status, in seconds                 |
 | State            | State of thread                                |
 | QueryId          | ID of the current query statement                           |
+| TraceId          | Trace ID that the client set for the current query; empty if none |
 | Info             | Generally, the statement executed by the thread is recorded, and only the first 100 characters are displayed by default         |
 | FE               | The FE that the connection is on |
+| CloudCluster     | Compute group of the connection in compute-storage decoupled mode; NULL if none |
 
 Common Command types are as follows:
 
@@ -71,12 +73,12 @@ SHOW PROCESSLIST
 ```
 
 ```text
-+------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+------------+
-| CurrentConnected | Id   | User | Host            | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info                  | FE         |
-+------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+------------+
-| Yes              |    0 | root | 127.0.0.1:34650 | 2025-01-21 12:01:02 | internal | test | Query   |    0 | OK    | c84e397193a54fe7-bbe9bc219318b75e | select 1              | 10.16.10.6 |
-|                  |    1 | root | 127.0.0.1:34776 | 2025-01-21 12:01:07 | internal |      | Sleep   |   29 | EOF   | 886ffe2894314f50-8dd73a6ca06699e4 | show full processlist | 10.16.10.6 |
-+------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+------------+
++------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+---------+-----------------------+------------+--------------+
+| CurrentConnected | Id | User | Host            | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | TraceId | Info                  | FE         | CloudCluster |
++------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+---------+-----------------------+------------+--------------+
+| Yes              |  0 | root | 127.0.0.1:34650 | 2025-01-21 12:01:02 | internal | test | Query   |    0 | OK    | c84e397193a54fe7-bbe9bc219318b75e |         | select 1              | 10.16.10.6 | NULL         |
+| No               |  1 | root | 127.0.0.1:34776 | 2025-01-21 12:01:07 | internal |      | Sleep   |   29 | EOF   | 886ffe2894314f50-8dd73a6ca06699e4 |         | show full processlist | 10.16.10.6 | NULL         |
++------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+---------+-----------------------+------------+--------------+
 ```
 
 

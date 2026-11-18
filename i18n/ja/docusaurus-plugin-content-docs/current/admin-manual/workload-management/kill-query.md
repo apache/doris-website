@@ -61,7 +61,7 @@ SHOW PROCESSLIST;
 
 4.0.0 より前のバージョンでは、`SHOW PROCESSLIST` にはデフォルトで現在の FE ノード上のセッションのみが表示され、対応する変数は `show_all_fe_connection`（デフォルトは `false`）です。`information_schema.processlist` も同じ変数に従います。
 
-`information_schema` システムテーブルも使用できます。デフォルトですべての FE ノード上のセッションが表示され、追加の設定は不要です。
+`information_schema` システムテーブルも使用できます。4.0.0 以降は、デフォルトですべての FE ノード上のセッションが表示され、追加の設定は不要です。
 
 ```sql
 SELECT * FROM information_schema.processlist;

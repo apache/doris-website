@@ -61,7 +61,7 @@ SHOW PROCESSLIST;
 
 Before 4.0.0, `SHOW PROCESSLIST` displays only the sessions on the current FE node by default, and the variable is `show_all_fe_connection` (default `false`). `information_schema.processlist` follows the same variable.
 
-You can also use the `information_schema` system table, which displays sessions on all FE nodes by default and requires no additional setup:
+You can also use the `information_schema` system table. Since 4.0.0, it displays sessions on all FE nodes by default and requires no additional setup:
 
 ```sql
 SELECT * FROM information_schema.processlist;
