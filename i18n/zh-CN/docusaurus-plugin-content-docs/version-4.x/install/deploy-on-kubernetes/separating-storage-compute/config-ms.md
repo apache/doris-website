@@ -181,11 +181,18 @@ spec:
 
 ### 自定义管理 HTTP token {#ms-http-token}
 
-`http_token` 用于校验 MetaService 管理 HTTP API 的请求，默认值为 `greedisgood9999`。请将示例中的 `<custom-http-token>` 替换为自己的值，并保留 `doris_cloud.conf` 中的其他配置。将文件放在 ConfigMap 的 `doris_cloud.conf` 键下，再按上方步骤通过 `spec.metaService.configMaps` 引用该 ConfigMap。
+`http_token` 用于 MetaService 管理 HTTP API 的请求鉴权，默认值为 `greedisgood9999`。请将示例中的 `<custom-http-token>` 替换为自定义随机字符串。将 `doris_cloud.conf` 放在 ConfigMap 的同名键下，再按上方步骤通过 `spec.metaService.configMaps` 引用该 ConfigMap。
 
-所有 MetaService 副本应使用相同 token，并重启以加载启动配置。API 客户端通过 `token` 查询参数传入该值。Doris Operator 也会从引用的 MS ConfigMap 中读取 `http_token`，用于管理 HTTP 请求；只修改 Pod 内的文件会导致 Operator 与 MS 配置不一致。
+API 客户端通过 `token` 查询参数传入该值。Doris Operator 从引用的 ConfigMap 读取 `http_token`，用于管理 HTTP 请求，因此请更新 ConfigMap，使 Operator 与 MetaService 的配置保持一致。FE、BE 的元数据 RPC 不使用此 token。对于通过 FE SQL 注册节点的镜像（例如 Doris 4.1.5），修改此 token 无需修改或重启 FE、BE。[Doris 管理账户凭据 `spec.authSecret`](config-cluster.md) 与 `http_token` 相互独立。
 
-FE、BE 的元数据 RPC 不需要在其配置中设置这个管理 HTTP token。`spec.authSecret` 中的 SQL 管理凭据与 `http_token` 相互独立。
+部署后可按以下步骤轮换 token：
+
+1. 更新引用的 ConfigMap 中 `doris_cloud.conf` 的 `http_token`，保留其他配置项。所有 MetaService 副本使用相同的新 token。
+2. 逐个重启 MetaService Pod，等待当前 Pod 恢复 Ready 后再处理下一个。单副本部署在重启期间会暂时无法提供 MetaService 服务。
+3. 使用需要 token 鉴权的只读管理 HTTP API，逐个验证各 MetaService 副本的新 token 已生效。仅检查 Pod Ready 不能确认 token 已切换。
+4. 同步更新调用这些 API 的运维工具。
+
+MetaService 在启动时加载 `http_token`。仅更新 ConfigMap 不会修改运行中进程的 token，也不能保证自动重启 Pod。轮换期间，各副本可能暂时使用不同的 token，管理 HTTP API 请求可能认证失败。请在此期间避开依赖这些 API 的节点管理操作。
 
 ## 5. 配置服务探测超时
 

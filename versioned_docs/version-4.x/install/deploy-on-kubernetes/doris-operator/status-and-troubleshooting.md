@@ -202,6 +202,45 @@ kubectl logs deployment/${operator_deployment_name} -n ${operator_namespace}
 
 If the cluster uses a non-default management account or has already set a root password, verify that `authSecret` matches the actual Doris credentials.
 
+#### BE registration failures caused by credentials in a decoupled cluster
+
+The following steps apply to BE images that use `authSecret` to log in to FE and register nodes through SQL, such as Doris 4.1.5.
+
+| Symptom | What to check |
+|---------|---------------|
+| Pod events show `FailedMount` and report that the Secret does not exist | Check the Secret name and namespace; the Secret must be in the same namespace as the cluster |
+| BE registration logs repeatedly show `Access denied` / `1045` and the node does not join | Check that the Secret's `username` and `password` match the database account; the script first tries root without a password, so a single error does not necessarily mean the subsequent attempt with configured credentials failed |
+| The management account can log in to FE, but node management SQL is rejected | Check that the account has the required node management privileges |
+| The Secret is corrected, but BE still fails registration with old credentials | The startup script has already read the credentials into variables and does not reread the Secret during registration retries |
+
+First inspect the target BE Pod's events and registration logs:
+
+```shell
+kubectl describe pod ${be_pod_name} -n ${namespace}
+kubectl logs ${be_pod_name} -c compute -n ${namespace}
+```
+
+Recovery steps:
+
+1. Correct the Secret and the `spec.authSecret` reference as described in [Configuring Authentication](../separating-storage-compute/config-cluster.md). Use a Secret of type `kubernetes.io/basic-auth` with `username` and `password`. If root already has a password, use an existing valid account or have an administrator create and grant privileges to a management account first. Updating the Secret does not change the database password.
+2. From an environment that can reach FE, connect with the same account and verify the password and required management operations such as `SHOW BACKENDS`. The following command prompts for the password. `${fe_query_port}` is the FE query port (9030 by default):
+
+   ```shell
+   mysql -h ${fe_host} -P ${fe_query_port} -u ${management_user} -p
+   ```
+
+3. If BE still fails registration because of old credentials, recreate those Pods one at a time so that the startup script rereads the Secret. `${be_pod_name}` must identify a Pod confirmed to have failed registration; do not restart the entire healthy compute group:
+
+   ```shell
+   kubectl delete pod ${be_pod_name} -n ${namespace}
+   ```
+
+4. Wait for the StatefulSet to recreate the Pod and for it to become Ready. Run the following SQL on FE to confirm that the corresponding node has joined and its `Alive` field is `true` before proceeding to the next failed Pod:
+
+   ```sql
+   SHOW BACKENDS;
+   ```
+
 ### ComputeGroup scale-in does not finish
 
 In compute-storage decoupled clusters, ComputeGroup scale-in may stay in `Decommissioning` or `ScaleDownFailed`.
