@@ -2,7 +2,7 @@
 {
     "title": "HLL",
     "language": "zh-CN",
-    "description": "如何使用 Stream Load 配合 hll_hash 函数将数据导入 Doris HLL 类型字段，实现大数据量下高性能模糊去重统计。",
+    "description": "介绍如何使用 Stream Load 配合 hll_hash 或 hll_from_binary 函数将数据导入 Doris HLL 类型字段，实现大数据量下高性能的模糊去重与 UV 统计。",
     "keywords": [
         "HLL",
         "HyperLogLog",
@@ -23,7 +23,7 @@
 
 HLL（HyperLogLog）是 Doris 提供的一种用于**模糊去重**的数据类型。在数据量较大的场景下，HLL 的去重性能显著优于 `Count Distinct`，常用于 UV 统计、独立用户数计算等场景。
 
-由于 HLL 字段不能直接写入原始值，导入时需要结合 `hll_hash` 等函数进行哈希转换。更多关于 HLL 类型的说明，请参考 [HLL](../../../sql-manual/basic-element/sql-data-types/aggregate/HLL)。
+由于 HLL 字段不能直接写入原始值，导入时需要结合 `hll_hash` 等函数进行哈希转换；如果源列已经是 Doris HLL 的序列化字节，则改用 `hll_from_binary` 映射。更多关于 HLL 类型的说明，请参考 [HLL](../../../sql-manual/basic-element/sql-data-types/aggregate/HLL)。
 
 ## 适用场景
 
@@ -97,7 +97,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 | 参数 | 说明 |
 | --- | --- |
 | `column_separator` | 源文件列分隔符，本例使用 `|` |
-| `columns` | 字段映射表达式，HLL 列必须通过 `hll_hash()` 进行转换 |
+| `columns` | 字段映射表达式，HLL 列必须通过 `hll_hash()`、`hll_from_base64()`、`hll_from_binary()` 或 `hll_empty()` 之一进行转换，详见[导入已序列化的 HLL 数据](#导入已序列化的-hll-数据) |
 | `<doris_user>` / `<doris_password>` | Doris 的用户名与密码 |
 | `<fe_ip>` / `<fe_http_port>` | FE 节点的 IP 地址与 HTTP 端口 |
 
@@ -126,11 +126,40 @@ mysql> select typ_id,typ_name,hll_cardinality(pv) from testdb.test_hll;
 
 返回结果显示每条记录的 HLL 列基数均为 1，说明数据已正确导入并被 `hll_hash` 哈希。
 
+## 导入已序列化的 HLL 数据
+
+当源数据已经是 Doris HLL 的序列化字节而不是原始值时，不要再哈希一次，而是通过 `hll_from_binary` 映射，由该函数将字节反序列化为 HLL 列：
+
+```sql
+curl --location-trusted -u <doris_user>:<doris_password> \
+    -H "column_separator:|" \
+    -H "columns:typ_id,typ_name,pv=hll_from_binary(typ_id_binary)" \
+    -T test_hll_binary.csv \
+    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_hll/_stream_load
+```
+
+`hll_from_binary` 接受 [`hll_to_binary`](../../../sql-manual/sql-functions/scalar-functions/hll-functions/hll-to-binary) 的输出、Doris Hive UDF（`to_hll` / `hll_union`）的输出，以及任何使用相同 Doris HLL 序列化格式的写入方产生的字节。如果源列存的是 Base64 文本而不是原始字节，先用 `from_base64` 解码，例如 `pv=hll_from_binary(from_base64(typ_id_base64))`。
+
+`columns` 映射中的 HLL 列只能使用以下函数之一，其他表达式会在分析阶段报错 `HLL column must use hll_hash function`：
+
+| 函数 | 适用情况 |
+| --- | --- |
+| `hll_hash(<value>)` | 源列是原始值，需要哈希 |
+| `hll_from_base64(<string>)` | 源列是 Doris HLL 字节的 Base64 字符串 |
+| `hll_from_binary(<varbinary>)` | 源列是 Doris HLL 的原始字节 |
+| `hll_empty()` | 该列需要初始化为空 HLL |
+
+:::caution
+
+`hll_from_binary` 对不合法或被截断的字节返回 `NULL`。HLL 列必须声明为 `NOT NULL`，因此这些行会被过滤掉，并计入导入的 `max_filter_ratio`。如果过滤行比例过高会导致作业失败，请在导入前先校验源字节。
+
+:::
+
 ## 常见问题
 
 ### HLL 列为什么必须使用 hll_hash？
 
-HLL 是一种特殊的二进制聚合类型，不能直接存储原始值，需要先通过 `hll_hash` 将原始值转换为 HLL 内部表示，再写入 HLL 列。
+HLL 是一种特殊的二进制聚合类型，不能直接存储原始值，需要先通过 `hll_hash` 将原始值转换为 HLL 内部表示，再写入 HLL 列。当源数据已经是 Doris HLL 序列化格式时，应改用 `hll_from_binary`（原始字节）或 `hll_from_base64`（Base64 文本），而不是再哈希一次。
 
 ### HLL 与 Count Distinct 有什么区别？
 

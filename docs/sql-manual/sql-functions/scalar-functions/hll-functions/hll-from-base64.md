@@ -10,6 +10,12 @@
 
 Converts a base64-encoded string (usually the result of the `HLL_TO_BASE64` function) into an HLL. If the input string is invalid or NULL, the function returns NULL.
 
+:::note
+
+This function expects Base64 **text**. External binary columns such as Hive `binary` are mapped to `VARBINARY` and hold the raw serialized bytes, so `hll_from_base64` returns NULL on them. Use [`hll_from_binary`](hll-from-binary) for those columns, or decode the text first with `from_base64`.
+
+:::
+
 ## Syntax
 
 ```sql

@@ -208,20 +208,45 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 
 **推荐方式：Hive Catalog**
 
-将 Hive 表存储为 `TEXT` 格式时，`binary` 类型会以 Base64 编码字符串保存。借助 Hive Catalog，可直接通过 [`bitmap_from_base64`](../../sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-base64) 或 [`hll_from_base64`](../../sql-manual/sql-functions/scalar-functions/hll-functions/hll-from-base64) 函数将数据写入 Doris 内表。
+Hive 的 `binary` 列会被 Hive Catalog 映射为 Doris 的 `VARBINARY` 类型，无论 Hive 表采用哪种存储格式，都可以用统一的语法导入其中保存的 Bitmap / HLL 原始序列化字节：
+
+- **Parquet / ORC**：`BINARY` 是这类格式的原生物理类型，`binary` 列在磁盘上保存的就是 Doris Bitmap / HLL 的原始字节，零编码开销。
+- **TEXTFILE**：基于分隔符的文本协议无法直接嵌入任意二进制字节，因此 Hive 会将 `binary` 列以 Base64 编码字符串的形式落盘（约占额外的 33% 空间）。读取映射后的 VARBINARY 列时，Doris 会自动将 Base64 文本解码回原始字节。
+
+两种情况下，都通过 [`bitmap_from_binary`](../../sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-binary) / [`hll_from_binary`](../../sql-manual/sql-functions/scalar-functions/hll-functions/hll-from-binary) 函数导入该列：
+
+```sql
+-- Bitmap
+SELECT k1, k2, k3, bitmap_from_binary(uuid) FROM hive.test.hive_bitmap_table;
+-- HLL
+SELECT k1, k2, k3, hll_from_binary(uuid) FROM hive.test.hive_hll_table;
+```
+
+:::caution 为什么 `bitmap_from_base64` / `hll_from_base64` 在 Hive `binary` 列上不再可用
+
+在 Doris 4.1.4.1 及之前的版本中，Hive 的 `binary` 类型默认映射为 `STRING`（设置 `enable.mapping.varbinary = true` 可切换为 `VARBINARY`），TEXTFILE 表的 `binary` 列以 Base64 文本形式到达，必须用 `bitmap_from_base64` / `hll_from_base64` 解码。4.1.5 起将 Hive `binary` 无条件映射为 `VARBINARY`，且 Catalog 属性 `enable.mapping.varbinary` 不再生效（不设置、设为 `false`、设为 `true` 结果相同）。因此 `binary` 列永远返回解码后的原始字节而非 Base64 文本，`*_from_base64` 函数在其上会失败——它们试图对并非 Base64 文本的字节做 Base64 解码。对所有 Hive 存储格式，请统一改用 `*_from_binary` 函数。
+
+:::
+
+:::note 性能
+
+虽然语法统一，但性能敏感的场景请优先选择 Parquet / ORC：读取 TEXTFILE 的 `binary` 列时每个单元格都要进行 Base64 解码（且磁盘上是约大 33% 的文本），而 Parquet / ORC 直接返回原始字节。
+
+:::
 
 完整流程如下：
 
-1. 在 Hive 中将表创建为 `TEXTFILE` 格式
+1. 在 Hive 中创建带 `binary` 列的表（存储格式不限：TEXTFILE、ORC 或 Parquet 均可）
 2. 在 Doris 中创建 [Hive Catalog](../../lakehouse/catalogs/hive-catalog)
 3. 在 Doris 中创建对应的 Bitmap / HLL 内表
 4. 通过 `INSERT INTO ... SELECT` 从 Hive 写入 Doris
 
 #### Bitmap 完整示例
 
-**1. Hive 端创建 TEXT 格式表**
+**1. Hive 端建表**
 
 ```sql
+-- 此处以 TEXTFILE 为例，ORC / Parquet 写法相同
 CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
     `k1`   int       COMMENT '',
     `k2`   String    COMMENT '',
@@ -259,15 +284,16 @@ PROPERTIES (
 
 ```sql
 insert into test.doris_bitmap_table
-select k1, k2, k3, bitmap_from_base64(uuid)
+select k1, k2, k3, bitmap_from_binary(uuid)
 from hive.test.hive_bitmap_table;
 ```
 
 #### HLL 完整示例
 
-**1. Hive 端创建 TEXT 格式表**
+**1. Hive 端建表**
 
 ```sql
+-- 此处以 TEXTFILE 为例，ORC / Parquet 写法相同
 CREATE TABLE IF NOT EXISTS `hive_hll_table`(
     `k1`   int       COMMENT '',
     `k2`   String    COMMENT '',
@@ -307,7 +333,7 @@ PROPERTIES (
 
 ```sql
 insert into doris_test.doris_hll_table
-select k1, k2, k3, hll_from_base64(uuid)
+select k1, k2, k3, hll_from_binary(uuid)
 from hive.hive_test.hive_hll_table;
 
 -- 查看导入结果，可结合 hll_to_base64 解码
@@ -332,11 +358,11 @@ select k3, hll_cardinality(hll_union(uuid)) from doris_test.doris_hll_table grou
 +------+----------------------------------+
 
 -- 直接查 Hive 外表（即导入前的数据）做交叉校验，确认数据一致
-select k3, hll_cardinality(hll_union(hll_from_base64(uuid)))
+select k3, hll_cardinality(hll_union(hll_from_binary(uuid)))
 from hive.hive_test.hive_hll_table
 group by k3;
 +------+---------------------------------------------------+
-| k3   | hll_cardinality(hll_union(hll_from_base64(uuid))) |
+| k3   | hll_cardinality(hll_union(hll_from_binary(uuid))) |
 +------+---------------------------------------------------+
 | d    |                                                 1 |
 | b    |                                                 1 |
@@ -347,6 +373,6 @@ group by k3;
 ## 注意事项
 
 - **HLL 精度**：HLL 为近似算法，统计结果与精确值通常存在 1%~2% 误差；对精度要求严格的场景请改用 Bitmap。
-- **存储格式**：通过 Hive Catalog 导入时，Hive 表需使用 `TEXTFILE` 格式，`binary` 列才会以 Base64 字符串保存。
+- **存储格式**：通过 Hive Catalog 导入时，Hive `binary` 列映射为 VARBINARY，对所有存储格式（TEXTFILE、ORC、Parquet）都使用 `bitmap_from_binary` / `hll_from_binary` 导入。Parquet / ORC 原生保存原始字节；TEXTFILE 中 `binary` 列以 Base64 字符串保存，Doris 读取时自动解码——结果正确但性能较慢，性能敏感场景请优先选择 Parquet / ORC。
 - **JAR 路径**：示例中的 `hdfs://hostname:port/hive-udf.jar` 需替换为实际的 HDFS 地址，且建议所有 UDF 引用同一份 JAR。
 - **函数对应关系**：`to_hll` ↔ `to_bitmap`、`hll_union` ↔ `bitmap_union`、`hll_cardinality` ↔ `bitmap_count`，便于在 Bitmap 与 HLL 方案之间切换。

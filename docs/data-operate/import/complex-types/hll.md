@@ -2,7 +2,7 @@
 {
     "title": "HLL",
     "language": "en",
-    "description": "How to use Stream Load together with the hll_hash function to import data into Doris HLL columns, enabling high-performance approximate distinct counting on large data volumes.",
+    "description": "Use Stream Load with hll_hash or hll_from_binary to import data into Doris HLL columns for high-performance approximate distinct counting.",
     "keywords": [
         "HLL",
         "HyperLogLog",
@@ -23,7 +23,7 @@
 
 HLL (HyperLogLog) is a data type provided by Doris for **approximate distinct counting**. On large data volumes, HLL delivers significantly better deduplication performance than `Count Distinct`, and is commonly used for UV statistics, unique user counting, and similar scenarios.
 
-Because raw values cannot be written directly into an HLL column, the data must be hashed with functions such as `hll_hash` during import. For more information about the HLL type, see [HLL](../../../sql-manual/basic-element/sql-data-types/aggregate/HLL).
+Because raw values cannot be written directly into an HLL column, the data must be hashed with functions such as `hll_hash` during import. If the source column already holds serialized Doris HLL bytes, map it through `hll_from_binary` instead. For more information about the HLL type, see [HLL](../../../sql-manual/basic-element/sql-data-types/aggregate/HLL).
 
 ## Applicable Scenarios
 
@@ -97,7 +97,7 @@ Key parameter descriptions:
 | Parameter | Description |
 | --- | --- |
 | `column_separator` | Column separator in the source file. This example uses `|`. |
-| `columns` | Field mapping expression. The HLL column must be transformed by `hll_hash()`. |
+| `columns` | Field mapping expression. The HLL column must be transformed by one of `hll_hash()`, `hll_from_base64()`, `hll_from_binary()`, or `hll_empty()`. See [Loading Pre-serialized HLL Data](#loading-pre-serialized-hll-data). |
 | `<doris_user>` / `<doris_password>` | Username and password for Doris. |
 | `<fe_ip>` / `<fe_http_port>` | IP address and HTTP port of the FE node. |
 
@@ -126,11 +126,40 @@ mysql> select typ_id,typ_name,hll_cardinality(pv) from testdb.test_hll;
 
 The result shows that the HLL column cardinality is 1 for every row, which means the data has been imported correctly and hashed by `hll_hash`.
 
+## Loading Pre-serialized HLL Data
+
+When the source data already contains serialized Doris HLL bytes instead of raw values, do not hash it again. Map the column through `hll_from_binary` so the bytes are deserialized into the HLL column:
+
+```sql
+curl --location-trusted -u <doris_user>:<doris_password> \
+    -H "column_separator:|" \
+    -H "columns:typ_id,typ_name,pv=hll_from_binary(typ_id_binary)" \
+    -T test_hll_binary.csv \
+    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_hll/_stream_load
+```
+
+`hll_from_binary` accepts the bytes produced by [`hll_to_binary`](../../../sql-manual/sql-functions/scalar-functions/hll-functions/hll-to-binary), by the Doris Hive UDFs (`to_hll` / `hll_union`), or by any writer that uses the same Doris HLL serialization format. If the source column holds Base64 text instead of raw bytes, decode it first with `from_base64`, for example `pv=hll_from_binary(from_base64(typ_id_base64))`.
+
+An HLL column in the `columns` mapping must use one of the following functions. Any other expression is rejected at analysis time with `HLL column must use hll_hash function`:
+
+| Function | Use when |
+| --- | --- |
+| `hll_hash(<value>)` | The source column holds a raw value that must be hashed |
+| `hll_from_base64(<string>)` | The source column holds a Base64 string of Doris HLL bytes |
+| `hll_from_binary(<varbinary>)` | The source column holds raw Doris HLL bytes |
+| `hll_empty()` | The column should be initialized as an empty HLL |
+
+:::caution
+
+`hll_from_binary` returns `NULL` for rows whose bytes are invalid or truncated. Because the HLL column is usually declared `NOT NULL`, such rows are filtered out and count towards the load's `max_filter_ratio`. Validate the source bytes before loading if a high filtered-row count would abort the job.
+
+:::
+
 ## FAQ
 
 ### Why must HLL columns use hll_hash?
 
-HLL is a special binary aggregate type and cannot store raw values directly. The raw value must first be converted into the internal HLL representation through `hll_hash` before being written into the HLL column.
+HLL is a special binary aggregate type and cannot store raw values directly. The raw value must first be converted into the internal HLL representation through `hll_hash` before being written into the HLL column. When the source data is already in the Doris HLL serialization format, use `hll_from_binary` (raw bytes) or `hll_from_base64` (Base64 text) instead of hashing it a second time.
 
 ### What is the difference between HLL and Count Distinct?
 

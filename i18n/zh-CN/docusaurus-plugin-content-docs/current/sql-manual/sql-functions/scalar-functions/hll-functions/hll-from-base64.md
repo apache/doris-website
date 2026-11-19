@@ -2,13 +2,19 @@
 {
     "title": "HLL_FROM_BASE64",
     "language": "zh-CN",
-    "description": "将一个 base64 编码的字符串（通常由 HLLTOBASE64 函数生成）转换为 HLL 类型。如果输入字符串不合法或为 NULL，则返回 NULL。"
+    "description": "将 hll_to_base64 生成的 base64 编码字符串还原为 HLL 类型。如果输入字符串不合法或为 NULL 则返回 NULL；若输入是原始二进制字节，请改用 hll_from_binary。"
 }
 ---
 
 ## 描述
 
 将一个 base64 编码的字符串（通常由 `HLL_TO_BASE64` 函数生成）转换为 HLL 类型。如果输入字符串不合法或为 NULL，则返回 NULL。
+
+:::note
+
+本函数期望输入 Base64 **文本**。Hive `binary` 等外部二进制列会映射为 `VARBINARY` 并保存原始序列化字节，`hll_from_base64` 在其上会返回 NULL。这类列请使用 [`hll_from_binary`](hll-from-binary)，或先用 `from_base64` 将文本解码为字节。
+
+:::
 
 ## 语法
 
