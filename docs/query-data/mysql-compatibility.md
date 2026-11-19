@@ -264,6 +264,10 @@ The Doris DELETE syntax is essentially the same as MySQL. However, since Doris i
 
 #### SELECT
 
+:::note
+`MAX_VISIBLE_PARTITION()` targets the development version and requires the corresponding implementation to be merged. It is not currently available in master, 4.x, or 3.x. See [Query the maximum visible partition](../sql-manual/sql-statements/data-query/SELECT.md#query-the-maximum-visible-partition) for its scope and limitations.
+:::
+
 ```sql
 SELECT
     [hint_statement, ...]
@@ -271,7 +275,7 @@ SELECT
     select_expr [, select_expr ...]
     [EXCEPT ( col_name1 [, col_name2, col_name3, ...] )]
     [FROM table_references
-      [PARTITION partition_list]
+      [PARTITION (partition_list) | MAX_VISIBLE_PARTITION()]
       [TABLET tabletid_list]
       [TABLESAMPLE sample_value [ROWS | PERCENT]
         [REPEATABLE pos_seek]]
