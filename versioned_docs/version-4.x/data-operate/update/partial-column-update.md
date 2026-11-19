@@ -163,6 +163,10 @@ The Merge-on-Write implementation has to fill in the full row at write time to g
 
 Previously, the partial column update feature in Doris required all rows in a single load to update the same set of columns. **Starting from version 3.1.0**, Doris supports a more flexible update method: **each row in a single load can update a different set of columns**.
 
+:::info Routine Load version support
+Flexible partial column updates with Routine Load are supported starting from Doris 4.0.4 in the 4.0 series and from 4.1.0 onward. Routine Load in 3.x and 4.0.0–4.0.3 does not support `unique_key_update_mode=UPDATE_FLEXIBLE_COLUMNS`. The 3.1.0 introduction of flexible updates on the Stream Load path does not imply Routine Load support in those older versions.
+:::
+
 :::caution Note
 
 1. Flexible column update supports Stream Load, Routine Load, and any tool that uses Stream Load as the underlying load method (such as the Doris Flink Connector).

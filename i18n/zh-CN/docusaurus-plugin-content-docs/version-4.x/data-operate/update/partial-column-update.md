@@ -163,6 +163,10 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1, '待发货');
 
 此前，Doris 支持的部分列更新功能限制了一次导入中每一行必须更新相同的列。从 **3.1.0 版本开始**，Doris 支持一种更加灵活的更新方式：**一次导入中每一行可以更新不同的列**。
 
+:::info Routine Load 版本支持
+Routine Load 灵活部分列更新在 4.0 系列中自 Doris 4.0.4 起支持，并在 4.1.0 及后续版本中支持。3.x 和 4.0.0–4.0.3 的 Routine Load 不支持 `unique_key_update_mode=UPDATE_FLEXIBLE_COLUMNS`。Stream Load 路径自 3.1.0 引入灵活更新，不表示这些旧版本中的 Routine Load 也支持该能力。
+:::
+
 :::caution 注意
 
 1. 灵活列更新功能支持 Stream Load、Routine Load 以及使用 Stream Load 作为底层导入方式的工具（如 Doris-Flink-Connector）。
