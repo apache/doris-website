@@ -2,7 +2,7 @@
 {
     "title": "内置认证",
     "language": "zh-CN",
-    "description": "Apache Doris 内置认证机制详解：用户标识 user_identity 组成、密码策略（历史密码、过期、登录失败锁定、强度校验）、IP 匹配优先级、黑白名单模拟与常见问题排查。"
+    "description": "介绍 Apache Doris 内置认证、用户身份匹配和密码策略，提供自 4.2.1 起支持的双密码轮换步骤、权限要求、次密码监控与撤销方法，并说明域名账号刷新、滚动升级和降级的使用限制。"
 }
 ---
 
@@ -17,6 +17,7 @@ Apache Doris 提供内置的用户认证机制，管理员通过 SQL 命令创�
 | --- | --- |
 | 新建账号、删除账号、重置密码 | [核心概念](#核心概念)、[常用运维命令](#常用运维命令) |
 | 配置企业级密码策略（过期 / 历史 / 强度 / 锁定） | [密码策略](#密码策略) |
+| 应用切换新密码期间保留旧密码登录能力 | [双密码](#双密码) |
 | 同一用户名匹配多个 `user_identity`，登录被拒 | [用户身份匹配优先级](#用户身份匹配优先级) |
 | 限制特定 IP 不能登录（模拟黑名单） | [使用白名单模拟黑名单](#使用白名单模拟黑名单) |
 | 忘记 root 密码、`current_user()` 与 `user()` 不一致 | [常见问题](#常见问题) |
@@ -124,6 +125,66 @@ SHOW PROC "/auth/'<user>'@'<host>'";
 SHOW PROC "/auth/'root'@'%'";
 SHOW PROC "/auth/'user1'@'127.0.0.1'";
 ```
+
+## 双密码
+
+<!-- 知识类型: 操作流程 + 规则说明 -->
+<!-- 适用场景: 应用凭据轮换 -->
+
+**自 4.2.1 起支持。** 内置密码认证允许同一账号同时拥有一个主密码和一个保留的次密码。利用这段重叠期，可以逐步将客户端切换到新密码，同时允许尚未迁移的客户端继续使用旧密码。默认不存在次密码，只有指定 `RETAIN CURRENT PASSWORD` 才会创建。这些操作影响后续认证，不会断开已建立的会话。
+
+### 前提条件
+
+- 使用这些子句前，所有 FE 均须升级到 4.2.1 或更高版本。
+- 由具有全局 `GRANT_PRIV` 或 `ADMIN_PRIV` 的管理员执行轮换。即使操作自己的账号，RETAIN 也需要此权限；不带 RETAIN 的普通自助 SET PASSWORD 不需要额外权限。
+- 目标账号使用内置密码认证，且当前主密码非空。LDAP 和认证集成自行管理其凭据。
+
+### 轮换密码
+
+1. 创建示例账号，然后设置新密码并保留当前密码。已有账号只需执行 ALTER USER 语句。
+
+    ```sql
+    CREATE USER 'app_user'@'%' IDENTIFIED BY 'OldPwd_2026!';
+    ALTER USER 'app_user'@'%' IDENTIFIED BY 'NewPwd_2026!' RETAIN CURRENT PASSWORD;
+    ```
+
+    此时 `OldPwd_2026!` 和 `NewPwd_2026!` 均可登录。也可以使用 `SET PASSWORD FOR 'app_user'@'%' = PASSWORD('NewPwd_2026!') RETAIN CURRENT PASSWORD` 替代上述 ALTER 语句，两者不要连续执行。
+
+2. 将所有客户端改为使用 `NewPwd_2026!`，并查看账号是否仍保留次密码：
+
+    ```sql
+    SHOW GRANTS FOR 'app_user'@'%';
+    ```
+
+    `Password` 列显示 `Yes (dual)`，`SHOW ALL GRANTS` 和 `SHOW PROC '/auth'` 也显示相同标记。每个 FE 的 `doris_fe_secondary_password_auth_total` 指标统计通过账号策略检查后、使用次密码认证成功的次数；这是 FE 级、跨账号的累计计数，应观察增量，而不是等待归零。
+
+3. 所有客户端迁移完成后，撤销次密码：
+
+    ```sql
+    ALTER USER 'app_user'@'%' DISCARD OLD PASSWORD;
+    ```
+
+    此后只有 `NewPwd_2026!` 可以登录，`Password` 列恢复为 `Yes`。没有次密码时，重复执行 DISCARD 不会产生变化。
+
+### 密码生命周期与策略
+
+| 操作 | 结果 |
+| --- | --- |
+| 设置非空新密码并指定 RETAIN | 原主密码成为唯一的次密码，更早的次密码被替换。 |
+| 设置非空新密码，不指定 RETAIN | 已有次密码继续有效，仅替换主密码不会撤销它。 |
+| 新密码为空 | 两份密码均被清除，即使指定了 RETAIN。 |
+| 当前主密码为空时指定 RETAIN | 拒绝执行。 |
+| DISCARD OLD PASSWORD | 仅删除次密码，不改变密码历史或密码过期时间。 |
+
+两份密码均受账号锁定和密码过期策略约束。指定 RETAIN 仍属于修改密码，需要满足密码强度和历史策略，并更新密码过期计时。绑定、解绑或切换认证集成会清除保留的次密码，不允许跨这些转换使用 RETAIN。DISCARD 是独立的 ALTER USER 操作，不能与修改密码、策略或注释组合使用。
+
+### 域名账号与版本变更
+
+对域名账号执行 DISCARD 时，先清除持久化域名账号中的次密码，已解析的 IP 记录要等下一次域名解析刷新后才会停止接受其保留副本。正常刷新间隔为 10 秒，但不是严格的撤销时延上限。
+
+滚动升级期间，旧 FE 只接受主密码，也无法解析新增子句。开始双密码轮换前，应完成所有 FE 的升级。使用此功能后降级会丢失保留的次密码，仅主密码得以保留；重新升级不会恢复原来的次密码。
+
+完整语句参考见 [ALTER USER](../../../sql-manual/sql-statements/account-management/ALTER-USER) 和 [SET PASSWORD](../../../sql-manual/sql-statements/account-management/SET-PASSWORD)。
 
 ## 用户身份匹配优先级
 
