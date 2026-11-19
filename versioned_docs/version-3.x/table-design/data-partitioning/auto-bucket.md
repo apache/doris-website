@@ -38,113 +38,32 @@ propertie estimate_partition_size not support alter
 
 ## Initial bucketing projection
 
-1. Obtain a number of buckets N based on the data size. Initially, we divide the value of `estimate_partition_size` by 5 (considering a data compression ratio of 5 to 1 when storing data in text format in Doris). The result obtained is
+:::info Version differences
 
-```
-(, 100MB), then take N=1
+Since **3.0.6** in the 3.0 series and **3.1.0**, the FE configuration `autobucket_partition_size_per_bucket_gb` controls the size used to estimate one bucket. Its default value is `-1`: Doris uses 5 GiB in integrated storage-compute mode and 10 GiB in decoupled storage-compute mode. A positive value overrides this adaptive default. Earlier 3.0 releases use 1 GiB per bucket after compression. The 5:1 compression estimate and the small-partition thresholds below apply in both cases.
 
-[100MB, 1GB), then take N=2
+:::
 
-(1GB, ), then one bucket per GB
-```
+Doris computes the initial number of buckets as follows (1 GiB = 1024 MiB):
 
-2. calculate the number of buckets M based on the number of BE nodes and the disk capacity of each BE node.
+1. Divide `estimate_partition_size` by 5 to estimate the compressed partition size `P`.
+2. Compute the size-based bucket count `N`: use 1 if `P <= 100 MiB`, 2 if `100 MiB < P <= 1 GiB`, and otherwise `ceil(P / target_size)`. Choose `target_size` according to the version and configuration above.
+3. In integrated storage-compute mode, compute the disk-based count `M` by summing `ceil(available_disk_capacity / 50 GiB)` over online disks with a valid path hash on backends available for loading. Decoupled storage-compute mode does not apply this disk-capacity limit.
+4. Set `x = min(N, M, autobucket_max_buckets)`, omitting `M` in decoupled mode. If `x < N` and `x` is smaller than the number of alive BEs, raise `x` to the number of alive BEs. Apply `autobucket_max_buckets` again, then apply the lower bound `autobucket_min_buckets`.
 
-```
-Where each BE node counts as 1, and every 50G of disk capacity counts as 1.
+The defaults in 3.x are `autobucket_min_buckets = 1` and `autobucket_max_buckets = 128`. Do not configure the minimum above the maximum.
 
-The calculation rule for M is: M = Number of BE nodes * (Size of one disk block / 50GB) * Number of disk blocks.
+For example, on Doris 3.0.6 or later, or 3.1.x, assume integrated storage-compute mode, the default target size, and 3 available BEs with two empty 500 GiB disks each. Then `M = 3 * 2 * ceil(500 / 50) = 60`:
 
-For example: If there are 3 BEs, and each BE has 4 disks of 500GB, then M = 3 * (500GB / 50GB) * 4 = 120.
+| `estimate_partition_size` | Estimated compressed size `P` | Size-based count `N` | Final bucket count |
+|---|---|---|---|
+| 100 MiB | 20 MiB | 1 | 1 |
+| 1 GiB | About 205 MiB | 2 | 2 |
+| 100 GiB | 20 GiB | 4 | 4 |
+| 500 GiB | 100 GiB | 20 | 20 |
+| 1 TiB | About 205 GiB | 41 | 41 |
 
-```
-
-3. Calculation logic to get the final number of buckets.
-
-```
-Calculate an intermediate value x = min(M, N, 128).
-
-If x < N and x < the number of BE nodes, the final bucket is y.
-
-The number of BE nodes; otherwise, the final bucket is x.
-```
-
-4. x = max(x, autobucket_min_buckets), Here autobucket_min_buckets is configured in Config (where, default is 1)
-
-The pseudo-code representation of the above process is as follows
-
-```
-int N = Compute the N value;
-int M = compute M value;
-
-int y = number of BE nodes;
-int x = min(M, N, 128);
-
-if (x < N && x < y) {
-  return y;
-}
-return x;
-```
-
-With the above algorithm in mind, let's introduce some examples to better understand this part of the logic.
-
-```
-case1:
-Amount of data 100 MB, 10 BE machines, 2TB * 3 disks
-Amount of data N = 1
-BE disks M = 10* (2TB/50GB) * 3 = 1230
-x = min(M, N, 128) = 1
-Final: 1
-
-case2:
-Data volume 1GB, 3 BE machines, 500GB * 2 disks
-Amount of data N = 2
-BE disks M = 3* (500GB/50GB) * 2 = 60
-x = min(M, N, 128) = 2
-Final: 2
-
-case3:
-Data volume 100GB, 3 BE machines, 500GB * 2 disks
-Amount of data N = 20
-BE disks M = 3* (500GB/50GB) * 2 = 60
-x = min(M, N, 128) = 20
-Final: 20
-
-case4:
-Data volume 500GB, 3 BE machines, 1TB * 1 disk
-Data volume N = 100
-BE disks M = 3* (1TB /50GB) * 1 = 60
-x = min(M, N, 128) = 63
-Final: 63
-
-case5:
-Data volume 500GB, 10 BE machines, 2TB * 3 disks
-Amount of data N = 100
-BE disks M = 10* (2TB / 50GB) * 3 = 1230
-x = min(M, N, 128) = 100
-Final: 100
-
-case 6:
-Data volume 1TB, 10 BE machines, 2TB * 3 disks
-Amount of data N = 205
-BE disks M = 10* (2TB / 50GB) * 3 = 1230
-x = min(M, N, 128) = 128
-Final: 128
-
-case 7:
-Data volume 500GB, 1 BE machine, 100TB * 1 disk
-Amount of data N = 100
-BE disk M = 1* (100TB / 50GB) * 1 = 2048
-x = min(M, N, 128) = 100
-Final: 100
-
-case 8:
-Data volume 1TB, 200 BE machines, 4TB * 7 disks
-Amount of data N = 205
-BE disks M = 200* (4TB / 50GB) * 7 = 114800
-x = min(M, N, 128) = 128
-Final: 200
-```
+These are estimates, not fixed output values for every cluster. Disk availability and FE configuration affect the result. To retain the earlier size-based rule on 3.0.6 or later, set `autobucket_partition_size_per_bucket_gb = 1` explicitly.
 
 ## Subsequent bucketing projection
 
@@ -161,7 +80,7 @@ S2 - S1 = delta6
 
 This yields the ema(delta) value.Then, today's estimate_partition_size = S7 + ema(delta)
 
-- not the first case, this time directly take the average of the previous days EMA. Today's estimate_partition_size = EMA(S1, ... , S7) , S7)
+- not the first case, this time directly take the average of the previous days EMA. Today's estimate_partition_size = EMA(S1, ... , S7)
 
 :::tip
 
