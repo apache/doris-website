@@ -2198,7 +2198,7 @@ For an Iceberg Database, you must first drop all tables under the database befor
   | --- | --- | --- |
   | 3.x | `snappy`, `zstd` (default), `plain` | `snappy`, `zlib` (default), `zstd`, `plain` |
 
-  For tables created through Doris, select the codec with the `compression` property. For writes to existing Iceberg tables, Doris reads the `write.parquet.compression-codec` or `write.orc.compression-codec` table property.
+  Select the codec for the corresponding file format with the Iceberg table property `write.parquet.compression-codec` or `write.orc.compression-codec`, including in `PROPERTIES` when creating a table. Doris also recognizes the legacy `compression-codec` property, which takes precedence over these format-specific properties.
 
 * **Storage Medium**
 
