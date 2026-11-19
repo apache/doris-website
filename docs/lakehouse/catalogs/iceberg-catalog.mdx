@@ -2458,9 +2458,15 @@ For an Iceberg Database, you must first drop all tables under the database befor
 
 * **Compression Formats**
 
-    * Parquet: snappy, zstd (default), plain (no compression).
+  The following codecs apply when selecting compression for table creation and data writes through Doris. `plain` means no compression.
 
-    * ORC: snappy, zlib (default), zstd, plain (no compression).
+  | Doris version | Parquet | ORC |
+  | --- | --- | --- |
+  | 4.0.x, 4.1.0–4.1.2 | `snappy`, `zstd` (default), `plain` | `snappy`, `zlib` (default), `zstd`, `plain` |
+  | 4.1.3 and later 4.1 releases | `snappy`, `zstd` (default), `plain`, `lz4` | `snappy`, `zlib` (default), `zstd`, `plain`, `lz4` |
+  | Since 4.2.0 (including dev) | `snappy`, `zstd` (default), `plain`, `lz4`, `gzip` | `snappy`, `zlib` (default), `zstd`, `plain`, `lz4` |
+
+  For tables created through Doris, select the codec with the `compression` property. For writes to existing Iceberg tables, Doris reads the `write.parquet.compression-codec` or `write.orc.compression-codec` table property.
 
 * **Storage Medium**
 

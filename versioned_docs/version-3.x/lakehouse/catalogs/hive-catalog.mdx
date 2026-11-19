@@ -1001,9 +1001,15 @@ For a Hive Database, you must first delete all tables under that Database before
 
 - **Compression Formats**
 
-  - Parquet: snappy (default), zstd, plain (no compression)
-  - ORC: snappy, zlib (default), zstd, plain (no compression)
-  - Text: gzip, deflate, bzip2, zstd, lz4, lzo, snappy, plain (default, no compression)
+  The following codecs apply when selecting compression for table creation and data writes through Doris. `plain` means no compression.
+
+  | Doris version | Parquet | ORC |
+  | --- | --- | --- |
+  | 3.x | `snappy` (default), `zstd`, `plain` | `snappy`, `zlib` (default), `zstd`, `plain` |
+
+  Hive Text writes support `gzip`, `bzip2`, `zstd`, `lz4`, `snappy`, and `plain` (default). For compression support when reading existing files, see [Text/CSV/JSON](../file-formats/text.md).
+
+  For tables created through Doris, select the codec with the `compression` property. For writes to existing Hive tables, Doris reads the table properties `parquet.compression`, `orc.compress`, and `text.compression` for the respective file formats.
 
 - **Storage Medium**
 

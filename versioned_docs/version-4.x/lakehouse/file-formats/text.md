@@ -32,6 +32,8 @@ This document introduces the support for reading and writing text file formats i
 
 ### Supported Compression Formats
 
+Reading existing files supports the following codecs.
+
 * uncompressed
 * gzip
 * deflate
@@ -40,6 +42,8 @@ This document introduces the support for reading and writing text file formats i
 * lz4
 * snappy
 * lzo
+
+Hive Text table writes support `plain`, `gzip`, `bzip2`, `zstd`, `lz4`, and `snappy`, with `plain` as the default. Use the `compression` property when creating a table through Doris, or the Hive table property `text.compression` when writing to an existing table.
 
 ## JSON
 
