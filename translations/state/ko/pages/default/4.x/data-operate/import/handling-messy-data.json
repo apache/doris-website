@@ -8,41 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/handling-messy-data.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/handling-messy-data.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-    "sourceTechnicalHash": "59c9fe52f4658a8061ab29193716e29568582041a5064030b0e6deb4f7d77ee4",
-    "targetHash": "5ea1536a031bbce725f408dc796f4ae4cd2897a2d6e299b8aeea16974e529dff",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "8e2403bf71bc3e2293fdf2db7987be2c7860e34dd77027445394567ec7114f09",
+    "sourceTechnicalHash": "35470e070d1b31f6e4a3789cbf149a582f98d4dad02d664d0355bdf567745e64",
+    "targetHash": "f0d74ca2cd009a2b75496553c57b621df54fde5e356b7e00065966e11367d613",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:16:25.620Z",
+    "translatedAt": "2026-11-19T19:26:41.121Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-      "targetHash": "5ea1536a031bbce725f408dc796f4ae4cd2897a2d6e299b8aeea16974e529dff",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "8e2403bf71bc3e2293fdf2db7987be2c7860e34dd77027445394567ec7114f09",
+      "targetHash": "f0d74ca2cd009a2b75496553c57b621df54fde5e356b7e00065966e11367d613",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 34: expected [\"inlineCode\",null,null,\"TinyInt\"]; received [\"inlineCode\",null,null,\"abc\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"abc\"]; received [\"inlineCode\",null,null,\"2000\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"2000\"]; received [\"inlineCode\",null,null,\"TinyInt\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters + Operational steps -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 구성 매개변수 + 운영 단계 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data import / Dirty data governance / Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 데이터 적재 / 비정상 데이터 관리 / 문제 해결 -->\"]\nprotected node 12: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameter description -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 구성 매개변수 설명 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 22: expected [\"inlineCode\",null,null,\"\\\\N\"]; received [\"inlineCode\",null,null,\"\\\\\\\\N\"]\nprotected node 34: expected [\"inlineCode\",null,null,\"TinyInt\"]; received [\"inlineCode\",null,null,\"abc\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"abc\"]; received [\"inlineCode\",null,null,\"2000\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 34: expected [\"inlineCode\",null,null,\"TinyInt\"]; received [\"inlineCode\",null,null,\"abc\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"abc\"]; received [\"inlineCode\",null,null,\"2000\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"2000\"]; received [\"inlineCode\",null,null,\"TinyInt\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "merged",
-        "version": "current",
-        "docId": "data-operate/import/handling-messy-data",
-        "sourcePath": "docs/data-operate/import/handling-messy-data.md",
-        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/handling-messy-data.md",
-        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-        "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-        "targetHash": "5ea1536a031bbce725f408dc796f4ae4cd2897a2d6e299b8aeea16974e529dff",
-        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/handling-messy-data.md",
+        "blob": "8f872d023edaa5dcb01c726fadb77517b8ba16ea"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/handling-messy-data.md",
+        "blob": "8535a7e60b342d61c3b1ad8f371578577615ef0d"
       }
     }
   }
