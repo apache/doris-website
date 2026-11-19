@@ -54,7 +54,7 @@ Show the Partition status of all tables in the database.
 | COOLDOWN_TIME_MS              | text          | Cooldown time                        |
 | LAST_CONSISTENCY_CHECK_TIME   | text          | Last consistency check time          |
 | BUCKET_NUM                    | int           | Partition bucket num                 |
-| COMMITTED_VERSION             | bigint        | Last commited version                |
+| COMMITTED_VERSION             | bigint        | Last committed version               |
 | VISIBLE_VERSION               | bigint        | Current visible version              |
 | PARTITION_KEY                 | text          | Partition key                        |
 | RANGE                         | text          | Partition range(min max value)       |
