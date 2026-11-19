@@ -25,21 +25,33 @@ import TabItem from '@theme/TabItem';
 
 ## Quick deployment with Docker
 
-Starting from the latest version, you can use Docker for quick deployment.
+The following example uses Docker for a local trial.
+
+:::info New-cluster authentication in 4.2.1 and 5.0
+
+The helper example below is pinned to **4.1.0** and uses legacy empty-password initialization. For **4.2.1** and **5.0**, follow [Local full deployment](#local-full-deployment), or use a deployment tool that supports the hashed `initial_root_password` and supplies the matching password for node registration and SQL. See [Initialize Built-in Accounts](../admin-manual/auth/authentication/internal#initialize-built-in-accounts).
+
+:::
 
 ### Step 1 (1/2): Start the cluster
 
-Run the following command to download the startup script and start the cluster in one go. When no version is specified, the latest release (`doris-latest`) is downloaded by default:
-
-```shell
-curl -fsSL https://doris.apache.org/files/start-doris.sh | bash
-```
-
-To specify a version, use the `-v` parameter:
+Run the helper with an explicit version:
 
 ```shell
 curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.0
 ```
+
+After startup, connect and set root's password before continuing:
+
+```bash
+mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot
+```
+
+```sql
+SET PASSWORD = PASSWORD('<new_root_password>');
+```
+
+Use your own nonempty password. Subsequent connections use `-p` to prompt for it.
 
 ### Step 2 (2/2): Verify cluster status
 
@@ -48,13 +60,13 @@ Connect to the cluster with a MySQL client and check the FE and BE status:
 ```sql
 -- Purpose: verify that the FE node has joined the cluster
 -- Expected: both Join and Alive columns are true
-mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
+mysql -uroot -p -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
 ```
 
 ```sql
 -- Purpose: verify that the BE node is heartbeating normally
 -- Expected: the Alive column is 1
-mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
+mysql -uroot -p -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 ```
 
 **Output explanation:** `Alive=true` (FE) or `Alive=1` (BE) indicates that the node is running normally.
@@ -112,12 +124,24 @@ sysctl -p
    apache-doris/fe/bin/start_fe.sh --daemon
    ```
 
-3. **Verify the FE status:**
+3. **Initialize root's password:** before checking status or registering BE, connect from the FE host:
+
+   ```bash
+   mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot
+   ```
+
+   ```sql
+   SET PASSWORD = PASSWORD('<new_root_password>');
+   ```
+
+   Choose your own nonempty password. For new clusters on **4.2.1** and **5.0**, normal SQL returns error 1820 until this succeeds. If you configured `initial_root_password` before first startup, connect with `-p` and that password instead. Subsequent commands below use `-p`. Admin remains unavailable until root sets its password; see [Initialize Built-in Accounts](../admin-manual/auth/authentication/internal#initialize-built-in-accounts).
+
+4. **Verify the FE status:**
 
    ```sql
    -- Purpose: confirm that the FE has started and joined the cluster
    -- Expected: Join=true, Alive=true, IsMaster=true
-   mysql -uroot -P9030 -h127.0.0.1 -e "show frontends;"
+   mysql -uroot -p -P9030 -h127.0.0.1 -e "show frontends;"
    ```
 
 ### Step 4 (4/4): Deploy the BE
@@ -147,7 +171,7 @@ sysctl -p
    ```sql
    -- Purpose: confirm that the BE is registered and heartbeating normally
    -- Expected: Alive=true
-   mysql -uroot -P9030 -h127.0.0.1 -e "show backends;"
+   mysql -uroot -p -P9030 -h127.0.0.1 -e "show backends;"
    ```
 
 ---
@@ -159,7 +183,7 @@ Whether you used Docker or a local deployment, once the cluster is up you can fo
 ### Connect to the cluster
 
 ```sql
-mysql -uroot -P9030 -h127.0.0.1
+mysql -uroot -p -P9030 -h127.0.0.1
 ```
 
 ### Create a database and table

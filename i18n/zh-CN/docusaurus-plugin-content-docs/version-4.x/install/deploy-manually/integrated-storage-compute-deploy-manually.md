@@ -101,13 +101,17 @@
 
 4. **检查 FE 启动状态**
 
-   通过 MySQL 客户端连接 Doris 集群，初始化用户为 `root`，默认密码为空。
+   **4.2.1** 和 **5.0** 新集群应先初始化 root 密码，再检查状态、添加 FE 或注册 BE。未配置 `initial_root_password` 时，请在**当前 FE 主机**上执行：
 
-   ```SQL
-
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
-
+   ```bash
+   mysql --protocol=TCP -h127.0.0.1 -P<fe_query_port> -uroot
    ```
+
+   ```sql
+   SET PASSWORD = PASSWORD('<new_root_password>');
+   ```
+
+   此步骤成功前执行普通 SQL 会返回 1820，成功后当前会话即可使用。如果已配置初始密码，请使用 `-p` 提供该密码登录。下文后续 MySQL 连接均需要提供已配置的密码，详见[初始化内置账号](../../admin-manual/auth/authentication/internal#初始化内置账号)。
 
    链接到 Doris 集群后，可以通过 `show frontends` 命令查看 FE 的状态，通常要确认以下几项
 
@@ -135,7 +139,7 @@
 
    ```Bash
    ## connect a alive FE node
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
+   mysql -uroot -p -P<fe_query_port> -h<fe_ip_address>
    
    ## register a new FE follower node
    ALTER SYSTEM ADD FOLLOWER "<fe_ip_address>:<fe_edit_log_port>"
@@ -208,7 +212,7 @@
 
    ```Bash
    ## connect a alive FE node
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
+   mysql -uroot -p -P<fe_query_port> -h<fe_ip_address>
       
    ## register BE node
    ALTER SYSTEM ADD BACKEND "<be_ip_address>:<be_heartbeat_service_port>"
@@ -230,7 +234,7 @@
 
    ```Bash
    ## connect a alive FE node
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
+   mysql -uroot -p -P<fe_query_port> -h<fe_ip_address>
       
    ## check BE node status
    show backends;
@@ -250,7 +254,7 @@
 
    ```Bash
    ## connect a alive fe node
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
+   mysql -uroot -p -P<fe_query_port> -h<fe_ip_address>
    ```
 
 2. **检查 Doris 安装信息**
@@ -265,21 +269,12 @@
    show backends;
    ```
 
-3. **修改 Doris 集群密码**
+3. **按需启用 admin**
 
-   在创建 Doris 集群时，系统会自动创建一个名为 `root` 的用户，并默认设置其密码为空。为了提高安全性，建议在集群创建后立即为 `root` 用户设置一个新密码。
+   第 1 步已完成 root 密码初始化。在受保护的新集群中，admin 密码为空时不能登录。如需通过客户端使用 admin，请由 root 执行以下语句；内部 JOB、MTMV 和统计信息执行不需要此步骤：
 
-   ```SQL
-   -- check the current user
-   select user();  
-   +------------------------+  
-   | user()                 |  
-   +------------------------+  
-   | 'root'@'192.168.88.30' |  
-   +------------------------+  
-        
-   -- modify the password for current user
-   SET PASSWORD = PASSWORD('doris_new_passwd');
+   ```sql
+   ALTER USER 'admin' IDENTIFIED BY '<new_admin_password>';
    ```
 
 4. **创建测试表并插入数据**
@@ -366,14 +361,7 @@ SHOW BACKENDS;
 
 ### Q: 如果忘记 root 密码，如何重置？
 
-在 FE 节点通过 127.0.0.1 进行连接，可以使用 root 用户免密登录，然后修改密码：
-
-```Bash
-mysql -h127.0.0.1 -P9030 -uroot
-
--- 重置密码
-SET PASSWORD = PASSWORD('your_new_password');
-```
+请按[本机密码恢复步骤](../../admin-manual/auth/authentication/internal#常见问题)操作：临时开启 `skip_localhost_auth_check` 并重启该 FE，通过直接回环 MySQL 连接重设密码，然后删除恢复配置并再次重启。默认情况下，回环连接不会绕过已设置的密码。
 
 ---
 

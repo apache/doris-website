@@ -359,15 +359,45 @@ FE 之间元数据 HTTP 接口（`image`、`role`、`check`、`put`、`journal_i
 
 #### `initial_root_password`
 
-设置 root 用户初始化 2 阶段 SHA-1 加密密码，默认为''，即不设置 root 密码。后续 root 用户的 `set password` 操作会将 root 初始化密码覆盖。
+首次初始化集群前配置的 root 两阶段 SHA-1 密码哈希，仅由首次初始化的 Master FE 应用。后续启动以及已初始化的集群会忽略此项，后续 `SET PASSWORD` 修改的密码优先；初始化完成后可以删除此项。它不会设置 admin 的密码。
 
-示例：如要配置密码的明文是 `root@123`，可在 Doris 执行 SQL `select password('root@123')` 获取加密密码 `*A00C34073A26B40AB4307650BFB9309D6BFA6999`。
+行为变更版本：**4.2.1** 和 **5.0**。首次初始化时，非空无效值会阻止初始化，不再被忽略；不接受明文。离线生成哈希及自动化部署步骤见[初始化内置账号](../auth/authentication/internal#初始化内置账号)。
+
+类型：string
 
 默认值：空字符串
 
 是否可以动态配置：false
 
 是否为 Master FE 节点独有的配置项：true
+
+#### `allow_empty_password_for_root_admin`
+
+从 **4.2.1** 和 **5.0** 开始支持。在新初始化且受保护的集群中，设为 `true` 会恢复原有的 root/admin 空密码登录行为，允许从任意主机通过支持的客户端协议登录，且不强制 root 先设置密码；它不会绕过已设置的非空密码。升级而来的集群如果没有新的初始化策略，无论此项取值如何，均保留原有行为。
+
+仅用于隔离测试。需要在每台接收客户端连接的 FE 的 `fe.conf` 或实际生效的 `fe_custom.conf` 中配置并重启。删除此项或设为 `false` 并重启后恢复保护。临时本机密码恢复请使用 `skip_localhost_auth_check`。
+
+类型：boolean
+
+默认值：false
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有的配置项：false
+
+#### `skip_localhost_auth_check`
+
+临时本机密码恢复配置。设为 `true` 后，root/admin 可通过本机 MySQL 连接登录，不校验提供的密码，即使账号已有密码也一样。对 **4.2.1** 或 **5.0** 新初始化的受保护集群，仅从 `127.0.0.1` 或 `::1` 发起的直接 MySQL 连接符合条件，PROXY protocol、HTTP 和 Flight 连接均不适用。升级集群保留原有恢复行为。
+
+修改 FE 配置并重启后生效。重设密码后，删除此项或设为 `false`，再重启以关闭恢复模式。操作步骤见[密码恢复](../auth/authentication/internal#常见问题)。
+
+类型：boolean
+
+默认值：false
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有的配置项：false
 
 #### `enable_cooldown_replica_affinity`
 

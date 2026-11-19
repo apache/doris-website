@@ -286,7 +286,18 @@ Meta Service 本身具备了元数据管理和回收功能，这两个功能可�
    bin/start_fe.sh --daemon
    ```
 
-   第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。使用 mysql 客户端连接 FE 使用 `show frontends` 确认刚才启动的 FE 是 master。
+   第一个 FE 进程初始化集群并以 FOLLOWER 角色工作。**4.2.1** 和 **5.0** 新集群需要先初始化 root 密码，再执行 `SHOW FRONTENDS` 或注册其他节点。未配置初始 root 密码时，在 FE 主机上连接：
+
+   ```bash
+   mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot
+   ```
+
+   ```sql
+   SET PASSWORD = PASSWORD('<new_root_password>');
+   SHOW FRONTENDS;
+   ```
+
+   将 `9030` 替换为实际的 `query_port`。密码修改成功后，当前连接立即解除初始 SQL 限制。如果首次启动前已设置 `initial_root_password`，请通过 `-p` 提供该密码连接。后续注册节点和执行 SQL 的命令也需要使用已配置的账号密码。如需以 admin 进行客户端登录，应单独启用，详见[初始化内置账号](../../admin-manual/auth/authentication/internal#初始化内置账号)。
 
 ## 第 6 步：注册 FE Follower/Observer 节点
 
@@ -418,7 +429,7 @@ Doris 默认依赖 FDB 7.1.x 系列。请执行 `fdbserver --version` 确认已�
 
 执行以下命令确认：
 ```bash
-mysql -h <fe_host> -P 9030 -u root -e "SHOW FRONTENDS;"
+mysql -h <fe_host> -P 9030 -u root -p -e "SHOW FRONTENDS;"
 ```
 检查输出中对应 FE 的 `Role` 列是否为 `MASTER`。
 

@@ -358,15 +358,45 @@ Whether to enable the multi-tags function of a single BE
 
 #### `initial_root_password`
 
-Set root user initial 2-staged SHA-1 encrypted password, default as '', means no root password. Subsequent `set password` operations for root user will overwrite the initial root password.
+Set root's initial two-stage SHA-1 password hash before the first cluster initialization. Only the first master FE applies it; subsequent startups and initialized clusters ignore it, and later `SET PASSWORD` operations take precedence. The entry can be removed after initialization. It does not set admin's password.
 
-Example: If you want to configure a plaintext password `root@123`. You can execute Doris SQL `select password('root@123')` to generate encrypted password `*A00C34073A26B40AB4307650BFB9309D6BFA6999`.
+Supported behavior change: in **4.2.1** and **5.0**, an invalid nonempty value prevents first initialization instead of being ignored. Plaintext is not accepted. See [Initialize Built-in Accounts](../auth/authentication/internal#initialize-built-in-accounts) for offline hash generation and automated deployment.
+
+Type: string
 
 Default: empty string
 
 Is it possible to dynamically configure: false
 
 Is it a configuration item unique to the Master FE node: true
+
+#### `allow_empty_password_for_root_admin`
+
+Supported since **4.2.1** and **5.0**. On a newly initialized, protected cluster, `true` restores the previous empty-password root/admin login behavior from any host and supported client protocol, without forcing root to set a password first. It never bypasses an existing nonempty password. Upgraded clusters without the new initialization policy retain their previous behavior regardless of this setting.
+
+Use only in isolated tests. Configure every FE accepting client connections through `fe.conf` or the effective `fe_custom.conf`, then restart. Removing the entry or setting it to `false` and restarting restores protection. For temporary local password recovery, use `skip_localhost_auth_check` instead.
+
+Type: boolean
+
+Default: false
+
+Is it possible to dynamically configure: false
+
+Is it a configuration item unique to the Master FE node: false
+
+#### `skip_localhost_auth_check`
+
+Temporary local password-recovery setting. `true` allows local root/admin MySQL login without checking the supplied password, including when the account already has a password. For protected clusters newly initialized on **4.2.1** or **5.0**, only direct MySQL connections from `127.0.0.1` or `::1` qualify; PROXY protocol, HTTP and Flight connections do not. Upgraded clusters retain their previous recovery behavior.
+
+Edit the FE configuration and restart to enable recovery. After resetting the password, remove this setting or set it to `false` and restart again. See [password recovery](../auth/authentication/internal#faq).
+
+Type: boolean
+
+Default: false
+
+Is it possible to dynamically configure: false
+
+Is it a configuration item unique to the Master FE node: false
 
 #### `enable_cooldown_replica_affinity`
 
