@@ -24,7 +24,7 @@ This framework is available starting from Apache Doris 4.1.4. These unified TLS 
 
 The open-source Doris package contains the framework, configuration items, parser support, and extension points for TLS and certificate-based authentication. It does not include a complete TLS runtime implementation for every protocol. In the stock open-source build, enabling TLS for a protocol that has no TLS module implementation will fail with an error indicating that the TLS module is required.
 
-Builds containing the private RPC implementation introduced by [Apache Doris PR #70693](https://github.com/apache/doris/pull/70693) provide built-in mutual TLS for internal gRPC/BRPC and blocking Thrift. See [Internal RPC encryption with mutual TLS](./private-rpc-tls.md) for certificate provisioning, required configuration overrides, coordinated activation, and protocol limits. The framework's availability since 4.1.4 does not establish availability of that runtime implementation in released versions.
+Starting from Apache Doris 5.0, the open-source build provides built-in mutual TLS for internal gRPC/BRPC and blocking Thrift. See [Internal RPC encryption with mutual TLS](./private-rpc-tls.md) for certificate provisioning, required configuration overrides, coordinated activation, and protocol limits.
 
 The configuration names, default values, and meanings listed below are fixed by the framework. If you provide your own TLS module implementation, use this framework and these configuration items for compatibility. Implementation details such as certificate loading, TLS context creation, handshake behavior, certificate reload, and protocol-specific peer verification can be implemented by the TLS module.
 

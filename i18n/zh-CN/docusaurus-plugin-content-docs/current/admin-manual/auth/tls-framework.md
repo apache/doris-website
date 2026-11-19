@@ -24,7 +24,7 @@
 
 开源 Doris 包含 TLS 和证书鉴权相关的框架、配置项、解析支持和扩展点，但不包含覆盖所有协议的完整 TLS 运行时实现。在开源默认构建中，如果为未提供 TLS 模块实现的协议开启 TLS，启动或连接创建会失败，并提示需要 TLS module。
 
-包含 [Apache Doris PR #70693](https://github.com/apache/doris/pull/70693) 引入的内部 RPC 实现的构建，为内部 gRPC/BRPC 和阻塞式 Thrift 提供内置双向 TLS。证书准备、必要的配置覆盖、协调切换及协议限制见[使用双向 TLS 加密内部 RPC](./private-rpc-tls.md)。框架自 4.1.4 起提供，不表示该运行时实现已在发布版本中提供。
+自 Apache Doris 5.0 起，开源构建为内部 gRPC/BRPC 和阻塞式 Thrift 提供内置双向 TLS。证书准备、必要的配置覆盖、协调切换及协议限制见[使用双向 TLS 加密内部 RPC](./private-rpc-tls.md)。
 
 下表中的配置名称、默认值和语义由框架固定。如果你提供自己的 TLS module 实现，需要使用这套框架和这些配置项，以保证配置兼容。证书加载、TLS context 创建、握手行为、证书重载、协议级对端校验等细节可以由 TLS module 自行实现。
 

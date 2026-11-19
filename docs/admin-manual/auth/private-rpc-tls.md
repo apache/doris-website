@@ -16,7 +16,7 @@
 Use mutual TLS (mTLS) to encrypt supported internal RPC connections and require both peers to present certificates signed by the cluster's trusted certificate authority (CA). The open-source private RPC provider covers gRPC/BRPC and blocking Thrift connections. It does not fall back to plaintext after a TLS connection fails.
 
 :::note Availability
-This guide requires a build containing the open-source private RPC implementation introduced by [Apache Doris PR #70693](https://github.com/apache/doris/pull/70693). Check that **both FE and BE packages** contain that implementation before enabling it. The TLS framework settings introduced in 4.1.4 alone do not provide this runtime capability; this guide does not establish support in a released 4.x or 3.x version.
+Internal RPC mutual TLS is supported starting from Apache Doris 5.0. This guide applies to 5.0 and later versions.
 :::
 
 ### Protocol coverage
@@ -36,7 +36,7 @@ Server listeners admit peers belonging to the configured CA trust domain. Use a 
 
 ### Prerequisites
 
-- Install compatible FE and BE packages containing the implementation described above on every participating node.
+- Install Apache Doris 5.0 or later FE and BE packages on every participating node.
 - Reserve a maintenance window. Plaintext nodes cannot communicate with TLS listeners; this provider does not support a mixed plaintext/TLS rolling transition.
 - Obtain a PEM CA certificate and a separate PEM certificate/private key for each node. Certificates must support both `serverAuth` and `clientAuth`, and contain DNS/IP Subject Alternative Names (SANs) matching the addresses peers actually use. If Doris registers or connects to a node by IP, include that IP as an IP SAN.
 - Keep the CA private key on the signing system, outside Doris nodes. Give the Doris service account read access to its own identity files, and restrict private-key access to that account.

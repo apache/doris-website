@@ -21,7 +21,7 @@ Apache Doris provides complete security capabilities for enterprise-grade data p
 | Unified authorization governance with the big data ecosystem | Apache Ranger integration | [Ranger-based authorization](./authorization/ranger) |
 | Sensitive data protection (row-level/column-level, masking) | Data access control | [Data access control](./authorization/data) |
 | Encrypting the client-to-FE link | MySQL protocol SSL, FE HTTPS | [MySQL protocol SSL](./certificate), [FE HTTPS configuration](./fe-certificate) |
-| Encrypting supported internal FE/BE RPC in builds containing the private RPC implementation | Node certificate authentication, gRPC/BRPC and blocking Thrift mTLS | [Internal RPC encryption with mutual TLS](./private-rpc-tls.md) |
+| Encrypting supported internal FE/BE RPC (Doris 5.0+) | Node certificate authentication, gRPC/BRPC and blocking Thrift mTLS | [Internal RPC encryption with mutual TLS](./private-rpc-tls.md) |
 | Audit and compliance traceability | Audit log | [Audit log](../audit-plugin) |
 | Data encryption and decryption | Encryption functions | [Data encryption functions](./encryption-function) |
 | Deployment on AWS, integration with IAM | AWS authentication and authorization | [AWS authentication and authorization](./integrations/aws-authentication-and-authorization) |
@@ -113,6 +113,6 @@ Refer to the following documents by topic for details on Doris security capabili
 | Audit log | [Audit log](../audit-plugin) |
 | MySQL protocol SSL transport encryption | [MySQL protocol SSL](./certificate) |
 | FE HTTP/HTTPS transport encryption | [FE HTTPS configuration](./fe-certificate) |
-| Internal FE/BE RPC mutual TLS (requires the private RPC implementation) | [Internal RPC encryption with mutual TLS](./private-rpc-tls.md) |
+| Internal FE/BE RPC mutual TLS (Doris 5.0+) | [Internal RPC encryption with mutual TLS](./private-rpc-tls.md) |
 | Encryption functions | [Data encryption functions](./encryption-function) |
 | Integration with cloud vendors (AWS) | [AWS authentication and authorization](./integrations/aws-authentication-and-authorization) |

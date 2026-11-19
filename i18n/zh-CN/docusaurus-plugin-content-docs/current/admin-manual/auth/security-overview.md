@@ -21,7 +21,7 @@ Apache Doris 面向企业级数据平台提供完整的安全能力，覆盖身�
 | 与大数据生态统一权限治理 | Apache Ranger 集成 | [基于 Ranger 的鉴权方案](./authorization/ranger) |
 | 敏感数据保护（行级/列级、脱敏） | 数据访问控制 | [数据访问控制](./authorization/data) |
 | 客户端到 FE 链路加密 | MySQL 协议 SSL、FE HTTPS | [MySQL 协议 SSL](./certificate)、[FE HTTPS 配置](./fe-certificate) |
-| 包含内部 RPC 实现的构建中，受支持的 FE/BE 内部 RPC 加密 | 节点证书认证、gRPC/BRPC 和阻塞式 Thrift mTLS | [使用双向 TLS 加密内部 RPC](./private-rpc-tls.md) |
+| 受支持的 FE/BE 内部 RPC 加密（Doris 5.0 起） | 节点证书认证、gRPC/BRPC 和阻塞式 Thrift mTLS | [使用双向 TLS 加密内部 RPC](./private-rpc-tls.md) |
 | 审计与合规追溯 | 审计日志 | [审计日志](../audit-plugin) |
 | 数据加解密计算 | 加密函数 | [数据加密函数](./encryption-function) |
 | 部署在 AWS 上、对接 IAM | AWS 认证鉴权 | [AWS 认证与鉴权](./integrations/aws-authentication-and-authorization) |
@@ -113,6 +113,6 @@ Doris 在认证侧支持**内置认证**与 **LDAP 认证**两种方案；在鉴
 | 审计日志 | [审计日志](../audit-plugin) |
 | MySQL 协议 SSL 传输加密 | [MySQL 协议 SSL](./certificate) |
 | FE HTTP/HTTPS 传输加密 | [FE HTTPS 配置](./fe-certificate) |
-| FE/BE 内部 RPC 双向 TLS（需要内部 RPC 实现） | [使用双向 TLS 加密内部 RPC](./private-rpc-tls.md) |
+| FE/BE 内部 RPC 双向 TLS（Doris 5.0 起） | [使用双向 TLS 加密内部 RPC](./private-rpc-tls.md) |
 | 加密函数 | [数据加密函数](./encryption-function) |
 | 与云厂商集成（AWS） | [AWS 认证与鉴权](./integrations/aws-authentication-and-authorization) |

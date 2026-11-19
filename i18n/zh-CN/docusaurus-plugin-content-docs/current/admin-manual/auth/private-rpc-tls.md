@@ -16,7 +16,7 @@
 双向 TLS（mTLS）为支持的内部 RPC 连接提供传输加密，并要求通信双方出示由集群信任的证书颁发机构（CA）签发的证书。开源内部 RPC provider 覆盖 gRPC/BRPC 和阻塞式 Thrift 连接，TLS 连接失败后不会回退到明文。
 
 :::note 可用性
-本文要求使用包含 [Apache Doris PR #70693](https://github.com/apache/doris/pull/70693) 引入的开源内部 RPC 实现的构建。开启前请确认 **FE 和 BE 安装包均包含该实现**。仅有 4.1.4 引入的 TLS 框架配置项并不具备此运行时能力；本文不表示已发布的 4.x 或 3.x 版本支持该功能。
+内部 RPC 双向 TLS 自 Apache Doris 5.0 起支持，本文适用于 5.0 及后续版本。
 :::
 
 ### 协议覆盖范围
@@ -36,7 +36,7 @@
 
 ### 前置条件
 
-- 所有参与节点安装兼容且包含上述实现的 FE、BE 安装包。
+- 所有参与节点安装 Apache Doris 5.0 或后续版本的 FE、BE 安装包。
 - 安排维护窗口。明文节点无法与 TLS 监听端通信，此 provider 不支持明文/TLS 混合滚动切换。
 - 准备 PEM 格式的 CA 证书，以及每个节点独立的 PEM 证书和私钥。节点证书必须同时支持 `serverAuth`、`clientAuth`，DNS/IP Subject Alternative Name（SAN）必须覆盖其他节点实际使用的访问地址。如果 Doris 注册或连接节点时使用 IP，必须包含对应的 IP SAN。
 - CA 私钥保留在 Doris 节点以外的签发系统。允许 Doris 服务账号读取自己的身份文件，并将私钥访问权限限制为该账号。
