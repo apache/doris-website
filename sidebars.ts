@@ -1641,6 +1641,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-all',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-all-array',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-or-null',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/regexp-position',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace-one',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/replace',
