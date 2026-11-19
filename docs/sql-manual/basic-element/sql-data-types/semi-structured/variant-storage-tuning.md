@@ -39,7 +39,7 @@ The system chooses the candidates for automatic extraction from the path statist
 | Property | Question it answers | Main effect of changing it |
 | --- | --- | --- |
 | `variant_max_subcolumns_count` | How many subcolumns are extracted at most? | A larger limit gives more paths the chance to be stored as columns, and adds write, metadata and compaction cost; `0` turns automatic extraction off |
-| `variant_subcolumn_extraction_min_rows` | When does automatic extraction start? | A higher threshold saves the extraction work for data files with few rows; path queries on that data may read more from the sparse encoding |
+| `variant_doc_materialization_min_rows` | When does automatic extraction start? | A higher threshold saves the extraction work for data files with few rows; path queries on that data may read more from the sparse encoding |
 | `variant_enable_doc_mode` | Is the complete document also kept? | When enabled, queries of whole documents read the document representation directly; this adds storage and write cost |
 
 The three independent examples below show how the properties change the result. The values explain the rules; they are not recommended defaults.
@@ -50,7 +50,7 @@ The three independent examples below show how the properties change the result. 
 `0` turns automatic extraction off only for columns created by version 4.2 or later. A column created before version 4.2 keeps its behavior after the upgrade: `0` means no limit, and every dynamic path is extracted into a subcolumn. See [Sparse columns](./VARIANT.md#sparse-columns).
 :::
 
-**When: `variant_subcolumn_extraction_min_rows`.** With `variant_subcolumn_extraction_min_rows = 0`, extraction is tried when data is written. With `1000000`, a data file of 500,000 rows is written without automatic extraction, and extraction is tried when a later compaction writes a data file of 1,200,000 rows. This property decides when extraction happens, not how many subcolumns are extracted in the end.
+**When: `variant_doc_materialization_min_rows`.** With `variant_doc_materialization_min_rows = 0`, extraction is tried when data is written. With `1000000`, a data file of 500,000 rows is written without automatic extraction, and extraction is tried when a later compaction writes a data file of 1,200,000 rows. This property decides when extraction happens, not how many subcolumns are extracted in the end. Despite the doc in its name, it applies without DOC mode too; before version 4.2 it applied only with DOC mode.
 
 **Whether to keep the complete document: `variant_enable_doc_mode`.** Suppose `payload` already has 128 extracted subcolumns and queries often run `SELECT payload`. With `variant_enable_doc_mode = false`, the whole document has to be rebuilt from the subcolumns and the data in the sparse encoding. With `variant_enable_doc_mode = true`, Doris also stores a complete representation of the document and queries read it directly, at the cost of more storage space and write work.
 
@@ -96,7 +96,7 @@ CREATE TABLE event_analysis (
     event_id   BIGINT NOT NULL,
     payload    VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "128",
-        "variant_subcolumn_extraction_min_rows" = "0",
+        "variant_doc_materialization_min_rows" = "0",
         "variant_enable_doc_mode" = "false"
     )>
 )
@@ -116,7 +116,7 @@ WHERE event_time >= '2026-11-04 00:00:00'
 GROUP BY CAST(payload['event_type'] AS STRING);
 ```
 
-`variant_subcolumn_extraction_min_rows = 0` means extraction is not deferred because of the number of rows in a data file; `variant_max_subcolumns_count = 128` means at most 128 dynamic subcolumns are extracted. Once the queried paths are subcolumns, a higher limit usually does not make them faster. Consider a larger limit only when more frequently queried paths are still in sparse encoding and path queries become the bottleneck.
+`variant_doc_materialization_min_rows = 0` means extraction is not deferred because of the number of rows in a data file; `variant_max_subcolumns_count = 128` means at most 128 dynamic subcolumns are extracted. Once the queried paths are subcolumns, a higher limit usually does not make them faster. Consider a larger limit only when more frequently queried paths are still in sparse encoding and path queries become the bottleneck.
 
 Compare query latency, scanned data and load throughput with the actual filter and aggregation SQL; do not choose the subcolumn limit from the number of JSON keys alone.
 
@@ -134,7 +134,7 @@ CREATE TABLE device_events_sparse (
     device_id  BIGINT NOT NULL,
     attributes VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "128",
-        "variant_subcolumn_extraction_min_rows" = "0",
+        "variant_doc_materialization_min_rows" = "0",
         "variant_enable_doc_mode" = "false"
     )>
 )
@@ -176,7 +176,7 @@ CREATE TABLE wide_snapshots_deferred (
     snapshot_id   BIGINT NOT NULL,
     payload       VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "128",
-        "variant_subcolumn_extraction_min_rows" = "1000",
+        "variant_doc_materialization_min_rows" = "1000",
         "variant_enable_doc_mode" = "false"
     )>
 )
@@ -194,7 +194,7 @@ CREATE TABLE wide_snapshots_row_only (
     snapshot_id   BIGINT NOT NULL,
     payload       VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "0",
-        "variant_subcolumn_extraction_min_rows" = "0",
+        "variant_doc_materialization_min_rows" = "0",
         "variant_enable_doc_mode" = "false"
     )>
 )
@@ -230,7 +230,7 @@ CREATE TABLE event_documents (
     event_id BIGINT NOT NULL,
     payload  VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "2",
-        "variant_subcolumn_extraction_min_rows" = "0",
+        "variant_doc_materialization_min_rows" = "0",
         "variant_enable_doc_mode" = "true"
     )>
 )
@@ -250,6 +250,6 @@ If `user_id` and `action` are already subcolumns, the filter of this SQL can rea
 
 ## 3. Advanced settings
 
-**`variant_sparse_hash_shard_count`: the number of shards of the sparse encoding.** This property sets the number of physical shards that the sparse encoding uses; paths that are not extracted are mapped to a shard by hash. The default is 1. It is unrelated to the BUCKETS of the table and to the number of tablets. With `variant_enable_doc_mode`, the complete document is split into the same number of shards.
+**`variant_doc_hash_shard_count`: the number of shards of the sparse encoding.** This property sets the number of physical shards that the sparse encoding uses; paths that are not extracted are mapped to a shard by hash. The default is 1. It is unrelated to the BUCKETS of the table and to the number of tablets. With `variant_enable_doc_mode`, the complete document is split into the same number of shards. Despite the doc in its name, it applies without DOC mode too; versions 4.0 and 4.1 set the shard count without DOC mode with `variant_sparse_hash_shard_count`, which is ignored from version 4.2.
 
 For example, 18 long-tail paths are stored in sparse encoding. With `4`, these paths are mapped to 4 available shards; with `16`, to 16 available shards. To query one long-tail path, Doris can locate the shard that holds it and read less data of other paths. Querying a whole document may still read several shards.

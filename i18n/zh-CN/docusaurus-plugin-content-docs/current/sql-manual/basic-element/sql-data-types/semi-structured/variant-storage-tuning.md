@@ -2,7 +2,7 @@
 {
     "title": "VARIANT 存储原理与场景调优",
     "language": "zh-CN",
-    "description": "VARIANT 如何把 JSON 路径拆成独立子列或采用稀疏编码保存，以及如何按场景设置 variant_max_subcolumns_count、variant_subcolumn_extraction_min_rows 和 variant_enable_doc_mode。"
+    "description": "VARIANT 如何把 JSON 路径拆成独立子列或采用稀疏编码保存，以及如何按场景设置 variant_max_subcolumns_count、variant_doc_materialization_min_rows 和 variant_enable_doc_mode。"
 }
 ---
 
@@ -39,7 +39,7 @@ VARIANT 的基本调优需要回答三个问题：最多自动拆多少个子列
 | 参数 | 回答的问题 | 调整后的主要影响 |
 | --- | --- | --- |
 | `variant_max_subcolumns_count` | 最多自动拆多少个子列？ | 增大上限，让更多路径有机会独立列存，同时增加写入、元数据与合并开销；`0` 表示关闭自动拆列 |
-| `variant_subcolumn_extraction_min_rows` | 什么时候开始自动拆列？ | 提高阈值，减少行数较少的数据文件的自动拆列工作；这些数据的路径查询可能更多地读取稀疏编码中的数据 |
+| `variant_doc_materialization_min_rows` | 什么时候开始自动拆列？ | 提高阈值，减少行数较少的数据文件的自动拆列工作；这些数据的路径查询可能更多地读取稀疏编码中的数据 |
 | `variant_enable_doc_mode` | 是否额外保留完整文档？ | 开启后，整条文档查询可以直接读取文档表示；同时增加存储与写入开销 |
 
 下面用三个独立的例子说明参数变化。示例值用于解释规则，不是推荐默认值。
@@ -50,7 +50,7 @@ VARIANT 的基本调优需要回答三个问题：最多自动拆多少个子列
 `0` 表示关闭自动拆列，只适用于 4.2 及以后版本创建的列。4.2 之前创建的列在升级后保持原有行为：`0` 表示不限制子列数量，所有动态路径都拆成独立子列。参见 [稀疏列机制](./VARIANT.md#sparse-columns)。
 :::
 
-**什么时候拆：`variant_subcolumn_extraction_min_rows`。** `variant_subcolumn_extraction_min_rows = 0` 时，写入时就尝试自动拆列；设为 `1000000` 时，写出一个 50 万行的数据文件暂不自动拆列，后续 Compaction 写出 120 万行的数据文件时才尝试自动拆列。这个参数决定拆列时机，不决定最终拆出多少列。
+**什么时候拆：`variant_doc_materialization_min_rows`。** `variant_doc_materialization_min_rows = 0` 时，写入时就尝试自动拆列；设为 `1000000` 时，写出一个 50 万行的数据文件暂不自动拆列，后续 Compaction 写出 120 万行的数据文件时才尝试自动拆列。这个参数决定拆列时机，不决定最终拆出多少列。参数名中带有 doc，但不开启 DOC mode 时同样生效；4.2 版本之前它只在 DOC mode 下生效。
 
 **是否保留完整文档：`variant_enable_doc_mode`。** 假设 `payload` 已经拆出 128 个子列，查询经常执行 `SELECT payload`。`variant_enable_doc_mode = false` 时，整条文档需要从子列和稀疏编码中的数据重组；`variant_enable_doc_mode = true` 时，Doris 额外保存一份完整文档表示，查询可以直接读取它，代价是更多存储空间和写入工作。
 
@@ -96,7 +96,7 @@ CREATE TABLE event_analysis (
     event_id   BIGINT NOT NULL,
     payload    VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "128",
-        "variant_subcolumn_extraction_min_rows" = "0",
+        "variant_doc_materialization_min_rows" = "0",
         "variant_enable_doc_mode" = "false"
     )>
 )
@@ -116,7 +116,7 @@ WHERE event_time >= '2026-11-04 00:00:00'
 GROUP BY CAST(payload['event_type'] AS STRING);
 ```
 
-`variant_subcolumn_extraction_min_rows = 0` 表示不因数据文件行数推迟自动拆列；`variant_max_subcolumns_count = 128` 表示最多自动拆出 128 个动态子列。如果查询路径已成为独立子列，继续提高上限通常不会让这些路径变得更快。只有更多常查路径仍采用稀疏编码、路径查询成为瓶颈时，才考虑扩大上限。
+`variant_doc_materialization_min_rows = 0` 表示不因数据文件行数推迟自动拆列；`variant_max_subcolumns_count = 128` 表示最多自动拆出 128 个动态子列。如果查询路径已成为独立子列，继续提高上限通常不会让这些路径变得更快。只有更多常查路径仍采用稀疏编码、路径查询成为瓶颈时，才考虑扩大上限。
 
 用实际过滤和聚合 SQL 比较查询延迟、扫描量与导入吞吐，不要仅凭 JSON 的 key 数决定子列上限。
 
@@ -134,7 +134,7 @@ CREATE TABLE device_events_sparse (
     device_id  BIGINT NOT NULL,
     attributes VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "128",
-        "variant_subcolumn_extraction_min_rows" = "0",
+        "variant_doc_materialization_min_rows" = "0",
         "variant_enable_doc_mode" = "false"
     )>
 )
@@ -176,7 +176,7 @@ CREATE TABLE wide_snapshots_deferred (
     snapshot_id   BIGINT NOT NULL,
     payload       VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "128",
-        "variant_subcolumn_extraction_min_rows" = "1000",
+        "variant_doc_materialization_min_rows" = "1000",
         "variant_enable_doc_mode" = "false"
     )>
 )
@@ -194,7 +194,7 @@ CREATE TABLE wide_snapshots_row_only (
     snapshot_id   BIGINT NOT NULL,
     payload       VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "0",
-        "variant_subcolumn_extraction_min_rows" = "0",
+        "variant_doc_materialization_min_rows" = "0",
         "variant_enable_doc_mode" = "false"
     )>
 )
@@ -230,7 +230,7 @@ CREATE TABLE event_documents (
     event_id BIGINT NOT NULL,
     payload  VARIANT<PROPERTIES(
         "variant_max_subcolumns_count" = "2",
-        "variant_subcolumn_extraction_min_rows" = "0",
+        "variant_doc_materialization_min_rows" = "0",
         "variant_enable_doc_mode" = "true"
     )>
 )
@@ -250,6 +250,6 @@ WHERE CAST(payload['user_id'] AS BIGINT) = 101;
 
 ## 3. 高级设置
 
-**`variant_sparse_hash_shard_count`：调整稀疏编码的分片数。** 这个参数控制稀疏编码使用的物理分片数，未拆列路径按 hash 映射到对应分片，默认值为 1。它与表的 BUCKETS、Tablet 数量无关。开启 `variant_enable_doc_mode` 时，完整文档同样按这个分片数拆分存储。
+**`variant_doc_hash_shard_count`：调整稀疏编码的分片数。** 这个参数控制稀疏编码使用的物理分片数，未拆列路径按 hash 映射到对应分片，默认值为 1。它与表的 BUCKETS、Tablet 数量无关。开启 `variant_enable_doc_mode` 时，完整文档同样按这个分片数拆分存储。参数名中带有 doc，但不开启 DOC mode 时同样生效；4.0、4.1 版本不开启 DOC mode 时用 `variant_sparse_hash_shard_count` 设置分片数，4.2 版本起它的值会被忽略。
 
 例如，有 18 个长尾路径采用稀疏编码保存。设置为 `4` 时，这些路径映射到 4 个可用 shard；设置为 `16` 时，映射到 16 个可用 shard。查询一个长尾路径时，Doris 可以定位它所在的 shard，减少读取其他路径的数据。查询整条文档仍可能需要读取多个 shard。
