@@ -538,7 +538,7 @@ v1 VARIANT<
 > NULL
 ```
 
-Matched paths participate in Subcolumnization by default. If too many paths match and generate too many subcolumns, consider `variant_enable_typed_paths_to_sparse` (see [Column properties](#column-properties)).
+Matched paths always go through Subcolumnization and do not count toward `variant_max_subcolumns_count`, so avoid patterns that match a large number of paths.
 
 The Schema Template cannot be changed after the column is created. See [ALTER TABLE](#alter-table).
 
@@ -556,7 +556,7 @@ ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
 - `ADD COLUMN` of a nullable VARIANT column, with or without a Schema Template and properties.
 - `DROP COLUMN`, `RENAME COLUMN`, and `MODIFY COLUMN ... COMMENT '...'`.
 - `ADD INDEX` and `DROP INDEX`. An index with `field_pattern` can only be defined in `CREATE TABLE`.
-- On a column without a Schema Template: changing `NOT NULL` to `NULL`, and changing `variant_doc_materialization_min_rows`. `MODIFY COLUMN` takes the complete column definition; a property it omits takes its default value (see [Column properties](#column-properties)), so restate every property whose value differs from the default.
+- On a column without a Schema Template: changing `NOT NULL` to `NULL`, and changing `variant_doc_materialization_min_rows` (a column created before version 4.2 without DOC mode and with `variant_max_subcolumns_count = 0` can only keep it at `0`). `MODIFY COLUMN` takes the complete column definition; a property it omits takes its default value (see [Column properties](#column-properties)), so restate every property whose value differs from the default.
 
 Not supported:
 
@@ -588,8 +588,7 @@ CREATE TABLE example_table (
       'path_2' : STRING,
       properties(
           'variant_max_subcolumns_count' = '2048',
-          'variant_enable_typed_paths_to_sparse' = 'true',
-          'variant_sparse_hash_shard_count' = '64'
+          'variant_doc_hash_shard_count' = '64'
       )
   >
 );
@@ -597,13 +596,12 @@ CREATE TABLE example_table (
 
 | Property | Default | ALTER | Description |
 | --- | --- | --- | --- |
-| `variant_max_subcolumns_count` | `2048` | No | Maximum number of dynamic paths that go through Subcolumnization in one data file; paths with more non-null values are chosen first, and the other paths are stored in sparse columns. `0` means no limit. Range 0 to 100000; stay at or below 10000. The default is enough for most workloads; if the workload truly needs a much larger number of subcolumns, prefer [DOC mode](./variant-workload-guide.md#doc-mode-template). |
-| `variant_enable_typed_paths_to_sparse` | `false` | No | By default, Schema Template paths always go through Subcolumnization and do not count toward `variant_max_subcolumns_count`. When `true`, they count toward the limit and can be stored in sparse columns. |
-| `variant_sparse_hash_shard_count` | `1` | No | Number of physical sparse columns that sparse paths are distributed to by hash. Range 0 to 1024; `0` is treated as `1`. |
+| `variant_max_subcolumns_count` | `2048` | No | Maximum number of dynamic paths that go through Subcolumnization in one data file; paths with more non-null values are chosen first, and the other paths are stored in sparse columns. `0` means that no dynamic path goes through Subcolumnization and all of them are stored in sparse columns; in a column created before version 4.2, `0` still means no limit, see [Sparse columns](#sparse-columns). Range 0 to 100000; stay at or below 10000. The default is enough for most workloads; if the workload truly needs a much larger number of subcolumns, prefer [DOC mode](./variant-workload-guide.md#doc-mode-template). |
+| `variant_enable_typed_paths_to_sparse` | `false` | No | Cannot be set from version 4.2: a column definition that states it fails, also with `false`. Schema Template paths always go through Subcolumnization and do not count toward `variant_max_subcolumns_count`. A column that set it to `true` before version 4.2 keeps it: these paths count toward the limit and can be stored in sparse columns. `SHOW CREATE TABLE` before version 4.2 prints this property for every VARIANT column without DOC mode; remove it before running that output, and change `variant_sparse_hash_shard_count` there to `variant_doc_hash_shard_count` to keep the shard count. |
+| `variant_doc_hash_shard_count` | `1` | No | Number of physical sparse columns that sparse paths are distributed to by hash; with DOC mode, the number of columns that the stored document is split into. Range 0 to 1024; `0` is treated as `1`. Before version 4.2 it applied only with DOC mode. |
 | `variant_max_sparse_column_statistics_size` | `10000` | No | Maximum number of sparse paths in one data file whose statistics are recorded. Beyond it, a query on a path that has no statistics cannot skip the sparse columns. Range 1 to 50000. |
-| `variant_enable_doc_mode` | `false` | No | Enables DOC mode. It cannot be set together with `variant_max_subcolumns_count`, `variant_enable_typed_paths_to_sparse`, `variant_max_sparse_column_statistics_size`, or `variant_sparse_hash_shard_count`. |
-| `variant_doc_materialization_min_rows` | `0` | Only without a Schema Template | DOC mode only. A write with fewer rows stores only the document; Subcolumnization happens once compaction merges files up to the threshold. `0` performs Subcolumnization at write time. Range 0 to 1000000000. |
-| `variant_doc_hash_shard_count` | `64` | No | DOC mode only. Number of columns that the stored document is split into. Range 0 to 1024; `0` is treated as `1`. |
+| `variant_enable_doc_mode` | `false` | No | Enables DOC mode, which also stores the complete document. It can be set together with `variant_max_subcolumns_count`, `variant_doc_materialization_min_rows` and `variant_doc_hash_shard_count`, but not with `variant_max_sparse_column_statistics_size`. |
+| `variant_doc_materialization_min_rows` | `0` | Only without a Schema Template | A data file with fewer rows skips Subcolumnization and stores its dynamic paths in sparse columns (with DOC mode, only the document); Subcolumnization happens once compaction writes a data file that reaches the threshold. `0` performs Subcolumnization at write time. Range 0 to 1000000000. Before version 4.2 it applied only with DOC mode. |
 
 The **ALTER** column tells whether `ALTER TABLE ... MODIFY COLUMN` can change the property; see [ALTER TABLE](#alter-table). See [Wide columns](#wide-columns) for how to use the sparse and DOC mode properties.
 
@@ -722,6 +720,7 @@ Disabling norms does not affect `MATCH` filtering, but `score()` returns an erro
    );
    SELECT * FROM tbl WHERE v_str MATCH 'Doris';
    ```
+4. The path is stored in sparse columns: a subpath index needs a subcolumn. A path beyond `variant_max_subcolumns_count` has none, with `variant_max_subcolumns_count = 0` no dynamic path has one, and a data file with fewer rows than `variant_doc_materialization_min_rows` has no dynamic subcolumn until compaction writes a data file that reaches the threshold. Without a subcolumn, `SEARCH()` fails with "SEARCH index unavailable for Variant field", and `MATCH` falls back to matching the values row by row unless `enable_match_without_inverted_index = false`, which makes it fail. Pin the path with a Schema Template, or see [Sparse columns](#sparse-columns).
 
 ## Wide columns
 
@@ -729,27 +728,71 @@ When ingested data contains many distinct JSON keys, the number of subcolumns pr
 
 For workload selection guidance, see [Variant Workload Guide](./variant-workload-guide.md). This section only explains the mechanisms and their related properties.
 
-Note: these two mechanisms are mutually exclusive—enabling DOC encoding disables sparse columns, and vice versa.
+With DOC encoding, `variant_max_subcolumns_count`, `variant_doc_materialization_min_rows` and `variant_doc_hash_shard_count` apply as well: at most `variant_max_subcolumns_count` paths are extracted, and the other paths are read from the document; `variant_max_sparse_column_statistics_size` cannot be set together with DOC encoding. For the values to choose in each scenario, see [VARIANT Storage and Tuning](./variant-storage-tuning.md).
 
 ### Sparse columns
 
 **How it works**
 
 - The system ranks paths by non-null ratio / sparsity: high-frequency (less-sparse) paths go through Subcolumnization and are stored as independent subcolumns; remaining low-frequency (sparse) paths are merged and stored in sparse columns. The maximum number of extracted subcolumns is controlled by `variant_max_subcolumns_count`.
-- If a path is declared in a Schema Template, by default it will not be moved into sparse columns; set `variant_enable_typed_paths_to_sparse` to allow typed paths to be moved into sparse columns.
-- Sparse columns support sharding: distribute sparse subpaths across multiple sparse columns to reduce per-column read overhead and improve read efficiency. Use `variant_sparse_hash_shard_count` to specify how many sparse columns are physically stored.
+- A path declared in a Schema Template is not moved into sparse columns (except in a column that set `variant_enable_typed_paths_to_sparse = true` before version 4.2).
+- `variant_max_subcolumns_count = 0` stores every dynamic path in sparse columns, while Schema Template paths still go through Subcolumnization. Use it when values are mostly read whole. To send every dynamic path through Subcolumnization instead, for example to keep subpath indexes on them, set a count above the number of distinct paths:
+  ```sql
+  -- every dynamic path in sparse columns
+  v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+
+  -- every dynamic path as a subcolumn, as long as the paths fit in the count
+  v VARIANT<properties('variant_max_subcolumns_count' = '2048')>
+  ```
+
+  From version 4.2, this meaning applies to every statement that creates a table, including `CREATE TABLE`, `CREATE TABLE LIKE` and `CREATE TABLE AS SELECT`. A column created before version 4.2 keeps its old behavior: `0` sends every dynamic path through Subcolumnization, with no limit. `SHOW CREATE TABLE` marks a VARIANT column with a comment after its type: `/* variant_serialize_type = v1 */` for a column created before version 4.2 and `/* variant_serialize_type = v2 */` for one created from version 4.2. The comment only shows the behavior: running the output skips it and creates a new column.
+
+  ```sql
+  -- Version 4.1
+  CREATE TABLE old_t (
+      k INT,
+      v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+  )
+  DUPLICATE KEY(k) DISTRIBUTED BY HASH(k) BUCKETS 1;
+  INSERT INTO old_t VALUES (1, PARSE_TO_VARIANT('{"a": 1, "b": "x"}'));
+
+  -- After upgrading to version 4.2: new_t has the same definition as old_t, with a count of 0
+  CREATE TABLE new_t LIKE old_t;
+  INSERT INTO new_t SELECT * FROM old_t;
+
+  SET describe_extend_variant_column = true;
+  DESC old_t;  -- lists the subcolumns v.a and v.b, because old_t keeps the old meaning
+  DESC new_t;  -- lists no subcolumn, because new_t stores a and b in sparse columns
+  SHOW CREATE TABLE old_t;  -- the type of v is followed by /* variant_serialize_type = v1 */
+  SHOW CREATE TABLE new_t;  -- the type of v is followed by /* variant_serialize_type = v2 */
+  ```
+
+  When `CREATE TABLE AS SELECT` stores a VARIANT that the query computes, such as `PARSE_TO_VARIANT(...)`, `TRY_PARSE_TO_VARIANT(...)` or a subpath `v['a']`, in a new column, the column takes the `variant_max_subcolumns_count` of the expression's type: `0` for `PARSE_TO_VARIANT` and `TRY_PARSE_TO_VARIANT`, so every dynamic path is stored in sparse columns, and the count of the source column for a subpath. To get the default limit, cast the expression to VARIANT; `CAST(PARSE_TO_VARIANT(s) AS VARIANT)` has a limit of `2048`.
+- Sparse columns support sharding: distribute sparse subpaths across multiple sparse columns to reduce per-column read overhead and improve read efficiency. Use `variant_doc_hash_shard_count` to specify how many sparse columns are physically stored. Versions 4.0 and 4.1 set this shard count with `variant_sparse_hash_shard_count`; from version 4.2 it is still accepted, but its value is ignored.
+
+:::caution Rollback
+After upgrading to version 4.2, once a new VARIANT column is created, do not roll back to a version before 4.2. New columns are stored with the 4.2 behavior described on this page: for example, a version before 4.2 reads the `0` of a new column with `variant_max_subcolumns_count = 0` as no limit, and its compaction drops the paths that are stored only in sparse columns. These statements create new VARIANT columns:
+
+- `CREATE TABLE` with a VARIANT column.
+- `CREATE TABLE LIKE`, or the output of `SHOW CREATE TABLE` run again, for a table with a VARIANT column, also one created before version 4.2.
+- `CREATE TABLE AS SELECT` whose result has a VARIANT column.
+- `ALTER TABLE ... ADD COLUMN` of a VARIANT column, also on a table created before version 4.2.
+- An async materialized view with a VARIANT column.
+
+In `SHOW CREATE TABLE`, a new column is marked `/* variant_serialize_type = v2 */`.
+:::
 
 **Reference notes**
 
 - If most keys have similar non-null ratios (little sparsity contrast), it’s hard to identify truly sparse paths and the benefit of sparse columns is reduced.
 - `variant_max_subcolumns_count` defaults to `2048`, which is already enough for most workloads. Avoid raising it aggressively just to pre-allocate more extracted subcolumns; if the workload truly needs large-scale Subcolumnization, prefer [DOC mode](./variant-workload-guide.md#doc-mode-template). The practical upper bound is still recommended to stay ≤ `10000`.
-- `variant_sparse_hash_shard_count` can be roughly estimated as “number of sparse paths / 128”. Example: total JSON keys ≈ 10,000, `variant_max_subcolumns_count = 2000`, then sparse paths ≈ 8000, so `variant_sparse_hash_shard_count` can start around `8000/128`.
+- `variant_doc_hash_shard_count` can be roughly estimated as “number of sparse paths / 128”. Example: total JSON keys ≈ 10,000, `variant_max_subcolumns_count = 2000`, then sparse paths ≈ 8000, so `variant_doc_hash_shard_count` can start around `8000/128`.
 
 ### DOC encoding (DOC mode)
 
 **How it works**
 
-- Paths can still go through Subcolumnization for path-based queries, and the original JSON is additionally stored as a stored field to return the full JSON document efficiently.
+- Paths can still go through Subcolumnization for path-based queries, up to `variant_max_subcolumns_count` paths, and the original JSON is additionally stored as a stored field to return the full JSON document efficiently.
 - DOC encoding supports sharding: the original JSON is split into multiple columns for storage and reassembled when querying the full JSON. Use `variant_doc_hash_shard_count` to specify the number of DOC shards.
 - For small-batch writes, Subcolumnization can be skipped and deferred to later merges. This is controlled by `variant_doc_materialization_min_rows`. For example, if `variant_doc_materialization_min_rows = 10000`, writes below 10,000 rows will only store the original JSON and won’t trigger Subcolumnization for that batch.
 - For ultra-wide workloads, DOC mode is also the more stable choice when Subcolumnization scale approaches ten-thousand subcolumns. Compared with default eager Subcolumnization, compaction memory can drop by about two-thirds, and sparse wide-column ingest throughput can improve by about 5-10x.
@@ -774,7 +817,10 @@ CREATE TABLE example_table (
 
 - DOC mode requires `variant_enable_doc_mode = true`.
 - In DOC mode, Schema Template fields are limited to strings, integers, `FLOAT`, `DOUBLE`, `BOOLEAN`, and arrays of these types.
-- `variant_doc_hash_shard_count` can be roughly estimated as “total JSON keys / 128”.
+- With DOC mode, `variant_doc_hash_shard_count` can be roughly estimated as “total JSON keys / 128”.
+- A new DOC mode column has `1` shard by default (64 before version 4.2).
+- From version 4.2, `variant_doc_hash_shard_count` sets the shard count with and without DOC mode. The `SHOW CREATE TABLE` output of a DOC mode table created before version 4.2 runs and keeps its shard count; it does not state `variant_max_subcolumns_count`, so the new column extracts at most `2048` paths unless you state it.
+- A DOC mode column created before version 4.2 keeps its old behavior: once a data file reaches the row threshold, every path is extracted, and the column keeps the shard count it was created with.
 
 ### Behavior at limits and tuning suggestions
 
