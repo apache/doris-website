@@ -768,6 +768,16 @@ CREATE TABLE IF NOT EXISTS tbl (
   `CREATE TABLE AS SELECT` 把查询计算出的 VARIANT（如 `PARSE_TO_VARIANT(...)`、`TRY_PARSE_TO_VARIANT(...)`、子路径 `v['a']`）存为新列时，`variant_max_subcolumns_count` 取表达式类型的值：`PARSE_TO_VARIANT` 和 `TRY_PARSE_TO_VARIANT` 为 `0`，动态路径都存入稀疏列；子路径取源列的值。需要默认上限时，把表达式 CAST 为 VARIANT，例如 `CAST(PARSE_TO_VARIANT(s) AS VARIANT)` 的上限为 `2048`。
 - 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
 
+:::caution 回滚
+升级到 4.2 版本后，一旦创建了新的 VARIANT 列，就不能再回滚到 4.2 之前的版本。新列按本页描述的 4.2 语义存储：例如 `variant_max_subcolumns_count` 为 `0` 的新列，旧版本会把 `0` 当作不限制，它的 Compaction 会丢掉只保存在稀疏列中的路径。以下方式都会创建新的 VARIANT 列：
+
+- `CREATE TABLE` 定义 VARIANT 列。
+- `CREATE TABLE LIKE`，或重新执行 `SHOW CREATE TABLE` 的输出，表中有 VARIANT 列，包括复制 4.2 版本之前创建的表。
+- `CREATE TABLE AS SELECT` 的结果中有 VARIANT 列。
+- `ALTER TABLE ... ADD COLUMN` 新增 VARIANT 列，在 4.2 版本之前创建的表上新增也一样。
+- 新建的异步物化视图中有 VARIANT 列。
+:::
+
 **参考说明**
 
 - JSON key 总量大，但各个 JSON key 的“非空比例/稀疏度”都比较接近、缺乏区分度：这种情况下很难区分哪些列是真正稀疏的，稀疏列机制的效果会被降低。

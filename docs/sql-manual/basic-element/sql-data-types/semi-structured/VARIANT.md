@@ -768,6 +768,16 @@ With DOC encoding, `variant_max_subcolumns_count`, `variant_subcolumn_extraction
   When `CREATE TABLE AS SELECT` stores a VARIANT that the query computes, such as `PARSE_TO_VARIANT(...)`, `TRY_PARSE_TO_VARIANT(...)` or a subpath `v['a']`, in a new column, the column takes the `variant_max_subcolumns_count` of the expression's type: `0` for `PARSE_TO_VARIANT` and `TRY_PARSE_TO_VARIANT`, so every dynamic path is stored in sparse columns, and the count of the source column for a subpath. To get the default limit, cast the expression to VARIANT; `CAST(PARSE_TO_VARIANT(s) AS VARIANT)` has a limit of `2048`.
 - Sparse columns support sharding: distribute sparse subpaths across multiple sparse columns to reduce per-column read overhead and improve read efficiency. Use `variant_sparse_hash_shard_count` to specify how many sparse columns are physically stored.
 
+:::caution Rollback
+After upgrading to version 4.2, once a new VARIANT column is created, do not roll back to a version before 4.2. New columns are stored with the 4.2 behavior described on this page: for example, a version before 4.2 reads the `0` of a new column with `variant_max_subcolumns_count = 0` as no limit, and its compaction drops the paths that are stored only in sparse columns. These statements create new VARIANT columns:
+
+- `CREATE TABLE` with a VARIANT column.
+- `CREATE TABLE LIKE`, or the output of `SHOW CREATE TABLE` run again, for a table with a VARIANT column, also one created before version 4.2.
+- `CREATE TABLE AS SELECT` whose result has a VARIANT column.
+- `ALTER TABLE ... ADD COLUMN` of a VARIANT column, also on a table created before version 4.2.
+- An async materialized view with a VARIANT column.
+:::
+
 **Reference notes**
 
 - If most keys have similar non-null ratios (little sparsity contrast), it’s hard to identify truly sparse paths and the benefit of sparse columns is reduced.
