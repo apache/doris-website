@@ -77,7 +77,7 @@ MySQL 客户端通过 `--ssl-mode` 参数控制连接行为，可选模式如下
 | PREFERRED（默认） | 优先尝试 SSL 连接，失败则回退到普通连接 | `mysql -uroot -P9030 -h127.0.0.1` |
 | DISABLE | 禁用 SSL，使用普通连接 | `mysql --ssl-mode=DISABLE -uroot -P9030 -h127.0.0.1` |
 | REQUIRED | 强制使用 SSL 连接 | `mysql --ssl-mode=REQUIRED -uroot -P9030 -h127.0.0.1` |
-| VERIFY_CA | 强制 SSL 并校验服务端证书的 CA（mTLS 场景使用） | 参考 [配置双向认证（mTLS）](#配置双向认证-mtls) |
+| VERIFY_CA | 强制 SSL 并校验服务端证书的 CA（mTLS 场景使用） | 参考 [配置双向认证（mTLS）](#配置双向认证mtls) |
 
 :::note 注意
 `--ssl-mode` 参数是 MySQL 5.7.11 版本引入的，低于此版本的 MySQL 客户端请参考 [MySQL 官方文档](https://dev.mysql.com/doc/connector-j/en/connector-j-connp-props-security.html)。
