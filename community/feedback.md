@@ -67,7 +67,7 @@ To help the community locate the issue quickly, include the following informatio
 
 - **Describe the issue in detail**: Provide logs, key error messages, and the troubleshooting and analysis you have already performed.
 - **Minimize the issue**: Narrow the scope, and strip away business context that is unrelated to the issue.
-- **Provide reproduction steps**: Attach the minimum SQL, configuration, or script that reproduces the issue.
+- **Provide reproduction steps**: Attach the minimal SQL, configuration, or script that reproduces the issue.
 - **Focus on the issue itself**: Decouple from the business or scenario as much as possible. If scenario information must be retained, provide clear and explicit context.
 
 ## Related Links
