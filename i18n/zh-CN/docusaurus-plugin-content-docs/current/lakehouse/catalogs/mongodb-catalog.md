@@ -145,7 +145,36 @@ SELECT count(*) FROM internal.reporting.order_copy;
 
 读取偏好和 readConcern 的优先级为：**显式语句或会话值 > URI 选项 > Catalog 属性 > 默认值**。会话值为 `inherit` 时，采用 URI 和 Catalog 共同确定的有效策略。连接、选服、socket 和池大小则由 **Catalog 参数覆盖 URI 中的对应传输选项**。超时和客户端上限不决定 split 数量。
 
-TLS 和认证 URI 选项会传给驱动，引用的文件需在 FE、BE 上可用。关闭 TLS 主机名校验会被拒绝。Catalog 不提供证书或凭据轮换服务，也不提供通用的跨查询、跨源准入服务。请使用已在自身部署中验证的认证和 TLS 组合。
+### TLS 连接
+
+在 `mongodb.uri` 中设置 `tls=true` 启用加密连接。FE 元数据访问使用 Java 驱动，BE 数据读取使用 C 驱动，两端需要分别配置证书材料。
+
+| 进程 | 服务端证书信任配置 | 双向 TLS 的客户端证书 |
+| --- | --- | --- |
+| 每个 FE | 需要自定义信任库时，通过 `javax.net.ssl.trustStore` 及其密码、类型配置 JVM truststore。 | 通过 `javax.net.ssl.keyStore` 及其密码、类型配置 JVM keystore。 |
+| 每个参与读取的 BE | URI 的 `tlsCAFile` 指定受信任 CA 的 PEM 文件。 | `tlsCertificateKeyFile` 指定客户端证书和私钥的 PEM 文件；私钥加密时，通过 `tlsCertificateKeyFilePassword` 提供密码。 |
+
+使用私有 CA 时，将 CA 证书导入 JVM truststore，并在每个 FE 的 `fe.conf` 中，向已有的 `JAVA_OPTS_FOR_JDK_17` 追加以下选项，保留其他 JVM 参数：
+
+```text
+-Djavax.net.ssl.trustStore=<truststore-file>
+-Djavax.net.ssl.trustStorePassword=<truststore-password>
+-Djavax.net.ssl.trustStoreType=PKCS12
+```
+
+MongoDB 要求客户端证书时，还需追加：
+
+```text
+-Djavax.net.ssl.keyStore=<client-keystore-file>
+-Djavax.net.ssl.keyStorePassword=<keystore-password>
+-Djavax.net.ssl.keyStoreType=PKCS12
+```
+
+修改这些启动参数后重启 FE。参数作用于 FE JVM，不是单个 Catalog 的配置。URI 中的 `tlsCAFile`、`tlsCertificateKeyFile` 等文件选项不会配置 Java 驱动的 truststore/keystore。每个 FE 都应具备所需的 JVM store 文件，每个参与读取的 BE 都应能访问 URI 中指定路径的 CA 和客户端 PEM 文件。
+
+TLS 可以配合 SCRAM 用户名密码认证。双向 TLS 也可以继续使用 SCRAM；提供客户端证书不会自动选择 MongoDB X.509 数据库认证。使用 X.509 认证时，在 URI 中设置 `authMechanism=MONGODB-X509&authSource=%24external`，并在 MongoDB 的 `$external` 数据库中为证书 subject 授予权限。已验证的 X.509 配置中，FE 和 BE 使用同一个已授权证书身份，其他身份组合需要另行验收。
+
+已验证的组合包括：MongoDB 7.0.28/8.0.20 副本集和 mongos 上，校验服务端证书的 TLS 配合 SCRAM-SHA-1/SCRAM-SHA-256，以及双向 TLS 配合 SCRAM-SHA-256/MONGODB-X509。CA、主机名、客户端证书或私钥配置错误时连接失败。关闭 TLS 主机名校验会被拒绝。证书或凭据轮换服务、通用的跨查询或跨源准入仍不在此 Catalog 的范围内。
 
 ## Schema 和 BSON 类型
 
@@ -190,7 +219,9 @@ Schema 选择**不会通过采样数据推断类型**。后文的 range 边界�
 
 ### 日期时间和 Decimal 精度
 
-BSON Date 只有毫秒精度，不保存原始时区标签。`mongodb.datetime_timezone` 固定为 UTC，Doris 会话的 `time_zone` 控制返回的本地日期时间。提高 DATETIME 精度会补齐毫秒值，不能恢复 MongoDB 未保存的微秒。非零毫秒值不能静默截断为 `DATETIME(0)`：`type_mismatch=null` 时返回 NULL，`error` 时查询失败。
+BSON Date 只有毫秒精度，不保存原始时区标签。原生映射将其转换为 UTC DATETIME，`mongodb.datetime_timezone` 仅接受 UTC。修改 Doris 会话的 `time_zone` 不会平移这些映射后的字段值。需要本地日期时间时，应显式转换，例如 `CONVERT_TZ(created, 'UTC', 'Asia/Shanghai')` 会将 `2024-01-01 00:00:00.123` 转为 `2024-01-01 08:00:00.123`。
+
+提高 DATETIME 精度会补齐毫秒值，不能恢复 MongoDB 未保存的微秒。非零毫秒值不能静默截断为 `DATETIME(0)`：`type_mismatch=null` 时返回 NULL，`error` 时查询失败。
 
 Decimal 同样要求目标精度和标度可以精确表达源值。例如，`12.34` 可放入 `DECIMAL(18,2)`，但放入 `DECIMAL(18,1)` 需要舍入，因此报错或返回 NULL。非有限 Decimal128 值没有对应的 Doris DECIMAL 表示，需要时保留为 Extended JSON。
 
