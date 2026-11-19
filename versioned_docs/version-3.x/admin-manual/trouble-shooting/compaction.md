@@ -136,3 +136,39 @@ If the same BE runs four compaction tasks with this input size concurrently, the
 - When creating a table or adding partitions, choose partition and bucket counts based on the expected row count as well as the compressed data size. Select bucket keys that distribute data evenly to prevent a single tablet from accumulating too many rows. See [Data Bucketing](../../table-design/data-partitioning/data-bucketing.md). The bucket count of an existing partition cannot be changed directly; for an existing oversized tablet, consider recreating the table and migrating the data.
 - When memory is limited, consider reducing Base Compaction concurrency to leave more memory available for each task. This only reduces the combined memory peak of multiple tasks on the same BE; it does not reduce the map of an individual task. If a single map already exceeds the available memory, reducing concurrency alone may still be insufficient.
 - Vertical compaction, a smaller `compaction_batch_size`, or fewer columns in `vertical_compaction_num_columns_per_group` can reduce memory used for reading and processing column groups, but do not reduce the size of the complete rowid map. `compaction_memory_bytes_limit` is used to estimate the read batch size and does not impose a hard cap on the rowid map or the entire compaction task.
+
+## Choosing and Manually Triggering Compaction
+
+Background compaction is normally sufficient. Before intervening, inspect the tablet's rowsets, `cumulative point`, current tasks, and errors with the [Compaction status API](../open-api/be-http/compaction-status). Choose the operation based on the rowsets to merge:
+
+The rowset ranges and local-version-chain checks below describe the **storage-compute coupled BE** implementation. Storage-compute separated deployments use Cloud Compaction; the complete-local-chain rule must not be applied to that path.
+
+| Operation | Appropriate use | Limits |
+| --- | --- | --- |
+| Cumulative | Reduce small incremental rowsets on the incremental side of the cumulative point | Uses the table's compaction policy and its rowset selection rules; it does not merge the entire history |
+| Base | Merge eligible historical rowsets before the cumulative point | Candidate filtering and score budgets can select only part of the history; one Base task need not produce a single rowset for the whole tablet |
+| Full | Deliberately merge the tablet's complete local version chain | Requires a complete, continuous chain; cannot recreate missing data. It rewrites more data and can consume substantial CPU, I/O, and memory |
+
+Base and Full are therefore not interchangeable. Even after repeated Base tasks, newer incremental rowsets can remain beyond the cumulative point. Full selects the input chain for that task; loads that arrive afterward can create new rowsets again.
+
+A low score does not mean that only one rowset remains or that no merge is possible. Automatic selection balances read cost against write amplification, size, time, and resource limits. For example, Base can become eligible through a rowset-count condition, the ratio of cumulative data to base data, **or** elapsed time. There is no universal rule that all compaction stops when a tablet's score is 5 or below. Manually requesting Base or Cumulative still runs their selection checks; a request can report that no suitable versions exist. Use Full only when merging the complete chain is justified and resources permit it, rather than lowering thresholds or forcing Full after every load.
+
+### Manual HTTP example
+
+For a storage-compute coupled cluster, use an account with ADMIN privileges and a reachable BE HTTP endpoint. First identify the tablet and the BE hosting the replica using `SHOW TABLETS FROM db_name.table_name`, `SHOW TABLET tablet_id`, and `SHOW BACKENDS`. The BE HTTP request acts on the replica hosted by that BE, not all replicas in the cluster.
+
+```shell
+# Inspect the rowsets and cumulative point before choosing an operation.
+curl -u '<user>:<password>' \
+  'http://<be-host>:8040/api/compaction/show?tablet_id=<tablet-id>'
+
+# Example: merge the complete chain, after checking its continuity and resources.
+curl -u '<user>:<password>' -X POST \
+  'http://<be-host>:8040/api/compaction/run?tablet_id=<tablet-id>&compact_type=full'
+
+# Check the manual task and then inspect rowsets again.
+curl -u '<user>:<password>' \
+  'http://<be-host>:8040/api/compaction/run_status?tablet_id=<tablet-id>'
+```
+
+The run endpoint supports `base`, `cumulative`, and `full`. A successful submission is not proof that compaction has finished: check the task status, resulting rowsets, and BE logs. A version gap, a conflicting task, or no useful input can prevent the requested merge. See the [manual Compaction API](../open-api/be-http/compaction-run) for response fields.

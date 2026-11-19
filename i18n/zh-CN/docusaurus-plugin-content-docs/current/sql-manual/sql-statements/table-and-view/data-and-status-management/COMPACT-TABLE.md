@@ -10,7 +10,7 @@
 
 手动触发一次 Compaction。Doris 提供两种粒度：
 
-- `ADMIN COMPACT TABLE`：对指定表分区下的所有副本触发一次 Compaction。仅存算一体模式支持。
+- `ADMIN COMPACT TABLE`：对指定表分区下的所有副本触发一次 Compaction。从 4.1.1 起支持 FULL 和存算分离模式；4.0、4.1.0 只支持存算一体的 Base/Cumulative。
 - `ADMIN COMPACT TABLET`：对指定 Tablet 的所有副本触发一次 Compaction，自 4.1.4 版本开始支持。存算一体与存算分离模式均支持。
 
 ## 语法
@@ -18,7 +18,7 @@
 ```sql
 ADMIN COMPACT TABLE <table_name>
 PARTITION <partition_name>
-WHERE TYPE={ BASE | CUMULATIVE }
+WHERE TYPE={ BASE | CUMULATIVE | FULL }
 ```
 
 ```sql
@@ -34,7 +34,7 @@ WHERE TYPE={ BASE | CUMULATIVE | FULL }
 
 2. `<partition_name>`：待触发 Compaction 的分区名
 
-3. `TYPE={ BASE | CUMULATIVE }` : 其中 BASE 是指触发 Base Compaction，CUMULATIVE 是指触发 Cumulative Compaction，具体可以参考 COMPACTION 章节
+3. `TYPE={ BASE | CUMULATIVE | FULL }` : 其中 BASE、CUMULATIVE、FULL 分别触发对应类型的 Compaction；分区级 FULL 自 4.1.1 起支持。具体可以参考 [COMPACTION](../../../../admin-manual/trouble-shooting/compaction-principles) 章节
 
 **ADMIN COMPACT TABLET**
 
@@ -81,21 +81,15 @@ WHERE TYPE={ BASE | CUMULATIVE | FULL }
     ADMIN COMPACT TABLET 10086 WHERE TYPE='BASE';
     ```
 
+4. 触发表 tbl 分区 par01 的 Full Compaction（4.1.1 起支持）。
+
+    ```sql
+    ADMIN COMPACT TABLE tbl PARTITION par01 WHERE TYPE='FULL';
+    ```
+
 ## 注意事项（Usage Note）
 
-1. 存算分离模式不支持 `ADMIN COMPACT TABLE`，在此模式下执行会报错，例如：
-
-    ```sql
-    ADMIN COMPACT TABLE tbl PARTITION par01 WHERE TYPE='CUMULATIVE';
-    ```
-
-    报错信息如下：
-
-    ```sql
-    ERROR 1105 (HY000): errCode = 2, detailMessage = Unsupported operation
-    ```
-
-    此场景请改用 `ADMIN COMPACT TABLET`。
+1. 版本与部署范围：4.0、4.1.0 的 `ADMIN COMPACT TABLE` 只支持存算一体的 Base/Cumulative；从 4.1.1 起增加 FULL 与存算分离支持。`ADMIN COMPACT TABLET` 则要求 4.1.4 或更新版本。存算分离任务需要可用的计算组，由 FE 解析目标 BE 后下发。
 
 2. `ADMIN COMPACT TABLET` 只支持内表（OLAP 表）的 Tablet。如果 Tablet ID 不存在、所属库表已被删除，或所属 Index 处于不可见状态，会直接报错，例如：
 

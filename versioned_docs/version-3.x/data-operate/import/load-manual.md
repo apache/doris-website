@@ -38,6 +38,10 @@ Apache Doris offers various methods for importing and integrating data, allowing
     
 Each import method in Doris is an implicit transaction by default. For more information on transactions, refer to [Transactions](../transaction.md).
 
+## Query Performance After Loading
+
+Once a load transaction is committed and its data is visible, queries do not need to wait for background compaction. However, many loads, especially frequent small batches, can accumulate rowsets/segments and increase read and merge costs. Batch writes appropriately and monitor compaction backlog and resource usage; do not run Full Compaction after every load as a routine step. See the [Compaction guide](../../admin-manual/trouble-shooting/compaction) for compaction types, score behavior, and manual-operation limits.
+
 ### Quick Overview of Import Methods
 
 Doris import process mainly involves various aspects such as data sources, data formats, import methods, error handling, data transformation, and transactions. You can quickly browse the scenarios suitable for each import method and the supported file formats in the table below.

@@ -27,6 +27,10 @@
 
 Apache Doris provides multiple data load and integration methods to help you write data into the database from different sources. Starting from typical business scenarios, this document explains how to choose the most suitable solution among four categories: **real-time writes**, **streaming sync**, **batch loading**, and **external data source integration**.
 
+## Query Performance After Loading
+
+Once a load transaction is committed and its data is visible, queries do not need to wait for background compaction. However, many loads, especially frequent small batches, can accumulate rowsets/segments and increase read and merge costs. Batch writes appropriately and monitor compaction backlog and resource usage; do not run Full Compaction after every load as a routine step. See the [Compaction guide](../../admin-manual/trouble-shooting/compaction-principles) for compaction types, score behavior, and manual-operation limits.
+
 ## Quick Navigation
 
 Based on data source and timeliness requirements, you can refer to the following table to quickly locate the recommended load method:
