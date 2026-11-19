@@ -91,7 +91,7 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 
 ### 基于 LDAP 的认证方案
 
-请参阅[基于 LDAP 的认证方案](./ldap.md)。
+请参阅[基于 LDAP 的认证方案](./authentication/ldap.md)。
 
 ## 鉴权
 
