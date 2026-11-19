@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/admin-manual/auth/authentication/internal.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/internal.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
-    "sourceTechnicalHash": "d5738b96e3aa6a793cc4afd98e9085754b02242b8ca59f4af0cad9f8510e552d",
-    "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "ca7bbcba3e753882196774cda66c2051797fa5fa3e5ad6b4dd2eddbdc4c4aa5b",
+    "sourceTechnicalHash": "58174f5f114911e103eda569b3d73db0007b188b9215d16107b05d35f6d54b0d",
+    "targetHash": "3f22d48ec4e201c8d1cd565fd88ec9a94721081dc2e396fa72bcf78453738b02",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T15:08:16.763Z",
+    "translatedAt": "2026-11-19T06:47:09.523Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
-      "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
+      "sourceHash": "ca7bbcba3e753882196774cda66c2051797fa5fa3e5ad6b4dd2eddbdc4c4aa5b",
+      "targetHash": "3f22d48ec4e201c8d1cd565fd88ec9a94721081dc2e396fa72bcf78453738b02",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept + Configuration parameters + Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- Тип материала: понятия + параметры конфигурации + устранение неполадок -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: User and privilege management / Login authentication troubleshooting / Password policy configuration -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: управление пользователями и правами / устранение неполадок при входе / настройка политик паролей -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/admin-manual/auth/authentication/internal.md",
+        "blob": "7997092142df37e6d5934442b494ce274e911628"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/internal.md",
+        "blob": "53b4c2f4a02c24c75526547e0f28f52ff800ef51"
+      }
     }
   }
 }

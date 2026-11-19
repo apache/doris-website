@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
-    "sourceHash": "de97f7d0b2319c502aa33ebe6553d92e0db0a546233e3838aae400d89a2cc5a7",
-    "sourceTechnicalHash": "97f2a3eebc1eee23ab8e7492c0b5469f4d5f3b9615b17b26a47ba9ab483147df",
-    "targetHash": "3c8654d914fc4fa3460aa48bf8fdf654fef7f163956963c2bd712e8ea16ce8f5",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "60828ccfa1abd4c7c363446d5a65ab269801e09d3e279e092d22e932b0551a09",
+    "sourceTechnicalHash": "86fcefb8afe917f81601cda800812bbd752fe939f870f624193e856d6daa25ce",
+    "targetHash": "08ab70bc62105e769fe075c9ab3ba86ea68a0b35f70330f65bc90e5dcff12251",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-11-13T06:36:43.373Z",
+    "translatedAt": "2026-11-19T06:56:51.208Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,12 +22,12 @@
       "reason": "chinese-reference-changed",
       "attempts": 3,
       "acceptedWithWarnings": true,
-      "sourceHash": "de97f7d0b2319c502aa33ebe6553d92e0db0a546233e3838aae400d89a2cc5a7",
-      "targetHash": "3c8654d914fc4fa3460aa48bf8fdf654fef7f163956963c2bd712e8ea16ce8f5",
+      "sourceHash": "60828ccfa1abd4c7c363446d5a65ab269801e09d3e279e092d22e932b0551a09",
+      "targetHash": "08ab70bc62105e769fe075c9ab3ba86ea68a0b35f70330f65bc90e5dcff12251",
       "warnings": [
         {
           "check": "protected-content",
-          "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"AVAILABLE\"]; received [\"inlineCode\",null,null,\"kubectl get fdb\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"kubectl get fdb\"]; received [\"inlineCode\",null,null,\"AVAILABLE\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"STATUS\"]; received [\"inlineCode\",null,null,\"Running\"]"
+          "message": "Restore protected source content:\nprotected node 14: expected [\"inlineCode\",null,null,\"STATUS\"]; received [\"inlineCode\",null,null,\"Running\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"Running\"]; received [\"inlineCode\",null,null,\"STATUS\"]\nprotected node 61: expected [\"inlineCode\",null,null,\"IsDefault\"]; received [\"inlineCode\",null,null,\"true\"]"
         }
       ],
       "history": [
@@ -36,7 +36,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"STATUS\"]; received [\"inlineCode\",null,null,\"Running\"]\nprotected node 18: expected [\"inlineCode\",null,null,\"Running\"]; received [\"inlineCode\",null,null,\"STATUS\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1000\",\"132\",\"17.6\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4.4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"7.1\",\"7.3.69\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1000\",\"132\",\"17.6\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4.4\",\"5\",\"5\",\"5\",\"5\",\"7.1\",\"7.3.69\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"STATUS\"]; received [\"inlineCode\",null,null,\"Running\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"Running\"]; received [\"inlineCode\",null,null,\"STATUS\"]"
             }
           ]
         },
@@ -45,7 +45,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"AVAILABLE\"]; received [\"inlineCode\",null,null,\"kubectl get fdb\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"kubectl get fdb\"]; received [\"inlineCode\",null,null,\"AVAILABLE\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"STATUS\"]; received [\"inlineCode\",null,null,\"Running\"]"
+              "message": "Restore protected source content:\nprotected node 14: expected [\"inlineCode\",null,null,\"STATUS\"]; received [\"inlineCode\",null,null,\"Running\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"Running\"]; received [\"inlineCode\",null,null,\"STATUS\"]"
             }
           ]
         },
@@ -54,7 +54,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"AVAILABLE\"]; received [\"inlineCode\",null,null,\"kubectl get fdb\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"kubectl get fdb\"]; received [\"inlineCode\",null,null,\"AVAILABLE\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"STATUS\"]; received [\"inlineCode\",null,null,\"Running\"]"
+              "message": "Restore protected source content:\nprotected node 14: expected [\"inlineCode\",null,null,\"STATUS\"]; received [\"inlineCode\",null,null,\"Running\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"Running\"]; received [\"inlineCode\",null,null,\"STATUS\"]\nprotected node 61: expected [\"inlineCode\",null,null,\"IsDefault\"]; received [\"inlineCode\",null,null,\"true\"]"
             }
           ]
         }
@@ -63,11 +63,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-        "blob": "19846e3aa259958a1031a63310830e81abd9e25e"
+        "blob": "34bedcb9b4525b99021742671fc6bff50cea6272"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-        "blob": "0ed0d2c753390f3940b12b96945419ff2852d331"
+        "blob": "8788faa3126c0451aabffe862a8d9a01b73b028c"
       }
     }
   }
