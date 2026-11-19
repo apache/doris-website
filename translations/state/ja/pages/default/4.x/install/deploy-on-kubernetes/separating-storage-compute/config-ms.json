@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "a7b4343fc33c36c4f488f8a65088e166ad1acc2680d77227755adb440737d064",
-    "sourceTechnicalHash": "0d0f9a2daae576561183d59fe1bb417f8235613f4c82e094a46d7efd3592e7ce",
-    "targetHash": "c0f13d0f4b2cf604517a411a7ed4a776e6de3688ec38bfa89c932380d764b889",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "626d1abea0179768ecd4cf5ec4525bc3a8675b2c0c8d38ba43ae5ee246ecf3f5",
+    "sourceTechnicalHash": "a48370766a1cd819ece493a659c0b6853106bfaf529e6747c72968ca689bb9bd",
+    "targetHash": "5329d91d45f3555a261df18fcd7cadb4f67b55ffb05f872833401d12bf59618e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T01:12:08.628Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-19T05:14:42.952Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "626d1abea0179768ecd4cf5ec4525bc3a8675b2c0c8d38ba43ae5ee246ecf3f5",
+      "targetHash": "5329d91d45f3555a261df18fcd7cadb4f67b55ffb05f872833401d12bf59618e",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 52: expected [\"inlineCode\",null,null,\"http_token\"]; received [\"inlineCode\",null,null,\"doris_cloud.conf\"]\nprotected node 53: expected [\"inlineCode\",null,null,\"doris_cloud.conf\"]; received [\"inlineCode\",null,null,\"http_token\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"120\",\"180\",\"180\",\"2\",\"2\",\"2\",\"3\",\"30\",\"300\",\"300\",\"4\",\"4\",\"4\",\"4.1.5\",\"5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"120\",\"180\",\"180\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"30\",\"300\",\"300\",\"4\",\"4\",\"4\",\"4.1.5\",\"5\"]\nprotected node 52: expected [\"inlineCode\",null,null,\"http_token\"]; received [\"inlineCode\",null,null,\"doris_cloud.conf\"]\nprotected node 53: expected [\"inlineCode\",null,null,\"doris_cloud.conf\"]; received [\"inlineCode\",null,null,\"http_token\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 52: expected [\"inlineCode\",null,null,\"http_token\"]; received [\"inlineCode\",null,null,\"doris_cloud.conf\"]\nprotected node 53: expected [\"inlineCode\",null,null,\"doris_cloud.conf\"]; received [\"inlineCode\",null,null,\"http_token\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 52: expected [\"inlineCode\",null,null,\"http_token\"]; received [\"inlineCode\",null,null,\"doris_cloud.conf\"]\nprotected node 53: expected [\"inlineCode\",null,null,\"doris_cloud.conf\"]; received [\"inlineCode\",null,null,\"http_token\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
+        "blob": "3344d2d218b410769f1897a3e1ec1c56f28c515e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
+        "blob": "d0fac147f267cf1500d4dfec22efed6c31e90462"
+      }
+    }
   }
 }
