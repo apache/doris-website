@@ -1,0 +1,9 @@
+# BEGIN DORIS PUBLISH OPTIMIZATION
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteOptions IgnoreInherit
+RewriteRule "^(?:NotoSansSC-VariableFont_wght\.ttf)$" "/assets/shared/940625e248588cec2d20d9190fc9f091.ttf" [R=302,L,NE,E=DORIS_ASSET_REDIRECT:1]
+RewriteRule "^(?:JetBrainsMono-VariableFont_wght\.ttf)$" "/assets/shared/aa1144dc381d33eb953b87af2072c84a.ttf" [R=302,L,NE,E=DORIS_ASSET_REDIRECT:1]
+RewriteRule "^(?:Inter-VariableFont_opsz,wght\.ttf)$" "/assets/shared/e05c5f3d1fa6a3893d84c1eef4e89951.ttf" [R=302,L,NE,E=DORIS_ASSET_REDIRECT:1]
+</IfModule>
+# END DORIS PUBLISH OPTIMIZATION

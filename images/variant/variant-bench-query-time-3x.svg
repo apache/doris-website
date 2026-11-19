@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="290" viewBox="0 0 880 290">
+  <style>
+    text { font-family: Inter, 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    .title { font-size: 17px; font-weight: 700; fill: #1e293b; }
+    .subtitle { font-size: 11px; fill: #94a3b8; }
+    .label { font-size: 13px; font-weight: 600; fill: #334155; }
+    .value { font-size: 13px; font-weight: 700; }
+    .grid-label { font-size: 10px; fill: #94a3b8; }
+    .footer { font-size: 10px; fill: #94a3b8; font-style: italic; }
+    .grid-line { stroke: #e2e8f0; stroke-width: 1; stroke-dasharray: 4,3; }
+    .axis-line { stroke: #cbd5e1; stroke-width: 1.5; }
+  </style>
+
+  <rect width="880" height="290" fill="#ffffff"/>
+
+  <text x="440" y="28" text-anchor="middle" class="title">Wide-Column Single-Path Extraction: Query Time</text>
+  <text x="440" y="46" text-anchor="middle" class="subtitle">200K rows × 10K paths · extracting key5000 · 16 CPUs · median of 3 runs</text>
+
+  <line x1="200" y1="62" x2="200" y2="258" class="grid-line"/>
+  <text x="200" y="58" text-anchor="middle" class="grid-label">0</text>
+  <line x1="298" y1="62" x2="298" y2="258" class="grid-line"/>
+  <text x="298" y="58" text-anchor="middle" class="grid-label">1 s</text>
+  <line x1="397" y1="62" x2="397" y2="258" class="grid-line"/>
+  <text x="397" y="58" text-anchor="middle" class="grid-label">2 s</text>
+  <line x1="495" y1="62" x2="495" y2="258" class="grid-line"/>
+  <text x="495" y="58" text-anchor="middle" class="grid-label">3 s</text>
+  <line x1="594" y1="62" x2="594" y2="258" class="grid-line"/>
+  <text x="594" y="58" text-anchor="middle" class="grid-label">4 s</text>
+  <line x1="692" y1="62" x2="692" y2="258" class="grid-line"/>
+  <text x="692" y="58" text-anchor="middle" class="grid-label">5 s</text>
+  <line x1="790" y1="62" x2="790" y2="258" class="grid-line"/>
+  <text x="790" y="58" text-anchor="middle" class="grid-label">6 s</text>
+
+  <line x1="200" y1="258" x2="810" y2="258" class="axis-line"/>
+
+  <text x="195" y="93" text-anchor="end" class="label">VARIANT Default</text>
+  <rect x="200" y="76" width="8" height="36" rx="5" fill="#10B981"/>
+  <text x="214" y="99" class="value" fill="#10B981">76 ms</text>
+
+  <text x="195" y="142" text-anchor="end" class="label">JSONB</text>
+  <rect x="200" y="125" width="87" height="36" rx="5" fill="#EAB308"/>
+  <text x="293" y="148" class="value" fill="#a16207">887 ms</text>
+
+  <text x="195" y="191" text-anchor="end" class="label">MAP&lt;STRING,STRING&gt;</text>
+  <rect x="200" y="174" width="275" height="36" rx="5" fill="#EF4444"/>
+  <text x="481" y="197" class="value" fill="#dc2626">2,800 ms</text>
+
+  <text x="195" y="240" text-anchor="end" class="label">STRING (raw JSON)</text>
+  <rect x="200" y="223" width="601" height="36" rx="5" fill="#B91C1C"/>
+  <text x="807" y="246" text-anchor="start" class="value" fill="#991b1b">6,104 ms</text>
+
+  <text x="440" y="283" text-anchor="middle" class="footer">Doris VARIANT wide-column benchmark · 2026-03</text>
+</svg>
