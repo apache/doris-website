@@ -19,12 +19,25 @@ This document introduces the support for reading and writing ORC file formats in
 
 ## Supported Compression Formats
 
+### Reading
+
+Reading existing files supports the following codecs.
+
 * uncompressed
 * snappy
 * lz4
 * zstd
 * lzo
 * zlib
+
+### Writing
+
+| Write entry point | Supported codecs |
+| --- | --- |
+| Hive / Iceberg Catalog | `plain`, `snappy`, `zlib`, `zstd`, `lz4` (since 4.1.3) |
+| OUTFILE / EXPORT | `plain`, `snappy`, `zlib`, `zstd` |
+
+`plain` means no compression. For Catalog write configuration and defaults, see [Hive Catalog](../catalogs/hive-catalog.mdx) and [Iceberg Catalog](../catalogs/iceberg-catalog.mdx). OUTFILE / EXPORT selects the codec with the `compress_type` property.
 
 ## Parameters
 

@@ -32,7 +32,9 @@
 
 ### 支持的压缩格式
 
-* umcomressed
+读取已有文件支持以下压缩格式。
+
+* uncompressed
 
 * gzip
 
@@ -47,6 +49,8 @@
 * snappy
 
 * lzo
+
+Hive Text 表写入支持 `plain`、`gzip`、`bzip2`、`zstd`、`lz4`、`snappy`，默认使用 `plain`。通过 Doris 建表时使用 `compression` 属性，写入已有表时使用 Hive 表属性 `text.compression`。
 
 ## JSON
 
