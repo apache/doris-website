@@ -2,8 +2,6 @@
 title: 'Apache Doris 5.0 Preview(1): A Unified Multimodal Lakehouse for Real-Time Analytics'
 summary: 'A look at how Doris plans to extend unified search and real-time analytics across open lake formats and multimodal data.'
 description: 'Explore the Apache Doris 5.0 multimodal lakehouse preview, including open-format integration, Variant and vector analytics, Physical AI, and agent use cases.'
-picked: "true"
-order: "1"
 keywords:
   - 'Apache Doris 5.0'
   - 'multimodal lakehouse'
