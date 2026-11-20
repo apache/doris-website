@@ -8,39 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "5f4dac3e961dca1731fd41a2a5dc303cd76b5e86a43d7441d1b290b99d9cef2e",
-    "sourceTechnicalHash": "61b32cd8a351043737a5f003e444bba59bef96976fa84e66683bd7102670449a",
-    "targetHash": "7fd1004f67266301e65fd7a601a36f0dfaddc937fbbb6c221f1f79fe3e9017f5",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "95d92307a7937d6cc17c445e5d74e66dd121e9caef45449c1004f3af74c739f8",
+    "sourceTechnicalHash": "d61f1c774673678c2534e79b7e5f2d325865cf660f59e5149e3ecafef5f75856",
+    "targetHash": "9750e83007ac9159e1282c578a15161dcb0c75590f72ed11cbf50e3cafda314c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T10:04:23.283Z",
+    "translatedAt": "2026-11-19T20:11:25.120Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
-      "modelCalls": 2,
-      "acceptedWithWarnings": false,
-      "sourceHash": "5f4dac3e961dca1731fd41a2a5dc303cd76b5e86a43d7441d1b290b99d9cef2e",
-      "targetHash": "7fd1004f67266301e65fd7a601a36f0dfaddc937fbbb6c221f1f79fe3e9017f5",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "95d92307a7937d6cc17c445e5d74e66dd121e9caef45449c1004f3af74c739f8",
+      "targetHash": "9750e83007ac9159e1282c578a15161dcb0c75590f72ed11cbf50e3cafda314c",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 114: expected [\"inlineCode\",null,null,\"variant_enable_duplicate_json_path_check\"]; received [\"inlineCode\",null,null,\"INSERT\"]\nprotected node 115: expected [\"inlineCode\",null,null,\"true\"]; received [\"inlineCode\",null,null,\"variant_enable_duplicate_json_path_check\"]\nprotected node 116: expected [\"inlineCode\",null,null,\"null\"]; received [\"inlineCode\",null,null,\"true\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"PARSE_TO_VARIANT\"]; received [\"inlineCode\",null,null,\"INSERT\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"INSERT\"]; received [\"inlineCode\",null,null,\"PARSE_TO_VARIANT\"]\nprotected node 145: expected [\"inlineCode\",null,null,\"json\"]; received [\"inlineCode\",null,null,\"DESC\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"10\",\"1000\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"100000\",\"1000000000\",\"1024\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"18446744073709551615\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2000\",\"233.79\",\"248.66\",\"25\",\"255\",\"255\",\"27\",\"3\",\"3.7\",\"32\",\"35.711\",\"38\",\"38\",\"38\",\"4\",\"4\",\"4\",\"4.0\",\"4.1\",\"4.1.5\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"43\",\"44\",\"5\",\"5.0.0\",\"50000\",\"63\",\"63\",\"63\",\"64\",\"64\",\"64\",\"64\",\"65\",\"65\",\"65535\",\"743.69\",\"789.24\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"9\",\"92.29\",\"94.82\"]; received [\"0\",\"0\",\"0\",\"000\",\"000\",\"000\",\"000\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"1000\",\"10000\",\"100000\",\"1000000000\",\"1024\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"18446744073709551615\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2000\",\"233.79\",\"248.66\",\"25\",\"255\",\"255\",\"27\",\"3\",\"3\",\"32\",\"35.711\",\"38\",\"38\",\"38\",\"4\",\"4\",\"4\",\"4.0\",\"4.1\",\"4.1.5\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"4.2\",\"43\",\"44\",\"5\",\"5.0.0\",\"50000\",\"63\",\"63\",\"63\",\"64\",\"64\",\"64\",\"64\",\"65\",\"65\",\"65535\",\"7\",\"743.69\",\"789.24\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"9\",\"92.29\",\"94.82\"]\nprotected node 114: expected [\"inlineCode\",null,null,\"variant_enable_duplicate_json_path_check\"]; received [\"inlineCode\",null,null,\"INSERT\"]\nprotected node 115: expected [\"inlineCode\",null,null,\"true\"]; received [\"inlineCode\",null,null,\"variant_enable_duplicate_json_path_check\"]"
             }
           ]
         },
         {
           "attempt": 2,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 114: expected [\"inlineCode\",null,null,\"variant_enable_duplicate_json_path_check\"]; received [\"inlineCode\",null,null,\"INSERT\"]\nprotected node 115: expected [\"inlineCode\",null,null,\"true\"]; received [\"inlineCode\",null,null,\"variant_enable_duplicate_json_path_check\"]\nprotected node 116: expected [\"inlineCode\",null,null,\"null\"]; received [\"inlineCode\",null,null,\"true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 114: expected [\"inlineCode\",null,null,\"variant_enable_duplicate_json_path_check\"]; received [\"inlineCode\",null,null,\"INSERT\"]\nprotected node 115: expected [\"inlineCode\",null,null,\"true\"]; received [\"inlineCode\",null,null,\"variant_enable_duplicate_json_path_check\"]\nprotected node 116: expected [\"inlineCode\",null,null,\"null\"]; received [\"inlineCode\",null,null,\"true\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+        "blob": "f4db666caef0fa71ae96e7149a93607c052f4a77"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+        "blob": "49bd051311b4b611b4a63a69b136bbafba71a630"
+      }
     }
   }
 }

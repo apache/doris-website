@@ -8,42 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authentication/internal.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authentication/internal.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
-    "sourceTechnicalHash": "d5738b96e3aa6a793cc4afd98e9085754b02242b8ca59f4af0cad9f8510e552d",
-    "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "ca7bbcba3e753882196774cda66c2051797fa5fa3e5ad6b4dd2eddbdc4c4aa5b",
+    "sourceTechnicalHash": "58174f5f114911e103eda569b3d73db0007b188b9215d16107b05d35f6d54b0d",
+    "targetHash": "c39faaeab9f2c8b0c86accc994c627cf18845762cfdab45938fe83f09547f940",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T13:51:36.268Z",
+    "translatedAt": "2026-11-19T20:45:09.496Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
-      "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ca7bbcba3e753882196774cda66c2051797fa5fa3e5ad6b4dd2eddbdc4c4aa5b",
+      "targetHash": "c39faaeab9f2c8b0c86accc994c627cf18845762cfdab45938fe83f09547f940",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 126: expected [\"inlineCode\",null,null,\"SELECT current_user()\"]; received [\"inlineCode\",null,null,\"current_user\"]\nprotected node 127: expected [\"inlineCode\",null,null,\"SELECT user()\"]; received [\"inlineCode\",null,null,\"user\"]\nprotected node 128: expected [\"inlineCode\",null,null,\"current_user\"]; received [\"inlineCode\",null,null,\"SELECT current_user()\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept + Configuration parameters + Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: понятия + параметры конфигурации + устранение неполадок -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: User and privilege management / Login authentication troubleshooting / Password policy configuration -->\"]; received [\"html\",null,null,\"<!-- Применимые сценарии: управление пользователями и привилегиями / устранение неполадок входа и аутентификации / настройка политик паролей -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"user_name\"]; received [\"inlineCode\",null,null,\"user_identity\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"host\"]; received [\"inlineCode\",null,null,\"user_name\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 126: expected [\"inlineCode\",null,null,\"SELECT current_user()\"]; received [\"inlineCode\",null,null,\"current_user\"]\nprotected node 127: expected [\"inlineCode\",null,null,\"SELECT user()\"]; received [\"inlineCode\",null,null,\"user\"]\nprotected node 128: expected [\"inlineCode\",null,null,\"current_user\"]; received [\"inlineCode\",null,null,\"SELECT current_user()\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "admin-manual/auth/authentication/internal",
-        "sourcePath": "docs/admin-manual/auth/authentication/internal.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/internal.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
-        "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
-        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
-        "pr": "https://github.com/apache/doris-website/pull/4432"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/admin-manual/auth/authentication/internal.md",
+        "blob": "7997092142df37e6d5934442b494ce274e911628"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authentication/internal.md",
+        "blob": "53b4c2f4a02c24c75526547e0f28f52ff800ef51"
       }
     }
   }

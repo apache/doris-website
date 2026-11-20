@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "bec80bdd9204e324ea1c3dd03f54b067fba081a3cf9e00defa918e10b1ef1577",
-    "sourceTechnicalHash": "0f8086f54ccc5e6d9be7833d90918005ea1acc2e27aa280d3698a45c62c56dc5",
-    "targetHash": "bbcb3fc6940f29a8eabd9746036871e4ebadf70a0097bae969dd308b531e8285",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "9837129e56f9147e326987055dfb738fcc05585426f15bfda87f4a38fc1da0f4",
+    "sourceTechnicalHash": "aa145fddf6f8b9f7924d8be27cbd4db3180a4aadca3238330249ed2d287747c9",
+    "targetHash": "c0856ef51f5ffdbc19ebd38708ec9a6bd912e648e0ae6870bc21be52c57ca34d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T09:56:40.825Z",
+    "translatedAt": "2026-11-19T20:17:06.115Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "bec80bdd9204e324ea1c3dd03f54b067fba081a3cf9e00defa918e10b1ef1577",
-      "targetHash": "bbcb3fc6940f29a8eabd9746036871e4ebadf70a0097bae969dd308b531e8285",
+      "sourceHash": "9837129e56f9147e326987055dfb738fcc05585426f15bfda87f4a38fc1da0f4",
+      "targetHash": "c0856ef51f5ffdbc19ebd38708ec9a6bd912e648e0ae6870bc21be52c57ca34d",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"12\",\"148\",\"148\",\"16\",\"2\",\"2\",\"2.5\",\"200\",\"2533\",\"2800\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"4\",\"48\",\"48\",\"5\",\"6104\",\"76\",\"76\",\"76\",\"80\",\"887\"]; received [\"000\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"12\",\"148\",\"148\",\"16\",\"2\",\"2\",\"2\",\"200\",\"2533\",\"2800\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"4\",\"48\",\"48\",\"5\",\"5\",\"6104\",\"76\",\"76\",\"76\",\"80\",\"887\"]\nprotected node 73: expected [\"inlineCode\",null,null,\"\\\"1\\\"\"]; received [\"inlineCode\",null,null,\"1\"]\nprotected node 76: expected [\"code\",\"sql\",null,\"-- Insert sample data. INSERT stores a plain string as a VARIANT string, so parse the JSON text.\\nINSERT INTO event_log VALUES\\n    ('2025-01-01 10:00:00', 1001, 'click', PARSE_TO_VARIANT('{\\\"page\\\": \\\"home\\\", \\\"user_id\\\": 42, \\\"duration_ms\\\": 320}')),\\n    ('2025-01-01 10:00:01', 1002, 'purchase', PARSE_TO_VARIANT('{\\\"item\\\": \\\"widget\\\", \\\"price\\\": 9.99, \\\"user_id\\\": 42}')),\\n    ('2025-01-01 10:00:02', 1003, 'click', PARSE_TO_VARIANT('{\\\"page\\\": \\\"search\\\", \\\"user_id\\\": 99, \\\"query\\\": \\\"doris variant\\\"}'));\\n\\n-- Verify data\\nSELECT payload['user_id'], payload['page'] FROM event_log;\\n\\n-- Check Subcolumnization results\\nSET describe_extend_variant_column = true;\\nDESC event_log;\\n\\n-- Check the type of one path, row by row\\nSELECT variant_type(payload['user_id']) FROM event_log;\"]; received [\"code\",\"sql\",null,\"-- Insert sample data. INSERT stores a plain string as a VARIANT string, so parse the JSON text.\\nINSERT INTO event_log VALUES\\n    ('2025-01-01 10:00:00', 1001, 'click', PARSE_TO_VARIANT('{\\\\\\\"page\\\\\\\": \\\\\\\"home\\\\\\\", \\\\\\\"user_id\\\\\\\": 42, \\\\\\\"duration_ms\\\\\\\": 320}')),\\n    ('2025-01-01 10:00:01', 1002, 'purchase', PARSE_TO_VARIANT('{\\\\\\\"item\\\\\\\": \\\\\\\"widget\\\\\\\", \\\\\\\"price\\\\\\\": 9.99, \\\\\\\"user_id\\\\\\\": 42}')),\\n    ('2025-01-01 10:00:02', 1003, 'click', PARSE_TO_VARIANT('{\\\\\\\"page\\\\\\\": \\\\\\\"search\\\\\\\", \\\\\\\"user_id\\\\\\\": 99, \\\\\\\"query\\\\\\\": \\\\\\\"doris variant\\\\\\\"}'));\\n\\n-- Verify data\\nSELECT payload['user_id'], payload['page'] FROM event_log;\\n\\n-- Check Subcolumnization results\\nSET describe_extend_variant_column = true;\\nDESC event_log;\\n\\n-- Check the type of one path, row by row\\nSELECT variant_type(payload['user_id']) FROM event_log;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
+        "blob": "5747530e6135ffa9465e1e8e24bee96dc80e6724"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
+        "blob": "b4c13c969fceaceeb7d26d38a8971ae85a86660b"
+      }
     }
   }
 }

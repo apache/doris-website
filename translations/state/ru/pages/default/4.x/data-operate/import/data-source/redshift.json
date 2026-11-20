@@ -8,42 +8,78 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/redshift.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/redshift.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
-    "sourceTechnicalHash": "c2ac105a31955ed67c896b8c6096831e77bcba2c8c134c6b21cac16f173d1230",
-    "targetHash": "b7da755c5f79890f4c753f830183217e73060e18d8dc74f189251e4f1afd601e",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "fca707f32f467a1036468bd6c6e328a59f2d2ed9698558f154f78d38fe16a0d4",
+    "sourceTechnicalHash": "6e6752bc5e0333c006d28c97137e8cb88264df782c2cdbda34f75380cadf74dd",
+    "targetHash": "aa85e7c293ac56493c230fd8d89a2b5d0fc1c3a22a282c645babe002a76c5c55",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:29:40.794Z",
+    "translatedAt": "2026-11-19T21:14:27.813Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
-      "targetHash": "b7da755c5f79890f4c753f830183217e73060e18d8dc74f189251e4f1afd601e",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "fca707f32f467a1036468bd6c6e328a59f2d2ed9698558f154f78d38fe16a0d4",
+      "targetHash": "aa85e7c293ac56493c230fd8d89a2b5d0fc1c3a22a282c645babe002a76c5c55",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 30: expected [\"code\",\"yaml\",null,\"mysql> show load where label = \\\"sales_data_2025_04_08\\\"\\\\G\\n*************************** 1. row ***************************\\n         JobId: 17956078\\n         Label: sales_data_2025_04_08\\n         State: FINISHED\\n      Progress: 100.00% (1/1)\\n          Type: BROKER\\n       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2\\n      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL\\n      ErrorMsg: NULL\\n    CreateTime: 2025-04-10 17:50:53\\n  EtlStartTime: 2025-04-10 17:50:54\\n EtlFinishTime: 2025-04-10 17:50:54\\n LoadStartTime: 2025-04-10 17:50:54\\nLoadFinishTime: 2025-04-10 17:50:54\\n           URL: NULL\\n    JobDetails: {\\\"Unfinished backends\\\":{\\\"5eec1be8612d4872-91040ff1e7208a4f\\\":[]},\\\"ScannedRows\\\":2,\\\"TaskNumber\\\":1,\\\"LoadBytes\\\":91,\\\"All backends\\\":{\\\"5eec1be8612d4872-91040ff1e7208a4f\\\":[10022]},\\\"FileNumber\\\":1,\\\"FileSize\\\":1620}\\n TransactionId: 766228\\n  ErrorTablets: {}\\n          User: root\\n       Comment: \\n1 row in set (0.00 sec)\"]; received [\"code\",\"yaml\",null,\"mysql> show load where label = \\\"sales_data_2025_04_08\\\"\\\\G\\n*************************** 1. row ***************************\\n         JobId: 17956078\\n         Label: sales_data_2025_04_08\\n         State: FINISHED\\n      Progress: 100.00% (1/1)\\n          Type: BROKER\\n       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2\\n      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL\\n      ErrorMsg: NULL\\n    CreateTime: 2025-04-10 17:50:53\\n  EtlStartTime: 2025-04-10 17:50:54\\n EtlFinishTime: 2025-04-10 17:50:54\\n LoadStartTime: 2025-04-10 17:50:54\\nLoadFinishTime: 2025-04-10 17:50:54\\n           URL: NULL\\n    JobDetails: {\\\"Unfinished backends\\\":{\\\"5eec1be8612d4872-91040ff1e7208a4f\\\":[]},\\\"ScannedRows\\\":2,\\\"TaskNumber\\\":1,\\\"LoadBytes\\\":91,\\\"All backends\\\":{\\\"5eec1be8612d4872-91040ff1e7208a4f\\\":[10022]},\\\"FileNumber\\\":1,\\\"FileSize\\\":1620}\\n TransactionId: 766228\\n  ErrorTablets: {}\\n          User: root\\n       Comment:\\n1 row in set (0.00 sec)\"]\nprotected node 33: expected [\"code\",\"SQL\",null,\"mysql> show load where state='CANCELLED' and label like \\\"label_test%\\\"\\\\G\\n*************************** 1. row ***************************\\n         JobId: 18312384\\n         Label: label_test123\\n         State: CANCELLED\\n      Progress: 100.00% (3/3)\\n          Type: BROKER\\n       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0\\n      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL\\n      ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel\\n    CreateTime: 2025-04-15 17:32:59\\n  EtlStartTime: 2025-04-15 17:33:02\\n EtlFinishTime: 2025-04-15 17:33:02\\n LoadStartTime: 2025-04-15 17:33:02\\nLoadFinishTime: 2025-04-15 17:33:02\\n           URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342\\n    JobDetails: {\\\"Unfinished backends\\\":{\\\"7602ccd7c3a4854-95307efca7bfe341\\\":[]},\\\"ScannedRows\\\":4,\\\"TaskNumber\\\":1,\\\"LoadBytes\\\":188,\\\"All backends\\\":{\\\"7602ccd7c3a4854-95307efca7bfe341\\\":[10022]},\\\"FileNumber\\\":3,\\\"FileSize\\\":4839}\\n TransactionId: 769213\\n  ErrorTablets: {}\\n          User: root\\n       Comment: \"]; received [\"code\",\"SQL\",null,\"mysql> show load where state='CANCELLED' and label like \\\"label_test%\\\"\\\\G\\n*************************** 1. row ***************************\\n         JobId: 18312384\\n         Label: label_test123\\n         State: CANCELLED\\n      Progress: 100.00% (3/3)\\n          Type: BROKER\\n       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0\\n      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL\\n      ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel\\n    CreateTime: 2025-04-15 17:32:59\\n  EtlStartTime: 2025-04-15 17:33:02\\n EtlFinishTime: 2025-04-15 17:33:02\\n LoadStartTime: 2025-04-15 17:33:02\\nLoadFinishTime: 2025-04-15 17:33:02\\n           URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342\\n    JobDetails: {\\\"Unfinished backends\\\":{\\\"7602ccd7c3a4854-95307efca7bfe341\\\":[]},\\\"ScannedRows\\\":4,\\\"TaskNumber\\\":1,\\\"LoadBytes\\\":188,\\\"All backends\\\":{\\\"7602ccd7c3a4854-95307efca7bfe341\\\":[10022]},\\\"FileNumber\\\":3,\\\"FileSize\\\":4839}\\n TransactionId: 769213\\n  ErrorTablets: {}\\n          User: root\\n       Comment:\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"URL\"]; received [\"inlineCode\",null,null,\"country\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Data migration / Redshift to Doris -->\"]; received [\"html\",null,null,\"<!-- Применимый сценарий: миграция данных / Redshift в Doris -->\"]\nprotected node 13: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Конфигурация -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "headings",
+              "message": "the stream contains non-printable characters at line 3, column 14:\n        \u00022title\u00022: \u00022Redshift\u00022,\n                 ^"
+            },
+            {
+              "check": "syntax",
+              "message": "the stream contains non-printable characters at line 3, column 14:\n        \u00022title\u00022: \u00022Redshift\u00022,\n                 ^"
+            },
+            {
+              "check": "frontmatter",
+              "message": "the stream contains non-printable characters at line 3, column 14:\n        \u00022title\u00022: \u00022Redshift\u00022,\n                 ^"
+            },
+            {
+              "check": "protected-content",
+              "message": "the stream contains non-printable characters at line 3, column 14:\n        \u00022title\u00022: \u00022Redshift\u00022,\n                 ^"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 30: expected [\"code\",\"yaml\",null,\"mysql> show load where label = \\\"sales_data_2025_04_08\\\"\\\\G\\n*************************** 1. row ***************************\\n         JobId: 17956078\\n         Label: sales_data_2025_04_08\\n         State: FINISHED\\n      Progress: 100.00% (1/1)\\n          Type: BROKER\\n       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2\\n      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL\\n      ErrorMsg: NULL\\n    CreateTime: 2025-04-10 17:50:53\\n  EtlStartTime: 2025-04-10 17:50:54\\n EtlFinishTime: 2025-04-10 17:50:54\\n LoadStartTime: 2025-04-10 17:50:54\\nLoadFinishTime: 2025-04-10 17:50:54\\n           URL: NULL\\n    JobDetails: {\\\"Unfinished backends\\\":{\\\"5eec1be8612d4872-91040ff1e7208a4f\\\":[]},\\\"ScannedRows\\\":2,\\\"TaskNumber\\\":1,\\\"LoadBytes\\\":91,\\\"All backends\\\":{\\\"5eec1be8612d4872-91040ff1e7208a4f\\\":[10022]},\\\"FileNumber\\\":1,\\\"FileSize\\\":1620}\\n TransactionId: 766228\\n  ErrorTablets: {}\\n          User: root\\n       Comment: \\n1 row in set (0.00 sec)\"]; received [\"code\",\"yaml\",null,\"mysql> show load where label = \\\"sales_data_2025_04_08\\\"\\\\G\\n*************************** 1. row ***************************\\n         JobId: 17956078\\n         Label: sales_data_2025_04_08\\n         State: FINISHED\\n      Progress: 100.00% (1/1)\\n          Type: BROKER\\n       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=0; dpp.norm.ALL=2\\n      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):3600; max_filter_ratio:0.0; priority:NORMAL\\n      ErrorMsg: NULL\\n    CreateTime: 2025-04-10 17:50:53\\n  EtlStartTime: 2025-04-10 17:50:54\\n EtlFinishTime: 2025-04-10 17:50:54\\n LoadStartTime: 2025-04-10 17:50:54\\nLoadFinishTime: 2025-04-10 17:50:54\\n           URL: NULL\\n    JobDetails: {\\\"Unfinished backends\\\":{\\\"5eec1be8612d4872-91040ff1e7208a4f\\\":[]},\\\"ScannedRows\\\":2,\\\"TaskNumber\\\":1,\\\"LoadBytes\\\":91,\\\"All backends\\\":{\\\"5eec1be8612d4872-91040ff1e7208a4f\\\":[10022]},\\\"FileNumber\\\":1,\\\"FileSize\\\":1620}\\n TransactionId: 766228\\n  ErrorTablets: {}\\n          User: root\\n       Comment:\\n1 row in set (0.00 sec)\"]\nprotected node 33: expected [\"code\",\"SQL\",null,\"mysql> show load where state='CANCELLED' and label like \\\"label_test%\\\"\\\\G\\n*************************** 1. row ***************************\\n         JobId: 18312384\\n         Label: label_test123\\n         State: CANCELLED\\n      Progress: 100.00% (3/3)\\n          Type: BROKER\\n       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0\\n      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL\\n      ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel\\n    CreateTime: 2025-04-15 17:32:59\\n  EtlStartTime: 2025-04-15 17:33:02\\n EtlFinishTime: 2025-04-15 17:33:02\\n LoadStartTime: 2025-04-15 17:33:02\\nLoadFinishTime: 2025-04-15 17:33:02\\n           URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342\\n    JobDetails: {\\\"Unfinished backends\\\":{\\\"7602ccd7c3a4854-95307efca7bfe341\\\":[]},\\\"ScannedRows\\\":4,\\\"TaskNumber\\\":1,\\\"LoadBytes\\\":188,\\\"All backends\\\":{\\\"7602ccd7c3a4854-95307efca7bfe341\\\":[10022]},\\\"FileNumber\\\":3,\\\"FileSize\\\":4839}\\n TransactionId: 769213\\n  ErrorTablets: {}\\n          User: root\\n       Comment: \"]; received [\"code\",\"SQL\",null,\"mysql> show load where state='CANCELLED' and label like \\\"label_test%\\\"\\\\G\\n*************************** 1. row ***************************\\n         JobId: 18312384\\n         Label: label_test123\\n         State: CANCELLED\\n      Progress: 100.00% (3/3)\\n          Type: BROKER\\n       EtlInfo: unselected.rows=0; dpp.abnorm.ALL=4; dpp.norm.ALL=0\\n      TaskInfo: cluster:s3.ap-southeast-1.amazonaws.com; timeout(s):14400; max_filter_ratio:0.0; priority:NORMAL\\n      ErrorMsg: type:ETL_QUALITY_UNSATISFIED; msg:quality not good enough to cancel\\n    CreateTime: 2025-04-15 17:32:59\\n  EtlStartTime: 2025-04-15 17:33:02\\n EtlFinishTime: 2025-04-15 17:33:02\\n LoadStartTime: 2025-04-15 17:33:02\\nLoadFinishTime: 2025-04-15 17:33:02\\n           URL: http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342\\n    JobDetails: {\\\"Unfinished backends\\\":{\\\"7602ccd7c3a4854-95307efca7bfe341\\\":[]},\\\"ScannedRows\\\":4,\\\"TaskNumber\\\":1,\\\"LoadBytes\\\":188,\\\"All backends\\\":{\\\"7602ccd7c3a4854-95307efca7bfe341\\\":[10022]},\\\"FileNumber\\\":3,\\\"FileSize\\\":4839}\\n TransactionId: 769213\\n  ErrorTablets: {}\\n          User: root\\n       Comment:\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"URL\"]; received [\"inlineCode\",null,null,\"country\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "data-operate/import/data-source/redshift",
-        "sourcePath": "docs/data-operate/import/data-source/redshift.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/redshift.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
-        "targetHash": "b7da755c5f79890f4c753f830183217e73060e18d8dc74f189251e4f1afd601e",
-        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
-        "pr": "https://github.com/apache/doris-website/pull/4435"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/data-source/redshift.md",
+        "blob": "102c4697bf36833f7d82ec8730405a8df92051ef"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/redshift.md",
+        "blob": "d90ee31bbb5ab34899dd8824b4e288615f924b56"
       }
     }
   }

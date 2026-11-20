@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/inverted-index/search-function.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/search-function.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "39e1d99e4b8260a70c58a9075d39baffc3ddefa3bcbfe1fcef32005b7ae1943d",
-    "sourceTechnicalHash": "97e160e9e7b4e13c408f9d4ad6f27113ca41fa443512a73609c20d209718bb1f",
-    "targetHash": "da0309c4d19b47b7f66124f30fa6b99889e1985b9e8ea8f7f5b89ff0a2a97c3c",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "0e6f4db3e7d07b7ed8d0a991e420f509f50e38c247cdab575f79b6a97fcf9476",
+    "sourceTechnicalHash": "54527891668dbd47558457d19f74e9569b5ff45a6e26d11f0409f831d2258c1a",
+    "targetHash": "45962260c521bea175ee7b1e981f4430e4d01c28433d3575910eb8216982a607",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:00:31.291Z",
+    "translatedAt": "2026-11-19T20:37:51.255Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "39e1d99e4b8260a70c58a9075d39baffc3ddefa3bcbfe1fcef32005b7ae1943d",
-      "targetHash": "da0309c4d19b47b7f66124f30fa6b99889e1985b9e8ea8f7f5b89ff0a2a97c3c",
+      "sourceHash": "0e6f4db3e7d07b7ed8d0a991e420f509f50e38c247cdab575f79b6a97fcf9476",
+      "targetHash": "45962260c521bea175ee7b1e981f4430e4d01c28433d3575910eb8216982a607",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Function reference / Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: справочник функций / процедура -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use cases: Full-text search / Inverted index query / DSL expression authoring -->\"]; received [\"html\",null,null,\"<!-- Сценарии использования: полнотекстовый поиск / запросы к инвертированному индексу / создание выражений DSL -->\"]\nprotected node 89: expected [\"code\",\"sql\",null,\"SELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(python javascript)');\\nSELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(machine learning tutorial)');\\n\\n-- Edge case: a single-value ANY is equivalent to a term query\\nSELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(python)');\"]; received [\"code\",\"sql\",null,\"SELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(python javascript)');\\nSELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(machine learning tutorial)');\\n\\n-- Граничный случай: ANY с одним значением эквивалентен запросу термина\\nSELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(python)');\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/table-design/index/inverted-index/search-function.md",
+        "blob": "3b1d64fda29ced0555baca0f7db1f820f4dc1678"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/search-function.md",
+        "blob": "a4351292ebbda171c010c8ecde2aa57188a08a06"
+      }
     }
   }
 }
