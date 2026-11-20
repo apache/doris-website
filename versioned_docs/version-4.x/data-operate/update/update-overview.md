@@ -145,7 +145,6 @@ PROPERTIES (
 For more information:
 
 - For concurrency control capabilities such as the Sequence column, MVCC version management, and `UPDATE` concurrency parameters, see: [Concurrency Control of Updates in the Unique Key Model](./unique-update-concurrent-control.md).
-- When multiple data streams update different columns of the same wide table simultaneously, you can use Sequence Mapping to control the version order of each column independently. For details, see: [Multi-Stream Updates in the Unique Key Model](./multi-stream-update-for-unique-model.md).
 
 ### 2.3 Workflow of the Delete Marker
 
@@ -230,7 +229,7 @@ Using partial column updates, you can complete multi-source wide table assembly 
     - The user behavior stream updates `page_view_count` and `last_login_time`.
     - The transaction stream updates `total_orders` and `total_amount`.
 
-Each stream writes only the changed columns, which reduces IO overhead and avoids the resource consumption of real-time joins. For version control in multi-stream concurrent scenarios, see: [Multi-Stream Updates in the Unique Key Model](./multi-stream-update-for-unique-model.md).
+Each stream writes only the changed columns, which reduces IO overhead and avoids the resource consumption of real-time joins.
 
 ## 4. Usage Recommendations
 
