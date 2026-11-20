@@ -2,8 +2,6 @@
 title: 'Apache Doris x Lance for Autonomous Driving and Robotics Analytics'
 summary: 'Doris and Lance combine episode search, structured filters, and OLAP analysis to help teams find hard cases and diagnose failures in Physical AI data.'
 description: 'How Apache Doris and Lance support hard-case mining for autonomous driving and failure analysis for robotics with open multimodal datasets.'
-picked: "true"
-order: "2"
 keywords:
   - 'Apache Doris'
   - 'Lance Catalog'

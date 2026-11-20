@@ -76,14 +76,14 @@ const RELEASE_PLAN: ReleasePlanEntry[] = [
         version: '4.2',
         stage: 'planned',
         status: translate({id: "landing.roadmap.data.011", message: "Planned"}),
-        timing: translate({id: "landing.roadmap.data.012", message: "Sep 2026"}),
+        timing: translate({id: "landing.roadmap.data.012", message: "Nov 2026"}),
         description: translate({id: "landing.CommunityRoadmap.012", message: "A feature release focused on the multimodal lakehouse and stronger search capabilities."}),
     },
     {
         version: '5.0',
         stage: 'planned',
         status: translate({id: "landing.roadmap.data.011", message: "Planned"}),
-        timing: translate({id: "landing.roadmap.data.013", message: "Nov 2026"}),
+        timing: translate({id: "landing.roadmap.data.013", message: "Feb 2027"}),
         description: translate({id: "landing.CommunityRoadmap.013", message: "A feature release focused on real-time incremental computation."}),
     },
 ];
