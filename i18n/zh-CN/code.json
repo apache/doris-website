@@ -10843,12 +10843,12 @@
         "description": "Planned"
     },
     "landing.roadmap.data.012": {
-        "message": "2026 年 9 月",
-        "description": "Sep 2026"
-    },
-    "landing.roadmap.data.013": {
         "message": "2026 年 11 月",
         "description": "Nov 2026"
+    },
+    "landing.roadmap.data.013": {
+        "message": "2027 年 2 月",
+        "description": "Feb 2027"
     },
     "landing.events.status.upcoming": {
         "message": "即将举行"
