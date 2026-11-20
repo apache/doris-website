@@ -145,7 +145,6 @@ PROPERTIES (
 更多内容：
 
 - Sequence 列、MVCC 版本管理、`UPDATE` 并发参数等并发控制能力详见：[主键模型的更新并发控制](./unique-update-concurrent-control.md)。
-- 多条数据流同时更新一张宽表的不同列时，可使用 Sequence Mapping 控制每列各自的版本顺序，详见：[主键模型的多流更新](./multi-stream-update-for-unique-model.md)。
 
 ### 2.3 删除标记的工作流程
 
@@ -230,7 +229,7 @@ PROPERTIES (
     - 用户行为流更新 `page_view_count`、`last_login_time`；
     - 交易流更新 `total_orders`、`total_amount`。
 
-每个流仅写入变化列，可降低 IO 开销并避免实时 Join 的资源消耗。多流并发场景下的版本控制见：[主键模型的多流更新](./multi-stream-update-for-unique-model.md)。
+每个流仅写入变化列，可降低 IO 开销并避免实时 Join 的资源消耗。
 
 ## 4. 使用建议
 

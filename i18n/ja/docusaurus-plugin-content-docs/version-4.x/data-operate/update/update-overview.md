@@ -145,7 +145,6 @@ PROPERTIES (
 詳細は次を参照してください。
 
 - Sequence 列、MVCC によるバージョン管理、`UPDATE` の並行実行パラメータなどについては、[Unique Key モデルにおける更新の並行制御](./unique-update-concurrent-control.md)を参照してください。
-- 複数のデータストリームが同じワイドテーブルの異なる列を同時に更新する場合は、Sequence Mapping を使用して列ごとのバージョン順序を個別に制御できます。詳細は[Unique Key モデルにおける複数ストリームからの更新](./multi-stream-update-for-unique-model.md)を参照してください。
 
 ### 2.3 削除マーカーの処理の流れ
 
@@ -230,7 +229,7 @@ Flink CDC などのツールは、上流データベース（MySQL、PostgreSQL�
     - ユーザー行動ストリームは `page_view_count` と `last_login_time` を更新します。
     - 取引ストリームは `total_orders` と `total_amount` を更新します。
 
-各ストリームが変更された列だけを書き込むことで、IO の負荷を軽減し、リアルタイム JOIN のリソース消費を避けられます。複数ストリームの並行実行時のバージョン管理については、[Unique Key モデルにおける複数ストリームからの更新](./multi-stream-update-for-unique-model.md)を参照してください。
+各ストリームが変更された列だけを書き込むことで、IO の負荷を軽減し、リアルタイム JOIN のリソース消費を避けられます。
 
 ## 4. 利用上の推奨事項 {#4-usage-recommendations}
 
