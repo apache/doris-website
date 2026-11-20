@@ -10,6 +10,10 @@
 
 Shows properties of specified catalog
 
+## Property Masking
+
+The password mask in this example describes that field only. Coverage of other credentials and connection strings depends on the exact version and patch level; it does not imply that every access key, token, JDBC URL or URI is hidden. The [complete development-version policy](/docs/dev/lakehouse/catalog-property-masking/) is not a guarantee for every 4.x build.
+
 ## Syntax
 
 ```sql
@@ -43,7 +47,7 @@ The name of the catalog to be displayed.
    ```sql
    show catalog test_mysql;
    ```
-   ```sql
+   ```text
       +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
    | Key            | Value                                                                                                                                               |
    +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+

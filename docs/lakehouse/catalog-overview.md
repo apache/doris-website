@@ -27,6 +27,10 @@ Data catalogs are primarily applicable to the following three types of scenarios
 
 This article uses [Iceberg Catalog](./catalogs/iceberg-catalog) as an example to introduce the basic operations of data catalogs. For detailed introductions to different data catalogs, please refer to the corresponding data catalog documentation.
 
+## Sensitive Property Masking
+
+Catalog passwords, access keys, tokens, JDBC strings and URL credentials follow a shared policy in supported display, audit and lineage paths. Original connection settings are unchanged. See [Catalog Property Masking](./catalog-property-masking.md) for field families, URI exceptions, supplemental name rules, version scope and limitations.
+
 ## Creating a Data Catalog
 
 Create an Iceberg Catalog using the `CREATE CATALOG` statement.

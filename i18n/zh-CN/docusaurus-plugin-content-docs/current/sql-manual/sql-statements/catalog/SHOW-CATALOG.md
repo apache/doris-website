@@ -10,6 +10,10 @@
 
 该语句用于显示已存在是数据目录（catalog）属性
 
+## 属性脱敏
+
+敏感属性按 [Catalog 属性脱敏规则](../../../lakehouse/catalog-property-masking.md) 展示为 `*XXX`，部分内部属性直接省略。明确的 JDBC 连接串整值遮蔽；普通 URI 按值清理 userinfo、秘密参数和签名，不是所有 URI 都整值隐藏。此规则描述开发版本，不能据此推断所有 4.x、3.x 构建均具有相同行为。
+
 ## 语法
 
 ```sql
@@ -41,7 +45,7 @@ SHOW CATALOG <catalog_name>
    ```sql
    SHOW CATALOG test_mysql;
    ```
-   ```sql
+   ```text
    +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
    | Key            | Value                                                                                                                                               |
    +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -49,7 +53,7 @@ SHOW CATALOG <catalog_name>
    | create_time    | 2025-02-17 17:21:13.099                                                                                                                             |
    | driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |
    | driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |
-   | jdbc_url       | jdbc:mysql://127.0.0.1:3306/db                                                                                                                      |
+   | jdbc_url       | *XXX                                                                                                                                                |
    | password       | *XXX                                                                                                                                                |
    | type           | jdbc                                                                                                                                                |
    | use_meta_cache | true                                                                                                                                                |

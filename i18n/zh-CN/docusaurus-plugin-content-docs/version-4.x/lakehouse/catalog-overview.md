@@ -27,6 +27,10 @@ Doris 中的数据目录分为两种：
 
 本文以 [Iceberg Catalog](./catalogs/iceberg-catalog) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
 
+## 敏感属性脱敏
+
+SHOW 中出现密码掩码不表示全部凭据均会脱敏，具体字段覆盖取决于部署版本和补丁；展示脱敏也不代表元数据已加密存储。[开发版本的完整脱敏规则](/zh-CN/docs/dev/lakehouse/catalog-property-masking/)及补充正则配置不能视为所有 4.x 构建均已支持。分享配置或日志前，应核对该版本的实际输出，并从配置管理系统保管和恢复原始秘密。
+
 ## 创建数据目录
 
 通过 `CREATE CATALOG` 语句创建一个 Iceberg Catalog。

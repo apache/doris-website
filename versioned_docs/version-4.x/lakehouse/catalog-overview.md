@@ -27,6 +27,10 @@ Data catalogs are primarily applicable to the following three types of scenarios
 
 This article uses [Iceberg Catalog](./catalogs/iceberg-catalog) as an example to introduce the basic operations of data catalogs. For detailed introductions to different data catalogs, please refer to the corresponding data catalog documentation.
 
+## Sensitive Property Masking
+
+A masked password in SHOW output does not imply complete credential coverage. The protected fields depend on the deployed version and patch level, and display masking does not encrypt stored metadata. The [complete development-version policy](/docs/dev/lakehouse/catalog-property-masking/) and its supplemental regex must not be assumed available in every 4.x build. Check the output of that version before sharing configuration or logs, and retain original secrets in configuration management.
+
 ## Creating a Data Catalog
 
 Create an Iceberg Catalog using the `CREATE CATALOG` statement.
