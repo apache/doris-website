@@ -2,18 +2,21 @@
 {
     "title": "ALTER USER",
     "language": "ja",
-    "description": "ALTER USER 文は、パスワードやパスワードポリシーなど、ユーザーのアカウント属性を変更するために使用します。"
+    "description": "ALTER USER ステートメントは、デュアルパスワードによるローテーションを含め、アカウントのパスワードとポリシーを変更します。"
 }
 ---
 
 ## 説明 {#description}
 
-`ALTER USER` 文は、パスワードやパスワードポリシーなど、ユーザーのアカウント属性を変更するために使用します。
+`ALTER USER` ステートメントは、パスワードやパスワードポリシーなど、ユーザーのアカウント属性を変更するために使用します。
+
+4.2.1 以降、Doris は組み込みのパスワード認証で、`RETAIN CURRENT PASSWORD` と `DISCARD OLD PASSWORD` によるデュアルパスワードをサポートしています。
 
 ## 構文 {#syntax}
 
 ```sql
-ALTER USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
+ALTER USER [IF EXISTS] <user_identity>
+    [IDENTIFIED BY <password> [RETAIN CURRENT PASSWORD] | DISCARD OLD PASSWORD]
 [<password_policy>]
 [<comment>]
 
@@ -30,8 +33,8 @@ password_policy:
 **1. `<user_identity`>**
 
 > user_identity はユーザーを一意に識別します。構文は 'user_name'@'host' です。
-> `user_identity` は user_name と host の二つの部分で構成されます。user_name はユーザー名、host はクライアントの接続元ホストのアドレスを示します。host には % を使用したあいまい一致を指定できます。host を指定しない場合、デフォルトは '%' となり、そのユーザーはどのホストからでも Doris に接続できます。
-> host にはドメインも指定できます。構文は 'user_name'@['domain'] です。角括弧で囲まれている場合、Doris はこれをドメインとして扱い、その IP アドレスの解決を試みます。
+> `user_identity` は user_name と host の二つの部分から構成され、user_name はユーザー名です。host はクライアントの接続元ホストアドレスを示します。host 部分には、あいまい一致のために % を使用できます。host を指定しない場合、デフォルトは '%' となり、ユーザーはどのホストからでも Doris に接続できます。
+> host 部分にはドメインも指定できます。構文は 'user_name'@['domain'] です。角括弧で囲まれている場合、Doris はこれをドメインとみなし、その IP アドレスの解決を試みます。
 
 ## オプションパラメータ {#optional-parameters}
 
@@ -41,56 +44,73 @@ password_policy:
 
 **2. `<password_policy>`**
 
-> `password_policy` は、パスワード認証によるログインに関するポリシーを指定する句です。現在、次のポリシーがサポートされています。
+> `password_policy` は、パスワード認証によるログインに関するポリシーを指定する句です。現在、以下のポリシーをサポートしています。
 >
 > `PASSWORD_HISTORY { <n> | DEFAULT}`
 >
->    パスワードを再設定する際に、過去のパスワードの再利用を許可するかどうかを指定します。たとえば、`PASSWORD_HISTORY 10` は、過去10回に設定したパスワードを新しいパスワードとして使用できないことを意味します。`PASSWORD_HISTORY DEFAULT` に設定すると、グローバル変数 `password_history` の値が使用されます。`0` はこの機能を有効にしないことを意味します。デフォルトは0です。
+>    パスワードの再設定時に、過去に使用したパスワードの再利用を許可するかどうかを指定します。たとえば、`PASSWORD_HISTORY 10` は、過去 10 回に設定したパスワードを新しいパスワードとして使用することを禁止します。`PASSWORD_HISTORY DEFAULT` を設定すると、グローバル変数 `password_history` の値が使用されます。`0` はこの機能を有効にしないことを意味します。デフォルトは 0 です。
 >
 > `PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}`
 >
->    ユーザーのパスワードの有効期限を設定します。たとえば、`PASSWORD_EXPIRE INTERVAL 10 DAY` は、パスワードが10日後に期限切れになることを意味します。`PASSWORD_EXPIRE NEVER` は、パスワードに有効期限がないことを意味します。`PASSWORD_EXPIRE DEFAULT` に設定すると、グローバル変数 `default_password_lifetime` の値が使用されます。デフォルトは NEVER（または0）で、期限切れにならないことを意味します。
+>    ユーザーのパスワードの有効期限を設定します。たとえば、`PASSWORD_EXPIRE INTERVAL 10 DAY` は、パスワードが 10 日後に期限切れになることを意味します。`PASSWORD_EXPIRE NEVER` は、パスワードの有効期限がないことを意味します。`PASSWORD_EXPIRE DEFAULT` を設定すると、グローバル変数 `default_password_lifetime` の値が使用されます。デフォルトは NEVER（または 0）で、有効期限はありません。
 >
 > `FAILED_LOGIN_ATTEMPTS <n>`
 >
-> ユーザーが誤ったパスワードで n 回ログインを試みると、アカウントがロックされます。たとえば、`FAILED_LOGIN_ATTEMPTS 3` は、ログインに3回失敗するとアカウントがロックされることを意味します。
+> ユーザーが誤ったパスワードで n 回ログインを試みると、アカウントがロックされます。たとえば、`FAILED_LOGIN_ATTEMPTS 3` は、ログインに 3 回失敗するとアカウントがロックされることを意味します。
 >
 > `PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}`
 >
-> アカウントがロックされたときのロック期間を設定します。たとえば、`PASSWORD_LOCK_TIME 1 DAY` は、アカウントが一日間ロックされることを意味します。
+> アカウントがロックされた場合のロック期間を設定します。たとえば、`PASSWORD_LOCK_TIME 1 DAY` は、アカウントが一日間ロックされることを意味します。
 >
 > `ACCOUNT_UNLOCK`
 >
-> `ACCOUNT_UNLOCK` は、ロックされたユーザーのロック解除に使用します。
+> `ACCOUNT_UNLOCK` は、ロックされたユーザーのロックを解除するために使用します。
 
 **3. `<comment>`**
 
-> ユーザーのコメントを指定します。
+>ユーザーのコメントを指定します。
 
-## アクセス制御要件 {#access-control-requirements}
+**4. `RETAIN CURRENT PASSWORD`（4.2.1 以降）**
 
-この SQL コマンドを実行するユーザーには、少なくとも次の権限が必要です。
+> `IDENTIFIED BY` とともに使用し、以前のプライマリパスワードをセカンダリパスワードとして保持します。新しいパスワードがプライマリとなり、どちらのパスワードでも認証できます。それ以前のセカンダリパスワードは置き換えられます。
+
+**5. `DISCARD OLD PASSWORD`（4.2.1 以降）**
+
+> 保持されているセカンダリパスワードを削除し、プライマリパスワードは変更しません。これは単独で実行する操作です。パスワード変更、パスワードポリシー、コメント、その他のアカウント操作と組み合わせないでください。セカンダリパスワードが存在しない場合、何も変わりません。
+
+## アクセス制御の要件 {#access-control-requirements}
+
+この SQL コマンドを実行するユーザーには、少なくとも以下の権限が必要です。
 
 | 権限     | 対象    | 備考 |
 |:--------------|:----------|:------|
-| ADMIN_PRIV    | USER または ROLE    | この操作は、ADMIN_PRIV 権限を持つユーザーまたはロールのみ実行できます。  |
+| GRANT_PRIV または ADMIN_PRIV | グローバル | RETAIN CURRENT PASSWORD と DISCARD OLD PASSWORD を含む ALTER USER の実行に必要です。 |
 
 ## 使用上の注意 {#usage-notes}
 
-4.1.5 以降、特別な root ID は `'root'@'%'` のみです。`'root'@'localhost'` などの ID は通常のユーザーのままであり、ユーザー名が root であるという理由だけで、実際の root アカウントを変更する権限は得られません。実際の root アカウントに対する保護は、root という名前のほかのユーザーには適用されません。
+4.1.5 以降、特別な root ユーザーの識別子は `'root'@'%'` のみです。`'root'@'localhost'` などの識別子は通常のユーザーのままであり、ユーザー名が root であるという理由だけで、実際の root アカウントを変更する権限は得られません。実際の root アカウントに対する保護は、root という名前のほかのユーザーには適用されません。
 
-1. バージョン 2.0 以降、このコマンドではユーザーロールの変更をサポートしていません。関連する操作には [GRANT](./GRANT-TO.md) と [REVOKE](./REVOKE-FROM.md) を使用してください。
+1. バージョン 2.0 以降、このコマンドはユーザーロールの変更をサポートしていません。関連する操作には [GRANT](./GRANT-TO.md) と [REVOKE](./REVOKE-FROM.md) を使用してください。
 
-2. ALTER USER コマンドでは、次のアカウント属性のうち、一度に変更できるのは一つだけです。
-- パスワードの変更
+2. 一つの ALTER USER コマンドでは、以下のアカウント属性のうち、一度に変更できるのは一項目だけです。
+- パスワードの変更。必要に応じて RETAIN CURRENT PASSWORD を指定可能
+- 保持されているセカンダリパスワードの破棄
 - `PASSWORD_HISTORY` の変更
 - `PASSWORD_EXPIRE` の変更
 - `FAILED_LOGIN_ATTEMPTS` と `PASSWORD_LOCK_TIME` の変更
 - ユーザーのロック解除
 
+### デュアルパスワード（4.2.1 以降） {#dual-passwords-since-421}
+
+- `RETAIN CURRENT PASSWORD` を使用するには、現在のプライマリパスワードが空でなく、パスワードを変更する必要があります。新しいパスワードが空の場合、RETAIN を指定していても両方のパスワードが消去されます。
+- RETAIN を指定せずに空でないパスワードへ通常の変更を行った場合、既存のセカンダリパスワードは保持されます。その認証情報は失効しません。
+- アカウントのロックとパスワードの有効期限のチェックは、両方のパスワードに適用されます。DISCARD はパスワード履歴を変更せず、パスワードの有効期限の起算時点も更新しません。
+
+ローテーションの手順、状態の確認方法、ドメインアカウントでの動作、アップグレード時の制約については、[デュアルパスワード](../../../admin-manual/auth/authentication/internal#dual-passwords)を参照してください。これらの句が管理するのは組み込みのパスワードであり、LDAP や外部認証連携で保持される認証情報には適用されません。
+
 ## 例 {#example}
 
-準備としてユーザー `jack` を作成し、以下の例で操作する対象とします。
+準備としてユーザー `jack` を作成し、以下の例で操作する対象にします。
 
 ```sql
 CREATE USER jack@'%' IDENTIFIED BY "12345";
@@ -119,3 +139,17 @@ ALTER USER jack@'%' ACCOUNT_UNLOCK
 ```sql
 ALTER USER jack@'%' COMMENT "this is my first user"
 ```
+
+- 以前のパスワードを使用可能な状態に保ちながら、パスワードをローテーションする（4.2.1 以降）
+
+```sql
+ALTER USER jack@'%' IDENTIFIED BY 'NewPwd_2026!' RETAIN CURRENT PASSWORD;
+```
+
+以前のパスワードと `NewPwd_2026!` のどちらでも認証できます。すべてのクライアントが新しいパスワードに切り替わったら、保持されているパスワードを破棄します。
+
+```sql
+ALTER USER jack@'%' DISCARD OLD PASSWORD;
+```
+
+以後は `NewPwd_2026!` でのみ認証できます。
