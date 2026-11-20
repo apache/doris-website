@@ -29,7 +29,7 @@ This article uses [Iceberg Catalog](./catalogs/iceberg-catalog) as an example to
 
 ## Sensitive Property Masking
 
-A masked password in SHOW output does not imply complete credential coverage. The protected fields depend on the deployed version and patch level, and display masking does not encrypt stored metadata. The [complete development-version policy](/docs/dev/lakehouse/catalog-property-masking/) and its supplemental regex must not be assumed available in every 4.x build. Check the output of that version before sharing configuration or logs, and retain original secrets in configuration management.
+The shared Catalog property masking policy is planned for Doris 4.2 and for 5.0 and later releases. Passwords, access keys, tokens, JDBC strings and URL credentials are masked in supported display, audit and lineage paths; runtime connection values are unchanged. See [Catalog Property Masking](./catalog-property-masking.md) for the rules, version differences, configuration and limitations.
 
 ## Creating a Data Catalog
 

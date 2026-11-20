@@ -793,6 +793,7 @@
                 "id": "lakehouse/catalog-overview"
               },
               "items": [
+                "lakehouse/catalog-property-masking",
                 {
                   "type": "category",
                   "label": "Hive Catalog",

@@ -128,7 +128,7 @@ The tryLock timeout configuration of catalog lock.  Normally it does not need to
 
 #### `datasource_sensitive_property_pattern`
 
-Available in the development version; do not assume availability in every released 4.x or 3.x build.
+Planned for Doris 4.2 and for 5.0 and later releases. Not supported in 4.0, 4.1 or 3.x.
 
 - Type: string
 - IsMutable: true

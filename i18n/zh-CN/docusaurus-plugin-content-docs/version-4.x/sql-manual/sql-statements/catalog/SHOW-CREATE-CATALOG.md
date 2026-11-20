@@ -12,7 +12,7 @@
 
 ## 属性脱敏
 
-本页的密码掩码示例仅说明该字段的展示，其他凭据和连接串的脱敏范围取决于具体版本及补丁。不要据此推断所有 Access Key、Token、JDBC URL 或 URI 均已脱敏。[开发版本的完整规则](/zh-CN/docs/dev/lakehouse/catalog-property-masking/)不代表所有 4.x 构建均已支持。 示例中的 `*XXX` 是实际脱敏标记，其他 `XXX` 是示例占位符。
+统一脱敏规则计划在 Doris 4.2、5.0 及后续版本支持。敏感属性展示为 `*XXX`，部分内部属性直接省略；明确的 JDBC 连接串整值遮蔽，普通 URI 按值清理 userinfo、秘密参数和签名。完整规则见 [Catalog 属性脱敏](../../../lakehouse/catalog-property-masking.md)。下例使用此规则，不表示 4.0、4.1 或 3.x 的行为。 示例中的 `*XXX` 是实际脱敏标记，其他 `XXX` 是示例占位符。
 
 ## 语法
 
@@ -47,7 +47,7 @@ SHOW CREATE CATALOG <catalog_name>;
     "user" = "XXX",
     "type" = "jdbc",
     "password" = "*XXX",
-    "jdbc_url" = "XXX",
+    "jdbc_url" = "*XXX",
     "driver_url" = "XXX",
     "driver_class" = "oracle.jdbc.driver.OracleDriver",
     "checksum" = "XXX"

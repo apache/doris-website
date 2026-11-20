@@ -11,7 +11,7 @@
 Doris masks sensitive external Catalog properties in supported display and audit paths. Masking replaces a whole value or a sensitive URL parameter with `*XXX`; some internal properties are omitted entirely. Connectors continue using the original values.
 
 :::info Version scope
-This page describes the current development version. The complete policy and `datasource_sensitive_property_pattern` are not available in every 4.x or 3.x build. Check the documentation and release notes for your deployed version before relying on these rules. A password masked in an older SHOW example does not imply that all access keys, tokens or connection strings are masked in that version.
+This policy and `datasource_sensitive_property_pattern` are planned for Doris 4.2 and for 5.0 and later releases. In the 4.x documentation, this feature applies starting with 4.2. Do not assume the complete policy is available in 4.0, 4.1 or 3.x; older releases may mask individual fields without implementing all of these rules.
 :::
 
 ## Quick Start
@@ -48,7 +48,7 @@ Masked output cannot recover the original secret. Use your configuration managem
 | `SHOW CATALOG`, `SHOW CREATE CATALOG`, `catalogs()` | Apply the shared property-name and value rules. Hidden properties remain omitted. |
 | CREATE / ALTER CATALOG SQL in the audit log | Replace sensitive properties in the statement text using the same rules. |
 | Catalog properties in lineage metadata | Omit properties whose names are sensitive; sanitize retained properties that contain connection strings or URL credentials. |
-| Typed connector property diagnostics | Fields declared sensitive by a connector render as `***`, or `<empty>` when unset. A structured URI can be sensitive in diagnostics while still using value-aware masking in Catalog output. |
+| Typed connector property diagnostics (5.0 and later) | Fields declared sensitive by a connector render as `***`, or `<empty>` when unset. A structured URI can be sensitive in diagnostics while still using value-aware masking in Catalog output. |
 
 The same masking-enabled property renderer is used by some resource, storage-vault and job SQL paths. This does not mean that every resource proc result, SDK diagnostic, HTTP response or application log uses this renderer.
 
@@ -56,7 +56,7 @@ The same masking-enabled property renderer is used by some resource, storage-vau
 
 Doris takes the union of:
 
-1. Built-in sensitive names and the secret aliases or namespaces registered by loaded connectors and filesystem providers.
+1. Built-in sensitive names and connector/filesystem secret aliases. In 4.2, these come from the built-in registry and sensitive field declarations; in 5.0 and later, loaded providers also register secret aliases and namespaces.
 2. Permanent connection-string, native credential and Hadoop credential name rules.
 3. The configurable supplemental name expression described below.
 
@@ -64,7 +64,7 @@ Exact secret names are compared case-insensitively. A sensitive name takes prece
 
 ### Catalog and Metastore Credentials
 
-The table lists representative names and special rules. Accepted aliases of a declared secret field follow the same protection; this is not a list of the only names that can be sensitive.
+The table lists representative names and special rules. Connector availability depends on the Doris version; a masking rule does not add connector support. Accepted aliases of a declared secret field follow the same protection; this is not a list of the only names that can be sensitive.
 
 | Catalog or service | Whole-value masking |
 |---|---|
@@ -75,13 +75,13 @@ The table lists representative names and special rules. Accepted aliases of a de
 | Iceberg JDBC / Paimon JDBC | `iceberg.jdbc.password`, `paimon.jdbc.password`, `jdbc.password`, and explicit JDBC URI properties. The shared `uri` alias is hidden when its value starts with `jdbc:`. |
 | Paimon REST | `paimon.rest.dlf.access-key-id`, `paimon.rest.dlf.access-key-secret`, plus credential names recognized by the shared rules. |
 | Glue / retained DLF properties | Glue aliases such as `glue.access_key`, `glue.secret_key`, `aws.glue.access-key`, `aws.glue.secret-key`, `aws.glue.session-token`; retained DLF aliases such as `dlf.access_key`, `dlf.secret_key`, `dlf.session_token`, `dlf.catalog.accessKeyId`, `dlf.catalog.accessKeySecret`, `dlf.catalog.sessionToken`, `dlf.catalog.securityToken`. Retaining a masking rule does not imply support for creating that metastore type. |
-| Fluss | `fluss.client.security.sasl.username`, `fluss.client.security.sasl.password`, `fluss.client.security.sasl.jaas.config`. Under `fluss.lake.paimon.`, a name containing `key`, `secret`, `password`, `token` or `credential` is sensitive. |
+| Fluss (5.0 and later) | `fluss.client.security.sasl.username`, `fluss.client.security.sasl.password`, `fluss.client.security.sasl.jaas.config`. Under `fluss.lake.paimon.`, a name containing `key`, `secret`, `password`, `token` or `credential` is sensitive. |
 | Trino | Under `trino.`, a name containing `key`, `secret`, `password`, `token` or `credential` is sensitive, for example `trino.keytab` or `trino.connection-password`. |
-| ADBC | `password`; under `adbc.`, a name containing `key`, `secret`, `password`, `token`, `credential` or `authorization` is sensitive. Connection URIs also use the address rules. |
+| ADBC (5.0 and later) | `password`; under `adbc.`, a name containing `key`, `secret`, `password`, `token`, `credential` or `authorization` is sensitive. Connection URIs also use the address rules. |
 | Elasticsearch | Declared password aliases such as `elasticsearch.password`; endpoint values use the address rules. |
 | Other Catalogs | The same global policy applies according to their metastore, filesystem and credential properties. A Catalog type alone does not make every property sensitive. |
 
-The namespace rules for Fluss, Trino and ADBC perform case-insensitive substring matching in the name after the prefix. For example, `trino.monkey` also contains `key` and is masked. These registered rules still apply when the supplemental expression is disabled.
+In 5.0 and later, the namespace rules for Fluss, Trino and ADBC perform case-insensitive substring matching in the name after the prefix. For example, `trino.monkey` also contains `key` and is masked. These registered rules still apply when the supplemental expression is disabled.
 
 ### Storage and Native SDK Credentials
 

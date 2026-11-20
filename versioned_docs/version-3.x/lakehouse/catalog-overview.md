@@ -29,7 +29,7 @@ This article uses [Iceberg Catalog](./catalogs/iceberg-catalog) as an example to
 
 ## Sensitive Property Masking
 
-A masked password in SHOW output does not imply complete credential coverage. The protected fields depend on the deployed version and patch level, and display masking does not encrypt stored metadata. The [complete development-version policy](/docs/dev/lakehouse/catalog-property-masking/) and its supplemental regex must not be assumed available in every 3.x build. Check the output of that version before sharing configuration or logs, and retain original secrets in configuration management.
+A masked password in SHOW output does not imply complete credential coverage. The protected fields depend on the deployed version and patch level, and display masking does not encrypt stored metadata. The [complete policy planned for 4.2, 5.0 and later](/docs/4.x/lakehouse/catalog-property-masking/) and its supplemental regex do not apply to 3.x. Check the output of that version before sharing configuration or logs, and retain original secrets in configuration management.
 
 ## Creating a Data Catalog
 

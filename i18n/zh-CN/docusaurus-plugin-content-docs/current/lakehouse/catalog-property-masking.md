@@ -2,7 +2,7 @@
 {
     "title": "Catalog 属性脱敏",
     "language": "zh-CN",
-    "description": "了解 Doris 在 SHOW、审计 SQL 和血缘中对 Catalog 凭据、JDBC 连接串、URL、SDK 及 Hadoop 属性的脱敏规则，并区分开发与发布版本、动态配置及展示脱敏的边界。",
+    "description": "了解 Doris 在 SHOW、审计 SQL 和血缘中对 Catalog 凭据、JDBC 连接串、URL、SDK 及 Hadoop 属性的脱敏规则，并区分 4.2、5.0 及后续版本的支持范围、动态配置和展示脱敏的边界。",
     "keywords": ["Catalog 属性脱敏", "Catalog 凭据", "SHOW CATALOG", "JDBC URL", "datasource_sensitive_property_pattern"],
     "doc_type": "reference"
 }
@@ -11,7 +11,7 @@
 Doris 会在支持的展示和审计入口中对外部 Catalog 的敏感属性进行脱敏，将整个值或 URL 中的敏感参数值替换为 `*XXX`，部分内部属性则直接省略。连接器仍然使用原始值。
 
 :::info 适用版本
-本文描述当前开发版本的行为。完整规则及 `datasource_sensitive_property_pattern` 并非在所有 4.x、3.x 构建中均可用，请先核对部署版本的文档和发行说明。旧版 SHOW 示例中的密码被遮蔽，不代表该版本会遮蔽全部 Access Key、Token 或连接串。
+本文规则及 `datasource_sensitive_property_pattern` 计划在 Doris 4.2、5.0 及后续版本支持。在 4.x 文档中，本功能自 4.2 起适用。不能据此推断 4.0、4.1 或 3.x 具备完整规则；旧版本可能仅对部分字段脱敏。
 :::
 
 ## 快速开始
@@ -48,7 +48,7 @@ ORDER BY `Property`;
 | `SHOW CATALOG`、`SHOW CREATE CATALOG`、`catalogs()` | 使用统一的属性名和值规则，原有隐藏属性继续省略。 |
 | 审计日志中的 CREATE / ALTER CATALOG SQL | 按相同规则替换语句文本中的敏感属性。 |
 | 血缘元数据中的 Catalog 属性 | 省略属性名敏感的字段，对保留字段中的连接串和 URL 凭据进行清理。 |
-| 连接器类型化属性的诊断输出 | 连接器声明为敏感的字段显示为 `***`，未设置时显示为 `<empty>`。结构化 URI 可以在诊断中属于敏感字段，同时在 Catalog 展示中使用按值脱敏的规则。 |
+| 连接器类型化属性的诊断输出（5.0 及后续版本） | 连接器声明为敏感的字段显示为 `***`，未设置时显示为 `<empty>`。结构化 URI 可以在诊断中属于敏感字段，同时在 Catalog 展示中使用按值脱敏的规则。 |
 
 部分 resource、storage vault 和 job SQL 入口也使用开启脱敏的同一属性格式化逻辑。这不表示所有 resource proc 结果、SDK 诊断、HTTP 响应或应用日志都使用这一逻辑。
 
@@ -56,7 +56,7 @@ ORDER BY `Property`;
 
 Doris 对以下规则取并集：
 
-1. 内置敏感字段，以及已加载连接器和文件系统 provider 注册的秘密字段别名或命名空间。
+1. 内置敏感字段及连接器/文件系统的秘密字段别名。4.2 从内置注册表及字段敏感声明中收集；5.0 及后续版本还由已加载的 provider 注册秘密别名及命名空间。
 2. 永久的连接串、原生凭据和 Hadoop 凭据名称规则。
 3. 下文介绍的可配置补充名称表达式。
 
@@ -64,7 +64,7 @@ Doris 对以下规则取并集：
 
 ### Catalog 与 Metastore 凭据
 
-下表列出代表性名称和特殊规则。某个已声明秘密字段接受的别名适用相同保护；这不是“只有这些名称才敏感”的穷举名单。
+下表列出代表性名称和特殊规则。连接器是否可用取决于 Doris 版本；增加脱敏规则不会增加连接器支持。某个已声明秘密字段接受的别名适用相同保护；这不是“只有这些名称才敏感”的穷举名单。
 
 | Catalog 或服务 | 整值遮蔽规则 |
 |---|---|
@@ -75,13 +75,13 @@ Doris 对以下规则取并集：
 | Iceberg JDBC / Paimon JDBC | `iceberg.jdbc.password`、`paimon.jdbc.password`、`jdbc.password`，以及明确的 JDBC URI 属性。共享别名 `uri` 的值以 `jdbc:` 开头时也整值遮蔽。 |
 | Paimon REST | `paimon.rest.dlf.access-key-id`、`paimon.rest.dlf.access-key-secret`，以及共享规则识别出的其他凭据名称。 |
 | Glue / 保留的 DLF 属性 | Glue 别名，例如 `glue.access_key`、`glue.secret_key`、`aws.glue.access-key`、`aws.glue.secret-key`、`aws.glue.session-token`；保留的 DLF 别名，例如 `dlf.access_key`、`dlf.secret_key`、`dlf.session_token`、`dlf.catalog.accessKeyId`、`dlf.catalog.accessKeySecret`、`dlf.catalog.sessionToken`、`dlf.catalog.securityToken`。保留脱敏规则不表示仍支持创建该 metastore 类型。 |
-| Fluss | `fluss.client.security.sasl.username`、`fluss.client.security.sasl.password`、`fluss.client.security.sasl.jaas.config`；`fluss.lake.paimon.` 后的名称包含 `key`、`secret`、`password`、`token`、`credential` 任一子串即敏感。 |
+| Fluss（5.0 及后续版本） | `fluss.client.security.sasl.username`、`fluss.client.security.sasl.password`、`fluss.client.security.sasl.jaas.config`；`fluss.lake.paimon.` 后的名称包含 `key`、`secret`、`password`、`token`、`credential` 任一子串即敏感。 |
 | Trino | `trino.` 后的名称包含 `key`、`secret`、`password`、`token`、`credential` 任一子串即敏感，例如 `trino.keytab`、`trino.connection-password`。 |
-| ADBC | `password`；`adbc.` 后的名称包含 `key`、`secret`、`password`、`token`、`credential`、`authorization` 任一子串即敏感。连接 URI 也使用地址规则。 |
+| ADBC（5.0 及后续版本） | `password`；`adbc.` 后的名称包含 `key`、`secret`、`password`、`token`、`credential`、`authorization` 任一子串即敏感。连接 URI 也使用地址规则。 |
 | Elasticsearch | `elasticsearch.password` 等已声明密码别名；端点值使用地址规则。 |
 | 其他 Catalog | 根据 metastore、文件系统和凭据属性，使用相同的全局规则。仅凭 Catalog 类型不会把所有属性都视为敏感。 |
 
-Fluss、Trino、ADBC 的命名空间规则对前缀之后的名称进行不区分大小写的子串匹配。例如，`trino.monkey` 也包含 `key`，因此会被遮蔽。关闭补充表达式后，这些已注册的规则仍然生效。
+5.0 及后续版本中，Fluss、Trino、ADBC 的命名空间规则对前缀之后的名称进行不区分大小写的子串匹配。例如，`trino.monkey` 也包含 `key`，因此会被遮蔽。关闭补充表达式后，这些已注册的规则仍然生效。
 
 ### 存储与原生 SDK 凭据
 
