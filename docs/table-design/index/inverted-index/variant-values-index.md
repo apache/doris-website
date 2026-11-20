@@ -138,19 +138,8 @@ It searches the stored scalar values inside objects and arrays, including string
 
 For example, `payload MATCH_ANY 'debugflag'` returns no rows in the quick start. To filter on that key, use a path predicate such as `CAST(payload['debugflag'] AS BOOLEAN) = TRUE`.
 
+Search results for `true` or `false` may be inconsistent if the same path contains both Boolean and numeric values.
+
 ### Why can a query scan rows after I add the index? {#scan-fallback}
 
 Rows written before the index change can still be in data segments without the index. Keep `enable_match_without_inverted_index` and `enable_fallback_on_missing_inverted_index` enabled (both default to `true`) to allow fallback. A scan can take longer than index lookup. To see why Doris scanned, run the query with `enable_profile = true` and `profile_level = 2`. In the [Query Profile](../../../query-acceleration/query-profile.md), look for `VariantValuesIndex` with `reason=missing_index` or `reason=legacy_storage_format`.
-
-### Why can indexed results differ from a scan after compaction? {#type-promotion}
-
-Compaction can promote a field to a common type when different writes store different types at the same path. For example, a field fed with both Boolean `true` and numeric `1` can be stored as `1` after compaction. If compaction merges existing indexes, the old search term `true` can remain attached to the first row. An indexed search for `true` can still return that row, and an indexed search for `1` can miss it. A scan evaluates the stored value.
-
-To check the stored values, run the query in a separate session with inverted index queries disabled. The following example searches for `timeout` by scanning the quick-start data and returns IDs `1`, `2`, and `4`.
-
-```sql
-SET enable_match_without_inverted_index = true;
-SET enable_inverted_index_query = false;
-
-SELECT id FROM service_events WHERE payload MATCH_ANY 'timeout' ORDER BY id;
-```

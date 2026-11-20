@@ -2,7 +2,7 @@
 {
     "title": "VARIANT 值索引",
     "language": "zh-CN",
-    "description": "使用 VARIANT 值索引和 MATCH 搜索整列的值。通过日志示例学习建索引、搜索嵌套 JSON 和给已有 Doris 表添加索引，并了解历史数据回退扫描与字段类型变化对查询的影响。",
+    "description": "使用 VARIANT 值索引和 MATCH 搜索整列的值。通过日志示例学习建索引、搜索嵌套 JSON 和给已有 Doris 表添加索引，并了解历史数据何时回退到扫描以及如何查看回退原因。",
     "doc_type": "feature"
 }
 ---
@@ -137,19 +137,8 @@ DROP INDEX idx_payload_values ON existing_service_events;
 
 例如，快速开始里的 `payload MATCH_ANY 'debugflag'` 不返回任何行。要按这个键过滤，可以用子路径条件 `CAST(payload['debugflag'] AS BOOLEAN) = TRUE`。
 
+同一路径混用布尔值和数字时，搜索 `true` 或 `false` 的结果可能不稳定。
+
 ### 加了索引，为什么查询还在扫描数据？ {#scan-fallback}
 
 加索引前写入的数据可能还在没有该索引的数据段中。保留 `enable_match_without_inverted_index` 和 `enable_fallback_on_missing_inverted_index` 为 `true`（均为默认值），查询就能回退到扫描。扫描可能比使用索引慢。要查看回退原因，设置 `enable_profile = true` 和 `profile_level = 2` 后执行查询。在[查询 Profile](../../../query-acceleration/query-profile.md) 中查找 `VariantValuesIndex`，留意 `reason=missing_index` 或 `reason=legacy_storage_format`。
-
-### 为什么 compaction 后，索引和扫描结果可能不同？ {#type-promotion}
-
-不同批次在同一路径写入不同类型时，compaction 可能把这个字段提升为共同类型。例如，同一个字段有的写成布尔值 `true`，有的写成数字 `1`，合并后可能都存成 `1`。如果 compaction 直接合并已有索引，第一行的索引可能还保留旧的搜索词 `true`。这时用索引搜 `true` 可能仍命中这行，搜 `1` 则可能漏掉这行。扫描会按实际存储的值匹配。
-
-要核对实际存储的值，可以在单独的会话中关闭倒排索引查询。下面以快速开始的数据为例，扫描搜索 `timeout`，返回 ID `1`、`2` 和 `4`。
-
-```sql
-SET enable_match_without_inverted_index = true;
-SET enable_inverted_index_query = false;
-
-SELECT id FROM service_events WHERE payload MATCH_ANY 'timeout' ORDER BY id;
-```
