@@ -29,7 +29,7 @@ This article uses [Iceberg Catalog](./catalogs/iceberg-catalog) as an example to
 
 ## Sensitive Property Masking
 
-The shared Catalog property masking policy is planned for Doris 4.2 and for 5.0 and later releases. Passwords, access keys, tokens, JDBC strings and URL credentials are masked in supported display, audit and lineage paths; runtime connection values are unchanged. See [Catalog Property Masking](./catalog-property-masking.md) for the rules, version differences, configuration and limitations.
+The shared Catalog property masking policy is planned for Doris 4.2.0 and for 5.0 and later releases. Passwords, access keys, tokens, JDBC strings and URL credentials are masked in supported display, audit and lineage paths; runtime connection values are unchanged. See [Catalog Property Masking](./catalog-property-masking.md) for the rules, version differences, configuration and limitations.
 
 ## Creating a Data Catalog
 

@@ -11,7 +11,7 @@
 Doris masks sensitive external Catalog properties in supported display and audit paths. Masking replaces a whole value or a sensitive URL parameter with `*XXX`; some internal properties are omitted entirely. Connectors continue using the original values.
 
 :::info Version scope
-This policy and `datasource_sensitive_property_pattern` are planned for Doris 4.2 and for 5.0 and later releases. In the 4.x documentation, this feature applies starting with 4.2. Do not assume the complete policy is available in 4.0, 4.1 or 3.x; older releases may mask individual fields without implementing all of these rules.
+This policy and `datasource_sensitive_property_pattern` are planned for Doris 4.2.0 and for 5.0 and later releases. In the 4.x documentation, this feature applies starting with 4.2.0. Do not assume the complete policy is available in 4.0, 4.1 or 3.x; older releases may mask individual fields without implementing all of these rules.
 :::
 
 ## Quick Start
@@ -55,7 +55,7 @@ The same masking-enabled property renderer is used by some resource, storage-vau
 
 Doris takes the union of:
 
-1. Built-in sensitive names and connector/filesystem secret aliases. In 4.2, these come from the built-in registry and sensitive field declarations; in 5.0 and later, loaded providers also register secret aliases and namespaces.
+1. Built-in sensitive names and connector/filesystem secret aliases. In 4.2.0, these come from the built-in registry and sensitive field declarations; in 5.0 and later, loaded providers also register secret aliases and namespaces.
 2. Permanent connection-string, native credential and Hadoop credential name rules.
 3. The configurable supplemental name expression described below.
 
@@ -78,7 +78,7 @@ The table lists representative names and special rules. Connector availability d
 | Elasticsearch | Declared password aliases such as `elasticsearch.password`; endpoint values use the address rules. |
 | Other Catalogs | The same global policy applies according to their metastore, filesystem and credential properties. A Catalog type alone does not make every property sensitive. |
 
-In 4.2, the Trino namespace rule performs case-insensitive substring matching in the name after the prefix. For example, `trino.monkey` also contains `key` and is masked. This permanent rule still applies when the supplemental expression is disabled.
+In 4.2.0, the Trino namespace rule performs case-insensitive substring matching in the name after the prefix. For example, `trino.monkey` also contains `key` and is masked. This permanent rule still applies when the supplemental expression is disabled.
 
 ### Storage and Native SDK Credentials
 

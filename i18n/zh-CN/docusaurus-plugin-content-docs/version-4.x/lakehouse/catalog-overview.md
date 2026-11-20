@@ -29,7 +29,7 @@ Doris 中的数据目录分为两种：
 
 ## 敏感属性脱敏
 
-Catalog 属性的统一脱敏规则计划在 Doris 4.2、5.0 及后续版本支持。在支持的展示、审计及血缘入口中对密码、访问密钥、Token、JDBC 连接串和 URL 凭据脱敏，运行时连接原值不变。具体规则、版本差异、配置及限制见 [Catalog 属性脱敏](./catalog-property-masking.md)。
+Catalog 属性的统一脱敏规则计划在 Doris 4.2.0、5.0 及后续版本支持。在支持的展示、审计及血缘入口中对密码、访问密钥、Token、JDBC 连接串和 URL 凭据脱敏，运行时连接原值不变。具体规则、版本差异、配置及限制见 [Catalog 属性脱敏](./catalog-property-masking.md)。
 
 ## 创建数据目录
 

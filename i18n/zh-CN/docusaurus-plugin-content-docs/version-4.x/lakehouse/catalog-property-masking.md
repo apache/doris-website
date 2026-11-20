@@ -2,7 +2,7 @@
 {
     "title": "Catalog 属性脱敏",
     "language": "zh-CN",
-    "description": "了解 Doris 在 SHOW、审计 SQL 和血缘中对 Catalog 凭据、JDBC 连接串、URL、SDK 及 Hadoop 属性的脱敏规则，并区分 4.2、5.0 及后续版本的支持范围、动态配置和展示脱敏的边界。",
+    "description": "了解 Doris 在 SHOW、审计 SQL 和血缘中对 Catalog 凭据、JDBC 连接串、URL、SDK 及 Hadoop 属性的脱敏规则，并区分 4.2.0、5.0 及后续版本的支持范围、动态配置和展示脱敏的边界。",
     "keywords": ["Catalog 属性脱敏", "Catalog 凭据", "SHOW CATALOG", "JDBC URL", "datasource_sensitive_property_pattern"],
     "doc_type": "reference"
 }
@@ -11,7 +11,7 @@
 Doris 会在支持的展示和审计入口中对外部 Catalog 的敏感属性进行脱敏，将整个值或 URL 中的敏感参数值替换为 `*XXX`，部分内部属性则直接省略。连接器仍然使用原始值。
 
 :::info 适用版本
-本文规则及 `datasource_sensitive_property_pattern` 计划在 Doris 4.2、5.0 及后续版本支持。在 4.x 文档中，本功能自 4.2 起适用。不能据此推断 4.0、4.1 或 3.x 具备完整规则；旧版本可能仅对部分字段脱敏。
+本文规则及 `datasource_sensitive_property_pattern` 计划在 Doris 4.2.0、5.0 及后续版本支持。在 4.x 文档中，本功能自 4.2.0 起适用。不能据此推断 4.0、4.1 或 3.x 具备完整规则；旧版本可能仅对部分字段脱敏。
 :::
 
 ## 快速开始
@@ -55,7 +55,7 @@ ORDER BY `Property`;
 
 Doris 对以下规则取并集：
 
-1. 内置敏感字段及连接器/文件系统的秘密字段别名。4.2 从内置注册表及字段敏感声明中收集；5.0 及后续版本还由已加载的 provider 注册秘密别名及命名空间。
+1. 内置敏感字段及连接器/文件系统的秘密字段别名。4.2.0 从内置注册表及字段敏感声明中收集；5.0 及后续版本还由已加载的 provider 注册秘密别名及命名空间。
 2. 永久的连接串、原生凭据和 Hadoop 凭据名称规则。
 3. 下文介绍的可配置补充名称表达式。
 
@@ -78,7 +78,7 @@ Doris 对以下规则取并集：
 | Elasticsearch | `elasticsearch.password` 等已声明密码别名；端点值使用地址规则。 |
 | 其他 Catalog | 根据 metastore、文件系统和凭据属性，使用相同的全局规则。仅凭 Catalog 类型不会把所有属性都视为敏感。 |
 
-4.2 中，Trino 的命名空间规则对前缀之后的名称进行不区分大小写的子串匹配。例如，`trino.monkey` 也包含 `key`，因此会被遮蔽。关闭补充表达式后，这一永久规则仍然生效。
+4.2.0 中，Trino 的命名空间规则对前缀之后的名称进行不区分大小写的子串匹配。例如，`trino.monkey` 也包含 `key`，因此会被遮蔽。关闭补充表达式后，这一永久规则仍然生效。
 
 ### 存储与原生 SDK 凭据
 
