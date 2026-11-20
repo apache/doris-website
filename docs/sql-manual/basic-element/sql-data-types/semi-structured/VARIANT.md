@@ -622,6 +622,7 @@ All three can be changed at runtime. See [Parse errors](#parse-errors) for how a
 VARIANT supports BloomFilter and Inverted Index on subpaths.
 - High-cardinality equality/IN filters: prefer BloomFilter (sparser index, better write performance).
 - Tokenization/phrase/range search: use Inverted Index and set proper `parser`/`analyzer` properties.
+- Keyword searches across the whole column: use a [VARIANT values index](../../../../table-design/index/inverted-index/variant-values-index.md) in Doris 4.2 or later.
 
 A filter can use an index or a BloomFilter only when it compares the path with its stored type. CAST numeric paths explicitly; a string path compared with a string literal needs no CAST.
 
@@ -634,7 +635,7 @@ SELECT * FROM tbl WHERE CAST(v['id'] AS BIGINT) = 12345678;
 SELECT * FROM tbl WHERE CAST(v['id'] AS BIGINT) IN (1, 2, 3);
 ```
 
-Once an inverted index is created on a VARIANT column, all subpaths inherit the same index properties (e.g., parser):
+With an ordinary inverted index on a VARIANT column, all subpaths inherit the same index properties (e.g., parser):
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (

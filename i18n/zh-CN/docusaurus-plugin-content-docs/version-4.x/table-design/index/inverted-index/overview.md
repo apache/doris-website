@@ -225,6 +225,8 @@ CREATE INDEX idx_content ON docs(content) USING INVERTED PROPERTIES ("parser" = 
 BUILD INDEX idx_content ON docs;
 ```
 
+Doris 4.2 起，可以用 [VARIANT 值索引](./variant-values-index.md)搜索 VARIANT 列中各个 JSON 字段的值。该指南介绍了值索引的创建方法和历史数据的处理方式。
+
 #### 存算分离模式下的历史数据 {#cloud-index-build}
 
 在 Doris 4.1.5 中，新增分词倒排索引（如上方 `parser="chinese"` 的索引）会通过 Schema Change 任务构建历史数据。等待任务达到 `FINISHED` 即可，该索引不需要再单独执行 `BUILD INDEX`：

@@ -321,6 +321,7 @@
                     "table-design/index/inverted-index/custom-analyzer",
                     "table-design/index/inverted-index/custom-normalizer",
                     "table-design/index/inverted-index/search-operators",
+                    "table-design/index/inverted-index/variant-values-index",
                     "table-design/index/inverted-index/search-function",
                     "table-design/index/inverted-index/scoring"
                   ]

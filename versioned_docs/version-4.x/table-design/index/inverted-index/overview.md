@@ -225,6 +225,8 @@ CREATE INDEX idx_content ON docs(content) USING INVERTED PROPERTIES ("parser" = 
 BUILD INDEX idx_content ON docs;
 ```
 
+Starting with Doris 4.2, use a [VARIANT values index](./variant-values-index.md) to search across JSON values in a VARIANT column. See the guide for index creation and historical data handling.
+
 #### Existing data in compute-storage decoupled mode {#cloud-index-build}
 
 In Doris 4.1.5, adding a tokenized inverted index, such as the `parser="chinese"` index above, builds historical data through a schema-change job. Wait for the job to reach `FINISHED`; a separate `BUILD INDEX` is not needed for that index:

@@ -247,6 +247,7 @@ v1 VARIANT<
 VARIANT 支持对子列建立 BloomFilter 与 Inverted Index 两类索引。
 - 高基数等值/IN 过滤：优先使用 BloomFilter（更省存储、写入更高效）。
 - 需要分词、短语、范围检索：使用 Inverted Index，并根据需求设置 `parser`/`analyzer` 等属性。
+- 需要在整列中搜索关键词：Doris 4.2 起支持 [VARIANT 值索引](../../../../table-design/index/inverted-index/variant-values-index.md)。
 
 ```sql
 ...  
@@ -257,7 +258,7 @@ SELECT * FROM tbl WHERE v['id'] = 12345678;
 SELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);
 ```
 
-给 VARIANT 列创建 Inverted Index 后，所有子列将继承相同的索引属性（如分词方式）。
+给 VARIANT 列创建普通倒排索引后，所有子列将继承相同的索引属性（如分词方式）。
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
