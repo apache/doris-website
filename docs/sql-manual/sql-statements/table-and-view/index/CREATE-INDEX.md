@@ -77,7 +77,8 @@ The user executing this SQL command must have at least the following permissions
 
 ## Usage Notes
 
-- The **INVERTED** inverted index takes effect immediately for newly inserted data. For historical data, the index needs to be built using the BUILD INDEX operation.
+- For an ordinary **INVERTED** index, see [Managing inverted indexes](../../../../table-design/index/inverted-index/overview.md#managing-inverted-indexes) for how to index historical data.
+- Starting with Doris 4.2, use `variant_index_scope = "values"` to [add a VARIANT values index to an existing table](../../../../table-design/index/inverted-index/variant-values-index.md#add-to-existing-table). Queries can scan historical data while its index is missing.
 - The **NGRAM_BF** NGram BloomFilter index will perform a schema change in the background on all data to complete the index construction after creation. The progress can be checked using SHOW ALTER TABLE COLUMN.
 
 ## Examples

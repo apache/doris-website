@@ -247,6 +247,7 @@ If you need strict types (for stable indexing and storage), declare them via Sch
 VARIANT supports BloomFilter and Inverted Index on subpaths.
 - High-cardinality equality/IN filters: prefer BloomFilter (sparser index, better write performance).
 - Tokenization/phrase/range search: use Inverted Index and set proper `parser`/`analyzer` properties.
+- Keyword searches across the whole column: use a [VARIANT values index](../../../../table-design/index/inverted-index/variant-values-index.md) in Doris 4.2 or later.
 
 ```sql
 ...  
@@ -257,7 +258,7 @@ SELECT * FROM tbl WHERE v['id'] = 12345678;
 SELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);
 ```
 
-Once an inverted index is created on a VARIANT column, all subpaths inherit the same index properties (e.g., parser):
+With an ordinary inverted index on a VARIANT column, all subpaths inherit the same index properties (e.g., parser):
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
