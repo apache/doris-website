@@ -10,6 +10,10 @@ STRUCT type is used to store and process structured data, which can contain fiel
 
 ## Cast to STRUCT
 
+### FROM FILE
+
+CAST and TRY_CAST do not support converting [FILE](../semi-structured/FILE.md) to STRUCT, including FILE values nested in containers. Use [EXPLODE_FILE](../../../sql-functions/table-functions/explode-file.md) to extract all six fields, or read metadata with ELEMENT_AT and binary contents with FL_GET_BINARY. See [FILE Type Conversion](file-conversion.md) for conversion rules.
+
 ### FROM String
 
 #### Strict Mode
@@ -190,11 +194,11 @@ mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:
 ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 -- CAST is based on the defined order, not field names
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- Element CAST fails, the whole CAST reports an error
@@ -240,11 +244,11 @@ mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:
 ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 -- CAST is based on the defined order, not field names
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- Element CAST fails, the corresponding element is set to null

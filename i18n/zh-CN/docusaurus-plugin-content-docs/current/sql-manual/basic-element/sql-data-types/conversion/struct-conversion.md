@@ -10,6 +10,10 @@ STRUCT 类型用于存储和处理结构化数据，可以包含不同类型的�
 
 ## 转换为 STRUCT
 
+### FROM FILE
+
+CAST 和 TRY_CAST 不支持将 [FILE](../semi-structured/FILE.md) 转换为 STRUCT，包括容器中嵌套的 FILE 值。可以使用 [EXPLODE_FILE](../../../sql-functions/table-functions/explode-file.md) 展开全部六个字段，或使用 ELEMENT_AT 读取元数据、FL_GET_BINARY 读取二进制内容。转换规则见 [FILE 类型转换](file-conversion.md)。
+
 ### FROM String
 
 #### 严格模式
@@ -191,11 +195,11 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 
 -- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- STRUCT 中的元素 CAST 失败，整个 CAST 报错
@@ -244,19 +248,11 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 
 -- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
-+------------------------+
-
--- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
-+------------------------+
-| renamed_struct         |
-+------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- STRUCT 中的元素 CAST 失败，对应元素设置为 null
