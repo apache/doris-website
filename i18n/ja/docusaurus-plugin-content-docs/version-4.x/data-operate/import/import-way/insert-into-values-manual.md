@@ -1,14 +1,14 @@
 ---
 {
-    "title": "INSERT INTO VALUES",
+    "title": "Insert Into Values によるデータの挿入",
     "language": "ja",
-    "description": "INSERT INTO VALUES 文を使用して、SQL に直接記述したデータを Doris のテーブルに同期的かつアトミックにロードします。機能検証、デモ、少量のデータ取り込みに適しています。",
+    "description": "INSERT INTO VALUES 文を使用し、SQL のインラインデータを Doris テーブルに同期的かつ原子的にデータロードします。機能検証、デモ、少量データの取り込みに適しています。",
     "keywords": [
         "INSERT INTO VALUES",
-        "Doris の同期ロード",
-        "SQL による Doris への書き込み",
-        "アトミックなロード",
-        "Group Commit",
+        "Doris synchronous load",
+        "SQL write to Doris",
+        "atomic load",
+        "group commit",
         "insert_max_filter_ratio",
         "enable_insert_strict",
         "insert_load_default_timeout_second"
@@ -19,41 +19,41 @@
 <!-- Knowledge type: Procedure / Configuration parameters -->
 <!-- Applicable scenarios: Feature validation / Demo / Small-batch data ingestion -->
 
-INSERT INTO VALUES 文は、SQL に直接記述した値を Doris のテーブルにロードします。これは**同期ロード方式**で、実行後にロード結果を直接返すため、応答から成功したかどうかを確認できます。この方式はロードタスクの**アトミック性**を保証します。データはすべて正常にロードされるか、まったくロードされないかのいずれかです。
+INSERT INTO VALUES 文は、SQL のインライン値を Doris テーブルにデータロードします。これは**同期データロード方式**であり、実行後に結果が直接返されるため、応答からデータロードの成否を判断できます。この方式ではデータロードタスクの**原子性**が保証されます。すべてのデータが正常にロードされるか、まったくロードされないかのどちらかです。
 
 ## ユースケース {#use-cases}
 
-INSERT INTO VALUES は、次の二つの用途を想定しています。
+INSERT INTO VALUES は、次の用途を想定しています。
 
 | 用途 | 説明 |
 | --- | --- |
-| 機能検証とデモ | 少量のサンプルデータをロードして Doris の機能を検証します。構文は MySQL と同じです。 |
-| 少量のデータ取り込み | 同時実行数が少なく、データ量も少ない場合に使用します。 |
+| 機能検証 / デモ | 少量のモックデータをロードして Doris の機能を検証します。構文は MySQL と同じです。 |
+| 少量データの取り込み | 同時実行数とデータ量が少ない場合に使用します。 |
 
 :::tip パフォーマンスに関するヒント
-INSERT INTO VALUES を同時実行する場合、コミット段階がスループットのボトルネックになります。データ量が多い場合は、[Group Commit](../load-best-practices/group-commit-manual.md) を有効にしてスループットを向上させてください。
+INSERT INTO VALUES を同時実行する際の性能は、コミット段階のボトルネックによって制限されます。データ量が多い場合は、[Group Commit](../load-best-practices/group-commit-manual.md) を有効にすると、より高いスループットを得られます。
 :::
 
 ## 動作の仕組み {#how-it-works}
 
-INSERT INTO VALUES は MySQL プロトコルを介して FE ノードにジョブを送り、実行します。全体の流れは次のとおりです。
+INSERT INTO VALUES は、MySQL プロトコルを通じて FE ノードにジョブを送信し、実行します。全体の流れは次のとおりです。
 
-1. クライアントが MySQL プロトコルを介して INSERT INTO VALUES 文を FE に送信します。
-2. FE が実行計画を生成します。前半にはクエリ関連のオペレーターが含まれ、最後のオペレーターである `OlapTableSink` がクエリ結果を対象テーブルに書き込みます。
-3. FE が実行計画を BE ノードに配布して実行させ、一つの BE を **Coordinator** ノードとして選択します。
+1. クライアントが MySQL プロトコルを通じて INSERT INTO VALUES 文を FE に送信します。
+2. FE が実行計画を生成します。前半にはクエリ関連の演算子が含まれ、最後の演算子である `OlapTableSink` がクエリ結果を対象テーブルに書き込みます。
+3. FE が実行計画を BE ノードに配布して実行させ、BE の中から **Coordinator** ノードを選択します。
 4. Coordinator ノードがデータを受け取り、ほかの BE ノードに分配して書き込みを完了します。
 
 ## クイックスタート {#quick-start}
 
-INSERT INTO VALUES は MySQL プロトコルを介して送信されます。次の例では、MySQL コマンドラインを使って送信から結果の確認までを示します。構文の詳細については、[INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT) を参照してください。
+INSERT INTO VALUES は MySQL プロトコルを通じて送信されます。以下では MySQL コマンドラインを使用して、送信から実行までの流れを示します。構文の詳細は [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT) を参照してください。
 
 ### 前提条件 {#prerequisites}
 
-INSERT INTO VALUES の実行には、対象テーブルに対する **INSERT 権限**が必要です。現在のユーザーに権限がない場合は、[GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) コマンドで付与してください。
+INSERT INTO VALUES を実行するには、対象テーブルに対する **INSERT 権限**が必要です。現在のユーザーに権限がない場合は、[GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) コマンドで付与してください。
 
-### ロードジョブの作成 {#create-a-load-job}
+### データロードジョブの作成 {#create-a-load-job}
 
-#### ステップ 1: 対象テーブルを作成する {#step-1-create-the-target-table}
+#### ステップ 1：対象テーブルを作成する {#step-1-create-the-target-table}
 
 ```sql
 CREATE TABLE testdb.test_table(
@@ -65,10 +65,10 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-#### ステップ 2: INSERT INTO VALUES でデータを書き込む {#step-2-run-insert-into-values-to-write-data}
+#### ステップ 2：INSERT INTO VALUES を実行してデータを書き込む {#step-2-run-insert-into-values-to-write-data}
 
-:::caution 本番環境での使用は非推奨
-INSERT INTO VALUES は通常、デモやテストにのみ使用します。本番環境でのデータ取り込みには推奨しません。
+:::caution 本番環境での使用は推奨しません
+INSERT INTO VALUES は通常、デモやテストでのみ使用します。本番環境でのデータ取り込みには推奨しません。
 :::
 
 ```sql
@@ -80,14 +80,14 @@ VALUES (1, "Emily", 25),
        (5, "Ava", 17);
 ```
 
-同期ロード方式のため、結果はクライアントに直接返されます。
+同期データロード方式のため、結果はクライアントに直接返されます。
 
 ```JSON
 Query OK, 5 rows affected (0.308 sec)
 {'label':'label_26eebc33411f441c_b2b286730d495e2c', 'status':'VISIBLE', 'txnId':'61071'}
 ```
 
-#### ステップ 3: ロードされたデータを確認する {#step-3-verify-the-loaded-data}
+#### ステップ 3：ロードされたデータを確認する {#step-3-verify-the-loaded-data}
 
 ```sql
 MySQL> SELECT COUNT(*) FROM testdb.test_table;
@@ -99,9 +99,9 @@ MySQL> SELECT COUNT(*) FROM testdb.test_table;
 1 row in set (0.179 sec)
 ```
 
-### ロードジョブの確認 {#view-the-load-job}
+### データロードジョブの確認 {#view-the-load-job}
 
-完了した INSERT INTO VALUES ジョブを確認するには、`SHOW LOAD` コマンドを使用します。
+完了した INSERT INTO VALUES ジョブは、`SHOW LOAD` コマンドで確認できます。
 
 ```sql
 mysql> SHOW LOAD FROM testdb\G
@@ -119,22 +119,22 @@ mysql> SHOW LOAD FROM testdb\G
  EtlFinishTime: 2024-11-20 16:44:08
  LoadStartTime: 2024-11-20 16:44:08
 LoadFinishTime: 2024-11-20 16:44:08
-           URL: 
+           URL:
     JobDetails: {"Unfinished backends":{},"ScannedRows":0,"TaskNumber":0,"LoadBytes":0,"All backends":{},"FileNumber":0,"FileSize":0}
  TransactionId: 61071
   ErrorTablets: {}
           User: root
-       Comment: 
+       Comment:
 1 row in set (0.00 sec)
 ```
 
-### ロードジョブのキャンセル {#cancel-the-load-job}
+### データロードジョブのキャンセル {#cancel-the-load-job}
 
-実行中の INSERT INTO VALUES ジョブをキャンセルするには、MySQL クライアントで `Ctrl-C` を使用します。
+MySQL クライアントでは、`Ctrl-C` を使用して実行中の INSERT INTO VALUES ジョブをキャンセルできます。
 
 ## リファレンス {#reference}
 
-### ロードコマンドの構文 {#load-command-syntax}
+### データロードコマンドの構文 {#load-command-syntax}
 
 ```sql
 INSERT INTO target_table (col1, col2, ...)
@@ -142,43 +142,43 @@ VALUES (val1, val2, ...), (val3, val4, ...), ...;
 ```
 
 :::note
-INSERT INTO VALUES は通常デモにのみ使用し、本番環境での使用は推奨しません。
+INSERT INTO VALUES は通常、デモでのみ使用します。本番環境での使用は推奨しません。
 :::
 
-### ロード設定パラメーター {#load-configuration-parameters}
+### データロードの設定パラメータ {#load-configuration-parameters}
 
-#### FE 設定 {#fe-configuration}
+#### FE の設定 {#fe-configuration}
 
-| パラメーター | デフォルト値 | 説明 |
+| パラメータ | デフォルト値 | 説明 |
 | --- | --- | --- |
-| `insert_load_default_timeout_second` | 14400（4 時間） | ロードタスクのタイムアウト（秒）。この時間内にロードタスクが完了しなければ、システムがキャンセルし、ステータスは `CANCELLED` に変わります。 |
+| `insert_load_default_timeout_second` | 14400（4 時間） | データロードタスクのタイムアウト時間を秒単位で指定します。この時間内にタスクが完了しない場合、システムがキャンセルし、ステータスは `CANCELLED` に変わります。 |
 
 #### セッション変数 {#session-variables}
 
-| パラメーター | デフォルト値 | 説明 |
+| パラメータ | デフォルト値 | 説明 |
 | --- | --- | --- |
-| `insert_timeout` | 14400（4 時間） | INSERT INTO を SQL 文として実行する際のタイムアウト（秒）。 |
-| `enable_insert_strict` | true | `true` に設定すると、不適合なデータが一件でもあればロードは失敗します。`false` に設定すると、不適合な行は無視され、少なくとも一行が正しくロードされればロードは成功と見なされます。バージョン 2.1.4 以前では、INSERT INTO でエラー率を制御できません。このパラメーターで指定できるのは、厳格なデータ品質チェックか、エラーデータの完全な無視のいずれかです。 |
-| `insert_max_filter_ratio` | 1.0 | バージョン 2.1.5 以降でサポートされます。**`enable_insert_strict=false` の場合にのみ有効です。** `INSERT INTO FROM S3/HDFS/LOCAL()` のエラー許容率を制御します。値の範囲は 0 から 1 です。デフォルトの 1.0 は、すべてのエラーを許容することを意味します。エラー行の割合がこの値を超えると、INSERT タスクは失敗します。 |
+| `insert_timeout` | 14400（4 時間） | INSERT INTO を SQL 文として実行する際のタイムアウト時間を秒単位で指定します。 |
+| `enable_insert_strict` | true | `true` に設定すると、不適格なデータが見つかった場合にデータロードが失敗します。`false` に設定すると、不適格な行は無視され、少なくとも 1 行が正しくロードされれば成功とみなされます。バージョン 2.1.4 以前では、INSERT INTO でエラー率を制御できません。このパラメータで選択できるのは、データ品質を厳密に検査するか、エラーデータを完全に無視するかのいずれかです。 |
+| `insert_max_filter_ratio` | 1.0 | バージョン 2.1.5 以降でサポートされ、`enable_insert_strict = false` の場合にのみ有効です。`INSERT INTO ... VALUES` と `INSERT INTO ... SELECT` でフィルタリングされる行の最大割合を制御します。Doris テーブル、外部テーブル、S3、HDFS、LOCAL などのファイル TVF からのクエリも対象です。設定範囲は 0 から 1 で、デフォルトは 1.0 です。`filtered_rows / (loaded_rows + filtered_rows)` がこの値を超えると、INSERT は失敗します。1.0 を指定するとすべての行のフィルタリングが許容されますが、ほかの実行エラーは抑制されません。 |
 
-:::info 不適合なデータの主な原因
-ソースの列の長さが対象列の長さを超える、列の型が一致しない、パーティションが一致しない、列の順序が一致しない、などです。
+:::info データが不適格と判定される主な原因
+ソース列の長さが対象列の長さを超えている、列の型が一致しない、パーティションが一致しない、列の順序が一致しない、といった原因があります。
 :::
 
-### ロードの戻り値 {#load-return-values}
+### データロードの戻り値 {#load-return-values}
 
-INSERT INTO VALUES は SQL 文です。戻り値には、次のフィールドを含む JSON 文字列が含まれます。
+INSERT INTO VALUES は SQL 文です。戻り値には、次のフィールドを持つ JSON 文字列が含まれます。
 
-| パラメーター | 説明 |
+| パラメータ | 説明 |
 | -------- | ------------------------------------------------------------ |
-| `Label`  | ロードジョブのラベルです。`INSERT INTO tbl WITH LABEL label ...` で指定できます。 |
-| `Status` | ロードされたデータの可視性を示すステータスです。<br />- `visible`: ロードが成功し、データは参照可能です。<br />- `committed`: ロードは完了しています。データが参照可能になるまで時間がかかる場合がありますが、再試行は不要です。<br />- `Label Already Exists`: ラベルが重複しています。別のラベルに変更する必要があります。<br />- `Fail`: ロードに失敗しました。 |
-| `Err`    | ロードのエラーメッセージです。 |
-| `TxnId`  | ロードトランザクションの ID です。 |
+| `Label`  | データロードジョブのラベルです。`INSERT INTO tbl WITH LABEL label ...` で指定できます。 |
+| `Status` | ロードされたデータの可視性を示すステータスです。<br />- `visible`：データロードに成功し、データが可視になっています。<br />- `committed`：データロードは完了しています。データが可視になるまで遅延が生じる場合がありますが、再試行は不要です。<br />- `Label Already Exists`：ラベルが重複しているため、別のラベルに変更する必要があります。<br />- `Fail`：データロードに失敗しました。 |
+| `Err`    | データロードのエラーメッセージです。 |
+| `TxnId`  | データロードトランザクションの ID です。 |
 
-代表的な四つの戻り値の例を以下に示します。
+代表的な戻り値の例を以下に示します。
 
-#### ケース 1: INSERT が正常に実行された場合 {#scenario-1-insert-executed-successfully}
+#### シナリオ 1：INSERT が正常に実行された場合 {#scenario-1-insert-executed-successfully}
 
 ```sql
 mysql> INSERT INTO test_table (user_id, name, age) VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (NULL, "Alexander", 60), (5, "Ava", 17);
@@ -186,10 +186,10 @@ Query OK, 5 rows affected (0.05 sec)
 {'label':'label_26eebc33411f441c_b2b286730d495e2c', 'status':'VISIBLE', 'txnId':'61071'}
 ```
 
-- `Query OK`: 文が正常に実行されたことを示します。
-- `5 rows affected`: 合計 5 行がロードされたことを示します。
+- `Query OK`：文が正常に実行されたことを示します。
+- `5 rows affected`：合計 5 行がロードされたことを示します。
 
-#### ケース 2: 警告を伴って INSERT が正常に実行された場合 {#scenario-2-insert-executed-successfully-with-warnings}
+#### シナリオ 2：警告を伴って INSERT が正常に実行された場合 {#scenario-2-insert-executed-successfully-with-warnings}
 
 ```sql
 mysql> INSERT INTO test_table (user_id, name, age) VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (NULL, "Alexander", 60), (5, "Ava", 17);
@@ -197,11 +197,11 @@ Query OK, 4 rows affected, 1 warning (0.04 sec)
 {'label':'label_a8d99ae931194d2b_93357aac59981a18', 'status':'VISIBLE', 'txnId':'61068'}
 ```
 
-- `Query OK`: 文が正常に実行されたことを示します。
-- `4 rows affected`: 合計 4 行がロードされたことを示します。
-- `1 warnings`: 1 行が除外されたことを示します。
+- `Query OK`：文が正常に実行されたことを示します。
+- `4 rows affected`：合計 4 行がロードされたことを示します。
+- `1 warnings`：1 行がフィルタリングされたことを示します。
 
-除外された行を確認するには、[SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD.md) 文を使用します。結果の `URL` からエラーデータを照会できます。以下の「[エラー行の確認](#view-error-rows)」を参照してください。
+フィルタリングされた行は、[SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD.md) 文で確認できます。結果の `URL` を使用してエラーデータを照会できます。詳しくは後述の[エラー行の確認](#view-error-rows)を参照してください。
 
 ```sql
 mysql> SHOW LOAD WHERE label="label_a8d99ae931194d2b_93357aac59981a18"\G
@@ -224,11 +224,11 @@ LoadFinishTime: 2024-11-20 16:35:40
  TransactionId: 61068
   ErrorTablets: {}
           User: root
-       Comment: 
+       Comment:
 1 row in set (0.00 sec)
 ```
 
-#### ケース 3: INSERT は正常に実行されたが、ステータスが committed の場合 {#scenario-3-insert-executed-successfully-but-status-is-committed}
+#### シナリオ 3：INSERT は正常に実行されたが、ステータスが committed の場合 {#scenario-3-insert-executed-successfully-but-status-is-committed}
 
 ```sql
 mysql> INSERT INTO test_table (user_id, name, age) VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (4, "Alexander", 60), (5, "Ava", 17);
@@ -236,7 +236,7 @@ Query OK, 5 rows affected (0.04 sec)
 {'label':'label_78bf5396d9594d4d_a8d9a914af40f73d', 'status':'COMMITTED', 'txnId':'61074'}
 ```
 
-データが参照できないのは一時的な状態です。このバッチのデータはいずれ参照可能になります。[SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md) 文で可視性を確認してください。`TransactionStatus` 列が `VISIBLE` になると、データを参照できます。
+データが見えないのは一時的な状態で、このバッチのデータは最終的に可視になります。[SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md) 文で可視性を確認できます。`TransactionStatus` 列が `VISIBLE` になれば、データは可視です。
 
 ```sql
 mysql> SHOW TRANSACTION WHERE id=61074\G
@@ -251,17 +251,17 @@ mysql> SHOW TRANSACTION WHERE id=61074\G
         CommitTime: 2024-11-20 16:51:54
        PublishTime: 2024-11-20 16:51:54
         FinishTime: 2024-11-20 16:51:54
-            Reason: 
+            Reason:
 ErrorReplicasCount: 0
         ListenerId: -1
          TimeoutMs: 14400000
-            ErrMsg: 
+            ErrMsg:
 1 row in set (0.00 sec)
 ```
 
-#### ケース 4: INSERT の実行に失敗した場合 {#scenario-4-insert-execution-failed}
+#### シナリオ 4：INSERT の実行に失敗した場合 {#scenario-4-insert-execution-failed}
 
-実行に失敗した場合、データは一行もロードされません。
+実行に失敗すると、データはまったくロードされません。
 
 ```sql
 mysql> INSERT INTO test_table (user_id, name, age) VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (NULL, "Alexander", 60), (5, "Ava", 17);
@@ -269,36 +269,36 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Insert has too many filtered da
 ```
 
 - `ERROR 1105 (HY000): errCode = 2, detailMessage = Insert has too many filtered data 1/5 insert_max_filter_ratio is 0.100000.` は失敗の理由を示します。
-- 末尾の URL からエラーデータを照会できます。以下の「[エラー行の確認](#view-error-rows)」を参照してください。
+- 末尾の url を使用してエラーデータを照会できます。詳しくは後述の[エラー行の確認](#view-error-rows)を参照してください。
 
 ## ベストプラクティス {#best-practices}
 
 ### データ量 {#data-volume}
 
-INSERT INTO VALUES は通常、テストやデモに使用します。大量のデータのロードには**推奨しません**。大量データの書き込みには、[Group Commit](../load-best-practices/group-commit-manual.md) またはほかのバッチロード方式を使用してください。
+INSERT INTO VALUES は通常、テストやデモで使用します。大量のデータのロードには**推奨しません**。大量のデータを書き込む場合は、[Group Commit](../load-best-practices/group-commit-manual.md) またはほかのバッチデータロード方式を使用してください。
 
 ### エラー行の確認 {#view-error-rows}
 
-INSERT INTO の戻り値に `url` フィールドが含まれている場合は、次のコマンドでエラー行を確認します。
+INSERT INTO の戻り値に `url` フィールドがある場合、次のコマンドでエラー行を確認できます。
 
 ```sql
 SHOW LOAD WARNINGS ON "url";
 ```
 
-例:
+例：
 
 ```sql
 mysql> SHOW LOAD WARNINGS ON "http://10.16.10.7:8743/api/_load_error_log?file=__shard_18/error_log_insert_stmt_a8d99ae931194d2b-93357aac59981a19_a8d99ae931194d2b_93357aac59981a19"\G
 *************************** 1. row ***************************
          JobId: -1
          Label: NULL
-ErrorMsgDetail: Reason: column_name[user_id], null value for not null column, type=BIGINT. src line []; 
+ErrorMsgDetail: Reason: column_name[user_id], null value for not null column, type=BIGINT. src line [];
 1 row in set (0.00 sec)
 ```
 
-主なエラーの原因は次のとおりです。
+主なエラー原因は次のとおりです。
 
-- ソースの列の長さが対象列の長さを超えている。
+- ソース列の長さが対象列の長さを超えている。
 - 列の型が一致しない。
 - パーティションが一致しない。
 - 列の順序が一致しない。
@@ -309,25 +309,25 @@ INSERT INTO がエラー行を無視するかどうかは、セッション変�
 
 <!-- Knowledge type: FAQ -->
 
-**Q1: INSERT INTO VALUES は同期方式ですか、それとも非同期方式ですか？**
+**Q1：INSERT INTO VALUES は同期方式ですか、非同期方式ですか？**
 
-A: 同期方式です。文の実行後にロード結果が直接返されるため、追加のポーリングは不要です。
+A：同期方式です。文の実行後にデータロード結果が直接返されるため、追加のポーリングは不要です。
 
-**Q2: INSERT INTO VALUES はアトミック性を保証しますか？**
+**Q2：INSERT INTO VALUES では原子性が保証されますか？**
 
-A: はい。一つの INSERT INTO VALUES に含まれるデータは、すべて正常にロードされるか、全体が失敗するかのいずれかで、部分的な書き込みは発生しません。
+A：はい。同一の INSERT INTO VALUES に含まれるデータは、すべて正常にロードされるか、すべて失敗するかのどちらかです。一部のみが書き込まれることはありません。
 
-**Q3: 戻り値のステータスが `COMMITTED` の場合、ロードは失敗していますか？**
+**Q3：返されたステータスが `COMMITTED` の場合、データロードに失敗したという意味ですか？**
 
-A: いいえ。`COMMITTED` はロードが完了し、データが間もなく参照可能になることを示します。再試行は不要です。`SHOW TRANSACTION` で `TransactionStatus` が `VISIBLE` になるまで確認してください。
+A：いいえ。`COMMITTED` はデータロードが完了し、データがまもなく可視になることを示します。再試行は不要です。`SHOW TRANSACTION` で `TransactionStatus` を確認し、`VISIBLE` になるまで待ってください。
 
-**Q4: `Insert has too many filtered data` と表示されるのはなぜですか？**
+**Q4：`Insert has too many filtered data` と報告されるのはなぜですか？**
 
-A: `enable_insert_strict=false` の場合、除外されたデータの割合が `insert_max_filter_ratio` で設定したしきい値を超えたためです。`insert_max_filter_ratio` の制限を緩めるか、ソースデータがテーブルのスキーマ（列の型、NULL の許可など）に適合しているか確認してください。
+A：`enable_insert_strict=false` の場合、フィルタリングされたデータの割合が `insert_max_filter_ratio` で設定したしきい値を超えたためです。`insert_max_filter_ratio` の設定を緩めるか、ソースデータがテーブルスキーマに適合しているかを確認してください。列の型や NULL の許可設定などを確認します。
 
-**Q5: 大量データのロードには、どの方式を使用すべきですか？**
+**Q5：大量のデータをロードするには、どの方式を使用すべきですか？**
 
-A: INSERT INTO VALUES は、同時実行数やデータ量が多いとコミット段階がボトルネックになります。[Group Commit](../load-best-practices/group-commit-manual.md) を有効にするか、Stream Load や Broker Load などの専用のロード方式を選んでください。
+A：INSERT INTO VALUES は、同時実行数やデータ量が多い場合、コミット段階のボトルネックによって制限されます。[Group Commit](../load-best-practices/group-commit-manual.md) を有効にするか、Stream Load や Broker Load などの専用のデータロード方式を選択してください。
 
 ## トラブルシューティング {#troubleshooting}
 
@@ -335,12 +335,12 @@ A: INSERT INTO VALUES は、同時実行数やデータ量が多いとコミッ�
 
 | 症状 | 考えられる原因 | 対処方法 |
 | --- | --- | --- |
-| `null value for not null column` エラー | NOT NULL 列に NULL 値を挿入した。 | ソースデータを修正するか、対象列で NULL を許可してください。 |
-| `Insert has too many filtered data` エラー | 除外された行の割合が `insert_max_filter_ratio` を超えた。 | `insert_max_filter_ratio` のしきい値を上げるか、ソースデータを修正してください。 |
-| `Label Already Exists` エラー | 指定したラベルがすでに使用されている。 | 別のラベルを使用するか、ラベルを指定せずにシステムに自動生成させてください。 |
-| タスクが長時間実行された後、完了せずにキャンセルされる。 | `insert_load_default_timeout_second` または `insert_timeout` を超えた。 | 対応するタイムアウト値を増やすか、ロードを複数のバッチに分けてください。 |
-| 同時実行数が多いとスループットが低い。 | コミット段階がボトルネックになっている。 | [Group Commit](../load-best-practices/group-commit-manual.md) を有効にしてください。 |
+| エラー `null value for not null column` | NOT NULL 列に NULL 値を挿入しました。 | ソースデータを修正するか、対象列で NULL を許可するように変更します。 |
+| エラー `Insert has too many filtered data` | フィルタリングされた行の割合が `insert_max_filter_ratio` を超えています。 | `insert_max_filter_ratio` のしきい値を上げるか、ソースデータを修正します。 |
+| エラー `Label Already Exists` | 指定したラベルがすでに使用されています。 | 別のラベルを使用するか、ラベルを指定せずにシステムに自動生成させます。 |
+| タスクが長時間実行され、完了前にキャンセルされる。 | `insert_load_default_timeout_second` または `insert_timeout` を超えています。 | 対応するタイムアウトパラメータを大きくするか、データロードを複数のバッチに分割します。 |
+| 同時実行数が多いとスループットが低い。 | コミット段階のボトルネックによって制限されています。 | [Group Commit](../load-best-practices/group-commit-manual.md) を有効にします。 |
 
-## 関連情報 {#more-help}
+## その他のヘルプ {#more-help}
 
-INSERT INTO の構文の詳細については、[INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT.md) コマンドのマニュアルを参照してください。MySQL クライアントのコマンドラインで `HELP INSERT` と入力して、追加情報を確認することもできます。
+INSERT INTO の構文の詳細は、[INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT.md) コマンドのマニュアルを参照してください。MySQL クライアントのコマンドラインで `HELP INSERT` と入力して、さらに詳しいヘルプを表示することもできます。
