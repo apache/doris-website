@@ -12,6 +12,8 @@ Calculates the shortest distance on the sphere between two geometry objects, in 
 
 Unlike `ST_DISTANCE_SPHERE`, which accepts longitude and latitude coordinates, `ST_DISTANCE` accepts geometry objects (points, lines, polygons, circles, etc.) as parameters and calculates the shortest distance between their boundaries. If the two shapes intersect (including touching or containing each other), it returns 0.
 
+For the development-version typed `GEOGRAPHY` overload, see [Iceberg spatial types](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types). For calculations involving a LineString or Polygon, a zero distance reported by S2 must be confirmed as an intersection using the original coordinates; otherwise the query raises an unsupported-precision error. Raw WKB storage and accessors are unchanged.
+
 ## Syntax
 
 ```sql

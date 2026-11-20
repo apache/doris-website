@@ -8,6 +8,8 @@
 
 ## Description
 
+For development-version typed GEOGRAPHY inputs, see [Typed Geography](#typed-geography). The existing examples below use the historical STRING spatial interface.
+
 Determines whether one geometric shape (shape1) completely contains another geometric shape (shape2). Returns 1 if shape1 contains all points of shape2; otherwise, returns 0.
 
 - For points: The point must lie inside or on the boundary of the polygon.
@@ -146,3 +148,9 @@ mysql> SELECT ST_Contains(  ST_Polygon("POLYGON ((0 0, 1 1, 0 1, 1 0, 0 0))"), S
 |                                                                                 NULL |
 +--------------------------------------------------------------------------------------+
 ```
+
+## Typed Geography (development version) {#typed-geography}
+
+The development-version typed interface accepts nonempty XY Point, LineString and Polygon values with default `GEOGRAPHY(OGC:CRS84, spherical)` semantics. Geometry, other CRS/algorithms, Z/M, Multi*/GeometryCollection and EMPTY are not supported for calculations; valid raw values remain available for storage and access. NULL arguments return NULL. Edges are spherical geodesics, with the existing smaller-region polygon-ring interpretation. No spatial index or predicate pushdown is provided.
+
+Returns true when every point of the contained value lies in the container interior or boundary and their interiors intersect. The three admitted shape kinds are supported in combination. A line lying solely on a polygon boundary returns false. Contains(g,g) is true; impossible containment across dimensions returns false.
