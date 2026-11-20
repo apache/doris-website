@@ -8,30 +8,35 @@
     "sourceLocale": "en",
     "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-    "sourceCommit": "a3630231339a95694e946147eb1601a336951094",
-    "sourceHash": "de97f7d0b2319c502aa33ebe6553d92e0db0a546233e3838aae400d89a2cc5a7",
-    "sourceTechnicalHash": "97f2a3eebc1eee23ab8e7492c0b5469f4d5f3b9615b17b26a47ba9ab483147df",
-    "targetHash": "e72d8b4259dc545ea761df50dec23a0848c757031634f7f6066b07de65eb8db3",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "60828ccfa1abd4c7c363446d5a65ab269801e09d3e279e092d22e932b0551a09",
+    "sourceTechnicalHash": "86fcefb8afe917f81601cda800812bbd752fe939f870f624193e856d6daa25ce",
+    "targetHash": "6eebdb10f85c297a383eb3a8a0905674effb9d9ead8b9af35548e3b537129b34",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-11-13T05:38:51.564Z",
+    "translatedAt": "2026-11-19T05:57:53.977Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
       "reason": "chinese-reference-changed",
       "attempts": 3,
-      "acceptedWithWarnings": false,
-      "sourceHash": "de97f7d0b2319c502aa33ebe6553d92e0db0a546233e3838aae400d89a2cc5a7",
-      "targetHash": "e72d8b4259dc545ea761df50dec23a0848c757031634f7f6066b07de65eb8db3",
-      "warnings": [],
+      "acceptedWithWarnings": true,
+      "sourceHash": "60828ccfa1abd4c7c363446d5a65ab269801e09d3e279e092d22e932b0551a09",
+      "targetHash": "6eebdb10f85c297a383eb3a8a0905674effb9d9ead8b9af35548e3b537129b34",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"fdb-single-config\"]; received [\"inlineCode\",null,null,\"fdb-system\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"fdb-system\"]; received [\"inlineCode\",null,null,\"fdb-single-config\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"AVAILABLE\"]; received [\"inlineCode\",null,null,\"kubectl get fdb\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"kubectl get fdb\"]; received [\"inlineCode\",null,null,\"AVAILABLE\"]"
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"fdb-single-config\"]; received [\"inlineCode\",null,null,\"fdb-system\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"fdb-system\"]; received [\"inlineCode\",null,null,\"fdb-single-config\"]"
             }
           ]
         },
@@ -40,24 +45,29 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\"]"
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"fdb-single-config\"]; received [\"inlineCode\",null,null,\"fdb-system\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"fdb-system\"]; received [\"inlineCode\",null,null,\"fdb-single-config\"]"
             }
           ]
         },
         {
           "attempt": 3,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"fdb-single-config\"]; received [\"inlineCode\",null,null,\"fdb-system\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"fdb-system\"]; received [\"inlineCode\",null,null,\"fdb-single-config\"]"
+            }
+          ]
         }
       ]
     },
     "sourceRevisions": {
       "en": {
         "path": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-        "blob": "19846e3aa259958a1031a63310830e81abd9e25e"
+        "blob": "34bedcb9b4525b99021742671fc6bff50cea6272"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
-        "blob": "0ed0d2c753390f3940b12b96945419ff2852d331"
+        "blob": "8788faa3126c0451aabffe862a8d9a01b73b028c"
       }
     }
   }

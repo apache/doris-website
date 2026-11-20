@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/account-management/ALTER-USER.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/ALTER-USER.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "7aab4a596cee53212a31d2ca44023ba0b350fdcf79002a595adb11c10f891979",
-    "sourceTechnicalHash": "e9c8c75b27065c17d1320a61e96067ed919458b15c902d39880a5b22ce747b9c",
-    "targetHash": "9375cc626c9eea52e6d0bb2e0f2c1485fb6cc1add139cda848136fec3f75754b",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "3d085337a1f7e62e2f781f8d04eea5ee3ca549e4240c6a60f685866d2f8142d3",
+    "sourceTechnicalHash": "a12e05c80cd1ff94cccb392416584ee2be7bda70610094c149cfd82fdfe594ae",
+    "targetHash": "4342c6b1c0da5db2df68bfb8e12744b1fa1bc55b685af57b6f864945321fbb63",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T07:05:13.840Z",
+    "translatedAt": "2026-11-19T06:24:56.811Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "7aab4a596cee53212a31d2ca44023ba0b350fdcf79002a595adb11c10f891979",
-      "targetHash": "9375cc626c9eea52e6d0bb2e0f2c1485fb6cc1add139cda848136fec3f75754b",
+      "sourceHash": "3d085337a1f7e62e2f781f8d04eea5ee3ca549e4240c6a60f685866d2f8142d3",
+      "targetHash": "4342c6b1c0da5db2df68bfb8e12744b1fa1bc55b685af57b6f864945321fbb63",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"<password>\"]; received [\"inlineCode\",null,null,\"user_identity\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<password_policy>\"]; received [\"inlineCode\",null,null,\"<password>\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"password_policy\"]; received [\"inlineCode\",null,null,\"<password_policy>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/account-management/ALTER-USER.md",
+        "blob": "6633c747d4fc1d57ab3d22cf8401817b9e9f90e1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/ALTER-USER.md",
+        "blob": "f320212c29445efc61c7239586ebb0223ac09f08"
+      }
     }
   }
 }

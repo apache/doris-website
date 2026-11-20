@@ -8,23 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
-    "sourceTechnicalHash": "95a0b9d880040f6c5df1829657ef4e7ee05b731bce2a5c9af8c0c15ef51fdd1d",
-    "targetHash": "745062ce65dabdc1b9eb2ca0023b1187877c56537bd6ee6e0e15f4786ef862da",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "65b134c21479039540efbc0128fafc759fd9469bbd5a78d530ff2965965dbac0",
+    "sourceTechnicalHash": "012cbeba28d3c2b57fc82cd96cf0956cdaffae1c44bddd6fdf7442a806d0120b",
+    "targetHash": "9a02965e37d22ae621e16a47e89e6f9e5593e8b1db4c398a03e2b3a19c9e3746",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T07:05:55.542Z",
+    "translatedAt": "2026-11-19T06:27:10.696Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
-      "targetHash": "745062ce65dabdc1b9eb2ca0023b1187877c56537bd6ee6e0e15f4786ef862da",
+      "sourceHash": "65b134c21479039540efbc0128fafc759fd9469bbd5a78d530ff2965965dbac0",
+      "targetHash": "9a02965e37d22ae621e16a47e89e6f9e5593e8b1db4c398a03e2b3a19c9e3746",
       "warnings": [],
       "history": [
         {
@@ -32,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+        "blob": "67bfe7553d7b38dbac7516d683fd7a54daba2f1d"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+        "blob": "d066737eaf30ed49d0a01509ef8b19932b5c8c50"
+      }
     }
   }
 }
