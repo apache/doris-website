@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/install-fdb.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/install-fdb.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "5e1c2edefcbc11390a7aa9cb2f8c86c8c7e09ff026151069676421cfb8077b06",
-    "sourceTechnicalHash": "06d8f72da6b9057486d4727f59ff55cfa2f155859ffcb3302e86c32c7e5fa26a",
-    "targetHash": "8e7a2bf730b1904cd1eeb10376adac30464652e5dcc28fada44ef83a7d70538b",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "c1e71573d7d8480e7d15d7fc60f2ce642d297c41db6a1a63f236d225a1386f33",
+    "sourceTechnicalHash": "6523923552eb9af1097f0ba8764429bcff040a5fd0445af039f81c126728c72e",
+    "targetHash": "961533ff06d321cb552f40f7c1188d1a93b95025c6cc7b2ba9868cbcbdbe9f03",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T01:12:08.628Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-19T17:18:44.632Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c1e71573d7d8480e7d15d7fc60f2ce642d297c41db6a1a63f236d225a1386f33",
+      "targetHash": "961533ff06d321cb552f40f7c1188d1a93b95025c6cc7b2ba9868cbcbdbe9f03",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"100\",\"1000\",\"132\",\"16\",\"17.6\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.35.0\",\"2.35.0\",\"2.35.0\",\"20\",\"200\",\"200\",\"256\",\"256\",\"256\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4.4\",\"4059\",\"5\",\"50\",\"500\",\"64\",\"64\",\"64\",\"64\",\"64\",\"7\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1.67\",\"7.1.67\",\"7.3\",\"7.3.69\",\"7.3.69\",\"8\",\"8\",\"8\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"100\",\"1000\",\"132\",\"16\",\"17.6\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.35.0\",\"2.35.0\",\"2.35.0\",\"20\",\"200\",\"200\",\"256\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4.4\",\"4059\",\"5\",\"50\",\"500\",\"64\",\"64\",\"64\",\"64\",\"64\",\"7\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1\",\"7.1.67\",\"7.1.67\",\"7.3\",\"7.3.69\",\"7.3.69\",\"8\",\"8\",\"8\",\"9\",\"9\",\"9\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/install-fdb.md",
+        "blob": "0a1d92d974f7e5da22bf09ed7d9ba0220e943c37"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/install-fdb.md",
+        "blob": "767e64dcf71e5b80a19a772c2676a31ab49348cf"
+      }
+    }
   }
 }
