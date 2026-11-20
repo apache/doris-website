@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "af1474677fc59b708718449fb10fdc133836c4217644277c0755f61a4f3abf92",
-    "sourceTechnicalHash": "175d416210d1d920ea3d8f5e912b9777c912b9baaedbb040b37b2764200f6db2",
-    "targetHash": "a79cd95ee379f2ecd903c632f9c5892ec9428ec8b5dba5aef9a8fb5a35c728dc",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "53fc5de5000e746bf98d8372e29ffcc79f0d5c81b036b3d2a9ea0347eb2181a2",
+    "sourceTechnicalHash": "6286a25eb69f384aa687536bf0f7e52e13f3eddedf9318d1386f36a51510bad7",
+    "targetHash": "7fb91aae71c2beb43cbe2e53147db1359c17e7934b9b19bcb7d265b5dbb4a82b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T17:34:38.526Z",
+    "translatedAt": "2026-11-19T06:50:40.110Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "af1474677fc59b708718449fb10fdc133836c4217644277c0755f61a4f3abf92",
-      "targetHash": "a79cd95ee379f2ecd903c632f9c5892ec9428ec8b5dba5aef9a8fb5a35c728dc",
+      "sourceHash": "53fc5de5000e746bf98d8372e29ffcc79f0d5c81b036b3d2a9ea0347eb2181a2",
+      "targetHash": "7fb91aae71c2beb43cbe2e53147db1359c17e7934b9b19bcb7d265b5dbb4a82b",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"17\",\"192.168.88.62\",\"2\",\"2\",\"2\",\"2\",\"200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"30000\",\"31545\",\"32767\",\"4\",\"8\",\"8\",\"8\",\"8030\",\"9030\",\"9030\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"17\",\"192.168.88.62\",\"2\",\"2\",\"2\",\"2\",\"200\",\"3\",\"3\",\"3\",\"3\",\"300\",\"30000\",\"31545\",\"32767\",\"4\",\"8\",\"8\",\"8\",\"8030\",\"9030\",\"9030\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"LoadBalancer\"]; received [\"inlineCode\",null,null,\"feSpec.service\"]\nprotected node 52: expected [\"inlineCode\",null,null,\"feSpec.service\"]; received [\"inlineCode\",null,null,\"LoadBalancer\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
+        "blob": "be92731be18686ce9c9d08ba60aec39976cbcd91"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
+        "blob": "a27adc12bffa25b98f5d2b5030ea9f0957162749"
+      }
     }
   }
 }

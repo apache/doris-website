@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
-    "sourceTechnicalHash": "95a0b9d880040f6c5df1829657ef4e7ee05b731bce2a5c9af8c0c15ef51fdd1d",
-    "targetHash": "53116ff2d94362631d90328adb3f47835fd7b4cc15e3265d74963419f45154f5",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "65b134c21479039540efbc0128fafc759fd9469bbd5a78d530ff2965965dbac0",
+    "sourceTechnicalHash": "012cbeba28d3c2b57fc82cd96cf0956cdaffae1c44bddd6fdf7442a806d0120b",
+    "targetHash": "ab17c6607d1ef2176f096d6f60889ca5016cb73d355a56eff0a1d07c533c0403",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T12:33:47.040Z",
+    "translatedAt": "2026-11-19T07:07:52.599Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
-      "targetHash": "53116ff2d94362631d90328adb3f47835fd7b4cc15e3265d74963419f45154f5",
+      "sourceHash": "65b134c21479039540efbc0128fafc759fd9469bbd5a78d530ff2965965dbac0",
+      "targetHash": "ab17c6607d1ef2176f096d6f60889ca5016cb73d355a56eff0a1d07c533c0403",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"user_identity\"]; received [\"inlineCode\",null,null,\"CREATE USER\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"CREATE USER\"]; received [\"inlineCode\",null,null,\"user_identity\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"user_identity\"]; received [\"link\",\"./SHOW-ROLES.md\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+        "blob": "67bfe7553d7b38dbac7516d683fd7a54daba2f1d"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+        "blob": "d066737eaf30ed49d0a01509ef8b19932b5c8c50"
+      }
     }
   }
 }
