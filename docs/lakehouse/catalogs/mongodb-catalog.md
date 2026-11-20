@@ -144,7 +144,36 @@ Unknown `mongodb.*` properties are rejected. Timeout values are milliseconds; al
 
 For read preference and concern, precedence is **explicit statement/session value > URI option > Catalog property > default**. An `inherit` session value uses the effective URI/Catalog policy. The Catalog connection/selection/socket/pool properties instead **override the corresponding URI transport options**. Timeouts and client limits do not set the number of splits.
 
-TLS/authentication URI options are passed to the drivers; any referenced files must be available to the FE and BEs. Disabling TLS hostname validation is rejected. Certificate/credential rotation services and generalized cross-query/source admission are not provided by this Catalog. Use the authentication and TLS combinations qualified for your deployment.
+### TLS connections
+
+Enable encrypted connections with `tls=true` in `mongodb.uri`. FE metadata access uses the Java driver, while BE data reads use the C driver; configure certificate material for each process separately.
+
+| Process | Server certificate trust | Client certificate for mutual TLS |
+| --- | --- | --- |
+| Every FE | JVM truststore, configured with `javax.net.ssl.trustStore` and its password/type when a custom store is required. | JVM keystore, configured with `javax.net.ssl.keyStore` and its password/type. |
+| Every participating BE | `tlsCAFile` in the URI identifies the trusted CA PEM file. | `tlsCertificateKeyFile` identifies the client certificate/private-key PEM file; `tlsCertificateKeyFilePassword` supplies the password for an encrypted key. |
+
+For a private CA, import the CA certificate into a JVM truststore and append the following to each FE's existing `JAVA_OPTS_FOR_JDK_17` in `fe.conf`, preserving the other JVM options:
+
+```text
+-Djavax.net.ssl.trustStore=<truststore-file>
+-Djavax.net.ssl.trustStorePassword=<truststore-password>
+-Djavax.net.ssl.trustStoreType=PKCS12
+```
+
+When MongoDB requires a client certificate, also append:
+
+```text
+-Djavax.net.ssl.keyStore=<client-keystore-file>
+-Djavax.net.ssl.keyStorePassword=<keystore-password>
+-Djavax.net.ssl.keyStoreType=PKCS12
+```
+
+Restart the FEs after changing these startup settings. They apply to the FE JVM, rather than one Catalog. URI options such as `tlsCAFile` and `tlsCertificateKeyFile` do not configure the Java driver's truststore/keystore. Ensure the JVM stores are available on every FE, and the URI's CA/client PEM files are available at the configured paths on every participating BE.
+
+TLS can use SCRAM username/password authentication. Mutual TLS can also retain SCRAM authentication; presenting a client certificate does not by itself select MongoDB X.509 database authentication. For X.509 authentication, use `authMechanism=MONGODB-X509&authSource=%24external` in the URI and authorize the certificate subject in MongoDB's `$external` database. The qualified X.509 setup uses the same authorized certificate identity for FE and BE; other identity combinations require separate qualification.
+
+Server-validated TLS with SCRAM-SHA-1/SCRAM-SHA-256, and mutual TLS with SCRAM-SHA-256/MONGODB-X509, are qualified on MongoDB 7.0.28/8.0.20 replica sets and mongos. Invalid CA/hostname or client-certificate/key settings fail the connection. Disabling TLS hostname validation is rejected. Certificate/credential rotation services and generalized cross-query/source admission remain outside this Catalog's scope.
 
 ## Schema and BSON types
 
@@ -189,7 +218,9 @@ Only the listed target families are supported; MAP, VARIANT, and arbitrary impli
 
 ### Date/time and Decimal precision
 
-BSON Date has millisecond precision and carries no original time-zone label. `mongodb.datetime_timezone` stays UTC; Doris session `time_zone` controls the returned local datetime. Increasing DATETIME precision pads the millisecond value; it cannot recover microseconds that MongoDB never stored. A value with nonzero milliseconds cannot be silently truncated to `DATETIME(0)`: it becomes NULL under `type_mismatch=null`, or fails under `error`.
+BSON Date has millisecond precision and carries no original time-zone label. The native mapping converts it to a UTC DATETIME; `mongodb.datetime_timezone` accepts only UTC. Changing the Doris session `time_zone` does not shift these mapped values. Use an explicit conversion such as `CONVERT_TZ(created, 'UTC', 'Asia/Shanghai')` when a local datetime is needed: `2024-01-01 00:00:00.123` becomes `2024-01-01 08:00:00.123`.
+
+Increasing DATETIME precision pads the millisecond value; it cannot recover microseconds that MongoDB never stored. A value with nonzero milliseconds cannot be silently truncated to `DATETIME(0)`: it becomes NULL under `type_mismatch=null`, or fails under `error`.
 
 Decimal conversion likewise requires the exact target scale and precision. For example, `12.34` fits `DECIMAL(18,2)` but needs rounding for `DECIMAL(18,1)`; a value that does not fit fails or becomes NULL. Non-finite Decimal128 values have no Doris DECIMAL representation. Keep them as Extended JSON when needed.
 
