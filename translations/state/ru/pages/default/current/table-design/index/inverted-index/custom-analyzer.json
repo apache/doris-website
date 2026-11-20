@@ -8,39 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/inverted-index/custom-analyzer.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/custom-analyzer.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "99ac7aa2757304bf537446413f911bb8fba6a7a8f6324d87079d280f9b82648e",
-    "sourceTechnicalHash": "34cf375f7990721966f6b46e63603c11962ae9f89bc441736f57de769b4ed7e4",
-    "targetHash": "3af82be7f297dbddd7f601aeecc6c262dd9203f46a8498f242038514c898cc10",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "3703d2fa892c480ff9b81df84459409e74505437e76d9f376964e5a8cc75b549",
+    "sourceTechnicalHash": "9813f302fda57781afbe8ee9652128298111476a08db9dbd7f2ed736629aef6a",
+    "targetHash": "82e99f4a5e9c3c6447772ccf0385c4e81139067cba2ba0c2aa104879ff61ceeb",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:03:18.898Z",
+    "translatedAt": "2026-11-19T20:26:30.061Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
-      "modelCalls": 2,
-      "acceptedWithWarnings": false,
-      "sourceHash": "99ac7aa2757304bf537446413f911bb8fba6a7a8f6324d87079d280f9b82648e",
-      "targetHash": "3af82be7f297dbddd7f601aeecc6c262dd9203f46a8498f242038514c898cc10",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "3703d2fa892c480ff9b81df84459409e74505437e76d9f376964e5a8cc75b549",
+      "targetHash": "82e99f4a5e9c3c6447772ccf0385c4e81139067cba2ba0c2aa104879ff61ceeb",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 49: expected [\"inlineCode\",null,null,\"char_group\"]; received [\"inlineCode\",null,null,\"token_filter\"]\nprotected node 50: expected [\"inlineCode\",null,null,\"tokenize_on_chars\"]; received [\"inlineCode\",null,null,\"char_group\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"basic\"]; received [\"inlineCode\",null,null,\"tokenize_on_chars\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 81: expected [\"inlineCode\",null,null,\"1024\"]; received [\"inlineCode\",null,null,\"ngram\"]\nprotected node 82: expected [\"inlineCode\",null,null,\"ngram\"]; received [\"inlineCode\",null,null,\"1024\"]\nprotected node 86: expected [\"inlineCode\",null,null,\"1024\"]; received [\"inlineCode\",null,null,\"ngram\"]"
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + Configuration parameters + Operating procedures -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: обзор функции + параметры конфигурации + рабочие процедуры -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Inverted index text tokenization customization / Multilingual search / Auto-completion / Exact match -->\"]; received [\"html\",null,null,\"<!-- Подходящие сценарии: настройка токенизации текста инвертированного индекса / многоязычный поиск / автодополнение / точное совпадение -->\"]\nprotected node 14: expected [\"code\",null,null,\"Original text ──► [char_filter] ──► [tokenizer] ──► [token_filter] ──► Terms\"]; received [\"code\",null,null,\"Исходный текст ──► [char_filter] ──► [tokenizer] ──► [token_filter] ──► Термы\"]"
             }
           ]
         },
         {
           "attempt": 2,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 49: expected [\"inlineCode\",null,null,\"char_group\"]; received [\"inlineCode\",null,null,\"token_filter\"]\nprotected node 50: expected [\"inlineCode\",null,null,\"tokenize_on_chars\"]; received [\"inlineCode\",null,null,\"char_group\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"basic\"]; received [\"inlineCode\",null,null,\"tokenize_on_chars\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 49: expected [\"inlineCode\",null,null,\"char_group\"]; received [\"inlineCode\",null,null,\"token_filter\"]\nprotected node 50: expected [\"inlineCode\",null,null,\"tokenize_on_chars\"]; received [\"inlineCode\",null,null,\"char_group\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"basic\"]; received [\"inlineCode\",null,null,\"tokenize_on_chars\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/table-design/index/inverted-index/custom-analyzer.md",
+        "blob": "0ed0ad78e3c0188132d27b2394a98b1f76c0463a"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/custom-analyzer.md",
+        "blob": "5ad373201d8520c8521a989cc54d2645480d1824"
+      }
     }
   }
 }

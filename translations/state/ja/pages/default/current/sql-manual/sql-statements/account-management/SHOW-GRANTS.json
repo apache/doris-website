@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-GRANTS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "65b134c21479039540efbc0128fafc759fd9469bbd5a78d530ff2965965dbac0",
+    "sourceTechnicalHash": "012cbeba28d3c2b57fc82cd96cf0956cdaffae1c44bddd6fdf7442a806d0120b",
+    "targetHash": "7ccdd5c348deeee3e7ab66abf18e622065db4dcec6d0c4a20bc152cad66493b7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-19T04:46:31.535Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "65b134c21479039540efbc0128fafc759fd9469bbd5a78d530ff2965965dbac0",
+      "targetHash": "7ccdd5c348deeee3e7ab66abf18e622065db4dcec6d0c4a20bc152cad66493b7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+        "blob": "67bfe7553d7b38dbac7516d683fd7a54daba2f1d"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+        "blob": "d066737eaf30ed49d0a01509ef8b19932b5c8c50"
+      }
+    }
+  }
+}

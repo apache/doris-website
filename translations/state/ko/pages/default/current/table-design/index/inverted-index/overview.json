@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/inverted-index/overview.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/overview.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "51db53e6739aa7d0093f7aff3a8c5bccf78d62dd04ddcb2950d0f434d80b100d",
-    "sourceTechnicalHash": "4c4d7bc4cb0cb0f6a093db2fa4e253dd6aa4af45a673b253a92f7c41a80f5510",
-    "targetHash": "f5e1c134f5a20ba34ee684a1e39c0cfc1b9c87cf2779f64211b69267b9144844",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "3dbc99cdf17d79e84bbf68ac482c51e6c5ed5b5aa35286a4a70fb52f0a3ecaea",
+    "sourceTechnicalHash": "a7013fc4d2b2b506afc560eac7422a1141cd8243d68dea824a5889da95506beb",
+    "targetHash": "5b6a3f2481c0e5433b64f711550334740cd0cab02991fee875bcd834127bcd11",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T08:02:05.455Z",
+    "translatedAt": "2026-11-19T18:30:32.724Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "51db53e6739aa7d0093f7aff3a8c5bccf78d62dd04ddcb2950d0f434d80b100d",
-      "targetHash": "f5e1c134f5a20ba34ee684a1e39c0cfc1b9c87cf2779f64211b69267b9144844",
+      "sourceHash": "3dbc99cdf17d79e84bbf68ac482c51e6c5ed5b5aa35286a4a70fb52f0a3ecaea",
+      "targetHash": "5b6a3f2481c0e5433b64f711550334740cd0cab02991fee875bcd834127bcd11",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature introduction + Quick start -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 기능 소개 + 빠른 시작 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Keyword search / Phrase matching / RAG hybrid retrieval / Relevance ranking -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 키워드 검색 / 구문 일치 / RAG 하이브리드 검색 / 관련성 순위 지정 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/table-design/index/inverted-index/overview.md",
+        "blob": "b856863f2c62008ba6ed31ebc47ea8a68c59436c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/overview.md",
+        "blob": "9874bab26c0c11e2b436858a2ac2a40659b918dd"
+      }
     }
   }
 }

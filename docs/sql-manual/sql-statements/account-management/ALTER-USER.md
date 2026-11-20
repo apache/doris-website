@@ -2,7 +2,7 @@
 {
     "title": "ALTER USER",
     "language": "en",
-    "description": "The ALTER USER statement is used to modify a user's account attributes, including passwords, and password policies, etc."
+    "description": "The ALTER USER statement modifies account passwords and policies, including dual-password rotation."
 }
 ---
 
@@ -10,10 +10,13 @@
 
 The `ALTER USER` statement is used to modify a user's account attributes, including passwords, and password policies, etc.
 
+Since 4.2.1, Doris supports dual passwords for built-in password authentication with `RETAIN CURRENT PASSWORD` and `DISCARD OLD PASSWORD`.
+
 ## Syntax
 
 ```sql
-ALTER USER [IF EXISTS] <user_identity> [IDENTIFIED BY <password>]
+ALTER USER [IF EXISTS] <user_identity>
+    [IDENTIFIED BY <password> [RETAIN CURRENT PASSWORD] | DISCARD OLD PASSWORD]
 [<password_policy>]
 [<comment>]
 
@@ -67,13 +70,21 @@ password_policy:
 
 >Specify the user comment.
 
+**4. `RETAIN CURRENT PASSWORD` (since 4.2.1)**
+
+> Use with `IDENTIFIED BY` to make the previous primary password the retained secondary password. The new password becomes the primary; either password can authenticate. Any earlier secondary password is replaced.
+
+**5. `DISCARD OLD PASSWORD` (since 4.2.1)**
+
+> Remove the retained secondary password, leaving the primary unchanged. This is a standalone operation: do not combine it with a password change, password policy, comment, or other account operation. If no secondary password exists, it has no effect.
+
 ## Access Control Requirements
 
 The user executing this SQL command must have at least the following privileges:
 
 | Privilege     | Object    | Notes |
 |:--------------|:----------|:------|
-| ADMIN_PRIV    | USER or ROLE    | This operation can only be performed by users or roles with ADMIN_PRIV permissions  |
+| GRANT_PRIV or ADMIN_PRIV | Global | Required for ALTER USER, including RETAIN CURRENT PASSWORD and DISCARD OLD PASSWORD. |
 
 ## Usage Notes
 
@@ -82,11 +93,20 @@ Since 4.1.5, only `'root'@'%'` is the special root identity. An identity such as
 1. Starting from version 2.0, this command no longer supports modifying user roles. Please use [GRANT](./GRANT-TO.md) and [REVOKE](./REVOKE-FROM.md) for related operations.
 
 2. In an ALTER USER command, only one of the following account attributes can be modified at the same time:
-- Change password
+- Change password, optionally with RETAIN CURRENT PASSWORD
+- Discard the retained secondary password
 - Modify `PASSWORD_HISTORY`
 - Modify `PASSWORD_EXPIRE`
 - Modify `FAILED_LOGIN_ATTEMPTS` and `PASSWORD_LOCK_TIME`
 - Unlock users
+
+### Dual Passwords (Since 4.2.1)
+
+- `RETAIN CURRENT PASSWORD` requires a nonempty current primary password and a password change. An empty new password clears both password slots, even with RETAIN.
+- An ordinary nonempty password change without RETAIN preserves an existing secondary password; it does not revoke that credential.
+- Account lock and password expiration checks apply to both passwords. DISCARD does not change password history or restart the password expiration clock.
+
+See [Dual Passwords](../../../admin-manual/auth/authentication/internal#dual-passwords) for the rotation procedure, observability, domain-account behavior, and upgrade restrictions. These clauses manage built-in passwords, not credentials held by LDAP or an external authentication integration.
 
 ## Example
 
@@ -119,3 +139,17 @@ ALTER USER jack@'%' ACCOUNT_UNLOCK
 ```sql
 ALTER USER jack@'%' COMMENT "this is my first user"
 ```
+
+- Rotate the password while keeping the previous password usable (since 4.2.1)
+
+```sql
+ALTER USER jack@'%' IDENTIFIED BY 'NewPwd_2026!' RETAIN CURRENT PASSWORD;
+```
+
+Both the previous password and `NewPwd_2026!` can authenticate. After all clients have switched to the new password, discard the retained one:
+
+```sql
+ALTER USER jack@'%' DISCARD OLD PASSWORD;
+```
+
+Only `NewPwd_2026!` can authenticate afterward.

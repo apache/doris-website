@@ -8,42 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/handling-messy-data.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/handling-messy-data.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-    "sourceTechnicalHash": "59c9fe52f4658a8061ab29193716e29568582041a5064030b0e6deb4f7d77ee4",
-    "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "8e2403bf71bc3e2293fdf2db7987be2c7860e34dd77027445394567ec7114f09",
+    "sourceTechnicalHash": "35470e070d1b31f6e4a3789cbf149a582f98d4dad02d664d0355bdf567745e64",
+    "targetHash": "0db0364b7a16dd22b2d859a89f5630674331f80fd93df358b1a658ef0039212c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:29:41.608Z",
+    "translatedAt": "2026-11-19T21:20:46.555Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-      "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "8e2403bf71bc3e2293fdf2db7987be2c7860e34dd77027445394567ec7114f09",
+      "targetHash": "0db0364b7a16dd22b2d859a89f5630674331f80fd93df358b1a658ef0039212c",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 34: expected [\"inlineCode\",null,null,\"TinyInt\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"abc\"]; received [\"inlineCode\",null,null,\"TinyInt\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"2000\"]; received [\"inlineCode\",null,null,\"abc\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters + Operational steps -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: параметры конфигурации + операционные шаги -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data import / Dirty data governance / Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: импорт данных / управление грязными данными / устранение неполадок -->\"]\nprotected node 12: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameter description -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: описание параметра конфигурации -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"\\\\N\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"\\\\N\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"\\\"abc\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 34: expected [\"inlineCode\",null,null,\"TinyInt\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"abc\"]; received [\"inlineCode\",null,null,\"TinyInt\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"2000\"]; received [\"inlineCode\",null,null,\"abc\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "data-operate/import/handling-messy-data",
-        "sourcePath": "docs/data-operate/import/handling-messy-data.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/handling-messy-data.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-        "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
-        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
-        "pr": "https://github.com/apache/doris-website/pull/4436"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/handling-messy-data.md",
+        "blob": "8f872d023edaa5dcb01c726fadb77517b8ba16ea"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/handling-messy-data.md",
+        "blob": "8535a7e60b342d61c3b1ad8f371578577615ef0d"
       }
     }
   }
