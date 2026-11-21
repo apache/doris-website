@@ -986,6 +986,7 @@ const sidebars: SidebarsConfig = {
                                         'admin-manual/auth/certificate',
                                         'admin-manual/auth/fe-certificate',
                                         'admin-manual/auth/tls-framework',
+                                        'admin-manual/auth/private-rpc-tls',
                                     ],
                                 },
                                 'admin-manual/auth/encryption-function',
