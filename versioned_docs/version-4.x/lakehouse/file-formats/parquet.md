@@ -19,6 +19,10 @@ This document introduces the support for reading and writing Parquet file format
 
 ## Supported Compression Formats
 
+### Reading
+
+Reading existing files supports the following codecs.
+
 * uncompressed
 * snappy
 * lz4
@@ -26,6 +30,15 @@ This document introduces the support for reading and writing Parquet file format
 * gzip
 * lzo
 * brotli
+
+### Writing
+
+| Write entry point | Supported codecs |
+| --- | --- |
+| Hive / Iceberg Catalog | `plain`, `snappy`, `zstd`, `lz4` (since 4.1.3), `gzip` (since 4.2.0) |
+| OUTFILE / EXPORT | `plain`, `snappy`, `gzip`, `brotli`, `zstd`, `lz4` |
+
+`plain` means no compression. For Catalog write configuration and defaults, see [Hive Catalog](../catalogs/hive-catalog.mdx) and [Iceberg Catalog](../catalogs/iceberg-catalog.mdx). OUTFILE / EXPORT selects the codec with the `compress_type` property.
 
 ## Parameters
 

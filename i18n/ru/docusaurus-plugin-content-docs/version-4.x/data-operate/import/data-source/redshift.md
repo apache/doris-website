@@ -2,14 +2,14 @@
 {
     "title": "Redshift",
     "language": "ru",
-    "description": "Перенос данных из Redshift в Doris: экспорт в S3 с помощью Redshift UNLOAD и последующая загрузка в Doris с помощью S3 Load. Создание таблиц, сопоставление типов данных, обработка ошибок и пакетная загрузка.",
+    "description": "Миграция данных из Redshift в Doris путем экспорта в S3 с помощью Redshift UNLOAD и последующей загрузки в Doris с помощью S3 Load. Описаны создание таблицы, сопоставление типов данных, обработка ошибок и пакетная загрузка.",
     "keywords": [
-        "миграция из Redshift в Doris",
+        "Миграция Redshift в Doris",
         "Redshift UNLOAD",
         "S3 Load",
-        "сопоставление типов данных Redshift",
-        "импорт данных в Doris",
-        "загрузка Parquet",
+        "Сопоставление типов данных Redshift",
+        "Загрузка данных в Doris",
+        "Загрузка Parquet",
         "ETL_QUALITY_UNSATISFIED"
     ]
 }
@@ -18,52 +18,52 @@
 <!-- Knowledge type: Procedure -->
 <!-- Applicable scenario: Data migration / Redshift to Doris -->
 
-При переносе данных из Redshift в Apache Doris в качестве промежуточного хранилища обычно используется сервис объектного хранения (например, Amazon S3). Общая последовательность миграции:
+При миграции данных из Redshift в Apache Doris обычно используется объектное хранилище (например, Amazon S3) в качестве промежуточного носителя. Общий процесс миграции выглядит следующим образом:
 
 1. Создайте целевую таблицу в Doris на основе схемы исходной таблицы.
 2. Экспортируйте данные в объектное хранилище с помощью оператора Redshift [UNLOAD](https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html).
-3. Используйте функцию S3 Load в Doris, чтобы прочитать данные из объектного хранилища и загрузить их в Doris. Подробнее см. в разделе [S3 Load](./amazon-s3.md).
+3. Используйте функцию S3 Load в Doris для чтения данных из объектного хранилища и их загрузки в Doris. Подробнее см. в разделе [S3 Load](./amazon-s3.md).
 
 ## Примечания {#notes}
 
-Перед миграцией обратите внимание на следующее:
+Перед выполнением миграции обратите внимание на следующие моменты:
 
-- **Модель данных и стратегия партиционирования**: выберите подходящую [модель данных](../../../table-design/data-model/intro.mdx) Doris на основе схемы исходной таблицы Redshift и определите стратегию [партиционирования](../../../table-design/data-partitioning/dynamic-partitioning.md) и [бакетирования](../../../table-design/data-partitioning/data-bucketing.md). Дополнительные рекомендации по проектированию таблиц см. в разделе [Рекомендации по загрузке](../load-best-practices/load-best-practices.md).
-- **Преобразование типов**: перед экспортом данных типа `TIME` из Redshift необходимо выполнить `CAST` в `VARCHAR`.
-- **Ограничения для сложных типов**: файлы Parquet/ORC, содержащие сложные типы (Struct/Array/Map), в настоящее время необходимо загружать с помощью [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous).
+- **Стратегия моделирования и секционирования**: выберите подходящую [модель данных](../../../table-design/data-model/intro.mdx) Doris на основе схемы исходной таблицы Redshift и определите стратегии [секционирования](../../../table-design/data-partitioning/dynamic-partitioning.md) и [бакетирования](../../../table-design/data-partitioning/data-bucketing.md). Дополнительные рекомендации по проектированию таблиц см. в разделе [Лучшие практики загрузки данных](../load-best-practices/load-best-practices.md).
+- **Преобразование типов**: при экспорте типа `TIME` из Redshift сначала преобразуйте его с помощью `CAST` в `VARCHAR`.
+- **Ограничения сложных типов**: файлы Parquet/ORC, содержащие сложные типы (Struct/Array/Map), в настоящее время необходимо загружать с помощью [загрузки через TVF](./amazon-s3.md#method-2-load-with-tvf-synchronous).
 
 ## Сопоставление типов данных {#data-type-mapping}
 
 <!-- Knowledge type: Configuration -->
 
-Перед миграцией сопоставьте типы данных Redshift с типами данных Doris по следующей таблице:
+Перед миграцией сопоставьте типы данных Redshift и Doris по таблице ниже:
 
-| Redshift         | Doris          | Примечания                       |
-| ---------------- | -------------- | -------------------------------- |
-| SMALLINT         | SMALLINT       |                                  |
-| INTEGER          | INT            |                                  |
-| BIGINT           | BIGINT         |                                  |
-| DECIMAL          | DECIMAL        |                                  |
-| REAL             | FLOAT          |                                  |
-| DOUBLE PRECISION | DOUBLE         |                                  |
-| BOOLEAN          | BOOLEAN        |                                  |
-| CHAR             | CHAR           |                                  |
-| VARCHAR          | VARCHAR/STRING | Максимальная длина VARCHAR: 65535 |
-| DATE             | DATE           |                                  |
-| TIMESTAMP        | DATETIME       |                                  |
-| TIME/TIMEZ       | STRING         |                                  |
-| SUPER            | VARIANT        |                                  |
-| OTHER            | UNSUPPORTED    |                                  |
+|     Redshift     |     Doris      |              Примечания              |
+| ---------------- | -------------- | ------------------------------------ |
+| SMALLINT         | SMALLINT       |                                      |
+| INTEGER          | INT            |                                      |
+| BIGINT           | BIGINT         |                                      |
+| DECIMAL          | DECIMAL        |                                      |
+| REAL             | FLOAT          |                                      |
+| DOUBLE PRECISION | DOUBLE         |                                      |
+| BOOLEAN          | BOOLEAN        |                                      |
+| CHAR             | CHAR           |                                      |
+| VARCHAR          | VARCHAR/STRING | Максимальная длина VARCHAR — 65533   |
+| DATE             | DATE           |                                      |
+| TIMESTAMP        | DATETIME       |                                      |
+| TIME/TIMETZ      | STRING         |                                      |
+| SUPER            | VARIANT        |                                      |
+| OTHER            | UNSUPPORTED    |                                      |
 
 ## Этапы миграции {#migration-steps}
 
-### 1. Создайте таблицу Doris {#1-create-the-doris-table}
+### 1. Создание таблицы Doris {#1-create-the-doris-table}
 
 <!-- Knowledge type: Procedure -->
 
-Перед миграцией создайте соответствующую целевую таблицу в Doris.
+Перед миграцией сначала создайте соответствующую целевую таблицу в Doris.
 
-**Цель**: спланировать модель данных, партиционирование и стратегию бакетирования в Doris на основе схемы исходной таблицы Redshift.
+**Цель**: спланировать модель данных Doris, стратегии секционирования и бакетирования на основе схемы исходной таблицы Redshift.
 
 **Пример исходной таблицы Redshift**:
 
@@ -84,7 +84,7 @@ INSERT INTO sales_data VALUES
 (4, 'Diana', '2025-04-10', 200.00, 'Australia');
 ```
 
-**Пример целевой таблицы Doris**: на основе приведённой выше схемы создайте партиционированную таблицу Unique Key со столбцом партиционирования `order_date` и партициями по дням:
+**Пример целевой таблицы Doris**: на основе приведенной выше схемы создайте секционированную таблицу с Unique Key, используя `order_date` в качестве столбца секционирования и создавая секции по дням:
 
 ```sql
 CREATE TABLE `sales_data` (
@@ -111,13 +111,13 @@ PROPERTIES (
 );
 ```
 
-### 2. Экспортируйте данные из Redshift в S3 {#2-export-data-from-redshift-to-s3}
+### 2. Экспорт данных из Redshift в S3 {#2-export-data-from-redshift-to-s3}
 
 <!-- Knowledge type: Procedure -->
 
-#### 2.1 Экспорт в Parquet с помощью UNLOAD {#21-use-unload-to-export-as-parquet}
+#### 2.1 Использование UNLOAD для экспорта в Parquet {#21-use-unload-to-export-as-parquet}
 
-**Цель**: экспортировать данные Redshift в файлы Parquet с разделением по столбцу партиционирования Doris, чтобы затем загружать данные по отдельным партициям.
+**Цель**: экспортировать данные Redshift в виде файлов Parquet, разделенных по столбцу секционирования Doris, чтобы впоследствии загружать данные по партициям.
 
 **Команда**:
 
@@ -129,31 +129,31 @@ PARQUET
 PARTITION BY (order_date) INCLUDE
 ```
 
-**Примечание**: рекомендуется выполнять экспорт по тому же столбцу партиционирования, который используется в Doris, чтобы данные можно было загружать пакетами по партициям.
+**Примечание**: рекомендуется экспортировать данные с тем же столбцом секционирования, который используется в Doris, чтобы загружать данные пакетами по партициям.
 
-#### 2.2 Проверьте экспортированные файлы в S3 {#22-verify-the-exported-files-on-s3}
+#### 2.2 Проверка экспортированных файлов в S3 {#22-verify-the-exported-files-on-s3}
 
-После экспорта в S3 создаётся подкаталог для каждой партиции, и каждый каталог содержит данные одной партиции:
+После экспорта S3 создает подкаталог для каждой партиции, и каждый каталог содержит данные одной партиции:
 
 ![redshift_out](/images/data-operate/redshift_out.png)
 
 ![redshift_out2](/images/data-operate/redshift_out2.png)
 
-### 3. Загрузите данные в Doris {#3-load-data-into-doris}
+### 3. Загрузка данных в Doris {#3-load-data-into-doris}
 
 <!-- Knowledge type: Procedure -->
 
-Для загрузки используется **S3 Load**, асинхронный метод загрузки данных, при котором после отправки задания Doris самостоятельно получает данные из источника. Источником может быть любое объектное хранилище, совместимое с S3, включая [AWS S3](./amazon-s3.md), [GCS](./google-cloud-storage.md) и [AZURE](./azure-storage.md).
+Загрузка выполняется с помощью **S3 Load** — асинхронного способа загрузки данных, при котором после отправки задания Doris самостоятельно получает данные из источника. Источник данных может быть любым объектным хранилищем, совместимым с S3, включая [AWS S3](./amazon-s3.md), [GCS](./google-cloud-storage.md) и [AZURE](./azure-storage.md).
 
-Сравнение сценариев применения:
+Сравнение подходящих сценариев:
 
-| Сценарий                                          | Рекомендуемый метод                              |
-| ------------------------------------------------- | ----------------------------------------------- |
-| Большой объём данных, возможна асинхронная обработка | S3 Load                                         |
-| Требуется синхронная загрузка данных               | [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous)        |
-| Файлы содержат сложные типы (Struct/Array/Map)      | [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous) обязателен |
+| Сценарий                                          | Рекомендуемый способ                              |
+| ------------------------------------------------- | ------------------------------------------------- |
+| Большой объем данных, возможна асинхронная обработка | S3 Load                                         |
+| Требуется синхронная загрузка данных              | [Загрузка через TVF](./amazon-s3.md#method-2-load-with-tvf-synchronous)        |
+| Файлы содержат сложные типы (Struct/Array/Map)    | Требуется [загрузка через TVF](./amazon-s3.md#method-2-load-with-tvf-synchronous) |
 
-#### 3.1 Загрузите одну партицию {#31-load-a-single-partition}
+#### 3.1 Загрузка одной партиции {#31-load-a-single-partition}
 
 ```sql
 LOAD LABEL sales_data_2025_04_08
@@ -173,9 +173,9 @@ WITH S3
 );
 ```
 
-#### 3.2 Проверьте состояние задания с помощью SHOW LOAD {#32-check-job-status-with-show-load}
+#### 3.2 Проверка состояния задания с помощью SHOW LOAD {#32-check-job-status-with-show-load}
 
-Поскольку S3 Load запускается асинхронно, для проверки хода загрузки можно использовать `SHOW LOAD`, указав метку задания:
+Поскольку S3 Load отправляется асинхронно, для проверки хода загрузки можно использовать `SHOW LOAD` с меткой задания:
 
 ```yaml
 mysql> show load where label = "sales_data_2025_04_08"\G
@@ -198,16 +198,16 @@ LoadFinishTime: 2025-04-10 17:50:54
  TransactionId: 766228
   ErrorTablets: {}
           User: root
-       Comment: 
+       Comment:
 1 row in set (0.00 sec)
 ```
 
-#### 3.3 Обработайте ошибки загрузки {#33-handle-errors-during-the-load}
+#### 3.3 Обработка ошибок при загрузке {#33-handle-errors-during-the-load}
 
 <!-- Knowledge type: Troubleshooting -->
 <!-- Applicable scenario: Troubleshooting / Data quality errors -->
 
-**Шаг 1**: получите список заданий загрузки, завершившихся с ошибкой. Если пакетная загрузка включает несколько заданий, используйте следующий запрос, чтобы отобрать метки заданий с ошибками и причины их сбоя:
+**Шаг 1**: запросите задания загрузки, завершившиеся с ошибкой. Если пакетная загрузка содержит несколько заданий, следующая инструкция позволяет отфильтровать метки и причины неудачных заданий:
 
 ```SQL
 mysql> show load where state='CANCELLED' and label like "label_test%"\G
@@ -230,53 +230,53 @@ LoadFinishTime: 2025-04-15 17:33:02
  TransactionId: 769213
   ErrorTablets: {}
           User: root
-       Comment: 
+       Comment:
 ```
 
-**Шаг 2**: определите тип ошибки. В приведённом выше примере возникла **ошибка качества данных** (`ETL_QUALITY_UNSATISFIED`). Откройте `URL` из результатов команды, чтобы просмотреть подробности ошибки. Например, приведённая ниже ошибка означает, что длина данных превышает допустимую длину столбца `country`, заданную в схеме:
+**Шаг 2**: определите тип ошибки. В приведенном выше примере это **ошибка качества данных** (`ETL_QUALITY_UNSATISFIED`). Откройте URL, возвращенный в выводе, чтобы просмотреть подробную информацию об ошибке. Например, приведенная ниже ошибка означает, что длина данных превышает фактическую длину столбца `country`, заданную в схеме:
 
 ```python
 [root@VM-10-6-centos ~]$ curl "http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342"
-Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [USA] schema length: 1; actual length: 3; . src line []; 
-Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Canada] schema length: 1; actual length: 6; . src line []; 
-Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [UK] schema length: 1; actual length: 2; . src line []; 
+Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [USA] schema length: 1; actual length: 3; . src line [];
+Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Canada] schema length: 1; actual length: 6; . src line [];
+Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [UK] schema length: 1; actual length: 2; . src line [];
 Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
 ```
 
-**Шаг 3**: задайте допустимую долю ошибок (необязательно). Если допустимо пропустить часть строк с ошибками, задайте допустимую долю ошибок в `PROPERTIES` для S3 Load. Подробнее см. в разделе [Параметры настройки загрузки](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/broker-load-manual#导入配置参数).
+**Шаг 3**: задайте коэффициент допустимых ошибок (необязательно). Если можно пропустить часть ошибочных строк, задайте коэффициент допустимых ошибок в `PROPERTIES` S3 Load. Подробнее см. в разделе [Параметры конфигурации загрузки](../../import/import-way/broker-load-manual.md#import-configuration-parameters).
 
-#### 3.4 Загружайте несколько партиций пакетами {#34-load-multiple-partitions-in-batches}
+#### 3.4 Пакетная загрузка нескольких партиций {#34-load-multiple-partitions-in-batches}
 
-При переносе больших объёмов исторических данных соблюдайте следующие рекомендации по пакетной загрузке:
+При миграции больших исторических наборов данных придерживайтесь следующих рекомендаций по пакетной загрузке:
 
 - Каждый пакет должен соответствовать одной партиции Doris или небольшому числу партиций.
-- Размер одного пакета не должен превышать **100 GB**, чтобы снизить нагрузку на систему и затраты на повторную попытку после сбоя загрузки.
-- В качестве примера можно использовать скрипт [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh). Он перебирает каталоги партиций в S3 и автоматически отправляет в Doris задания S3 Load для пакетной загрузки.
+- Размер одного пакета не должен превышать **100 GB**, чтобы снизить нагрузку на систему и стоимость повторной попытки после неудачной загрузки.
+- В качестве справочного материала можно использовать скрипт [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh). Он перебирает каталоги партиций в S3 и автоматически отправляет задания S3 Load в Doris для пакетной загрузки.
 
 ## Часто задаваемые вопросы {#faq}
 
 <!-- Knowledge type: FAQ -->
 
-**Вопрос 1: Почему данные типа TIME из Redshift нельзя загрузить напрямую в Doris?**
+**Q1: Почему тип Redshift TIME нельзя напрямую загрузить в Doris?**
 
-Doris не поддерживает тип `TIME`. Перед экспортом из Redshift данных типа `TIME/TIMEZ` необходимо использовать `CAST` для преобразования в `VARCHAR`, а в Doris хранить их как `STRING`.
+Doris не поддерживает тип `TIME`. При экспорте из Redshift типа `TIME/TIMEZ` необходимо использовать `CAST`, преобразовать его в `VARCHAR`, а затем экспортировать и хранить в Doris как `STRING`.
 
-**Вопрос 2: Можно ли использовать S3 Load для файлов Parquet/ORC, содержащих сложные типы, например Struct/Array/Map?**
+**Q2: Можно ли использовать S3 Load для файлов Parquet/ORC, содержащих сложные типы, такие как Struct/Array/Map?**
 
-Нет. В настоящее время для файлов со сложными типами необходимо использовать [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous).
+Нет. В настоящее время для файлов, содержащих сложные типы, необходимо использовать [загрузку через TVF](./amazon-s3.md#method-2-load-with-tvf-synchronous).
 
-**Вопрос 3: Загрузка S3 Load синхронная или асинхронная? Как узнать результат?**
+**Q3: S3 Load выполняется синхронно или асинхронно? Как запросить результат?**
 
-S3 Load использует **асинхронный** метод загрузки. После отправки задания выполните `SHOW LOAD WHERE label = "<your_label>"`, чтобы проверить ход загрузки и результат.
+S3 Load — это **асинхронный** способ загрузки. После отправки задания выполните `SHOW LOAD WHERE label = "<your_label>"`, чтобы проверить ход выполнения и результат.
 
-**Вопрос 4: Как обработать ошибку `ETL_QUALITY_UNSATISFIED`?**
+**Q4: Как обрабатывать ошибку `ETL_QUALITY_UNSATISFIED`?**
 
-Эта ошибка означает, что качество данных не соответствует требованиям. Чтобы её устранить:
+Эта ошибка означает, что качество данных не соответствует требованиям. Для ее обработки:
 
-1. Откройте `URL`, возвращённый командой `SHOW LOAD`, чтобы получить подробный журнал ошибок.
-2. Измените схему таблицы Doris или исходные данные на основе журнала ошибок (например, при превышении длины поля или несоответствии типов).
-3. Если часть строк с ошибками можно пропустить, измените допустимую долю ошибок `max_filter_ratio` в `PROPERTIES` для S3 Load.
+1. Откройте URL, возвращенный в выводе `SHOW LOAD`, чтобы получить подробный журнал ошибок.
+2. На основании журнала ошибок (например, переполнения длины поля или несовпадения типов) скорректируйте схему таблицы Doris или исходные данные.
+3. Если допустимо наличие ошибочных строк, измените коэффициент допустимых ошибок `max_filter_ratio` в `PROPERTIES` S3 Load.
 
-**Вопрос 5: Как избежать сбоя при единовременной загрузке больших объёмов данных?**
+**Q5: Как избежать сбоя однократной загрузки при миграции больших объемов данных?**
 
-Рекомендуется загружать данные пакетами по партициям Doris, поддерживать размер каждого пакета менее 100 GB и использовать скрипт [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh) для автоматической отправки пакетов на загрузку.
+Рекомендуется загружать данные пакетами по партициям Doris, ограничивать размер каждого пакета 100 GB и использовать скрипт [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh) для автоматизации отправки пакетов.

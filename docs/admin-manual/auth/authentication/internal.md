@@ -2,7 +2,7 @@
 {
     "title": "Built-in Authentication",
     "language": "en",
-    "description": "Detailed guide to the Apache Doris built-in authentication mechanism: composition of the user_identity, password policies (history, expiration, login-failure lockout, strength validation), IP matching priority, simulating a blacklist with a whitelist, and common troubleshooting."
+    "description": "Manage Doris users, password policies, dual-password rotation, identity matching, and authentication troubleshooting."
 }
 ---
 
@@ -17,6 +17,7 @@ Apache Doris provides a built-in user authentication mechanism. Administrators c
 | --- | --- |
 | Create an account, drop an account, reset a password | [Core Concepts](#core-concepts), [Common Operational Commands](#common-operational-commands) |
 | Configure enterprise-grade password policies (expiration / history / strength / lockout) | [Password Policies](#password-policies) |
+| Rotate an application password while clients migrate | [Dual Passwords](#dual-passwords) |
 | The same user name matches multiple `user_identity` values and login is rejected | [User Identity Matching Priority](#user-identity-matching-priority) |
 | Block a specific IP from logging in (simulate a blacklist) | [Simulating a Blacklist with a Whitelist](#simulating-a-blacklist-with-a-whitelist) |
 | Forgot the root password, or `current_user()` does not match `user()` | [FAQ](#faq) |
@@ -124,6 +125,66 @@ Note that the user and host parts must each be wrapped in single quotes. For exa
 SHOW PROC "/auth/'root'@'%'";
 SHOW PROC "/auth/'user1'@'127.0.0.1'";
 ```
+
+## Dual Passwords
+
+<!-- Knowledge type: Operational procedure + Rules -->
+<!-- Applicable scenarios: Application credential rotation -->
+
+**Supported since 4.2.1.** Built-in password authentication can keep one primary password and one retained secondary password for the same account. Use this overlap to migrate clients to a new password without rejecting clients that still use the previous one. A secondary password is absent by default and is created only with `RETAIN CURRENT PASSWORD`. These changes affect subsequent authentications and do not disconnect existing sessions.
+
+### Prerequisites
+
+- Upgrade every FE to 4.2.1 or later before using these clauses.
+- Execute the rotation as an administrator with global `GRANT_PRIV` or `ADMIN_PRIV`. RETAIN requires this privilege even on your own account; an ordinary self-service SET PASSWORD without RETAIN does not.
+- Use an account with a built-in, nonempty primary password. LDAP and authentication integrations manage their own credentials.
+
+### Rotate a Password
+
+1. Create an example account, then set a new password while retaining its current one. For an existing account, run only the ALTER USER statement.
+
+    ```sql
+    CREATE USER 'app_user'@'%' IDENTIFIED BY 'OldPwd_2026!';
+    ALTER USER 'app_user'@'%' IDENTIFIED BY 'NewPwd_2026!' RETAIN CURRENT PASSWORD;
+    ```
+
+    Both `OldPwd_2026!` and `NewPwd_2026!` can authenticate. An equivalent retaining change is `SET PASSWORD FOR 'app_user'@'%' = PASSWORD('NewPwd_2026!') RETAIN CURRENT PASSWORD`; use it instead of the ALTER statement, not after it.
+
+2. Update every client to use `NewPwd_2026!`. Check the account's retained-password state:
+
+    ```sql
+    SHOW GRANTS FOR 'app_user'@'%';
+    ```
+
+    The `Password` column shows `Yes (dual)`. `SHOW ALL GRANTS` and `SHOW PROC '/auth'` expose the same marker. Each FE's `doris_fe_secondary_password_auth_total` metric counts successful authentications using the secondary password, across all accounts, after account-policy checks; observe its increments rather than waiting for this cumulative counter to return to zero.
+
+3. After all clients have migrated, revoke the secondary password:
+
+    ```sql
+    ALTER USER 'app_user'@'%' DISCARD OLD PASSWORD;
+    ```
+
+    Only `NewPwd_2026!` can authenticate, and the `Password` column returns to `Yes`. Repeating DISCARD when no secondary exists has no effect.
+
+### Password Lifetime and Policy Rules
+
+| Operation | Result |
+| --- | --- |
+| Nonempty new password with RETAIN | Previous primary becomes the only secondary; any earlier secondary is replaced. |
+| Nonempty change without RETAIN | Existing secondary remains valid. Replacing the primary alone does not revoke it. |
+| Empty new password | Both slots are cleared, even with RETAIN. |
+| RETAIN with an empty current primary | Rejected. |
+| DISCARD OLD PASSWORD | Only the secondary is removed. Password history and the password expiration clock are unchanged. |
+
+Both passwords are subject to the account's lock and expiration policies. A retaining change is still a password change and follows password strength/history rules and updates the expiration clock. Binding, unbinding, or changing an authentication integration clears any retained secondary; RETAIN is rejected across these transitions. DISCARD is a standalone ALTER USER operation and cannot be combined with a password change, policy change, or comment.
+
+### Domain Accounts and Version Changes
+
+For a domain account, DISCARD clears the persistent domain account first. Resolved-IP entries stop accepting their retained copy at the next domain-resolver refresh. The normal interval is 10 seconds, but this is not a strict revocation-time bound.
+
+During a rolling upgrade, an older FE authenticates against the primary only and cannot parse the new clauses. Wait until every FE has been upgraded before starting dual-password rotation. Downgrading after using the feature loses the retained secondary; only the primary survives, and upgrading again does not restore the old secondary.
+
+For the full statement reference, see [ALTER USER](../../../sql-manual/sql-statements/account-management/ALTER-USER) and [SET PASSWORD](../../../sql-manual/sql-statements/account-management/SET-PASSWORD).
 
 ## User Identity Matching Priority
 

@@ -538,7 +538,7 @@ v1 VARIANT<
 > NULL
 ```
 
-匹配成功的路径默认参与子列列式提取（Subcolumnization）。如果匹配的路径过多、生成了过多子列，可以考虑开启 `variant_enable_typed_paths_to_sparse`（参见[列属性](#column-properties)）。
+匹配成功的路径始终参与子列列式提取（Subcolumnization），且不计入 `variant_max_subcolumns_count`，因此请避免使用会匹配大量路径的过宽通配符。
 
 列创建后不能修改 Schema Template，参见 [ALTER TABLE](#alter-table)。
 
@@ -556,7 +556,7 @@ ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
 - `ADD COLUMN` 新增可为 NULL 的 VARIANT 列，可以带 Schema Template 和属性。
 - `DROP COLUMN`、`RENAME COLUMN` 和 `MODIFY COLUMN ... COMMENT '...'`。
 - `ADD INDEX` 和 `DROP INDEX`。带 `field_pattern` 的索引只能在 `CREATE TABLE` 中定义。
-- 对没有 Schema Template 的列：把 `NOT NULL` 改为 `NULL`，以及修改 `variant_doc_materialization_min_rows`。`MODIFY COLUMN` 需要给出完整的列定义，未写出的属性取默认值（参见[列属性](#column-properties)），因此取值与默认值不同的属性都要写出。
+- 对没有 Schema Template 的列：把 `NOT NULL` 改为 `NULL`，以及修改 `variant_doc_materialization_min_rows`（4.2 版本之前创建、没有开启 DOC mode 且 `variant_max_subcolumns_count = 0` 的列只能保持 `0`）。`MODIFY COLUMN` 需要给出完整的列定义，未写出的属性取默认值（参见[列属性](#column-properties)），因此取值与默认值不同的属性都要写出。
 
 不支持：
 
@@ -588,8 +588,7 @@ CREATE TABLE example_table (
       'path_2' : STRING,
       properties(
           'variant_max_subcolumns_count' = '2048',
-          'variant_enable_typed_paths_to_sparse' = 'true',
-          'variant_sparse_hash_shard_count' = '64'
+          'variant_doc_hash_shard_count' = '64'
       )
   >
 );
@@ -597,13 +596,12 @@ CREATE TABLE example_table (
 
 | 属性 | 默认值 | ALTER | 描述 |
 | --- | --- | --- | --- |
-| `variant_max_subcolumns_count` | `2048` | 否 | 单个数据文件中参与子列列式提取（Subcolumnization）的动态路径数上限；非空值多的路径优先入选，其余路径存入稀疏列。`0` 表示不限制。取值范围 0 到 100000，建议不超过 10000。默认值已足够覆盖大多数 workload；如果确实需要大规模子列，优先考虑 [DOC mode](./variant-workload-guide.md#doc-mode-template)。 |
-| `variant_enable_typed_paths_to_sparse` | `false` | 否 | 默认情况下，Schema Template 路径一定参与子列列式提取，且不计入 `variant_max_subcolumns_count`。设置为 `true` 后，这些路径也计入上限，并可能存入稀疏列。 |
-| `variant_sparse_hash_shard_count` | `1` | 否 | 稀疏路径按 Hash 分散到的物理稀疏列数量。取值范围 0 到 1024，`0` 按 `1` 处理。 |
+| `variant_max_subcolumns_count` | `2048` | 否 | 单个数据文件中参与子列列式提取（Subcolumnization）的动态路径数上限；非空值多的路径优先入选，其余路径存入稀疏列。`0` 表示动态路径都不参与子列列式提取（Subcolumnization），全部存入稀疏列；4.2 版本之前创建的列中 `0` 仍表示不限制，参见[稀疏列机制](#sparse-columns)。取值范围 0 到 100000，建议不超过 10000。默认值已足够覆盖大多数 workload；如果确实需要大规模子列，优先考虑 [DOC mode](./variant-workload-guide.md#doc-mode-template)。 |
+| `variant_enable_typed_paths_to_sparse` | `false` | 否 | 4.2 版本起不能设置：列定义中写出该属性会报错，取值为 `false` 也一样。Schema Template 路径一定参与子列列式提取，且不计入 `variant_max_subcolumns_count`。4.2 版本之前设置为 `true` 的列保持原样：这些路径计入上限，并可能存入稀疏列。4.2 版本之前的 `SHOW CREATE TABLE` 会为每个没有开启 DOC mode 的 VARIANT 列输出该属性，执行这些输出前需要删掉它；输出中的 `variant_sparse_hash_shard_count` 会被忽略，需要保留分片数时请改为 `variant_doc_hash_shard_count`。 |
+| `variant_doc_hash_shard_count` | `1` | 否 | 稀疏路径按 Hash 分散到的物理稀疏列数量；开启 DOC mode 时，为存储的文档被拆分到的列数。取值范围 0 到 1024，`0` 按 `1` 处理。4.2 版本之前只在开启 DOC mode 时生效。 |
 | `variant_max_sparse_column_statistics_size` | `10000` | 否 | 单个数据文件中记录统计信息的稀疏路径数上限。超过后，查询没有统计信息的路径时无法跳过稀疏列。取值范围 1 到 50000。 |
-| `variant_enable_doc_mode` | `false` | 否 | 开启 DOC mode。不能与 `variant_max_subcolumns_count`、`variant_enable_typed_paths_to_sparse`、`variant_max_sparse_column_statistics_size`、`variant_sparse_hash_shard_count` 同时设置。 |
-| `variant_doc_materialization_min_rows` | `0` | 仅限没有 Schema Template 的列 | 仅用于 DOC mode。行数少于该值的写入只存储文档，待 Compaction 把文件合并到该阈值后再执行子列列式提取。`0` 表示写入时即执行子列列式提取。取值范围 0 到 1000000000。 |
-| `variant_doc_hash_shard_count` | `64` | 否 | 仅用于 DOC mode。存储的文档被拆分到的列数。取值范围 0 到 1024，`0` 按 `1` 处理。 |
+| `variant_enable_doc_mode` | `false` | 否 | 开启 DOC mode，额外保存完整文档。可以与 `variant_max_subcolumns_count`、`variant_doc_materialization_min_rows`、`variant_doc_hash_shard_count` 同时设置，不能与 `variant_max_sparse_column_statistics_size` 同时设置。 |
+| `variant_doc_materialization_min_rows` | `0` | 仅限没有 Schema Template 的列 | 行数少于该值的数据文件不执行子列列式提取，动态路径存入稀疏列（开启 DOC mode 时只存储文档），待 Compaction 写出的数据文件达到该阈值后再执行。`0` 表示写入时即执行子列列式提取。取值范围 0 到 1000000000。4.2 版本之前只在开启 DOC mode 时生效。 |
 
 表中 **ALTER** 列表示 `ALTER TABLE ... MODIFY COLUMN` 能否修改该属性，参见 [ALTER TABLE](#alter-table)。稀疏列和 DOC mode 相关属性的用法参见[宽列](#wide-columns)。
 
@@ -624,6 +622,7 @@ CREATE TABLE example_table (
 VARIANT 支持对子列建立 BloomFilter 与 Inverted Index 两类索引。
 - 高基数等值/IN 过滤：优先使用 BloomFilter（更省存储、写入更高效）。
 - 需要分词、短语、范围检索：使用 Inverted Index，并根据需求设置 `parser`/`analyzer` 等属性。
+- 需要在整列中搜索关键词：Doris 4.2 起支持 [VARIANT 值索引](../../../../table-design/index/inverted-index/variant-values-index.md)。
 
 只有当过滤条件按路径的存储类型比较时，才能使用索引或 BloomFilter。数值路径需要显式 CAST；字符串路径与字符串字面量比较则不需要 CAST。
 
@@ -636,7 +635,7 @@ SELECT * FROM tbl WHERE CAST(v['id'] AS BIGINT) = 12345678;
 SELECT * FROM tbl WHERE CAST(v['id'] AS BIGINT) IN (1, 2, 3);
 ```
 
-给 VARIANT 列创建 Inverted Index 后，所有子列将继承相同的索引属性（如分词方式）。
+给 VARIANT 列创建普通倒排索引后，所有子列将继承相同的索引属性（如分词方式）。
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbl (
@@ -722,6 +721,7 @@ CREATE TABLE IF NOT EXISTS tbl (
    );
    SELECT * FROM tbl WHERE v_str MATCH 'Doris';
    ```
+4. 路径存储在稀疏列中：子路径索引依赖子列。超出 `variant_max_subcolumns_count` 的路径没有子列；`variant_max_subcolumns_count = 0` 时，所有动态路径都没有子列；行数少于 `variant_doc_materialization_min_rows` 的数据文件也没有动态子列，直到 Compaction 写出的数据文件达到该阈值。路径没有子列时，`SEARCH()` 会报错 “SEARCH index unavailable for Variant field”，`MATCH` 默认回退为读取值逐行匹配（`enable_match_without_inverted_index = false` 时报错）。可以用 Schema Template 固定路径，或参见[稀疏列机制](#sparse-columns)。
 
 ## 宽列 {#wide-columns}
 
@@ -729,27 +729,71 @@ CREATE TABLE IF NOT EXISTS tbl (
 
 如果你要决定什么时候选 Sparse、什么时候选 DOC mode，请先看 [VARIANT 使用与配置指南](./variant-workload-guide.md)。本节只说明机制本身及其相关属性。
 
-注意：这两种机制**互斥**——启用 DOC 编码后将无法使用稀疏列机制，反之亦然。
+开启 DOC 编码时，`variant_max_subcolumns_count`、`variant_doc_materialization_min_rows` 和 `variant_doc_hash_shard_count` 同样生效：最多提取 `variant_max_subcolumns_count` 个路径，其余路径从文档中读取；`variant_max_sparse_column_statistics_size` 不能与 DOC 编码同时设置。各参数在不同场景下的取值参见 [VARIANT 存储原理与场景调优](./variant-storage-tuning.md)。
 
 ### 稀疏列机制 {#sparse-columns}
 
 **机制说明**
 
 - 系统会按“非空比例/稀疏度”对路径排序：高频（不稀疏）路径优先执行子列列式提取（Subcolumnization），并存为独立子列；可执行 Subcolumnization 的最大子列数量由 `variant_max_subcolumns_count` 指定，其余低频（稀疏）路径会被合并存放到稀疏列中。
-- 在 Schema Template 中声明过的路径，默认不会被放入稀疏列；可通过 `variant_enable_typed_paths_to_sparse` 允许这些路径进入稀疏列。
-- 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
+- 在 Schema Template 中声明过的路径不会被放入稀疏列（4.2 版本之前设置了 `variant_enable_typed_paths_to_sparse = true` 的列除外）。
+- 设置 `variant_max_subcolumns_count = 0` 时，所有动态路径都存入稀疏列；Schema Template 路径仍参与子列列式提取（Subcolumnization）。适合值主要被整体读取的场景。如果希望所有动态路径都参与子列列式提取（Subcolumnization），比如要保留它们的子路径索引，请把该值设置得比不同路径的数量更大：
+  ```sql
+  -- 所有动态路径都在稀疏列中
+  v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+
+  -- 所有动态路径都成为子列（路径数量不超过该值时）
+  v VARIANT<properties('variant_max_subcolumns_count' = '2048')>
+  ```
+
+  从 4.2 版本起，任何建表语句中的 `0` 都是这个语义，包括 `CREATE TABLE`、`CREATE TABLE LIKE` 和 `CREATE TABLE AS SELECT`。4.2 版本之前创建的列保持原有行为：`0` 表示所有动态路径都参与子列列式提取（Subcolumnization），不限制数量。`SHOW CREATE TABLE` 在 VARIANT 列的类型后面用注释标出列的行为：`/* variant_serialize_type = v1 */` 表示 4.2 版本之前创建的列，`/* variant_serialize_type = v2 */` 表示 4.2 版本起创建的列。注释只用于查看，执行这段输出时会被忽略，建出的总是新列。
+
+  ```sql
+  -- 4.1 版本
+  CREATE TABLE old_t (
+      k INT,
+      v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+  )
+  DUPLICATE KEY(k) DISTRIBUTED BY HASH(k) BUCKETS 1;
+  INSERT INTO old_t VALUES (1, PARSE_TO_VARIANT('{"a": 1, "b": "x"}'));
+
+  -- 升级到 4.2 版本后：new_t 的定义与 old_t 相同，count 也是 0
+  CREATE TABLE new_t LIKE old_t;
+  INSERT INTO new_t SELECT * FROM old_t;
+
+  SET describe_extend_variant_column = true;
+  DESC old_t;  -- 列出子列 v.a 和 v.b，因为 old_t 保持原有语义
+  DESC new_t;  -- 不列出子列，因为 new_t 把 a 和 b 存入稀疏列
+  SHOW CREATE TABLE old_t;  -- v 的类型后面是 /* variant_serialize_type = v1 */
+  SHOW CREATE TABLE new_t;  -- v 的类型后面是 /* variant_serialize_type = v2 */
+  ```
+
+  `CREATE TABLE AS SELECT` 把查询计算出的 VARIANT（如 `PARSE_TO_VARIANT(...)`、`TRY_PARSE_TO_VARIANT(...)`、子路径 `v['a']`）存为新列时，`variant_max_subcolumns_count` 取表达式类型的值：`PARSE_TO_VARIANT` 和 `TRY_PARSE_TO_VARIANT` 为 `0`，动态路径都存入稀疏列；子路径取源列的值。需要默认上限时，把表达式 CAST 为 VARIANT，例如 `CAST(PARSE_TO_VARIANT(s) AS VARIANT)` 的上限为 `2048`。
+- 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_doc_hash_shard_count` 指定稀疏列的实际存储个数。4.0、4.1 版本用 `variant_sparse_hash_shard_count` 设置这个分片数；4.2 版本起它仍可写出，但值会被忽略。
+
+:::caution 回滚
+升级到 4.2 版本后，一旦创建了新的 VARIANT 列，就不能再回滚到 4.2 之前的版本。新列按本页描述的 4.2 语义存储：例如 `variant_max_subcolumns_count` 为 `0` 的新列，旧版本会把 `0` 当作不限制，它的 Compaction 会丢掉只保存在稀疏列中的路径。以下方式都会创建新的 VARIANT 列：
+
+- `CREATE TABLE` 定义 VARIANT 列。
+- `CREATE TABLE LIKE`，或重新执行 `SHOW CREATE TABLE` 的输出，表中有 VARIANT 列，包括复制 4.2 版本之前创建的表。
+- `CREATE TABLE AS SELECT` 的结果中有 VARIANT 列。
+- `ALTER TABLE ... ADD COLUMN` 新增 VARIANT 列，在 4.2 版本之前创建的表上新增也一样。
+- 新建的异步物化视图中有 VARIANT 列。
+
+`SHOW CREATE TABLE` 中标有 `/* variant_serialize_type = v2 */` 的列就是新列。
+:::
 
 **参考说明**
 
 - JSON key 总量大，但各个 JSON key 的“非空比例/稀疏度”都比较接近、缺乏区分度：这种情况下很难区分哪些列是真正稀疏的，稀疏列机制的效果会被降低。
 - `variant_max_subcolumns_count` 默认就是 `2048`，已经足够覆盖大多数 workload。不要为了预留更多自动提取子列而激进调大；如果场景确实需要大规模子列列式提取（Subcolumnization），优先参考 [DOC mode](./variant-workload-guide.md#doc-mode-template)。实践上仍建议不超过 **10000**。
-- `variant_sparse_hash_shard_count` 的设置可按“进入稀疏列的总列数 / 128”粗略估算。例如：VARIANT 中所有 JSON key 为 1 万，设置 `variant_max_subcolumns_count = 2000`，进入稀疏列的总列数约为 8000，则 `variant_sparse_hash_shard_count` 可参考 `8000/128`。
+- `variant_doc_hash_shard_count` 的设置可按“进入稀疏列的总列数 / 128”粗略估算。例如：VARIANT 中所有 JSON key 为 1 万，设置 `variant_max_subcolumns_count = 2000`，进入稀疏列的总列数约为 8000，则 `variant_doc_hash_shard_count` 可参考 `8000/128`。
 
 ### DOC 编码机制 {#doc-encoding-doc-mode}
 
 **机制说明**
 
-- 子路径仍可执行子列列式提取（Subcolumnization）用于按路径查询，同时会额外保存一份“原始 JSON”作为存储字段，以便更快返回整条 JSON 文档。
+- 子路径仍可执行子列列式提取（Subcolumnization）用于按路径查询，最多提取 `variant_max_subcolumns_count` 个路径，同时会额外保存一份“原始 JSON”作为存储字段，以便更快返回整条 JSON 文档。
 - DOC 编码支持 sharding：原始 JSON 会被拆分到多个列中存储，读取整条 JSON 时再组装这些分片；可通过 `variant_doc_hash_shard_count` 指定 DOC 编码的实际分片数。
 - 小批量写入时可以暂不执行子列列式提取（Subcolumnization），后续合并时再触发：该行为由 `variant_doc_materialization_min_rows` 决定。例如 `variant_doc_materialization_min_rows = 10000`，当写入行数低于 1 万时，该批次只写入原始 JSON，不会触发 Subcolumnization。
 - 对超宽列 workload，DOC mode 也是更稳定的选择，尤其是在 Subcolumnization 规模接近万列时。相比默认的即时 Subcolumnization，compaction 内存可下降约 2/3，在稀疏宽列导入场景下导入性能可提升约 5~10 倍。
@@ -774,7 +818,10 @@ CREATE TABLE example_table (
 
 - 需开启 `variant_enable_doc_mode`。
 - DOC mode 下，Schema Template 字段只能是字符串、整数、`FLOAT`、`DOUBLE`、`BOOLEAN` 以及由这些类型组成的数组。
-- `variant_doc_hash_shard_count` 的设置可按 “JSON key 的总个数 / 128” 粗略估算。
+- 开启 DOC mode 时，`variant_doc_hash_shard_count` 的设置可按 “JSON key 的总个数 / 128” 粗略估算。
+- 新建的 DOC mode 列默认分片数为 `1`（4.2 版本之前为 64）。
+- 4.2 版本起，`variant_doc_hash_shard_count` 在开启和不开启 DOC mode 时都生效。4.2 版本之前创建的 DOC mode 表，其 `SHOW CREATE TABLE` 输出可以直接执行，分片数保持原值；这样的输出没有写出 `variant_max_subcolumns_count`，因此建出的新列最多提取 `2048` 个路径，需要其他取值时请写出 `variant_max_subcolumns_count`。
+- 4.2 版本之前创建的 DOC mode 列保持原有行为：数据文件达到行数阈值后提取所有路径，分片数保持建表时的值。
 
 ### 达到上限后的行为与调优建议 {#behavior-at-limits-and-tuning-suggestions}
 

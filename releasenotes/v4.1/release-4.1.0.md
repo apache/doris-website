@@ -588,8 +588,6 @@ AND t1.ts >= t2.ts;
 - **[Continuous Load PostgreSQL](https://doris.apache.org/zh-CN/docs/4.x/data-operate/import/streaming-job/continuous-load-postgresql-single)**
 - **Self-Adaptation Write Scheduling**
   Supports Self-Adaptation adjustment of the MemTable Flush thread pool size, which can automatically match a more appropriate write concurrency level based on the real-time load of the cluster, better balancing throughput, resource utilization, and stability in high-write scenarios.
-- **Multi-stream Update of Primary Key Model**
-  The primary key model supports multi-stream merge updates through sequence_mapping. Different data streams can update different columns of the same table separately and complete the merge according to their respective sequence fields, which is suitable for scenarios where real-time stream updates and offline data supplementation are written in parallel.
 - **Routine Load Flexible Column Update**
   Routine Load supports flexible partial update, allowing for flexible updates to non-primary key columns, and different rows within the same batch can update different columns. It is suitable for scenarios such as status changes, feature backfilling, and label updates, further simplifying the data maintenance process.
 - **Dynamic Parameter Tuning for Routine Load**

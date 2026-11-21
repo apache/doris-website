@@ -321,6 +321,7 @@
                     "table-design/index/inverted-index/custom-analyzer",
                     "table-design/index/inverted-index/custom-normalizer",
                     "table-design/index/inverted-index/search-operators",
+                    "table-design/index/inverted-index/variant-values-index",
                     "table-design/index/inverted-index/search-function",
                     "table-design/index/inverted-index/scoring"
                   ]
@@ -556,8 +557,7 @@
                 "data-operate/update/update-of-unique-model",
                 "data-operate/update/update-of-aggregate-model",
                 "data-operate/update/partial-column-update",
-                "data-operate/update/unique-update-concurrent-control",
-                "data-operate/update/multi-stream-update-for-unique-model"
+                "data-operate/update/unique-update-concurrent-control"
               ]
             },
             {

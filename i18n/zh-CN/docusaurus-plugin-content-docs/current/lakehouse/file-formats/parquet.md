@@ -39,7 +39,11 @@ OUTFILE 和 EXPORT 导出 UUID 的完整类型映射见[导出文件列类型映
 
 ## 支持的压缩格式
 
-* umcomressed
+### 读取
+
+读取已有文件支持以下压缩格式。
+
+* uncompressed
 
 * snappy
 
@@ -52,6 +56,15 @@ OUTFILE 和 EXPORT 导出 UUID 的完整类型映射见[导出文件列类型映
 * lzo
 
 * brotli
+
+### 写入
+
+| 写入入口 | 支持的压缩格式 |
+| --- | --- |
+| Hive / Iceberg Catalog | `plain`、`snappy`、`zstd`、`lz4`（4.1.3 起）、`gzip`（4.2.0 起） |
+| OUTFILE / EXPORT | `plain`、`snappy`、`gzip`、`brotli`、`zstd`、`lz4` |
+
+`plain` 表示不压缩。Catalog 写入的配置方式和默认值见 [Hive Catalog](../catalogs/hive-catalog.mdx) 和 [Iceberg Catalog](../catalogs/iceberg-catalog.mdx)。OUTFILE / EXPORT 通过 `compress_type` 属性选择压缩格式。
 
 ## 写入页索引（Dev 版本）
 

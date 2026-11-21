@@ -145,7 +145,6 @@ PROPERTIES (
 자세한 내용은 다음 문서를 참고하세요.
 
 - Sequence 열, MVCC 버전 관리, `UPDATE` 동시성 매개변수 등의 동시성 제어 기능은 [Unique Key 모델의 업데이트 동시성 제어](./unique-update-concurrent-control.md)를 참고하세요.
-- 여러 데이터 스트림이 동일한 와이드 테이블의 서로 다른 열을 동시에 업데이트하는 경우, Sequence Mapping을 사용하여 각 열의 버전 순서를 독립적으로 제어할 수 있습니다. 자세한 내용은 [Unique Key 모델의 다중 스트림 업데이트](./multi-stream-update-for-unique-model.md)를 참고하세요.
 
 ### 2.3 삭제 마커의 처리 과정 {#23-workflow-of-the-delete-marker}
 
@@ -230,7 +229,7 @@ Flink CDC 같은 도구는 업스트림 데이터베이스(MySQL, PostgreSQL, Or
     - 사용자 행동 스트림은 `page_view_count`와 `last_login_time`을 업데이트합니다.
     - 트랜잭션 스트림은 `total_orders`와 `total_amount`를 업데이트합니다.
 
-각 스트림은 변경된 열만 쓰므로 IO 오버헤드를 줄이고 실시간 조인의 리소스 사용을 피할 수 있습니다. 여러 스트림이 동시에 업데이트하는 시나리오의 버전 제어는 [Unique Key 모델의 다중 스트림 업데이트](./multi-stream-update-for-unique-model.md)를 참고하세요.
+각 스트림은 변경된 열만 쓰므로 IO 오버헤드를 줄이고 실시간 조인의 리소스 사용을 피할 수 있습니다.
 
 ## 4. 사용 권장 사항 {#4-usage-recommendations}
 

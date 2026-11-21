@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "bec80bdd9204e324ea1c3dd03f54b067fba081a3cf9e00defa918e10b1ef1577",
-    "sourceTechnicalHash": "0f8086f54ccc5e6d9be7833d90918005ea1acc2e27aa280d3698a45c62c56dc5",
-    "targetHash": "a2d21681c131e0005f0e97ae5fbe31e4472596c80dccd04e794643f75cdb6e73",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "9837129e56f9147e326987055dfb738fcc05585426f15bfda87f4a38fc1da0f4",
+    "sourceTechnicalHash": "aa145fddf6f8b9f7924d8be27cbd4db3180a4aadca3238330249ed2d287747c9",
+    "targetHash": "2a7c3b06e220da2da0646ead4f9d78158c1c61eef7b02a8783e2ed98d681bf3b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:27:30.344Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-19T17:07:31.679Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "9837129e56f9147e326987055dfb738fcc05585426f15bfda87f4a38fc1da0f4",
+      "targetHash": "2a7c3b06e220da2da0646ead4f9d78158c1c61eef7b02a8783e2ed98d681bf3b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 63: expected [\"inlineCode\",null,null,\"SELECT *\"]; received [\"inlineCode\",null,null,\"VARIANT\"]\nprotected node 64: expected [\"inlineCode\",null,null,\"VARIANT\"]; received [\"inlineCode\",null,null,\"SELECT *\"]\nprotected node 70: expected [\"inlineCode\",null,null,\"DESC\"]; received [\"inlineCode\",null,null,\"SET describe_extend_variant_column = true\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"12\",\"148\",\"148\",\"16\",\"2\",\"2\",\"2.5\",\"200\",\"2533\",\"2800\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"4\",\"48\",\"48\",\"5\",\"6104\",\"76\",\"76\",\"76\",\"80\",\"887\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10000\",\"10000\",\"12\",\"148\",\"148\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2.5\",\"20\",\"2533\",\"2800\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"4\",\"4\",\"4\",\"48\",\"48\",\"5\",\"6104\",\"76\",\"76\",\"76\",\"80\",\"887\"]\nprotected node 63: expected [\"inlineCode\",null,null,\"SELECT *\"]; received [\"inlineCode\",null,null,\"VARIANT\"]\nprotected node 64: expected [\"inlineCode\",null,null,\"VARIANT\"]; received [\"inlineCode\",null,null,\"SELECT *\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 31: expected [\"html\",\"<img src=\\\"/images/variant/variant-decision-flowchart.png\\\" alt width=\\\"520\\\">\"]; received [\"inlineCode\",null,null,\"VARIANT\"]\nprotected node 32: expected [\"inlineCode\",null,null,\"variant_max_subcolumns_count\"]; received [\"html\",\"<img src=\\\"/images/variant/variant-decision-flowchart.png\\\" alt width=\\\"520\\\">\"]\nprotected node 33: expected [\"inlineCode\",null,null,\"variant_doc_hash_shard_count\"]; received [\"inlineCode\",null,null,\"variant_max_subcolumns_count\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 63: expected [\"inlineCode\",null,null,\"SELECT *\"]; received [\"inlineCode\",null,null,\"VARIANT\"]\nprotected node 64: expected [\"inlineCode\",null,null,\"VARIANT\"]; received [\"inlineCode\",null,null,\"SELECT *\"]\nprotected node 70: expected [\"inlineCode\",null,null,\"DESC\"]; received [\"inlineCode\",null,null,\"SET describe_extend_variant_column = true\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
+        "blob": "5747530e6135ffa9465e1e8e24bee96dc80e6724"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
+        "blob": "b4c13c969fceaceeb7d26d38a8971ae85a86660b"
+      }
+    }
   }
 }

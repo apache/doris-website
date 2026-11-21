@@ -8,41 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/doris-streamloader.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/doris-streamloader.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "7acc01b42a31a5bfce304c0b2d3358723f846feb2e507c09456d4c021b7d4223",
-    "sourceTechnicalHash": "a86693a509552566f5e0e82d32185567ef3d6d7be9f285772214d9680fa42b21",
-    "targetHash": "0e5149b3dc6967b9e229e5a171b107db286818d74e2e0fe33784834216ccfa4e",
+    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
+    "sourceHash": "d032584a2eacb6524c6b53bdb7bc902c86e0d7565e162217b10c3e5178cd5de7",
+    "sourceTechnicalHash": "f636b725edc556d70c68d1284dcf68be1196cb6f62f678ad33e4116ff8f44bd4",
+    "targetHash": "196e2d570214dc3b676e2a9d429dc1693c27e61ee59a6b96581c3787139f0d79",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T08:54:31.047Z",
+    "translatedAt": "2026-11-19T19:13:50.862Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "7acc01b42a31a5bfce304c0b2d3358723f846feb2e507c09456d4c021b7d4223",
-      "targetHash": "0e5149b3dc6967b9e229e5a171b107db286818d74e2e0fe33784834216ccfa4e",
+      "sourceHash": "d032584a2eacb6524c6b53bdb7bc902c86e0d7565e162217b10c3e5178cd5de7",
+      "targetHash": "196e2d570214dc3b676e2a9d429dc1693c27e61ee59a6b96581c3787139f0d79",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"shell\",null,\"doris-streamloader \\\\\\n    --source_file={FILE_LIST} \\\\\\n    --url={FE_OR_BE_SERVER_URL}:{PORT} \\\\\\n    --header={STREAMLOAD_HEADER} \\\\\\n    --db={TARGET_DATABASE} \\\\\\n    --table={TARGET_TABLE}\"]; received [\"code\",\"shell\",null,\"doris-streamloader \\\\\\\\\\n    --source_file={FILE_LIST} \\\\\\\\\\n    --url={FE_OR_BE_SERVER_URL}:{PORT} \\\\\\\\\\n    --header={STREAMLOAD_HEADER} \\\\\\\\\\n    --db={TARGET_DATABASE} \\\\\\\\\\n    --table={TARGET_TABLE}\"]\nprotected node 112: expected [\"code\",\"shell\",null,\"./doris-streamloader \\\\\\n    --source_file=\\\"demo.csv,demoFile*.csv,demoDir\\\" \\\\\\n    --url=\\\"http://127.0.0.1:8030\\\" \\\\\\n    --header=\\\"column_separator:,\\\" \\\\\\n    --db=\\\"demo\\\" \\\\\\n    --table=\\\"test_load\\\" \\\\\\n    --u=\\\"root\\\" \\\\\\n    --workers=8\"]; received [\"code\",\"shell\",null,\"./doris-streamloader \\\\\\\\\\n    --source_file=\\\"demo.csv,demoFile*.csv,demoDir\\\" \\\\\\\\\\n    --url=\\\"http://127.0.0.1:8030\\\" \\\\\\\\\\n    --header=\\\"column_separator:,\\\" \\\\\\\\\\n    --db=\\\"demo\\\" \\\\\\\\\\n    --table=\\\"test_load\\\" \\\\\\\\\\n    --u=\\\"root\\\" \\\\\\\\\\n    --workers=8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "merged",
-        "version": "current",
-        "docId": "connection-integration/data-integration/doris-streamloader",
-        "sourcePath": "docs/connection-integration/data-integration/doris-streamloader.md",
-        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/doris-streamloader.md",
-        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-        "sourceHash": "7acc01b42a31a5bfce304c0b2d3358723f846feb2e507c09456d4c021b7d4223",
-        "targetHash": "0e5149b3dc6967b9e229e5a171b107db286818d74e2e0fe33784834216ccfa4e",
-        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/connection-integration/data-integration/doris-streamloader.md",
+        "blob": "9f05c38779b5560e510590b2d3243733d5008f5c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/doris-streamloader.md",
+        "blob": "3608942c052e4f4a61ccaafa141d357a04b31026"
       }
     }
   }

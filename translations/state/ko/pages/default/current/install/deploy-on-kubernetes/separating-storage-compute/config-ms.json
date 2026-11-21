@@ -8,22 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "a7b4343fc33c36c4f488f8a65088e166ad1acc2680d77227755adb440737d064",
-    "sourceTechnicalHash": "0d0f9a2daae576561183d59fe1bb417f8235613f4c82e094a46d7efd3592e7ce",
-    "targetHash": "cee933461c31414dac3a4c5b139c633ef72be46276e4a2c6ec569a1ce73ebe11",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "d53b11ac03a81fdcd7b70c9ab6ebf227e06e2e39811446898921693cd85d1a2f",
+    "sourceTechnicalHash": "00d303d22737bce2725debb750b7dedf214a28d155a82591476a9809c08edb7c",
+    "targetHash": "0d7b6e4a958ff9fb386e60785582c606810d7b54296c06496fa5eeb2fcc78c19",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T03:04:15.548Z",
+    "translatedAt": "2026-11-19T05:53:08.224Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "a7b4343fc33c36c4f488f8a65088e166ad1acc2680d77227755adb440737d064",
-      "targetHash": "cee933461c31414dac3a4c5b139c633ef72be46276e4a2c6ec569a1ce73ebe11",
+      "sourceHash": "d53b11ac03a81fdcd7b70c9ab6ebf227e06e2e39811446898921693cd85d1a2f",
+      "targetHash": "0d7b6e4a958ff9fb386e60785582c606810d7b54296c06496fa5eeb2fcc78c19",
       "warnings": [],
       "history": [
         {
@@ -31,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
+        "blob": "81d148a282a57aee05feaefcac450cbe01adb0a4"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
+        "blob": "a8ebab149523f997d128e9b2f11df7c3c05c1a30"
+      }
     }
   }
 }

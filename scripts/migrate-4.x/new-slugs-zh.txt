@@ -302,7 +302,6 @@ data-operate/import/load-manual
 data-operate/overview
 data-operate/transaction
 data-operate/update-and-delete
-data-operate/update/multi-stream-update-for-unique-model
 data-operate/update/partial-column-update
 data-operate/update/unique-update
 data-operate/update/unique-update-concurrent-control

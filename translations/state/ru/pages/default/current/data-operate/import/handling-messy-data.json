@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/handling-messy-data.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/handling-messy-data.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-    "sourceTechnicalHash": "59c9fe52f4658a8061ab29193716e29568582041a5064030b0e6deb4f7d77ee4",
-    "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
+    "sourceCommit": "a3be05907cb03a32905c451a9bd9bd61ae5b7e24",
+    "sourceHash": "8e2403bf71bc3e2293fdf2db7987be2c7860e34dd77027445394567ec7114f09",
+    "sourceTechnicalHash": "35470e070d1b31f6e4a3789cbf149a582f98d4dad02d664d0355bdf567745e64",
+    "targetHash": "685524c9336cbca864714e3d58308feb1c863612c00f606c1b6083c35e92c073",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T17:20:35.511Z",
+    "translatedAt": "2026-11-18T21:16:45.109Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-      "targetHash": "c5f6eaf6f19f23eafbafa3b4d6c893d032cc991d1d038982e0aedcdafb4063df",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "8e2403bf71bc3e2293fdf2db7987be2c7860e34dd77027445394567ec7114f09",
+      "targetHash": "685524c9336cbca864714e3d58308feb1c863612c00f606c1b6083c35e92c073",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 20: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"\\\\N\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"\\\\N\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 23: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"\\\"abc\\\"\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters + Operational steps -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: параметры конфигурации + порядок действий -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data import / Dirty data governance / Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- Применение: импорт данных / управление некорректными данными / устранение неполадок -->\"]\nprotected node 12: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameter description -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: описание параметра конфигурации -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"\\\\N\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"\\\\N\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"\\\"abc\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 20: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"\\\\N\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"\\\\N\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 23: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"\\\"abc\\\"\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/handling-messy-data.md",
+        "blob": "8f872d023edaa5dcb01c726fadb77517b8ba16ea"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/handling-messy-data.md",
+        "blob": "8535a7e60b342d61c3b1ad8f371578577615ef0d"
+      }
     }
   }
 }

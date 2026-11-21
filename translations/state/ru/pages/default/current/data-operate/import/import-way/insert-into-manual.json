@@ -8,30 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/insert-into-manual.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-manual.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
-    "sourceTechnicalHash": "aafbe862faafb879d27048e0ffbf1af4024d94f395bd9dbfc14dd913e9e1c2e6",
-    "targetHash": "0618bbefa8e388a8672d44682d56571d6304beff7f0c2e5de74d08a1a7eb23e8",
+    "sourceCommit": "a3be05907cb03a32905c451a9bd9bd61ae5b7e24",
+    "sourceHash": "b22c676279353bf82e159b9ddeaa8ff2e0d513063428be8f4f8afb1686fa77fe",
+    "sourceTechnicalHash": "2b1f3067087f9f9e66030746457b1a8157798af87fc8c587b80263c09dc11585",
+    "targetHash": "c101456bf9fc39286238ca29b5c31d67f1abe524556cc5cb96e4b6ace5dfcb3a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T17:21:32.200Z",
+    "translatedAt": "2026-11-18T21:23:07.685Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
-      "targetHash": "0618bbefa8e388a8672d44682d56571d6304beff7f0c2e5de74d08a1a7eb23e8",
+      "sourceHash": "b22c676279353bf82e159b9ddeaa8ff2e0d513063428be8f4f8afb1686fa77fe",
+      "targetHash": "c101456bf9fc39286238ca29b5c31d67f1abe524556cc5cb96e4b6ace5dfcb3a",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operation steps + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип информации: порядок действий + параметры конфигурации -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data import / ETL transformation / External data source integration -->\"]; received [\"html\",null,null,\"<!-- Применение: импорт данных / ETL-преобразование / подключение внешних источников данных -->\"]\nprotected node 21: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип информации: параметры конфигурации -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 94: expected [\"inlineCode\",null,null,\"Import timeout >= Data volume / Estimated import speed\"]; received [\"inlineCode\",null,null,\"Время ожидания импорта >= Объём данных / Ожидаемая скорость импорта\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/insert-into-manual.md",
+        "blob": "500dceb8014c6a67bea058a300de7884f28d829b"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-manual.md",
+        "blob": "2d490006062960959649ae52197ee8acf509f470"
+      }
     }
   }
 }

@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/admin-manual/auth/authentication/internal.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/internal.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
-    "sourceTechnicalHash": "d5738b96e3aa6a793cc4afd98e9085754b02242b8ca59f4af0cad9f8510e552d",
-    "targetHash": "baa8704162e3f8c4016da35e283be2b9cea45612475873118761b426b25163c6",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "ca7bbcba3e753882196774cda66c2051797fa5fa3e5ad6b4dd2eddbdc4c4aa5b",
+    "sourceTechnicalHash": "58174f5f114911e103eda569b3d73db0007b188b9215d16107b05d35f6d54b0d",
+    "targetHash": "e1bb68ef39c5d81fe5bdf2f1921905ba8e6766a3fdda9e8254e9033be50439dd",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:46:10.870Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-19T04:41:51.100Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ca7bbcba3e753882196774cda66c2051797fa5fa3e5ad6b4dd2eddbdc4c4aa5b",
+      "targetHash": "e1bb68ef39c5d81fe5bdf2f1921905ba8e6766a3fdda9e8254e9033be50439dd",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"user_name\"]; received [\"inlineCode\",null,null,\"user_identity\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"user_identity\"]; received [\"inlineCode\",null,null,\"user_name\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept + Configuration parameters + Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 概念 + 設定パラメータ + トラブルシューティング -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: User and privilege management / Login authentication troubleshooting / Password policy configuration -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: ユーザーと権限の管理 / ログイン認証のトラブルシューティング / パスワードポリシーの設定 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 20: expected [\"inlineCode\",null,null,\"user_name\"]; received [\"inlineCode\",null,null,\"user_identity\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"user_identity\"]; received [\"inlineCode\",null,null,\"user_name\"]\nprotected node 85: expected [\"inlineCode\",null,null,\"192.%\"]; received [\"inlineCode\",null,null,\"%\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"1\",\"10\",\"10\",\"10\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.2.1\",\"4.2.1\",\"8\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"user_name\"]; received [\"inlineCode\",null,null,\"user_identity\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"user_identity\"]; received [\"inlineCode\",null,null,\"user_name\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/admin-manual/auth/authentication/internal.md",
+        "blob": "7997092142df37e6d5934442b494ce274e911628"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/internal.md",
+        "blob": "53b4c2f4a02c24c75526547e0f28f52ff800ef51"
+      }
+    }
   }
 }

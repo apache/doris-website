@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/INSERT.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/INSERT.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "8f7e7a7bd0a33fdfe819f40886000448884bdc49dc180c0861a3e5e5b42c4310",
-    "sourceTechnicalHash": "276a6d811601098fc4043d4775fad1e19c66dddf001278e29e64e50c03da40ea",
-    "targetHash": "12516b6be5114899a28d56ea1db36b339512c5a47a98f1964f136df2c70f7118",
+    "sourceCommit": "a2bcddf826c9e91dbfb4e4c7451179446deed5d3",
+    "sourceHash": "0434684f5d53d7c6332fd4782967bc04c21f02240536ab770947f7f9d5878445",
+    "sourceTechnicalHash": "f7fb729996af3e43f38bd584ed179e0f830b8eff3aa434a43dfd734a2a0637b5",
+    "targetHash": "00fccf6e035295d5401160712dae5e2447abdf362933269e34724b1176d50f12",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T13:01:55.351Z",
+    "translatedAt": "2026-11-19T07:11:22.910Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "8f7e7a7bd0a33fdfe819f40886000448884bdc49dc180c0861a3e5e5b42c4310",
-      "targetHash": "12516b6be5114899a28d56ea1db36b339512c5a47a98f1964f136df2c70f7118",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0434684f5d53d7c6332fd4782967bc04c21f02240536ab770947f7f9d5878445",
+      "targetHash": "00fccf6e035295d5401160712dae5e2447abdf362933269e34724b1176d50f12",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"enable_insert_strict\"]; received [\"inlineCode\",null,null,\"/*+ NOSHUFFLE */\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"enable_unique_key_partial_update\"]; received [\"inlineCode\",null,null,\"enable_insert_strict\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"enable_insert_strict\"]; received [\"inlineCode\",null,null,\"enable_unique_key_partial_update\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1.0\",\"2.1.5\",\"4\",\"4\",\"5\"]; received [\"0\",\"1\",\"1.0\",\"2.1.5\",\"4\",\"5\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"enable_insert_strict\"]; received [\"inlineCode\",null,null,\"/*+ NOSHUFFLE */\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"enable_unique_key_partial_update\"]; received [\"inlineCode\",null,null,\"enable_insert_strict\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"enable_insert_strict\"]; received [\"inlineCode\",null,null,\"/*+ NOSHUFFLE */\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"enable_unique_key_partial_update\"]; received [\"inlineCode\",null,null,\"enable_insert_strict\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"enable_insert_strict\"]; received [\"inlineCode\",null,null,\"enable_unique_key_partial_update\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"enable_insert_strict\"]; received [\"inlineCode\",null,null,\"/*+ NOSHUFFLE */\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"enable_unique_key_partial_update\"]; received [\"inlineCode\",null,null,\"enable_insert_strict\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"enable_insert_strict\"]; received [\"inlineCode\",null,null,\"enable_unique_key_partial_update\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/data-modification/DML/INSERT.md",
+        "blob": "54c0477a1f5b44d2fc6d3fcf93dd8da81a39983b"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/INSERT.md",
+        "blob": "cf655c0a297f4e34d4d104a1bddd682708881c32"
+      }
     }
   }
 }

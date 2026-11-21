@@ -76,7 +76,8 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 
 ## 注意事项
 
-- **INVERTED** 倒排索引创建后对新写入的数据立即生效，历史数据的索引需要进行 BUILD INDEX 操作。
+- 创建普通 **INVERTED** 倒排索引时，历史数据的处理方式请参见[管理倒排索引](../../../../table-design/index/inverted-index/overview.md#管理倒排索引)。
+- Doris 4.2 起，可以用 `variant_index_scope = "values"` [给已有表添加 VARIANT 值索引](../../../../table-design/index/inverted-index/variant-values-index.md#add-to-existing-table)。历史数据缺少索引时，查询可以回退到扫描。
 - **NGRAM_BF** NGram BloomFilter 索引创建后会在后台对所用数据进行 schema change 以完成索引构建，进度可以通过 SHOW ALTER TABLE COLUMN 查看进度
 
 ## 示例
