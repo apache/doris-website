@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/hive-catalog.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/hive-catalog.mdx",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "b4f05d08387d34ef9f4e4681502d9e9c2455f1f4320d4e021c56cd5990cd4b44",
-    "sourceTechnicalHash": "1c455ac176d04ca41d12462b6de3a736afc2bcfce906a843b92e98d57556c078",
-    "targetHash": "46de26db4e8b871bfd98e4146755af330709a1f972c0972fb926c7aaf7f74664",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "e7b0c98d8a9134e6d6fb866928331ec9fbe588c496f56c04d0c6f4fc96dec96f",
+    "sourceTechnicalHash": "8ca58322f8705a059df291b6df3a3714ad3679d9e582247ca09750cc877c2b27",
+    "targetHash": "328a5603ec23c29133a6ed83b2291098f178f2fbcec58b619996ea7835bf75ac",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T15:08:09.775Z",
+    "translatedAt": "2026-11-21T22:26:56.718Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "b4f05d08387d34ef9f4e4681502d9e9c2455f1f4320d4e021c56cd5990cd4b44",
-      "targetHash": "46de26db4e8b871bfd98e4146755af330709a1f972c0972fb926c7aaf7f74664",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "e7b0c98d8a9134e6d6fb866928331ec9fbe588c496f56c04d0c6f4fc96dec96f",
+      "targetHash": "328a5603ec23c29133a6ed83b2291098f178f2fbcec58b619996ea7835bf75ac",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 156: expected [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( \\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES (\\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]\nprotected node 209: expected [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n    \\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]; received [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n\\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 156: expected [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( \\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES (\\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]\nprotected node 209: expected [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n    \\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]; received [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n\\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]\nprotected node 215: expected [\"inlineCode\",null,null,\"current accumulated data volume\"]; received [\"inlineCode\",null,null,\"текущий накопленный объём данных\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 156: expected [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( \\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES (\\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]\nprotected node 209: expected [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n    \\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]; received [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n\\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 156: expected [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( \\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES (\\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]\nprotected node 209: expected [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n    \\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]; received [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n\\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/lakehouse/catalogs/hive-catalog.mdx",
+        "blob": "6ef6150cd318a88982bd261e427a32e63a5c20a3"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/hive-catalog.mdx",
+        "blob": "963292e1a7096b170d8b85d54808923933dfc66d"
+      }
     }
   }
 }
