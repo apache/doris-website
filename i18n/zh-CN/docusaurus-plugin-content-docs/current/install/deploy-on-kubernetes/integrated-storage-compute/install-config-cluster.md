@@ -84,6 +84,8 @@ spec:
 
 将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
 
+从 Doris Operator 26.1.0 开始，新建集群配置了 `feSpec.limits.memory` 时，FE JVM 的初始堆和最大堆默认均为容器内存上限的 80%。配置优先级及存量集群的升级启用步骤见 [FE JVM 堆与 Pod 内存](../separating-storage-compute/config-fe.md#fe-jvm-memory)。
+
 **BE 计算资源设定**
 
 默认部署的 BE 计算资源为 8c 16Gi, 如需修改为 16c 32Gi，可按以下方式进行配置：
@@ -107,7 +109,7 @@ FE 和 BE 所需要的最小启动资源为 4c 8Gi，如果需要进行正常能
 
 ## 定制化启动配置
 
-在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../../admin-manual/config/fe-config)和 [BE 配置文档](../../../admin-manual/config/be-config)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)所在的命名空间中。
+在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务从镜像加载启动配置。从 Operator 26.1.0 开始，采用自动适配策略且配置了 FE 内存上限时，Operator 会调整镜像默认堆参数。请根据 [FE 配置文档](../../../admin-manual/config/fe-config)和 [BE 配置文档](../../../admin-manual/config/be-config)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)所在的命名空间中。
 
 ### FE 定制化启动配置
 

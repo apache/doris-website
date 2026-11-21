@@ -119,6 +119,10 @@ Recommended practice:
 - Confirm client retry behavior.
 - Follow Doris version upgrade documentation for upgrade order.
 
+### FE JVM heap settings after an Operator upgrade
+
+Starting with Doris Operator 26.1.0, new clusters with an FE container memory limit default to 80% of that limit for both the initial and maximum JVM heap. Existing clusters keep their previous heap settings by default when you upgrade the Operator. To switch policies and roll the FE Pods during a maintenance window, see [Enable automatic sizing after upgrading the Operator](../separating-storage-compute/config-fe.md#enable-fe-heap-after-operator-upgrade).
+
 ## Cluster deletion
 
 After the Doris custom resource is deleted, the Operator enters cleanup flow and removes Kubernetes resources that it manages.

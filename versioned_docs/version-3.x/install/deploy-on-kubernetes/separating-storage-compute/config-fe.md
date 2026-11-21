@@ -24,11 +24,34 @@ Update the above configuration in the [DorisDisaggregatedCluster resource](./ins
 
 ### JVM heap and Pod memory {#fe-jvm-memory}
 
-Kubernetes `requests.memory` controls scheduling, while `limits.memory` limits the container's total memory. Doris Operator does not calculate the FE JVM heap from either value. The heap, Metaspace, thread stacks, direct memory, and other native allocations must fit within the container limit.
+Starting with Doris Operator **26.1.0**, new `DorisCluster` and `DorisDisaggregatedCluster` resources with `spec.feSpec.limits.memory` set default to **80% of the FE container memory limit** for both the initial and maximum JVM heap. Earlier Operator versions use the startup values from the image or your custom configuration. With only `requests.memory` set, FE continues to use those startup values.
 
-Before lowering the memory limit, copy `fe.conf` from the image you deploy and adjust both `-Xms` and `-Xmx` in its JVM options. For JDK 17 images, edit `JAVA_OPTS_FOR_JDK_17` and preserve its other options. For example, the ConfigMap below uses a 4 GiB heap within the 8 GiB container limit above; size production heaps for the metadata and workload. Mount the file through `feSpec.configMaps` as described in Custom startup configuration, then restart the FE to apply it.
+| JVM | Default heap settings | Example with an `8Gi` limit |
+| --- | --- | --- |
+| JDK 8 | `-Xms` and `-Xmx` are both set to 80% of the limit, rounded down to a whole MiB. | `-Xms6553m -Xmx6553m` |
+| JDK 17 | `-XX:InitialRAMPercentage=80 -XX:MaxRAMPercentage=80`. The JVM calculates the heap from the container limit it detects. | About 6.4 GiB for each heap setting |
 
-If Kubernetes reports `OOMKilled`, compare the effective JVM options with the Pod memory limit. Leave room for non-heap memory when increasing the limit; when reducing the heap, do not lower only `-Xmx` while leaving a larger `-Xms`.
+This policy adjusts the heap flags in the image defaults and preserves the other JVM options. If your ConfigMap's `fe.conf` defines `JAVA_OPTS` (JDK 8) or `JAVA_OPTS_FOR_JDK_17` (JDK 17), that entire entry takes precedence. To use the automatic defaults, omit the corresponding entry. The ConfigMap example below explicitly sets both heap sizes to 4 GiB for JDK 17.
+
+The 80% applies to the heap. The remaining container memory also needs to cover Metaspace, thread stacks, direct memory, and other native allocations. If Kubernetes reports `OOMKilled`, compare the effective JVM heap sizes with the container limit. When overriding the heap sizes, set `-Xms` and `-Xmx` together and keep `-Xms` at or below `-Xmx`.
+
+#### Enable automatic sizing after upgrading the Operator {#enable-fe-heap-after-operator-upgrade}
+
+When you upgrade from an earlier version to 26.1.0 or later, the Operator sets `legacy` for existing clusters that have no explicit policy. They keep their previous FE heap configuration, and the Operator upgrade alone leaves the FE Pod template as it was. Newly created clusters default to `auto`.
+
+To opt in for an existing cluster, first set `spec.feSpec.limits.memory` and check for custom JVM options in `fe.conf`. During a maintenance window, run the command for your deployment mode. Set `namespace` and `cluster_name` to the namespace and name of the cluster resource.
+
+```shell
+# Compute-storage integrated
+kubectl annotate dcr "${cluster_name}" -n "${namespace}" doris.apache.org/fe-heap-policy=auto --overwrite
+
+# Compute-storage decoupled
+kubectl annotate ddc "${cluster_name}" -n "${namespace}" doris.apache.org/fe-heap-policy=auto --overwrite
+```
+
+The annotation updates the FE Pod template when the cluster meets the requirements for automatic sizing. The new settings take effect as the FE Pods roll. Custom JVM entries still take precedence. After the rollout, if the image includes `jcmd`, run `jcmd <fe-java-pid> VM.flags` inside each FE container and check `InitialHeapSize` and `MaxHeapSize`.
+
+To use the previous behavior, set the cluster resource's `doris.apache.org/fe-heap-policy` annotation to `legacy`. Switching an active cluster back to `legacy` also requires an FE rollout.
 
 ## Configuring the Number of Follower Nodes
 In a Doris Frontend (FE) service, there are two types of roles: Follower and Observer. Follower nodes are responsible for SQL parsing, metadata management, and storage. Observer nodes primarily handle SQL parsing to offload query and write traffic from Followers. Doris uses the bdbje storage system for metadata management, which implements an algorithm similar to the Paxos protocol.
