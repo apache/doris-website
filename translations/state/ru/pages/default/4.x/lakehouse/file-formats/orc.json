@@ -8,23 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/file-formats/orc.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/file-formats/orc.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "bb309f78cee75df49af834cc20d4ee2ffe6ee792cc9609730643b57b783964ca",
-    "sourceTechnicalHash": "26c3359bd968d9af220c9b51de575c5133489bc6b7dadf700db1d080e16ac560",
-    "targetHash": "c6f838d93483e03714d98b489a1498519a412fbc9169cce7081a4e424812c3d7",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "92118cdfb0e87be3917776775c8cc8f71a1c59a84654e153261762a221e654f9",
+    "sourceTechnicalHash": "fdd7e516a86e2a75b0e962f445394ca700d5d729197836f1928e3ac0aa157331",
+    "targetHash": "84c5c4e159232aa2a92a1b9302d2ae78fb9209bddabada5ca315eb859114d0fe",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T15:02:26.823Z",
+    "translatedAt": "2026-11-22T09:55:58.523Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "bb309f78cee75df49af834cc20d4ee2ffe6ee792cc9609730643b57b783964ca",
-      "targetHash": "c6f838d93483e03714d98b489a1498519a412fbc9169cce7081a4e424812c3d7",
+      "sourceHash": "92118cdfb0e87be3917776775c8cc8f71a1c59a84654e153261762a221e654f9",
+      "targetHash": "84c5c4e159232aa2a92a1b9302d2ae78fb9209bddabada5ca315eb859114d0fe",
       "warnings": [],
       "history": [
         {
@@ -32,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/lakehouse/file-formats/orc.md",
+        "blob": "422cf6d002d2a22ca1cd5ef55c10bf6e904ac644"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/lakehouse/file-formats/orc.md",
+        "blob": "727201e88b7f8b9a71b076b299291a1dcc4cbaed"
+      }
     }
   }
 }
