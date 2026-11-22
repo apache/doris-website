@@ -8,29 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/routine-load-manual.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/routine-load-manual.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "40970d21904a268c338e733243f38a76976bd40def51e6227587b59b4bcfdd09",
-    "sourceTechnicalHash": "1006402a0c98fcc712a12534acefd3384c63c90cf717d8dd794588525258bc45",
-    "targetHash": "525468c8f2ed9cc6487b932e2e4f61a00ba76193d1cbba0c314bd06493822775",
+    "sourceCommit": "a3be05907cb03a32905c451a9bd9bd61ae5b7e24",
+    "sourceHash": "96768f31d28b474d7da118d83419565de1d6a50ef78c99c60e558b7e415c3de6",
+    "sourceTechnicalHash": "60112dbb158375d948703a51d2e430a95024234dc68ef1aeaa1385933d479a30",
+    "targetHash": "24b5eefe9977cf93b410a7ad105c44da17b35abbe1e453cc34f04f6dd3be007b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T03:01:59.444Z",
+    "translatedAt": "2026-11-18T19:52:59.033Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "40970d21904a268c338e733243f38a76976bd40def51e6227587b59b4bcfdd09",
-      "targetHash": "525468c8f2ed9cc6487b932e2e4f61a00ba76193d1cbba0c314bd06493822775",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "96768f31d28b474d7da118d83419565de1d6a50ef78c99c60e558b7e415c3de6",
+      "targetHash": "24b5eefe9977cf93b410a7ad105c44da17b35abbe1e453cc34f04f6dd3be007b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"2.1.1\",\"2.1.5\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"30\",\"30\",\"4\",\"4\",\"5\",\"5\",\"5\",\"60\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"2.1.1\",\"2.1.5\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"30\",\"30\",\"4\",\"4\",\"5\",\"5\",\"5\",\"60\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"PAUSED\"]; received [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]\nprotected node 52: expected [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]; received [\"inlineCode\",null,null,\"PAUSED\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"2.1.1\",\"2.1.5\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"30\",\"30\",\"4\",\"4\",\"5\",\"5\",\"5\",\"60\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"2.1.1\",\"2.1.5\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"30\",\"30\",\"4\",\"4\",\"5\",\"5\",\"5\",\"60\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedures + Configuration parameters + Examples + FAQ -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 절차 + 구성 매개변수 + 예제 + FAQ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Continuously consume data from Kafka into Doris / Real-time data ingestion / CDC streaming sync -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: Kafka에서 Doris로 데이터를 지속적으로 소비 / 실시간 데이터 수집 / CDC 스트리밍 동기화 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 36: expected [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$.\\\")\"]; received [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$. \\\")\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"PAUSED\"]; received [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]\nprotected node 52: expected [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]; received [\"inlineCode\",null,null,\"PAUSED\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"2.1.1\",\"2.1.5\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"30\",\"30\",\"4\",\"4\",\"5\",\"5\",\"5\",\"60\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"2.1.1\",\"2.1.5\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"30\",\"30\",\"4\",\"4\",\"5\",\"5\",\"5\",\"60\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"PAUSED\"]; received [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]\nprotected node 52: expected [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]; received [\"inlineCode\",null,null,\"PAUSED\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/routine-load-manual.md",
+        "blob": "11e275b221db2aec6d46c48e2cd172edd11b5f63"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/routine-load-manual.md",
+        "blob": "16e58414b09ebd9be7964a01f8a8a37a389db9fc"
+      }
     }
   }
 }
