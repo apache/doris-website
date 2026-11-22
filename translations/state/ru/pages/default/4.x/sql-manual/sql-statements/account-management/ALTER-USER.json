@@ -8,23 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-USER.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-USER.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "7aab4a596cee53212a31d2ca44023ba0b350fdcf79002a595adb11c10f891979",
-    "sourceTechnicalHash": "e9c8c75b27065c17d1320a61e96067ed919458b15c902d39880a5b22ce747b9c",
-    "targetHash": "70e9c9f2e2ac82d4a92898ed4f52caca535cac269de9db937583a54e0db66740",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "3d085337a1f7e62e2f781f8d04eea5ee3ca549e4240c6a60f685866d2f8142d3",
+    "sourceTechnicalHash": "a12e05c80cd1ff94cccb392416584ee2be7bda70610094c149cfd82fdfe594ae",
+    "targetHash": "52a50b6a5bf29b516555078905aff93bbe73534d58adc28a9833a5ac7aac7f87",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-23T00:00:32.547Z",
+    "translatedAt": "2026-11-22T10:19:19.783Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "7aab4a596cee53212a31d2ca44023ba0b350fdcf79002a595adb11c10f891979",
-      "targetHash": "70e9c9f2e2ac82d4a92898ed4f52caca535cac269de9db937583a54e0db66740",
+      "sourceHash": "3d085337a1f7e62e2f781f8d04eea5ee3ca549e4240c6a60f685866d2f8142d3",
+      "targetHash": "52a50b6a5bf29b516555078905aff93bbe73534d58adc28a9833a5ac7aac7f87",
       "warnings": [],
       "history": [
         {
@@ -32,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-USER.md",
+        "blob": "6633c747d4fc1d57ab3d22cf8401817b9e9f90e1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-USER.md",
+        "blob": "f320212c29445efc61c7239586ebb0223ac09f08"
+      }
     }
   }
 }
