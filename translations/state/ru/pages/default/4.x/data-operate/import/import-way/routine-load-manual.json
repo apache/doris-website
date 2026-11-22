@@ -11,7 +11,7 @@
     "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
     "sourceHash": "3f0838b6ba617da47201cfde2d4c158f482c2696711e9b626bf93e22d5926a50",
     "sourceTechnicalHash": "0877d3c2c0ff7c260aa1df2f6373efbccdc7f239b61480b69f6202de25ea732f",
-    "targetHash": "ea979fe056af424663218302ae7c41ac786fb5b00c2f3156640881b5eb38aea2",
+    "targetHash": "ce752a7b86938f884953f900013219fa0671b9352641c3e576df89fc4ac29691",
     "reviewStatus": "machine",
     "ownership": "machine",
     "translatedAt": "2026-11-21T10:43:45.954Z",
@@ -23,11 +23,11 @@
       "attempts": 3,
       "acceptedWithWarnings": true,
       "sourceHash": "3f0838b6ba617da47201cfde2d4c158f482c2696711e9b626bf93e22d5926a50",
-      "targetHash": "ea979fe056af424663218302ae7c41ac786fb5b00c2f3156640881b5eb38aea2",
+      "targetHash": "ce752a7b86938f884953f900013219fa0671b9352641c3e576df89fc4ac29691",
       "warnings": [
         {
           "check": "protected-content",
-          "message": "Restore protected source content:\nprotected node 36: expected [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$.\\\")\"]; received [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$. \\\")\"]\nprotected node 188: expected [\"inlineCode\",null,null,\"json_root\"]; received [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]\nprotected node 189: expected [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]; received [\"inlineCode\",null,null,\"strip_outer_array\"]"
+          "message": "Restore protected source content:\nprotected node 188: expected [\"inlineCode\",null,null,\"json_root\"]; received [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]\nprotected node 189: expected [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]; received [\"inlineCode\",null,null,\"strip_outer_array\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"strip_outer_array\"]; received [\"inlineCode\",null,null,\"[]\"]"
         }
       ],
       "history": [
@@ -54,7 +54,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 36: expected [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$.\\\")\"]; received [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$. \\\")\"]\nprotected node 188: expected [\"inlineCode\",null,null,\"json_root\"]; received [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]\nprotected node 189: expected [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]; received [\"inlineCode\",null,null,\"strip_outer_array\"]"
+              "message": "Restore protected source content:\nprotected node 188: expected [\"inlineCode\",null,null,\"json_root\"]; received [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]\nprotected node 189: expected [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]; received [\"inlineCode\",null,null,\"strip_outer_array\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"strip_outer_array\"]; received [\"inlineCode\",null,null,\"[]\"]"
             }
           ]
         }
