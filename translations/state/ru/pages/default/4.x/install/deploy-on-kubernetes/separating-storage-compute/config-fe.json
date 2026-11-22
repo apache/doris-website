@@ -8,42 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "af1474677fc59b708718449fb10fdc133836c4217644277c0755f61a4f3abf92",
-    "sourceTechnicalHash": "175d416210d1d920ea3d8f5e912b9777c912b9baaedbb040b37b2764200f6db2",
-    "targetHash": "a79cd95ee379f2ecd903c632f9c5892ec9428ec8b5dba5aef9a8fb5a35c728dc",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "53fc5de5000e746bf98d8372e29ffcc79f0d5c81b036b3d2a9ea0347eb2181a2",
+    "sourceTechnicalHash": "6286a25eb69f384aa687536bf0f7e52e13f3eddedf9318d1386f36a51510bad7",
+    "targetHash": "75acee4ca4a7834dafc429641d64eab1bf00b83dca8b849de0b5487a8d8b5fbd",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:48:29.527Z",
+    "translatedAt": "2026-11-21T22:02:44.369Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "af1474677fc59b708718449fb10fdc133836c4217644277c0755f61a4f3abf92",
-      "targetHash": "a79cd95ee379f2ecd903c632f9c5892ec9428ec8b5dba5aef9a8fb5a35c728dc",
+      "sourceHash": "53fc5de5000e746bf98d8372e29ffcc79f0d5c81b036b3d2a9ea0347eb2181a2",
+      "targetHash": "75acee4ca4a7834dafc429641d64eab1bf00b83dca8b849de0b5487a8d8b5fbd",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"17\",\"192.168.88.62\",\"2\",\"2\",\"2\",\"2\",\"200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"30000\",\"31545\",\"32767\",\"4\",\"8\",\"8\",\"8\",\"8030\",\"9030\",\"9030\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"17\",\"192.168.88.62\",\"2\",\"2\",\"2\",\"2\",\"200\",\"3\",\"3\",\"3\",\"3\",\"300\",\"30000\",\"31545\",\"32767\",\"4\",\"8\",\"8\",\"8\",\"8030\",\"9030\",\"9030\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "install/deploy-on-kubernetes/separating-storage-compute/config-fe",
-        "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "af1474677fc59b708718449fb10fdc133836c4217644277c0755f61a4f3abf92",
-        "targetHash": "a79cd95ee379f2ecd903c632f9c5892ec9428ec8b5dba5aef9a8fb5a35c728dc",
-        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
-        "pr": "https://github.com/apache/doris-website/pull/4436"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
+        "blob": "be92731be18686ce9c9d08ba60aec39976cbcd91"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
+        "blob": "a27adc12bffa25b98f5d2b5030ea9f0957162749"
       }
     }
   }

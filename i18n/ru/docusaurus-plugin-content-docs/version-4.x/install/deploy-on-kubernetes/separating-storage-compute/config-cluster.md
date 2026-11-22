@@ -2,66 +2,72 @@
 {
     "title": "Настройка аутентификации",
     "language": "ru",
-    "description": "Подробное описание двух способов настройки учётных данных на уровне кластера с разделением хранения и вычислений (переменные окружения и Secret), а также полные инструкции для трёх сценариев настройки паролей, включая настройку аутентификации Kerberos.",
+    "description": "Подробное описание двух способов настройки на уровне кластера с разделением хранения и вычислений (переменные окружения и Secret), а также всех этапов настройки паролей для трёх сценариев, включая настройку аутентификации Kerberos.",
     "keywords": ["Doris", "Storage-Compute Separation", "Kubernetes", "Username and Password", "Secret", "Kerberos", "Authentication", "Node_priv"]
 }
 ---
 
-## Что вы узнаете в этой главе {#what-you-will-learn-in-this-chapter}
+## Что вы узнаете из этой главы {#what-you-will-learn-in-this-chapter}
 
-- Какой механизм аутентификации требуется Doris Operator для управления узлами кластера
-- Как настроить учётные данные для управления через переменные окружения или Secret
-- Как правильно настроить имена пользователей и пароли на трёх этапах: до развёртывания, во время развёртывания и после него
+- Как работает аутентификация, необходимая Doris Operator для управления узлами кластера
+- Как настроить учётные данные для управления с помощью переменных окружения или Secret
+- Как настроить имена пользователей и пароли на трёх этапах: до развёртывания, во время развёртывания и после него
 - Как настроить аутентификацию Kerberos для кластера с разделением хранения и вычислений
 
 ## Принципы настройки и выбор сценария {#configuration-principles-and-scenario-selection}
 
-### Зачем нужно настраивать учётные данные для управления {#why-management-credentials-need-to-be-configured}
+### Зачем нужны учётные данные для управления {#why-management-credentials-need-to-be-configured}
 
-Для управления узлами Doris необходимо подключиться к работающему узлу FE по протоколу MySQL, используя имя пользователя и пароль. В Doris реализован [механизм управления привилегиями, подобный RBAC](../../../admin-manual/auth/authentication-and-authorization), а для управления узлами пользователю требуется привилегия [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions).
+Для управления узлами Doris необходимо подключаться к работающему узлу FE по протоколу MySQL, используя имя пользователя и пароль. В Doris реализован [механизм управления привилегиями, аналогичный RBAC](../../../admin-manual/auth/authentication-and-authorization), а для управления узлами пользователю необходима привилегия [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions).
 
-По умолчанию Doris Operator использует пользователя root со всеми привилегиями и без пароля для развёртывания и управления кластером, настроенным с помощью ресурса DorisDisaggregatedCluster. После установки пароля для пользователя root необходимо явно указать в ресурсе DorisDisaggregatedCluster имя и пароль пользователя с привилегией Node_priv, чтобы Doris Operator мог автоматически управлять кластером.
+По умолчанию Doris Operator развёртывает кластер, заданный ресурсом DorisDisaggregatedCluster, и управляет им от имени пользователя root, который обладает всеми привилегиями и не имеет пароля. После установки пароля для root необходимо явно указать в ресурсе DorisDisaggregatedCluster имя и пароль пользователя с привилегией Node_priv, чтобы Doris Operator мог автоматически управлять кластером.
+
+:::caution Учётные данные для управления после установки пароля root
+После установки пароля root предоставьте Operator и скриптам запуска узлов действительные учётные данные для управления, предпочтительно через `spec.authSecret`. Если узлы BE регистрируются через FE SQL, отсутствие учётных данных или их несоответствие может помешать узлам присоединиться к кластеру. Secret должен находиться в том же пространстве имён, что и `DorisDisaggregatedCluster`, и содержать поля `username` и `password`, соответствующие действительной учётной записи для управления в Doris. Обновление Secret не меняет пароль существующей учётной записи базы данных; при изменении пароля в базе данных необходимо также обновить Secret.
+
+Если у root уже есть пароль, администратор должен заранее создать отдельную учётную запись для управления и предоставить ей необходимые привилегии. Не рассчитывайте, что скрипты запуска создадут её автоматически.
+:::
 
 ### Сравнение трёх сценариев настройки пароля {#comparison-of-the-three-password-configuration-scenarios}
 
-В зависимости от этапа работы с кластером и требований к управлению доступны три сценария настройки. Выберите подходящий сценарий с помощью таблицы ниже:
+Выберите сценарий в зависимости от этапа работы кластера и требований к управлению:
 
-| Сценарий | Когда использовать | Сложность выполнения | Требуется программное шифрование |
+| Сценарий | Когда использовать | Сложность выполнения | Требуется шифрование с помощью кода |
 |------|---------|-----------|-----------------|
-| Сценарий 1: Установка начального пароля root во время развёртывания | Первичное развёртывание кластера | Средняя | Да (двухэтапное шифрование SHA-1) |
-| Сценарий 2: Автоматическое создание пользователя для управления, отличного от root, во время развёртывания (рекомендуется) | Первичное развёртывание кластера | Низкая | Нет |
-| Сценарий 3: Установка пароля root после развёртывания | Кластер уже работает | Высокая | Нет |
+| Сценарий 1: установка начального пароля root во время развёртывания | Первое развёртывание кластера | Средняя | Да (двухэтапное шифрование SHA-1) |
+| Сценарий 2: автоматическое создание пользователя для управления, отличного от root, во время развёртывания (рекомендуется) | Первое развёртывание кластера | Низкая | Нет |
+| Сценарий 3: установка пароля root после развёртывания | Кластер уже работает | Высокая | Нет |
 
 ### Общие принципы настройки {#general-configuration-principles}
 
-Независимо от выбранного сценария настройки паролей учитывайте следующее:
+Независимо от выбранного сценария учитывайте следующее:
 
-- **Пароли существующих пользователей не изменяются автоматически**: Operator никогда и ни при каких обстоятельствах не изменяет автоматически пароли уже существующих пользователей, таких как root и admin. Их необходимо задавать или изменять самостоятельно.
-- **Не рекомендуется использовать admin для управления кластером**: Пользователь admin обычно используется как пользователь с максимальными привилегиями для операций чтения и записи в базу данных, а не для эксплуатации и обслуживания кластера. У пользователя admin отсутствуют некоторые привилегии, необходимые для отдельных функций Operator.
-- **Для управления следует выделять отдельных пользователей, отличных от root**: Рекомендуется использовать таких пользователей только для управления кластером. Это позволит избежать ситуаций, когда изменение пароля не удаётся синхронизировать с Operator или пользователь теряет привилегии, что приводит к сбоям эксплуатации и обслуживания.
+- **Пароли существующих пользователей не изменяются автоматически**: Operator ни при каких обстоятельствах не меняет автоматически пароли уже существующих пользователей, таких как root и admin. Их нужно устанавливать или изменять самостоятельно.
+- **Использовать пользователя admin для управления не рекомендуется**: admin обычно используют как пользователя с наивысшими привилегиями для чтения и записи в базу данных, а не для обслуживания кластера. У admin нет отдельных привилегий, необходимых некоторым функциям Operator.
+- **Пользователь для управления, отличный от root, должен быть выделенным**: рекомендуется использовать его только для управления кластером. Иначе изменение пароля, которое не удалось синхронизировать с Operator, или утрата привилегий может нарушить работу по обслуживанию кластера.
 
 ### Два способа передачи учётных данных {#two-credential-delivery-methods}
 
-Ресурс DorisDisaggregatedCluster поддерживает следующие два способа настройки учётных данных. В каждом сценарии можно выбрать любой из них:
+Ресурс DorisDisaggregatedCluster поддерживает два способа настройки учётных данных. В каждом сценарии можно выбрать любой из них:
 
 | Способ настройки | Используемое поле | Механизм работы |
 |---------|---------|---------|
 | Переменные окружения | `.spec.adminUser` | Operator автоматически преобразует имя пользователя и пароль в переменные окружения контейнера, которые считывает вспомогательная служба внутри контейнера |
-| [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) | `.spec.authSecret` | Operator монтирует Basic Authentication Secret в виде файла в заданное место внутри контейнера, где его разбирает вспомогательная служба |
+| [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) | `.spec.authSecret` | Operator монтирует Basic Authentication Secret как файл в заданном расположении внутри контейнера, где его считывает вспомогательная служба |
 
-## Сценарий 1: Установка начального пароля пользователя root во время развёртывания {#scenario-1-initialize-the-root-user-password-during-deployment}
+## Сценарий 1: установка начального пароля пользователя root во время развёртывания {#scenario-1-initialize-the-root-user-password-during-deployment}
 
-При первичном развёртывании кластера может потребоваться использовать root для управления и заранее задать начальный пароль. Doris поддерживает настройку пароля пользователя root в зашифрованном виде в `fe.conf`. Этот пароль устанавливается при первом развёртывании Doris, что позволяет Doris Operator автоматически управлять узлами кластера.
+При первом развёртывании кластера можно использовать root для управления и заранее установить начальный пароль. Doris позволяет указать зашифрованный пароль root в `fe.conf`. При первом развёртывании Doris этот пароль будет установлен, после чего Doris Operator сможет автоматически управлять узлами кластера.
 
-Общий порядок настройки:
+Порядок настройки:
 
-1. Сформируйте зашифрованный пароль root
-2. Укажите зашифрованный пароль в `fe.conf`
-3. Настройте учётные данные для управления в DorisDisaggregatedCluster (через переменные окружения или Secret)
+1. Сгенерировать зашифрованный пароль root
+2. Указать зашифрованный пароль в `fe.conf`
+3. Указать учётные данные для управления в DorisDisaggregatedCluster, выбрав переменные окружения или Secret
 
-### Шаг 1: Сформируйте зашифрованный пароль root {#step-1-generate-the-encrypted-root-password}
+### Шаг 1: сгенерируйте зашифрованный пароль root {#step-1-generate-the-encrypted-root-password}
 
-Doris поддерживает настройку пароля пользователя root в зашифрованном виде в [файле конфигурации FE](../../../admin-manual/config/fe-config#initial_root_password). Используется двухэтапное шифрование SHA-1. Ниже приведены примеры реализации.
+Doris поддерживает установку зашифрованного пароля root через [файл конфигурации FE](../../../admin-manual/config/fe-config#initial_root_password). Для этого используется двухэтапное шифрование SHA-1. Ниже приведены примеры кода.
 
 **Реализация на Java:**
 
@@ -106,19 +112,19 @@ func main() {
 }
 ```
 
-### Шаг 2: Укажите зашифрованный пароль в fe.conf {#step-2-configure-the-encrypted-password-in-feconf}
+### Шаг 2: укажите зашифрованный пароль в fe.conf {#step-2-configure-the-encrypted-password-in-feconf}
 
-Добавьте зашифрованный пароль, полученный на предыдущем шаге, в `fe.conf` в соответствии с требованиями к файлу конфигурации. Следуя инструкциям в [разделе о настройке параметров запуска FE](config-fe#custom-startup-configuration), передайте файл конфигурации в кластер Kubernetes в виде `ConfigMap`.
+Укажите пароль, зашифрованный на предыдущем шаге, в `fe.conf` в соответствии с требованиями к файлу конфигурации. Следуя инструкциям в [разделе о настройке параметров запуска FE](config-fe#custom-startup-configuration), передайте файл конфигурации в кластер Kubernetes как `ConfigMap`.
 
-### Шаг 3: Настройте учётные данные для управления в DorisDisaggregatedCluster {#step-3-configure-management-credentials-in-dorisdisaggregatedcluster}
+### Шаг 3: укажите учётные данные для управления в DorisDisaggregatedCluster {#step-3-configure-management-credentials-in-dorisdisaggregatedcluster}
 
-После задания начального пароля root в файле конфигурации этот пароль вступает в силу сразу при запуске первого узла Doris FE. При присоединении последующих узлов к кластеру Doris Operator использует имя пользователя root и его пароль для добавления узлов. Поэтому необходимо указать имя пользователя и пароль в развёртываемом ресурсе DorisDisaggregatedCluster, чтобы Doris Operator мог управлять узлами кластера.
+После задания начального пароля root в файле конфигурации пароль начинает действовать сразу при запуске первого узла Doris FE. Для добавления последующих узлов Doris Operator будет использовать имя пользователя root и его пароль. Поэтому укажите их в развёртываемом ресурсе DorisDisaggregatedCluster, чтобы Doris Operator мог управлять узлами кластера.
 
-Выберите один из следующих двух способов настройки.
+Выберите один из двух способов настройки.
 
-#### Способ A: Настройка через переменные окружения {#method-a-environment-variable-configuration}
+#### Способ A: настройка через переменные окружения {#method-a-environment-variable-configuration}
 
-Укажите имя пользователя root и его пароль в полях `.spec.adminUser.name` и `.spec.adminUser.password` ресурса DorisDisaggregatedCluster. Doris Operator автоматически преобразует эти настройки в переменные окружения контейнера, а вспомогательная служба внутри контейнера использует их для добавления узлов в кластер. Формат настройки:
+Укажите имя пользователя root и пароль в полях `.spec.adminUser.name` и `.spec.adminUser.password` ресурса DorisDisaggregatedCluster. Doris Operator автоматически преобразует эти значения в переменные окружения контейнера, а вспомогательная служба внутри контейнера использует их для добавления узлов в кластер. Формат настройки:
 
 ```yaml
 spec:
@@ -127,25 +133,31 @@ spec:
         password: ${password}
 ```
 
-Здесь `${password}` обозначает незашифрованный пароль root.
+Здесь `${password}` — незашифрованный пароль root.
 
-#### Способ B: Настройка через Secret {#method-b-secret-configuration}
+#### Способ B: настройка через Secret {#method-b-secret-configuration}
 
-Doris Operator поддерживает использование [Basic Authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) для указания имени пользователя и пароля, необходимых для управления узлами. Doris Operator автоматически монтирует Secret в виде файла в заданное место внутри контейнера. Вспомогательная служба контейнера извлекает имя пользователя и пароль из файла и использует их для автоматического добавления узлов в кластер. Поле stringData объекта Basic Authentication Secret содержит только два поля: username и password.
+Doris Operator поддерживает [Basic Authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) для задания имени пользователя и пароля, используемых при управлении узлами. Doris Operator автоматически монтирует Secret как файл в заданном расположении внутри контейнера. Вспомогательная служба считывает из файла имя пользователя и пароль и использует их для автоматического добавления узлов в кластер. Поле stringData объекта Basic Authentication Secret содержит только два поля: username и password.
 
-**Шаг 1: Создайте и разверните Secret**
+**Шаг 1: создайте и разверните Secret**
 
-Настройте используемый Basic Authentication Secret в следующем формате:
+Настройте Basic Authentication Secret в следующем формате:
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: root
-    password: ${password}
+  username: root
+  password: "${password}"
 ```
 
-Здесь `${password}` обозначает незашифрованный пароль, заданный для root.
+Здесь `${password}` — незашифрованный пароль, установленный для root.
 
-Разверните Secret в кластере Kubernetes с помощью следующей команды:
+Разверните Secret в кластере Kubernetes следующей командой:
 
 ```shell
 kubectl -n ${namespace} apply -f ${secretFileName}.yaml
@@ -153,29 +165,29 @@ kubectl -n ${namespace} apply -f ${secretFileName}.yaml
 
 | Параметр | Описание |
 |------|------|
-| `${namespace}` | Пространство имён, в котором необходимо развернуть ресурс DorisDisaggregatedCluster |
+| `${namespace}` | Пространство имён, в котором нужно развернуть ресурс DorisDisaggregatedCluster |
 | `${secretFileName}` | Имя файла развёртываемого Secret |
 
-**Шаг 2: Укажите ссылку на Secret в DorisDisaggregatedCluster**
+**Шаг 2: укажите Secret в DorisDisaggregatedCluster**
 
-В развёртываемом ресурсе DorisDisaggregatedCluster укажите используемый Secret. Формат настройки:
+В развёртываемом ресурсе DorisDisaggregatedCluster укажите Secret следующим образом:
 
 ```yaml
 spec:
     authSecret: ${secretName}
 ```
 
-Здесь `${secretName}` обозначает имя Secret, содержащего имя пользователя root и его пароль.
+Здесь `${secretName}` — имя Secret, содержащего имя пользователя root и его пароль.
 
-## Сценарий 2: Автоматическое создание пользователя для управления, отличного от root, во время развёртывания (рекомендуется) {#scenario-2-automatically-create-a-non-root-management-user-during-deployment-recommended}
+## Сценарий 2: автоматическое создание пользователя для управления, отличного от root, во время развёртывания (рекомендуется) {#scenario-2-automatically-create-a-non-root-management-user-during-deployment-recommended}
 
-При первичном развёртывании кластера может потребоваться, чтобы Operator автоматически создал отдельного пользователя для управления, отличного от root. Если при первом развёртывании начальный пароль root не задан, можно указать пользователя, отличного от root, и пароль для входа через переменные окружения или Secret. Вспомогательная служба контейнера Doris автоматически создаёт этого пользователя в Doris, задаёт пароль и предоставляет привилегию Node_priv. Затем Doris Operator использует имя и пароль автоматически созданного пользователя для управления узлами кластера.
+При первом развёртывании кластера можно поручить Operator автоматически создать отдельного пользователя для управления, отличного от root. Если начальный пароль root не задан, имя такого пользователя и пароль для входа можно указать через переменные окружения или Secret. Вспомогательная служба контейнера Doris автоматически создаст пользователя в Doris, установит пароль и предоставит привилегию Node_priv. Затем Doris Operator будет использовать созданные имя пользователя и пароль для управления узлами кластера.
 
-Выберите один из следующих двух способов настройки.
+Выберите один из двух способов настройки.
 
-### Способ A: Настройка через переменные окружения {#method-a-environment-variable-configuration-1}
+### Способ A: настройка через переменные окружения {#method-a-environment-variable-configuration-1}
 
-Настройте развёртываемый ресурс DorisDisaggregatedCluster в следующем формате:
+Настройте развёртываемый ресурс DorisDisaggregatedCluster следующим образом:
 
 ```yaml
 spec:
@@ -186,27 +198,33 @@ spec:
 
 | Параметр | Описание |
 |------|------|
-| `${DB_ADMIN_USER}` | Имя создаваемого пользователя с привилегиями управления |
+| `${DB_ADMIN_USER}` | Имя создаваемого пользователя с привилегиями для управления |
 | `${DB_ADMIN_PASSWD}` | Пароль нового пользователя |
 
-### Способ B: Настройка через Secret {#method-b-secret-configuration-1}
+### Способ B: настройка через Secret {#method-b-secret-configuration-1}
 
-**Шаг 1: Создайте и разверните Secret**
+**Шаг 1: создайте и разверните Secret**
 
-Настройте используемый Basic Authentication Secret в следующем формате:
+Настройте Basic Authentication Secret в следующем формате:
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: ${DB_ADMIN_USER}
-    password: ${DB_ADMIN_PASSWD}
+  username: ${DB_ADMIN_USER}
+  password: "${DB_ADMIN_PASSWD}"
 ```
 
 | Параметр | Описание |
 |------|------|
 | `${DB_ADMIN_USER}` | Имя создаваемого пользователя |
-| `${DB_ADMIN_PASSWD}` | Пароль, задаваемый для создаваемого пользователя |
+| `${DB_ADMIN_PASSWD}` | Пароль, устанавливаемый для нового пользователя |
 
-Разверните Secret в кластере Kubernetes с помощью следующей команды:
+Разверните Secret в кластере Kubernetes следующей командой:
 
 ```shell
 kubectl -n ${namespace} apply -f ${secretFileName}.yaml
@@ -214,37 +232,37 @@ kubectl -n ${namespace} apply -f ${secretFileName}.yaml
 
 | Параметр | Описание |
 |------|------|
-| `${namespace}` | Пространство имён, в котором развёртывается ресурс DorisDisaggregatedCluster |
+| `${namespace}` | Пространство имён, в котором развёрнут ресурс DorisDisaggregatedCluster |
 | `${secretFileName}` | Имя файла развёртываемого Secret |
 
-**Шаг 2: Укажите ссылку на Secret в DorisDisaggregatedCluster**
+**Шаг 2: укажите Secret в DorisDisaggregatedCluster**
 
-В ресурсе DorisDisaggregatedCluster укажите используемый Secret, как показано ниже:
+Укажите используемый Secret в ресурсе DorisDisaggregatedCluster:
 
 ```yaml
 spec:
     authSecret: ${secretName}
 ```
 
-Здесь `${secretName}` обозначает имя развёрнутого Basic Authentication Secret.
+Здесь `${secretName}` — имя развёрнутого Basic Authentication Secret.
 
 :::tip Совет
-После развёртывания задайте пароль root. Doris Operator перейдёт на использование нового пользователя и пароля для управления узлами кластера. Не удаляйте созданного пользователя.
+После развёртывания установите пароль root. Doris Operator перейдёт на использование нового пользователя и его пароля для управления узлами кластера. Не удаляйте созданного пользователя.
 :::
 
-## Сценарий 3: Установка пароля пользователя root после развёртывания кластера {#scenario-3-set-the-root-user-password-after-the-cluster-is-deployed}
+## Сценарий 3: установка пароля пользователя root после развёртывания кластера {#scenario-3-set-the-root-user-password-after-the-cluster-is-deployed}
 
-Если после развёртывания кластера Doris пароль пользователя root не задан, необходимо настроить пользователя с привилегией [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions), чтобы Doris Operator мог автоматически управлять узлами кластера. Рекомендуется использовать пользователя, отличного от root. Чтобы создать нового пользователя и предоставить ему привилегию Node_priv, обратитесь к [разделу о создании пользователей и предоставлении привилегий](../../../sql-manual/sql-statements/account-management/CREATE-USER). После создания пользователя укажите имя и пароль нового пользователя для управления через переменные окружения или Secret и настройте их в ресурсе DorisDisaggregatedCluster.
+Если после развёртывания кластера Doris у пользователя root нет пароля, необходимо настроить пользователя с привилегией [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions), чтобы Doris Operator мог автоматически управлять узлами кластера. Использовать для этого root не рекомендуется. Создайте нового пользователя и предоставьте ему привилегию Node_priv, следуя [разделу о создании пользователей и предоставлении привилегий](../../../sql-manual/sql-statements/account-management/CREATE-USER). Затем укажите имя и пароль нового пользователя для управления через переменные окружения или Secret в ресурсе DorisDisaggregatedCluster.
 
-Общий порядок настройки:
+Порядок настройки:
 
-1. Создайте пользователя с привилегией Node_priv через протокол MySQL
-2. Предоставьте новому пользователю привилегию Node_priv
-3. Настройте учётные данные для управления в DorisDisaggregatedCluster (через переменные окружения или Secret)
+1. Создать пользователя через протокол MySQL для последующего предоставления привилегии Node_priv
+2. Предоставить новому пользователю привилегию Node_priv
+3. Указать учётные данные для управления в DorisDisaggregatedCluster, выбрав переменные окружения или Secret
 
-### Шаг 1: Создайте пользователя с привилегией Node_priv {#step-1-create-a-user-with-the-node_priv-privilege}
+### Шаг 1: создайте пользователя для последующего предоставления привилегии Node_priv {#step-1-create-a-user-with-the-node_priv-privilege}
 
-После подключения к базе данных по протоколу MySQL создайте пользователя и задайте пароль с помощью следующей команды:
+Подключитесь к базе данных по протоколу MySQL и создайте пользователя с паролем следующей командой:
 
 ```shell
 CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
@@ -253,25 +271,25 @@ CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
 | Параметр | Описание |
 |------|------|
 | `${DB_ADMIN_USER}` | Имя создаваемого пользователя |
-| `${DB_ADMIN_PASSWD}` | Задаваемый пароль |
+| `${DB_ADMIN_PASSWD}` | Устанавливаемый пароль |
 
-### Шаг 2: Предоставьте новому пользователю привилегию Node_priv {#step-2-grant-the-node_priv-privilege-to-the-new-user}
+### Шаг 2: предоставьте новому пользователю привилегию Node_priv {#step-2-grant-the-node_priv-privilege-to-the-new-user}
 
-После подключения к базе данных по протоколу MySQL выполните следующую команду, чтобы предоставить новому пользователю привилегию Node_priv:
+Подключитесь к базе данных по протоколу MySQL и выполните следующую команду, чтобы предоставить новому пользователю привилегию Node_priv:
 
 ```shell
 GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 ```
 
-Здесь `${DB_ADMIN_USER}` обозначает имя созданного пользователя.
+Здесь `${DB_ADMIN_USER}` — имя созданного пользователя.
 
-Подробные сведения о создании пользователей, настройке паролей и предоставлении привилегий приведены в официальной документации [CREATE-USER](../../../sql-manual/sql-statements/account-management/CREATE-USER).
+Подробности о создании пользователей, установке паролей и предоставлении привилегий см. в официальной документации по [CREATE-USER](../../../sql-manual/sql-statements/account-management/CREATE-USER).
 
-### Шаг 3: Настройте учётные данные для управления в DorisDisaggregatedCluster {#step-3-configure-management-credentials-in-dorisdisaggregatedcluster-1}
+### Шаг 3: укажите учётные данные для управления в DorisDisaggregatedCluster {#step-3-configure-management-credentials-in-dorisdisaggregatedcluster-1}
 
-Выберите один из следующих двух способов настройки.
+Выберите один из двух способов настройки.
 
-#### Способ A: Настройка через переменные окружения {#method-a-environment-variable-configuration-2}
+#### Способ A: настройка через переменные окружения {#method-a-environment-variable-configuration-2}
 
 Укажите созданного пользователя и его пароль в ресурсе DorisDisaggregatedCluster в следующем формате:
 
@@ -285,26 +303,32 @@ spec:
 | Параметр | Описание |
 |------|------|
 | `${DB_ADMIN_USER}` | Имя созданного пользователя |
-| `${DB_ADMIN_PASSWD}` | Пароль, заданный для созданного пользователя |
+| `${DB_ADMIN_PASSWD}` | Пароль, установленный для созданного пользователя |
 
-#### Способ B: Настройка через Secret {#method-b-secret-configuration-2}
+#### Способ B: настройка через Secret {#method-b-secret-configuration-2}
 
-**Шаг 1: Создайте и разверните Secret**
+**Шаг 1: создайте и разверните Secret**
 
 Создайте Basic Authentication Secret в следующем формате:
 
 ```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${secretName}
+  namespace: ${namespace}
+type: kubernetes.io/basic-auth
 stringData:
-    username: ${DB_ADMIN_USER}
-    password: ${DB_ADMIN_PASSWD}
+  username: ${DB_ADMIN_USER}
+  password: "${DB_ADMIN_PASSWD}"
 ```
 
 | Параметр | Описание |
 |------|------|
 | `${DB_ADMIN_USER}` | Имя созданного пользователя |
-| `${DB_ADMIN_PASSWD}` | Пароль, заданный для созданного пользователя |
+| `${DB_ADMIN_PASSWD}` | Пароль, установленный для созданного пользователя |
 
-Разверните Secret в кластере Kubernetes с помощью следующей команды:
+Разверните Secret в кластере Kubernetes следующей командой:
 
 ```shell
 kubectl -n ${namespace} apply -f ${secretFileName}.yaml
@@ -312,45 +336,45 @@ kubectl -n ${namespace} apply -f ${secretFileName}.yaml
 
 | Параметр | Описание |
 |------|------|
-| `${namespace}` | Пространство имён, в котором развёртывается ресурс DorisDisaggregatedCluster |
+| `${namespace}` | Пространство имён, в котором развёрнут ресурс DorisDisaggregatedCluster |
 | `${secretFileName}` | Имя файла развёртываемого Secret |
 
-**Шаг 2: Укажите ссылку на Secret в DorisDisaggregatedCluster**
+**Шаг 2: укажите Secret в DorisDisaggregatedCluster**
 
-В ресурсе DorisDisaggregatedCluster укажите используемый Secret, как показано ниже:
+Укажите используемый Secret в ресурсе DorisDisaggregatedCluster:
 
 ```yaml
 spec:
     authSecret: ${secretName}
 ```
 
-Здесь `${secretName}` обозначает имя развёрнутого Basic Authentication Secret.
+Здесь `${secretName}` — имя развёрнутого Basic Authentication Secret.
 
 :::tip Совет
-После развёртывания установка пароля root и настройка имени и пароля нового пользователя с привилегиями управления узлами вызовут один поочерёдный перезапуск существующих служб.
+Изменение ссылки `spec.authSecret` или поля `spec.adminUser` в CR меняет шаблоны соответствующих Pod и может запустить последовательное обновление. Изменение только пароля в базе данных или содержимого Secret с тем же именем само по себе не означает последовательного перезапуска. Скрипты запуска BE, регистрирующихся через FE SQL, считывают Secret в переменные при запуске и не перечитывают его при повторных попытках регистрации. Исправив учётные данные и убедившись, что с ними можно войти в FE, пересоздайте по одному те Pod BE, которые всё ещё не могут зарегистрироваться из-за старых учётных данных. Выполните `SHOW BACKENDS`, чтобы убедиться, что каждый узел присоединился к кластеру и значение его поля `Alive` равно `true`. Порядок устранения неполадок см. в разделе [Проблемы с authSecret](../doris-operator/status-and-troubleshooting.md#authsecret-problems).
 :::
 
 ## Монтирование файлов аутентификации Kerberos {#mounting-kerberos-authentication-files}
 
-В этом разделе описано, как смонтировать файлы аутентификации Kerberos для кластера Doris с разделением хранения и вычислений в среде Kubernetes. После настройки файл конфигурации `krb5.conf` и файл ключей `keytab`, необходимые для аутентификации Kerberos, монтируются в контейнер Doris для использования такими функциями, как [Hive Catalog](../../../lakehouse/catalogs/hive-catalog). Это позволяет Doris подключаться к Hive и другим внешним источникам данных с включённой аутентификацией Kerberos.
+В этом разделе описано, как смонтировать файлы аутентификации Kerberos для кластера Doris с разделением хранения и вычислений в среде Kubernetes. После настройки файл конфигурации `krb5.conf` и файл ключей `keytab`, необходимые для аутентификации Kerberos, будут смонтированы в контейнер Doris. Эти файлы смогут использовать функции, такие как [Hive Catalog](../../../lakehouse/catalogs/hive-catalog), чтобы Doris подключался к Hive или другим внешним источникам данных с включённой аутентификацией Kerberos.
 
 :::caution Примечание
-Здесь не рассматривается доступ к кластеру Doris через Kerberos. После монтирования Doris может использовать эти файлы Kerberos для доступа к другим внешним источникам данных (например, HDFS).
+Речь идёт не о доступе к кластеру Doris через Kerberos. После монтирования Doris сможет использовать эти файлы Kerberos для доступа к другим внешним источникам данных, например HDFS.
 :::
 
 ### Предварительные требования {#prerequisites}
 
 - Doris Operator версии 25.5.1 или новее
-- Кластер Doris с разделением хранения и вычислений версии 2.1.10 или 3.0.6 либо более поздней версии
+- Кластер Doris с разделением хранения и вычислений версии 2.1.10 или 3.0.6 либо более поздней версии соответствующей ветки
 
 ### Необходимые файлы {#required-files}
 
 | Файл | Описание |
 |------|------|
 | [krb5.conf](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/conf_files/krb5_conf.html) | Файл конфигурации Kerberos |
-| [Файл keytab](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) | Файл, содержащий principal Kerberos и ключи шифрования |
+| [Файл keytab](https://web.mit.edu/Kerberos/krb5-1.16/doc/basic/keytab_def.html) | Файл с принципалом Kerberos и ключами шифрования |
 
-### Шаг 1: Создайте ConfigMap для хранения krb5.conf {#step-1-create-a-configmap-to-store-krb5conf}
+### Шаг 1: создайте ConfigMap для хранения krb5.conf {#step-1-create-a-configmap-to-store-krb5conf}
 
 ```shell
 kubectl create -n ${namespace} configmap ${name} --from-file=krb5.conf
@@ -361,7 +385,7 @@ kubectl create -n ${namespace} configmap ${name} --from-file=krb5.conf
 | `${namespace}` | Пространство имён, в котором развёрнут `DorisDisaggregatedCluster` |
 | `${name}` | Имя ConfigMap |
 
-### Шаг 2: Создайте Secret для хранения файла keytab {#step-2-create-a-secret-to-store-the-keytab-file}
+### Шаг 2: создайте Secret для хранения файла keytab {#step-2-create-a-secret-to-store-the-keytab-file}
 
 ```shell
 kubectl create -n ${namespace} secret generic ${name} --from-file=${xxx.keytab}
@@ -374,10 +398,10 @@ kubectl create -n ${namespace} secret generic ${name} --from-file=${xxx.keytab}
 | `${xxx.keytab}` | Имя файла keytab |
 
 :::tip Совет
-Если необходимо смонтировать несколько файлов `keytab`, обратитесь к [документации kubectl create secret](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/), чтобы поместить несколько файлов `keytab` в один Secret.
+Если нужно смонтировать несколько файлов `keytab`, обратитесь к [документации kubectl по созданию Secret](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/), чтобы поместить их в один Secret.
 :::
 
-### Шаг 3: Настройте параметры Kerberos в DorisDisaggregatedCluster {#step-3-configure-kerberos-information-in-dorisdisaggregatedcluster}
+### Шаг 3: настройте Kerberos в DorisDisaggregatedCluster {#step-3-configure-kerberos-information-in-dorisdisaggregatedcluster}
 
 ```yaml
 spec:
@@ -391,8 +415,8 @@ spec:
 |------|------|
 | `${krb5ConfigMapName}` | Имя ConfigMap, содержащего файл `krb5.conf` |
 | `${keytabSecretName}` | Имя Secret, содержащего файл keytab |
-| `${keytabPath}` | Путь, по которому файл keytab монтируется в контейнере |
+| `${keytabPath}` | Путь монтирования файла keytab внутри контейнера |
 
-### Шаг 4: Используйте аутентификацию Kerberos в Hive Catalog {#step-4-use-kerberos-authentication-in-hive-catalog}
+### Шаг 4: используйте аутентификацию Kerberos в Hive Catalog {#step-4-use-kerberos-authentication-in-hive-catalog}
 
-После настройки Kerberos можно включить аутентификацию Kerberos при создании Hive Catalog. Подробные сведения о настройке приведены в [документации по настройке Hive Catalog](../../../lakehouse/catalogs/hive-catalog#配置-catalog).
+После настройки Kerberos при создании Hive Catalog можно включить аутентификацию Kerberos. Подробности см. в [документации по настройке Hive Catalog](../../../lakehouse/catalogs/hive-catalog.mdx#configuring-catalog).
