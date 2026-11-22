@@ -221,7 +221,7 @@ Routine Load의 자세한 흐름은 다음 그림과 같습니다.
     ```
 
 :::info 참고
-JSON 파일의 루트에 있는 JSON 객체를 적재하려면 `jsonpaths`를 `$.`로 설정합니다. 예: `PROPERTIES("jsonpaths"="$. ")`.
+JSON 파일의 루트에 있는 JSON 객체를 적재하려면 `jsonpaths`를 `$.`로 설정합니다. 예: `PROPERTIES("jsonpaths"="$.")`.
 :::
 
 ### 데이터 적재 상태 조회 {#view-import-status}
