@@ -8,23 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/orc.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/file-formats/orc.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "8fd46e01c8042a80934136aff3642b756d0c4c91092b0dba704b8cd4153f5ac6",
-    "sourceTechnicalHash": "ba93dc4db9299c2cd1c7d4c6924c0a9ef1ff306eeeff33791855a42c2d766ee4",
-    "targetHash": "42a4130bbe9355d85c9582325e841bd82afacf5e6f04afafb6f5f09c7c35f750",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "132f2888ebd4aeb8dbe26cc5f5f168c786bc387bf4b4936ba0954a2bb1f51e12",
+    "sourceTechnicalHash": "34b2816e29b7516c8e600a24a0a405282f8f753ee8d301beb2f37d2a1df0c8ae",
+    "targetHash": "d1451618570917369304cc4f7b23a0c6a28e783e99c816b4a5930bc2f42c000b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T08:06:21.217Z",
+    "translatedAt": "2026-11-21T09:42:44.465Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "8fd46e01c8042a80934136aff3642b756d0c4c91092b0dba704b8cd4153f5ac6",
-      "targetHash": "42a4130bbe9355d85c9582325e841bd82afacf5e6f04afafb6f5f09c7c35f750",
+      "sourceHash": "132f2888ebd4aeb8dbe26cc5f5f168c786bc387bf4b4936ba0954a2bb1f51e12",
+      "targetHash": "d1451618570917369304cc4f7b23a0c6a28e783e99c816b4a5930bc2f42c000b",
       "warnings": [],
       "history": [
         {
@@ -32,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/file-formats/orc.md",
+        "blob": "90e77a4f827346f748b79719f51f89c231788dca"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/file-formats/orc.md",
+        "blob": "ad776127d6a73d1cf8458fa429c55ce2c538db2c"
+      }
     }
   }
 }

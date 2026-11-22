@@ -8,30 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/text.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/file-formats/text.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "fb9dd260afbd0ab5f28f1e3f13504818b297b25296fed743c0f87b7a06d9f9b3",
-    "sourceTechnicalHash": "e27ad5b46d657dd91ab0a5fbebd7451c0c38d0a8a577be005cc24e8096eae904",
-    "targetHash": "2fb678cbaece346e586ff3131cb7a7c761b15cd353a3ece614ad3d1c99976175",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "b0454d3adc274983c959879a01eff59c3b3a7b58933dc4031d1071ffa06909da",
+    "sourceTechnicalHash": "38e8b9dee888148ea8b72082ce3aa939cd5bf6f26a1dc675f308bdb89e2f8041",
+    "targetHash": "d1785fff4a4594d81c2c5e24d02061cbec820a6de851117362d6fc903bfba5b8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T08:05:25.958Z",
+    "translatedAt": "2026-11-21T09:46:51.346Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "fb9dd260afbd0ab5f28f1e3f13504818b297b25296fed743c0f87b7a06d9f9b3",
-      "targetHash": "2fb678cbaece346e586ff3131cb7a7c761b15cd353a3ece614ad3d1c99976175",
+      "sourceHash": "b0454d3adc274983c959879a01eff59c3b3a7b58933dc4031d1071ffa06909da",
+      "targetHash": "d1785fff4a4594d81c2c5e24d02061cbec820a6de851117362d6fc903bfba5b8",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 22: expected [\"inlineCode\",null,null,\"Using Arrays\"]; received [\"inlineCode\",null,null,\"Использование массивов\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"Promoting a Scalar to an Array\"]; received [\"inlineCode\",null,null,\"Преобразование скалярного значения в массив\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"2.1.7\",\"3.0.4\",\"3.0.4\",\"3.0.4\",\"3.0.6\",\"3.1.0\",\"4\",\"8\",\"8\",\"8\",\"8\"]; received [\"2\",\"2.1.7\",\"3.0.4\",\"3.0.4\",\"3.0.4\",\"3.0.6\",\"3.1.0\",\"4\",\"8\",\"8\",\"8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/file-formats/text.md",
+        "blob": "cf164565ceaeb461105f15d50d9d5b9f0bfe31a7"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/file-formats/text.md",
+        "blob": "1857de649a1bb587da994016170b0a8ebc6de0e6"
+      }
     }
   }
 }

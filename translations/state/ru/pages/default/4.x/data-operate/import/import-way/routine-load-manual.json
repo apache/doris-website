@@ -8,39 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/routine-load-manual.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/routine-load-manual.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "bad960aa934b5e0e236c0846bcd8c548f7fbf0b6c385a536c5258dfe30d17a89",
-    "sourceTechnicalHash": "fbcfff5f84b5613f6b6276ebfbcf1369920231ca8619ad4af65106a07a0ab05d",
-    "targetHash": "15ac4108d1028a30a1233d73cee0c46e6010a3f8c2a151bcbc22ae555087dcb5",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "3f0838b6ba617da47201cfde2d4c158f482c2696711e9b626bf93e22d5926a50",
+    "sourceTechnicalHash": "0877d3c2c0ff7c260aa1df2f6373efbccdc7f239b61480b69f6202de25ea732f",
+    "targetHash": "ce752a7b86938f884953f900013219fa0671b9352641c3e576df89fc4ac29691",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:44:47.273Z",
+    "translatedAt": "2026-11-21T10:43:45.954Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
-      "modelCalls": 2,
-      "acceptedWithWarnings": false,
-      "sourceHash": "bad960aa934b5e0e236c0846bcd8c548f7fbf0b6c385a536c5258dfe30d17a89",
-      "targetHash": "15ac4108d1028a30a1233d73cee0c46e6010a3f8c2a151bcbc22ae555087dcb5",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "3f0838b6ba617da47201cfde2d4c158f482c2696711e9b626bf93e22d5926a50",
+      "targetHash": "ce752a7b86938f884953f900013219fa0671b9352641c3e576df89fc4ac29691",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 188: expected [\"inlineCode\",null,null,\"json_root\"]; received [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]\nprotected node 189: expected [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]; received [\"inlineCode\",null,null,\"strip_outer_array\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"strip_outer_array\"]; received [\"inlineCode\",null,null,\"[]\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 393: expected [\"inlineCode\",null,null,\"test1\"]; received [\"inlineCode\",null,null,\"example_db\"]\nprotected node 394: expected [\"inlineCode\",null,null,\"example_db\"]; received [\"inlineCode\",null,null,\"test1\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"2.1.1\",\"2.1.5\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"30\",\"30\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"5\",\"5\",\"60\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.10.0.0\",\"0.10.0.0\",\"0.10.0.0\",\"0.8.0\",\"0.8.1\",\"0.8.2\",\"0.9.0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"10\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"2\",\"2\",\"2.1.1\",\"2.1.5\",\"200000\",\"20000000\",\"256\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3.0.0\",\"30\",\"30\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"60\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$.\\\")\"]; received [\"inlineCode\",null,null,\"PROPERTIES(\\\"jsonpaths\\\"=\\\"$. data\\\")\"]\nprotected node 47: expected [\"inlineCode\",null,null,\"PAUSED\"]; received [\"link\",\"../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD\",null]"
             }
           ]
         },
         {
           "attempt": 2,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedures + Configuration parameters + Examples + FAQ -->\"]; received [\"html\",null,null,\"<!-- Тип материала: процедуры + параметры конфигурации + примеры + часто задаваемые вопросы -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Continuously consume data from Kafka into Doris / Real-time data ingestion / CDC streaming sync -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: непрерывное получение данных из Kafka в Doris / прием данных в реальном времени / потоковая синхронизация CDC -->\"]\nprotected node 10: expected [\"html\",null,null,\"<!-- Knowledge type: Scenario description -->\"]; received [\"html\",null,null,\"<!-- Тип материала: описание сценариев -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 188: expected [\"inlineCode\",null,null,\"json_root\"]; received [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]\nprotected node 189: expected [\"inlineCode\",null,null,\"\\\"json_root\\\" = \\\"$.RECORDS\\\"\"]; received [\"inlineCode\",null,null,\"strip_outer_array\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"strip_outer_array\"]; received [\"inlineCode\",null,null,\"[]\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/routine-load-manual.md",
+        "blob": "63ddd6498dfdde757701e9de4e55e36857abdeb0"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/routine-load-manual.md",
+        "blob": "58c0a4ce6458aa9637c1a9b7e23e788537301975"
+      }
     }
   }
 }
