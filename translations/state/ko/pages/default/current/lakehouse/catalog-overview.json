@@ -8,29 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalog-overview.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalog-overview.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "b6b394b4874598a913b8823bedd8c5f6841119184dc2bef513f3eb83fedf7582",
-    "sourceTechnicalHash": "3ec42de61d8dc9c52cb8d66642fe8576c988e5f33471eecacfd0a3a6baada26b",
-    "targetHash": "13c806735352dd6027fce14f50df299fe64267b2cd752eb4150438210a166508",
+    "sourceCommit": "e3308dcaf8a63cccb98bd71edd1edb12eb046c94",
+    "sourceHash": "23fb0e4fb051e2be8fcd559ebf21d7561ff76d1d028e36d103c02308df2c9df4",
+    "sourceTechnicalHash": "1c5994dbee9a96eb78cb2e2e621046505894fb370db52957ddf97c8b9a2eb028",
+    "targetHash": "599bd0ab89bed2b13ae87b49412692ff6912a1bb474129658356691c34e08490",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T03:21:22.564Z",
+    "translatedAt": "2026-11-23T06:19:20.981Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "b6b394b4874598a913b8823bedd8c5f6841119184dc2bef513f3eb83fedf7582",
-      "targetHash": "13c806735352dd6027fce14f50df299fe64267b2cd752eb4150438210a166508",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "23fb0e4fb051e2be8fcd559ebf21d7561ff76d1d028e36d103c02308df2c9df4",
+      "targetHash": "599bd0ab89bed2b13ae87b49412692ff6912a1bb474129658356691c34e08490",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 79: expected [\"inlineCode\",null,null,\"SWITCH\"]; received [\"inlineCode\",null,null,\"USE\"]\nprotected node 80: expected [\"inlineCode\",null,null,\"USE\"]; received [\"inlineCode\",null,null,\"SWITCH\"]\nprotected node 114: expected [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); \\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]; received [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']);\\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 114: expected [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); \\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]; received [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']);\\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 114: expected [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); \\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]; received [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']);\\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 79: expected [\"inlineCode\",null,null,\"SWITCH\"]; received [\"inlineCode\",null,null,\"USE\"]\nprotected node 80: expected [\"inlineCode\",null,null,\"USE\"]; received [\"inlineCode\",null,null,\"SWITCH\"]\nprotected node 114: expected [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']); \\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]; received [\"code\",\"sql\",null,\"-- Rename a catalog\\nALTER CATALOG iceberg_catalog RENAME iceberg_catalog2;\\n\\n-- Modify properties of a catalog\\nALTER CATALOG iceberg_catalog SET PROPERTIES ('key1' = 'value1' [, 'key' = 'value2']);\\n\\n-- Modify the comment of a catalog\\nALTER CATALOG iceberg_catalog MODIFY COMMENT 'my iceberg catalog';\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/catalog-overview.md",
+        "blob": "0eda7c8630208bb9cde6789aa6fa88d234cc2236"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/catalog-overview.md",
+        "blob": "816f6c2142597bf830b8b0ff18816cb4b76fc601"
+      }
     }
   }
 }

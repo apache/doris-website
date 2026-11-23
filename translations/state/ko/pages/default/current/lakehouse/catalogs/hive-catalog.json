@@ -8,36 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalogs/hive-catalog.mdx",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hive-catalog.mdx",
-    "sourceCommit": "82ccae858254f24b1b3a85f181ec289e386d33ae",
-    "sourceHash": "6c6b1d068c4458a2b61cbffaf4cccfbab9b0e85a7778c3a23472f410c0443098",
-    "sourceTechnicalHash": "53cf3a58e75cdd5883dcc3f77c9bfbdfe92dee39a46b5036330d7c3e9188a4b7",
-    "targetHash": "0b24684b6067a2c986a6589c1530005f69871eeee1adb4beb842672bbb39d49f",
+    "sourceCommit": "e3308dcaf8a63cccb98bd71edd1edb12eb046c94",
+    "sourceHash": "dae0989a9128cf0adafd7372e2935081443ccacdbea8cd7e89fcb045f5ae0509",
+    "sourceTechnicalHash": "99d3e4b64f404be4d6e7fa0def886b892ae1989f011fb8d3583cb8997726b8e9",
+    "targetHash": "c3585449f42bef2dcb8c8b38001f16af7fd603422aa6f3ca7fb2c51691bbd897",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-20T20:42:13.910Z",
+    "translatedAt": "2026-11-23T06:37:43.922Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "previousSourceHash": "d9ce818f8a66b712d8e8c00095b775b2eee999d61ab6a6d6e85d652f27b9f9f6",
-      "previousTargetHash": "53796a1df9ff4bd5ef5237999ebe1113eeab5a2fc9f110965628f2674e391013",
-      "mode": "incremental",
-      "reason": "source-change-within-30-percent",
-      "sourceChange": {
-        "changedLines": 22,
-        "totalLines": 1026,
-        "ratio": 0.021442495126705652
-      },
-      "attempts": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "6c6b1d068c4458a2b61cbffaf4cccfbab9b0e85a7778c3a23472f410c0443098",
-      "targetHash": "0b24684b6067a2c986a6589c1530005f69871eeee1adb4beb842672bbb39d49f",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "dae0989a9128cf0adafd7372e2935081443ccacdbea8cd7e89fcb045f5ae0509",
+      "targetHash": "c3585449f42bef2dcb8c8b38001f16af7fd603422aa6f3ca7fb2c51691bbd897",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 140: expected [\"inlineCode\",null,null,\"2021-01-01 10:11:00\"]; received [\"inlineCode\",null,null,\"Asia/Shanghai\"]\nprotected node 141: expected [\"inlineCode\",null,null,\"Asia/Shanghai\"]; received [\"inlineCode\",null,null,\"2021-01-01 10:11:00\"]\nprotected node 144: expected [\"inlineCode\",null,null,\"10:11:00\"]; received [\"inlineCode\",null,null,\"Asia/Shanghai\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 35: expected [\"inlineCode\",null,null,\"iceberg\"]; received [\"link\",\"./iceberg-catalog.mdx#meta-cache\",null]\nprotected node 36: expected [\"link\",\"./iceberg-catalog.mdx#meta-cache\",null]; received [\"inlineCode\",null,null,\"iceberg\"]\nprotected node 136: expected [\"inlineCode\",null,null,\"INT96\"]; received [\"inlineCode\",null,null,\"DATETIMEV2\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 35: expected [\"inlineCode\",null,null,\"iceberg\"]; received [\"link\",\"./iceberg-catalog.mdx#meta-cache\",null]\nprotected node 36: expected [\"link\",\"./iceberg-catalog.mdx#meta-cache\",null]; received [\"inlineCode\",null,null,\"iceberg\"]\nprotected node 140: expected [\"inlineCode\",null,null,\"2021-01-01 10:11:00\"]; received [\"inlineCode\",null,null,\"Asia/Shanghai\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 140: expected [\"inlineCode\",null,null,\"2021-01-01 10:11:00\"]; received [\"inlineCode\",null,null,\"Asia/Shanghai\"]\nprotected node 141: expected [\"inlineCode\",null,null,\"Asia/Shanghai\"]; received [\"inlineCode\",null,null,\"2021-01-01 10:11:00\"]\nprotected node 144: expected [\"inlineCode\",null,null,\"10:11:00\"]; received [\"inlineCode\",null,null,\"Asia/Shanghai\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/catalogs/hive-catalog.mdx",
+        "blob": "3430ff6acde3fa406fd48bb14944ce3697c03e30"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hive-catalog.mdx",
+        "blob": "3d281daca42542e541f4cad96bf74d47d9ef455c"
+      }
     }
   }
 }

@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/table-and-view/index/CREATE-INDEX.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/index/CREATE-INDEX.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "3bc081f389d53c69d8f4f6c2f6e2dc5a71f64762a5db16d90943f7c6d13532c6",
-    "sourceTechnicalHash": "1ca6c93822fd0d73214c02a6b80ad619f3d88781a1f00f5bc213343034bf0865",
-    "targetHash": "a284edff6971b58bb9bc3c1a7c2a13165f9ddc8f6a96d2b87fc04890f751d763",
+    "sourceCommit": "e3308dcaf8a63cccb98bd71edd1edb12eb046c94",
+    "sourceHash": "418ad6040e3c0f83f016c0bfb04ddbe4376edcc6dc5d3894780699a2e9649293",
+    "sourceTechnicalHash": "1283deb8eadb6e38dabea6a6012a2c4aec7e1d356988fca39665c8de991bfcae",
+    "targetHash": "cfca6e3ad29bf905c0d6dec887a627f7050153ed4b592b1a91b5cf4abf51709b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T07:45:30.411Z",
+    "translatedAt": "2026-11-23T07:36:58.462Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "3bc081f389d53c69d8f4f6c2f6e2dc5a71f64762a5db16d90943f7c6d13532c6",
-      "targetHash": "a284edff6971b58bb9bc3c1a7c2a13165f9ddc8f6a96d2b87fc04890f751d763",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "418ad6040e3c0f83f016c0bfb04ddbe4376edcc6dc5d3894780699a2e9649293",
+      "targetHash": "cfca6e3ad29bf905c0d6dec887a627f7050153ed4b592b1a91b5cf4abf51709b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"CREATE INDEX [IF NOT EXISTS] <index_name> \\n             ON <table_name> (<column_name> [, ...])\\n             [USING {INVERTED | NGRAM_BF | ANN}]\\n             [PROPERTIES (\\\"<key>\\\" = \\\"<value>\\\"[ , ...])]\\n             [COMMENT '<index_comment>']\"]; received [\"code\",\"sql\",null,\"CREATE INDEX [IF NOT EXISTS] <index_name>\\n             ON <table_name> (<column_name> [, ...])\\n             [USING {INVERTED | NGRAM_BF | ANN}]\\n             [PROPERTIES (\\\"<key>\\\" = \\\"<value>\\\"[ , ...])]\\n             [COMMENT '<index_comment>']\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"index1\"]; received [\"inlineCode\",null,null,\"table1\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"table1\"]; received [\"inlineCode\",null,null,\"index1\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"CREATE INDEX [IF NOT EXISTS] <index_name> \\n             ON <table_name> (<column_name> [, ...])\\n             [USING {INVERTED | NGRAM_BF | ANN}]\\n             [PROPERTIES (\\\"<key>\\\" = \\\"<value>\\\"[ , ...])]\\n             [COMMENT '<index_comment>']\"]; received [\"code\",\"sql\",null,\"CREATE INDEX [IF NOT EXISTS] <index_name>\\n             ON <table_name> (<column_name> [, ...])\\n             [USING {INVERTED | NGRAM_BF | ANN}]\\n             [PROPERTIES (\\\"<key>\\\" = \\\"<value>\\\"[ , ...])]\\n             [COMMENT '<index_comment>']\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"index1\"]; received [\"inlineCode\",null,null,\"table1\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"table1\"]; received [\"inlineCode\",null,null,\"index1\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"CREATE INDEX [IF NOT EXISTS] <index_name> \\n             ON <table_name> (<column_name> [, ...])\\n             [USING {INVERTED | NGRAM_BF | ANN}]\\n             [PROPERTIES (\\\"<key>\\\" = \\\"<value>\\\"[ , ...])]\\n             [COMMENT '<index_comment>']\"]; received [\"code\",\"sql\",null,\"CREATE INDEX [IF NOT EXISTS] <index_name>\\n             ON <table_name> (<column_name> [, ...])\\n             [USING {INVERTED | NGRAM_BF | ANN}]\\n             [PROPERTIES (\\\"<key>\\\" = \\\"<value>\\\"[ , ...])]\\n             [COMMENT '<index_comment>']\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",\"sql\",null,\"CREATE INDEX [IF NOT EXISTS] <index_name> \\n             ON <table_name> (<column_name> [, ...])\\n             [USING {INVERTED | NGRAM_BF | ANN}]\\n             [PROPERTIES (\\\"<key>\\\" = \\\"<value>\\\"[ , ...])]\\n             [COMMENT '<index_comment>']\"]; received [\"code\",\"sql\",null,\"CREATE INDEX [IF NOT EXISTS] <index_name>\\n             ON <table_name> (<column_name> [, ...])\\n             [USING {INVERTED | NGRAM_BF | ANN}]\\n             [PROPERTIES (\\\"<key>\\\" = \\\"<value>\\\"[ , ...])]\\n             [COMMENT '<index_comment>']\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"index1\"]; received [\"inlineCode\",null,null,\"table1\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"table1\"]; received [\"inlineCode\",null,null,\"index1\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/table-and-view/index/CREATE-INDEX.md",
+        "blob": "d21056e7db16675147da75c2bdc1307bc91226d5"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/index/CREATE-INDEX.md",
+        "blob": "2256716c2770c2fd35108f2b22a91c819b6d574a"
+      }
     }
   }
 }
