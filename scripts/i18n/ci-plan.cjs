@@ -8,6 +8,7 @@ const {locales, localeRegistry} = require('../../config/i18n');
 const {buildScope, validationScope} = require('./build-scope.cjs');
 const {managedLocales} = require('./state.cjs');
 const {analyzeImpact} = require('./content-impact.cjs');
+const {actionSubmodulesOnly} = require('./ci-maintenance.cjs');
 const mechanism = /^(src\/utils\/(localizedRoute|localePreference|contentRoute|useLocalizedRoute|useLanguageItems)\.[jt]sx?$|src\/components\/Content(Route|Metadata)\.tsx$|scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages|locale-entry)\.cjs$|static\/js\/[^/]*bootstrap\.js$|static\/\.htaccess$|translations\/(pages|shared)\/registry\.json$|config\/(?:(i18n|ssrTemplate)\.js|locale-entry\.json)$)/;
 const runtime =
     /^(src\/|config\/|docusaurus\.config\.js$|sidebars[^/]*\.(ts|json)$|versioned_sidebars\/|scripts\/i18n\/(source-revisions|automated-blog|automated-blog-body-loader|release-policy|docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap)\.cjs$)/;
@@ -26,12 +27,12 @@ const maintenanceConfig = file => {
     return !!match && localeRegistry.some(locale=>locale.optional&&locale.code===match[1]);
 };
 const reportRegistry = 'translations/community-reports.json';
-function policy(files, {forceFull = false, forceSample = false} = {}) {
+function policy(files, {forceFull = false, forceSample = false, actionSubmodules = false} = {}) {
     const risk = files.filter(file => highRisk.test(file));
     const changed = files.some(file => content.test(file));
     const shared = files.some(file => runtime.test(file) || mechanism.test(file) || file === reportRegistry || maintenanceConfig(file));
     const checks = validationScope(files);
-    const ci = files.some(file => /^(scripts\/|\.github\/)/.test(file));
+    const ci = files.some(file => /^(scripts\/|\.github\/)/.test(file) || file === '.gitmodules' && actionSubmodules);
     const unknown = files.filter(
         file =>
             !runtime.test(file) &&
@@ -40,6 +41,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
             file !== reportRegistry &&
             !maintenanceConfig(file) &&
             !maintenanceNotes.test(file) &&
+            !(file === '.gitmodules' && actionSubmodules) &&
             !/^((scripts|\.github|plan-doc|review-docs|\.agents)\/|README\.md$|AGENTS\.md$|LICENSE$|NOTICE$)/.test(
                 file,
             ),
@@ -91,7 +93,9 @@ function plan({root, base, event = {}, forceFull = false, forceSample = false}) 
         .split('\0')
         .filter(Boolean);
     const labels = event.pull_request?.labels ?? [];
+    const actionSubmodules = files.includes('.gitmodules') && actionSubmodulesOnly(root, base);
     const selected = policy(files, {
+        actionSubmodules,
         forceFull:
             forceFull ||
             event.inputs?.validation === 'full' ||
@@ -104,6 +108,7 @@ function plan({root, base, event = {}, forceFull = false, forceSample = false}) 
         JSON.parse(fs.readFileSync(path.join(root, 'versions.json'))),
         managedLocales(root),
         dependencies,
+        {actionSubmodules},
     );
     let requested = impact.locales;
     if (selected.mode === 'full' || selected.selection === 'representative') requested = locales;
