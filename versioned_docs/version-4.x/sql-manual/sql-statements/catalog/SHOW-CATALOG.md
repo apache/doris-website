@@ -10,6 +10,10 @@
 
 Shows properties of specified catalog
 
+## Property Masking
+
+The shared masking policy is planned for Doris 4.2.0 and for 5.0 and later releases. Sensitive properties display as `*XXX`; some internal properties are omitted. Explicit JDBC connection strings are entirely hidden, while ordinary URIs are sanitized according to their values. See [Catalog property masking rules](../../../lakehouse/catalog-property-masking.md). The example below uses this policy; it does not describe 4.0, 4.1 or 3.x.
+
 ## Syntax
 
 ```sql
@@ -43,7 +47,7 @@ The name of the catalog to be displayed.
    ```sql
    show catalog test_mysql;
    ```
-   ```sql
+   ```text
       +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
    | Key            | Value                                                                                                                                               |
    +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -51,7 +55,7 @@ The name of the catalog to be displayed.
    | create_time    | 2025-02-17 17:21:13.099                                                                                                                             |
    | driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |
    | driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |
-   | jdbc_url       | jdbc:mysql://127.0.0.1:3306/db                                                                                                                      |
+   | jdbc_url       | *XXX                                                                                                                                                |
    | password       | *XXX                                                                                                                                                |
    | type           | jdbc                                                                                                                                                |
    | use_meta_cache | true                                                                                                                                                |

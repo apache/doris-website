@@ -10,6 +10,10 @@
 
 This statement shows the creating statement of a doris catalog.
 
+## Property Masking
+
+The shared masking policy is planned for Doris 4.2.0 and for 5.0 and later releases. Sensitive properties display as `*XXX`; some internal properties are omitted. Explicit JDBC connection strings are entirely hidden, while ordinary URIs are sanitized according to their values. See [Catalog property masking rules](../../../lakehouse/catalog-property-masking.md). The example below uses this policy; it does not describe 4.0, 4.1 or 3.x. In the example, `*XXX` is a masking marker; other `XXX` values are illustrative placeholders.
+
 ## Syntax
 
 ```sql
@@ -35,7 +39,7 @@ The name of the catalog whose creation statement needs to be viewed.
 ```sql
    SHOW CREATE CATALOG oracle;
    ```
-   ```sql
+   ```text
    +---------+----------------------------------------------------------------------------------------------------------------------+
     | Catalog | CreateCatalog                                                                                                        |
     +---------+----------------------------------------------------------------------------------------------------------------------+
@@ -44,7 +48,7 @@ The name of the catalog whose creation statement needs to be viewed.
     "user" = "XXX",
     "type" = "jdbc",
     "password" = "*XXX",
-    "jdbc_url" = "XXX",
+    "jdbc_url" = "*XXX",
     "driver_url" = "XXX",
     "driver_class" = "oracle.jdbc.driver.OracleDriver",
     "checksum" = "XXX"
