@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/catalog/SHOW-CATALOG.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/SHOW-CATALOG.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "407f5625cdb2ff7d97bc14965dc64c7822c3ec2d05007950a667e01ce33dff76",
-    "sourceTechnicalHash": "bfe0557270e79c334c32133a7a1860cff6ae2bd52976a9daa10d67e460d912c2",
-    "targetHash": "3db700988be91d47d19e05959e5df469964062a0deeacde3aff2e5afe29453e7",
+    "sourceCommit": "e3308dcaf8a63cccb98bd71edd1edb12eb046c94",
+    "sourceHash": "4a1c8113cb659e3ec2ca352350422064bfd2b485323b0b800a82532a5fd1416b",
+    "sourceTechnicalHash": "5382e89d8c18650dc8daeadf4b643a6f5dbb1febdc94601a2a10c2f4e96e931b",
+    "targetHash": "92ed386523841c8cda68997211929d08d742330164b4e2a6be5b0237c093f081",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T07:06:11.383Z",
+    "translatedAt": "2026-11-23T07:34:38.974Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "407f5625cdb2ff7d97bc14965dc64c7822c3ec2d05007950a667e01ce33dff76",
-      "targetHash": "3db700988be91d47d19e05959e5df469964062a0deeacde3aff2e5afe29453e7",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "4a1c8113cb659e3ec2ca352350422064bfd2b485323b0b800a82532a5fd1416b",
+      "targetHash": "92ed386523841c8cda68997211929d08d742330164b4e2a6be5b0237c093f081",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"text\",null,\"   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| Key            | Value                                                                                                                                               |\\n+----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |\\n| create_time    | 2025-02-17 17:21:13.099                                                                                                                             |\\n| driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |\\n| driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |\\n| jdbc_url       | *XXX                                                                                                                                                |\\n| password       | *XXX                                                                                             ; received [\"code\",\"text\",null,\"   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| Key            | Value                                                                                                                                               |\\n+----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |\\n| create_time    | 2025-02-17 17:21:13.099                                                                                                                             |\\n| driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |\\n| driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |\\n| jdbc_url       | *XXX                                                                                                                                                |\\n| password       | *XXX                                                                                             "
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"text\",null,\"   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| Key            | Value                                                                                                                                               |\\n+----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |\\n| create_time    | 2025-02-17 17:21:13.099                                                                                                                             |\\n| driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |\\n| driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |\\n| jdbc_url       | *XXX                                                                                                                                                |\\n| password       | *XXX                                                                                             ; received [\"code\",\"text\",null,\"   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| Key            | Value                                                                                                                                               |\\n+----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |\\n| create_time    | 2025-02-17 17:21:13.099                                                                                                                             |\\n| driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |\\n| driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |\\n| jdbc_url       | *XXX                                                                                                                                                |\\n| password       | *XXX                                                                                             "
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"text\",null,\"   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| Key            | Value                                                                                                                                               |\\n+----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |\\n| create_time    | 2025-02-17 17:21:13.099                                                                                                                             |\\n| driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |\\n| driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |\\n| jdbc_url       | *XXX                                                                                                                                                |\\n| password       | *XXX                                                                                             ; received [\"code\",\"text\",null,\"   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| Key            | Value                                                                                                                                               |\\n+----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |\\n| create_time    | 2025-02-17 17:21:13.099                                                                                                                             |\\n| driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |\\n| driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |\\n| jdbc_url       | *XXX                                                                                                                                                |\\n| password       | *XXX                                                                                             "
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"text\",null,\"   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| Key            | Value                                                                                                                                               |\\n+----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |\\n| create_time    | 2025-02-17 17:21:13.099                                                                                                                             |\\n| driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |\\n| driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |\\n| jdbc_url       | *XXX                                                                                                                                                |\\n| password       | *XXX                                                                                             ; received [\"code\",\"text\",null,\"   +----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| Key            | Value                                                                                                                                               |\\n+----------------+-----------------------------------------------------------------------------------------------------------------------------------------------------+\\n| checksum       | fdf55dcef04b09f2eaf42b75e61ccc9a                                                                                                                    |\\n| create_time    | 2025-02-17 17:21:13.099                                                                                                                             |\\n| driver_class   | com.mysql.cj.jdbc.Driver                                                                                                                            |\\n| driver_url     | mysql-connector-j-8.3.0.jar                                                                                                                         |\\n| jdbc_url       | *XXX                                                                                                                                                |\\n| password       | *XXX                                                                                             "
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/catalog/SHOW-CATALOG.md",
+        "blob": "19b2166af57a9e04160cfc0ede0cb685825f6030"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/SHOW-CATALOG.md",
+        "blob": "e7686417104bc3887ba0c9909b1df56eac0f29e2"
+      }
     }
   }
 }
