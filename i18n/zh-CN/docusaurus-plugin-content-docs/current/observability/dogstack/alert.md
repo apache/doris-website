@@ -29,7 +29,7 @@
 3. 如果满足触发条件，生成告警实例。
 4. 发送告警，可以直接发送到联系方式或者经过通知策略进行灵活的路由。
 
-![alert_overview](https://cdnd.selectdb.com/images/upload/dogstack/alert_overview.png)
+![alert_overview](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_overview.png)
 
 
 
@@ -37,7 +37,7 @@
 
 **1.进入 Grafana Alerting 的 Alert rules 子页面，点击创建 Alert**
 
-![alert_create](https://cdnd.selectdb.com/images/upload/dogstack/alert_create.png)
+![alert_create](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_create.png)
 
 
 
@@ -51,7 +51,7 @@
 
 更多详细介绍请参考 [Grafana 文档](https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-grafana-managed-rule/)。
 
-![alert_condition](https://cdnd.selectdb.com/images/upload/dogstack/alert_condition.png)
+![alert_condition](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_condition.png)
 
 
 
@@ -61,7 +61,7 @@
 
 更多详细介绍请参考 [Grafana 文档](https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rule-evaluation/)。
 
-![alert_evaluation](https://cdnd.selectdb.com/images/upload/dogstack/alert_evaluation.png)
+![alert_evaluation](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_evaluation.png)
 
 
 
@@ -71,9 +71,9 @@ Grafana 支持很多场景的告警通知方式，比如 Email, Slack, Discord, 
 
 更多详细介绍请参考 [Grafana 文档](https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/)。
 
-![alert_lable](https://cdnd.selectdb.com/images/upload/dogstack/alert_lable.png)
+![alert_lable](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_lable.png)
 
-![alert_contact](https://cdnd.selectdb.com/images/upload/dogstack/alert_contact.png)
+![alert_contact](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_contact.png)
 
 
 
@@ -81,7 +81,7 @@ Grafana 支持很多场景的告警通知方式，比如 Email, Slack, Discord, 
 
 你可以定制告警通知的内容，包括 summary, description 和一个指导告警处理的 runbook URL，让接收告警的人更快理解发生了什么。
 
-![alert_message](https://cdnd.selectdb.com/images/upload/dogstack/alert_message.png)
+![alert_message](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_message.png)
 
 
 
@@ -91,4 +91,4 @@ Grafana 支持很多场景的告警通知方式，比如 Email, Slack, Discord, 
 
 更多详细介绍请参考 [Grafana 文档](https://grafana.com/docs/grafana/latest/alerting/monitor-status/)。
 
-![alert_management](https://cdnd.selectdb.com/images/upload/dogstack/alert_management.png)
+![alert_management](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_management.png)

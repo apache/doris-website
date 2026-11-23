@@ -104,6 +104,34 @@ test('verifies homepage redirects and unquoted resource attributes from the fast
     assert.equal(result.compiledJavaScriptFiles,1);
 });
 
+test('verifies compiled assets beneath a CDN directory and rejects missing prefixed files', t => {
+    const previous = process.env.DORIS_ASSET_ORIGIN;
+    process.env.DORIS_ASSET_ORIGIN = 'https://assets-cdn.selectdb.com/site';
+    t.after(() => {
+        if (previous === undefined) delete process.env.DORIS_ASSET_ORIGIN;
+        else process.env.DORIS_ASSET_ORIGIN = previous;
+    });
+    const {site,write} = fixture(t);
+    write('assets/js/entry.hash.js', 'console.log("entry");');
+    write('assets/css/style.hash.css', 'body{background:url(../shared/same.png)}');
+    write('index.html', '<script src="https://assets-cdn.selectdb.com/site/assets/js/entry.hash.js"></script>'
+        + '<link rel="stylesheet" href="https://assets-cdn.selectdb.com/site/assets/css/style.hash.css">');
+    optimize({site,locales});
+    const verify = require('../verify.cjs').verify;
+    assert.equal(verify(site).compiledAssetReferences, 3);
+    write('index.html', '<script src="https://assets-cdn.selectdb.com/site/assets/js/missing.js"></script>');
+    assert.throws(() => verify(site), /Missing compiled asset/);
+    write('index.html', '<script src="https://assets-cdn.selectdb.com/assets/js/entry.hash.js"></script>');
+    assert.throws(() => verify(site), /Missing CDN asset prefix/);
+    write('index.html', '<script src="https://assets-cdn.selectdb.com/wrong/assets/js/entry.hash.js"></script>');
+    assert.throws(() => verify(site), /Missing CDN asset prefix/);
+    write('index.html', '<script src="https://assets-cdn.selectdb.com/site/site/assets/js/entry.hash.js"></script>');
+    assert.throws(() => verify(site), /Missing compiled asset/);
+    write('index.html', '<link rel="stylesheet" href="https://assets-cdn.selectdb.com/site/assets/css/style.hash.css">');
+    write('assets/css/style.hash.css', 'body{background:url(/assets/shared/same.png)}');
+    assert.throws(() => verify(site), /Missing CDN asset prefix/);
+});
+
 test('rejects malformed client entries, runtimes and unreferenced lazy chunks before publication', t => {
     const {site,write} = fixture(t);
     optimize({site,locales});

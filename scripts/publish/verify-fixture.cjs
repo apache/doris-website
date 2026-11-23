@@ -10,6 +10,16 @@ const root = path.resolve(__dirname,'../..');
 const fixture = path.join(root,'.i18n-build/publish-fixture');
 const locales = ['en','zh-CN','ja','ko','ru'];
 const hash = content => createHash('sha256').update(content).digest('hex');
+const assetOrigin = process.argv.includes('--same-origin-assets') ? '' : 'https://assets-cdn.selectdb.com/site';
+function localResource(value, origin) {
+    const url = new URL(value, origin);
+    if (assetOrigin && url.origin === new URL(assetOrigin).origin) {
+        const local = require('../../config/asset-origin').getLocalAssetPath(url);
+        assert(local, `Missing CDN prefix: ${url.href}`);
+        return new URL(local, origin);
+    }
+    return url;
+}
 // Status/header probes still need to finish their response body so Undici can
 // reuse the connection. Otherwise a long Apache probe can exhaust its workers.
 async function probe(url, options) {
@@ -64,7 +74,7 @@ themes:[['@yang1666204/docusaurus-search-local',{hashed:true,language:['en'],doc
 };`);
     }
     let baseline;
-    process.env.DORIS_ASSET_ORIGIN = '';
+    process.env.DORIS_ASSET_ORIGIN = assetOrigin;
     if (!verifyOnly && process.argv.includes('--compare')) {
         delete process.env.DORIS_OPTIMIZE_PUBLISH;
         await buildLocales({siteDir:fixture,outDir:'baseline'});
@@ -102,8 +112,9 @@ themes:[['@yang1666204/docusaurus-search-local',{hashed:true,language:['en'],doc
                 assert(html.includes(locale === 'en' ? 'FixtureSQL documents' : `FixtureSQL ${locale} documents`));
                 const $ = require('cheerio').load(html);
                 const urls = $('script[src],link[rel="stylesheet"],img[src]').map((_,node) => $(node).attr('src') ?? $(node).attr('href')).get();
+                if (assetOrigin) assert(urls.some(value => value.startsWith(assetOrigin + '/')), 'Fixture must exercise CDN-prefixed resources');
                 for (const resource of urls.filter(value => !value.startsWith('data:'))) {
-                    const response = await probe(new URL(resource,origin));
+                    const response = await probe(localResource(resource,origin));
                     assert.equal(response.status,200,resource);
                 }
                 assert.equal((await probe(origin+prefix+'/not-a-page')).status,404);
@@ -116,6 +127,10 @@ themes:[['@yang1666204/docusaurus-search-local',{hashed:true,language:['en'],doc
             try {
                 for (const locale of locales) {
                     const page = await browser.newPage();
+                    if (assetOrigin) await page.route(new URL(assetOrigin).origin + '/**', async route => {
+                        const response = await page.request.get(localResource(route.request().url(), previewOrigin).href);
+                        await route.fulfill({response, headers:{...response.headers(),'access-control-allow-origin':'*'}});
+                    });
                     const errors = [];
                     page.on('pageerror',error => errors.push(error.message));
                     page.on('response',response => {if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`);});
@@ -128,14 +143,14 @@ themes:[['@yang1666204/docusaurus-search-local',{hashed:true,language:['en'],doc
                     await page.goto((apache?.origin ?? previewOrigin)+prefix+'/docs/intro.html/?probe=1#example',{waitUntil:'networkidle'});
                     assert(page.url().endsWith(prefix+'/docs/intro/?probe=1#example'));
                     const imageUrl = await page.locator('article img').getAttribute('src');
-                    assert.equal(hash(Buffer.from(await (await fetch(new URL(imageUrl,previewOrigin))).arrayBuffer())),hash(image));
+                    assert.equal(hash(Buffer.from(await (await fetch(localResource(imageUrl,previewOrigin))).arrayBuffer())),hash(image));
                     assert.deepEqual(errors,[],locale);
                     await page.close();
                 }
             } finally {await browser.close();}
         }
         const result = {baseline,...report.optimization,bundler:process.argv.includes('--webpack') ? 'webpack' : 'rspack',
-            apache:!!apache,browser:process.argv.includes('--browser')};
+            apache:!!apache,browser:process.argv.includes('--browser'),assetOrigin};
         fs.writeFileSync(path.join(fixture,'report.json'),JSON.stringify(result,null,2)+'\n');
         console.log(JSON.stringify(result,null,2));
     } finally {

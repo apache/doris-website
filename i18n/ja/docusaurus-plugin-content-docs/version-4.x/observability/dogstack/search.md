@@ -36,7 +36,7 @@ Discover ページでは、高速なログ分析に最適化された、Kibana D
 
 ## Discover ページの概要
 
-![Discover ページの概要](https://cdnd.selectdb.com/images/upload/dogstack/search_overview.png)
+![Discover ページの概要](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_overview.png)
 
 Discover ページは、次の四つの主要な領域で構成されます。
 
@@ -80,7 +80,7 @@ Discover ページは、次の四つの主要な領域で構成されます。
 
 クエリ入力領域では、ドロップダウンメニューからデータソース、データベース、テーブル、時間フィールド、時間範囲を選択します。データソース、データベース、テーブルのデフォルト値は設定ページで変更できます。時間フィールドのデフォルト値は、テーブル内で最初の `DATETIME` または `DATE` 列です。
 
-![クエリ入力のデモ](https://cdnd.selectdb.com/images/upload/dogstack/search_input.gif)
+![クエリ入力のデモ](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_input.gif)
 
 検索入力欄は SQL と Lucene の両方の構文に対応しています。Lucene 構文は内部で SQL の `WHERE` 条件に変換されます。対応する Lucene 構文と Kibana、SQL の対応関係を以下に示します。
 
@@ -131,7 +131,7 @@ SQL 構文の要点は次のとおりです。
 2. 傾向グラフ上で範囲をドラッグして選択すると、クエリの時間範囲を変更できます。
 3. バケット幅のデフォルト値は `Auto` で、時間範囲全体に応じて調整されます。ドロップダウンから秒、分、時間など、別の粒度も選択できます。
 
-![時間傾向のデモ](https://cdnd.selectdb.com/images/upload/dogstack/search_trend.gif)
+![時間傾向のデモ](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_trend.gif)
 
 
 
@@ -141,19 +141,19 @@ SQL 構文の要点は次のとおりです。
 
 1. レコードは時間フィールドの降順に並び、最新のデータが先頭に表示されます。各ページに 50 件のレコードが表示され、ページを切り替えて続きを確認できます。デフォルトでは、時間フィールドと `_source` の二つのフィールドが表示されます。`_source` はすべてのフィールドを `key: value` 形式で仮想的に連結したもので、読みやすいようにキーが強調表示されます。左側のフィールドブラウザーでフィールド名の横にある「+」をクリックすると、右側に表示するフィールドを変更できます。複数のフィールドを追加でき、右側の「x」をクリックすると削除できます。すべてのフィールドを削除すると、デフォルトの `_source` 表示に戻ります。
 
-![詳細データのデモ](https://cdnd.selectdb.com/images/upload/dogstack/search_detail.gif)
+![詳細データのデモ](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_detail.gif)
 
 2. 左端の「->」矢印をクリックすると、レコードの詳細が展開されます。表示形式は **テーブル** と **JSON** の二種類です。テーブル形式では、フィールドの横にある「+」または「-」をクリックすると、`severity_text=INFO` などのフィルター条件を対話的に追加できます。
 
-![レコード展開のデモ](https://cdnd.selectdb.com/images/upload/dogstack/search_expand.gif)
+![レコード展開のデモ](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_expand.gif)
 
 3. レコードを展開して **Surrounding items**（前後の項目）をクリックすると、そのレコードの「コンテキスト」として、時間的に前後 5 件ずつのレコードを表示できます。この機能は問題の調査中に特定のログの前後を確認するためによく使われるため、時間以外のクエリフィルター条件は無視されます。そうしなければ、詳細データテーブルと同じ結果になってしまいます。前後 5 件を超えるレコードを表示したり、特定のホストに絞り込むなどのフィルターを追加したりすることもできます。
 
-![コンテキスト表示のデモ](https://cdnd.selectdb.com/images/upload/dogstack/search_context.gif)
+![コンテキスト表示のデモ](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_context.gif)
 
 4. レコードに `trace_id` フィールドがある場合、関連するトレースとして認識されます。その値はクリック可能なリンクになり、クリックするとログとトレースを関連付けて確認できるトレースのウォーターフォール表示ドロワーが開きます。
 
-![ログからトレースへの移動のデモ](https://cdnd.selectdb.com/images/upload/dogstack/search_trace.gif)
+![ログからトレースへの移動のデモ](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_trace.gif)
 
 
 
@@ -164,4 +164,4 @@ SQL 構文の要点は次のとおりです。
 1. フィールドの右側にある「+」をクリックすると、そのフィールドを詳細データテーブルに追加できます。
 2. フィールド名をクリックすると、出現頻度の高い上位 5 件の値を確認できます。値の横にある「+」または「-」をクリックすると、フィルター条件を動的に追加できます。
 
-![フィールドブラウザーのデモ](https://cdnd.selectdb.com/images/upload/dogstack/search_fields.gif)
+![フィールドブラウザーのデモ](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_fields.gif)

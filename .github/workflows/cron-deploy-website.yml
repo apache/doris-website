@@ -11,18 +11,13 @@ on:
         - cron: '0 1 * * *' # Daily at 01:00 UTC.
 permissions:
   contents: read
-# One deploy at a time. A run whose OSS upload crawls (the 2026-09-21 12:05
-# run spent two hours on it) must not overlap a newer push or cron trigger: both
-# would push the same objects through the same slow pipe and race for the
-# bucket's .actioninfo manifest. Queue the newer run instead of cancelling
-# the running one - killing it mid-upload discards the manifest it writes at
-# the end, and the next run starts the whole upload over.
+# Serialize website uploads and ASF publication with manual deployment.
 concurrency:
     group: cron-deploy-website
     cancel-in-progress: false
 jobs:
   source:
-    if: github.ref == 'refs/heads/master'
+    if: github.repository == 'apache/doris-website' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -42,6 +37,8 @@ jobs:
 
   build:
     needs: source
+    outputs:
+      locales: ${{ steps.publication-locales.outputs.locales }}
     runs-on: ubuntu-latest
     # Temporary ceiling: validate build + verification + artifact transfer
     # with 30% margin using the publishing measurement reports.
@@ -50,6 +47,7 @@ jobs:
       contents: read
       actions: read
     env:
+        DORIS_ASSET_ORIGIN: ${{ vars.WEBSITE_ASSET_BASE_URL }}
         DORIS_ENABLE_JA: 'true'
         DORIS_ENABLE_KO: 'true'
         DORIS_ENABLE_RU: 'true'
@@ -127,6 +125,15 @@ jobs:
               sudo swapon /mnt/swapfile2
               free -h
               swapon --show
+
+        - name: Resolve publication locales
+          id: publication-locales
+          run: |
+              node - <<'NODE'
+              const fs = require('node:fs');
+              const {locales} = require('./config/i18n');
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, 'locales=' + locales.join(',') + '\n');
+              NODE
 
         - name: Build
           env:
@@ -211,22 +218,33 @@ jobs:
               retention-days: 14
 
   deploy:
+    if: >-
+      github.repository == 'apache/doris-website' &&
+      github.ref == 'refs/heads/master' &&
+      (vars.WEBSITE_ASSET_UPLOAD_ENABLED == 'true' || vars.WEBSITE_PUBLISH_ENABLED == 'true') &&
+      needs.source.outputs.branch == 'master'
     needs: [source, build]
     runs-on: ubuntu-latest
-    timeout-minutes: 180
-    environment: Production
+    timeout-minutes: 55
     permissions:
       contents: write
       actions: read
+      id-token: write
     env:
       DORIS_COMMIT: ${{ needs.source.outputs.source_sha }}
+      WEBSITE_PUBLISH_LOCALES: ${{ needs.build.outputs.locales }}
+      ALIYUN_OIDC_PROVIDER_ARN: ${{ vars.ALIYUN_OIDC_PROVIDER_ARN }}
+      ALIYUN_WEBSITE_ROLE_ARN: ${{ vars.ALIYUN_WEBSITE_ROLE_ARN }}
+      WEBSITE_OSS_BUCKET: ${{ vars.WEBSITE_OSS_BUCKET }}
+      WEBSITE_OSS_REGION: ${{ vars.WEBSITE_OSS_REGION }}
+      WEBSITE_OSS_ENDPOINT: ${{ vars.WEBSITE_OSS_ENDPOINT }}
+      WEBSITE_ASSET_BASE_URL: ${{ vars.WEBSITE_ASSET_BASE_URL }}
     steps:
       - name: Checkout trusted deployment code
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-          submodules: recursive
       - name: Start publishing measurements
         id: metrics-start
         env:
@@ -236,50 +254,18 @@ jobs:
         with:
           name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
           path: build
+      - name: Initialize pinned Alibaba Cloud action
+        run: git submodule update --init --depth 1 -- .github/actions/configure-aliyun-credentials
+
       - name: Upload files to OSS
         id: oss-upload
-        # The action has no per-request retry (the OSS SDK it embeds never
-        # reads its RetryTimes), so a single PUT hitting the SDK's 60s
-        # timeout among tens of thousands fails the whole step - on
-        # 2026-09-21 that was 6 of 12,320 uploads after two hours on a slow
-        # link. It does write its .actioninfo manifest before exiting
-        # non-zero, so the retry below only re-sends the objects that
-        # failed, plus the manifest. continue-on-error keeps the job alive
-        # for that retry; the retry step fails the job if it fails too.
-        continue-on-error: true
-        uses: ./.github/actions/aliyun-oss-website-action
-        with:
-            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-            # Transfer-acceleration endpoint of the website bucket (enabled
-            # on the bucket on 2026-09-21): the runner enters Alibaba's
-            # backbone at the nearest PoP instead of crossing the public
-            # internet to the bucket's region. Uploads only - the CDN keeps
-            # its regional origin for downloads.
-            endpoint: oss-accelerate.aliyuncs.com
-            folder: build
-            onlyUpload: true
-            otherCacheControl: 0
-            skipSetting: true
-
-      - name: Upload files to OSS (retry)
-        if: steps.oss-upload.outcome == 'failure'
-        uses: ./.github/actions/aliyun-oss-website-action
-        with:
-            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-            endpoint: oss-accelerate.aliyuncs.com
-            folder: build
-            onlyUpload: true
-            otherCacheControl: 0
-            skipSetting: true
+        uses: ./.github/actions/upload-website-assets
 
       - name: Remove pdf
         run: rm -rf ./build/assets/files/*.pdf
 
       - name: Deploy Website
+        if: vars.WEBSITE_PUBLISH_ENABLED == 'true'
         uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
         with:
             github_token: ${{ github.token }}
@@ -295,7 +281,7 @@ jobs:
         if: always() && steps.metrics-start.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 .github/scripts/publish_metrics.py finish --budget 180
+        run: python3 .github/scripts/publish_metrics.py finish --budget 55
 
       - name: Upload publishing measurements
         if: always() && steps.metrics-start.outcome == 'success'

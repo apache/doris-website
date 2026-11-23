@@ -753,7 +753,7 @@ PROPERTIES (
 터미널에서 다음 명령을 실행하여 데이터를 로컬에 다운로드하고 Stream Load로 데이터를 적재합니다.
 
 ```shell
-curl -L https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar -o - | tar -Jxf -
+curl -L https://assets-cdn.selectdb.com/media/static/doc_ddl_dir_d27a752a7b.tar -o - | tar -xf -
 
 curl --location-trusted \
     -u "root:" \
@@ -784,4 +784,4 @@ curl --location-trusted \
     http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
 ```
 
-데이터 파일 `item_1_10.dat`, `date_dim_1_10.dat`, `store_sales.csv`, `customer_address_1_10.dat`는 [이 아카이브](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar)에서도 다운로드할 수 있습니다.
+데이터 파일 `item_1_10.dat`, `date_dim_1_10.dat`, `store_sales.csv`, `customer_address_1_10.dat`는 [이 아카이브](https://assets-cdn.selectdb.com/media/static/doc_ddl_dir_d27a752a7b.tar)에서도 다운로드할 수 있습니다.

@@ -8,7 +8,9 @@ export async function fetchSearchIndex(url, {
     if (source.origin !== origin) throw new Error('Unexpected search index origin');
     const candidates = [source];
     if (assetOrigin && siteOrigin && new URL(siteOrigin).origin === origin) {
-        const cdn = new URL(source.pathname + source.search, assetOrigin);
+        // A leading slash would discard the configured /site/ asset prefix.
+        const base = assetOrigin.replace(/\/?$/, '/');
+        const cdn = new URL(source.pathname.replace(/^\/+/, '') + source.search, base);
         if (!['http:', 'https:'].includes(cdn.protocol)) throw new Error('Invalid search asset origin');
         if (cdn.origin !== source.origin) candidates.unshift(cdn);
     }
