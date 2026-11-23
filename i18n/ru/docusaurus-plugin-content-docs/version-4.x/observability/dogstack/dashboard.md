@@ -64,7 +64,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 
 1. Нажмите **Сохранить и проверить**, чтобы убедиться, что подключение работает.
 
-![Настройка источника данных MySQL](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_datasource.png)
+![Настройка источника данных MySQL](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_datasource.png)
 
 
 
@@ -103,7 +103,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - Диск: таблица использования дискового пространства, пропускная способность чтения и записи
 - Сеть: входящий и исходящий трафик, ошибки и потери пакетов
 
-![Дашборд метрик хоста](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_host.png)
+![Дашборд метрик хоста](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_host.png)
 
 **Дашборд мониторинга JVM**
 
@@ -112,7 +112,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - GC: время (Young / Old) и количество сборок
 - Потоки и CPU: динамика количества потоков, использование CPU
 
-![Дашборд мониторинга JVM](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_jvm.png)
+![Дашборд мониторинга JVM](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_jvm.png)
 
 **Дашборд наблюдаемости K8s**
 
@@ -120,7 +120,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - Узлы: динамика использования CPU и памяти, таблица состояний
 - Пространства имён: суммарное использование CPU и памяти, таблица состояний
 
-![Дашборд наблюдаемости K8s](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_k8s.png)
+![Дашборд наблюдаемости K8s](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_k8s.png)
 
 **Дашборд логов Nginx**
 
@@ -129,7 +129,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - Анализ: наиболее популярные URL и IP, распределение HTTP-методов, наиболее частые сообщения об ошибках
 - Последние логи: подробные записи логов доступа и ошибок
 
-![Дашборд логов Nginx](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_nginx.png)
+![Дашборд логов Nginx](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_nginx.png)
 
 **Дашборд метрик PostgreSQL**
 
@@ -138,7 +138,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - Хранение: размер баз данных (по базам данных), количество баз данных, количество таблиц
 - BGWriter: количество контрольных точек (плановых / по запросу), записи буферов, время работы BGWriter
 
-![Дашборд метрик PostgreSQL](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_postgresql.png)
+![Дашборд метрик PostgreSQL](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_postgresql.png)
 
 
 

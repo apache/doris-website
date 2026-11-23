@@ -37,15 +37,15 @@ docker compose up -d
 
 Откройте браузер, перейдите по адресу http://localhost:33000/grafana/plugins, найдите `doris` и нажмите на пункт **Doris App**.
 
-![Плагин Doris App](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_plugin.png)
+![Плагин Doris App](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_plugin.png)
 
 Затем нажмите кнопку **Включить**, чтобы включить Doris App.
 
-![Включение Doris App](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_enable.png)
+![Включение Doris App](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_enable.png)
 
 После включения Doris App появится в разделе «Другие приложения» в меню слева. Нажмите «Doris App», чтобы начать знакомство с приложением.
 
-![Пункт Doris App](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_apps.png)
+![Пункт Doris App](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_apps.png)
 
 
 
@@ -53,11 +53,11 @@ docker compose up -d
 
 В Doris App выберите `Doris` в качестве источника данных, `otel` в качестве базы данных и `otel_logs` в качестве таблицы. На экране появятся данные. Пользователям Kibana интерфейс покажется знакомым и простым в использовании.
 
-![Источник данных журналов](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_logs.png)
+![Источник данных журналов](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_logs.png)
 
 Попробуйте ввести `body:error` в поле поиска, чтобы найти записи журнала, в поле body которых содержится слово `error`.
 
-![Поиск body:error](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_search.png)
+![Поиск body:error](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_search.png)
 
 
 
@@ -67,17 +67,17 @@ docker compose up -d
 
 Выберите `Doris` в качестве источника данных, `otel` в качестве базы данных и `otel_traces` в качестве таблицы. Нажмите кнопку **Найти трассировки**, чтобы получить 50 последних записей трассировок. Они отобразятся на диаграмме вверху и в списке под ней. Поэкспериментируйте с фильтрами «Сервис», «Операция», «Теги» и «Длительность» слева и попробуйте разные варианты сортировки под диаграммой трассировок.
 
-![Список трассировок](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_traces.png)
+![Список трассировок](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_traces.png)
 
 Нажмите на нужную трассировку, чтобы открыть её каскадную диаграмму. В этом представлении используйте **Фильтр спанов**, чтобы дополнительно отфильтровать спаны внутри трассировки.
 
-![Каскадная диаграмма трассировки](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_waterfall.png)
+![Каскадная диаграмма трассировки](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_waterfall.png)
 
 ## Панели мониторинга {#dashboards}
 
 В меню слева нажмите **Панели мониторинга**, затем **Демо Doris**, а после этого **Самомониторинг коллектора**. Откроется показанная ниже демонстрационная панель мониторинга, которая отображает метрики хоста самого OpenTelemetry Collector.
 
-![Демонстрационная панель мониторинга](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_dashboard.png)
+![Демонстрационная панель мониторинга](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_dashboard.png)
 
 
 
@@ -85,4 +85,4 @@ docker compose up -d
 
 Вы можете создавать правила оповещения на основе SQL-запросов к Doris. Задайте параметры условия срабатывания оповещения, такие как функция **Свёртка** и **Порог**.
 
-![Правило оповещения](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_alert.png)
+![Правило оповещения](https://assets-cdn.selectdb.com/site/images/upload/dogstack/quickstart_alert.png)

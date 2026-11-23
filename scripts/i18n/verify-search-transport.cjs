@@ -7,6 +7,7 @@ const {hash} = require('./state.cjs');
 const {structure} = require('./structure.cjs');
 const {createServer} = require('../publish/serve.cjs');
 const root = path.resolve(__dirname, '../..');
+process.env.DORIS_ASSET_ORIGIN = 'https://assets-cdn.selectdb.com/site';
 const fixture = path.join(root, '.i18n-build/search-transport-fixture');
 
 async function build() {
@@ -68,7 +69,7 @@ module.exports = () => {const config = base();
     execFileSync('git',['add','.'],{cwd:fixture});
     execFileSync('git',['-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','Search transport fixture'],{cwd:fixture});
     const result = spawnSync(process.execPath,[path.join(root,'scripts/build-locales.cjs'),'--site-dir',fixture],
-        {cwd:root,stdio:'inherit',env:{...process.env,DORIS_ASSET_ORIGIN:'https://cdnd.selectdb.com',
+        {cwd:root,stdio:'inherit',env:{...process.env,DORIS_ASSET_ORIGIN:'https://assets-cdn.selectdb.com/site',
             NODE_OPTIONS:'--max-old-space-size=4096',TERSER_PARALLEL:'false'}});
     assert.equal(result.status,0,'Search transport fixture build');
 }
@@ -87,14 +88,17 @@ async function verify() {
         await ctx.route('**/*',async route=>{
             try {
             const url=new URL(route.request().url());
-            if(!['doris.apache.org','cdnd.selectdb.com'].includes(url.hostname))return await route.abort();
+            if(!['doris.apache.org','assets-cdn.selectdb.com'].includes(url.hostname))return await route.abort();
             if(/search-index.*\.json$/.test(url.pathname)) {
                 requests.push({url:url.href,origin:url.origin});
-                if(mode.failBoth||mode.failCdn&&url.hostname==='cdnd.selectdb.com')
+                if(mode.failBoth||mode.failCdn&&url.hostname==='assets-cdn.selectdb.com')
                     return await route.fulfill({status:503,body:'Unavailable',headers:{'access-control-allow-origin':'*'}});
                 if(mode.delay)await new Promise(resolve=>setTimeout(resolve,mode.delay));
             }
-            const response=await api.get(localOrigin+url.pathname+url.search);
+            const localPath=url.hostname==='assets-cdn.selectdb.com'
+                ? require('../../config/asset-origin').getLocalAssetPath(url) : url.pathname+url.search;
+            assert(localPath,'Missing CDN /site prefix: '+url.href);
+            const response=await api.get(localOrigin+localPath);
             return await route.fulfill({response,headers:{...response.headers(),'content-security-policy':csp,
                 'access-control-allow-origin':'*'}});
             } catch(error) {
@@ -142,7 +146,7 @@ async function verify() {
             await input(page).fill('Doris');
             await suggestions(page).first().waitFor();
             assert.equal(await input(page).inputValue(),'Doris');
-            assert(requests.some(r=>r.origin==='https://cdnd.selectdb.com'));
+            assert(requests.some(r=>r.origin==='https://assets-cdn.selectdb.com'));
             assert(requests.every(r=>/search-index.*-[a-f0-9]{16}\.json$/.test(new URL(r.url).pathname)));
             const ax=await page.locator('.navbar__search').ariaSnapshot();
             assert.match(ax,/combobox/);
@@ -153,7 +157,7 @@ async function verify() {
             const {ctx,page,requests}=await context({failCdn:true});
             await open(page,'/docs/dev/english-shared/');await input(page).fill('Doris');
             await suggestions(page).first().waitFor();
-            assert(requests.some(r=>r.origin==='https://cdnd.selectdb.com'));
+            assert(requests.some(r=>r.origin==='https://assets-cdn.selectdb.com'));
             assert(requests.some(r=>r.origin==='https://doris.apache.org'));
             results.push({fallbackToOrigin:true,requests});await close(ctx);
         }

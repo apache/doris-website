@@ -57,6 +57,9 @@ node --test scripts/publish/__tests__/*.test.cjs
 NODE_OPTIONS=--max-old-space-size=2048 node scripts/publish/verify-fixture.cjs
 ```
 
+The fixture uses `https://assets-cdn.selectdb.com/site` and serves those
+requests from the artifact under test, exercising the real CDN directory prefix.
+Use `--same-origin-assets` for the local-only asset variant.
 With Playwright available separately through `NODE_PATH`, add `--browser`.
 `--apache` also checks the generated rules against a temporary loopback-only
 Apache instance. `--compare` builds an unoptimized fixture for size comparison;
@@ -90,3 +93,37 @@ Changes to publication infrastructure make Build Check build every active
 version and enabled locale using the optimized mode on CI, with the existing
 8 GiB heap/swap configuration. It verifies localized metadata and uploads
 the measurement reports, without deploying the PR.
+
+## Website OSS publication
+
+Production asset URLs use `https://assets-cdn.selectdb.com/site`. The automatic
+and manual website deploy jobs read `WEBSITE_ASSET_BASE_URL`, `WEBSITE_OSS_BUCKET`,
+`WEBSITE_OSS_REGION`, `WEBSITE_OSS_ENDPOINT`, `ALIYUN_OIDC_PROVIDER_ARN` and
+`ALIYUN_WEBSITE_ROLE_ARN` from repository Actions variables. The verified role
+can read and write only `site/` in the private Beijing bucket. Both workflows
+publish only master; the manual workflow rejects another branch before building.
+
+Initially keep both `WEBSITE_ASSET_UPLOAD_ENABLED` and `WEBSITE_PUBLISH_ENABLED`
+false. Set the upload variable true to exercise the new upload and CDN checks
+without publishing HTML. Set `WEBSITE_PUBLISH_ENABLED=true` only after validating
+the complete build, CDN and remaining recovery gaps. While the publication
+variable is false, the ASF publication step is skipped. With both variables
+false, the deployment jobs are skipped and builds still produce reviewable
+artifacts. The deployment timeout stays below the one-hour STS session.
+No GitHub Environment or permanent OSS access key is used.
+
+The local `upload-website-assets` action prepares a public copy without Apache
+controls, Git metadata, environment files or CI reports. The original artifact
+retains its ASF controls. Symlinks and sample artifacts are rejected, and every
+locale reported by the build job must have its entry page and prefixed assets.
+ossutil 2.4.1 uploads this copy to `site/` with request retries and one-hour cache
+headers. This initial migration uploads the public copy in full; it never uses
+delete synchronization or changes `media/` or `downloads/`.
+
+Before ASF publication, verify exact CDN bytes and CORS for the entry scripts,
+styles, search contexts and a unique run probe. A file/checksum receipt is retained
+with the publishing measurements. Upload or delivery errors prevent publishing
+the HTML. Historical asset objects remain available in the versioned bucket.
+
+The legacy PDF workflow and release-package endpoints are separate recovery
+work. They are not switched to unverified new URLs by this website-assets change.

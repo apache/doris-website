@@ -69,10 +69,12 @@ async function verifyBrowser(site, {fixture = false, manifests = '.i18n-build/co
         const localAssets = async route => {
             const url = new URL(route.request().url());
             if (url.origin === origin) return route.continue();
-            if (url.hostname === 'cdnd.selectdb.com') {
-                const response = await context.request.get(origin + url.pathname + url.search);
-                return route.fulfill({response});
+            const local = require('../../config/asset-origin').getLocalAssetPath(url);
+            if (local && !url.pathname.startsWith('/site/images/upload/dogstack/')) {
+                const response = await context.request.get(origin + local);
+                return route.fulfill({response, headers:{...response.headers(),'access-control-allow-origin':'*'}});
             }
+            if (url.hostname === 'assets-cdn.selectdb.com') return route.continue();
             return route.abort();
         };
         await context.route('**/*', localAssets);
