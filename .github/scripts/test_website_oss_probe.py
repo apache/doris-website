@@ -48,8 +48,24 @@ class ProbeTests(unittest.TestCase):
         self.assertNotIn('secrets.', json.dumps(workflow))
         self.assertNotIn('asf-site', json.dumps(job))
         for step in job['steps']:
-            if 'uses' in step:
+            if 'uses' in step and not step['uses'].startswith('./'):
                 self.assertRegex(step['uses'], r'@[0-9a-f]{40}$')
+        uses = [step.get('uses', '') for step in job['steps']]
+        local_action = './.github/actions/configure-aliyun-credentials'
+        self.assertIn(local_action, uses)
+        self.assertFalse(any(item.startswith('aliyun/') for item in uses))
+        init = next(index for index, step in enumerate(job['steps'])
+                    if step.get('run') == 'git submodule update --init --depth 1 -- .github/actions/configure-aliyun-credentials')
+        self.assertLess(init, uses.index(local_action))
+        gitlink = subprocess.check_output(['git', 'ls-files', '--stage', '--',
+                                           '.github/actions/configure-aliyun-credentials'], cwd=root, text=True)
+        mode, revision, *_ = gitlink.split()
+        self.assertEqual(mode, '160000')
+        self.assertEqual(revision, '1e5248c8d5d93a8781ac344a68e19a43341e79e6')
+        url = subprocess.check_output(['git', 'config', '-f', '.gitmodules', '--get',
+                                      'submodule..github/actions/configure-aliyun-credentials.url'],
+                                     cwd=root, text=True).strip()
+        self.assertEqual(url, 'https://github.com/aliyun/configure-aliyun-credentials-action.git')
 
     def test_rejects_untrusted_contexts_before_any_cloud_access(self):
         for key, value in [('GITHUB_REPOSITORY', 'someone/doris-website'),
