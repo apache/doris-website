@@ -47,7 +47,7 @@ runs:
           --region "$WEBSITE_OSS_REGION" --endpoint "$WEBSITE_OSS_ENDPOINT" \
           --cache-control 'public,max-age=3600' \
           --retry-times 3 --read-timeout 120 --connect-timeout 30 \
-          --job 8 --parallel 4 --checkpoint-dir "$RUNNER_TEMP/website-oss-checkpoints"
+          --job 16 --parallel 4 --checkpoint-dir "$RUNNER_TEMP/website-oss-checkpoints"
 
     - name: Verify CDN delivery before publishing HTML
       shell: bash
