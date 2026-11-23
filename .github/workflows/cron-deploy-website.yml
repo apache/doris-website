@@ -45,6 +45,9 @@ jobs:
       contents: read
       actions: read
     env:
+        # Temporary: serve this build's assets from ASF while OSS upload is disabled.
+        # Remove this override when both OSS upload steps are restored.
+        DORIS_ASSET_ORIGIN: ''
         DORIS_ENABLE_JA: 'true'
         DORIS_ENABLE_KO: 'true'
         DORIS_ENABLE_RU: 'true'
@@ -231,45 +234,47 @@ jobs:
         with:
           name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
           path: build
-      - name: Upload files to OSS
-        id: oss-upload
-        # The action has no per-request retry (the OSS SDK it embeds never
-        # reads its RetryTimes), so a single PUT hitting the SDK's 60s
-        # timeout among tens of thousands fails the whole step - on
-        # 2026-09-21 that was 6 of 12,320 uploads after two hours on a slow
-        # link. It does write its .actioninfo manifest before exiting
-        # non-zero, so the retry below only re-sends the objects that
-        # failed, plus the manifest. continue-on-error keeps the job alive
-        # for that retry; the retry step fails the job if it fails too.
-        continue-on-error: true
-        uses: ./.github/actions/aliyun-oss-website-action
-        with:
-            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-            # Transfer-acceleration endpoint of the website bucket (enabled
-            # on the bucket on 2026-09-21): the runner enters Alibaba's
-            # backbone at the nearest PoP instead of crossing the public
-            # internet to the bucket's region. Uploads only - the CDN keeps
-            # its regional origin for downloads.
-            endpoint: oss-accelerate.aliyuncs.com
-            folder: build
-            onlyUpload: true
-            otherCacheControl: 0
-            skipSetting: true
+      # Temporary: the OSS access key is disabled. Preserve the upload steps
+      # below for restoration together with the build's CDN asset origin.
+      # - name: Upload files to OSS
+      #   id: oss-upload
+      #   # The action has no per-request retry (the OSS SDK it embeds never
+      #   # reads its RetryTimes), so a single PUT hitting the SDK's 60s
+      #   # timeout among tens of thousands fails the whole step - on
+      #   # 2026-09-21 that was 6 of 12,320 uploads after two hours on a slow
+      #   # link. It does write its .actioninfo manifest before exiting
+      #   # non-zero, so the retry below only re-sends the objects that
+      #   # failed, plus the manifest. continue-on-error keeps the job alive
+      #   # for that retry; the retry step fails the job if it fails too.
+      #   continue-on-error: true
+      #   uses: ./.github/actions/aliyun-oss-website-action
+      #   with:
+      #       accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+      #       accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+      #       bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+      #       # Transfer-acceleration endpoint of the website bucket (enabled
+      #       # on the bucket on 2026-09-21): the runner enters Alibaba's
+      #       # backbone at the nearest PoP instead of crossing the public
+      #       # internet to the bucket's region. Uploads only - the CDN keeps
+      #       # its regional origin for downloads.
+      #       endpoint: oss-accelerate.aliyuncs.com
+      #       folder: build
+      #       onlyUpload: true
+      #       otherCacheControl: 0
+      #       skipSetting: true
 
-      - name: Upload files to OSS (retry)
-        if: steps.oss-upload.outcome == 'failure'
-        uses: ./.github/actions/aliyun-oss-website-action
-        with:
-            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-            endpoint: oss-accelerate.aliyuncs.com
-            folder: build
-            onlyUpload: true
-            otherCacheControl: 0
-            skipSetting: true
+      # - name: Upload files to OSS (retry)
+      #   if: steps.oss-upload.outcome == 'failure'
+      #   uses: ./.github/actions/aliyun-oss-website-action
+      #   with:
+      #       accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+      #       accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+      #       bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+      #       endpoint: oss-accelerate.aliyuncs.com
+      #       folder: build
+      #       onlyUpload: true
+      #       otherCacheControl: 0
+      #       skipSetting: true
 
       - name: Remove pdf
         run: rm -rf ./build/assets/files/*.pdf
