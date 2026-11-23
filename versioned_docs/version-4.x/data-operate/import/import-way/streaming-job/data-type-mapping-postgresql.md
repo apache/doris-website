@@ -45,4 +45,4 @@ In both cases, the values are written following the same mapping. For types that
 | `json` / `jsonb` | `JSON` | |
 | Geometry types (`point`, `line`, `polygon`, …) | `STRING` | Serialized as a GeoJSON string (`type` / `coordinates` / `srid`) |
 | Array types (e.g. `int4[]`, `text[]`) | `ARRAY<T>` | One-dimensional only |
-| Other / user-defined types | `STRING` | |
+| Other / user-defined types | Not supported | |

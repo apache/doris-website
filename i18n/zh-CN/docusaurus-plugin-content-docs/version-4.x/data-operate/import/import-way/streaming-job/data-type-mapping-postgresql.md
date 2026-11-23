@@ -45,4 +45,4 @@ Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
 | `json` / `jsonb` | `JSON` | |
 | 几何类型（`point`、`line`、`polygon` 等） | `STRING` | 序列化为 GeoJSON 字符串（`type` / `coordinates` / `srid`） |
 | 数组类型（如 `int4[]`、`text[]`） | `ARRAY<T>` | 仅支持一维 |
-| 其他 / 用户自定义类型 | `STRING` | |
+| 其他 / 用户自定义类型 | 不支持 | |
