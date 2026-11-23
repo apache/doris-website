@@ -4,11 +4,6 @@ on:
     push:
         branches:
             - master
-    schedule:
-        # Refresh dynamic data, such as the GitHub star count, and recover from
-        # a missed push deployment without rebuilding an unchanged site 12
-        # times per day.
-        - cron: '0 1 * * *' # Daily at 01:00 UTC.
 permissions:
   contents: read
 # Serialize website uploads and ASF publication with manual deployment.
