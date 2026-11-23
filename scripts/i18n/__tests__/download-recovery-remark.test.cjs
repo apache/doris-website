@@ -12,7 +12,8 @@ async function render(source, options = {}) {
     const {evaluate} = await import('@mdx-js/mdx');
     const {format = 'mdx', ...settings} = options;
     const raw = format === 'md' ? [(await import('rehype-raw')).default] : [];
-    const result = await evaluate(source, {...jsx, format, rehypePlugins: raw, remarkPlugins: [[plugin,
+    const directive = (await import('remark-directive')).default;
+    const result = await evaluate(source, {...jsx, format, rehypePlugins: raw, remarkPlugins: [directive, [plugin,
         {catalog: recovery, locale: 'en', label: 'Unavailable', notice: 'Package files are unavailable.', ...settings}]]});
     return renderToStaticMarkup(React.createElement(result.default));
 }
@@ -50,6 +51,13 @@ test('ordinary internal and external links remain unchanged', async () => {
     assert(html.includes('href="/docs/dev/intro"'));
     assert(html.includes('href="https://downloads.apache.org/doris/source.tar.gz"'));
     assert(!html.includes('role="note"'));
+});
+
+test('admonition directive attributes remain compatible with the documentation pipeline', async () => {
+    const html = await render(':::note{#tip}\nA documentation tip.\n:::\n\n[Guide](/docs/dev/intro)', {format: 'md'});
+    assert(html.includes('A documentation tip.'));
+    assert(html.includes('href="/docs/dev/intro"'));
+    assert(!html.includes('aria-disabled'));
 });
 
 test('CommonMark links and raw HTML retain no active missing-download href', async () => {

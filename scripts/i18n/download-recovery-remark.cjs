@@ -46,7 +46,10 @@ function downloadRecovery({catalog = defaults, locale = 'en', label = 'Unavailab
             if (typeof node.url === 'string') node.url = rewrite(node.url);
             if (['text', 'code', 'html'].includes(node.type) && typeof node.value === 'string') node.value = rewrite(node.value);
             if (node.type === 'html') node.value = rawLinks(node.value);
-            for (const attribute of node.attributes ?? []) {
+            // Remark directives use an attributes object; JSX uses an array.
+            // Only JSX attributes can contain the expressions handled below.
+            const attributes = Array.isArray(node.attributes) ? node.attributes : [];
+            for (const attribute of attributes) {
                 if (typeof attribute.value === 'string') attribute.value = rewrite(attribute.value);
                 else if (attribute.value?.value && (migrateDownloadUrls(attribute.value.value, catalog) !== attribute.value.value
                     || missingDownloads(attribute.value.value, catalog).length)) {
@@ -57,7 +60,7 @@ function downloadRecovery({catalog = defaults, locale = 'en', label = 'Unavailab
                 }
             }
             const href = node.type === 'link' ? node.url : ['a', 'Link'].includes(node.name)
-                ? node.attributes?.find(attribute => ['href', 'to'].includes(attribute.name))?.value : null;
+                ? attributes.find(attribute => ['href', 'to'].includes(attribute.name))?.value : null;
             if (typeof href === 'string' && missingDownloads(href, catalog).length && !isDownloadAvailable(href, catalog)) {
                 if (node.type === 'link') {
                     node.type = 'emphasis';
