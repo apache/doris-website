@@ -188,6 +188,10 @@ commit mismatches. Successful uploads retain private OSS ACLs and AES256
 encryption. The public URLs use the base in `config/archived-docs.json`.
 Website and PDF uploads share a concurrency group. A deploy-only retry selects
 the successful build's artifact ID, including when the run attempt changes.
+Existing PDF URLs can remain cached for up to an hour after replacement. If
+the CDN byte check sees an older copy, have a CDN administrator refresh the
+affected URLs, or wait for cache expiry and retry the deployment job. The PDF
+role cannot change CDN configuration or refresh unrelated resources.
 
 `config/restored-assets.json` maps recovered original images and datasets to
 their new CDN paths during PDF rendering. Archived source snapshots stay

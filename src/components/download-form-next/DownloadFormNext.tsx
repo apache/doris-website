@@ -292,7 +292,7 @@ export default function DownloadFormNext(): JSX.Element {
                                         </div>
                                         {!available && <p role="status" className="mt-2 text-sm">
                                             {DOWNLOAD_UNAVAILABLE_NOTE}{' '}
-                                            {!isSource && build?.source && <Link to={`${build.source}apache-doris-${build.version}-src.tar.gz`}>
+                                            {!isSource && build?.source && <Link className="underline" to={`${build.source}apache-doris-${build.version}-src.tar.gz`}>
                                                 {DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Source]}
                                             </Link>}
                                         </p>}
