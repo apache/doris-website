@@ -37,6 +37,11 @@ jobs:
       - name: Check repository and non-secret configuration
         run: python3 .github/scripts/website_oss_probe.py --check-config
 
+      # Load the pinned action from this repository, following the Doris
+      # submodule pattern used for Actions outside the ASF allowlist.
+      - name: Initialize the pinned Alibaba Cloud action
+        run: git submodule update --init --depth 1 -- .github/actions/configure-aliyun-credentials
+
       - name: Install pinned ossutil
         shell: bash
         run: |
@@ -53,7 +58,7 @@ jobs:
 
       - name: Authenticate using GitHub OIDC
         id: aliyun
-        uses: aliyun/configure-aliyun-credentials-action@1e5248c8d5d93a8781ac344a68e19a43341e79e6
+        uses: ./.github/actions/configure-aliyun-credentials
         with:
           oidc-provider-arn: ${{ vars.ALIYUN_OIDC_PROVIDER_ARN }}
           role-to-assume: ${{ vars.ALIYUN_WEBSITE_ROLE_ARN }}

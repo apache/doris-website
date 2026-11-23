@@ -9,6 +9,15 @@ does not build or publish the website.
 Configure these repository-level Actions variables. No GitHub Environment or
 permanent AccessKey secret is required.
 
+The Alibaba Cloud credentials action is a Git submodule at
+`.github/actions/configure-aliyun-credentials`, pinned to
+`1e5248c8d5d93a8781ac344a68e19a43341e79e6`. The workflow initializes that
+submodule and uses its local path, following the Doris repository convention
+for actions outside the ASF remote-action allowlist. It never uses
+`git submodule update --remote`; updates require reviewing a new gitlink commit.
+The action's OIDC inputs, output masking and credential cleanup remain provided
+by that same pinned upstream implementation.
+
 | Variable | Value |
 | --- | --- |
 | `ALIYUN_OIDC_PROVIDER_ARN` | Provider ARN for `https://token.actions.githubusercontent.com`, audience `sts.aliyuncs.com` |
