@@ -7,7 +7,8 @@ import { CPUEnum, DownloadTypeEnum, Option } from '@site/src/constant/download.d
 import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { DownloadIcon } from '../Icons/download-icon';
-import {DOWNLOAD_TYPE_LABELS, localizeDownloadOptions} from './download-labels';
+import {DOWNLOAD_TYPE_LABELS, localizeDownloadOptions, DOWNLOAD_UNAVAILABLE_LABEL, DOWNLOAD_UNAVAILABLE_NOTE} from './download-labels';
+import {isDownloadAvailable} from '@site/src/utils/download-recovery';
 
 interface DownloadFormToolsProps {
     data: Option[];
@@ -27,7 +28,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
     const tool = useWatch('tool', form);
     const architecture = useWatch('architecture', form);
     const version = useWatch('version', form);
-    const tarBall = useWatch('tarBall', form);
+    const tarBall = useWatch('tarBall', form) || DownloadTypeEnum.Binary;
     const isOperatorBinary = tool === ToolsEnum.Operator && tarBall === DownloadTypeEnum.Binary;
 
     const getOptions = useMemo(() => {
@@ -60,31 +61,27 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
     //     }
     // };
     const getDownloadLinkByCard = (params: { version: string[]; cpu: string; tarBall: string; type: string }) => {
-        const currentTool = data.find(item => tool === item.value).children;
+        const currentTool = data.find(item => tool === item.value)?.children;
+        if (!currentTool) return '';
         if (tool === ToolsEnum.StreamLoader) {
             const currentVersion = currentTool.find(item => version === item.value);
-            if (params.tarBall === 'Source') {
-                return !params.type ? `${currentTool[0].source}` : `${currentTool[0].source}.${params.type}`;
-            } else {
-                const currentCPU: any = currentVersion.children.find(item => params.cpu === item.value);
-                return currentCPU.Binary;
-            }
-        } else {
-            let currentVersion;
-            if (tool === ToolsEnum.Flink || tool === ToolsEnum.Spark) {
-                currentVersion = currentTool
-                    .find(item => item.value === version[0])
-                    .children.find(child => child.value === version[1]);
-            } else {
-                const selectedVersion = Array.isArray(version) ? version[0] : version;
-                currentVersion = currentTool.find(item => selectedVersion === item.value);
-            }
             if (!currentVersion) return '';
-            const downloadLink = currentVersion[params.tarBall];
-            if (!downloadLink) return '';
-            if (!params.type) return `${downloadLink}`;
-            return `${currentVersion[params.type] || `${downloadLink}.${params.type}`}`;
+            const download = params.tarBall === DownloadTypeEnum.Source ? currentVersion.source
+                : (currentVersion.children?.find(item => params.cpu === item.value) ?? currentVersion.children?.[0])?.Binary;
+            if (!download) return '';
+            return params.type ? `${download}.${params.type}` : download;
         }
+        let currentVersion;
+        if (tool === ToolsEnum.Flink || tool === ToolsEnum.Spark) {
+            if (!Array.isArray(version)) return '';
+            currentVersion = currentTool.find(item => item.value === version[0])?.children.find(child => child.value === version[1]);
+        } else {
+            const selectedVersion = Array.isArray(version) ? version[0] : version;
+            currentVersion = currentTool.find(item => selectedVersion === item.value);
+        }
+        const download = currentVersion?.[params.tarBall];
+        if (!download) return '';
+        return params.type ? currentVersion[params.type] || `${download}.${params.type}` : download;
     };
 
     useEffect(() => {
@@ -131,6 +128,10 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
           })
         : '';
 
+    const selectedLink = (type: string) => tool && version ? getDownloadLinkByCard({version, cpu: architecture, tarBall, type}) : '';
+    const download = selectedLink('');
+    const available = isDownloadAvailable(download);
+
     const formBody = (
         <Form
             validateMessages={{required: translate({id: 'landing.download.required', message: 'Select an option.'})}}
@@ -143,7 +144,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     tarBall: tarBall,
                     type: '',
                 });
-                window.open(url, '_blank');
+                if (isDownloadAvailable(url)) window.open(url, '_blank');
             }}
             initialValues={{
                 tool: data[0]?.value,
@@ -273,14 +274,16 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                 <Form.Item style={{ marginBottom: 0 }} colon={false}>
                     <button
                         type="submit"
+                        disabled={!available}
                         className={`w-full text-lg ${isArchive ? 'download-next__archive-button' : 'button-primary'}`}
                     >
-                        {translate({id: "landing.downloadformtools.014", message: "Download"})}
+                        {download && !available ? DOWNLOAD_UNAVAILABLE_LABEL : translate({id: "landing.downloadformtools.014", message: "Download"})}
                     </button>
                 </Form.Item>
             )}
+            {!isOperatorBinary && download && !available && <p role="status" className="mt-2 text-center text-sm">{DOWNLOAD_UNAVAILABLE_NOTE}</p>}
             {!isOperatorBinary && (
-                <button type="button"
+                <button type="button" disabled={!available}
                     className="flex w-full cursor-pointer text-primary items-center mt-4 justify-center"
                     onClick={() => {
                         const url = getDownloadLinkByCard({
@@ -289,6 +292,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             tarBall: tarBall,
                             type: '',
                         });
+                        if (!isDownloadAvailable(url)) return;
                         copy(url);
                         message.success(translate({id: 'landing.download.copied', message: 'Copied'}));
                     }}
@@ -315,7 +319,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
             )}
             {!isOperatorBinary && (
                 <div className="flex justify-center mt-4">
-                    <button type="button"
+                    <button type="button" disabled={!isDownloadAvailable(selectedLink('asc'))}
                         className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
@@ -324,12 +328,12 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 tarBall: tarBall,
                                 type: 'asc',
                             });
-                            window.open(url, '_blank');
+                            if (isDownloadAvailable(url)) window.open(url, '_blank');
                         }}
                     >
                         ASC
                     </button>
-                    <button type="button"
+                    <button type="button" disabled={!isDownloadAvailable(selectedLink('sha512'))}
                         className="inline-flex items-center ml-4 text-[#8592A6] hover:text-primary cursor-pointer hover:underline"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
@@ -338,7 +342,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 tarBall: tarBall,
                                 type: 'sha512',
                             });
-                            window.open(url, '_blank');
+                            if (isDownloadAvailable(url)) window.open(url, '_blank');
                         }}
                     >
                         SHA-512
@@ -356,7 +360,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 tarBall: tarBall,
                                 type: 'gz',
                             });
-                            window.open(url, '_blank');
+                            if (isDownloadAvailable(url)) window.open(url, '_blank');
                         }}
                     >
                         Source code

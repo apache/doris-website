@@ -1,25 +1,33 @@
-name: Generate Pdf And Upload To OSS
+name: Generate Archived Documentation PDFs
 
-
-on: 
+on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Protected repository branch to publish (run this workflow from master)'
+        description: 'Protected source branch (only master is supported)'
         required: true
-        default: 'master'
-  
+        default: master
+      version:
+        description: 'Archived documentation version'
+        type: choice
+        options: ['all', '2.1', '2.0', '1.2']
+        default: all
+      locale:
+        description: 'Languages to export'
+        type: choice
+        options: ['en,zh-CN', 'en', 'zh-CN']
+        default: 'en,zh-CN'
 
 permissions:
   contents: read
 
 concurrency:
-  group: production-pdf
+  group: cron-deploy-website
   cancel-in-progress: false
 
 jobs:
   source:
-    if: github.ref == 'refs/heads/master'
+    if: github.repository == 'apache/doris-website' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -30,55 +38,84 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Resolve a protected branch to an immutable commit
+      - name: Resolve master to an immutable source
         id: source
         env:
           GH_TOKEN: ${{ github.token }}
           DEPLOY_BRANCH: ${{ inputs.branch }}
-        run: python3 .github/scripts/review.py deploy-ref
+        run: |
+          if [ "$DEPLOY_BRANCH" != master ]; then
+            echo "::error::Only master may build published archive PDFs"
+            exit 1
+          fi
+          python3 .github/scripts/review.py deploy-ref
 
   build:
     needs: source
+    outputs:
+      artifact_id: ${{ steps.pdf-artifact.outputs.artifact-id }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
-    - name: Checkout
-      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      with:
-          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
           ref: ${{ needs.source.outputs.source_sha }}
-
-
-    - name: Use Node.js
-      uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
-      with:
-        node-version: 20
-
-
-    - name: Generate PDF
-      run: |
-        npx --yes vitpress-generate-pdf@1.1.4 --initialDocURLs="https://doris.apache.org/docs/dev/getting-started/intro" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true
-        npx --yes vitpress-generate-pdf@1.1.4 --initialDocURLs="https://doris.apache.org/zh-CN/docs/dev/getting-started/intro" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (中文)" --outputPDFFilename="Apache Doris Docs (中文).pdf" --tocOnlyH1=true
-        mkdir -p ./build-pdf/assets/files/
-        cp -- ./*.pdf ./build-pdf/assets/files/
-        ls ./build-pdf/assets/files/
-    - name: Upload the site artifact for the isolated deployment job
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-      with:
-        name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
-        path: build-pdf
-        include-hidden-files: true
-        compression-level: 0
-        if-no-files-found: error
-        retention-days: 1
+          persist-credentials: false
+      - uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
+        with:
+          node-version: 20
+          cache: yarn
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
+        with:
+          python-version: '3.12'
+      - name: Install local PDF export dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y pandoc fonts-noto-cjk fontconfig
+          npm install -g yarn@1.22.22
+          yarn --frozen-lockfile
+          python3 -m venv tmp/pdfs/.venv
+          tmp/pdfs/.venv/bin/python -m pip install -r scripts/docs-pdf/requirements.txt
+      - name: Generate and verify complete archived PDFs
+        env:
+          PDF_VERSION: ${{ inputs.version }}
+          PDF_LOCALES: ${{ inputs.locale }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$PDF_VERSION" in
+            all) pdf_versions=(2.1 2.0 1.2) ;;
+            2.1|2.0|1.2) pdf_versions=("$PDF_VERSION") ;;
+            *) echo "::error::Unsupported archive version"; exit 1 ;;
+          esac
+          for pdf_version in "${pdf_versions[@]}"; do
+            ./scripts/docs-pdf/generate.sh "$pdf_version" "$PDF_LOCALES" --output "pdf-output/$pdf_version"
+            tmp/pdfs/.venv/bin/python scripts/docs-pdf/verify.py "pdf-output/$pdf_version"
+          done
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        id: pdf-artifact
+        with:
+          name: archived-pdfs-${{ github.run_id }}-${{ github.run_attempt }}
+          path: pdf-output
+          if-no-files-found: error
+          retention-days: 14
 
   deploy:
     needs: [source, build]
+    if: >-
+      github.repository == 'apache/doris-website' &&
+      github.ref == 'refs/heads/master' &&
+      needs.source.outputs.branch == 'master' &&
+      vars.WEBSITE_PDF_UPLOAD_ENABLED == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 180
-    environment: Production
+    timeout-minutes: 55
     permissions:
       contents: read
+      actions: read
+      id-token: write
     env:
       DORIS_COMMIT: ${{ needs.source.outputs.source_sha }}
     steps:
@@ -87,19 +124,38 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-          submodules: recursive
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
-          path: build-pdf
-      - name: Upload files to OSS
-        uses: ./.github/actions/aliyun-oss-website-action
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          merge-multiple: true
+          path: pdf-output
+      - name: Initialize pinned Alibaba Cloud action
+        run: git submodule update --init --depth 1 -- .github/actions/configure-aliyun-credentials
+      - name: Install pinned ossutil
+        shell: bash
+        run: |
+          set -euo pipefail
+          tool_dir="$RUNNER_TEMP/pdf-ossutil"
+          mkdir -p "$tool_dir"
+          curl --fail --location --retry 3 \
+            'https://gosspublic.alicdn.com/ossutil/v2/2.4.1/ossutil-2.4.1-linux-amd64.zip' \
+            --output "$tool_dir/ossutil.zip"
+          echo '57ee4c56796a40144acd6b0b96b53b4ba75e5cec09c01d8d0313c09a5524022f  '"$tool_dir/ossutil.zip" | sha256sum --check
+          unzip -q "$tool_dir/ossutil.zip" -d "$tool_dir"
+          install -m 0755 "$tool_dir/ossutil-2.4.1-linux-amd64/ossutil" "$tool_dir/ossutil"
+          echo "$tool_dir" >> "$GITHUB_PATH"
+      - name: Authenticate using the PDF-only role
+        id: aliyun
+        uses: ./.github/actions/configure-aliyun-credentials
         with:
-            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-            # Transfer-acceleration endpoint, same as the website deploys.
-            endpoint: oss-accelerate.aliyuncs.com
-            folder: build-pdf
-            onlyUpload: true
-            skipSetting: true
+          oidc-provider-arn: ${{ vars.ALIYUN_OIDC_PROVIDER_ARN }}
+          role-to-assume: ${{ vars.ALIYUN_WEBSITE_PDF_ROLE_ARN }}
+          audience: sts.aliyuncs.com
+          role-session-name: doris-pdf-${{ github.run_id }}-${{ github.run_attempt }}
+          role-session-expiration: 3600
+      - name: Upload verified archive PDFs
+        env:
+          OSS_ACCESS_KEY_ID: ${{ steps.aliyun.outputs.aliyun-access-key-id }}
+          OSS_ACCESS_KEY_SECRET: ${{ steps.aliyun.outputs.aliyun-access-key-secret }}
+          OSS_SESSION_TOKEN: ${{ steps.aliyun.outputs.aliyun-security-token }}
+        run: python3 .github/scripts/upload_archived_pdfs.py

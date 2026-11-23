@@ -6,7 +6,8 @@ import copy from 'copy-to-clipboard';
 import DownloadFormAllRelease from '@site/src/components/download-form/download-form-all-release';
 import DownloadFormArchive from '@site/src/components/download-form/download-form-archive';
 import DownloadFormTools from '@site/src/components/download-form/download-form-tools';
-import {DOWNLOAD_TYPE_LABELS} from '@site/src/components/download-form/download-labels';
+import {DOWNLOAD_TYPE_LABELS, DOWNLOAD_UNAVAILABLE_LABEL, DOWNLOAD_UNAVAILABLE_NOTE} from '@site/src/components/download-form/download-labels';
+import {isDownloadAvailable} from '@site/src/utils/download-recovery';
 import {
     ACTIVE_HEADS,
     ACTIVE_TOOL_VERSIONS,
@@ -129,6 +130,7 @@ export default function DownloadFormNext(): JSX.Element {
             sha512: build.sha512,
         };
     }, [build, isSource]);
+    const available = isDownloadAvailable(asset?.gz);
 
     /** Copy-link feedback: the button's icon flips to a check for a moment. */
     const [copied, setCopied] = useState(false);
@@ -141,7 +143,7 @@ export default function DownloadFormNext(): JSX.Element {
     }, [asset?.gz]);
 
     function onCopyLink() {
-        if (!asset?.gz) return;
+        if (!asset?.gz || !available) return;
         copy(asset.gz);
         setCopied(true);
         clearTimeout(copiedTimer.current);
@@ -281,20 +283,27 @@ export default function DownloadFormNext(): JSX.Element {
                                     <div className="download-next__file">
                                         <code className="download-next__file-name">{asset.filename}</code>
                                         <div className="download-next__file-verify">
-                                            <Link to={asset.asc}>ASC</Link>
-                                            <Link to={asset.sha512}>SHA-512</Link>
+                                            {isDownloadAvailable(asset.asc) && <Link to={asset.asc}>ASC</Link>}
+                                            {isDownloadAvailable(asset.sha512) && <Link to={asset.sha512}>SHA-512</Link>}
                                             <Link to={KEYS_URL}>KEYS</Link>
                                             <Link className="download-next__file-verify-guide" to={VERIFY_URL}>
                                                 {translate({id: "landing.DownloadFormNext.009", message: "How to verify"})}
                                             </Link>
                                         </div>
+                                        {!available && <p role="status" className="mt-2 text-sm">
+                                            {DOWNLOAD_UNAVAILABLE_NOTE}{' '}
+                                            {!isSource && build?.source && <Link to={`${build.source}apache-doris-${build.version}-src.tar.gz`}>
+                                                {DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Source]}
+                                            </Link>}
+                                        </p>}
                                     </div>
-                                    <div className="download-next__actions">
-                                        <Link className="download-next__download-btn" to={asset.gz}>
+                                    <div className={clsx('download-next__actions', {'is-unavailable': !available})}>
+                                        {available ? <Link className="download-next__download-btn" to={asset.gz}>
                                             {translate({id: "landing.DownloadFormNext.010", message: "Download"})}
-                                        </Link>
+                                        </Link> : <button type="button" disabled className="download-next__download-btn">{DOWNLOAD_UNAVAILABLE_LABEL}</button>}
                                         <button
                                             type="button"
+                                            disabled={!available}
                                             className={clsx('download-next__copy-btn', { 'is-copied': copied })}
                                             aria-label={copied ? translate({id: "landing.DownloadFormNext.011", message: "Download link copied"}) : translate({id: "landing.DownloadFormNext.012", message: "Copy download link"})}
                                             title={copied ? translate({id: "landing.DownloadFormNext.013", message: "Copied"}) : translate({id: "landing.DownloadFormNext.014", message: "Copy download link"})}

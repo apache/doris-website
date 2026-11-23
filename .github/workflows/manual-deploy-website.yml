@@ -44,6 +44,7 @@ jobs:
     needs: source
     outputs:
       locales: ${{ steps.publication-locales.outputs.locales }}
+      artifact_id: ${{ steps.site-artifact.outputs.artifact-id }}
     runs-on: ubuntu-latest
     # Temporary ceiling: validate build + verification + artifact transfer
     # with 30% margin using the publishing measurement reports.
@@ -235,7 +236,10 @@ jobs:
         run: python3 .github/scripts/publish_metrics.py start --job deploy
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
+          # A deploy-only retry must use the artifact from the successful build
+          # attempt, even though github.run_attempt has advanced.
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          merge-multiple: true
           path: build
       - name: Initialize pinned Alibaba Cloud action
         run: git submodule update --init --depth 1 -- .github/actions/configure-aliyun-credentials

@@ -22,9 +22,14 @@ async function metadata(context, options, versionMetadata, source, filePath, con
 }
 
 // Keep the native plugin name, validation, route parser, links and sidebars.
-// The adapter only redirects the localization directory of every managed locale
-// to its generated view and adds translation state.
+// Adapt managed localization directories and translation state, then migrate
+// distribution links at render time without changing historical source files.
 module.exports = async function translationDocsPlugin(context, options) {
+    const recovery = require('./download-recovery-remark.cjs');
+    const recoveryLocale = context.i18n.currentLocale ?? context.i18n.defaultLocale ?? 'en';
+    options = {...options, beforeDefaultRemarkPlugins: [...(options.beforeDefaultRemarkPlugins ?? []),
+        [recovery, {...recovery.messages(context.siteDir, recoveryLocale),
+            locale: recoveryLocale, catalog: require('../../config/download-recovery.json')}]]};
     // Managed locales come from the translation configuration, restricted to the
     // locales this build serves. Without managed locales the native render path
     // stays untouched, while English/Chinese identities still enter the registry.
