@@ -69,21 +69,21 @@ DOG Stack은 OpenTelemetry와 Grafana를 기반으로 풍부한 기능을 제공
 
 - 로그 검색
 
-![로그 검색](https://cdnd.selectdb.com/images/upload/dogstack/overview_logs.png)
+![로그 검색](https://assets-cdn.selectdb.com/site/images/upload/dogstack/overview_logs.png)
 
 - 트레이스 분석
 
-![트레이스 분석](https://cdnd.selectdb.com/images/upload/dogstack/overview_traces.png)
+![트레이스 분석](https://assets-cdn.selectdb.com/site/images/upload/dogstack/overview_traces.png)
 
 - 메트릭 대시보드
 
-![메트릭 대시보드](https://cdnd.selectdb.com/images/upload/dogstack/overview_dashboard.png)
+![메트릭 대시보드](https://assets-cdn.selectdb.com/site/images/upload/dogstack/overview_dashboard.png)
 
 
 
 ## 아키텍처 {#architecture}
 
-![DOG Stack 아키텍처](https://cdnd.selectdb.com/images/upload/dogstack/dogstack_architecture.png)
+![DOG Stack 아키텍처](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dogstack_architecture.png)
 
 DOG Stack은 다음 구성 요소로 이루어져 있습니다.
 

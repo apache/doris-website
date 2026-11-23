@@ -37,7 +37,7 @@ This is the best practice of a non-banking payment service provider that serves 
 
 In this post, you will learn how to integrate Apache Doris into your data architecture, including how to arrange data inside Doris, how to ingest data into it, and how to enable efficient data updates. Plus, you will learn about the enterprise features that Apache Doris provides to guarantee data security, system stability, and service availability.
 
-![offline-vs-real-time-data-warehouse](https://cdn.selectdb.com/static/offline_vs_real_time_data_warehouse_6b3fd0d1bc.png)
+![offline-vs-real-time-data-warehouse](https://assets-cdn.selectdb.com/media/static/offline_vs_real_time_data_warehouse_6b3fd0d1bc.png)
 
 ## Building a real-time data warehouse with Apache Doris
 ### Choice of data models
@@ -59,13 +59,13 @@ The financial user adopts different data models in different data warehouse laye
 
 The idea of partitioning and bucketing is to "cut" data into smaller pieces to increase data processing speed. The key is to set an appropriate number of data partitions and buckets. Based on their use case, the user tailors the bucketing field and bucket number to each table. For example, they often need to query the dimensional data of different retailers from the retailer flat table, so they specify the retailer ID column as the bucketing field, and list the recommended bucket number for various data sizes.
 
-![partitioning-and-bucketing-strategies](https://cdn.selectdb.com/static/partitioning_and_bucketing_strategies_c91ad6a340.png)
+![partitioning-and-bucketing-strategies](https://assets-cdn.selectdb.com/media/static/partitioning_and_bucketing_strategies_c91ad6a340.png)
 
 ### Multi-source data migration
 
 In the adoption of Apache Doris, the user had to migrate all local data from their branches into Doris, which was when they found out their branches were using **different databases** and had **data files of very different formats**, so the migration could be a mess.
 
-![multi-source-data-migration](https://cdn.selectdb.com/static/multi_source_data_migration_2b4f54e005.png)
+![multi-source-data-migration](https://assets-cdn.selectdb.com/media/static/multi_source_data_migration_2b4f54e005.png)
 
 Luckily, Apache Doris supports a rich collection of data integration methods for both real-time data streaming and offline data import.
 
@@ -91,7 +91,7 @@ LOAD LABEL ${TBL_NAME}_${load_timestamp} ...
 
 The user has moved their offline data processing workload to Apache Doris and thus **increased execution speed by 5 times**. 
 
-![offline-data-processing](https://cdn.selectdb.com/static/offline_data_processing_82e20fc59a.png)
+![offline-data-processing](https://assets-cdn.selectdb.com/media/static/offline_data_processing_82e20fc59a.png)
 
 - **Before**: The old Hive-based offline data warehouse used the TEZ execution engine to process 30 million new data records every day. With 2TB computation resources, the whole pipeline took 2.5 hours. 
 - **After**: Apache Doris finishes the same tasks within only 30 minutes and consumes only 1TB. Script execution takes only 10 seconds instead of 8 minutes.
@@ -106,7 +106,7 @@ This is required because it often happens that the same piece of data is request
 
 The user classifies their analytics workloads into four types and sets a resource limit for each of them. In particular, they have four different types of Doris accounts and set a limit on the CPU and memory resources for each type of account.
 
-![multi-tenant-resource-isolation](https://cdn.selectdb.com/static/multi_tenant_resource_isolation_772a57a4f1.png)
+![multi-tenant-resource-isolation](https://assets-cdn.selectdb.com/media/static/multi_tenant_resource_isolation_772a57a4f1.png)
 
 In this way, when one tenant requires excessive resources, it will only compromise its own efficiency but not affect other tenants.
 
@@ -114,7 +114,7 @@ In this way, when one tenant requires excessive resources, it will only compromi
 
 For data security under the parent-subsidiary company hierarchy, the user has set isolated resource groups for the subsidiaries. Data of each subsidiary is stored in its own resource group with three replicas, while data of the parent company is stored with four replicas: three in the parent company resource group, and the other one in the subsidiary resource group. Thus, when an employee from a subsidiary requests data from the parent company, the query will only executed in the subsidiary resource group. Specifically, they take these steps:
 
-![ resource-tag-based-isolation](https://cdn.selectdb.com/static/resource_tag_based_isolation_442e20f09c.png)
+![ resource-tag-based-isolation](https://assets-cdn.selectdb.com/media/static/resource_tag_based_isolation_442e20f09c.png)
 
 **Workload group**
 
@@ -132,7 +132,7 @@ For regulation and compliance reasons, this payment service provider implements 
 - **Privilege control over databases, tables, and rows**: The `ROW POLICY` mechanism of Apache Doris makes these operations easy.
 - **Privilege control over columns**: This is done by creating views.
 
-![fine-grained-user-privilege-management.png](https://cdn.selectdb.com/static/fine_grained_user_privilege_management_f0cd060011.png)
+![fine-grained-user-privilege-management.png](https://assets-cdn.selectdb.com/media/static/fine_grained_user_privilege_management_f0cd060011.png)
 
 ### Cluster stability guarantee
 

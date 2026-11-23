@@ -127,6 +127,23 @@ Doris 元数据将保存在这里。强烈建议将此目录的存储为：
 
 元数据锁的 tryLock 超时配置。通常它不需要改变，除非你需要测试一些东西。
 
+#### `datasource_sensitive_property_pattern`
+
+计划在 Doris 4.2.0、5.0 及后续版本支持；不能将完整脱敏规则视为 4.0、4.1 或 3.x 的已有能力。
+
+- 类型：string
+- 是否可以动态配置：true
+- 是否仅 Master 生效：false（FE 本地配置）
+- 默认值：
+
+```text
+password|passwd|secret|token|credential|access[._-]?key|api[._-]?key
+```
+
+在支持的输出入口脱敏时，对数据源属性名及 URL 查询参数名进行不区分大小写查找的正则表达式。其匹配与内置及已注册秘密规则取并集。`(?!)` 只关闭补充表达式；空表达式匹配所有名称。启动、custom 配置加载及运行时更新会拒绝非法表达式。
+
+所有提供查询服务的 FE 应使用相同配置。运行时 SQL 修改不会持久化；重启和加入新 FE 时，应通过 `fe.conf` 或文档中的持久化配置机制保留设置。用法、范围及 URI 规则见 [Catalog 属性脱敏](../../lakehouse/catalog-property-masking.md#配置补充名称规则)。
+
 #### `enable_bdbje_debug_mode`
 
 默认值：true（4.1.5 之前为 false）

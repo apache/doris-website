@@ -4,3 +4,6 @@
 [submodule ".github/actions/aliyun-oss-website-action"]
 	path = .github/actions/aliyun-oss-website-action
 	url = https://github.com/jeffreys-cat/aliyun-oss-website-action.git
+[submodule ".github/actions/configure-aliyun-credentials"]
+	path = .github/actions/configure-aliyun-credentials
+	url = https://github.com/aliyun/configure-aliyun-credentials-action.git

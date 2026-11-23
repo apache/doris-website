@@ -64,7 +64,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 
 1. **Save & test** をクリックして、接続を確認します。
 
-![MySQL データソースの設定](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_datasource.png)
+![MySQL データソースの設定](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_datasource.png)
 
 
 
@@ -103,7 +103,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - ディスク: ディスク容量使用量の表、読み取り・書き込みスループット
 - ネットワーク: 受信・送信トラフィック、エラー、パケットドロップ
 
-![ホストメトリクスダッシュボード](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_host.png)
+![ホストメトリクスダッシュボード](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_host.png)
 
 **JVM モニタリングダッシュボード**
 
@@ -112,7 +112,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - GC: Young / Old の所要時間と回数
 - スレッドと CPU: スレッド数の推移、CPU 使用率
 
-![JVM モニタリングダッシュボード](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_jvm.png)
+![JVM モニタリングダッシュボード](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_jvm.png)
 
 **K8s 可観測性ダッシュボード**
 
@@ -120,7 +120,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - Node: CPU・メモリの推移、ステータス表
 - Namespace: CPU・メモリの集計値、ステータス表
 
-![K8s 可観測性ダッシュボード](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_k8s.png)
+![K8s 可観測性ダッシュボード](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_k8s.png)
 
 **Nginx ログダッシュボード**
 
@@ -129,7 +129,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - 分析: 上位 URL、上位 IP、HTTP メソッドの分布、頻出するエラーメッセージ
 - 最近のログ: アクセスログ・エラーログの詳細
 
-![Nginx ログダッシュボード](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_nginx.png)
+![Nginx ログダッシュボード](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_nginx.png)
 
 **PostgreSQL メトリクスダッシュボード**
 
@@ -138,7 +138,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - ストレージ: データベースサイズ（データベース別）、データベース数、テーブル数
 - BGWriter: チェックポイント数（スケジュール実行 / 要求による実行）、バッファ書き込み数、BGWriter の処理時間
 
-![PostgreSQL メトリクスダッシュボード](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_postgresql.png)
+![PostgreSQL メトリクスダッシュボード](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_postgresql.png)
 
 
 

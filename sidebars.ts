@@ -708,6 +708,7 @@ const sidebars: SidebarsConfig = {
                     label: 'Data Catalogs',
                     link: {type: 'doc', id: 'lakehouse/catalog-overview'},
                     items: [
+                        'lakehouse/catalog-property-masking',
                         {
                             type: 'category',
                             label: 'Hive Catalog',

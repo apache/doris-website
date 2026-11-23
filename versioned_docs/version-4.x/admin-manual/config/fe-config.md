@@ -126,6 +126,23 @@ IsMutable：true
 
 The tryLock timeout configuration of catalog lock.  Normally it does not need to change, unless you need to test something.
 
+#### `datasource_sensitive_property_pattern`
+
+Planned for Doris 4.2.0 and for 5.0 and later releases. Not supported in 4.0, 4.1 or 3.x.
+
+- Type: string
+- IsMutable: true
+- MasterOnly: false (FE-local)
+- Default:
+
+```text
+password|passwd|secret|token|credential|access[._-]?key|api[._-]?key
+```
+
+A case-insensitive regex searched in data-source property names and URL query names when masking supported output. Its matches are combined with built-in and registered secret rules. `(?!)` disables only this supplemental expression; an empty expression matches every name. Invalid expressions are rejected during startup, custom configuration loading and runtime updates.
+
+Apply the same setting to every serving FE. Runtime SQL changes are not persistent; use `fe.conf` or a documented persistent configuration mechanism for restarts and new FEs. See [Catalog Property Masking](../../lakehouse/catalog-property-masking.md#configure-additional-names) for examples, scope and URI rules.
+
 #### `enable_bdbje_debug_mode`
 
 Default：false

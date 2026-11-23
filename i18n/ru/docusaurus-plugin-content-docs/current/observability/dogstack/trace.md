@@ -31,7 +31,7 @@
 3. **Область распределения трассировок (справа вверху)**: диаграмма рассеяния трассировок, соответствующих условиям фильтрации. По оси X отображается время начала трассировки, по оси Y — её длительность, а размер пузырька соответствует числу спанов в трассировке. Диаграмма рассеяния помогает быстро находить длительные трассировки и «большие» трассировки с множеством спанов. Нажмите на пузырёк, чтобы просмотреть подробности трассировки в виде каскадной диаграммы.
 4. **Область списка трассировок (справа внизу)**: список трассировок, соответствующих условиям фильтрации, с указанием сервиса, операции, trace_id, длительности трассировки, числа спанов и других сведений. По умолчанию используется сортировка `Most Recent`: трассировки упорядочены по времени начала по убыванию, начиная с самых новых. Можно изменить сортировку, чтобы первыми отображались самые длительные или короткие трассировки либо трассировки с наибольшим или наименьшим числом спанов.
 
-![Обзор страницы трассировок](https://cdnd.selectdb.com/images/upload/dogstack/trace_page.gif)
+![Обзор страницы трассировок](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_page.gif)
 
 При нажатии на трассировку открывается панель трассировки с подробными сведениями, где можно продолжить анализ её спанов:
 
@@ -39,7 +39,7 @@
 2. Нажмите на спан, чтобы просмотреть время его начала, длительность и контекстную информацию, включая атрибуты спана и атрибуты ресурса.
 3. Нажмите **Фильтр спанов**, чтобы отфильтровать спаны по имени сервиса, имени спана, длительности, тегам и другим параметрам.
 
-![Подробные сведения на панели трассировки](https://cdnd.selectdb.com/images/upload/dogstack/trace_panel.gif)
+![Подробные сведения на панели трассировки](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_panel.gif)
 
 
 
@@ -53,7 +53,7 @@ Service = frontend-web
 
 Быстро просматривайте трассировки, созданные указанным сервисом.
 
-![Фильтрация по сервису](https://cdnd.selectdb.com/images/upload/dogstack/trace_service.png)
+![Фильтрация по сервису](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_service.png)
 
 ### Фильтрация по операции {#filter-by-operation}
 
@@ -63,7 +63,7 @@ Operation = HTTP POST
 
 Позволяет найти конкретную конечную точку или тип запроса.
 
-![Фильтрация по операции](https://cdnd.selectdb.com/images/upload/dogstack/trace_operation.png)
+![Фильтрация по операции](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_operation.png)
 
 ### Фильтрация по тегам {#filter-by-tags}
 
@@ -73,7 +73,7 @@ upstream_cluster.name="flagservice"
 
 Используйте синтаксис **logfmt key=value** для фильтрации по атрибутам спанов.
 
-![Фильтрация по тегам](https://cdnd.selectdb.com/images/upload/dogstack/trace_tags.png)
+![Фильтрация по тегам](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_tags.png)
 
 ### Фильтрация по длительности {#filter-by-duration}
 
@@ -81,7 +81,7 @@ upstream_cluster.name="flagservice"
 
 Быстро находите медленные запросы.
 
-![Фильтрация по длительности](https://cdnd.selectdb.com/images/upload/dogstack/trace_duration.png)
+![Фильтрация по длительности](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_duration.png)
 
 
 
@@ -95,4 +95,4 @@ upstream_cluster.name="flagservice"
 
 Также поддерживается постраничный просмотр.
 
-![Сортировка и постраничный просмотр](https://cdnd.selectdb.com/images/upload/dogstack/trace_sort.png)
+![Сортировка и постраничный просмотр](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_sort.png)

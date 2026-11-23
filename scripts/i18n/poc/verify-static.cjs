@@ -71,7 +71,7 @@ function signature(route) {
     assert(!html.includes('\0'), `SSR inserted NUL bytes into ${route}`);
     const $ = cheerio.load(html);
     if (!redirectCdn) {
-        assert.equal($('script[src^="https://cdnd.selectdb.com/"],link[href^="https://cdnd.selectdb.com/"]').length, 0,
+        assert.equal($('script[src^="https://assets-cdn.selectdb.com/site/"],link[href^="https://assets-cdn.selectdb.com/site/"]').length, 0,
             `Static preview still bootstraps old CDN resources: ${route}`);
     }
     // Japanese is a deliberate additional switch option when enabled. It must
@@ -149,9 +149,11 @@ let browser;
     // Block only unrelated third-party analytics/AI requests, identically for
     // baseline and PoC. Local assets and search are never mocked in the PoC.
     await context.route(/https:\/\/(widget\.kapa\.ai|analytics\.apache\.org|www\.googletagmanager\.com|(?:[\w-]+\.)?clarity\.ms)\//, route => route.abort());
-    if (redirectCdn) await context.route('https://cdnd.selectdb.com/**', async route => {
+    if (redirectCdn) await context.route('https://assets-cdn.selectdb.com/site/**', async route => {
         const url = new URL(route.request().url());
-        const file = fileFor(url.pathname);
+        const local = require('../../../config/asset-origin').getLocalAssetPath(url);
+        assert(local,'Missing CDN prefix: '+url.href);
+        const file = fileFor(local);
         try {
             await route.fulfill(fs.existsSync(file)
                 ? { path: file }

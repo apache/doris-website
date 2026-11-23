@@ -64,7 +64,7 @@ DOG Stack 使用 Doris 作为统一的存储后端。Doris 兼容 MySQL 协议�
 
 1. 点击 **Save & test**，确认连接成功。
 
-![配置 MySQL 数据源](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_datasource.png)
+![配置 MySQL 数据源](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_datasource.png)
 
 
 
@@ -103,7 +103,7 @@ DOG Stack 使用 Doris 作为统一的存储后端。Doris 兼容 MySQL 协议�
 - Disk：磁盘空间使用表格、读写吞吐量
 - Network：收发流量、错误与丢包
 
-![Host Metrics Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_host.png)
+![Host Metrics Dashboard](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_host.png)
 
 **JVM Monitoring Dashboard**
 
@@ -112,7 +112,7 @@ DOG Stack 使用 Doris 作为统一的存储后端。Doris 兼容 MySQL 协议�
 - GC：耗时（Young / Old 分类）、次数
 - Thread & CPU：线程数趋势、CPU 利用率
 
-![JVM Monitoring Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_jvm.png)
+![JVM Monitoring Dashboard](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_jvm.png)
 
 **K8s Observability Dashboard**
 
@@ -120,7 +120,7 @@ DOG Stack 使用 Doris 作为统一的存储后端。Doris 兼容 MySQL 协议�
 - Nodes：CPU / 内存趋势、状态表格
 - Namespaces：CPU / 内存汇总、状态表格
 
-![K8s Observability Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_k8s.png)
+![K8s Observability Dashboard](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_k8s.png)
 
 **Nginx Logs Dashboard**
 
@@ -129,7 +129,7 @@ DOG Stack 使用 Doris 作为统一的存储后端。Doris 兼容 MySQL 协议�
 - Analysis：Top URL、Top IP、HTTP 方法分布、Top 错误信息
 - Recent Logs：Access / Error 日志明细
 
-![Nginx Logs Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_nginx.png)
+![Nginx Logs Dashboard](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_nginx.png)
 
 **PostgreSQL Metrics Dashboard**
 
@@ -138,7 +138,7 @@ DOG Stack 使用 Doris 作为统一的存储后端。Doris 兼容 MySQL 协议�
 - Storage：数据库大小（按数据库拆分）、数据库数量、表数量
 - BGWriter：Checkpoint 次数（scheduled / requested）、Buffer 写入次数、BGWriter 耗时
 
-![PostgreSQL Metrics Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_postgresql.png)
+![PostgreSQL Metrics Dashboard](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_postgresql.png)
 
 
 

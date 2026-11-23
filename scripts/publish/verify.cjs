@@ -13,15 +13,21 @@ function verify(site) {
     const files = inventory(site);
     const available = new Set(files.map(item => item.relative));
     const assetOrigin = require('../../config/asset-origin').getAssetOrigin();
-    const ownOrigins = new Set(['https://doris.apache.org',...(assetOrigin ? [new URL(assetOrigin).origin] : [])]);
+    const assetBase = assetOrigin ? new URL(assetOrigin.replace(/\/?$/, '/')) : null;
+    const assetPrefix = assetBase?.pathname.replace(/\/$/, '') ?? '';
+    const ownOrigins = new Set(['https://doris.apache.org',...(assetBase ? [assetBase.origin] : [])]);
+    const localPath = url => assetBase && url.origin === assetBase.origin
+        && assetPrefix && url.pathname.startsWith(assetPrefix + '/')
+        ? url.pathname.slice(assetPrefix.length) : url.pathname;
     const resolve = value => {
         let url = new URL(value,'https://doris.apache.org');
-        const key = decodeURIComponent(url.pathname);
+        const key = decodeURIComponent(localPath(url));
         const target = redirects.get(key) ?? redirects.get(key+'/');
         if (target) url = new URL(target,url);
-        let relative = decodeURIComponent(url.pathname).replace(/^\//,'');
-        const prefix = manifest.assetPrefixes.find(prefix => url.pathname.startsWith(prefix));
-        if (prefix) relative = 'assets/'+decodeURIComponent(url.pathname.slice(prefix.length));
+        const pathname = localPath(url);
+        let relative = decodeURIComponent(pathname).replace(/^\//,'');
+        const prefix = manifest.assetPrefixes.find(prefix => pathname.startsWith(prefix));
+        if (prefix) relative = 'assets/'+decodeURIComponent(pathname.slice(prefix.length));
         return available.has(relative) || available.has(path.posix.join(relative,'index.html'));
     };
     for (const [from,to] of manifest.redirects) {
@@ -30,9 +36,18 @@ function verify(site) {
     let references = 0, compiledJavaScriptFiles = 0;
     const check = (value,source) => {
         if (value.startsWith('data:')) return;
-        const url = new URL(value,`https://doris.apache.org/${source}`);
+        const sourceBase = source.endsWith('.css') && assetBase
+            ? new URL(source, assetBase) : new URL(source, 'https://doris.apache.org/');
+        const url = new URL(value, sourceBase);
         if (!ownOrigins.has(url.origin)) return;
-        if (!url.pathname.startsWith('/assets/')) return;
+        const pathname = localPath(url);
+        const misplacedCompiledAsset = assetBase && url.origin === assetBase.origin
+            && url.pathname.includes('/assets/') && !/^\/(media|downloads)\//.test(url.pathname);
+        if (!pathname.startsWith('/assets/') && !misplacedCompiledAsset) return;
+        if (assetBase && assetBase.origin !== 'https://doris.apache.org'
+            && url.origin === assetBase.origin && assetPrefix) {
+            assert(url.pathname.startsWith(assetPrefix + '/'), `Missing CDN asset prefix in ${source}: ${value}`);
+        }
         assert(resolve(url.href),`Missing compiled asset in ${source}: ${value}`);
         references++;
     };

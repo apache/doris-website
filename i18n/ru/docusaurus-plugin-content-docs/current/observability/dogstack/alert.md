@@ -29,7 +29,7 @@
 3. Если условие выполнено, создаётся экземпляр оповещения.
 4. Затем оповещение отправляется напрямую в точку контакта или маршрутизируется с помощью гибко настраиваемых политик уведомлений.
 
-![Обзор оповещений](https://cdnd.selectdb.com/images/upload/dogstack/alert_overview.png)
+![Обзор оповещений](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_overview.png)
 
 
 
@@ -37,7 +37,7 @@
 
 **1. Откройте Grafana Alerting → Правила оповещения и нажмите «Создать оповещение»**
 
-![Создание оповещения](https://cdnd.selectdb.com/images/upload/dogstack/alert_create.png)
+![Создание оповещения](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_create.png)
 
 
 
@@ -51,7 +51,7 @@
 
 Подробнее см. в [документации Grafana](https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-grafana-managed-rule/).
 
-![Условие срабатывания оповещения](https://cdnd.selectdb.com/images/upload/dogstack/alert_condition.png)
+![Условие срабатывания оповещения](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_condition.png)
 
 
 
@@ -61,7 +61,7 @@
 
 Подробнее см. в [документации Grafana](https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rule-evaluation/).
 
-![Проверка оповещений](https://cdnd.selectdb.com/images/upload/dogstack/alert_evaluation.png)
+![Проверка оповещений](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_evaluation.png)
 
 
 
@@ -71,9 +71,9 @@ Grafana поддерживает множество каналов уведом�
 
 Подробнее см. в [документации Grafana](https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/).
 
-![Метки оповещения](https://cdnd.selectdb.com/images/upload/dogstack/alert_lable.png)
+![Метки оповещения](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_lable.png)
 
-![Точка контакта для оповещений](https://cdnd.selectdb.com/images/upload/dogstack/alert_contact.png)
+![Точка контакта для оповещений](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_contact.png)
 
 
 
@@ -81,7 +81,7 @@ Grafana поддерживает множество каналов уведом�
 
 Вы можете настроить содержимое уведомления, включая краткое описание, подробное описание и URL инструкции по реагированию, чтобы получатели быстрее понимали, что произошло.
 
-![Текст уведомления](https://cdnd.selectdb.com/images/upload/dogstack/alert_message.png)
+![Текст уведомления](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_message.png)
 
 
 
@@ -91,4 +91,4 @@ Grafana поддерживает множество каналов уведом�
 
 Подробнее см. в [документации Grafana](https://grafana.com/docs/grafana/latest/alerting/monitor-status/).
 
-![Управление оповещениями](https://cdnd.selectdb.com/images/upload/dogstack/alert_management.png)
+![Управление оповещениями](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_management.png)

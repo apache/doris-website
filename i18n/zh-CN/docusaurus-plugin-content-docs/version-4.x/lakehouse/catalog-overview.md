@@ -27,6 +27,10 @@ Doris 中的数据目录分为两种：
 
 本文以 [Iceberg Catalog](./catalogs/iceberg-catalog) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
 
+## 敏感属性脱敏
+
+Catalog 属性的统一脱敏规则计划在 Doris 4.2.0、5.0 及后续版本支持。在支持的展示、审计及血缘入口中对密码、访问密钥、Token、JDBC 连接串和 URL 凭据脱敏，运行时连接原值不变。具体规则、版本差异、配置及限制见 [Catalog 属性脱敏](./catalog-property-masking.md)。
+
 ## 创建数据目录
 
 通过 `CREATE CATALOG` 语句创建一个 Iceberg Catalog。

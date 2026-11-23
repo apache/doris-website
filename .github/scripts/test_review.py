@@ -301,7 +301,19 @@ class WorkflowTests(unittest.TestCase):
             self.assertNotIn("secrets.", json.dumps(build))
             self.assertEqual(workflow["permissions"], {"contents": "read"})
             deploy = workflow["jobs"]["deploy"]
-            self.assertEqual(deploy["environment"], "Production")
+            if name == "manual-generate-pdf.yml":
+                self.assertEqual(deploy["environment"], "Production")
+            else:
+                self.assertNotIn("environment", deploy)
+                self.assertEqual(deploy["permissions"]["id-token"], "write")
+                self.assertIn("vars.WEBSITE_PUBLISH_ENABLED == 'true'", deploy["if"])
+                self.assertIn("vars.WEBSITE_ASSET_UPLOAD_ENABLED == 'true'", deploy["if"])
+                self.assertIn("github.repository == 'apache/doris-website'", deploy["if"])
+                self.assertIn("needs.source.outputs.branch == 'master'", deploy["if"])
+                self.assertNotIn("secrets.", json.dumps(deploy))
+                self.assertTrue(any(step.get("uses") == "./.github/actions/upload-website-assets" for step in deploy["steps"]))
+                publisher = next(step for step in deploy["steps"] if step.get("name") == "Deploy Website")
+                self.assertEqual(publisher["if"], "vars.WEBSITE_PUBLISH_ENABLED == 'true'")
             self.assertEqual(deploy["steps"][0]["with"]["ref"], "${{ github.sha }}")
             self.assertEqual(workflow["jobs"]["source"]["steps"][-1]["env"]["DEPLOY_BRANCH"],
                              "${{ inputs.branch }}" if name.startswith("manual") else "master")

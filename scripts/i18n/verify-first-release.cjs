@@ -56,11 +56,12 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
         await context.route('**/*', async route => {
             const url = new URL(route.request().url());
             if (url.origin === origin) return route.continue();
-            if (!publicOrigin && url.hostname === 'cdnd.selectdb.com') {
-                const response = await context.request.get(origin + url.pathname + url.search);
-                return route.fulfill({response});
+            if (url.hostname === 'assets-cdn.selectdb.com') {
+                const local = require('../../config/asset-origin').getLocalAssetPath(url);
+                if (publicOrigin || !local || url.pathname.startsWith('/site/images/upload/dogstack/')) return route.continue();
+                const response = await context.request.get(origin + local);
+                return route.fulfill({response, headers:{...response.headers(),'access-control-allow-origin':'*'}});
             }
-            if (publicOrigin && ['cdnd.selectdb.com', 'cdn.selectdb.com'].includes(url.hostname)) return route.continue();
             return route.abort();
         });
         const page = await context.newPage();
@@ -68,7 +69,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
         page.on('console', message => {if (/hydration|did not match|server HTML/i.test(message.text())) errors.push(message.text());});
         if (publicOrigin) page.on('response', response => {
             const url = new URL(response.url());
-            if (/\.(js|css|svg|png|jpe?g|webp|woff2?|html)$/.test(url.pathname) && (url.origin === origin || url.hostname === 'cdnd.selectdb.com'))
+            if (/\.(js|css|svg|png|jpe?g|webp|woff2?|html)$/.test(url.pathname) && (url.origin === origin || url.hostname === 'assets-cdn.selectdb.com'))
                 assets.set(url.href, url.pathname);
         });
         for (const locale of locales) {

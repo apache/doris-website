@@ -3,14 +3,16 @@ const test = require('node:test');
 const plugin = require('../../../config/custom-docusaurus-plugin');
 
 function paths(baseUrl) {
-    return plugin({ siteConfig: { baseUrl } }).configureWebpack({ output: {} }).output;
+    return plugin({siteConfig: {baseUrl},
+        i18n: {currentLocale: baseUrl.split('/').filter(Boolean)[0] ?? 'en',
+            defaultLocale: 'en', locales: ['en','zh-CN','ja']}}).configureWebpack({output:{}}).output;
 }
 
 test('production CDN paths stay equivalent for English and Chinese; Japanese uses its own prefix', () => {
     const original = process.env.DORIS_ASSET_ORIGIN;
     delete process.env.DORIS_ASSET_ORIGIN;
     try {
-        for (const [base, expected] of [['/', 'https://cdnd.selectdb.com/'], ['/zh-CN/', 'https://cdnd.selectdb.com/zh-CN/'], ['/ja/', 'https://cdnd.selectdb.com/ja/']]) {
+        for (const [base, expected] of [['/', 'https://assets-cdn.selectdb.com/site/'], ['/zh-CN/', 'https://assets-cdn.selectdb.com/site/zh-CN/'], ['/ja/', 'https://assets-cdn.selectdb.com/site/ja/']]) {
             assert.equal(paths(base).publicPath, expected);
             assert.equal(paths(base).workerPublicPath, base);
         }
@@ -36,6 +38,22 @@ test('local static and single-locale previews load their own same-origin assets'
     }
 });
 
+test('asset previews strip only their configured CDN directory and preserve query strings', () => {
+    const original = process.env.DORIS_ASSET_ORIGIN;
+    const {getLocalAssetPath} = require('../../../config/asset-origin');
+    process.env.DORIS_ASSET_ORIGIN = 'https://assets-cdn.selectdb.com/site';
+    try {
+        assert.equal(getLocalAssetPath(new URL('https://assets-cdn.selectdb.com/site/ja/search-index.json?x=1')), '/ja/search-index.json?x=1');
+        assert.equal(getLocalAssetPath(new URL('https://assets-cdn.selectdb.com/site-other/assets/a.js')), null);
+        assert.equal(getLocalAssetPath(new URL('https://other.example.test/site/assets/a.js')), null);
+        process.env.DORIS_ASSET_ORIGIN = '';
+        assert.equal(getLocalAssetPath(new URL('https://assets-cdn.selectdb.com/site/assets/a.js')), null);
+    } finally {
+        if (original === undefined) delete process.env.DORIS_ASSET_ORIGIN;
+        else process.env.DORIS_ASSET_ORIGIN = original;
+    }
+});
+
 test('SSR bootstrap, preload and stylesheet URLs use the same origin as webpack', () => {
     const original = process.env.DORIS_ASSET_ORIGIN;
     const templatePath = require.resolve('../../../config/ssrTemplate');
@@ -52,7 +70,7 @@ test('SSR bootstrap, preload and stylesheet URLs use the same origin as webpack'
                 postBodyTags: '', appHtml: '<main>test</main>', noIndex: false,
                 stylesheets: ['assets/css/main.css'], scripts: ['assets/js/main.js'],
             });
-            const prefix = origin === undefined ? 'https://cdnd.selectdb.com' : origin.replace(/\/$/, '');
+            const prefix = origin === undefined ? 'https://assets-cdn.selectdb.com/site' : origin.replace(/\/$/, '');
             assert(html.includes(`href="${prefix}/ja/assets/css/main.css"`));
             assert(html.includes(`href="${prefix}/ja/assets/js/main.js" as="script"`));
             assert(html.includes(`src="${prefix}/ja/assets/js/main.js"`));
