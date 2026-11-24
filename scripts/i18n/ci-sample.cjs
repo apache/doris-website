@@ -593,6 +593,9 @@ async function install({root, outDir, locale, planFile}) {
         )) {
             for (const version of plugin.content.loadedVersions)
                 version.docs = version.docs.filter(d => chosen.has(key(d.permalink)));
+            plugin.content.loadedVersions = plugin.content.loadedVersions.filter(
+                version => version.docs.length > 0,
+            );
             if (plugin.content.translationManifest)
                 plugin.content.translationManifest.pages =
                     plugin.content.translationManifest.pages.filter(p =>
