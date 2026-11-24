@@ -43,13 +43,14 @@ If any of these parameters is set explicitly in `jdbc_url`, Doris keeps the conf
 | `YEAR` | `SMALLINT` | Read as an integer year; zero year (`0000`) is preserved as `0`. |
 | `FLOAT` | `FLOAT` | |
 | `DOUBLE` | `DOUBLE` | |
-| `DECIMAL(p,s)` | `DECIMAL(p,s)` | Very high precision falls back to `STRING`. |
+| `DECIMAL(p,s)` | `DECIMAL(p,s)` / `STRING` | Precision above 38 maps to `STRING` |
+| `DECIMAL(p,s) UNSIGNED` | `DECIMAL(p+1,s)` / `STRING` | Precision expanded by 1; above 38 maps to `STRING` |
 | `DATE` | `DATE` | |
 | `DATETIME` | `DATETIME(s)` | Preserves microsecond scale from 0 to 6. |
 | `TIMESTAMP` | `DATETIME(s)` | Normalized to the server time zone. |
 | `TIME` | `STRING` | Stored as a string, for example, `12:34:56.000000`. |
-| `CHAR` | `CHAR` | |
-| `VARCHAR` | `VARCHAR` | |
+| `CHAR(n)` | `CHAR` / `VARCHAR` | Length scaled ×3 for UTF-8; above 255 becomes `VARCHAR` |
+| `VARCHAR(n)` | `VARCHAR` / `STRING` | Length scaled ×3 for UTF-8; above 65533 becomes `STRING` |
 | `TINYTEXT` / `TEXT` / `MEDIUMTEXT` / `LONGTEXT` | `STRING` | |
 | `BINARY` / `VARBINARY` / `TINYBLOB` / `BLOB` / `MEDIUMBLOB` / `LONGBLOB` | `STRING` | Base64-encoded string. |
 | `BIT(1)` | `BOOLEAN` | |
