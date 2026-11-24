@@ -51,15 +51,16 @@ To read `TINYINT(1)` as `BOOLEAN` or `YEAR` as a date, explicitly set `tinyInt1i
 | `INT` | `INT` | `UNSIGNED` → `BIGINT` |
 | `BIGINT` | `BIGINT` | `UNSIGNED` → `LARGEINT` |
 | `YEAR` | `SMALLINT` | The value is read as an integer year rather than as a date; the MySQL zero year (`0000`) is kept as `0` |
-| `FLOAT` | `FLOAT` | |
-| `DOUBLE` | `DOUBLE` | |
-| `DECIMAL(p,s)` | `DECIMAL(p,s)` | Very high precision falls back to `STRING` |
+| `FLOAT` / `FLOAT UNSIGNED` | `FLOAT` | |
+| `DOUBLE` / `DOUBLE UNSIGNED` | `DOUBLE` | |
+| `DECIMAL(p,s)` | `DECIMAL(p,s)` / `STRING` | Precision above 38 maps to `STRING` |
+| `DECIMAL(p,s) UNSIGNED` | `DECIMAL(p+1,s)` / `STRING` | Precision expanded by 1; above 38 maps to `STRING` |
 | `DATE` | `DATE` | |
 | `DATETIME` | `DATETIME(s)` | Microsecond scale (0–6) preserved |
 | `TIMESTAMP` | `DATETIME(s)` | Normalized to the server time zone |
 | `TIME` | `STRING` | Serialized as a string, e.g. `12:34:56.000000` |
-| `CHAR` | `CHAR` | |
-| `VARCHAR` | `VARCHAR` | |
+| `CHAR(n)` | `CHAR` / `VARCHAR` | Length scaled ×3 for UTF-8; above 255 becomes `VARCHAR` |
+| `VARCHAR(n)` | `VARCHAR` / `STRING` | Length scaled ×3 for UTF-8; above 65533 becomes `STRING` |
 | `TINYTEXT` / `TEXT` / `MEDIUMTEXT` / `LONGTEXT` | `STRING` | |
 | `BINARY` / `VARBINARY` / `TINYBLOB` / `BLOB` / `MEDIUMBLOB` / `LONGBLOB` | `STRING` | Base64-encoded string |
 | `BIT(1)` | `BOOLEAN` | |
@@ -67,4 +68,4 @@ To read `TINYINT(1)` as `BOOLEAN` or `YEAR` as a date, explicitly set `tinyInt1i
 | `JSON` | `STRING` | Stored as JSON text |
 | `ENUM` | `STRING` | Resolved to the label value |
 | `SET` | `STRING` | Resolved to comma-separated labels |
-| Spatial types (`GEOMETRY`, `POINT`, …) and other types | Not supported | Auto Table Creation fails for tables with such columns; use SQL Mapping Sync (cast in `SELECT`) or exclude the column |
+| Spatial types (`GEOMETRY`, `POINT`, …) and other types | Not supported | |
