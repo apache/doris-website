@@ -8,7 +8,7 @@
 
 ## 描述
 
-开发版本的 typed GEOGRAPHY 输入见[下文](#typed-geography)。以下既有示例使用历史 STRING 空间接口。
+开发版的 GEOGRAPHY 用法见[原生 GEOGRAPHY](#typed-geography)。
 
 判断两个几何图形是否仅边界接触（即边界存在公共点，但内部无任何交集）。具体来说：
 
@@ -261,8 +261,11 @@ mysql> SELECT ST_TOUCHES(  ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
 |                                                                                        0 |
 +------------------------------------------------------------------------------------------+
 ```
-## Typed Geography（开发版本） {#typed-geography}
 
-开发版本的 typed 接口只支持默认 `GEOGRAPHY(OGC:CRS84, spherical)` 的非空 XY Point、LineString、Polygon。Geometry、其他 CRS/算法、Z/M、Multi*/GeometryCollection 和 EMPTY 不支持用于计算；合法原始值仍可存储和访问。NULL 参数返回 NULL。函数使用球面测地线边，沿用较小区域的多边形环解释；不提供空间索引或谓词下推。
+## 原生 GEOGRAPHY（开发版） {#typed-geography}
 
-支持 Point/LineString/Polygon 的组合：闭集相交且内部不相交时为 true。线内部交叉、正长度线段重合及正面积面交叠返回 false；线端点接触、面共边或共顶点可返回 true。Point/Point 总是 false；闭合线不把重复起终点视为边界。
+开发版接受默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线和多边形，可任意两两组合。任一参数为 NULL 时返回 NULL。
+
+两个形状有公共点且内部不相交时，返回 `true`。两条线在内部交叉或共用一段线时返回 `false`。线的端点接触或多边形边缘接触可以返回 `true`。两个点一律返回 `false`。闭合线没有边界端点。
+
+球面计算规则和精度限制见 [空间函数](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions)。

@@ -8,9 +8,7 @@
 
 ## 描述
 
-判断同维度空间值是否部分重叠：内部交集必须具有相同维度，且双方都不完全覆盖对方。线仅交于一点、面仅共边或共顶点、完全相等、包含、不同维度，以及单 Point/Point 均返回 false。函数关于两个参数对称。
-
-开发版本的 typed 接口只支持默认 `GEOGRAPHY(OGC:CRS84, spherical)` 的非空 XY Point、LineString、Polygon。Geometry、其他 CRS/算法、Z/M、Multi*/GeometryCollection 和 EMPTY 不支持用于计算；合法原始值仍可存储和访问。NULL 参数返回 NULL。函数使用球面测地线边，沿用较小区域的多边形环解释；不提供空间索引或谓词下推。
+判断两个同维度的 GEOGRAPHY 值是否部分重叠。两者的内部在该维度上相交，且两者都各有一部分落在对方之外。任一参数为 NULL 时返回 NULL。
 
 ## 语法
 
@@ -22,13 +20,28 @@ ST_OVERLAPS(<a>, <b>)
 
 | 参数 | 说明 |
 | --- | --- |
-| `a`, `b` | 保留完整参数的 GEOGRAPHY 值。 |
+| `<a>`, `<b>` | 默认类型 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线或多边形。 |
 
 ## 返回值
 
-Nullable BOOLEAN。
+返回 BOOLEAN。部分重叠时返回 `true`。维度不同、两个值相同、一方完全包含另一方，或两个值都是单个点时返回 `false`。两条线仅在一个点交叉、多边形只共边或共顶点时也返回 `false`。有 NULL 参数时返回 NULL。
 
 ## 示例
+
+线段 (0, 0)–(2, 0) 和 (1, 0)–(3, 0) 有一段重叠。
+
+```sql
+SELECT ST_Overlaps(
+    ST_GeogFromWKB('0102000000020000000000000000000000000000000000000000000000000000400000000000000000'),
+    ST_GeogFromWKB('010200000002000000000000000000f03f000000000000000000000000000008400000000000000000')
+) AS overlaps;
+```
+
+```text
+true
+```
+
+一个点与自身没有部分重叠。
 
 ```sql
 SELECT ST_Overlaps(g, g) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;

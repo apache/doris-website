@@ -8,11 +8,7 @@
 
 ## 描述
 
-判断两个空间值之间的球面最短距离是否小于或等于阈值，单位米，包含等号。阈值遵循数值到 DOUBLE 的转换规则；非 NULL 行的负数、NaN 和无穷阈值报错。任一参数为 NULL 时返回 NULL。只支持三个参数，不提供椭球模式或用户指定的吸附容差。
-
-开发版本的 typed 接口只支持默认 `GEOGRAPHY(OGC:CRS84, spherical)` 的非空 XY Point、LineString、Polygon。Geometry、其他 CRS/算法、Z/M、Multi*/GeometryCollection 和 EMPTY 不支持用于计算；合法原始值仍可存储和访问。NULL 参数返回 NULL。函数使用球面测地线边，沿用较小区域的多边形环解释；不提供空间索引或谓词下推。
-
-涉及 LineString 或 Polygon 的计算中，S2 给出的零距离需用原始坐标确认两者相交。只因舍入产生或无法确认的零距离会报错，阈值为 0 或正数时同样如此。
+判断两个 GEOGRAPHY 值的最短球面距离是否在指定米数以内。任一参数为 NULL 时返回 NULL。
 
 ## 语法
 
@@ -24,21 +20,30 @@ ST_DWITHIN(<a>, <b>, <distance_meters>)
 
 | 参数 | 说明 |
 | --- | --- |
-| `a`, `b` | 保留完整参数的 GEOGRAPHY 值。 |
-| `distance_meters` | 有限、非负的距离阈值，单位米。 |
+| `<a>`, `<b>` | 默认类型 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线或多边形。 |
+| `<distance_meters>` | 以米为单位的有限非负数。Doris 将其转换为 DOUBLE。 |
 
 ## 返回值
 
-Nullable BOOLEAN。
+返回 BOOLEAN。距离小于或等于阈值时返回 `true`，超过阈值时返回 `false`。有 NULL 参数时返回 NULL。参数均非 NULL 时，负数、NaN 或无穷大的阈值会报错。
+
+涉及线或多边形时，如果算出的距离是 0，但原始坐标无法确认相交，函数会报精度错误。阈值为 0 或正数时都遵循此规则。
 
 ## 示例
 
+点 (0, 0) 到点 (1, 0) 的距离超过 100 千米，在 200 千米以内。
+
 ```sql
-SELECT ST_DWithin(g, g, 0) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;
+SELECT ST_DWithin(a, b, 100000) AS within_100_km,
+       ST_DWithin(a, b, 200000) AS within_200_km
+FROM (
+    SELECT ST_GeogFromWKB('010100000000000000000000000000000000000000') AS a,
+           ST_GeogFromWKB('0101000000000000000000f03f0000000000000000') AS b
+) AS points;
 ```
 
 ```text
-true
+false  true
 ```
 
 NULL 参数：

@@ -8,7 +8,7 @@
 
 ## Description
 
-For development-version typed GEOGRAPHY inputs, see [Typed Geography](#typed-geography). The existing examples below use the historical STRING spatial interface.
+For GEOGRAPHY values in the development version, see [Typed Geography](#typed-geography).
 
 Determine whether two geometric shapes have boundary contact only (i.e., there are common points on the boundaries, but no internal intersection). Specifically:
 
@@ -259,8 +259,11 @@ mysql> SELECT ST_TOUCHES(  ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
 |                                                                                        0 |
 +------------------------------------------------------------------------------------------+
 ```
+
 ## Typed Geography (development version) {#typed-geography}
 
-The development-version typed interface accepts nonempty XY Point, LineString and Polygon values with default `GEOGRAPHY(OGC:CRS84, spherical)` semantics. Geometry, other CRS/algorithms, Z/M, Multi*/GeometryCollection and EMPTY are not supported for calculations; valid raw values remain available for storage and access. NULL arguments return NULL. Edges are spherical geodesics, with the existing smaller-region polygon-ring interpretation. No spatial index or predicate pushdown is provided.
+The development version accepts any combination of nonempty XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. Either argument can be NULL, in which case the result is NULL.
 
-Supports combinations of Point, LineString and Polygon. Returns true when their closed point sets intersect but their interiors do not. Interior line crossings, positive-length shared line segments and positive-area polygon intersections return false. Line endpoint contacts and polygons sharing only edges or vertices can return true. Point/Point is always false; closed lines do not treat the repeated start/end vertex as a boundary.
+Returns `true` if the shapes have a point in common but their interiors do not intersect. Lines crossing in their interiors or sharing a segment return `false`. A contact at a line endpoint or along the edge of a polygon can return `true`. Two points always return `false`. A closed line has no endpoints on its boundary.
+
+For the shared spherical calculation rules and precision limits, see [Spatial functions](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions).

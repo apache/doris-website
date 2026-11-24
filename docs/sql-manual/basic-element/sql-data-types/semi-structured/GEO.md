@@ -7,7 +7,7 @@
 ---
 
 :::info
-The GEO type described in this document is not an actual data type in Doris, but rather a specific format of data stored based on String/Varchar type, along with the usage of related functions.
+This page shows how to use the original spatial functions with `STRING` and `VARCHAR`. For native `GEOMETRY` and `GEOGRAPHY` in the development version, see [Iceberg V3 spatial types](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types).
 :::
 
 Geospatial types are special data types in databases used to store and manipulate geospatial data, which can represent geometric objects such as points, lines, and polygons,Core purposes are as follows:.

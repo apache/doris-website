@@ -12,7 +12,7 @@
 
 ## Description
 
-For development-version typed GEOGRAPHY inputs, see [Typed Geography](#typed-geography). The existing examples below use the historical STRING spatial interface.
+For GEOGRAPHY values in the development version, see [Typed Geography](#typed-geography).
 
 Determines whether one geometric shape (shape1) is completely inside another geometric shape (shape2). Returns 1 if shape1 is entirely within shape2; otherwise, returns 0.
 
@@ -178,6 +178,8 @@ SELECT ST_Within(ST_Point(0.5, 0.5), ST_Polygon("POLYGON ((0 0, 1 1, 0 1, 1 0, 0
 
 ## Typed Geography (development version) {#typed-geography}
 
-The development-version typed interface accepts nonempty XY Point, LineString and Polygon values with default `GEOGRAPHY(OGC:CRS84, spherical)` semantics. Geometry, other CRS/algorithms, Z/M, Multi*/GeometryCollection and EMPTY are not supported for calculations; valid raw values remain available for storage and access. NULL arguments return NULL. Edges are spherical geodesics, with the existing smaller-region polygon-ring interpretation. No spatial index or predicate pushdown is provided.
+The development version accepts any combination of nonempty XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. Either argument can be NULL, in which case the result is NULL.
 
-ST_Within(a,b) is evaluated as ST_Contains(b,a), for combinations of the three admitted shape kinds, with the same interior and boundary rules.
+Returns `true` if the second shape covers every point of the first shape and their interiors intersect. `ST_Within(a, b)` uses the same rule as `ST_Contains(b, a)`.
+
+For the shared spherical calculation rules and precision limits, see [Spatial functions](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions).

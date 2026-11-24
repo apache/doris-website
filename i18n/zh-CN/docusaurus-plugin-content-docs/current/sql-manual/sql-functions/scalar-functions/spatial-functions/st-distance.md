@@ -12,7 +12,7 @@
 
 与 `ST_DISTANCE_SPHERE` 接受经纬度坐标不同，`ST_DISTANCE` 接受几何对象（点、线、多边形、圆等）作为参数，并计算它们边界之间的最短距离。若两个图形相交（包括接触或包含），则返回 0。
 
-开发版本的 typed `GEOGRAPHY` 重载参见 [Iceberg 空间类型](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types)。涉及 LineString 或 Polygon 的计算中，S2 给出的零距离必须用原始坐标确认两者相交，否则显式报精度不支持错误。原始 WKB 存储和访问器不受影响。
+开发版的 `ST_DISTANCE` 也接受默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线和多边形，返回最短球面距离，单位为米。涉及线或多边形时，只有原始坐标确认相交才返回 0。无法确认相交时会报精度错误。参见[空间函数](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions)。
 
 ## 语法
 

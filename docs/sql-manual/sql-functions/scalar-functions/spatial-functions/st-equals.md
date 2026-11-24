@@ -8,9 +8,7 @@
 
 ## Description
 
-Tests whether two spatial values have the same dimension and occupy the same point set. WKB byte order, line direction, subdivision along the same geodesic, and polygon ring start or direction do not change equality. Different dimensions return false. This function neither changes raw WKB nor enables spatial SQL `=`, grouping or deduplication.
-
-The development-version typed interface accepts nonempty XY Point, LineString and Polygon values with default `GEOGRAPHY(OGC:CRS84, spherical)` semantics. Geometry, other CRS/algorithms, Z/M, Multi*/GeometryCollection and EMPTY are not supported for calculations; valid raw values remain available for storage and access. NULL arguments return NULL. Edges are spherical geodesics, with the existing smaller-region polygon-ring interpretation. No spatial index or predicate pushdown is provided.
+Tests whether two Geography values of the same dimension cover the same points. Differences in WKB byte order, line direction, subdivision along the same geodesic, and the starting point or direction of a polygon ring do not change equality. If either argument is NULL, the result is NULL.
 
 ## Syntax
 
@@ -22,11 +20,11 @@ ST_EQUALS(<a>, <b>)
 
 | Parameter | Description |
 | --- | --- |
-| `a`, `b` | GEOGRAPHY values with their complete type parameters. |
+| `<a>`, `<b>` | A nonempty XY Point, LineString, or Polygon with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. |
 
 ## Return Value
 
-Nullable BOOLEAN.
+Returns BOOLEAN. Equal point sets return `true`. Different point sets or different dimensions return `false`. NULL inputs return NULL.
 
 ## Example
 

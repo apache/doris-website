@@ -28,7 +28,7 @@ under the License.
 
 ## 描述
 
-开发版本的 typed GEOGRAPHY 输入见[下文](#typed-geography)。以下既有示例使用历史 STRING 空间接口。
+开发版的 GEOGRAPHY 用法见[原生 GEOGRAPHY](#typed-geography)。
 
 判断一个几何图形（shape1）是否完全包含另一个几何图形（shape2）。若 shape1 包含 shape2 的所有点，则返回 1；否则返回 0。
 
@@ -172,8 +172,10 @@ mysql> SELECT ST_Contains(  ST_Polygon("POLYGON ((0 0, 1 1, 0 1, 1 0, 0 0))"), S
 +--------------------------------------------------------------------------------------+
 ```
 
-## Typed Geography（开发版本） {#typed-geography}
+## 原生 GEOGRAPHY（开发版） {#typed-geography}
 
-开发版本的 typed 接口只支持默认 `GEOGRAPHY(OGC:CRS84, spherical)` 的非空 XY Point、LineString、Polygon。Geometry、其他 CRS/算法、Z/M、Multi*/GeometryCollection 和 EMPTY 不支持用于计算；合法原始值仍可存储和访问。NULL 参数返回 NULL。函数使用球面测地线边，沿用较小区域的多边形环解释；不提供空间索引或谓词下推。
+开发版接受默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线和多边形，可任意两两组合。任一参数为 NULL 时返回 NULL。
 
-所有被包含值的点都在容器内部或边界上，且两者内部有交集时返回 true。支持上述三类形状的组合；仅位于多边形边界上的线返回 false。Contains(g,g) 为 true；空间维度不允许的反向包含返回 false。
+第一个形状覆盖第二个形状的所有点，且两者内部相交时，返回 `true`。一条线完全落在多边形边界上时，返回 `false`。
+
+球面计算规则和精度限制见 [空间函数](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions)。

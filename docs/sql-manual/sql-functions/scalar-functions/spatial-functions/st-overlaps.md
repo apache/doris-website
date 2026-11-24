@@ -8,9 +8,7 @@
 
 ## Description
 
-Tests partial overlap of equal-dimensional spatial values: their interiors must intersect in that dimension, and neither value may fully cover the other. A point crossing of lines, polygons sharing only an edge or vertex, equality, containment, different dimensions, and single Point/Point inputs return false. The relation is symmetric.
-
-The development-version typed interface accepts nonempty XY Point, LineString and Polygon values with default `GEOGRAPHY(OGC:CRS84, spherical)` semantics. Geometry, other CRS/algorithms, Z/M, Multi*/GeometryCollection and EMPTY are not supported for calculations; valid raw values remain available for storage and access. NULL arguments return NULL. Edges are spherical geodesics, with the existing smaller-region polygon-ring interpretation. No spatial index or predicate pushdown is provided.
+Tests whether two Geography values of the same dimension overlap in part. Their interiors must intersect in that dimension, and each value must have some points outside the other. If either argument is NULL, the result is NULL.
 
 ## Syntax
 
@@ -22,13 +20,28 @@ ST_OVERLAPS(<a>, <b>)
 
 | Parameter | Description |
 | --- | --- |
-| `a`, `b` | GEOGRAPHY values with their complete type parameters. |
+| `<a>`, `<b>` | A nonempty XY Point, LineString, or Polygon with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. |
 
 ## Return Value
 
-Nullable BOOLEAN.
+Returns BOOLEAN. Partial overlap returns `true`. Different dimensions, identical values, full containment, and two single points return `false`. Lines that cross only at a point and polygons that share only an edge or vertex also return `false`. NULL inputs return NULL.
 
 ## Example
+
+The lines (0, 0)–(2, 0) and (1, 0)–(3, 0) overlap along part of their length.
+
+```sql
+SELECT ST_Overlaps(
+    ST_GeogFromWKB('0102000000020000000000000000000000000000000000000000000000000000400000000000000000'),
+    ST_GeogFromWKB('010200000002000000000000000000f03f000000000000000000000000000008400000000000000000')
+) AS overlaps;
+```
+
+```text
+true
+```
+
+One point has no partial overlap with itself.
 
 ```sql
 SELECT ST_Overlaps(g, g) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;

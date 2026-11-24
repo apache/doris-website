@@ -27,9 +27,7 @@ under the License.
 
 ## 描述
 
-将十六进制ISO WKB（XY、XYZ、XYM、XYZM） 构造为 GEOMETRY 类型值，保留原始字节，使用默认参数 OGC:CRS84。输入为 NULL 时返回 NULL。
-
-本函数属于支持 Iceberg V3 空间类型的开发版本，返回值用于 Iceberg 空间列。历史函数 `ST_GEOMETRYFROMWKB` 和 `ST_GEOMFROMWKB` 继续返回采用历史几何编码的 STRING 值。
+开发版将十六进制 ISO WKB 转为 `GEOMETRY('OGC:CRS84')`。结果保留原始 WKB，可写入 Iceberg 的 geometry 列。输入为 NULL 时返回 NULL。
 
 ## 语法
 
@@ -39,15 +37,17 @@ ST_GEOMETRYFROMWKBTYPED(<wkb_hex>)
 
 ## 参数
 
-| 参数 | 描述 |
+| 参数 | 说明 |
 | --- | --- |
-| `<wkb_hex>` | 包含标准ISO WKB（XY、XYZ、XYM、XYZM） 十六进制内容的 STRING。支持 Point、LineString、Polygon、MultiPoint、MultiLineString、MultiPolygon 和 GeometryCollection，包括 EMPTY 值；保留 Z/M，不支持 PostGIS EWKB 维度标记和内嵌 SRID。 |
+| `<wkb_hex>` | 十六进制 ISO WKB 字符串。支持 Point、LineString、Polygon、MultiPoint、MultiLineString、MultiPolygon 和 GeometryCollection，包括 EMPTY 及 Z/M 坐标。 |
 
 ## 返回值
 
-返回可空的 `GEOMETRY` 类型值，默认参数为 `OGC:CRS84`。非法十六进制或 WKB、不支持的 EWKB 标记或内嵌 SRID、无穷坐标及超出地理范围的坐标返回 NULL。EMPTY 是几何值，与 SQL NULL 不同。
+返回可空的 `GEOMETRY`。非法十六进制、非法 WKB、PostGIS EWKB 维度标记或内嵌 SRID、无穷坐标和超出默认经纬度范围的坐标均返回 NULL。EMPTY 是有效的空间值。
 
 ## 示例
+
+将点 (1, 2) 的 WKB 转成空间值。
 
 ```sql
 SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED('0101000000000000000000F03F0000000000000040'));
@@ -57,6 +57,8 @@ SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED('0101000000000000000000F03F000000000000
 POINT (1 2)
 ```
 
+传入 NULL。
+
 ```sql
 SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED(NULL));
 ```
@@ -64,6 +66,8 @@ SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED(NULL));
 ```text
 NULL
 ```
+
+传入带内嵌 SRID 的 EWKB。
 
 ```sql
 SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED('01010000208A11000068270210774C5D40B8DECA334C3B4240'));

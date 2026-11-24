@@ -8,9 +8,7 @@
 
 ## 描述
 
-判断两个空间值是否具有相同维度并占据相同点集。不同 WKB 字节序、线方向、同一测地线上的分段、环起点或环方向不会使同一对象变得不相等。不同维度返回 false。本函数不改变原始 WKB，也不开放空间 SQL `=`、分组或去重。
-
-开发版本的 typed 接口只支持默认 `GEOGRAPHY(OGC:CRS84, spherical)` 的非空 XY Point、LineString、Polygon。Geometry、其他 CRS/算法、Z/M、Multi*/GeometryCollection 和 EMPTY 不支持用于计算；合法原始值仍可存储和访问。NULL 参数返回 NULL。函数使用球面测地线边，沿用较小区域的多边形环解释；不提供空间索引或谓词下推。
+判断两个同维度的 GEOGRAPHY 值是否覆盖同一组点。WKB 字节序、线段方向、在同一测地线上增加分段，以及多边形环的起点和方向都不影响判等。任一参数为 NULL 时返回 NULL。
 
 ## 语法
 
@@ -22,11 +20,11 @@ ST_EQUALS(<a>, <b>)
 
 | 参数 | 说明 |
 | --- | --- |
-| `a`, `b` | 保留完整参数的 GEOGRAPHY 值。 |
+| `<a>`, `<b>` | 默认类型 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线或多边形。 |
 
 ## 返回值
 
-Nullable BOOLEAN。
+返回 BOOLEAN。覆盖同一组点时返回 `true`，点集不同或维度不同时返回 `false`。有 NULL 参数时返回 NULL。
 
 ## 示例
 

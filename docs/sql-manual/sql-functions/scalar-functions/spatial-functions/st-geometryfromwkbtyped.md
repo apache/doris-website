@@ -27,9 +27,7 @@ under the License.
 
 ## Description
 
-Constructs a typed GEOMETRY value from hexadecimal ISO WKB (XY, XYZ, XYM and XYZM). The value preserves the original bytes and uses OGC:CRS84. NULL input returns NULL.
-
-This function belongs to the development version with Iceberg V3 spatial support. Use the typed result for Iceberg spatial columns. Historical `ST_GEOMETRYFROMWKB` and `ST_GEOMFROMWKB` continue to return legacy STRING geometry values.
+Converts hexadecimal ISO WKB to `GEOMETRY('OGC:CRS84')` in the development version. The resulting value retains the original WKB and can be written to an Iceberg geometry column. NULL input returns NULL.
 
 ## Syntax
 
@@ -41,13 +39,15 @@ ST_GEOMETRYFROMWKBTYPED(<wkb_hex>)
 
 | Parameter | Description |
 | --- | --- |
-| `<wkb_hex>` | STRING containing hexadecimal standard ISO WKB (XY, XYZ, XYM and XYZM). Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon and GeometryCollection are supported, including EMPTY values. Z/M ordinates are retained. PostGIS EWKB dimension flags and embedded SRID metadata are unsupported. |
+| `<wkb_hex>` | A STRING of hexadecimal ISO WKB. Supports Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon, and GeometryCollection, including EMPTY and Z/M coordinates. |
 
 ## Return Value
 
-Returns a nullable value of type `GEOMETRY` with default parameters `OGC:CRS84`. Invalid hexadecimal/WKB, unsupported EWKB flags/embedded SRID, infinite coordinates or coordinates outside the geographic range return NULL. EMPTY is a geometry value distinct from SQL NULL.
+Returns a nullable `GEOMETRY` value. Invalid hexadecimal, invalid WKB, PostGIS EWKB dimension flags or embedded SRIDs, infinite coordinates, and coordinates outside the default geographic range return NULL. EMPTY is a valid spatial value.
 
 ## Example
+
+Convert the WKB for a point at (1, 2).
 
 ```sql
 SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED('0101000000000000000000F03F0000000000000040'));
@@ -57,6 +57,8 @@ SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED('0101000000000000000000F03F000000000000
 POINT (1 2)
 ```
 
+Pass a NULL input.
+
 ```sql
 SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED(NULL));
 ```
@@ -64,6 +66,8 @@ SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED(NULL));
 ```text
 NULL
 ```
+
+Pass EWKB with an embedded SRID.
 
 ```sql
 SELECT ST_AsText(ST_GEOMETRYFROMWKBTYPED('01010000208A11000068270210774C5D40B8DECA334C3B4240'));

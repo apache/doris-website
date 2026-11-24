@@ -268,18 +268,24 @@ ORDER BY engine_name, entry_name;
 
 ### 空间类型（Iceberg V3） {#iceberg-spatial-types}
 
-开发版本将 Iceberg V3 的 `geometry` 和 `geography` 映射为 Doris `GEOMETRY` 和 `GEOGRAPHY`。空间 WKB 值通过 Parquet 读取和写入。支持顶层空间列，以及 ARRAY 元素、MAP value、STRUCT 字段中空间值的读取和写入，包括这些容器的多层组合。不支持 Doris 内部表的空间类型存储。
+开发版通过 Iceberg Catalog 将 Iceberg V3 的 `geometry` 和 `geography` 映射为 Doris 的 `GEOMETRY` 和 `GEOGRAPHY`。使用 Parquet 读写。空间值可以是独立列，也可以放在 ARRAY 元素、普通键的 MAP 值和 STRUCT 字段中。这些容器可以多层嵌套。
 
-空间类型通过 Iceberg catalog 使用。S3、LOCAL 等通用文件 TVF 会拒绝 Parquet GEOMETRY/GEOGRAPHY 注解，包括嵌套字段；未注解的 BYTE_ARRAY 列保留普通二进制映射。已有外表中显式声明为 BINARY（Doris VARBINARY）的列，仍可将合法 GEOMETRY/GEOGRAPHY 注解的 Parquet 叶子读取为原始 WKB 字节，包括嵌套叶子；表中保留二进制类型，不会因此获得空间类型。
+参与查询的 FE 和 BE 都需要支持空间类型。请在相关节点全部升级后使用空间查询。
 
-Variant 不支持原生 GEOMETRY/GEOGRAPHY 值，包括其 object 或 array 内的空间值，与已验证的 Spark 4.1 / Iceberg 1.12 行为一致。将 WKB 保存为普通 Binary 或应用自定义对象，不等于原生空间值，也不会自动恢复 kind、CRS 或 algorithm。普通 Variant 列可以与独立空间列共存。
+#### 类型和默认值
 
-| 声明 | 默认值 | 作用 |
+| 类型声明 | 默认参数 | 保存的信息 |
 | --- | --- | --- |
-| `GEOMETRY('<crs>')` | `OGC:CRS84` | 保留源坐标参考系统，不转换坐标。 |
-| `GEOGRAPHY('<crs>', '<algorithm>')` | `OGC:CRS84`、`spherical` | 保留 CRS 和边算法，算法可为 spherical、vincenty、thomas、andoyer、karney。 |
+| `GEOMETRY('<crs>')` | `OGC:CRS84` | 坐标及其坐标参考系统（CRS）。 |
+| `GEOGRAPHY('<crs>', '<algorithm>')` | `OGC:CRS84`、`spherical` | 经纬度及定义边的算法。 |
 
-将 `iceberg_catalog` 和 `spatial_db` 替换为已有且允许写入的 Iceberg catalog/database 名称。先选择它们，再创建未分区 V3 表并写入 typed 值：
+GEOGRAPHY 支持保存 `spherical`、`vincenty`、`thomas`、`andoyer` 和 `karney`。Doris 保留表定义中的 CRS 和算法。更换类型参数不会转换坐标。
+
+#### 写入并读取一个点
+
+准备一个 Iceberg Catalog 和数据库，并确保有建表、写入和查询权限。若还没有 Catalog，参见 [Iceberg REST 元数据服务](../metastores/iceberg-rest.md)。把示例中的 `iceberg_catalog` 和 `spatial_db` 换成实际名称。
+
+下面用两个 WKB 构造函数写入点 `(1, 2)`，再用 `ST_AsText` 查看坐标。第二行演示 SQL NULL 的读写结果。
 
 ```sql
 SWITCH iceberg_catalog;
@@ -298,7 +304,9 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 2  NULL         NULL
 ```
 
-同一 catalog/database 中也可以保存嵌套空间列，普通 MAP key 可以对应空间 value：
+#### 写入嵌套的空间值
+
+在同一个 Catalog 和数据库中，将上例中的空间值分别放入数组、字符串键的 MAP 和 STRUCT。
 
 ```sql
 CREATE TABLE spatial_nested (
@@ -318,31 +326,46 @@ FROM spatial_nested ORDER BY id;
 2  1  NULL         NULL         NULL
 ```
 
-NULL 容器、空容器、NULL 元素/value/字段与空间 EMPTY 值保持区别。空间叶子参数及原始 WKB 递归保留；存储支持不代表开放空间 MAP key 的比较、分组或排序。
+Doris 保留嵌套空间值的类型参数和原始 WKB。NULL 容器、空容器、容器中的 NULL 和空间 EMPTY 值各自保留。
 
-示例要求在对应 catalog/database 中有建表、写入和查询权限；没有 catalog 时，请先配置 [Iceberg REST metastore](../metastores/iceberg-rest.md)。
+#### 写入时的类型要求
 
-值保留原始 WKB（XY、XYZ、XYM、XYZM） 字节，支持七种基础 WKB 类型、子几何混合字节序及 EMPTY。EMPTY 与 SQL NULL 不同；支持标准 ISO WKB 的 Z/M 保留，不支持 PostGIS EWKB 维度标记和内嵌 SRID。Geography 及已识别地理 CRS 的 Geometry（`OGC:CRS84`、`EPSG:4326`）要求已定义的 X/Y 坐标位于 [-180,180]/[-90,90]，投影 Geometry 不使用这一范围。其他 Geometry CRS 字符串按原样保留，不提供 CRS 解析或自动转换。
+- 源值的类型、CRS 和 GEOGRAPHY 算法要与目标列匹配，容器中的空间值也要逐层匹配。需要构造默认参数的值时，使用 [ST_GEOMETRYFROMWKBTYPED](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkbtyped.md) 或 [ST_GEOGFROMWKB](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geogfromwkb.md)。
+- 在 `INSERT ... SELECT`、`UPDATE` 和 `MERGE` 中，常量 `ARRAY`、`MAP` 或 `STRUCT` 中能确定为 NULL 的值，可以写入允许 NULL 的空间位置。容器形状匹配时，外层有 `CAST` 也适用。普通键及其他字段保留各自的值。Iceberg 定义为必填的元素、值或字段会拒绝 NULL。
+- `CREATE TABLE` 和 `ALTER TABLE` 添加空间列需要 Iceberg V3 和 Parquet。请使用普通列作为分区键。
 
-通过 `ST_AsText`、`ST_AsBinary`、`ST_X`、`ST_Y` 和 `ST_GeometryType` 查看原始值。 typed `ST_AsBinary` 以 `VARBINARY` 返回原始 WKB，包括不合法的 UTF-8 字节；历史 STRING 重载保持原返回类型。ST_AsText 输出维度标记及全部坐标，ST_X/ST_Y 返回点的 X/Y。typed 测量和关系计算仅支持 XY，要求默认 `GEOGRAPHY(OGC:CRS84, spherical)` 及受支持的非空 Point/LineString/Polygon；不支持的参数或形状组合明确报错。其他算法的值可读写，但不支持用于这些计算。 `ST_Contains`、`ST_Within` 和 `ST_Touches` 支持上述三类形状的组合，分别遵循包含、反向包含与仅边界接触的语义。仅沿面边界的线不满足 Contains；线内部交叉不满足 Touches。`ST_Equals` 判断同维度点集相等，`ST_Overlaps` 判断同维度的部分交叠；原始 WKB 字节顺序不参与这些拓扑判断。`ST_DWithin(a,b,d)` 判断球面距离是否小于或等于非负有限阈值 d，单位米；不支持的计算域仍明确报错。球面关系计算遍历全部测地线边，不会将开放的 LineString 自动闭合。
+#### 查看数据与空间计算 {#iceberg-spatial-functions}
 
-球面多边形计算将每个环解释为较小区域（不超过半球），不根据环方向选择另一侧。反转环不会选择大于半球的补集；当前不支持按环方向表达大区域的计算。这一计算约定不会改变原始 WKB 访问器及 Iceberg 读写所保留的环顺序或字节。
+`ST_AsBinary` 以 `VARBINARY` 返回原始 ISO WKB。读写保留七种基础 WKB 形状、XY/XYZ/XYM/XYZM、子几何各自的字节序和 EMPTY。PostGIS EWKB 的维度标记及内嵌 SRID 会被拒绝。对于 GEOGRAPHY，以及 CRS 为 `OGC:CRS84` 或 `EPSG:4326` 的 GEOMETRY，经度范围为 `[-180, 180]`，纬度范围为 `[-90, 90]`。GEOMETRY 的其他 CRS 字符串按原样保留。
 
-在极端坐标精度下，原始坐标所定义的不同 Polygon 边界可能在 S2 中折叠为同一个区域。`ST_Equals` 仍会区分这些边界；`ST_Contains`、`ST_Within` 和 `ST_Overlaps` 对此类有歧义的多边形组合明确报错，避免返回不可靠的结果。涉及 Polygon 的 `ST_Touches` 要求确认原始坐标上的边界接触。确认接触后，若 LineString 中正长度的原始线段在 S2 中折叠为一个点，且并非共享的多边形边界线段，则明确拒绝该 LineString/Polygon 组合。这一保守限制也适用于位于多边形外部的分段，因为舍入后的坐标无法可靠判断其内部关系。对于依赖 Polygon 内部关系的判断，如果点的原始坐标不在边界上，但其 S2 位置落在舍入后的边界上，也会明确拒绝。当 `ST_Contains`/`ST_Within`、`ST_Touches` 或多边形 `ST_Overlaps` 的判定还需要依赖舍入后的内部不相交这一结果时，如果非共享的原始边与舍入后的 Polygon 边界发生正长度重合，则拒绝这一无法可靠判断的边界组合。`ST_Contains`、`ST_Within` 和 `ST_Overlaps` 还会拒绝以下 Polygon 组合：仅属于其中一方原始边界的顶点，与另一方边界顶点具有相同的 S2 位置，即使舍入后的区域呈现严格包含关系。同一碰撞检查也适用于 `ST_Contains(Polygon, LineString)` 和 `ST_Within(LineString, Polygon)`；混合维度的 `ST_Overlaps` 仍返回 false。不存在原始坐标边界接触时，Touches 仍返回 false。这些检查没有引入独立的原始坐标区域求解器。除这些精度限制外，普通包含关系，以及等价的边分段、环起点旋转、反向和洞顺序调整仍受支持。这些计算限制不影响原始 WKB 的存储或访问器。
+`ST_AsText` 可将值显示为文本，包括 Z 和 M 坐标。用 `ST_X` 和 `ST_Y` 读取点的 X/Y 坐标，用 `ST_GeometryType` 查看形状名称。通过 Arrow Flight SQL 返回空间列时，请使用 `ST_AsText(geom)` 或 `ST_AsBinary(geom)` 转成文本或二进制。
 
-`GROUP BY`、`SELECT DISTINCT`、`COUNT(DISTINCT ...)` 和 `MIN`/`MAX` 不接受原生空间参数，包括嵌套空间值和窗口聚合。`COLLECT_SET` 及其聚合状态入口也拒绝空间参数，以及包含空间叶子的 Array/Map/Struct 值。原始 WKB 不做规范化：不同字节序可以表示同一几何对象，字节顺序也不代表空间顺序。普通 `COUNT`、`ANY_VALUE` 以及按普通键分组并携带空间值仍受支持。需要显式按字节分组或去重时，可使用 `hex(ST_AsBinary(shape))`；单独使用 `ST_AsBinary` 仍受现有 VARBINARY 限制。
+原生空间测量和关系函数接受默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线和多边形。其他受支持的参数仍可用于读写。每个函数的输入和结果规则见对应手册。
 
-`UNION`（包括 `UNION DISTINCT`）、`INTERSECT` 和 `EXCEPT` 不接受空间键。`ARRAY_AGG(DISTINCT ...)` 和 `COLLECT_LIST(DISTINCT ...)` 不接受空间参数。`COUNT_MAP(DISTINCT ...)`、`MIN_MAP(DISTINCT ...)`、`MAX_MAP(DISTINCT ...)`、`SUM_MAP(DISTINCT ...)` 和 `AVG_MAP(DISTINCT ...)` 同样拒绝包含空间叶子的 MAP 参数，包括嵌套 value。非 DISTINCT 的 `MAP_AGG`、`MAP_AGG_V2` 和 `COUNT_MAP` 仍支持普通 key＋空间 value。`MIN_MAP`、`MAX_MAP` 及其聚合状态组合器拒绝包含空间叶子的 value，因为空间值没有定义排序语义。`UNION ALL` 以及非 DISTINCT 的标量 `ARRAY_AGG`/`COLLECT_LIST` 仍受支持。
+- [ST_CONTAINS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains.md#typed-geography)、[ST_WITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-within.md#typed-geography) 和 [ST_TOUCHES](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches.md#typed-geography) 判断包含或边界接触。
+- [ST_EQUALS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-equals.md) 判断两个形状是否覆盖同一组点。[ST_OVERLAPS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-overlaps.md) 判断同维度形状是否部分重叠。
+- [ST_DWITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-dwithin.md) 判断球面距离是否在指定米数以内。
 
-`LEAST`、`GREATEST`、`COUNT_AT_MIN` 和 `COUNT_AT_MAX` 不接受空间参数。窗口 `PARTITION BY` 也拒绝空间 key，包括含空间叶子的嵌套类型；普通 partition key 上受支持的空间窗口 value 仍可使用。`MIN_BY` 和 `MAX_BY` 不接受标量空间结果 value，并递归拒绝包含空间叶子的排序键，聚合状态路径也遵循此限制；普通排序 key＋嵌套空间结果 value 仍受支持。`TOPN_ARRAY` 拒绝空间值及包含空间值的嵌套类型。`MULTI_DISTINCT_COUNT` 拒绝空间参数，包括嵌套空间叶子；`GROUP_ARRAY_UNION` 和 `GROUP_ARRAY_INTERSECT` 拒绝包含空间值的数组。
+球面多边形的每个环都取较小的区域，最多半个球面，环方向不影响选择。坐标非常接近时，舍入可能让边界或距离难以判断。函数无法可靠确定结果时会报错。读写和 WKB 查看仍保留原始字节。
 
-`INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。嵌套叶子同样递归检查这些身份。`INSERT ... SELECT`、`UPDATE` 赋值及 `MERGE` 分支可将 `CAST(ARRAY(CAST(NULL AS INT)) AS ARRAY<INT>)` 写入 Geometry 或 Geography 的数组列。数组容器保持非 NULL，NULL 元素按目标类型标记；这不会绕过非 NULL 空间值的身份校验或非法数组维度转换的拒绝。对于 V2 或使用非 Parquet 写入格式的表，CREATE 和 ALTER 拒绝空间列。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
+#### SQL 和存储限制
 
-所有参与 FE 和 BE 均需支持空间类型。本功能不提供 4.x 升级到 5.0 期间的混合版本执行兼容。
+- 等值连接、分组、排序和窗口分区请使用普通键。Doris 会拒绝空间键，也会拒绝含空间值的嵌套键。这同样适用于有序聚合和带 `LIMIT` 的排序。例如，`ORDER BY id` 可以返回空间列，`FIRST_VALUE(geom) OVER (ORDER BY id)` 可以返回空间值。
+- 普通 SQL 比较和数组比较会拒绝空间参数。对于满足条件的 GEOGRAPHY，可以用空间关系函数比较。要按原始 WKB 字节分组或去重，可用 `hex(ST_AsBinary(geom))`。
+- `DISTINCT`、需要比较行的集合运算（如 `UNION DISTINCT`、`INTERSECT`、`EXCEPT`）以及比较或去重空间值的聚合会拒绝空间输入。聚合规则见下表。`UNION ALL` 可以返回空间值。
+- 文本和 JSON 不能 CAST 为包含空间值的类型。普通 Variant 列可以与空间列共存。Variant 对象和数组不能装入原生空间值。
+- Doris 内部表暂不支持存储原生空间列。空间列暂不支持空间索引、范围裁剪和空间谓词下推。`ANALYZE TABLE` 收集普通列的统计信息时会跳过空间列。暂不支持 GeoArrow。
+- S3 和 LOCAL 文件表值函数会拒绝 Parquet 空间注解。已声明为 BINARY（Doris 中为 `VARBINARY`）的外表列仍可将合法空间值按原始 WKB 读取，包括嵌套值。无空间注解的 `BYTE_ARRAY` 沿用普通二进制映射。
 
-使用 Arrow Flight SQL 客户端时，请通过 `ST_AsBinary` 或 `ST_AsText` 投影空间列。当前不支持直接空间列的结果 schema；Iceberg Arrow 存储映射不代表支持 GeoArrow 或 Flight 直接输出空间类型。
+| 聚合用法 | 规则 |
+| --- | --- |
+| `COUNT`、`ANY_VALUE`，以及非 DISTINCT 的 `ARRAY_AGG`、`COLLECT_LIST` | 支持相应用法中的空间值。 |
+| `COUNT(DISTINCT ...)`、DISTINCT 的集合和 MAP 聚合、`COLLECT_SET`、`MULTI_DISTINCT_COUNT`、`GROUP_ARRAY_UNION`、`GROUP_ARRAY_INTERSECT` | 拒绝空间输入，包括嵌套空间值。 |
+| `MIN`、`MAX`、`LEAST`、`GREATEST`、`COUNT_AT_MIN`、`COUNT_AT_MAX`、`TOPN_ARRAY` | 拒绝参与比较的空间输入。`TOPN_ARRAY` 也拒绝嵌套空间值。 |
+| `MIN_BY`、`MAX_BY` | 使用普通排序键。拒绝标量空间结果，支持函数允许的嵌套空间结果。 |
+| `MAP_AGG`、`MAP_AGG_V2`、`COUNT_MAP` | 非 DISTINCT 用法支持普通键与空间值。`MIN_MAP`、`MAX_MAP` 拒绝空间值，包括嵌套值。 |
 
-参见 [ST_GEOMETRYFROMWKBTYPED](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkbtyped.md) 和 [ST_GEOGFROMWKB](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geogfromwkb.md)；历史 WKB 构造器继续保留 STRING/EWKB 行为。
+支持聚合状态的函数也遵循对应限制。
 
 ### 列名大小写
 
