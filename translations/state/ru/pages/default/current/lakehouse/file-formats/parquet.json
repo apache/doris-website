@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/parquet.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
-    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
-    "sourceHash": "5ed93e5be0a26b8d1102585db55aaa340045e837c1f9809b5151595ee56d9e06",
-    "sourceTechnicalHash": "30d547bb07d2f6b8b7ce4e2709bcf4d1e99d88461f1b5d4ef9c327c9c5fff0c7",
-    "targetHash": "a342f0a42cd750101867d402ecade4a7e184e1f82bb482237b9898d430e7fa93",
+    "sourceCommit": "af18139fb593de5bf9970531ca7e6474533b3fe6",
+    "sourceHash": "59619533c0e9ab52f9b5f51e1675a5dc512cd4a15359e5438d7c5ae70dc3e8ae",
+    "sourceTechnicalHash": "adf169563e26c67ffd5d393626f320a27af88c5ef1a1ebc2723926316f6f576d",
+    "targetHash": "cd958ebc9e716e7ba743d7dbc92db1f708696c05e739d90c6ac6ed3cf0766f5c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-11-21T09:45:14.173Z",
+    "translatedAt": "2026-11-24T08:47:05.341Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,8 +22,8 @@
       "reason": "chinese-reference-changed",
       "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "5ed93e5be0a26b8d1102585db55aaa340045e837c1f9809b5151595ee56d9e06",
-      "targetHash": "a342f0a42cd750101867d402ecade4a7e184e1f82bb482237b9898d430e7fa93",
+      "sourceHash": "59619533c0e9ab52f9b5f51e1675a5dc512cd4a15359e5438d7c5ae70dc3e8ae",
+      "targetHash": "cd958ebc9e716e7ba743d7dbc92db1f708696c05e739d90c6ac6ed3cf0766f5c",
       "warnings": [],
       "history": [
         {
@@ -44,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/lakehouse/file-formats/parquet.md",
-        "blob": "10d5bb60afc1dd38d5e317155b49401c070d75de"
+        "blob": "57884444360a5e7f6d66d7b9f60858ba74cee806"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
-        "blob": "4c04f8ae929cddf6e3085f51babc31e0f1d22bde"
+        "blob": "654ee485549ba035759a5586b0763dafa8d3b931"
       }
     }
   }
