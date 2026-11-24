@@ -355,11 +355,14 @@ Doris 保留嵌套空间值的类型参数和原始 WKB。NULL 容器、空容�
 
 `ST_AsText` 可将值显示为文本，包括 Z 和 M 坐标。用 `ST_X` 和 `ST_Y` 读取点的 X/Y 坐标，用 `ST_GeometryType` 查看形状名称。通过 Arrow Flight SQL 返回空间列时，请使用 `ST_AsText(geom)` 或 `ST_AsBinary(geom)` 转成文本或二进制。
 
-原生空间测量和关系函数接受默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线和多边形。其他受支持的参数仍可用于读写。每个函数的输入和结果规则见对应手册。
+下列距离和关系函数支持默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的二维点、线和多边形，图形不能为空（`EMPTY`）。其他受支持的类型参数可用于读写。
 
 - [ST_CONTAINS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains.md#typed-geography)、[ST_WITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-within.md#typed-geography) 和 [ST_TOUCHES](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches.md#typed-geography) 判断包含或边界接触。
 - [ST_EQUALS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-equals.md) 判断两个形状是否覆盖同一组点。[ST_OVERLAPS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-overlaps.md) 判断同维度形状是否部分重叠。
+- [ST_INTERSECTS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects.md) 判断两个形状是否有公共点。没有公共点时，[ST_DISJOINT](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint.md) 返回 `true`。
 - [ST_DISTANCE](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance.md#typed-geography) 返回最短球面距离，单位为米。[ST_DWITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-dwithin.md) 判断该距离是否在指定米数以内。
+
+[ST_AZIMUTH](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-azimuth.md) 根据两个点计算方位角。两个输入都满足上述类型和形状要求时，只要其中一个是线或多边形，就返回 `NULL`。
 
 球面多边形的每个环都取较小的区域，最多半个球面，环方向不影响选择。坐标非常接近时，舍入可能让边界或距离难以判断。函数无法可靠确定结果时会报错。读写和 WKB 查看仍保留原始字节。
 

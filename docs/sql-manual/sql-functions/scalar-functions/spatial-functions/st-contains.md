@@ -12,7 +12,7 @@ The description and examples below use string-encoded values returned by spatial
 
 Determines whether one geometric shape (shape1) completely contains another geometric shape (shape2). Returns 1 if shape1 contains all points of shape2; otherwise, returns 0.
 
-- For points: The point must lie inside or on the boundary of the polygon.
+- A point inside the polygon returns `1`. In the boundary example below, the point `(0, 5)` returns `0`.
 - For lines: All points of the line must lie inside or on the boundary of the polygon.
 - For polygons: The contained polygon must be entirely inside the outer polygon (boundaries can overlap).
 ## Syntax
@@ -114,7 +114,7 @@ mysql> SELECT ST_Contains(  ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"
 +------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-Polygon and boundary point (point on polygon boundary)
+Point on the polygon boundary
 
 ```sql
 mysql> SELECT ST_Contains(  ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"),  ST_Point(0, 5));
