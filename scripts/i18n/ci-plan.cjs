@@ -14,7 +14,7 @@ const runtime =
     /^(src\/|config\/|docusaurus\.config\.js$|sidebars[^/]*\.(ts|json)$|versioned_sidebars\/|scripts\/i18n\/(source-revisions|automated-blog|automated-blog-body-loader|release-policy|docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap)\.cjs$)/;
 const content =
     /^(static\/|docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|blog\/|i18n\/|translations\/(pages|blog|state)\/)/;
-const highRisk = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plugin\.js)$/;
+const frameworkInputs = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plugin\.js)$/;
 // Maintenance notes are not site content. The report registry, in contrast,
 // changes ordinary pages, which the real sample build always renders.
 const maintenanceNotes = /^translations\/(?:[^/]+\.md|scope\/README\.md)$/;
@@ -30,7 +30,7 @@ const reportRegistry = 'translations/community-reports.json';
 function policy(files, {forceFull = false, forceSample = false, actionSubmodules = false} = {}) {
     const checks = validationScope(files);
     const shared = files.some(file => runtime.test(file) || mechanism.test(file)
-        || highRisk.test(file) || file === '.gitmodules' && !actionSubmodules
+        || frameworkInputs.test(file) || file === '.gitmodules' && !actionSubmodules
         || /^i18n\/[^/]+\/code\.json$/.test(file) || file === reportRegistry || maintenanceConfig(file)
         || /^(?:tsconfig\.json|(?:babel|postcss|tailwind|webpack|rspack)\.config\.[cm]?[jt]s)$/.test(file));
     const changed = files.some(file => content.test(file));
@@ -98,8 +98,9 @@ function plan({root, base, event = {}, forceFull = false, forceSample = false}) 
             ? locales
             : [...new Set(['en', ...requested])];
     }
-    if (selected.mode === 'sample' && dependencies.complete && dependencies.locales.length) requested = dependencies.locales;
+    if (selected.mode === 'sample' && selected.selection === 'changed' && dependencies.complete && dependencies.locales.length) requested = dependencies.locales;
     if (selected.mode === 'sample' && !requested.length) requested = locales;
+    if (!['sample', 'full'].includes(selected.mode)) requested = [];
     const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], {
         cwd: root,
         encoding: 'utf8',

@@ -304,7 +304,7 @@ async function selectDocs(props, plan) {
         ),
     );
     if (dependenciesChanged.length) {
-        const cache = new Map();
+        const cache = new Map(), coveredOwners = new Set();
         for (const row of rows) {
             const result = await dependencies(
                 props.siteDir,
@@ -313,36 +313,15 @@ async function selectDocs(props, plan) {
                 new Set(),
                 props.siteConfig?.markdown?.format ?? 'mdx',
             );
-            if (
-                [...result.files].some(file => changed.has(gitPath(props.siteDir, file)))
-            )
-                add(
-                    row,
-                    result.uncertain
-                        ? 'conservative dynamic/unparsed import'
-                        : 'changed import dependency',
-                );
+            const affected = [...result.files].map(file => gitPath(props.siteDir, file)).filter(file => changed.has(file));
+            // Shared implementations need a few real consumers per plugin and
+            // version. Explicitly edited documents above are never truncated.
+            const ownerKeys = affected.map(file => JSON.stringify([row.pluginId, row.version, file]));
+            if (affected.length && (plan.selection === 'changed' || ownerKeys.some(key => !coveredOwners.has(key)))) {
+                ownerKeys.forEach(key => coveredOwners.add(key));
+                add(row, result.uncertain ? 'conservative dynamic/unparsed import' : 'changed import dependency');
+            }
         }
-    }
-    if (selected.size > 500) {
-        const directory = path.join(props.siteDir, '.i18n-build/ci-sample/scopes');
-        fs.mkdirSync(directory, {recursive: true});
-        fs.writeFileSync(
-            path.join(directory, props.i18n.currentLocale + '.selection.json'),
-            JSON.stringify(
-                {
-                    status: 'selection-exceeded',
-                    sourceSha: plan.sourceSha,
-                    metadataDocs: rows.length,
-                    selected: [...selected.values()],
-                },
-                null,
-                2,
-            ) + '\n',
-        );
-        throw new Error(
-            `Sample expands to ${selected.size} documents; use the ci/full label or manual full validation instead of truncating affected documents`,
-        );
     }
     return {rows, selected};
 }

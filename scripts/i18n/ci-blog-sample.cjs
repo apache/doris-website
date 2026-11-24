@@ -65,13 +65,16 @@ async function sample(context, options, content) {
     // Explicitly imported components/assets still select all affected owners.
     if (plan.files.some(file => /^(src|static|docs|versioned_docs|community|course|releasenotes|blog|i18n)\//.test(file))) {
         const {dependencies} = require('./ci-sample.cjs');
-        const changed = new Set(plan.files), cache = new Map();
+        const changed = new Set(plan.files), cache = new Map(), coveredOwners = new Set();
         for (const post of posts) {
             const result = await dependencies(context.siteDir,
                 path.resolve(context.siteDir, post.metadata.source.replace(/^@site\//, '')),
                 cache, new Set(), context.siteConfig.markdown.format);
-            if ([...result.files].some(file => changed.has(path.relative(context.siteDir, file).split(path.sep).join('/'))))
+            const affected = [...result.files].map(file => path.relative(context.siteDir, file).split(path.sep).join('/')).filter(file => changed.has(file));
+            if (affected.length && (plan.selection === 'changed' || affected.some(file => !coveredOwners.has(file)))) {
+                affected.forEach(file => coveredOwners.add(file));
                 add(post, result.uncertain ? 'uncertain import' : 'changed import dependency');
+            }
         }
     }
     const blogPosts = posts.filter(post => selected.has(post.id)).map(post => ({...post,

@@ -355,6 +355,20 @@ test('changed transitive imports and sharded translation state select their owni
             },
         ],
     };
+    // A shared module used by many docs stays a sample. A batch editing all
+    // of those docs still compiles every changed body without forcing full CI.
+    const extra = [];
+    for (let i=0; i<501; i++) {
+        const name='consumer-'+i;
+        fs.writeFileSync(path.join(root, 'docs', name+'.mdx'),'import {value} from "@site/src/nested.js";\n\n{value}');
+        extra.push({id:name,source:'@site/docs/'+name+'.mdx',permalink:'/docs/'+name+'/'});
+    }
+    docs.push(...extra);
+    const bounded=await selectDocs(props,{selection:'representative',files:['src/nested.js'],baseSha:'HEAD'});
+    assert(bounded.selected.size<10);
+    const batch=await selectDocs(props,{selection:'changed',files:extra.map(doc=>doc.source.slice(6)),baseSha:'HEAD'});
+    assert.equal(batch.selected.size,501);
+    docs.splice(3);
     const imported = await selectDocs(props, {files: ['src/nested.js'], baseSha: 'HEAD'});
     assert(
         imported.selected

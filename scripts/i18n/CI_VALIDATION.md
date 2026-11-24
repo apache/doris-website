@@ -63,8 +63,9 @@ and English fallbacks are sampled where available. Changed document bodies and
 translation-state records are mandatory. Local MDX/JavaScript imports are followed
 transitively when an imported file changes, including deleted imports. Unrelated
 broken/dynamic imports do not pull every owner into a document-only check. An
-actually edited document is always selected, so its compilation errors still fail. A selection above 500 documents fails with a request
-for `ci/full`, rather than silently dropping affected documents.
+actually edited document is always selected, so its compilation errors still fail. Shared implementation edits sample import consumers per input/plugin/version.
+Document-only edits retain every affected owner, even above 500 documents;
+they do not force unrelated versions and documents into a full build.
 
 The blog sample covers a recent article, lead/featured cards, MDX, code blocks and available real/fallback
 bodies. Explicit changed imports add their owners.
