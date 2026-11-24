@@ -6,12 +6,11 @@ import os
 from pathlib import Path
 import re
 import subprocess
-from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-BUCKET = 'doris-website-assets-prod-bj'
-PREFIX = 'downloads/archived-docs/'
-BASE = 'https://assets-cdn.selectdb.com/' + PREFIX
+BUCKET = 'apache-doris-downloads'
+PREFIX = 'doris-website/docs/archived/'
+BASE = 'https://' + BUCKET + '.oss-accelerate.aliyuncs.com/' + PREFIX
 
 
 def digest(file):
@@ -87,7 +86,7 @@ def upload(directory, source_sha, run=oss):
                 or headers.get('x-oss-server-side-encryption') != 'AES256'):
             raise RuntimeError('Uploaded PDF metadata or encryption verification failed')
         records.append({'key': key, 'bytes': entry['bytes'], 'sha256': entry['sha256']})
-        print('Verified private PDF upload: ' + file.name, flush=True)
+        print('Verified archived PDF upload: ' + file.name, flush=True)
     return records
 
 
@@ -100,19 +99,16 @@ def verify_delivery(records, files):
             if (response.status != 200 or response.headers.get('Content-Type') != 'application/pdf'
                     or int(response.headers.get('Content-Length', -1)) != record['bytes']
                     or response.headers.get('Access-Control-Allow-Origin') != 'https://doris.apache.org'):
-                raise RuntimeError('CDN PDF delivery verification failed')
+                raise RuntimeError('Public PDF delivery verification failed')
         with files[record['key']].open('rb') as stream:
             expected = stream.read(1024)
         with urlopen(Request(url, headers={'Range': 'bytes=0-1023'}), timeout=30) as response:
             if response.status != 206 or response.read(1024) != expected:
-                raise RuntimeError('CDN PDF range verification failed')
-        private = 'https://' + BUCKET + '.oss-cn-beijing.aliyuncs.com/' + record['key']
-        try:
-            with urlopen(Request(private, method='HEAD'), timeout=30):
-                raise RuntimeError('Anonymous OSS PDF read unexpectedly succeeded')
-        except HTTPError as error:
-            if error.code != 403:
-                raise RuntimeError('Expected anonymous OSS PDF access to be denied') from None
+                raise RuntimeError('Public PDF range verification failed')
+        regional = 'https://' + BUCKET + '.oss-cn-beijing.aliyuncs.com/' + record['key']
+        with urlopen(Request(regional, method='HEAD'), timeout=30) as response:
+            if response.status != 200 or int(response.headers.get('Content-Length', -1)) != record['bytes']:
+                raise RuntimeError('Anonymous OSS PDF delivery verification failed')
 
 
 def main():

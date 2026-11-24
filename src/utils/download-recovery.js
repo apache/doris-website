@@ -1,9 +1,10 @@
 const recovery = require('../../config/download-recovery.json');
+const archive = require('../../config/archived-docs.json');
 const retiredHost = /https?:\/\/apache-doris-releases\.oss[^.\s/]*\.aliyuncs\.com(?=\/|[\s"'`]|$)/g;
 const retiredArchive = /https?:\/\/apache-doris-releases\.oss[^.\s/]*\.aliyuncs\.com\/archived-docs(?=\/|[\s"'`]|$)/g;
 
 function migrateDownloadUrls(value, catalog = recovery) {
-    return value.replace(retiredArchive, new URL(catalog.baseUrl).origin + '/downloads/archived-docs')
+    return value.replace(retiredArchive, archive.baseUrl.replace(/\/$/, ''))
         .replace(retiredHost, catalog.baseUrl.replace(/\/$/, ''));
 }
 
@@ -13,7 +14,7 @@ function missingDownloads(value, catalog = recovery) {
     return urls.map(url => url.replace(/[.,;:]+$/, '')).filter(url => !isDownloadAvailable(url, catalog));
 }
 
-// Gate only our migrated distribution storage. Other publishers' source,
+// Apply the configured availability policy only to our distribution storage. Other publishers' source,
 // Maven and GitHub URLs retain their existing behavior.
 function isDownloadAvailable(value, catalog = recovery) {
     if (!value || typeof value !== 'string') return false;
@@ -24,6 +25,8 @@ function isDownloadAvailable(value, catalog = recovery) {
     if (url.hostname !== base.hostname) return true;
     if (url.origin !== base.origin || !value.startsWith(catalog.baseUrl) || url.search || url.hash) return false;
     const key = value.slice(catalog.baseUrl.length);
+    if (!key || key.endsWith('/')) return false;
+    if (catalog.availability === 'public') return true;
     if (!catalog.objects || !Object.prototype.hasOwnProperty.call(catalog.objects, key)) return false;
     const object = catalog.objects[key];
     return object?.verified === true && Number.isSafeInteger(object.bytes) && object.bytes > 0

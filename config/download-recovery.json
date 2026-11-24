@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
-  "baseUrl": "https://assets-cdn.selectdb.com/downloads/releases/",
+  "baseUrl": "https://apache-doris-downloads.oss-accelerate.aliyuncs.com/",
+  "availability": "public",
   "objects": {}
 }

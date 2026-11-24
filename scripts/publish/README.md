@@ -130,8 +130,8 @@ deployment does not look for a new artifact under the retry's run-attempt name.
 This behavior applies to runs created with the artifact-ID workflow changes.
 
 The archived PDF workflow exports repository snapshots and uses a separate
-role restricted to `downloads/archived-docs/`; see
+role restricted to `apache-doris-downloads/doris-website/docs/archived/`; see
 [`scripts/docs-pdf/README.md`](../docs-pdf/README.md). Distribution packages
-remain unavailable until their original files and signatures have been
-recovered and verified. The catalog and recovery procedure are documented in
+use the public-read release mirror. Complete and check the bucket replication
+before deploying the endpoint change. The catalog and recovery procedure are documented in
 [`download-recovery.md`](download-recovery.md).
