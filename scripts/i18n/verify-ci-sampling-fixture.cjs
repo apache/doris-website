@@ -93,6 +93,23 @@ async function main() {
         excludedBrokenModuleWasNotCompiled: true,
         excludedBrokenBlogWasNotCompiled: true,
     };
+    // Prose-only document edits must not also compile the representative set.
+    const focusedFile = 'docs/01-ja-only.md';
+    const originalFocused = fs.readFileSync(path.join(site, focusedFile), 'utf8');
+    fs.appendFileSync(path.join(site, focusedFile), '\nChanged document body.\n');
+    commit();
+    const focused = plan({root: site, base});
+    assert.equal(focused.selection, 'changed');
+    fs.writeFileSync(file, JSON.stringify(focused, null, 2));
+    assert.equal(run('pipe').status, 0, 'Focused changed-document build');
+    for (const locale of focused.locales) {
+        const scope = JSON.parse(fs.readFileSync(path.join(site, '.i18n-build/ci-sample/scopes', locale + '.json')));
+        assert.deepEqual(scope.selected.map(row => row.docId), ['ja-only']);
+    }
+    await verify({root: site, browser: process.argv.includes('--browser')});
+    proof.changedDocumentOnlyCompiled = true;
+    fs.writeFileSync(path.join(site, focusedFile), originalFocused);
+    commit();
     // A real edit makes that same module mandatory. Its missing import must now
     // fail compilation instead of being silently dropped by the sampler.
     const originalDocument = fs.readFileSync(path.join(site, 'docs/zz-unselected.mdx'), 'utf8');

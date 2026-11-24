@@ -69,7 +69,7 @@ export function isActiveToolVersion(tool: ToolsEnum, version: string): boolean {
     return (ACTIVE_TOOL_LINES[tool] || []).some(line => version === line || version.split('.')[0] === line);
 }
 
-export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
+export const ORIGIN = 'https://assets-cdn.selectdb.com/downloads/releases/';
 export enum DownloadTypeEnum {
     Binary = 'Binary',
     Source = 'Source',

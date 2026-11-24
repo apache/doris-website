@@ -100,8 +100,8 @@ function buildScope(files, versions, managed = [], dependencies = null, {actionS
         || (/^translations\/(pages|blog)\//.test(file) && !dependencies?.complete));
     const optimizePublish = contractChanged || searchChanged || navigationChanged || files.some(file => !isPublishMaintenanceNote(file)
         && /^(scripts\/publish\/|config\/matomo-plugin\/|scripts\/i18n\/locale-entry\.cjs$|package\.json$|yarn\.lock$|docusaurus\.config\.js$|config\/(?:(i18n|custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|scripts\/build-locales?\.cjs$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron-deploy-website|manual-deploy-website|build-check)\.yml$)/.test(file));
-    // Publication changes need the same complete artifact as deployment, on
-    // the CI runner. Keep local checks scoped to fixtures and Dev versions.
+    // Record complete publication impact for deployment. PR compilation policy
+    // is chosen separately by ci-plan.cjs and normally uses bounded samples.
     if (optimizePublish) {tier = 'full'; shared();}
     if (tier !== 'full' && dependencies?.complete && dependencies.locales.length) {
         languages.clear(); dependencies.locales.forEach(locale => languages.add(locale));

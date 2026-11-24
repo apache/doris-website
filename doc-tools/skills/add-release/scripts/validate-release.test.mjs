@@ -18,9 +18,9 @@ function packageRows(version, sourceVersion) {
     return ['x64', 'x64-noavx2', 'arm64']
         .map(
             arch => `{
-                gz: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-${version}-bin-${arch}.tar.gz',
-                asc: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-${version}-bin-${arch}.tar.gz.asc',
-                sha512: 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-${version}-bin-${arch}.tar.gz.sha512',
+                gz: 'https://assets-cdn.selectdb.com/downloads/releases/apache-doris-${version}-bin-${arch}.tar.gz',
+                asc: 'https://assets-cdn.selectdb.com/downloads/releases/apache-doris-${version}-bin-${arch}.tar.gz.asc',
+                sha512: 'https://assets-cdn.selectdb.com/downloads/releases/apache-doris-${version}-bin-${arch}.tar.gz.sha512',
                 source: 'https://dist.apache.org/repos/dist/release/doris/${version
                     .split('.')
                     .slice(0, 2)
@@ -78,7 +78,7 @@ function createFixture({
     write(
         root,
         'src/constant/download.data.ts',
-        `export const ORIGIN = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
+        `export const ORIGIN = 'https://assets-cdn.selectdb.com/downloads/releases/';
 
 // A doc comment that names ALL_VERSIONS must not confuse the array extractor.
 export const ACTIVE_CORE_BRANCHES: string[] = [${branchList}];

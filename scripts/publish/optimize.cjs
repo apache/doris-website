@@ -151,6 +151,7 @@ function optimize({site, locales, reportFile}) {
     const apache = writeApache({site,locales,redirects});
     fs.mkdirSync(path.join(site,'.publish'),{recursive:true});
     fs.writeFileSync(path.join(site,'.publish/redirects.json'),JSON.stringify({schemaVersion:1,
+        assetOrigin: require('../../config/asset-origin').getAssetOrigin(),
         assetPrefixes:prefixes.map(prefix => `/${prefix}/assets/`),
         redirects:[...redirects].map(([from,item]) => [from,item.to,item.preserveQuery,item.status])}));
     function clean(directory) {

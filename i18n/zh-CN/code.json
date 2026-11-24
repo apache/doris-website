@@ -16048,5 +16048,14 @@
     },
     "homepage.blogs.next": {
         "message": "下一篇"
+    },
+    "landing.download.unavailable": {
+        "message": "待恢复"
+    },
+    "landing.download.unavailableNote": {
+        "message": "此文件当前不可用，请选择其他下载选项。"
+    },
+    "landing.download.documentUnavailableNote": {
+        "message": "本文档中的部分软件包当前无法下载。相应文件恢复前，相关下载命令可能无法执行。"
     }
 }

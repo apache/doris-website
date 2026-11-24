@@ -8895,5 +8895,14 @@
   },
   "homepage.blogs.next": {
     "message": "次の記事"
+  },
+  "landing.download.unavailable": {
+    "message": "利用不可"
+  },
+  "landing.download.unavailableNote": {
+    "message": "このファイルは現在利用できません。別のダウンロードオプションを選択してください。"
+  },
+  "landing.download.documentUnavailableNote": {
+    "message": "このドキュメントに記載されている一部のパッケージは現在ダウンロードできません。ファイルが復旧するまで、関連するダウンロードコマンドが動作しない場合があります。"
   }
 }

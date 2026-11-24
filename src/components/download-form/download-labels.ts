@@ -7,6 +7,12 @@ export const DOWNLOAD_TYPE_LABELS = {
     [DownloadTypeEnum.Source]: translate({id: 'landing.download.source', message: 'Source'}),
 };
 
+export const DOWNLOAD_UNAVAILABLE_LABEL = translate({id: 'landing.download.unavailable', message: 'Unavailable'});
+export const DOWNLOAD_UNAVAILABLE_NOTE = translate({id: 'landing.download.unavailableNote',
+    message: 'This file is currently unavailable. Choose another download option.'});
+export const DOWNLOAD_DOCUMENT_UNAVAILABLE_NOTE = translate({id: 'landing.download.documentUnavailableNote',
+    message: 'Some package downloads in this document are currently unavailable. The related download commands may not work until the files are restored.'});
+
 export function localizeDownloadOptions(options: Option[]): Option[] {
     return options.map(option => {
         const compatibility = /^For (Flink|Spark) (.+)$/.exec(option.label);

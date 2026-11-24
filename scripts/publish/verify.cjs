@@ -12,7 +12,7 @@ function verify(site) {
     const redirects = new Map(manifest.redirects.map(([from,to]) => [decodeURIComponent(from),to]));
     const files = inventory(site);
     const available = new Set(files.map(item => item.relative));
-    const assetOrigin = require('../../config/asset-origin').getAssetOrigin();
+    const assetOrigin = manifest.assetOrigin ?? require('../../config/asset-origin').getAssetOrigin();
     const assetBase = assetOrigin ? new URL(assetOrigin.replace(/\/?$/, '/')) : null;
     const assetPrefix = assetBase?.pathname.replace(/\/$/, '') ?? '';
     const ownOrigins = new Set(['https://doris.apache.org',...(assetBase ? [assetBase.origin] : [])]);

@@ -125,5 +125,13 @@ styles, search contexts and a unique run probe. A file/checksum receipt is retai
 with the publishing measurements. Upload or delivery errors prevent publishing
 the HTML. Historical asset objects remain available in the versioned bucket.
 
-The legacy PDF workflow and release-package endpoints are separate recovery
-work. They are not switched to unverified new URLs by this website-assets change.
+Deploy jobs download the successful build's artifact ID, so rerunning only a
+deployment does not look for a new artifact under the retry's run-attempt name.
+This behavior applies to runs created with the artifact-ID workflow changes.
+
+The archived PDF workflow exports repository snapshots and uses a separate
+role restricted to `downloads/archived-docs/`; see
+[`scripts/docs-pdf/README.md`](../docs-pdf/README.md). Distribution packages
+remain unavailable until their original files and signatures have been
+recovered and verified. The catalog and recovery procedure are documented in
+[`download-recovery.md`](download-recovery.md).
