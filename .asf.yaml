@@ -43,6 +43,12 @@ github:
     rebase:  false
   pull_requests:
     allow_update_branch: true   
+    del_branch_on_merge: true
+    creation_cap:
+      # Limit concurrent open PRs from users without write access (fork PRs).
+      enabled: true
+      max_open_pull_requests: 20
+      include_drafts: true
   protected_branches:
     master:
       required_status_checks:
@@ -56,8 +62,19 @@ github:
         # Require at least one approving review before a PR can be merged into
         # master. Only reviewers with write access (committers) count.
         required_approving_review_count: 1
+        # A new commit dismisses earlier approvals, and the latest push must be
+        # approved again, so an approved clean revision cannot be replaced by a
+        # later unreviewed one.
+        dismiss_stale_reviews: true
+        require_last_push_approval: true
   features:
     issues: true
+    wiki: false
+    projects: false
+    discussions: false
+
+  dependabot_alerts: true
+  dependabot_updates: true
 
   # Explicit empty list: removing the key entirely would not clear collaborators
   # that a previously applied .asf.yaml had configured.
