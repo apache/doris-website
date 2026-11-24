@@ -298,11 +298,23 @@ class WorkflowTests(unittest.TestCase):
             workflow = workflows[name]
             build = workflow["jobs"]["build"]
             self.assertNotIn("environment", build)
+            # Retries retain the producer job outputs; run_attempt names would
+            # incorrectly select a nonexistent artifact on deploy-only reruns.
+            self.assertIn("artifact_id", build["outputs"])
+            download = next(step for step in workflow["jobs"]["deploy"]["steps"]
+                            if step.get("uses", "").startswith("actions/download-artifact@"))
+            self.assertEqual(download["with"]["artifact-ids"], "${{ needs.build.outputs.artifact_id }}")
+            self.assertTrue(download["with"]["merge-multiple"])
+            self.assertNotIn("name", download["with"])
             self.assertNotIn("secrets.", json.dumps(build))
             self.assertEqual(workflow["permissions"], {"contents": "read"})
             deploy = workflow["jobs"]["deploy"]
             if name == "manual-generate-pdf.yml":
-                self.assertEqual(deploy["environment"], "Production")
+                self.assertNotIn("environment", deploy)
+                self.assertEqual(deploy["permissions"]["id-token"], "write")
+                self.assertEqual(deploy["permissions"]["contents"], "read")
+                self.assertIn("vars.WEBSITE_PDF_UPLOAD_ENABLED == 'true'", deploy["if"])
+                self.assertNotIn("secrets.", json.dumps(deploy))
             else:
                 self.assertNotIn("environment", deploy)
                 self.assertEqual(deploy["permissions"]["id-token"], "write")

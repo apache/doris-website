@@ -6,7 +6,8 @@ import FormSelect from '../form-select/form-select';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import * as semver from 'semver';
 import copy from 'copy-to-clipboard';
-import {DOWNLOAD_TYPE_LABELS} from './download-labels';
+import {DOWNLOAD_TYPE_LABELS, DOWNLOAD_UNAVAILABLE_LABEL, DOWNLOAD_UNAVAILABLE_NOTE} from './download-labels';
+import {isDownloadAvailable} from '@site/src/utils/download-recovery';
 
 interface DownloadFormProps {
     versions: Option[];
@@ -23,7 +24,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
     const [form] = useForm();
     const version = useWatch('version', form) || [versions[0].value, versions[0].children[0].value];
     const architecture = useWatch('architecture', form);
-    const tarBall = useWatch('tarBall', form);
+    const tarBall = useWatch('tarBall', form) || DownloadTypeEnum.Binary;
 
     function showArch(version: string) {
         const SUPPORTED_VERSION = '>1.2.3';
@@ -48,12 +49,14 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
 
     function getDownloadLinkByCard(params: { version: string[]; cpu: string; tarBall: string; type: string }) {
         const parentVersion = versions.find(item => item.value === params.version[0]);
-        const childVersion = parentVersion.children.find(item => item.value === params.version[1]);
+        const childVersion = parentVersion?.children.find(item => item.value === params.version[1]);
+        if (!childVersion) return '';
         if (!showArch(params.version[1])) {
             return childVersion.source;
         }
-        const node = childVersion.items.find(item => item.value === params.cpu);
-        if (tarBall === DownloadTypeEnum.Binary) {
+        const node = childVersion.items?.find(item => item.value === params.cpu) ?? childVersion.items?.[0];
+        if (!node) return '';
+        if (params.tarBall === DownloadTypeEnum.Binary) {
             return node[params.type];
         } else {
             if (params.type === 'gz') {
@@ -74,6 +77,10 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
         }
     }, [version]);
 
+    const selectedLink = (type: string) => getDownloadLinkByCard({version, cpu: architecture, tarBall, type});
+    const download = selectedLink('gz');
+    const available = isDownloadAvailable(download);
+
     const formBody = (
         <Form
             validateMessages={{required: translate({id: 'landing.download.required', message: 'Select an option.'})}}
@@ -85,7 +92,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                     tarBall: tarBall,
                     type: 'gz',
                 });
-                window.open(url, '_blank');
+                if (isDownloadAvailable(url)) window.open(url, '_blank');
                 return;
             }}
             initialValues={{
@@ -146,17 +153,19 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                 </Form.Item>
             )}
 
+            {download && !available && <p role="status" className="mt-2 text-center text-sm">{DOWNLOAD_UNAVAILABLE_NOTE}</p>}
             <Form.Item style={{ marginBottom: 0 }} colon={false}>
                 <button
                     type="submit"
+                    disabled={!available}
                     className={`w-full text-lg ${isArchive ? 'download-next__archive-button' : 'button-primary'}`}
                 >
-                    {translate({id: "landing.downloadformallrelease.007", message: "Download"})}
+                    {download && !available ? DOWNLOAD_UNAVAILABLE_LABEL : translate({id: "landing.downloadformallrelease.007", message: "Download"})}
                 </button>
             </Form.Item>
             {Array.isArray(version) && showArch(version[1]) && (
                 <>
-                    <button type="button"
+                    <button type="button" disabled={!available}
                         className="flex w-full cursor-pointer text-primary items-center mt-4 justify-center"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
@@ -165,6 +174,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 tarBall: tarBall,
                                 type: 'gz',
                             });
+                            if (!isDownloadAvailable(url)) return;
                             copy(url);
                             message.success(translate({id: 'landing.download.copied', message: 'Copied'}));
                         }}
@@ -189,7 +199,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                         </svg>
                     </button>
                     <div className="flex justify-center mt-4">
-                        <button type="button"
+                        <button type="button" disabled={!isDownloadAvailable(selectedLink('asc'))}
                             className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
                             onClick={() => {
                                 const url = getDownloadLinkByCard({
@@ -198,12 +208,12 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                     tarBall: tarBall,
                                     type: 'asc',
                                 });
-                                window.open(url, '_blank');
+                                if (isDownloadAvailable(url)) window.open(url, '_blank');
                             }}
                         >
                             ASC
                         </button>
-                        <button type="button"
+                        <button type="button" disabled={!isDownloadAvailable(selectedLink('sha512'))}
                             className="inline-flex items-center ml-4 text-[#8592A6] hover:text-primary cursor-pointer hover:underline"
                             onClick={() => {
                                 const url = getDownloadLinkByCard({
@@ -212,7 +222,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                     tarBall: tarBall,
                                     type: 'sha512',
                                 });
-                                window.open(url, '_blank');
+                                if (isDownloadAvailable(url)) window.open(url, '_blank');
                             }}
                         >
                             SHA-512

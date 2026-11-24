@@ -435,7 +435,7 @@ export async function validateCoreRelease(options) {
     const sourceDir =
         options.sourceDir ||
         'https://dist.apache.org/repos/dist/release/doris/' + series + '/' + version + '/';
-    const binaryOrigin = options.binaryOrigin || 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/';
+    const binaryOrigin = options.binaryOrigin || 'https://assets-cdn.selectdb.com/downloads/releases/';
     const checkLinks = options.checkLinks !== false;
     const checkGitRouting = options.checkGitRouting !== false;
     const checks = [];

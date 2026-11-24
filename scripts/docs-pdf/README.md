@@ -162,4 +162,40 @@ When reusing an output directory, a failed export can leave the previous
 successful PDF in place. Review `manifest.json` to identify the files and
 source commit for the completed export.
 
+## Publish archived PDFs with GitHub Actions
+
+Run **Generate Archived Documentation PDFs** from `master`. Select `all`,
+`2.1`, `2.0`, or `1.2`, and the required languages. The workflow exports local
+sources, verifies each complete PDF, and retains the artifact for 14 days.
+It does not read the retired bucket or the live documentation website.
+
+Set these repository Actions variables before enabling uploads:
+
+| Variable | Value |
+| --- | --- |
+| `ALIYUN_OIDC_PROVIDER_ARN` | The Alibaba Cloud GitHub OIDC provider ARN. |
+| `ALIYUN_WEBSITE_PDF_ROLE_ARN` | A separate role restricted to `downloads/archived-docs/` in `doris-website-assets-prod-bj`. Trust only `repo:apache/doris-website:ref:refs/heads/master` and audience `sts.aliyuncs.com`. |
+| `WEBSITE_PDF_UPLOAD_ENABLED` | `true` to upload verified PDFs; `false` to generate artifacts only. |
+
+The PDF role needs bucket location, listing restricted to the PDF prefix, and
+object Get/Put/ListParts/AbortMultipartUpload for that prefix. It needs no delete,
+ACL, `site/`, or `media/` access. The workflow uses a pinned local authentication
+action and short-lived OIDC credentials. It does not require an Environment or
+an AK/SK secret. The website upload role keeps its existing `site/` permissions.
+
+The uploader rejects samples, missing images, checksum mismatches and source
+commit mismatches. Successful uploads retain private OSS ACLs and AES256
+encryption. The public URLs use the base in `config/archived-docs.json`.
+Website and PDF uploads share a concurrency group. A deploy-only retry selects
+the successful build's artifact ID, including when the run attempt changes.
+Existing PDF URLs can remain cached for up to an hour after replacement. If
+the CDN byte check sees an older copy, have a CDN administrator refresh the
+affected URLs, or wait for cache expiry and retry the deployment job. The PDF
+role cannot change CDN configuration or refresh unrelated resources.
+
+`config/restored-assets.json` maps recovered original images and datasets to
+their new CDN paths during PDF rendering. Archived source snapshots stay
+unchanged. Downloads from retired distribution storage are mapped to the new
+base, with a notice when the package has not been restored.
+
 The retired scheduled workflow was `.github/workflows/cron-generate-pdf.yml`.

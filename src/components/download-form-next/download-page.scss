@@ -251,6 +251,12 @@
     }
 }
 
+.download-next__actions.is-unavailable {
+    box-shadow: none;
+    &:hover { transform: none; box-shadow: none; }
+    button { cursor: not-allowed; }
+}
+
 .download-next__copy-btn {
     display: inline-flex;
     align-items: center;
