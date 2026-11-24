@@ -63,7 +63,7 @@ async function sample(context, options, content) {
     }
 
     // Explicitly imported components/assets still select all affected owners.
-    if (plan.files.some(file => /^(src|static)\//.test(file))) {
+    if (plan.files.some(file => /^(src|static|docs|versioned_docs|community|course|releasenotes|blog|i18n)\//.test(file))) {
         const {dependencies} = require('./ci-sample.cjs');
         const changed = new Set(plan.files), cache = new Map();
         for (const post of posts) {
