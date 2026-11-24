@@ -174,7 +174,7 @@ Set these repository Actions variables before enabling uploads:
 | Variable | Value |
 | --- | --- |
 | `ALIYUN_OIDC_PROVIDER_ARN` | The Alibaba Cloud GitHub OIDC provider ARN. |
-| `ALIYUN_WEBSITE_PDF_ROLE_ARN` | A separate role restricted to `downloads/archived-docs/` in `doris-website-assets-prod-bj`. Trust only `repo:apache/doris-website:ref:refs/heads/master` and audience `sts.aliyuncs.com`. |
+| `ALIYUN_WEBSITE_PDF_ROLE_ARN` | A separate role restricted to `doris-website/docs/archived/` in `apache-doris-downloads`. Trust only `repo:apache/doris-website:ref:refs/heads/master` and audience `sts.aliyuncs.com`. |
 | `WEBSITE_PDF_UPLOAD_ENABLED` | `true` to upload verified PDFs; `false` to generate artifacts only. |
 
 The PDF role needs bucket location, listing restricted to the PDF prefix, and
@@ -184,14 +184,16 @@ action and short-lived OIDC credentials. It does not require an Environment or
 an AK/SK secret. The website upload role keeps its existing `site/` permissions.
 
 The uploader rejects samples, missing images, checksum mismatches and source
-commit mismatches. Successful uploads retain private OSS ACLs and AES256
-encryption. The public URLs use the base in `config/archived-docs.json`.
+commit mismatches. Successful uploads inherit the bucket's public-read ACL and
+use its default AES256 encryption. Anonymous writes remain prohibited. Enable
+OSS transfer acceleration and GET/HEAD CORS for `https://doris.apache.org` on
+this bucket. The public URLs use the base in `config/archived-docs.json`.
 Website and PDF uploads share a concurrency group. A deploy-only retry selects
 the successful build's artifact ID, including when the run attempt changes.
-Existing PDF URLs can remain cached for up to an hour after replacement. If
-the CDN byte check sees an older copy, have a CDN administrator refresh the
-affected URLs, or wait for cache expiry and retry the deployment job. The PDF
-role cannot change CDN configuration or refresh unrelated resources.
+Existing PDF URLs can remain cached in browsers for up to an hour after
+replacement. Delivery checks verify anonymous reads from both the accelerated
+and regional OSS endpoints, plus the first PDF byte range. The PDF role cannot
+change bucket ACLs or CDN configuration.
 
 `config/restored-assets.json` maps recovered original images and datasets to
 their new CDN paths during PDF rendering. Archived source snapshots stay

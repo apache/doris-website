@@ -3,7 +3,9 @@ const assert = require('node:assert/strict');
 const React = require('react');
 const {renderToStaticMarkup} = require('react-dom/server');
 const jsx = require('react/jsx-runtime');
-const recovery = require('../../../config/download-recovery.json');
+const production = require('../../../config/download-recovery.json');
+const recovery = {...production, baseUrl: 'https://assets-cdn.selectdb.com/downloads/releases/',
+    availability: 'verified', objects: {}};
 const plugin = require('../download-recovery-remark.cjs');
 const key = 'apache-doris-4.1.5-bin-x64.tar.gz';
 const old = 'https://apache-doris-releases.oss-accelerate.aliyuncs.com/' + key;
@@ -32,6 +34,18 @@ test('verified files remain real links and do not produce a missing-file notice'
     const catalog = {...recovery, objects: {[key]: {bytes: 123, sha256: 'a'.repeat(64), verified: true}}};
     const html = await render(`[Binary](${old})`, {catalog});
     assert(html.includes(`href="${recovery.baseUrl + key}"`));
+    assert(!html.includes('role="note"'));
+    assert(!html.includes('aria-disabled'));
+});
+
+test('public mirror links, sidecars and commands render without unavailable notices', async () => {
+    const html = await render(`[Binary](${old})\n\n[ASC](${old}.asc)\n\n[SHA-512](${old}.sha512)\n\n`
+        + `<a href="${old}">Download</a>\n\n\`\`\`sh\nwget ${old}\n\`\`\``, {catalog: production});
+    for (const suffix of ['', '.asc', '.sha512']) {
+        assert(html.includes(`href="${production.baseUrl + key + suffix}"`));
+    }
+    assert(html.includes('wget ' + production.baseUrl + key));
+    assert(!html.includes('apache-doris-releases.oss-accelerate.aliyuncs.com'));
     assert(!html.includes('role="note"'));
     assert(!html.includes('aria-disabled'));
 });
