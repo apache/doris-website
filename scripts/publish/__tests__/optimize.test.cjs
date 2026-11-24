@@ -248,3 +248,19 @@ test('a fifth-language compiled filename collision rejects the artifact', t => {
     write('ru/assets/js/collision.0123abcd.js','Russian');
     assert.throws(() => optimize({site,locales:selected}),/filename collision/);
 });
+
+test('verification uses the recorded build asset origin when the caller environment changes', t => {
+    const previous = process.env.DORIS_ASSET_ORIGIN;
+    t.after(() => {if (previous === undefined) delete process.env.DORIS_ASSET_ORIGIN; else process.env.DORIS_ASSET_ORIGIN=previous;});
+    process.env.DORIS_ASSET_ORIGIN='';
+    const {site,write}=fixture(t);
+    write('assets/css/style.css','@font-face{src:url(/assets/shared/font.ttf)}');
+    write('assets/shared/font.ttf','font fixture bytes');
+    optimize({site,locales});
+    assert.equal(JSON.parse(fs.readFileSync(path.join(site,'.publish/redirects.json'))).assetOrigin,'');
+    process.env.DORIS_ASSET_ORIGIN='https://assets-cdn.selectdb.com/site';
+    const verify=require('../verify.cjs').verify;
+    assert(verify(site).compiledAssetReferences>0);
+    fs.unlinkSync(path.join(site,'assets/shared/font.ttf'));
+    assert.throws(()=>verify(site),/Missing compiled asset/);
+});

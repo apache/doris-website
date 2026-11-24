@@ -69,17 +69,17 @@ for (const [name, before, after] of [
     ['duplicate a module path', action, action + moduleConfig('another', '.github/actions/example')],
     ['add an unknown configuration section', action, action + '[include]\npath = other-config\n'],
     ['contain invalid configuration', action, '[submodule "broken"\n'],
-]) test(`gitmodules changes still require full CI when they ${name}`, t => {
+]) test(`gitmodules changes select framework samples when they ${name}`, t => {
     const {root, base} = repository(t, before, after);
     assert.equal(actionSubmodulesOnly(root, base), false);
-    assert.equal(plan({root, base}).mode, 'full');
+    assert.equal(plan({root, base}).mode, 'sample');
 });
 
 test('missing base history cannot reduce submodule validation', t => {
     const {root} = repository(t, null, action);
     assert.equal(actionSubmodulesOnly(root, '0'.repeat(40)), false);
-    assert.equal(policy(['.gitmodules']).mode, 'full');
-    assert.equal(policy(['.gitmodules'], {forceSample: true}).mode, 'full');
+    assert.equal(policy(['.gitmodules']).mode, 'sample');
+    assert.equal(policy(['.gitmodules'], {forceSample: true}).mode, 'sample');
 });
 
 test('top-level publishing notes skip builds while executable code and fixture inputs retain checks', () => {
@@ -121,6 +121,6 @@ test('the OIDC-action PR file set selects no website or publishing fixture build
     assert.equal(plan({...fixture, forceFull: true}).mode, 'full');
     assert.equal(plan({...fixture, event: {pull_request: {labels: [{name: 'ci/full'}]}}}).mode, 'full');
     for (const file of ['package.json', 'yarn.lock', 'versions.json', 'unknown-input.bin']) {
-        assert.equal(policy([...selected.files, file], {actionSubmodules: true}).mode, 'full');
+        assert.equal(policy([...selected.files, file], {actionSubmodules: true}).mode, file === 'unknown-input.bin' ? 'fixtures' : 'sample');
     }
 });

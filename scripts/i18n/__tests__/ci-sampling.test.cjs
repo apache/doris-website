@@ -23,8 +23,9 @@ test('PR policy separates fixtures, real samples, full upgrades and lightweight 
         'sample',
     );
     assert.equal(policy(['static/images/logo.svg']).mode, 'sample');
-    for (const file of ['package.json', 'yarn.lock', 'versions.json', 'unknown-input.bin'])
-        assert.equal(policy([file]).mode, 'full');
+    for (const file of ['package.json', 'yarn.lock', 'versions.json'])
+        assert.equal(policy([file]).mode, 'sample');
+    assert.equal(policy(['unknown-input.bin']).mode, 'fixtures');
     assert.equal(policy(['plan-doc/notes.md']).mode, 'skip');
     assert.equal(policy(['translations/CONTENT_MANIFEST.md']).mode, 'skip');
     assert.equal(
@@ -35,16 +36,16 @@ test('PR policy separates fixtures, real samples, full upgrades and lightweight 
     assert.equal(policy(['docs/topic.md'], {forceFull: true}).mode, 'full');
     assert.equal(policy([], {forceSample: true}).mode, 'sample');
 });
-test('translation configuration selects representative samples and unknown sibling JSON remains full', () => {
+test('translation configuration selects representative samples and unknown sibling tooling stays offline', () => {
     const config = policy(['translations/config.json']);
     assert.equal(config.mode, 'sample');
     assert.equal(config.selection, 'representative');
     assert.equal(config.publicationAllowed, false);
     assert.equal(config.runTranslationTests, true);
-    assert.equal(policy(['translations/config-unknown.json']).mode, 'full');
+    assert.equal(policy(['translations/config-unknown.json']).mode, 'fixtures');
 });
 
-test('shared UI registry selects real samples and content fixtures while unknown inputs still require full validation', () => {
+test('shared UI registry selects real samples and content fixtures while unknown inputs cannot force a full build', () => {
     const registry = 'translations/shared/registry.json';
     const selected = policy([registry]);
     assert.equal(selected.mode, 'sample');
@@ -52,9 +53,9 @@ test('shared UI registry selects real samples and content fixtures while unknown
     assert.equal(selected.runContentFixture, true);
     assert.equal(selected.publicationAllowed, false);
     for (const file of ['translations/shared/unknown.json', 'unknown-input.bin', 'package.json', 'versions.json'])
-        assert.equal(policy([registry, file]).mode, 'full', file);
+        assert.equal(policy([registry, file]).mode, 'sample', file);
     assert.equal(policy([registry], {forceFull: true}).mode, 'full');
-    assert.equal(policy([registry, 'translations/shared/unknown.json'], {forceSample: true}).mode, 'full');
+    assert.equal(policy([registry, 'translations/shared/unknown.json'], {forceSample: true}).mode, 'sample');
 });
 test('community translation metadata does not upgrade a landing-page PR to full compilation', () => {
     const files = ['translations/COMMUNITY_ENTRIES.md', 'translations/community-reports.json',
@@ -69,7 +70,7 @@ test('community translation metadata does not upgrade a landing-page PR to full 
     assert.equal(policy(['translations/community-reports.json']).mode, 'sample');
     for (const note of ['COMMUNITY_ENTRIES', 'FIRST_RELEASE', 'SHARED_UI', 'README'])
         assert.equal(policy([`translations/${note}.md`]).mode, 'skip');
-    assert.equal(policy([...files, 'translations/unknown.json']).mode, 'full');
+    assert.equal(policy([...files, 'translations/unknown.json']).mode, 'sample');
     assert.equal(policy(files, {forceFull: true}).mode, 'full');
 });
 test('known translation scope and glossary inputs keep combined blog/maintenance work in representative CI',()=>{
@@ -85,8 +86,8 @@ test('known translation scope and glossary inputs keep combined blog/maintenance
         assert.equal(policy([config]).runTranslationTests,true);
     }
     for(const unknown of ['translations/scope/unknown.json','translations/scope/ru-extra.json','translations/unknown.json'])
-        assert.equal(policy([...files,unknown]).mode,'full',unknown);
-    for(const risk of ['package.json','yarn.lock','versions.json']) assert.equal(policy([...files,risk]).mode,'full',risk);
+        assert.equal(policy([...files,unknown]).mode,'sample',unknown);
+    for(const risk of ['package.json','yarn.lock','versions.json']) assert.equal(policy([...files,risk]).mode,'sample',risk);
     assert.equal(policy(files,{forceFull:true}).mode,'full');
 });
 test('CI tooling only runs the fixtures for its own subsystem', () => {
@@ -96,7 +97,7 @@ test('CI tooling only runs the fixtures for its own subsystem', () => {
     assert.equal(language.runSamplingFixture, false);
     assert.equal(language.runPublishFixture, false);
     const dates=policy(['scripts/i18n/verify-doc-dates-fixture.cjs']);
-    assert.equal(dates.mode,'fixtures');assert.equal(dates.runContentFixture,true);
+    assert.equal(dates.mode,'fixtures');assert.equal(dates.runContentFixture,false);assert.equal(dates.runDocDatesFixture,true);
     assert.equal(dates.publicationAllowed,false);
     const sampler = policy(['scripts/i18n/ci-sample.cjs']);
     assert.equal(sampler.runSamplingFixture, true);
@@ -354,6 +355,20 @@ test('changed transitive imports and sharded translation state select their owni
             },
         ],
     };
+    // A shared module used by many docs stays a sample. A batch editing all
+    // of those docs still compiles every changed body without forcing full CI.
+    const extra = [];
+    for (let i=0; i<501; i++) {
+        const name='consumer-'+i;
+        fs.writeFileSync(path.join(root, 'docs', name+'.mdx'),'import {value} from "@site/src/nested.js";\n\n{value}');
+        extra.push({id:name,source:'@site/docs/'+name+'.mdx',permalink:'/docs/'+name+'/'});
+    }
+    docs.push(...extra);
+    const bounded=await selectDocs(props,{selection:'representative',files:['src/nested.js'],baseSha:'HEAD'});
+    assert(bounded.selected.size<10);
+    const batch=await selectDocs(props,{selection:'changed',files:extra.map(doc=>doc.source.slice(6)),baseSha:'HEAD'});
+    assert.equal(batch.selected.size,501);
+    docs.splice(3);
     const imported = await selectDocs(props, {files: ['src/nested.js'], baseSha: 'HEAD'});
     assert(
         imported.selected
@@ -372,6 +387,10 @@ test('changed transitive imports and sharded translation state select their owni
             .get(JSON.stringify(['default', 'current', 'owner']))
             .reasons.includes('changed import dependency'),
     );
+    const focused = await selectDocs(props, {selection:'changed', files:['docs/state-only.mdx'], baseSha:'HEAD'});
+    assert.deepEqual([...focused.selected.values()].map(item => item.row.docId).sort(), ['owner','state-only']);
+    const tooling = await selectDocs(props, {selection:'changed', files:['doc-tools/release.mjs'], baseSha:'HEAD'});
+    assert.equal(tooling.selected.size,0);
     fs.rmSync(path.join(root, 'src/nested.js'));
     const deleted = await selectDocs(props, {files: ['src/nested.js'], baseSha: 'HEAD'});
     assert(

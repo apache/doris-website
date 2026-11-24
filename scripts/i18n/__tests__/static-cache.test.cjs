@@ -22,14 +22,14 @@ function fixture(t) {
     return {site,manifestDir,locales:['ja','ko']};
 }
 test('sharing compact metadata preserves strict results while parsing fewer complete HTML documents',t=>{
-    const data=fixture(t),original=cheerio.load;let reads=0;
-    cheerio.load=(source,...args)=>{if(String(source).includes('theme-doc-markdown'))reads++;return original(source,...args);};
+    const data=fixture(t),original=fs.readFileSync;let reads=0;
+    fs.readFileSync=(file,...args)=>{if(String(file).endsWith('index.html'))reads++;return original(file,...args);};
     try {
         const separate=data.locales.map(locale=>({locale,...verify({site:data.site,manifest:path.join(data.manifestDir,locale+'.json')})}));
         const before=reads;reads=0;
         assert.deepEqual(verifyAll(data),separate);
         assert(reads<before,`${reads} shared parses must be less than ${before} separate parses`);
-    } finally {cheerio.load=original;}
+    } finally {fs.readFileSync=original;}
 });
 test('each invocation rereads the artifact and rejects damaged heading IDs and duplicate alternates',t=>{
     const data=fixture(t);verifyAll(data);

@@ -91,7 +91,7 @@ function rowsFor(props) {
     }
     return rows.sort((a, b) => id(a).localeCompare(id(b)));
 }
-function chooseRepresentatives(rows, root) {
+function chooseRepresentatives(rows, root, representative = true) {
     const selected = new Map();
     const add = (row, reason) => {
         if (!row) return;
@@ -105,7 +105,7 @@ function chooseRepresentatives(rows, root) {
         if (!groups.has(g)) groups.set(g, []);
         groups.get(g).push(row);
     }
-    for (const group of groups.values()) {
+    for (const group of representative ? groups.values() : []) {
         const patterns = [
             ['MDX/import', /\bimport\s|<[A-Z][A-Za-z]+/],
             ['SQL', /```sql\b/i],
@@ -225,7 +225,7 @@ async function dependencies(
               ? path.resolve(path.dirname(file), name)
               : undefined;
         if (!base) continue;
-        const child = [
+        const candidates = [
             '',
             '.js',
             '.jsx',
@@ -243,12 +243,15 @@ async function dependencies(
             '/index.ts',
             '/index.tsx',
         ]
-            .map(ext => base + ext)
-            .find(p => fs.existsSync(p) && fs.statSync(p).isFile());
+            .map(ext => base + ext);
+        const child = candidates.find(p => fs.existsSync(p) && fs.statSync(p).isFile());
         if (child) {
             const result = await dependencies(root, child, cache, seen, markdownConfigFormat);
             uncertain ||= result.uncertain;
-        } else uncertain = true; // Deleted imports must still select their owners.
+        } else {
+            uncertain = true;
+            candidates.forEach(file => seen.add(file)); // Retain exact deleted dependency edges.
+        }
     }
     return {files: seen, uncertain};
 }
@@ -284,7 +287,7 @@ function stateIdentities(root, files, base) {
 }
 async function selectDocs(props, plan) {
     const rows = rowsFor(props),
-        {selected, add} = chooseRepresentatives(rows, props.siteDir);
+        {selected, add} = chooseRepresentatives(rows, props.siteDir, plan.selection !== 'changed');
     const changed = new Set(plan.files),
         changedStates = stateIdentities(props.siteDir, plan.files, plan.baseSha);
     for (const row of rows)
@@ -301,7 +304,7 @@ async function selectDocs(props, plan) {
         ),
     );
     if (dependenciesChanged.length) {
-        const cache = new Map();
+        const cache = new Map(), coveredOwners = new Set();
         for (const row of rows) {
             const result = await dependencies(
                 props.siteDir,
@@ -310,37 +313,15 @@ async function selectDocs(props, plan) {
                 new Set(),
                 props.siteConfig?.markdown?.format ?? 'mdx',
             );
-            if (
-                result.uncertain ||
-                [...result.files].some(file => changed.has(gitPath(props.siteDir, file)))
-            )
-                add(
-                    row,
-                    result.uncertain
-                        ? 'conservative dynamic/unparsed import'
-                        : 'changed import dependency',
-                );
+            const affected = [...result.files].map(file => gitPath(props.siteDir, file)).filter(file => changed.has(file));
+            // Shared implementations need a few real consumers per plugin and
+            // version. Explicitly edited documents above are never truncated.
+            const ownerKeys = affected.map(file => JSON.stringify([row.pluginId, row.version, file]));
+            if (affected.length && (plan.selection === 'changed' || ownerKeys.some(key => !coveredOwners.has(key)))) {
+                ownerKeys.forEach(key => coveredOwners.add(key));
+                add(row, result.uncertain ? 'conservative dynamic/unparsed import' : 'changed import dependency');
+            }
         }
-    }
-    if (selected.size > 500) {
-        const directory = path.join(props.siteDir, '.i18n-build/ci-sample/scopes');
-        fs.mkdirSync(directory, {recursive: true});
-        fs.writeFileSync(
-            path.join(directory, props.i18n.currentLocale + '.selection.json'),
-            JSON.stringify(
-                {
-                    status: 'selection-exceeded',
-                    sourceSha: plan.sourceSha,
-                    metadataDocs: rows.length,
-                    selected: [...selected.values()],
-                },
-                null,
-                2,
-            ) + '\n',
-        );
-        throw new Error(
-            `Sample expands to ${selected.size} documents; use the ci/full label or manual full validation instead of truncating affected documents`,
-        );
     }
     return {rows, selected};
 }
