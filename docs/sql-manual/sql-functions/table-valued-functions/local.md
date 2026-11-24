@@ -2,7 +2,7 @@
 {
     "title": "LOCAL | Table Valued Functions",
     "language": "en",
-    "description": "Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table.",
+    "description": "Query local files on a Doris BE as a table, including CSV, JSON, Parquet, ORC, and native Avro object container files.",
     "sidebar_label": "LOCAL"
 }
 ---
@@ -11,7 +11,9 @@
 
 ## Description
 
-Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.
+Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro` file format.
+
+For native Avro reads, see [Avro](../../../lakehouse/file-formats/avro.md) for development-version prerequisites, codecs, types, and limitations.
 
 ## syntax
 
@@ -29,7 +31,7 @@ LOCAL(
 |-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
 | `file_path`       | The path of the file to be read, which is relative to the `user_files_secure_path` directory. The `user_files_secure_path` parameter is a [BE configuration item](../../../admin-manual/config/be-config.md). <br /> The path cannot include `..`, and glob syntax can be used for pattern matching, such as `logs/*.log`. |                                                   |
 | `backend_id`      | The ID of the BE node where the file is located. It can be obtained via the `show backends` command.                                                                                                  | Before version 2.1.1, Doris only supports specifying a BE node to read local data files on that node. |
-| `format`          | The file format, which is required. Supported formats are `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`.                                                                             |                                                   |
+| `format`          | The file format, which is required. Supported formats are `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`.                                                                             |                                                   |
 
 ## Optional Parameters
 | Parameter              | Description                                                                                                                                                                       | Remarks                                                                |

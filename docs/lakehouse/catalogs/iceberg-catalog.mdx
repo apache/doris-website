@@ -244,9 +244,13 @@ The `labels` system table is supported since version 5.0.0 and is available only
 * [Parquet](../file-formats/parquet.md)
 * [ORC](../file-formats/orc.md)
 
+* [Avro](../file-formats/avro.md) (development version; reads only)
+
 Since version 4.1.4, the file format is determined per data file (split), so **a single Iceberg table containing both Parquet and ORC data files can be queried normally**.
 
 Since version 4.1.4, the Iceberg identity partition metadata is delivered with every split, and the path partition keys cover the identity columns of all partition specs of the table. As a result, partition column values are also returned correctly for tables that have gone through **Partition Evolution**.
+
+The development version also reads Avro data, equality-delete, and position-delete files, including mixed Parquet/ORC/Avro snapshots. Avro requires the [development-version prerequisites](../file-formats/avro.md); Avro writing is unsupported.
 
 ## Column Type Mapping
 
@@ -1510,7 +1514,7 @@ Doris exposes two hidden metadata columns for Iceberg data tables. You can use t
 | `_file` | `STRING NOT NULL` | The original path recorded for the Iceberg data file. |
 | `_pos` | `BIGINT NOT NULL` | The zero-based physical row position within the complete data file. |
 
-Prerequisites: configure an Iceberg Catalog as described in the preceding examples, and create an Iceberg data table that contains an `id` column and uses Parquet or ORC files. The following query assumes that `iceberg_tbl` already contains rows with `id` values `1` and `2`:
+Prerequisites: configure an Iceberg Catalog as described in the preceding examples, and create an Iceberg data table that contains an `id` column and uses Parquet, ORC, or Avro files. The following query assumes that `iceberg_tbl` already contains rows with `id` values `1` and `2`:
 
 ```sql
 SELECT id, `_file`, `_pos`
@@ -1548,7 +1552,7 @@ Relevant session variables:
 The row position is relative to the complete physical file. Predicate filtering, delete processing, and scan splitting do not renumber the remaining rows. Therefore, the combination of `_file` and `_pos` can locate a physical record within the current table snapshot. Data-file rewrites or compaction can change both values, so they must not be used as a stable logical row ID.
 
 :::caution
-These columns are available only when an Iceberg data table is read through the FileScannerV2 native Parquet or ORC reader. A query that references them fails if `enable_file_scanner_v2` is disabled, `force_jni_scanner` is enabled, or the selected data files cannot use the native Parquet/ORC reader.
+These columns are available only when an Iceberg data table is read through the FileScannerV2 native Parquet, ORC, or Avro reader. Avro also requires the [development-version prerequisites](../file-formats/avro.md). A query that references them fails if `enable_file_scanner_v2` is disabled, `force_jni_scanner` is enabled, or the selected data files cannot use the native Parquet/ORC/Avro reader.
 
 `_file` and `_pos` are reserved names, compared case-insensitively. Do not use them as physical column names in an Iceberg table.
 :::

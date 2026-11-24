@@ -21,7 +21,10 @@ In addition to Hive, many other systems use Hive Metastore to store metadata. Th
 | Data Integration   | Read Hive data and write it to Doris internal tables, or perform ZeroETL operations using the Doris computing engine. |
 | Data Write-back   | Process data from any source supported by Doris and write it back to Hive tables. |
 
-## Configuring Catalog
+<!-- Preserve the previous automatic anchor while restoring the anchor used by installation guides. -->
+<span id="configuring-catalog"></span>
+
+## Configuring Catalog {#configure-catalog}
 
 ### Syntax
 
@@ -201,6 +204,8 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 
   * [ORC](../file-formats/orc.md)
 
+  * [Avro](../file-formats/avro.md) (development version; reads only)
+
   * [Text/CSV/JSON](../file-formats/text.md)
 
 * Hudi
@@ -214,6 +219,10 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
   * [Parquet](../file-formats/parquet.md)
 
   * [ORC](../file-formats/orc.md)
+
+  * [Avro](../file-formats/avro.md) (development version; reads only)
+
+See [Avro](../file-formats/avro.md) for development-version requirements, supported schema evolution, and Hive timestamp restrictions.
 
 ## Parquet INT96 Timestamp Compatibility {#timestamp-compatibility}
 

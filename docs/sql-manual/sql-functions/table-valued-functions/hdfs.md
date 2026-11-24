@@ -15,6 +15,8 @@
 
 The HDFS table-valued function (TVF) reads files on HDFS as a relational table. It supports `csv`, `csv_with_names`, `csv_with_names_and_types`, `json`, `parquet`, `orc`, and `avro` formats.
 
+For native Avro reads, see [Avro](../../../lakehouse/file-formats/avro.md) for development-version prerequisites, codecs, types, and limitations.
+
 ## Syntax
 
 ```sql

@@ -2,7 +2,7 @@
 {
     "title": "HDFS | Table Valued Functions",
     "language": "zh-CN",
-    "description": "HDFS 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持csv/csvwithnames/csvwithnamesandtypes/json/parquet/orc文件格式。",
+    "description": "HDFS 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持csv/csvwithnames/csvwithnamesandtypes/json/parquet/orc/avro文件格式。",
     "sidebar_label": "HDFS"
 }
 ---
@@ -11,7 +11,9 @@
 
 ## 描述
 
-HDFS 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
+HDFS 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`文件格式。
+
+原生 Avro 读取的开发版前置条件、压缩算法、类型及限制，请参阅 [Avro](../../../lakehouse/file-formats/avro.md)。
 
 ## 语法
 ```sql

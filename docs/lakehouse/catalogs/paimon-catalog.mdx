@@ -340,6 +340,10 @@ The currently dependent Paimon version is 1.4.2.
 
 * [ORC](../file-formats/orc.md)
 
+* [Avro](../file-formats/avro.md) (read through the Paimon SDK)
+
+Avro remains on the Paimon SDK path to preserve merge and deletion semantics; no new Catalog setting is needed. It does not use the native Avro file reader or provide the native-only `_file` / `_pos` metadata columns.
+
 ## Column Type Mapping
 
 See [Paimon to Doris Data Type Mapping](paimon-catalog/doris-type-mapping.md) for the complete Doris 4.2 mapping table, precision rules, and unsupported types.
