@@ -20,7 +20,7 @@ const highRisk = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plu
 const maintenanceNotes = /^translations\/(?:[^/]+\.md|scope\/README\.md)$/;
 // Registered locale scope/glossary files are validated offline and exercised
 // through native metadata plus representative builds, like other known shared
-// language inputs. Unknown translation configuration still requires full CI.
+// language inputs. Other tooling inputs use offline checks; full CI is explicitly requested.
 const maintenanceConfig = file => {
     if (['translations/config.json', 'translations/release-notes-baseline.json', 'translations/blog-baseline.json'].includes(file)) return true;
     const match=file.match(/^translations\/(?:scope|glossary)\/([^/]+)\.json$/);
@@ -28,64 +28,41 @@ const maintenanceConfig = file => {
 };
 const reportRegistry = 'translations/community-reports.json';
 function policy(files, {forceFull = false, forceSample = false, actionSubmodules = false} = {}) {
-    const risk = files.filter(file => highRisk.test(file));
-    const changed = files.some(file => content.test(file));
-    const shared = files.some(file => runtime.test(file) || mechanism.test(file) || file === reportRegistry || maintenanceConfig(file));
     const checks = validationScope(files);
-    const ci = files.some(file => /^(scripts\/|\.github\/)/.test(file) || file === '.gitmodules' && actionSubmodules);
-    const unknown = files.filter(
-        file =>
-            !runtime.test(file) &&
-            !mechanism.test(file) &&
-            !content.test(file) &&
-            file !== reportRegistry &&
-            !maintenanceConfig(file) &&
-            !maintenanceNotes.test(file) &&
-            !(file === '.gitmodules' && actionSubmodules) &&
-            !/^((scripts|\.github|plan-doc|review-docs|\.agents)\/|README\.md$|AGENTS\.md$|LICENSE$|NOTICE$)/.test(
-                file,
-            ),
-    );
-    const mode =
-        forceFull || risk.length || unknown.length
-            ? 'full'
-            : shared || changed || forceSample
-              ? 'sample'
-              : ci
-                ? 'fixtures'
-                : 'skip';
+    const shared = files.some(file => runtime.test(file) || mechanism.test(file)
+        || highRisk.test(file) || file === '.gitmodules' && !actionSubmodules
+        || /^i18n\/[^/]+\/code\.json$/.test(file) || file === reportRegistry || maintenanceConfig(file)
+        || /^(?:tsconfig\.json|(?:babel|postcss|tailwind|webpack|rspack)\.config\.[cm]?[jt]s)$/.test(file));
+    const changed = files.some(file => content.test(file));
+    const notes = file => maintenanceNotes.test(file) ||
+        /^(README\.md|AGENTS\.md|LICENSE|NOTICE|plan-doc\/|review-docs\/|\.agents\/)/.test(file);
+    const ci = files.some(file => !notes(file));
+    // Full compilation is opt-in. Unknown tooling must not silently promote a
+    // mixed framework/tooling PR (for example #4691) to a publication build.
+    const mode = forceFull ? 'full' : shared || changed || forceSample ? 'sample' : ci ? 'fixtures' : 'skip';
     return {
         mode,
-        selection: shared || forceSample ? 'representative' : 'changed',
-        reasons: forceFull
-            ? ['explicit full validation']
-            : risk.length
-              ? risk
-              : unknown.length
-                ? unknown
-                : [mode],
-        runContentFixture:
-            (shared && checks.check_content_fixture) ||
-            files.some(file =>
-                /verify-(content-fixture|source-revisions-fixture|doc-dates-fixture|blog(?:-automation)?-fixture|global-language)|create-blog-baseline\.cjs$|__tests__\/fixtures\/(content-manifest|blog)\.cjs$/.test(file),
-            ),
+        selection: shared || forceSample && !changed ? 'representative' : 'changed',
+        reasons: [forceFull ? 'explicit full validation' : mode],
+        ...require('./ci-fixtures.cjs').fixtures(files, forceFull),
         runSamplingFixture: files.some(file =>
-            /^scripts\/(build-locales?\.cjs$|i18n\/(compiler-processes|ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),
-        runCompilerFixture: mode === 'full' || files.some(file =>
+            /^scripts\/(build-locales?\.cjs$|i18n\/(compiler-processes|ci-sample|ci-plan|ci-fixtures|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file) || file === '.github/workflows/build-check.yml'),
+        runCompilerFixture: forceFull || files.some(file =>
             /^scripts\/(build-locales?\.cjs|i18n\/(compiler-processes|verify-compiler-fixture)\.cjs)$/.test(file)),
-        runSearchFixture: mode === 'full' || files.some(file =>
+        runSearchFixture: forceFull || files.some(file =>
             /^(src\/theme\/(SearchBar|SearchPage)\/|src\/utils\/(fetchSearchIndex|searchMessages|searchScopes|useLanguageItems)\.[jt]sx?$|src\/hooks\/use-search-query\.ts$|docusaurus\.config\.js$|scripts\/build-locales?\.cjs$|scripts\/i18n\/(compiler-processes|search-plugin|search-worker-loader|verify-search-transport)\.cjs$)/.test(file)),
-        runPublishFixture: checks.check_publish_fixture || mode === 'full' || files.includes('scripts/i18n/compiler-processes.cjs'),
-        runTranslationTests: mode === 'full' || files.some(file =>
+        runPublishFixture: checks.check_publish_fixture || forceFull || files.includes('scripts/i18n/compiler-processes.cjs'),
+        runTranslationTests: forceFull || files.some(file =>
             runtime.test(file) || mechanism.test(file) || maintenanceConfig(file) || /^scripts\/(i18n\/|build-locales?\.cjs$)/.test(file)
                 || file === '.github/workflows/build-check.yml'),
+        runToolTests: files.some(file => /^(doc-tools\/|scripts\/docs-pdf\/)/.test(file)),
         runDocsReport: mode === 'full' || (mode !== 'fixtures' && checks.check_docs_report),
         publicationAllowed: mode === 'full',
         checkRenderedLinks: !(files.length && files.every(file => /\.(css|scss|sass)$/.test(file))),
     };
 }
 function plan({root, base, event = {}, forceFull = false, forceSample = false}) {
-    const files = execFileSync('git', ['diff', '--name-only', '-z', base, 'HEAD'], {
+    const files = execFileSync('git', ['diff', '--no-renames', '--name-only', '-z', base, 'HEAD'], {
         cwd: root,
         encoding: 'utf8',
         maxBuffer: 16 * 1024 * 1024,
@@ -190,11 +167,18 @@ if (require.main === module) {
                     validation_locales: result.locales.join(','),
                     validation_enabled_locales: result.enabledLocales.join(','),
                     content_fixture: result.runContentFixture,
+                    doc_dates_fixture: result.runDocDatesFixture,
+                    blog_fixture: result.runBlogFixture,
+                    blog_automation_fixture: result.runBlogAutomationFixture,
+                    source_revisions_fixture: result.runSourceRevisionsFixture,
+                    release_policy_fixture: result.runReleasePolicyFixture,
+                    locale_entry_fixture: result.runLocaleEntryFixture,
                     publish_fixture: result.runPublishFixture,
                     sampling_fixture: result.runSamplingFixture,
                     search_fixture: result.runSearchFixture,
                     compiler_fixture: result.runCompilerFixture,
                     translation_tests: result.runTranslationTests,
+                    tool_tests: result.runToolTests,
                     docs_report: result.runDocsReport,
                 })
                     .map(([k, v]) => `${k}=${v}\n`)

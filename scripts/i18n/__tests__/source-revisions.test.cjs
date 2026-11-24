@@ -17,8 +17,8 @@ const source = '---\ntitle: Guide\nslug: /guide\n---\n\nOriginal source.\n\n```s
 const glossary = { schemaVersion: 1, version: 'fixture', keep: [], terms: [] };
 test('source-revision runtime and its standalone fixture retain real CI coverage', () => {
     const { policy } = require('../ci-plan.cjs');
-    assert(policy(['scripts/i18n/source-revisions.cjs']).runContentFixture);
-    assert(policy(['scripts/i18n/verify-source-revisions-fixture.cjs']).runContentFixture);
+    assert(policy(['scripts/i18n/source-revisions.cjs']).runSourceRevisionsFixture);
+    assert(policy(['scripts/i18n/verify-source-revisions-fixture.cjs']).runSourceRevisionsFixture);
 });
 async function fixture(t, { owner = 'machine' } = {}) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'source-revisions-'));

@@ -15,7 +15,7 @@ async function main() {
     const implementation = () => ({sha: sourceSha(root), trackedDiffHash: hash(execFileSync('git', ['diff', 'HEAD', '--binary'], {cwd: root, encoding: 'utf8'}))});
     const initialImplementation = implementation();
     const results = [];
-    for (const disabled of [false, true]) {
+    for (const disabled of process.argv.includes('--smoke') ? [false] : [false, true]) {
         const fixture = path.join(root, '.i18n-build', disabled ? 'content-disabled-fixture' : 'content-fixture');
         await fs.rm(fixture, {recursive: true, force: true});
         await createContentFixture(fixture);

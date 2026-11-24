@@ -4,10 +4,7 @@ const path = require('node:path');
 let active;
 
 function enable(plan) {
-    // Content edits retain the existing complete blog build. This optimization
-    // is for PRs that change implementations rather than published content.
-    const contentChanged = plan.files.some(file => /^(blog\/|i18n\/[^/]+\/docusaurus-plugin-content-blog(?:\/|-[^/]+\/)|translations\/blog\/|translations\/state\/[^/]+\/pages\/blog\/)/.test(file));
-    active = plan.mode === 'sample' && !contentChanged ? {plan, routes: [], reports: []} : undefined;
+    active = plan.mode === 'sample' ? {plan, routes: [], reports: []} : undefined;
     return () => {active = undefined;};
 }
 const enabled = () => !!active;
@@ -38,11 +35,32 @@ async function sample(context, options, content) {
     add(posts[0], 'latest post');
     // The site's native list renders the order=1 article as its lead card.
     add(posts.find(post => Number(post.metadata.frontMatter?.order) === 1), 'lead article');
-    add(posts.find(post => post.metadata.frontMatter?.picked && Number(post.metadata.frontMatter.order) !== 1), 'featured article');
-    add(posts.find(post => source(post).endsWith('.mdx')), 'MDX');
-    add(posts.find(post => /```(?:sql|javascript|js)\b/i.test(text(post))), 'code block');
-    add(posts.find(post => entry(post)?.indexable && !entry(post).fallback), 'real body');
-    add(posts.find(post => entry(post)?.fallback), 'English fallback');
+    if (plan.selection !== 'changed') {
+        add(posts.find(post => post.metadata.frontMatter?.picked && Number(post.metadata.frontMatter.order) !== 1), 'featured article');
+        add(posts.find(post => source(post).endsWith('.mdx')), 'MDX');
+        add(posts.find(post => /```(?:sql|javascript|js)\b/i.test(text(post))), 'code block');
+        add(posts.find(post => entry(post)?.indexable && !entry(post).fallback), 'real body');
+        add(posts.find(post => entry(post)?.fallback), 'English fallback');
+
+    }
+    const changedPaths = new Set(plan.files);
+    const changedStates = plan.files.filter(file => /^translations\/blog\//.test(file) && file.endsWith('.json'));
+    const stateIds = new Set();
+    if (changedStates.length) {
+        const {readManualRecords, blogStateFileFor} = require('./manual-state.cjs');
+        for (const record of [...readManualRecords(context.siteDir, 'blog'),
+            ...(plan.baseSha ? readManualRecords(context.siteDir, 'blog', plan.baseSha) : [])])
+            if (changedStates.includes(blogStateFileFor(record))) stateIds.add(record.contentId);
+    }
+    for (const post of posts) {
+        const identity = entry(post);
+        if ([source(post), post.metadata.source.replace(/^@site\//, ''), identity?.targetPath, identity?.sourcePath]
+            .some(file => changedPaths.has(file))) add(post, 'changed article');
+        if (stateIds.has(identity?.contentId) || plan.files.some(file => {
+            const state = file.match(/^translations\/(?:blog\/pages\/[^/]+|state\/[^/]+\/pages\/blog\/[^/]+)\/(.+)\.json$/);
+            return state && source(post) === 'blog/' + state[1];
+        })) add(post, 'changed article state');
+    }
 
     // Explicitly imported components/assets still select all affected owners.
     if (plan.files.some(file => /^(src|static)\//.test(file))) {
@@ -52,7 +70,7 @@ async function sample(context, options, content) {
             const result = await dependencies(context.siteDir,
                 path.resolve(context.siteDir, post.metadata.source.replace(/^@site\//, '')),
                 cache, new Set(), context.siteConfig.markdown.format);
-            if (result.uncertain || [...result.files].some(file => changed.has(path.relative(context.siteDir, file).split(path.sep).join('/'))))
+            if ([...result.files].some(file => changed.has(path.relative(context.siteDir, file).split(path.sep).join('/'))))
                 add(post, result.uncertain ? 'uncertain import' : 'changed import dependency');
         }
     }

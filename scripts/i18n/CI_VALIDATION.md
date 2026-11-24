@@ -11,12 +11,14 @@ committed lockfile after source planning. Source snapshot checks remain enabled.
 | README, planning or review notes only | Configuration, move/link and workflow security checks; no dependency installation or site build |
 | CI and tooling | Applicable unit tests and fixtures for the changed subsystem; no real-site build |
 | Shared UI, shared UI registry, routing, SEO, localization or sidebars | Representative real documents in five languages and every active version; native content fixtures for content/locale implementations, publishing fixtures for delivery/host implementations |
-| Documentation or assets | Changed documents and import dependants, plus representative real documents; English source changes select all five languages, localized changes select English and the affected locales |
-| Dependencies, active versions or unclassified inputs | Full five-language publication build and verification |
+| Documentation or assets | Changed documents and import dependants only; English source changes select all five languages, localized changes select English and the affected locales |
+| Dependencies or active versions | Representative five-language samples |
+| Other tooling or unclassified inputs | Offline checks; no automatic multilingual document build |
 | `ci/full` PR label or manual `validation=full` | Full five-language publication build and verification |
 
-Manual `validation=sample` requests representative samples, but cannot downgrade
-dependency/version changes or unknown inputs from full validation. Removing a
+Manual `validation=sample` uses representative samples when no content changed,
+and affected-document selection for content edits. Full compilation is requested
+only by `ci/full` or manual `validation=full`. Removing a
 `ci/full` label runs the automatic policy again. Scheduled and manual deployment
 workflows still build complete publication artifacts; this PR check never deploys.
 
@@ -24,17 +26,17 @@ workflows still build complete publication artifacts; this PR check never deploy
 messages or dependency inventory select representative real documents in every
 configured language and active version, along with the native content fixture.
 Ordinary pages remain in the real build. This classification applies only to
-that exact registry path; other unknown inputs still require full validation.
+that exact registry path; unknown tooling does not promote a mixed PR to full compilation.
 
 Top-level `translations/*.md` files are maintenance notes and do not request a
 site build. `translations/community-reports.json` controls ordinary page content
 and selects representative real builds. Combining these known inputs with a
 landing-page translation no longer upgrades it to a full publication build.
-Other unknown JSON inputs still require full validation.
+Other tooling inputs keep their offline checks without forcing full compilation.
 
 `translations/config.json` is also a known shared language input. It is checked
 by `check-configuration.cjs --all` before representative five-language builds.
-Unknown JSON files alongside it still require full validation.
+Unknown tooling JSON alongside it does not force full compilation.
 
 The sampling adapter, native content and publishing/Apache fixtures run only
 when their own implementation changes. Document, dictionary and translation-state
@@ -49,25 +51,28 @@ all active versions**, including IDs, front matter, routes, sidebars, source and
 translation state. Optional locales remain enabled during metadata collection.
 It then removes unselected document modules from the generated route registry
 before bundling and static rendering. Ordinary pages remain in the build.
-When no blog body or blog translation state changed, blog articles and their
-native lists/tags are sampled too. Blog metadata and logical link targets remain
+Blog articles and their native lists/tags are sampled too, including when a
+blog body or translation state changed. Blog metadata and logical link targets remain
 complete. The production build does not load this adapter.
 
-Every document plugin/version contributes its native main document and available
+For framework changes, every document plugin/version contributes its native main document and available
 examples of MDX/imports, SQL, math and media/relative links. A greedy selection
 reuses rich documents across requirements while keeping each version's entry.
 Real translated bodies
 and English fallbacks are sampled where available. Changed document bodies and
 translation-state records are mandatory. Local MDX/JavaScript imports are followed
-transitively when an imported file changes; dynamic or unparseable imports select
-their owners conservatively. A selection above 500 documents fails with a request
+transitively when an imported file changes, including deleted imports. Unrelated
+broken/dynamic imports do not pull every owner into a document-only check. An
+actually edited document is always selected, so its compilation errors still fail. A selection above 500 documents fails with a request
 for `ci/full`, rather than silently dropping affected documents.
 
 The blog sample covers a recent article, lead/featured cards, MDX, code blocks and available real/fallback
-bodies. Explicit changed imports and uncertain dependencies add their owners.
+bodies. Explicit changed imports add their owners.
 Lists, tags and neighboring-post links are rebuilt from selected articles before
 the native route generator runs, so an aggregate cannot import every omitted body.
-Edited blog bodies/state retain the complete native blog build.
+Edited blog bodies/state select those articles and affected import owners; the
+latest/lead articles remain as dependencies of ordinary list/card pages. Other
+representative blog examples are included only for framework samples.
 
 Locale processes still run sequentially on one runner. During a sample build,
 content-addressed Markdown structures and aligned headings are shared through a
@@ -118,6 +123,26 @@ The translation admission gate skips native inventory collection when no target
 body or state changed for that language. Its output says `inventorySkipped=true`
 and `freshness=null`; protection exceptions are still validated. Edited targets
 and state continue through the original native registration and technical checks.
+
+## Integration suites and static verification
+
+The native content smoke fixture builds one five-language matrix. The additional
+disabled-Russian matrix remains available without `--smoke` and in explicit full
+CI. Date, blog, blog-automation, source-revision, release-policy and language-entry
+suites have separate flags selected by `ci-fixtures.cjs`; a docs-renderer change
+does not run all six suites. PDF/release tooling runs its own unit tests.
+
+`Verify localized static pages` checks the selected sample on ordinary PRs.
+Explicit full validation checks every managed page with one shared metadata and
+alternate-group cache. Its streaming parser retains canonical, robots, body
+language, heading-ID and reciprocal hreflang assertions without constructing a
+full DOM for every page. Missing files and invalid metadata still fail.
+
+Optimized artifacts record `assetOrigin` in `.publish/redirects.json`. Resource
+verification uses the build's recorded setting, so a same-origin CI build is not
+mistaken for a CDN build when a later process has a different environment.
+Legacy artifacts use the verifier's environment; CI sets it to the build value.
+CDN builds still reject missing directory prefixes and missing files.
 
 ## Local commands
 

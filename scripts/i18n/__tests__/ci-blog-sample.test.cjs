@@ -20,7 +20,7 @@ test('blog lists/tags contain representative bodies and all changed import owner
         frontMatter: file === 'old.md' ? {order: 1, picked: true} : {},
     }}));
     const entries = blogPosts.map(post => ({siteLocale: 'ja', route: post.metadata.permalink,
-        englishPath: 'blog/' + post.id, fallback: post.id !== 'rich.mdx', indexable: post.id === 'rich.mdx'}));
+        englishPath: 'blog/' + post.id, targetPath:'i18n/ja/docusaurus-plugin-content-blog/'+post.id, fallback: post.id !== 'rich.mdx', indexable: post.id === 'rich.mdx'}));
     const content = {blogPosts, contentIdentity: {entries}};
     const context = {siteDir: root, baseUrl: '/ja/', i18n: {currentLocale: 'ja'}, siteConfig: {markdown: {format: 'detect'}}};
     const options = {...DEFAULT_OPTIONS, id: 'default', postsPerPage: 'ALL'};
@@ -37,8 +37,11 @@ test('blog lists/tags contain representative bodies and all changed import owner
     assert(!selected.blogPosts.some(post => post.id === 'other.md'));
     restore();
     for (const file of ['blog/owner.mdx', 'i18n/ja/docusaurus-plugin-content-blog/owner.mdx', 'translations/blog/pages/ja/owner.mdx.json', 'translations/state/ja/pages/blog/current/owner.mdx.json']) {
-        restore = sampler.enable({mode: 'sample', files: [file]});
-        assert.equal(await sampler.sample(context, options, content), undefined);
+        restore = sampler.enable({mode: 'sample', selection:'changed', files: [file]});
+        const scoped = await sampler.sample(context, options, content);
+        assert(scoped.blogPosts.some(post => post.id === 'owner.mdx'),file);
+        assert(!scoped.blogPosts.some(post => post.id === 'other.md'),file);
+        assert(!scoped.blogPosts.some(post => post.id === 'rich.mdx'),file);
         restore();
     }
     assert.equal(sampler.enabled(), false);

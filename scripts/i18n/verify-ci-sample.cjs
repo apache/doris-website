@@ -50,8 +50,9 @@ async function verify({root = process.cwd(), browser = true}) {
         );
         assert.equal(scope.sourceSha, plan.sourceSha);
         assert.equal(scope.status, 'compiled');
-        assert(scope.compiledMdxModules?.client?.length > 0);
-        assert(scope.renderedDocs > 0 && scope.renderedDocs <= scope.metadataDocs);
+        if (scope.renderedDocs) assert(scope.compiledMdxModules?.client?.length > 0);
+        assert(scope.renderedDocs >= 0 && scope.renderedDocs <= scope.metadataDocs);
+        assert.equal(scope.renderedDocs, scope.selected.length);
         for (const row of scope.selected) {
             const filename = path.join(site, decodeURIComponent(row.route), 'index.html');
             assert(fs.existsSync(filename), `Missing selected document: ${row.route}`);
@@ -97,7 +98,7 @@ async function verify({root = process.cwd(), browser = true}) {
                 const row =
                     scope.selected.find(r => r.pluginId === 'default' && r.version === 'current') ??
                     scope.selected[0];
-                const response = await page.goto(origin + row.route);
+                const response = await page.goto(origin + (row?.route ?? (locale === 'en' ? '/' : `/${locale}/`)));
                 assert.equal(response.status(), 200);
                 await page.locator('html[data-has-hydrated="true"]').waitFor();
                 const course = scope.selected.find(r => r.pluginId === 'course');

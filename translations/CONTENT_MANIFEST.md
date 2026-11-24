@@ -133,8 +133,9 @@ uses real docs (two versions/two plugins), React pages, native blog posts and a
 utility route; target coverage is zero/one/partial/full. It checks emitted HTML,
 route existence, body selection, source binding and payload sizes. This fixture
 does not certify full production publishing, page-wide SEO or blog lifecycle.
-CI selects the complete optimized five-language, all-active-version build for
-changes to the contract, adapters or manual ledgers, and archives size reports.
+CI uses a five-language smoke fixture and representative real pages for contract
+or adapter changes, and archives size reports. Full publication compilation is
+explicitly requested with `ci/full` or manual full validation.
 
 ## Route, body and SEO adoption (T02–T05)
 
@@ -204,10 +205,10 @@ that a candidate has been deployed to ASF or that its CDN configuration changed.
 
 `ci-plan.cjs` writes `.i18n-build/ci-plan.json`, bound to the checked source and
 merge base, using `build-scope.cjs` for impact metadata. Translation/state edits
-compile affected documents and representative samples; shared language routing,
+compile affected documents and their import owners; shared language routing,
 metadata and host rules use five-language samples across all active versions.
-Dependencies, active versions, unclassified inputs or the `ci/full` label retain
-the complete publication build. Scheduled/manual deployments still build the
+Dependencies and active-version changes also use representative samples. Only
+the `ci/full` label or manual full validation selects the complete publication build. Scheduled/manual deployments still build the
 complete site. This maintenance document does not itself require compilation.
 See [CI validation](../scripts/i18n/CI_VALIDATION.md) for coverage limits and
 publication guards. The required `Build Check` identity stays stable.
