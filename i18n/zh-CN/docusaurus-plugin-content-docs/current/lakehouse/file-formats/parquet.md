@@ -113,6 +113,38 @@ SET parquet_write_data_page_size = 1048576;
 
 页索引会增加元数据和写入开销。较小的数据页可能有利于高选择性查询，尤其是数据按过滤列聚集时，但也会生成更多索引条目和页头。收益取决于读取引擎和数据分布，开启索引不保证查询加速；读取端不使用这些可选索引时，仍可正常读取文件。这两个变量不改变 Parquet 格式版本或数据页版本。
 
+## 写入 Bloom Filter（Dev 版本）
+
+当下游读取端能够通过等值或 `IN` 谓词跳过 Row Group 时，可以开启 Bloom Filter 写入。在执行 OUTFILE、向可写文件表值函数插入数据，或向以 Parquet 存储的 Hive、Iceberg 表插入数据前，设置以下会话变量。该设置仅影响新写入的文件。
+
+| 变量 | 类型 | 默认值 | 行为 |
+| --- | --- | --- | --- |
+| `enable_parquet_write_bloom_filter` | Boolean | `false` | 为每个 Row Group 中适用的物理叶子列写入标准 Parquet Bloom Filter，包括 ARRAY、MAP、STRUCT 中嵌套的叶子列。BOOLEAN 和旧 INT96 编码的列不写入 Filter。 |
+
+例如，按照 [OUTFILE](../../data-operate/export/outfile.md) 文档准备可写的 S3 Bucket 和凭据后，替换以下存储占位符，开启 Bloom Filter 并导出：
+
+```sql
+SET enable_parquet_write_bloom_filter = true;
+
+SELECT 1 AS id, 'example' AS label
+INTO OUTFILE 's3://example-bucket/export/bloom_result_'
+FORMAT AS PARQUET
+PROPERTIES (
+    "s3.endpoint" = "https://s3.example.com",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<access_key>",
+    "s3.secret_key" = "<secret_key>"
+);
+
+SET enable_parquet_write_bloom_filter = false;
+```
+
+新文件会为每个 Row Group 中的适用列包含 Bloom Filter。最后一条 `SET` 为当前会话的后续写入恢复默认值，不会移除已写入文件中的 Filter。目标已配置为写入 Parquet 时，也可以在执行 `INSERT INTO` 或 `INSERT OVERWRITE` 前设置同一变量。
+
+字典编码保留、溢出后回退为普通编码，以及禁用字典编码时，都可以写出 Bloom Filter，无需为此关闭字典。该开关与上文的页索引写入设置相互独立。NULL 值不会插入 Bloom Filter。Doris 的读取端开关 `enable_parquet_filter_by_bloom_filter` 单独控制是否使用 Filter，开启写入不会强制读取端使用它。不使用该可选元数据的读取端仍可读取文件。
+
+建议按需开启，例如用于字典溢出后高基数列的等值过滤。写入端采用默认预期去重数 1,048,576、目标误判率 0.05，每个 Row Group 中每个适用的物理叶子列约分配 1 MiB，全部为 NULL 的列也会分配。Bloom 缓冲会跨 Row Group 累积到文件关闭，并计入查询内存限额，因此宽表或包含大量 Row Group 的文件可能显著增加内存占用。Filter 还会增加哈希计算和文件大小，不保证读取速度提升。此版本不提供列选择、Bloom 大小调整或独立的单文件 Bloom 内存限额设置。
+
 ## 相关参数
 
 ### 时间戳与日期兼容性（4.1.5 起）
