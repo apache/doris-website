@@ -8,7 +8,7 @@
 
 ## Description
 
-For GEOGRAPHY values in the development version, see [Typed Geography](#typed-geography).
+The description and examples below use string-encoded values returned by spatial constructors. For native spatial types, see [Typed Geography](#typed-geography).
 
 Determine whether two geometric shapes have boundary contact only (i.e., there are common points on the boundaries, but no internal intersection). Specifically:
 
@@ -260,10 +260,12 @@ mysql> SELECT ST_TOUCHES(  ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
 +------------------------------------------------------------------------------------------+
 ```
 
-## Typed Geography (development version) {#typed-geography}
+## Typed Geography {#typed-geography}
 
-The development version accepts any combination of nonempty XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. Either argument can be NULL, in which case the result is NULL.
+The development version of Doris accepts any combination of XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. `EMPTY` raises an error. If either argument is `NULL`, the result is `NULL`.
 
 Returns `true` if the shapes have a point in common but their interiors do not intersect. Lines crossing in their interiors or sharing a segment return `false`. A contact at a line endpoint or along the edge of a polygon can return `true`. Two points always return `false`. A closed line has no endpoints on its boundary.
 
 For the shared spherical calculation rules and precision limits, see [Spatial functions](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions).
+
+See the [line endpoint example](st-contains.md#geography-boundary-example).

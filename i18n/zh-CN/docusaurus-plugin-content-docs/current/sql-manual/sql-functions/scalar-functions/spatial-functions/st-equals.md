@@ -28,8 +28,13 @@ ST_EQUALS(<a>, <b>)
 
 ## 示例
 
+点 `(180, 0)` 和 `(-180, 0)` 都位于 180° 经线上，且表示同一位置。
+
 ```sql
-SELECT ST_Equals(g, g) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;
+SELECT ST_Equals(
+    ST_GeogFromWKB('010100000000000000008066400000000000000000'),
+    ST_GeogFromWKB('010100000000000000008066c00000000000000000')
+) AS same_point;
 ```
 
 ```text

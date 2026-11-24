@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_GEOGFROMWKB（开发版）",
+    "title": "ST_GEOGFROMWKB",
     "language": "zh-CN",
     "description": "将十六进制ISO WKB（XY、XYZ、XYM、XYZM） 构造为 GEOGRAPHY 类型值，保留原始字节并使用默认空间参数，适用于 Iceberg V3 空间列写入。支持基础几何与 EMPTY；输入为 NULL 或包含非法 WKB、不支持的 EWKB 标记或内嵌 SRID时返回 NULL。"
 }
@@ -27,7 +27,7 @@ under the License.
 
 ## 描述
 
-开发版将十六进制 ISO WKB 转为 `GEOGRAPHY('OGC:CRS84', 'spherical')`。结果保留原始 WKB，可写入 Iceberg 的 geography 列。输入为 NULL 时返回 NULL。
+将十六进制 ISO WKB 转为 `GEOGRAPHY('OGC:CRS84', 'spherical')`。结果保留原始 WKB，可写入 Iceberg 的 geography 列。输入为 NULL 时返回 NULL。
 
 ## 语法
 

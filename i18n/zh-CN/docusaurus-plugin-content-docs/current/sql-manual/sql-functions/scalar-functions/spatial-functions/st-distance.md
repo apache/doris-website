@@ -8,11 +8,11 @@
 
 ## 描述
 
+以下说明和示例适用于空间构造函数返回的字符串编码值。原生空间类型的用法见 [原生 GEOGRAPHY](#typed-geography)。
+
 计算两个几何图形在球面上的最短距离，单位为米。此函数使用球面地球模型进行计算。
 
 与 `ST_DISTANCE_SPHERE` 接受经纬度坐标不同，`ST_DISTANCE` 接受几何对象（点、线、多边形、圆等）作为参数，并计算它们边界之间的最短距离。若两个图形相交（包括接触或包含），则返回 0。
-
-开发版的 `ST_DISTANCE` 也接受默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线和多边形，返回最短球面距离，单位为米。涉及线或多边形时，只有原始坐标确认相交才返回 0。无法确认相交时会报精度错误。参见[空间函数](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions)。
 
 ## 语法
 
@@ -107,4 +107,23 @@ SELECT ST_DISTANCE(NULL, ST_GeometryFromText('POINT(1 1)'));
 +------------------------------------------------------+
 |                                                 NULL |
 +------------------------------------------------------+
+```
+
+## 原生 GEOGRAPHY {#typed-geography}
+
+Doris 开发版支持默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的二维点、线和多边形。返回最短球面距离，类型为 `DOUBLE`，单位为米。传入 `EMPTY` 会报错，任一参数为 `NULL` 时返回 `NULL`。
+
+涉及线或多边形时，如果距离接近零且原始坐标无法可靠判断是否相交，函数可能报精度错误。返回零距离需要确认相交。参见 [空间计算规则](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions)。
+
+下面计算赤道上相差 1 度的两点之间的距离，结果四舍五入到米。
+
+```sql
+SELECT CAST(ROUND(ST_Distance(
+    ST_GeogFromWKB('010100000000000000000000000000000000000000'),
+    ST_GeogFromWKB('0101000000000000000000f03f0000000000000000')
+)) AS BIGINT) AS distance_m;
+```
+
+```text
+111195
 ```

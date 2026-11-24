@@ -272,6 +272,8 @@ ORDER BY engine_name, entry_name;
 
 参与查询的 FE 和 BE 都需要支持空间类型。请在相关节点全部升级后使用空间查询。
 
+[查询已有表](#iceberg-spatial-read) · [写入并读取一个点](#iceberg-spatial-example) · [空间函数](#iceberg-spatial-functions) · [SQL 和存储限制](#iceberg-spatial-limits)
+
 #### 类型和默认值
 
 | 类型声明 | 默认参数 | 保存的信息 |
@@ -281,7 +283,20 @@ ORDER BY engine_name, entry_name;
 
 GEOGRAPHY 支持保存 `spherical`、`vincenty`、`thomas`、`andoyer` 和 `karney`。Doris 保留表定义中的 CRS 和算法。更换类型参数不会转换坐标。
 
-#### 写入并读取一个点
+#### 查询已有表 {#iceberg-spatial-read}
+
+查询已有的 Iceberg V3 Parquet 表时，可以用 `ST_AsText` 把空间列显示为 WKT 文本。把示例中的 Catalog、数据库、表名和列名换成实际名称。
+
+```sql
+SELECT id, ST_AsText(geom) AS geom_wkt
+FROM iceberg_catalog.spatial_db.spatial_values
+ORDER BY id
+LIMIT 10;
+```
+
+对下方示例表执行这条查询，`id` 为 1 的行显示 `POINT (1 2)`，`id` 为 2 的行显示 `NULL`。
+
+#### 写入并读取一个点 {#iceberg-spatial-example}
 
 准备一个 Iceberg Catalog 和数据库，并确保有建表、写入和查询权限。若还没有 Catalog，参见 [Iceberg REST 元数据服务](../metastores/iceberg-rest.md)。把示例中的 `iceberg_catalog` 和 `spatial_db` 换成实际名称。
 
@@ -344,22 +359,23 @@ Doris 保留嵌套空间值的类型参数和原始 WKB。NULL 容器、空容�
 
 - [ST_CONTAINS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains.md#typed-geography)、[ST_WITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-within.md#typed-geography) 和 [ST_TOUCHES](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches.md#typed-geography) 判断包含或边界接触。
 - [ST_EQUALS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-equals.md) 判断两个形状是否覆盖同一组点。[ST_OVERLAPS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-overlaps.md) 判断同维度形状是否部分重叠。
-- [ST_DWITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-dwithin.md) 判断球面距离是否在指定米数以内。
+- [ST_DISTANCE](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance.md#typed-geography) 返回最短球面距离，单位为米。[ST_DWITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-dwithin.md) 判断该距离是否在指定米数以内。
 
 球面多边形的每个环都取较小的区域，最多半个球面，环方向不影响选择。坐标非常接近时，舍入可能让边界或距离难以判断。函数无法可靠确定结果时会报错。读写和 WKB 查看仍保留原始字节。
 
-#### SQL 和存储限制
+#### SQL 和存储限制 {#iceberg-spatial-limits}
 
 - 等值连接、分组、排序和窗口分区请使用普通键。Doris 会拒绝空间键，也会拒绝含空间值的嵌套键。这同样适用于有序聚合和带 `LIMIT` 的排序。例如，`ORDER BY id` 可以返回空间列，`FIRST_VALUE(geom) OVER (ORDER BY id)` 可以返回空间值。
 - 普通 SQL 比较和数组比较会拒绝空间参数。对于满足条件的 GEOGRAPHY，可以用空间关系函数比较。要按原始 WKB 字节分组或去重，可用 `hex(ST_AsBinary(geom))`。
 - `DISTINCT`、需要比较行的集合运算（如 `UNION DISTINCT`、`INTERSECT`、`EXCEPT`）以及比较或去重空间值的聚合会拒绝空间输入。聚合规则见下表。`UNION ALL` 可以返回空间值。
 - 文本和 JSON 不能 CAST 为包含空间值的类型。普通 Variant 列可以与空间列共存。Variant 对象和数组不能装入原生空间值。
 - Doris 内部表暂不支持存储原生空间列。空间列暂不支持空间索引、范围裁剪和空间谓词下推。`ANALYZE TABLE` 收集普通列的统计信息时会跳过空间列。暂不支持 GeoArrow。
-- S3 和 LOCAL 文件表值函数会拒绝 Parquet 空间注解。已声明为 BINARY（Doris 中为 `VARBINARY`）的外表列仍可将合法空间值按原始 WKB 读取，包括嵌套值。无空间注解的 `BYTE_ARRAY` 沿用普通二进制映射。
+- 用 `S3` 或 `LOCAL` 文件表值函数直接读取 Parquet 时，带空间注解的列以 `VARBINARY` 返回原始 WKB。外表中声明为 BINARY（Doris 中为 `VARBINARY`）的列也可以读取这些 Parquet 列中的合法 WKB，包括嵌套列。无空间注解的 `BYTE_ARRAY` 沿用普通二进制映射。
 
 | 聚合用法 | 规则 |
 | --- | --- |
-| `COUNT`、`ANY_VALUE`，以及非 DISTINCT 的 `ARRAY_AGG`、`COLLECT_LIST` | 支持相应用法中的空间值。 |
+| `COUNT`、`ANY_VALUE` | 支持空间值。 |
+| 非 DISTINCT 的 `ARRAY_AGG`、`COLLECT_LIST` | 支持标量 `GEOMETRY` 或 `GEOGRAPHY`。含空间值的容器（如 `ARRAY<GEOMETRY>`）会报错。 |
 | `COUNT(DISTINCT ...)`、DISTINCT 的集合和 MAP 聚合、`COLLECT_SET`、`MULTI_DISTINCT_COUNT`、`GROUP_ARRAY_UNION`、`GROUP_ARRAY_INTERSECT` | 拒绝空间输入，包括嵌套空间值。 |
 | `MIN`、`MAX`、`LEAST`、`GREATEST`、`COUNT_AT_MIN`、`COUNT_AT_MAX`、`TOPN_ARRAY` | 拒绝参与比较的空间输入。`TOPN_ARRAY` 也拒绝嵌套空间值。 |
 | `MIN_BY`、`MAX_BY` | 使用普通排序键。拒绝标量空间结果，支持函数允许的嵌套空间结果。 |

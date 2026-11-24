@@ -8,7 +8,7 @@
 
 ## Description
 
-For GEOGRAPHY values in the development version, see [Typed Geography](#typed-geography).
+The description and examples below use string-encoded values returned by spatial constructors. For native spatial types, see [Typed Geography](#typed-geography).
 
 Determines whether one geometric shape (shape1) completely contains another geometric shape (shape2). Returns 1 if shape1 contains all points of shape2; otherwise, returns 0.
 
@@ -149,10 +149,28 @@ mysql> SELECT ST_Contains(  ST_Polygon("POLYGON ((0 0, 1 1, 0 1, 1 0, 0 0))"), S
 +--------------------------------------------------------------------------------------+
 ```
 
-## Typed Geography (development version) {#typed-geography}
+## Typed Geography {#typed-geography}
 
-The development version accepts any combination of nonempty XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. Either argument can be NULL, in which case the result is NULL.
+The development version of Doris accepts any combination of XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. `EMPTY` raises an error. If either argument is `NULL`, the result is `NULL`.
 
 Returns `true` if the first shape covers every point of the second shape and their interiors intersect. A line that lies entirely on a polygon boundary returns `false`.
 
 For the shared spherical calculation rules and precision limits, see [Spatial functions](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions).
+
+### Line endpoint example {#geography-boundary-example}
+
+The point `(0, 0)` is an endpoint of the line through `(0, 0)`, `(1, 0)`, and `(2, 0)`. The shapes touch, and both containment checks return `false`.
+
+```sql
+SELECT ST_Contains(l, p) AS contains_point,
+       ST_Within(p, l) AS point_within,
+       ST_Touches(p, l) AS touches
+FROM (
+    SELECT ST_GeogFromWKB('010100000000000000000000000000000000000000') AS p,
+           ST_GeogFromWKB('01020000000300000000000000000000000000000000000000000000000000f03f000000000000000000000000000000400000000000000000') AS l
+) AS shapes;
+```
+
+```text
+false  false  true
+```

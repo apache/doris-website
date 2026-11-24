@@ -8,11 +8,11 @@
 
 ## Description
 
+The description and examples below use string-encoded values returned by spatial constructors. For native spatial types, see [Typed Geography](#typed-geography).
+
 Calculates the shortest distance on the sphere between two geometry objects, in meters. This function uses a spherical Earth model for calculation.
 
 Unlike `ST_DISTANCE_SPHERE`, which accepts longitude and latitude coordinates, `ST_DISTANCE` accepts geometry objects (points, lines, polygons, circles, etc.) as parameters and calculates the shortest distance between their boundaries. If the two shapes intersect (including touching or containing each other), it returns 0.
-
-In the development version, `ST_DISTANCE` also accepts nonempty XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. It returns the shortest spherical distance in metres. For a line or polygon, a zero distance requires confirmation that the original coordinates intersect. The function raises a precision error if it cannot confirm that intersection. See [Spatial functions](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions).
 
 ## Syntax
 
@@ -107,4 +107,23 @@ SELECT ST_DISTANCE(NULL, ST_GeometryFromText('POINT(1 1)'));
 +------------------------------------------------------+
 |                                                 NULL |
 +------------------------------------------------------+
+```
+
+## Typed Geography {#typed-geography}
+
+The development version of Doris accepts XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. It returns the shortest spherical distance as a `DOUBLE` in metres. `EMPTY` raises an error. If either argument is `NULL`, the result is `NULL`.
+
+For a line or polygon input, a near-zero distance can raise a precision error if the original coordinates do not reliably determine whether the shapes intersect. A computed zero requires confirmation of intersection. See [Spatial calculation rules](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions).
+
+This example rounds the distance between two points one degree apart on the equator to the nearest metre.
+
+```sql
+SELECT CAST(ROUND(ST_Distance(
+    ST_GeogFromWKB('010100000000000000000000000000000000000000'),
+    ST_GeogFromWKB('0101000000000000000000f03f0000000000000000')
+)) AS BIGINT) AS distance_m;
+```
+
+```text
+111195
 ```

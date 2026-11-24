@@ -28,7 +28,7 @@ under the License.
 
 ## 描述
 
-开发版的 GEOGRAPHY 用法见[原生 GEOGRAPHY](#typed-geography)。
+以下说明和示例适用于空间构造函数返回的字符串编码值。原生空间类型的用法见 [原生 GEOGRAPHY](#typed-geography)。
 
 判断一个几何图形（shape1）是否完全包含另一个几何图形（shape2）。若 shape1 包含 shape2 的所有点，则返回 1；否则返回 0。
 
@@ -172,10 +172,28 @@ mysql> SELECT ST_Contains(  ST_Polygon("POLYGON ((0 0, 1 1, 0 1, 1 0, 0 0))"), S
 +--------------------------------------------------------------------------------------+
 ```
 
-## 原生 GEOGRAPHY（开发版） {#typed-geography}
+## 原生 GEOGRAPHY {#typed-geography}
 
-开发版接受默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线和多边形，可任意两两组合。任一参数为 NULL 时返回 NULL。
+Doris 开发版支持默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的二维点、线和多边形，可任意两两组合。传入 `EMPTY` 会报错，任一参数为 `NULL` 时返回 `NULL`。
 
 第一个形状覆盖第二个形状的所有点，且两者内部相交时，返回 `true`。一条线完全落在多边形边界上时，返回 `false`。
 
 球面计算规则和精度限制见 [空间函数](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions)。
+
+### 线段端点示例 {#geography-boundary-example}
+
+点 `(0, 0)` 位于线 `(0, 0)–(1, 0)–(2, 0)` 的端点。两者接触，包含和位于内部的判断都返回 `false`。
+
+```sql
+SELECT ST_Contains(l, p) AS contains_point,
+       ST_Within(p, l) AS point_within,
+       ST_Touches(p, l) AS touches
+FROM (
+    SELECT ST_GeogFromWKB('010100000000000000000000000000000000000000') AS p,
+           ST_GeogFromWKB('01020000000300000000000000000000000000000000000000000000000000f03f000000000000000000000000000000400000000000000000') AS l
+) AS shapes;
+```
+
+```text
+false  false  true
+```

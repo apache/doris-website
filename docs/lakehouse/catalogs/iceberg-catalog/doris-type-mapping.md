@@ -8,6 +8,8 @@
 
 The following table describes how Doris 4.2 (`branch-4.2`) maps Iceberg external-table schemas when reading. Writes also depend on the target schema and supported write operations; the read mapping is not an automatic inverse mapping for writes.
 
+For `geometry` and `geography` in the development version, see [Iceberg V3 spatial types](../iceberg-catalog.mdx#iceberg-spatial-types).
+
 | Iceberg Type                           | Doris Type           | Comment                                 |
 | -------------------------------------- | -------------------- | --------------------------------------- |
 | boolean                                | boolean              |                                         |

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_GEOGFROMWKB (Development)",
+    "title": "ST_GEOGFROMWKB",
     "language": "en",
     "description": "Constructs typed GEOGRAPHY from hexadecimal ISO WKB for Iceberg V3 columns, preserving bytes with default parameters. NULL or invalid input returns NULL."
 }
@@ -27,7 +27,7 @@ under the License.
 
 ## Description
 
-Converts hexadecimal ISO WKB to `GEOGRAPHY('OGC:CRS84', 'spherical')` in the development version. The resulting value retains the original WKB and can be written to an Iceberg geography column. NULL input returns NULL.
+Converts hexadecimal ISO WKB to `GEOGRAPHY('OGC:CRS84', 'spherical')`. The resulting value retains the original WKB and can be written to an Iceberg geography column. NULL input returns NULL.
 
 ## Syntax
 

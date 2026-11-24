@@ -8,7 +8,7 @@
 
 ## Description
 
-Tests whether two Geography values of the same dimension overlap in part. Their interiors must intersect in that dimension, and each value must have some points outside the other. If either argument is NULL, the result is NULL.
+Tests whether two Geography values of the same dimension overlap in part. Dimension here refers to points, lines, and polygons. Their interiors must intersect in that dimension, and each value must have some points outside the other. If either argument is NULL, the result is NULL.
 
 ## Syntax
 
@@ -25,6 +25,8 @@ ST_OVERLAPS(<a>, <b>)
 ## Return Value
 
 Returns BOOLEAN. Partial overlap returns `true`. Different dimensions, identical values, full containment, and two single points return `false`. Lines that cross only at a point and polygons that share only an edge or vertex also return `false`. NULL inputs return NULL.
+
+For polygons with very close boundaries, the function raises a precision error if it cannot determine whether their interiors overlap.
 
 ## Example
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ST_GEOMETRYFROMWKBTYPED (Development)",
+    "title": "ST_GEOMETRYFROMWKBTYPED",
     "language": "en",
     "description": "Constructs typed GEOMETRY from hexadecimal ISO WKB for Iceberg V3 columns, preserving bytes with default parameters. NULL or invalid input returns NULL."
 }
@@ -27,7 +27,7 @@ under the License.
 
 ## Description
 
-Converts hexadecimal ISO WKB to `GEOMETRY('OGC:CRS84')` in the development version. The resulting value retains the original WKB and can be written to an Iceberg geometry column. NULL input returns NULL.
+Converts hexadecimal ISO WKB to `GEOMETRY('OGC:CRS84')`. The resulting value retains the original WKB and can be written to an Iceberg geometry column. NULL input returns NULL.
 
 ## Syntax
 

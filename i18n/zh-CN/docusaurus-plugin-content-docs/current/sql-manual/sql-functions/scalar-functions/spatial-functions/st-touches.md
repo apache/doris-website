@@ -8,7 +8,7 @@
 
 ## 描述
 
-开发版的 GEOGRAPHY 用法见[原生 GEOGRAPHY](#typed-geography)。
+以下说明和示例适用于空间构造函数返回的字符串编码值。原生空间类型的用法见 [原生 GEOGRAPHY](#typed-geography)。
 
 判断两个几何图形是否仅边界接触（即边界存在公共点，但内部无任何交集）。具体来说：
 
@@ -262,10 +262,12 @@ mysql> SELECT ST_TOUCHES(  ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
 +------------------------------------------------------------------------------------------+
 ```
 
-## 原生 GEOGRAPHY（开发版） {#typed-geography}
+## 原生 GEOGRAPHY {#typed-geography}
 
-开发版接受默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的非空二维点、线和多边形，可任意两两组合。任一参数为 NULL 时返回 NULL。
+Doris 开发版支持默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的二维点、线和多边形，可任意两两组合。传入 `EMPTY` 会报错，任一参数为 `NULL` 时返回 `NULL`。
 
 两个形状有公共点且内部不相交时，返回 `true`。两条线在内部交叉或共用一段线时返回 `false`。线的端点接触或多边形边缘接触可以返回 `true`。两个点一律返回 `false`。闭合线没有边界端点。
 
 球面计算规则和精度限制见 [空间函数](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions)。
+
+参见 [线段端点示例](st-contains.md#geography-boundary-example)。

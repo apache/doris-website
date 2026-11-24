@@ -28,8 +28,13 @@ Returns BOOLEAN. Equal point sets return `true`. Different point sets or differe
 
 ## Example
 
+The points `(180, 0)` and `(-180, 0)` represent the same location on the antimeridian.
+
 ```sql
-SELECT ST_Equals(g, g) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;
+SELECT ST_Equals(
+    ST_GeogFromWKB('010100000000000000008066400000000000000000'),
+    ST_GeogFromWKB('010100000000000000008066c00000000000000000')
+) AS same_point;
 ```
 
 ```text

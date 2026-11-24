@@ -27,7 +27,7 @@ ST_DWITHIN(<a>, <b>, <distance_meters>)
 
 Returns BOOLEAN. A distance less than or equal to the threshold returns `true`. A larger distance returns `false`. NULL inputs return NULL. Negative, NaN, or infinite thresholds raise an error for non-NULL rows.
 
-For lines or polygons, the function raises a precision error if the computed distance is zero and the original coordinates cannot confirm intersection. This applies to zero and positive thresholds.
+For a line or polygon input, a near-zero distance can raise a precision error if the original coordinates do not reliably determine whether the shapes intersect. A computed zero requires confirmation of intersection. This applies to zero and positive thresholds.
 
 ## Example
 

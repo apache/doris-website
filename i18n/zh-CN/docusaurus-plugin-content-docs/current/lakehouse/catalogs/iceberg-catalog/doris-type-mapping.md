@@ -8,6 +8,8 @@
 
 以下表格描述 Doris 4.2（`branch-4.2`）读取 Iceberg 外部表 Schema 时的类型映射。写入外部表时还受目标表 Schema 和写入能力限制，不能直接将读取映射反向使用。
 
+开发版的 `geometry` 和 `geography` 映射见 [Iceberg V3 空间类型](../iceberg-catalog.mdx#iceberg-spatial-types)。
+
 | Iceberg Type                           | Doris Type           | Comment               |
 | -------------------------------------- | -------------------- | --------------------- |
 | boolean                                | boolean              |                       |

@@ -256,6 +256,8 @@ The development version maps Iceberg V3 `geometry` and `geography` to Doris `GEO
 
 All participating FEs and BEs need spatial type support. Run spatial queries after upgrading all nodes involved.
 
+[Query an existing table](#iceberg-spatial-read) · [Write and read a point](#iceberg-spatial-example) · [Spatial functions](#iceberg-spatial-functions) · [SQL and storage limits](#iceberg-spatial-limits)
+
 #### Types and defaults
 
 | Declaration | Default | What Doris stores |
@@ -265,7 +267,20 @@ All participating FEs and BEs need spatial type support. Run spatial queries aft
 
 The Geography edge algorithms are `spherical`, `vincenty`, `thomas`, `andoyer`, and `karney`. Doris preserves the CRS and algorithm from the schema. A change to the type parameters does not transform coordinates.
 
-#### Write and read a point
+#### Query an existing table {#iceberg-spatial-read}
+
+To inspect a spatial column in an existing Iceberg V3 Parquet table, use `ST_AsText` to display its value as WKT (Well-Known Text). Replace the catalog, database, table, and column names with your own.
+
+```sql
+SELECT id, ST_AsText(geom) AS geom_wkt
+FROM iceberg_catalog.spatial_db.spatial_values
+ORDER BY id
+LIMIT 10;
+```
+
+For the sample table below, the query returns `POINT (1 2)` for `id` 1 and `NULL` for `id` 2.
+
+#### Write and read a point {#iceberg-spatial-example}
 
 Use an existing Iceberg catalog and database where you can create tables, insert data, and run queries. For setup, see [Iceberg REST metastore](../metastores/iceberg-rest.md). Replace `iceberg_catalog` and `spatial_db` with your names.
 
@@ -328,22 +343,23 @@ Typed measurements and relations accept nonempty XY Point, LineString, and Polyg
 
 - [ST_CONTAINS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains.md#typed-geography), [ST_WITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-within.md#typed-geography), and [ST_TOUCHES](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-touches.md#typed-geography) check containment or boundary contact.
 - [ST_EQUALS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-equals.md) tests whether two shapes cover the same points. [ST_OVERLAPS](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-overlaps.md) tests partial overlap between shapes of the same dimension.
-- [ST_DWITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-dwithin.md) checks whether the spherical distance is at most a specified number of metres.
+- [ST_DISTANCE](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance.md#typed-geography) returns the shortest spherical distance in metres. [ST_DWITHIN](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-dwithin.md) tests whether that distance is within a given threshold.
 
 Each spherical polygon ring selects the smaller region, at most a hemisphere, with either ring direction. When coordinates are very close, rounding can make a boundary or distance result uncertain. Affected functions raise an error when they cannot determine the result reliably. Reads, writes, and WKB access still preserve the original bytes.
 
-#### SQL and storage limits
+#### SQL and storage limits {#iceberg-spatial-limits}
 
 - Use ordinary columns for equality joins, grouping, ordering, and window partition keys. Doris rejects spatial keys, including keys with nested spatial values. This also applies to ordered aggregates and queries that sort with `LIMIT`. For example, `ORDER BY id` can return a spatial column, and `FIRST_VALUE(geom) OVER (ORDER BY id)` can return a spatial value.
 - Generic SQL comparisons and array comparisons reject spatial operands. For supported Geography values, use a spatial predicate. To group or deduplicate by exact WKB bytes, use `hex(ST_AsBinary(geom))`.
 - `DISTINCT`, set operations that compare rows (such as `UNION DISTINCT`, `INTERSECT`, and `EXCEPT`), and aggregate functions that compare or deduplicate spatial values reject spatial inputs. See the table below. `UNION ALL` can return spatial values.
 - Text and JSON casts into types containing spatial values are rejected. Ordinary Variant columns can coexist with spatial columns. A Variant object or array cannot hold a native spatial value.
 - Doris internal tables do not store native spatial columns. Spatial indexes, bounds pruning, and spatial predicate pushdown are unsupported. `ANALYZE TABLE` collects statistics for ordinary columns and skips spatial columns. GeoArrow is unsupported.
-- S3 and LOCAL file table-valued functions reject Parquet spatial annotations. Existing external columns declared as BINARY (`VARBINARY` in Doris) can read valid annotated values as raw WKB, including nested values. Unannotated `BYTE_ARRAY` columns follow the ordinary binary mapping.
+- When reading Parquet directly with the `S3` or `LOCAL` table-valued function, spatially annotated columns return raw WKB as `VARBINARY`. External table columns declared as BINARY (`VARBINARY` in Doris) can also read valid WKB from these Parquet columns, including nested columns. Unannotated `BYTE_ARRAY` columns follow the ordinary binary mapping.
 
 | Aggregate usage | Rule |
 | --- | --- |
-| `COUNT`, `ANY_VALUE`, and non-DISTINCT `ARRAY_AGG` or `COLLECT_LIST` | Can take spatial values in the supported forms. |
+| `COUNT`, `ANY_VALUE` | Can take spatial values. |
+| Non-DISTINCT `ARRAY_AGG` or `COLLECT_LIST` | Accepts scalar `GEOMETRY` or `GEOGRAPHY` inputs. Containers with spatial values, such as `ARRAY<GEOMETRY>`, are rejected. |
 | `COUNT(DISTINCT ...)`, DISTINCT collection or MAP aggregates, `COLLECT_SET`, `MULTI_DISTINCT_COUNT`, `GROUP_ARRAY_UNION`, and `GROUP_ARRAY_INTERSECT` | Reject spatial inputs, including nested spatial values. |
 | `MIN`, `MAX`, `LEAST`, `GREATEST`, `COUNT_AT_MIN`, `COUNT_AT_MAX`, and `TOPN_ARRAY` | Reject spatial inputs used for comparison. `TOPN_ARRAY` also rejects nested spatial values. |
 | `MIN_BY` and `MAX_BY` | Require an ordinary ordering key. They reject scalar spatial results and accept supported nested spatial results. |

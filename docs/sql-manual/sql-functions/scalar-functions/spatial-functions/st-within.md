@@ -12,7 +12,7 @@
 
 ## Description
 
-For GEOGRAPHY values in the development version, see [Typed Geography](#typed-geography).
+The description and examples below use string-encoded values returned by spatial constructors. For native spatial types, see [Typed Geography](#typed-geography).
 
 Determines whether one geometric shape (shape1) is completely inside another geometric shape (shape2). Returns 1 if shape1 is entirely within shape2; otherwise, returns 0.
 
@@ -176,10 +176,12 @@ SELECT ST_Within(ST_Point(0.5, 0.5), ST_Polygon("POLYGON ((0 0, 1 1, 0 1, 1 0, 0
 +-----------------------------------------------------------------------------------+
 ```
 
-## Typed Geography (development version) {#typed-geography}
+## Typed Geography {#typed-geography}
 
-The development version accepts any combination of nonempty XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. Either argument can be NULL, in which case the result is NULL.
+The development version of Doris accepts any combination of XY Point, LineString, and Polygon values with type `GEOGRAPHY('OGC:CRS84', 'spherical')`. `EMPTY` raises an error. If either argument is `NULL`, the result is `NULL`.
 
 Returns `true` if the second shape covers every point of the first shape and their interiors intersect. `ST_Within(a, b)` uses the same rule as `ST_Contains(b, a)`.
 
 For the shared spherical calculation rules and precision limits, see [Spatial functions](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions).
+
+See the [line endpoint example](st-contains.md#geography-boundary-example).
