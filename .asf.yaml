@@ -52,12 +52,16 @@ github:
           - Build Check
           - check-md-links
           - check-file-sizes
+      required_pull_request_reviews:
+        # Require at least one approving review before a PR can be merged into
+        # master. Only reviewers with write access (committers) count.
+        required_approving_review_count: 1
   features:
     issues: true
 
-  collaborators:
-    - wangtianyi2004
-    - freemandealer
+  # Explicit empty list: removing the key entirely would not clear collaborators
+  # that a previously applied .asf.yaml had configured.
+  collaborators: []
 
 notifications:
     commits:              commits@doris.apache.org
