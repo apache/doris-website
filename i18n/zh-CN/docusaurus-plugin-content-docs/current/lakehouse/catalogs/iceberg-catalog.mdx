@@ -346,7 +346,9 @@ Doris 保留嵌套空间值的类型参数和原始 WKB。NULL 容器、空容�
 #### 写入时的类型要求
 
 - 源值的类型、CRS 和 GEOGRAPHY 算法要与目标列匹配，容器中的空间值也要逐层匹配。需要构造默认参数的值时，使用 [ST_GEOMETRYFROMWKBTYPED](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkbtyped.md) 或 [ST_GEOGFROMWKB](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geogfromwkb.md)。
-- 在 `INSERT ... SELECT`、`UPDATE` 和 `MERGE` 中，常量 `ARRAY`、`MAP` 或 `STRUCT` 中能确定为 NULL 的值，可以写入允许 NULL 的空间位置。容器形状匹配时，外层有 `CAST` 也适用。普通键及其他字段保留各自的值。Iceberg 定义为必填的元素、值或字段会拒绝 NULL。
+- 写入常量数组、MAP 或 STRUCT 时，如果 Iceberg 允许对应的空间数组元素、MAP 值或 STRUCT 字段为空，就可以写入 `NULL`。向必填元素、值或字段写入 `NULL` 会报错。MAP 的键和其他字段保留原值。
+
+  这条规则适用于 `INSERT ... SELECT`、`UPDATE` 和 `MERGE`。如果给构造函数加了 `CAST`，转换后的容器结构须与目标一致。
 - `CREATE TABLE` 和 `ALTER TABLE` 添加空间列需要 Iceberg V3 和 Parquet。请使用普通列作为分区键。
 
 #### 查看数据与空间计算 {#iceberg-spatial-functions}
@@ -381,7 +383,7 @@ Doris 保留嵌套空间值的类型参数和原始 WKB。NULL 容器、空容�
 | 非 DISTINCT 的 `ARRAY_AGG`、`COLLECT_LIST` | 支持标量 `GEOMETRY` 或 `GEOGRAPHY`。含空间值的容器（如 `ARRAY<GEOMETRY>`）会报错。 |
 | `COUNT(DISTINCT ...)`、DISTINCT 的集合和 MAP 聚合、`COLLECT_SET`、`MULTI_DISTINCT_COUNT`、`GROUP_ARRAY_UNION`、`GROUP_ARRAY_INTERSECT` | 拒绝空间输入，包括嵌套空间值。 |
 | `MIN`、`MAX`、`LEAST`、`GREATEST`、`COUNT_AT_MIN`、`COUNT_AT_MAX`、`TOPN_ARRAY` | 拒绝参与比较的空间输入。`TOPN_ARRAY` 也拒绝嵌套空间值。 |
-| `MIN_BY`、`MAX_BY` | 使用普通排序键。拒绝标量空间结果，支持函数允许的嵌套空间结果。 |
+| `MIN_BY`、`MAX_BY` | 使用 `id` 等普通列作为排序键。`geom` 是空间列，`MIN_BY(geom, id)` 会报错。`shapes` 是数组列，`MIN_BY(shapes, id)` 返回 `id` 最小那一行的空间数组。结果也可以是含空间值的 MAP 或 STRUCT。`MAX_BY` 的类型要求相同，取排序键最大的行。 |
 | `MAP_AGG`、`MAP_AGG_V2`、`COUNT_MAP` | 非 DISTINCT 用法支持普通键与空间值。`MIN_MAP`、`MAX_MAP` 拒绝空间值，包括嵌套值。 |
 
 支持聚合状态的函数也遵循对应限制。

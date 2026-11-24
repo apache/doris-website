@@ -330,7 +330,9 @@ Doris preserves the type parameters and original WKB of nested spatial values. A
 #### Check types when writing
 
 - Match the source kind, CRS, and Geography algorithm to the target column, including spatial values inside containers. Use [ST_GEOMETRYFROMWKBTYPED](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkbtyped.md) and [ST_GEOGFROMWKB](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geogfromwkb.md) to construct values with the default parameters.
-- A constant `ARRAY`, `MAP`, or `STRUCT` can supply a known NULL to a nullable spatial position in `INSERT ... SELECT`, `UPDATE`, and `MERGE`. This also works with a `CAST` around the constructor when the container shapes match. Ordinary keys and other fields keep their values. A required Iceberg element, value, or field rejects NULL.
+- When writing a constant array, map, or struct, you can use `NULL` for a spatial array element, map value, or struct field that Iceberg marks as optional. Writing `NULL` to a required element, value, or field fails. Map keys and other fields keep their values.
+
+  This applies to `INSERT ... SELECT`, `UPDATE`, and `MERGE`, including a `CAST` around the constructor when its result has the same container structure as the target.
 - Spatial columns in `CREATE TABLE` and `ALTER TABLE` require Iceberg V3 with Parquet. Use ordinary columns for partition keys.
 
 #### View values and use spatial functions {#iceberg-spatial-functions}
@@ -365,7 +367,7 @@ Each spherical polygon ring selects the smaller region, at most a hemisphere, wi
 | Non-DISTINCT `ARRAY_AGG` or `COLLECT_LIST` | Accepts scalar `GEOMETRY` or `GEOGRAPHY` inputs. Containers with spatial values, such as `ARRAY<GEOMETRY>`, are rejected. |
 | `COUNT(DISTINCT ...)`, DISTINCT collection or MAP aggregates, `COLLECT_SET`, `MULTI_DISTINCT_COUNT`, `GROUP_ARRAY_UNION`, and `GROUP_ARRAY_INTERSECT` | Reject spatial inputs, including nested spatial values. |
 | `MIN`, `MAX`, `LEAST`, `GREATEST`, `COUNT_AT_MIN`, `COUNT_AT_MAX`, and `TOPN_ARRAY` | Reject spatial inputs used for comparison. `TOPN_ARRAY` also rejects nested spatial values. |
-| `MIN_BY` and `MAX_BY` | Require an ordinary ordering key. They reject scalar spatial results and accept supported nested spatial results. |
+| `MIN_BY` and `MAX_BY` | Use an ordinary ordering key such as `id`. `MIN_BY(geom, id)` rejects a scalar spatial result. `MIN_BY(shapes, id)` returns the spatial array from the row with the smallest `id`. Maps and structs containing spatial values can also be returned. `MAX_BY` follows the same rules and selects the largest key. |
 | `MAP_AGG`, `MAP_AGG_V2`, and `COUNT_MAP` | Non-DISTINCT forms can use ordinary keys with spatial values. `MIN_MAP` and `MAX_MAP` reject spatial values, including nested ones. |
 
 The aggregate restrictions also apply to their aggregate-state forms where supported.
