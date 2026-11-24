@@ -127,14 +127,16 @@ Loading in Doris involves several aspects, including data sources, data formats,
 
 | Load method                                              | Use case                                              | Supported file formats   | Load mode    |
 | :------------------------------------------------------- | :---------------------------------------------------- | :----------------------- | :----------- |
-| [Stream Load](./import-way/stream-load-manual)           | Loading local files or application writes             | csv, json, parquet, orc  | Synchronous  |
-| [Broker Load](./import-way/broker-load-manual.md)        | Loading from object storage, HDFS, etc.               | csv, json, parquet, orc  | Asynchronous |
+| [Stream Load](./import-way/stream-load-manual)           | Loading local files or application writes             | csv, json, parquet, orc, avro  | Synchronous  |
+| [Broker Load](./import-way/broker-load-manual.md)        | Loading from object storage, HDFS, etc.               | csv, json, parquet, orc, avro  | Asynchronous |
 | [INSERT INTO VALUES](./import-way/insert-into-manual.md) | Loading through interfaces such as JDBC               | SQL                      | Synchronous  |
 | [INSERT INTO SELECT](./import-way/insert-into-manual.md) | Loading from external tables, object storage, or HDFS | SQL                      | Synchronous  |
 | [Routine Load](./import-way/routine-load-manual.md)      | Real-time loading from Kafka                          | csv, json                | Asynchronous |
 | [MySQL Load](./import-way/mysql-load-manual.md)          | Loading from local data                               | csv                      | Synchronous  |
 | [Group Commit](./load-best-practices/group-commit-manual.md) | High-frequency small-batch loading                | Depends on the load method used | -      |
 | [Streaming Job](./import-way/streaming-job/continuous-load-overview.md) | Continuous loading from sources such as MySQL, PostgreSQL, and S3 | Depends on the data source | Asynchronous |
+
+Avro file loads require a development build containing the feature and a complete OCF file; they do not add raw Avro-message decoding to Routine Load. See [Avro import](./file-format/avro.md) for examples and limitations.
 
 ## FAQ
 

@@ -456,6 +456,7 @@ const sidebars: SidebarsConfig = {
                         'data-operate/import/file-format/json',
                         'data-operate/import/file-format/parquet',
                         'data-operate/import/file-format/orc',
+                        'data-operate/import/file-format/avro',
                     ],
                 },
                 {
@@ -825,6 +826,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'lakehouse/file-formats/parquet',
                         'lakehouse/file-formats/orc',
+                        'lakehouse/file-formats/avro',
                         'lakehouse/file-formats/text',
                         'lakehouse/file-formats/lance',
                     ],

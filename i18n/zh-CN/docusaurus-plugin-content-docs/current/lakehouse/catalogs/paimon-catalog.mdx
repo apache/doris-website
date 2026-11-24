@@ -332,6 +332,10 @@ ORDER BY engine_name, entry_name;
 
 * [ORC](../file-formats/orc.md)
 
+* [Avro](../file-formats/avro.md)（通过 Paimon SDK 读取）
+
+Avro 始终通过 Paimon SDK 读取，以保留合并和删除语义，无需新增 Catalog 配置。它不使用原生 Avro 文件读取路径，也不支持仅限原生路径的 `_file` / `_pos` 元数据列。
+
 ## 列类型映射
 
 请参阅[Paimon 与 Doris 数据类型映射](paimon-catalog/doris-type-mapping.md)，了解 Doris 4.2 的完整映射表、精度和不支持的类型。

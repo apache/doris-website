@@ -260,9 +260,13 @@ ORDER BY engine_name, entry_name;
 
 * [ORC](../file-formats/orc.md)
 
+* [Avro](../file-formats/avro.md)（开发版，仅支持读取）
+
 自 4.1.4 版本起，文件格式按每个数据文件（Split）单独判定，因此**同一张 Iceberg 表中同时存在 Parquet 和 ORC 数据文件时也可以正常查询**。
 
 自 4.1.4 版本起，Iceberg 的 Identity 分区元数据会随每个 Split 下发，路径分区键覆盖表所有 Partition Spec 中的 Identity 列。因此经历过 **Partition Evolution** 的表，其分区列取值在查询中也能正确返回。
+
+开发版还支持读取 Avro 数据文件、Equality Delete 和 Position Delete 文件，以及混合 Parquet、ORC、Avro 的快照。Avro 须满足[开发版前置条件](../file-formats/avro.md)，不支持写出 Avro。
 
 ## 列类型映射
 
@@ -1526,7 +1530,7 @@ Doris 为 Iceberg 数据表提供两个隐藏元数据列，可用于定位每�
 | `_file` | `STRING NOT NULL` | Iceberg 数据文件元数据中记录的原始路径。 |
 | `_pos` | `BIGINT NOT NULL` | 该行在完整数据文件中的物理位置，从 0 开始。 |
 
-前置条件：按照前文示例配置 Iceberg Catalog，并创建一个包含 `id` 列、使用 Parquet 或 ORC 文件的 Iceberg 数据表。以下查询假设 `iceberg_tbl` 中已包含 `id` 为 `1` 和 `2` 的记录：
+前置条件：按照前文示例配置 Iceberg Catalog，并创建一个包含 `id` 列、使用 Parquet、ORC 或 Avro 文件的 Iceberg 数据表。以下查询假设 `iceberg_tbl` 中已包含 `id` 为 `1` 和 `2` 的记录：
 
 ```sql
 SELECT id, `_file`, `_pos`
@@ -1564,7 +1568,7 @@ SET show_hidden_columns = true;
 行位置以完整物理文件为基准。谓词过滤、Delete 处理及扫描切分不会对保留行重新编号。因此，`_file` 和 `_pos` 的组合可以定位当前表快照中的一条物理记录。数据文件重写或 Compaction 后，两列的值可能变化，不能将其作为稳定的逻辑行 ID。
 
 :::caution 注意
-仅当 Iceberg 数据表通过 FileScannerV2 原生 Parquet 或 ORC Reader 读取时，才能使用这些列。如果关闭 `enable_file_scanner_v2`、开启 `force_jni_scanner`，或者所选数据文件无法使用原生 Parquet/ORC Reader，引用这些列的查询会失败。
+仅当 Iceberg 数据表通过 FileScannerV2 原生 Parquet、ORC 或 Avro Reader 读取时，才能使用这些列。Avro 还须满足[开发版前置条件](../file-formats/avro.md)。如果关闭 `enable_file_scanner_v2`、开启 `force_jni_scanner`，或者所选数据文件无法使用原生 Parquet/ORC/Avro Reader，引用这些列的查询会失败。
 
 `_file` 和 `_pos` 是保留列名，名称比较不区分大小写。请勿在 Iceberg 表中使用它们作为物理列名。
 :::

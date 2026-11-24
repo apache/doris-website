@@ -2,13 +2,15 @@
 {
     "title": "LOCAL",
     "language": "zh-CN",
-    "description": "Local 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持csv/csvwithnames/csvwithnamesandtypes/json/parquet/orc文件格式。"
+    "description": "通过 Apache Doris Local 表函数查询 BE 节点上的本地文件，支持 CSV、JSON、Parquet、ORC 和 Avro；了解文件位置、读取参数、开发版 Avro 读取要求及使用限制。"
 }
 ---
 
 ## 描述
 
-Local 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`文件格式。
+Local 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 be 上的文件内容。目前支持`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`文件格式。
+
+原生 Avro 读取的开发版前置条件、压缩算法、类型及限制，请参阅 [Avro](../../../lakehouse/file-formats/avro.md)。
 
 ## 语法
 
@@ -26,7 +28,7 @@ LOCAL(
 |-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
 | `file_path`     | 待读取文件的路径，该路径是一个相对于 `user_files_secure_path` 目录的相对路径，其中 `user_files_secure_path` 参数是 [be 的一个配置项](../../../admin-manual/config/be-config.md)。 <br /> 路径中不能包含 `..`，可以使用 glob 语法进行模糊匹配，如：`logs/*.log` |                                                 |
 | `backend_id`    |  文件所在的 BE 节点的 ID，可以通过 `show backends` 命令得到                                                                                               | 在 2.1.1 之前的版本中，Doris 仅支持指定某个 BE 节点读取该节点上的本地数据文件 |
-| `format`        | 文件格式，必填，当前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`                                                                  |                                                 |
+| `format`        | 文件格式，必填，当前支持 `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc/avro`                                                                  |                                                 |
 
 ## Optional Parameters
 | 参数               | 说明                                                                                                                         | 备注                                                                          |

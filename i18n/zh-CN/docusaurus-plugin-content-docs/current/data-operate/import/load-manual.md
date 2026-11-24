@@ -127,14 +127,16 @@ Doris 的导入主要涉及数据源、数据格式、导入方式、错误数�
 
 | 导入方式                                                 | 使用场景                                  | 支持的文件格式          | 导入模式 |
 | :------------------------------------------------------- | :---------------------------------------- | :---------------------- | :------- |
-| [Stream Load](./import-way/stream-load-manual)           | 导入本地文件或者应用程序写入              | csv、json、parquet、orc | 同步     |
-| [Broker Load](./import-way/broker-load-manual.md)        | 从对象存储、HDFS 等导入                   | csv、json、parquet、orc | 异步     |
+| [Stream Load](./import-way/stream-load-manual)           | 导入本地文件或者应用程序写入              | csv、json、parquet、orc、avro | 同步     |
+| [Broker Load](./import-way/broker-load-manual.md)        | 从对象存储、HDFS 等导入                   | csv、json、parquet、orc、avro | 异步     |
 | [INSERT INTO VALUES](./import-way/insert-into-manual.md) | 通过 JDBC 等接口导入                      | SQL                     | 同步     |
 | [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS 中的文件 | SQL                     | 同步     |
 | [Routine Load](./import-way/routine-load-manual.md)      | 从 Kafka 实时导入                         | csv、json               | 异步     |
 | [MySQL Load](./import-way/mysql-load-manual.md)          | 从本地数据导入                            | csv                     | 同步     |
 | [Group Commit](./load-best-practices/group-commit-manual.md)                 | 高频小批量导入                            | 根据使用的导入方式而定  | -        |
 | [Streaming Job](./import-way/streaming-job/continuous-load-overview.md) | 从 MySQL、PostgreSQL、S3 等数据源持续导入 | 取决于数据源            | 异步     |
+
+Avro 文件导入要求包含该能力的开发版构建和完整 OCF 文件；它不会为 Routine Load 增加原始 Avro 消息解码。示例与限制参阅 [Avro 导入](./file-format/avro.md)。
 
 ## 常见问题
 
