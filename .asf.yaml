@@ -37,6 +37,19 @@ github:
     - tpch
     - ssb
     - vectorized
+  rulesets:
+    - name: "Protect asf-site"
+      type: branch
+      branches:
+        includes:
+          - "asf-site"
+        excludes: []
+      # The deploy force-pushes this branch with force_orphan, so the
+      # non-fast-forward rule would break publishing. Only block deletion;
+      # full force-push protection needs a bypass identity (custom App or
+      # deploy key) because the built-in Actions app cannot be a bypass actor.
+      restrict_deletion: true
+      restrict_force_push: false
   enabled_merge_buttons:
     squash:  true
     merge:   false
