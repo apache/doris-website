@@ -250,16 +250,10 @@ jobs:
 
       - name: Deploy Website
         if: vars.WEBSITE_PUBLISH_ENABLED == 'true'
-        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+        uses: ./.github/actions/publish-asf-site
         with:
-            github_token: ${{ github.token }}
-            publish_branch: asf-site
-            force_orphan: true
-            publish_dir: ./build
-            destination_dir: ./
-            user_name: 'github-actions[bot]'
-            user_email: 'github-actions[bot]@users.noreply.github.com'
-            commit_message: 'Automated deployment with doris branch ${{ needs.source.outputs.branch }}@${{ env.DORIS_COMMIT }}'
+          source-sha: ${{ needs.source.outputs.source_sha }}
+          commit-message: 'Automated deployment with doris branch ${{ needs.source.outputs.branch }}@${{ env.DORIS_COMMIT }}'
 
       - name: Report publishing measurements
         if: always() && steps.metrics-start.outcome == 'success'

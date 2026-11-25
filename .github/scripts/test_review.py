@@ -326,9 +326,20 @@ class WorkflowTests(unittest.TestCase):
                 self.assertTrue(any(step.get("uses") == "./.github/actions/upload-website-assets" for step in deploy["steps"]))
                 publisher = next(step for step in deploy["steps"] if step.get("name") == "Deploy Website")
                 self.assertEqual(publisher["if"], "vars.WEBSITE_PUBLISH_ENABLED == 'true'")
+                self.assertEqual(publisher["uses"], "./.github/actions/publish-asf-site")
+                self.assertEqual(publisher["with"]["source-sha"], "${{ needs.source.outputs.source_sha }}")
             self.assertEqual(deploy["steps"][0]["with"]["ref"], "${{ github.sha }}")
-            self.assertEqual(workflow["jobs"]["source"]["steps"][-1]["env"]["DEPLOY_BRANCH"],
+            source = workflow["jobs"]["source"]
+            resolver = next(step for step in source["steps"] if step.get("id") == "source")
+            self.assertEqual(resolver["env"]["DEPLOY_BRANCH"],
                              "${{ inputs.branch }}" if name.startswith("manual") else "master")
+            if name == "cron-deploy-website.yml":
+                self.assertIn("schedule", workflow["on"])
+                self.assertEqual(source["permissions"], {"contents": "read", "actions": "read"})
+                self.assertIn("github.ref == 'refs/heads/master'", source["if"])
+                self.assertNotIn("secrets.", json.dumps(source))
+                self.assertEqual(source["outputs"]["rebuild"], "${{ steps.integrity.outputs.rebuild }}")
+                self.assertEqual(build["if"], "github.event_name == 'push' || needs.source.outputs.rebuild == 'true'")
 
     def test_repository_secrets_work_without_new_environment_configuration(self):
         raw = subprocess.check_output(["node", "-e", """

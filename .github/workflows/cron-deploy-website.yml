@@ -4,6 +4,8 @@ on:
     push:
         branches:
             - master
+    schedule:
+        - cron: '17 * * * *'
 permissions:
   contents: read
 # Serialize website uploads and ASF publication with manual deployment.
@@ -15,23 +17,36 @@ jobs:
     if: github.repository == 'apache/doris-website' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
     outputs:
       source_sha: ${{ steps.source.outputs.source_sha }}
       branch: ${{ steps.source.outputs.branch }}
+      rebuild: ${{ steps.integrity.outputs.rebuild }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
+          sparse-checkout: .github/scripts
       - name: Resolve a protected branch to an immutable commit
         id: source
         env:
           GH_TOKEN: ${{ github.token }}
           DEPLOY_BRANCH: master
         run: python3 .github/scripts/review.py deploy-ref
+      - name: Check the published commit
+        id: integrity
+        if: github.event_name == 'schedule' && vars.WEBSITE_PUBLISH_ENABLED == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+        run: python3 .github/scripts/check_asf_site.py "$SOURCE_SHA"
 
   build:
     needs: source
+    if: github.event_name == 'push' || needs.source.outputs.rebuild == 'true'
     outputs:
       locales: ${{ steps.publication-locales.outputs.locales }}
       artifact_id: ${{ steps.site-artifact.outputs.artifact-id }}
@@ -265,16 +280,10 @@ jobs:
 
       - name: Deploy Website
         if: vars.WEBSITE_PUBLISH_ENABLED == 'true'
-        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+        uses: ./.github/actions/publish-asf-site
         with:
-            github_token: ${{ github.token }}
-            publish_branch: asf-site
-            publish_dir: ./build
-            force_orphan: true
-            destination_dir: ./
-            user_name: 'github-actions[bot]'
-            user_email: 'github-actions[bot]@users.noreply.github.com'
-            commit_message: 'Automated deployment with doris master@${{ env.DORIS_COMMIT }}'
+          source-sha: ${{ needs.source.outputs.source_sha }}
+          commit-message: 'Automated deployment with doris master@${{ env.DORIS_COMMIT }}'
 
       - name: Report publishing measurements
         if: always() && steps.metrics-start.outcome == 'success'
