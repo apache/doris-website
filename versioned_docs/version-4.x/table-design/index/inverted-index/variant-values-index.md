@@ -7,9 +7,13 @@
 }
 ---
 
-## Overview {#overview}
+:::caution Experimental feature
 
-This feature is available starting with Doris 4.2.
+The VARIANT values index is available as an experimental feature starting with Doris 4.2.
+
+:::
+
+## Overview {#overview}
 
 Use a VARIANT values index to find a keyword anywhere in a JSON payload when the field that contains it can vary. For example, an application can record `timeout` in a log message or in an array of retry details. With a values index, a single `payload MATCH_ANY 'timeout'` query finds both.
 

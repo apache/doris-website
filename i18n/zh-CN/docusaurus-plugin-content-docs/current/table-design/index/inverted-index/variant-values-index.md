@@ -8,9 +8,13 @@
 }
 ---
 
-## 概述 {#overview}
+:::caution 实验性功能
 
-此功能适用于 Doris 4.2 及以上版本。
+VARIANT 值索引自 Doris 4.2 起作为实验性功能提供。
+
+:::
+
+## 概述 {#overview}
 
 当关键词可能出现在 JSON 的不同字段中时，可以用 VARIANT 值索引搜索整列。例如，应用有时把 `timeout` 写在日志消息里，有时写在重试详情数组里。使用值索引后，一条 `payload MATCH_ANY 'timeout'` 就能找到这两种日志。
 
