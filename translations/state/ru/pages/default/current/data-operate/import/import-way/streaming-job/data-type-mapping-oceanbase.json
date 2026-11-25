@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
-    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
-    "sourceHash": "eb7ba4c67a7a5051526b671b216c5f35c048ad518888df9e0e37a586e0139460",
-    "sourceTechnicalHash": "ffd7f07e4d1059141097ad632faa07690a2ba2f18a863eb2f13678da4818aba6",
-    "targetHash": "d2a00fbb28f708722f9d7f897523d5ca3a5be8d66817a47bf1d76b4f1b264e45",
+    "sourceCommit": "af18139fb593de5bf9970531ca7e6474533b3fe6",
+    "sourceHash": "a175a55cc4812b991a1a249d26b0a984ac9c3df37220b86ecf2a6f07dc909545",
+    "sourceTechnicalHash": "1fe28439f1f1b30dfac08549ac27057fb9e050a3bf95666ed4310c28f96ca8d5",
+    "targetHash": "c1dd970c55aa55d31f5ffb8402761a9d8949e41f752d6e81ebcd0f929eded6f7",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-11-04T08:47:43.925Z",
+    "translatedAt": "2026-11-24T08:07:35.936Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,8 +22,8 @@
       "reason": "chinese-reference-changed",
       "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "eb7ba4c67a7a5051526b671b216c5f35c048ad518888df9e0e37a586e0139460",
-      "targetHash": "d2a00fbb28f708722f9d7f897523d5ca3a5be8d66817a47bf1d76b4f1b264e45",
+      "sourceHash": "a175a55cc4812b991a1a249d26b0a984ac9c3df37220b86ecf2a6f07dc909545",
+      "targetHash": "c1dd970c55aa55d31f5ffb8402761a9d8949e41f752d6e81ebcd0f929eded6f7",
       "warnings": [],
       "history": [
         {
@@ -31,7 +31,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: справочник / сопоставление типов данных -->\"]"
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- Тип материала: справочник / сопоставление типов данных -->\"]"
             }
           ]
         },
@@ -44,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
-        "blob": "6d449674101f25f59135aea5296f737b3e40238f"
+        "blob": "1a7155573efc2b069cc557b1b4dcea667d13c696"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
-        "blob": "42c5859718c6c014c810756a8060d5cce02bfd29"
+        "blob": "fc335114c057c29cb5b0e27b5743d9f8be1b4a95"
       }
     }
   }

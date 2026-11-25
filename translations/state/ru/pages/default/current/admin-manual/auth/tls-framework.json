@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/admin-manual/auth/tls-framework.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/tls-framework.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
-    "sourceTechnicalHash": "67992242190d81f957842223e23c04ea92718900e2e5399c7961bdcffbca2472",
-    "targetHash": "a442637a99130bc94102b05351ae1c8a53cacafadbd014db54d29ff308f8c679",
+    "sourceCommit": "af18139fb593de5bf9970531ca7e6474533b3fe6",
+    "sourceHash": "05910a12aba929a20b24f2e9b6da2dc552355569a24f60519be359db972e3e87",
+    "sourceTechnicalHash": "dd582be2e9c68399b00a664318de030ca6714b88f0bf47b8f959213f6571f71f",
+    "targetHash": "6d57f17cb8605385388f82d45bb2ad7fa535da037cdc7656c6751d2ad53eb235",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T15:08:29.711Z",
+    "translatedAt": "2026-11-24T07:39:23.299Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
-      "targetHash": "a442637a99130bc94102b05351ae1c8a53cacafadbd014db54d29ff308f8c679",
+      "sourceHash": "05910a12aba929a20b24f2e9b6da2dc552355569a24f60519be359db972e3e87",
+      "targetHash": "6d57f17cb8605385388f82d45bb2ad7fa535da037cdc7656c6751d2ad53eb235",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters / Extension contract -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: параметры конфигурации / контракт расширения -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: TLS module integration / Configuration compatibility -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: интеграция модуля TLS / совместимость конфигурации -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/admin-manual/auth/tls-framework.md",
+        "blob": "c312e55a4a90f2dcb99142f97ac8f8b8c102386d"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/auth/tls-framework.md",
+        "blob": "c8bf3181fb32e477c880c96290dba8bdd38dd7cb"
+      }
     }
   }
 }

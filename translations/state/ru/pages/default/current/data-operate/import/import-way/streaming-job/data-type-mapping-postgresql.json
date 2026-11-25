@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
-    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
-    "sourceHash": "3f1e7f7020ac79b1681dd62de8c988a434e38d9bb638db3ad58869b4ebbb91d8",
-    "sourceTechnicalHash": "c7063c821684a619dfd8a53045a9028672f6c99547a0bc44e6a287b183fb4fdb",
-    "targetHash": "258e6a98a6a03eb6b2dcaefe84a8d83110293941ad324fd87fc1eb91fa754293",
+    "sourceCommit": "af18139fb593de5bf9970531ca7e6474533b3fe6",
+    "sourceHash": "f2fc70c8969f8b453bf166087d7ab69e34d1c16e5f24ee76dc1575ee24854525",
+    "sourceTechnicalHash": "cd2dac24f57e1d2d59260f28b48129fbbfea3d5c5df00811facd32428e4a43b8",
+    "targetHash": "2ac2cc9b90df114b637597f1b2bb7c04a05812653296582d4f74b6f6cc26e7ba",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-11-04T08:54:17.149Z",
+    "translatedAt": "2026-11-24T08:08:43.776Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,8 +22,8 @@
       "reason": "chinese-reference-changed",
       "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "3f1e7f7020ac79b1681dd62de8c988a434e38d9bb638db3ad58869b4ebbb91d8",
-      "targetHash": "258e6a98a6a03eb6b2dcaefe84a8d83110293941ad324fd87fc1eb91fa754293",
+      "sourceHash": "f2fc70c8969f8b453bf166087d7ab69e34d1c16e5f24ee76dc1575ee24854525",
+      "targetHash": "2ac2cc9b90df114b637597f1b2bb7c04a05812653296582d4f74b6f6cc26e7ba",
       "warnings": [],
       "history": [
         {
@@ -31,7 +31,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: справочник / сопоставление типов данных -->\"]"
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- Тип материала: справочник / сопоставление типов данных -->\"]"
             }
           ]
         },
@@ -44,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
-        "blob": "cf7ececf50b5091921485ab4604b2e92f987b542"
+        "blob": "4563abf823f704feb330d92cdacc2c45840c2e7f"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
-        "blob": "47653939df457b92b427ae84e90d9bfaaec3b3da"
+        "blob": "08ba59b314f4aab8b0adb21ee4c7e2d6caa77aa2"
       }
     }
   }
