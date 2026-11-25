@@ -37,6 +37,35 @@ github:
     - tpch
     - ssb
     - vectorized
+  rulesets:
+    - name: "Protect asf-site"
+      target: branch
+      enforcement: active
+      conditions:
+        ref_name:
+          include:
+            - "refs/heads/asf-site"
+          exclude: []
+      rules:
+        - type: deletion
+        - type: non_fast_forward
+      bypass_actors:
+        # TODO before merge: replace 0 with the deploy GitHub App's App ID.
+        - actor_id: 0
+          actor_type: Integration
+          bypass_mode: always
+        # apache/root (ASF Infra) can recover a wedged deployment branch.
+        - actor_id: 118420
+          actor_type: Team
+          bypass_mode: always
+  environments:
+    Production:
+      # The deploy App private key is stored as an environment secret. Only
+      # protected branches may deploy here, so a workflow on a writer's branch
+      # cannot read it.
+      wait_timer: 0
+      deployment_branch_policy:
+        protected_branches: true
   enabled_merge_buttons:
     squash:  true
     merge:   false
