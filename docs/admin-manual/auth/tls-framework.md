@@ -61,6 +61,12 @@ When `enable_tls` is `true`, protocol startup or channel creation is routed thro
 
 This means the table above is a compatibility contract, not a complete operational guide for enabling TLS in the stock open-source package.
 
+## Private RPC for Iceberg PME in 5.0
+
+Iceberg PME encrypted reads are planned for Doris 5.0.0 and require the built-in private RPC provider in matching FE/BE packages. Both FE-to-BE fragment RPC and BE-to-FE split RPC require trusted mutual TLS. The initial provider uses static certificates, mandatory peer verification and blocking Thrift; the protocol exclusions and activation steps are documented in [Iceberg Encrypted Reads (PME)](../../lakehouse/catalogs/iceberg-catalog/iceberg-encryption.md#1-configure-private-mutual-tls).
+
+This private provider does not configure REST Catalog, KMS, object-storage or public SQL/HTTP TLS. Their connection/authentication settings remain independent.
+
 ## Implementation Guidance
 
 If you implement a custom TLS module, follow these rules:

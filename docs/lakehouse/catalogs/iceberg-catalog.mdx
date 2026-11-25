@@ -11,6 +11,8 @@ import TabItem from '@theme/TabItem';
 
 Doris supports accessing Iceberg table data through various metadata services. In addition to reading data, Doris also supports writing to Iceberg tables, including INSERT, INSERT OVERWRITE, UPDATE, DELETE, and MERGE INTO.
 
+Iceberg PME encrypted reads are planned for Doris 5.0.0 through HMS and REST catalogs. This read-only capability has separate KMS, private mutual TLS and deployment prerequisites; the general write and metadata-table capabilities below do not grant encrypted-table support. See [Iceberg Encrypted Reads (PME)](iceberg-catalog/iceberg-encryption.md).
+
 [Quick start with Apache Doris and Apache Iceberg](../best-practices/doris-iceberg.md).
 
 :::tip

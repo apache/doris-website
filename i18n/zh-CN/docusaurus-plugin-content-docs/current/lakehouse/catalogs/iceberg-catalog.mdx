@@ -11,6 +11,8 @@ import TabItem from '@theme/TabItem';
 
 Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数据读取外，Doris 也支持对 Iceberg 表进行写入操作，包括 INSERT、INSERT OVERWRITE、UPDATE、DELETE 和 MERGE INTO。
 
+Iceberg PME 加密读取计划自 Doris 5.0.0 起通过 HMS 和 REST Catalog 支持。该能力仅支持读取，需要单独满足 KMS、私有双向 TLS 和部署前提；下文通用的写入及元数据表能力不代表支持加密表。详见 [Iceberg 加密读取（PME）](iceberg-catalog/iceberg-encryption.md)。
+
 [使用 Docker 快速体验 Apache Doris & Iceberg](../best-practices/doris-iceberg.md)
 
 :::tip
