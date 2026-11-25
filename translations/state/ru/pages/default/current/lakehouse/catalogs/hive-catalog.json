@@ -8,39 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalogs/hive-catalog.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hive-catalog.mdx",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "6c6b1d068c4458a2b61cbffaf4cccfbab9b0e85a7778c3a23472f410c0443098",
-    "sourceTechnicalHash": "53cf3a58e75cdd5883dcc3f77c9bfbdfe92dee39a46b5036330d7c3e9188a4b7",
-    "targetHash": "8dffe7fb3d07a3b3bffa7c791fdb70a35debe6d7eebddeef63910da805cc4e88",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "dae0989a9128cf0adafd7372e2935081443ccacdbea8cd7e89fcb045f5ae0509",
+    "sourceTechnicalHash": "99d3e4b64f404be4d6e7fa0def886b892ae1989f011fb8d3583cb8997726b8e9",
+    "targetHash": "3239807e8a1b3dd632e8d0cc99be834df7ba970918879eef17c96ce0848e9122",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T18:08:46.556Z",
+    "translatedAt": "2026-11-21T09:11:53.128Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
-      "modelCalls": 2,
-      "acceptedWithWarnings": false,
-      "sourceHash": "6c6b1d068c4458a2b61cbffaf4cccfbab9b0e85a7778c3a23472f410c0443098",
-      "targetHash": "8dffe7fb3d07a3b3bffa7c791fdb70a35debe6d7eebddeef63910da805cc4e88",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "dae0989a9128cf0adafd7372e2935081443ccacdbea8cd7e89fcb045f5ae0509",
+      "targetHash": "3239807e8a1b3dd632e8d0cc99be834df7ba970918879eef17c96ce0848e9122",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 230: expected [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( \\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES (\\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]\nprotected node 283: expected [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n    \\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]; received [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n\\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
           "issues": [
             {
-              "check": "request",
-              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1000\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"100000\",\"128\",\"15\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1.10\",\"2.1.6\",\"2.1.6\",\"2.1.6\",\"2.1.7\",\"2.1.7\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0.2\",\"3.0.2\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.0.4\",\"3.0.6\",\"3.1\",\"3.1\",\"3.1\",\"3.1.2\",\"3.1.2\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.4\",\"4.0.4\",\"4.1\",\"4.1\",\"4.1\",\"4.1\",\"4.1.0\",\"4.1.2\",\"4.1.3\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\",\"4.2\",\"4.2.0\",\"500\",\"64\",\"86400\",\"86400\",\"86400\",\"86400\",\"86400\",\"86400\",\"96\",\"96\",\"96\",\"96\"]; received [\"1\",\"1\",\"1\",\"1\",\"1000\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"100000\",\"128\",\"15\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1.10\",\"2.1.6\",\"2.1.6\",\"2.1.6\",\"2.1.7\",\"2.1.7\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0.2\",\"3.0.2\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.0.4\",\"3.0.6\",\"3.1\",\"3.1\",\"3.1\",\"3.1.2\",\"3.1.2\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.4\",\"4.0.4\",\"4.1\",\"4.1\",\"4.1\",\"4.1\",\"4.1.0\",\"4.1.2\",\"4.1.3\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\",\"4.2\",\"4.2.0\",\"500\",\"64\",\"86400\",\"86400\",\"86400\",\"86400\",\"86400\",\"86400\",\"96\",\"96\",\"96\",\"96\"]\nprotected node 140: expected [\"inlineCode\",null,null,\"2021-01-01 10:11:00\"]; received [\"inlineCode\",null,null,\"Asia/Shanghai\"]\nprotected node 141: expected [\"inlineCode\",null,null,\"Asia/Shanghai\"]; received [\"inlineCode\",null,null,\"2021-01-01 10:11:00\"]"
             }
           ]
         },
         {
           "attempt": 2,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 230: expected [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( \\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES (\\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]\nprotected node 283: expected [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n    \\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]; received [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n\\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]\nprotected node 289: expected [\"inlineCode\",null,null,\"current accumulated data volume\"]; received [\"inlineCode\",null,null,\"текущий накопленный объём данных\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 230: expected [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( \\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG `glue_hive_iamrole` PROPERTIES (\\n    'type' = 'hms',\\n    'hive.metastore.type' = 'glue',\\n    'glue.region' = 'us-east-1',\\n    'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',\\n    'glue.role_arn' = '<role_arn>'\\n);\"]\nprotected node 283: expected [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n    \\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]; received [\"code\",\"sql\",null,\"CREATE TABLE hive_ctas ENGINE=hive\\nPARTITION BY LIST (pt1, pt2) ()\\nAS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;\\n\\nCREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive\\nPARTITION BY LIST (pt1) ()\\nPROPERTIES (\\n    \\\"file_format\\\"=\\\"parquet\\\",\\n    \\\"compression\\\"=\\\"zstd\\\"\\n)\\nAS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/catalogs/hive-catalog.mdx",
+        "blob": "3430ff6acde3fa406fd48bb14944ce3697c03e30"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hive-catalog.mdx",
+        "blob": "3d281daca42542e541f4cad96bf74d47d9ef455c"
+      }
     }
   }
 }

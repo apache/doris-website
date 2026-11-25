@@ -31,7 +31,7 @@
 3. **트레이스 분포 영역(오른쪽 상단)**: 조건에 맞는 트레이스를 산점도로 표시합니다. X축은 트레이스 시작 시간, Y축은 트레이스 소요 시간이며, 버블 크기는 트레이스의 스팬 수를 나타냅니다. 산점도를 통해 실행 시간이 길거나 스팬 수가 많은 "큰" 트레이스를 빠르게 찾을 수 있습니다. 버블을 클릭하면 해당 트레이스의 세부 정보를 워터폴 차트로 볼 수 있습니다.
 4. **트레이스 목록 영역(오른쪽 하단)**: 조건에 맞는 트레이스 목록을 표시하며, 서비스, 작업, trace_id, 트레이스 소요 시간, 스팬 수 등을 보여줍니다. 기본 정렬인 `Most Recent`는 시작 시간을 기준으로 최신 트레이스부터 내림차순으로 표시합니다. 정렬 방식을 변경하여 소요 시간이 가장 길거나 짧은 트레이스 또는 스팬 수가 가장 많거나 적은 트레이스부터 표시할 수 있습니다.
 
-![트레이스 페이지 개요](https://cdnd.selectdb.com/images/upload/dogstack/trace_page.gif)
+![트레이스 페이지 개요](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_page.gif)
 
 트레이스를 클릭하면 상세 정보가 담긴 트레이스 패널이 열리며, 여기에서 해당 트레이스의 스팬을 더 자세히 분석할 수 있습니다.
 
@@ -39,7 +39,7 @@
 2. 스팬을 클릭하여 시작 시간, 소요 시간, 스팬 속성과 리소스 속성을 비롯한 컨텍스트 정보를 확인합니다.
 3. **스팬 필터**를 클릭하여 서비스 이름, 스팬 이름, 소요 시간, 태그 등을 기준으로 스팬을 필터링합니다.
 
-![트레이스 패널 상세 정보](https://cdnd.selectdb.com/images/upload/dogstack/trace_panel.gif)
+![트레이스 패널 상세 정보](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_panel.gif)
 
 
 
@@ -53,7 +53,7 @@ Service = frontend-web
 
 지정한 서비스에서 생성된 트레이스를 빠르게 확인합니다.
 
-![서비스로 필터링](https://cdnd.selectdb.com/images/upload/dogstack/trace_service.png)
+![서비스로 필터링](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_service.png)
 
 ### 작업으로 필터링 {#filter-by-operation}
 
@@ -63,7 +63,7 @@ Operation = HTTP POST
 
 특정 엔드포인트나 요청 유형을 찾는 데 유용합니다.
 
-![작업으로 필터링](https://cdnd.selectdb.com/images/upload/dogstack/trace_operation.png)
+![작업으로 필터링](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_operation.png)
 
 ### 태그로 필터링 {#filter-by-tags}
 
@@ -73,7 +73,7 @@ upstream_cluster.name="flagservice"
 
 **logfmt key=value** 구문을 사용하여 스팬 속성을 기준으로 필터링합니다.
 
-![태그로 필터링](https://cdnd.selectdb.com/images/upload/dogstack/trace_tags.png)
+![태그로 필터링](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_tags.png)
 
 ### 소요 시간으로 필터링 {#filter-by-duration}
 
@@ -81,7 +81,7 @@ upstream_cluster.name="flagservice"
 
 느린 요청을 빠르게 찾아냅니다.
 
-![소요 시간으로 필터링](https://cdnd.selectdb.com/images/upload/dogstack/trace_duration.png)
+![소요 시간으로 필터링](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_duration.png)
 
 
 
@@ -95,4 +95,4 @@ upstream_cluster.name="flagservice"
 
 페이지를 나누어 탐색하는 기능도 지원합니다.
 
-![정렬 및 페이지 나누기](https://cdnd.selectdb.com/images/upload/dogstack/trace_sort.png)
+![정렬 및 페이지 나누기](https://assets-cdn.selectdb.com/site/images/upload/dogstack/trace_sort.png)

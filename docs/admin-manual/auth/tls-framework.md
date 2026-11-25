@@ -24,6 +24,8 @@ This framework is available starting from Apache Doris 4.1.4. These unified TLS 
 
 The open-source Doris package contains the framework, configuration items, parser support, and extension points for TLS and certificate-based authentication. It does not include a complete TLS runtime implementation for every protocol. In the stock open-source build, enabling TLS for a protocol that has no TLS module implementation will fail with an error indicating that the TLS module is required.
 
+Starting from Apache Doris 5.0, the open-source build provides built-in mutual TLS for internal gRPC/BRPC and blocking Thrift. See [Internal RPC encryption with mutual TLS](./private-rpc-tls.md) for certificate provisioning, required configuration overrides, coordinated activation, and protocol limits.
+
 The configuration names, default values, and meanings listed below are fixed by the framework. If you provide your own TLS module implementation, use this framework and these configuration items for compatibility. Implementation details such as certificate loading, TLS context creation, handshake behavior, certificate reload, and protocol-specific peer verification can be implemented by the TLS module.
 
 ## Configuration Reference
@@ -55,7 +57,7 @@ All options below are optional and use the listed defaults. Set them in FE `fe.c
 
 The open-source framework provides configuration definitions and extension points, and the default providers keep the existing plaintext behavior when `enable_tls` is `false`.
 
-When `enable_tls` is `true`, protocol startup or channel creation is routed through the TLS framework. If the corresponding TLS module is not provided, the open-source default implementation rejects TLS startup for that protocol and reports that the TLS module is required.
+When `enable_tls` is `true`, protocol startup or channel creation is routed through the TLS framework. A build containing the built-in private RPC provider can serve its supported internal protocols. If a selected protocol has no corresponding TLS implementation, the open-source default implementation rejects TLS startup for that protocol and reports that the TLS module is required.
 
 This means the table above is a compatibility contract, not a complete operational guide for enabling TLS in the stock open-source package.
 

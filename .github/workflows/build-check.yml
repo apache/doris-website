@@ -123,6 +123,10 @@ jobs:
               if: steps.detect.outputs.translation_tests == 'true'
               run: node --test scripts/i18n/__tests__/*.test.cjs
 
+            - name: Tool unit tests
+              if: steps.detect.outputs.tool_tests == 'true'
+              run: node --test scripts/docs-pdf/*.test.cjs doc-tools/skills/add-release/scripts/validate-release.test.mjs
+
             - name: Publish artifact optimization tests
               if: steps.detect.outputs.publish_fixture == 'true'
               env:
@@ -139,12 +143,29 @@ jobs:
             - name: Verify native content manifest fixture
               if: steps.detect.outputs.content_fixture == 'true'
               run: |
-                  node scripts/i18n/verify-content-fixture.cjs
-                  node scripts/i18n/verify-doc-dates-fixture.cjs
-                  node scripts/i18n/verify-blog-fixture.cjs
-                  node scripts/i18n/verify-blog-automation-fixture.cjs
-                  node scripts/i18n/verify-source-revisions-fixture.cjs
-                  node scripts/i18n/verify-release-policy-fixture.cjs
+                  ARGS=()
+                  if [ "${{ steps.detect.outputs.validation_mode }}" != "full" ]; then ARGS+=(--smoke); fi
+                  node scripts/i18n/verify-content-fixture.cjs "${ARGS[@]}"
+
+            - name: Verify documentation date fixture
+              if: steps.detect.outputs.doc_dates_fixture == 'true'
+              run: node scripts/i18n/verify-doc-dates-fixture.cjs
+
+            - name: Verify blog fixture
+              if: steps.detect.outputs.blog_fixture == 'true'
+              run: node scripts/i18n/verify-blog-fixture.cjs
+
+            - name: Verify blog automation fixture
+              if: steps.detect.outputs.blog_automation_fixture == 'true'
+              run: node scripts/i18n/verify-blog-automation-fixture.cjs
+
+            - name: Verify source revisions fixture
+              if: steps.detect.outputs.source_revisions_fixture == 'true'
+              run: node scripts/i18n/verify-source-revisions-fixture.cjs
+
+            - name: Verify release policy fixture
+              if: steps.detect.outputs.release_policy_fixture == 'true'
+              run: node scripts/i18n/verify-release-policy-fixture.cjs
 
             - name: Workflow security boundary tests
               run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v
@@ -170,7 +191,7 @@ jobs:
                   done
 
             - name: Install browser verification tools
-              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample' || steps.detect.outputs.publish_fixture == 'true' || steps.detect.outputs.content_fixture == 'true' || steps.detect.outputs.sampling_fixture == 'true' || steps.detect.outputs.search_fixture == 'true'
+              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample' || steps.detect.outputs.publish_fixture == 'true' || steps.detect.outputs.content_fixture == 'true' || steps.detect.outputs.sampling_fixture == 'true' || steps.detect.outputs.search_fixture == 'true' || steps.detect.outputs.blog_automation_fixture == 'true' || steps.detect.outputs.source_revisions_fixture == 'true' || steps.detect.outputs.release_policy_fixture == 'true' || steps.detect.outputs.locale_entry_fixture == 'true'
               run: |
                   DORIS_BROWSER_TOOLS="$RUNNER_TEMP/doris-browser-tools"
                   npm install --prefix "$DORIS_BROWSER_TOOLS" --no-save --no-package-lock playwright@1.64.1
@@ -197,19 +218,19 @@ jobs:
               if: steps.detect.outputs.content_fixture == 'true'
               run: node scripts/i18n/verify-global-language.cjs --fixture --site .i18n-build/content-fixture/build --manifests .i18n-build/content-fixture/.i18n-build/content-manifests --output .i18n-build/browser-global-language-fixture.json
             - name: Verify release-note policy fixture in Chromium
-              if: steps.detect.outputs.content_fixture == 'true'
+              if: steps.detect.outputs.release_policy_fixture == 'true'
               run: node scripts/i18n/verify-release-policy-fixture.cjs --verify-existing --browser
 
             - name: Verify new-blog automation fixture in Chromium
-              if: steps.detect.outputs.content_fixture == 'true'
+              if: steps.detect.outputs.blog_automation_fixture == 'true'
               run: node scripts/i18n/verify-blog-automation-fixture.cjs --verify-existing --browser
 
             - name: Verify body-only translation corrections in Chromium
-              if: steps.detect.outputs.content_fixture == 'true'
+              if: steps.detect.outputs.source_revisions_fixture == 'true'
               run: node scripts/i18n/verify-source-revisions-fixture.cjs --verify-existing --browser
 
             - name: Verify automatic language entry in Chromium
-              if: steps.detect.outputs.content_fixture == 'true'
+              if: steps.detect.outputs.locale_entry_fixture == 'true'
               run: node scripts/i18n/verify-locale-entry-fixture.cjs
 
             - name: Build
@@ -240,20 +261,20 @@ jobs:
               if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample'
               run: node scripts/i18n/manual-report.cjs --coverage
 
-            - name: Verify sampled compilation
-              if: steps.detect.outputs.validation_mode == 'sample'
-              run: node scripts/i18n/verify-ci-sample.cjs
-
             - name: Verify localized static pages
-              if: steps.detect.outputs.validation_mode == 'full'
+              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample'
               env:
                   NODE_OPTIONS: --max-old-space-size=8192
+                  DORIS_ASSET_ORIGIN: ""
               run: |
-                  for LOCALE in $(echo "${{ steps.detect.outputs.validation_enabled_locales }}" | tr ',' ' '); do
-                      node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
-                  done
+                  if [ "${{ steps.detect.outputs.validation_mode }}" = "sample" ]; then
+                      node scripts/i18n/verify-ci-sample.cjs
+                      exit 0
+                  fi
+                  # Validate resource configuration before the HTML census.
+                  node scripts/publish/verify.cjs build
+                  node scripts/i18n/verify-static.cjs --site build --all-managed
                   if [ "${{ steps.detect.outputs.validation_mode }}" = "full" ]; then
-                      node scripts/publish/verify.cjs build
                       node scripts/i18n/verify-global-language.cjs --site build --output .i18n-build/browser-global-language.json
                       node scripts/i18n/verify-first-release.cjs --site build --output .i18n-build/first-release.json
                       for LOCALE in $(echo "${{ steps.detect.outputs.validation_enabled_locales }}" | tr ',' ' '); do

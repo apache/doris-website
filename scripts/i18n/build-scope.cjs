@@ -3,6 +3,7 @@ const path = require('node:path');
 const {execFileSync} = require('node:child_process');
 const {locales, localeRegistry} = require('../../config/i18n');
 const {managedLocales} = require('./state.cjs');
+const {isPublishMaintenanceNote, actionSubmodulesOnly} = require('./ci-maintenance.cjs');
 // Locales that stay opt-in, so CI has to enable exactly the ones in scope.
 const optionalLocales = localeRegistry.filter(locale => locale.optional).map(locale => locale.code);
 const globalLanguageRuntime = file => /^src\/utils\/(locale|localization|translation|localizedRoute|localePreference|contentRoute|useLocalizedRoute|useLanguageItems|languageMessages|englishTranslation|englishLocalization|useEnglishContentContext)\.[jt]sx?$/.test(file)
@@ -15,7 +16,8 @@ const globalLanguageRuntime = file => /^src\/utils\/(locale|localization|transla
 function validationScope(files) {
     const dependencies = files.some(file => /^(package.json|yarn.lock)$/.test(file));
     const workflow = files.includes('.github/workflows/build-check.yml');
-    const publishing = files.some(file => /^(scripts\/publish\/|config\/matomo-plugin\/|scripts\/i18n\/locale-entry\.cjs$|scripts\/build-locales\.cjs$|scripts\/build-locale\.cjs$|config\/(?:(custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
+    const publishing = files.some(file => !isPublishMaintenanceNote(file)
+        && /^(scripts\/publish\/|config\/matomo-plugin\/|scripts\/i18n\/locale-entry\.cjs$|scripts\/build-locales\.cjs$|scripts\/build-locale\.cjs$|config\/(?:(custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
     const content = files.some(file => globalLanguageRuntime(file)
         || file === 'translations/shared/registry.json'
         || /^scripts\/i18n\/(?!__tests__\/).*\.[cm]?js$/.test(file)
@@ -32,7 +34,7 @@ function validationScope(files) {
 // `managed` lists the locales whose content carries translation state. A change
 // to one of their dictionaries or state files needs a real render build, while
 // the same change for a source-only locale does not.
-function buildScope(files, versions, managed = [], dependencies = null) {
+function buildScope(files, versions, managed = [], dependencies = null, {actionSubmodules = false} = {}) {
     const active = ['current', ...versions];
     const wanted = new Set(), languages = new Set(), json = new Set(), retired = new Set();
     let tier = 'skip';
@@ -40,7 +42,8 @@ function buildScope(files, versions, managed = [], dependencies = null) {
     const shared = () => {locales.forEach(locale => languages.add(locale)); build();};
     for (const file of files) {
         let match;
-        if (['versions.json', 'config/versions-plugin.js'].includes(file)) {tier = 'full'; shared();}
+        if (isPublishMaintenanceNote(file) || file === '.gitmodules' && actionSubmodules) {}
+        else if (['versions.json', 'config/versions-plugin.js'].includes(file)) {tier = 'full'; shared();}
         else if (file.startsWith('docs/')) {languages.add('en'); wanted.add('current'); build();}
         else if ((match = file.match(/^versioned_docs\/version-([^/]+)\//))) {languages.add('en'); wanted.add(match[1]); build();}
         else if ((match = file.match(/^i18n\/([^/]+)\/(.+)$/))) {
@@ -95,9 +98,10 @@ function buildScope(files, versions, managed = [], dependencies = null) {
         || /^scripts\/i18n\/verify-(doc-navigation|search)\.cjs$/.test(file));
     const contractChanged = files.some(file => /^scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|docs-plugin|status-plugin|route-context|page-body|page-body-loader|sitemap)\.cjs$/.test(file)
         || (/^translations\/(pages|blog)\//.test(file) && !dependencies?.complete));
-    const optimizePublish = contractChanged || searchChanged || navigationChanged || files.some(file => /^(scripts\/publish\/|config\/matomo-plugin\/|scripts\/i18n\/locale-entry\.cjs$|package\.json$|yarn\.lock$|docusaurus\.config\.js$|config\/(?:(i18n|custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|scripts\/build-locales?\.cjs$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron-deploy-website|manual-deploy-website|build-check)\.yml$)/.test(file));
-    // Publication changes need the same complete artifact as deployment, on
-    // the CI runner. Keep local checks scoped to fixtures and Dev versions.
+    const optimizePublish = contractChanged || searchChanged || navigationChanged || files.some(file => !isPublishMaintenanceNote(file)
+        && /^(scripts\/publish\/|config\/matomo-plugin\/|scripts\/i18n\/locale-entry\.cjs$|package\.json$|yarn\.lock$|docusaurus\.config\.js$|config\/(?:(i18n|custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|scripts\/build-locales?\.cjs$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron-deploy-website|manual-deploy-website|build-check)\.yml$)/.test(file));
+    // Record complete publication impact for deployment. PR compilation policy
+    // is chosen separately by ci-plan.cjs and normally uses bounded samples.
     if (optimizePublish) {tier = 'full'; shared();}
     if (tier !== 'full' && dependencies?.complete && dependencies.locales.length) {
         languages.clear(); dependencies.locales.forEach(locale => languages.add(locale));
@@ -120,7 +124,8 @@ if (require.main === module) {
     if (!base) throw new Error('Usage: build-scope.cjs <base SHA>');
     const files = execFileSync('git', ['diff', '--name-only', base, 'HEAD'], {encoding:'utf8'}).trim().split('\n').filter(Boolean);
     const dependencies = require('./content-impact.cjs').analyzeImpact(root, base, files);
-    const plan = buildScope(files, JSON.parse(fs.readFileSync(path.join(root,'versions.json'))), managedLocales(root), dependencies);
+    const actionSubmodules = files.includes('.gitmodules') && actionSubmodulesOnly(root, base);
+    const plan = buildScope(files, JSON.parse(fs.readFileSync(path.join(root,'versions.json'))), managedLocales(root), dependencies, {actionSubmodules});
     for (const file of plan.json) if (fs.existsSync(file)) JSON.parse(fs.readFileSync(file,'utf8'));
     const report = JSON.stringify({schemaVersion: 1, sourceSha: execFileSync('git', ['rev-parse', 'HEAD'], {encoding: 'utf8'}).trim(),
         baseSha: base, files, ...plan}, null, 2) + '\n';

@@ -69,21 +69,21 @@ DOG Stack предлагает широкие возможности на баз
 
 - Поиск по логам
 
-![Поиск по логам](https://cdnd.selectdb.com/images/upload/dogstack/overview_logs.png)
+![Поиск по логам](https://assets-cdn.selectdb.com/site/images/upload/dogstack/overview_logs.png)
 
 - Анализ трассировок
 
-![Анализ трассировок](https://cdnd.selectdb.com/images/upload/dogstack/overview_traces.png)
+![Анализ трассировок](https://assets-cdn.selectdb.com/site/images/upload/dogstack/overview_traces.png)
 
 - Панель метрик
 
-![Панель метрик](https://cdnd.selectdb.com/images/upload/dogstack/overview_dashboard.png)
+![Панель метрик](https://assets-cdn.selectdb.com/site/images/upload/dogstack/overview_dashboard.png)
 
 
 
 ## Архитектура {#architecture}
 
-![Архитектура DOG Stack](https://cdnd.selectdb.com/images/upload/dogstack/dogstack_architecture.png)
+![Архитектура DOG Stack](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dogstack_architecture.png)
 
 DOG Stack состоит из следующих компонентов.
 

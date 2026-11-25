@@ -27,6 +27,10 @@ Data catalogs are primarily applicable to the following three types of scenarios
 
 This article uses [Iceberg Catalog](./catalogs/iceberg-catalog) as an example to introduce the basic operations of data catalogs. For detailed introductions to different data catalogs, please refer to the corresponding data catalog documentation.
 
+## Sensitive Property Masking
+
+The shared Catalog property masking policy is planned for Doris 4.2.0 and for 5.0 and later releases. Passwords, access keys, tokens, JDBC strings and URL credentials are masked in supported display, audit and lineage paths; runtime connection values are unchanged. See [Catalog Property Masking](./catalog-property-masking.md) for the rules, version differences, configuration and limitations.
+
 ## Creating a Data Catalog
 
 Create an Iceberg Catalog using the `CREATE CATALOG` statement.

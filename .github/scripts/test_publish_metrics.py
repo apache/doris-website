@@ -137,7 +137,9 @@ class PublishMetricsTests(unittest.TestCase):
             trusted = next(step for step in build["steps"] if step.get("name") == "Checkout trusted measurement code")
             self.assertEqual(trusted["with"]["ref"], "${{ github.sha }}")
             self.assertFalse(trusted["with"]["persist-credentials"])
-            self.assertEqual(deploy["environment"], "Production")
+            self.assertNotIn("environment", deploy)
+            self.assertEqual(deploy["permissions"]["id-token"], "write")
+            self.assertLess(deploy["timeout-minutes"], 60)
             self.assertEqual(deploy["needs"], ["source", "build"])
             for job in (build, deploy):
                 report = next(step for step in job["steps"] if step.get("name") == "Report publishing measurements")

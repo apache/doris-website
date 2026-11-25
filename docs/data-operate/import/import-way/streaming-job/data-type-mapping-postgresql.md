@@ -25,24 +25,25 @@ In both cases, the values are written following the same mapping. For types that
 
 | PostgreSQL Type | Doris Type | Notes |
 | --- | --- | --- |
-| `bool` | `BOOLEAN` | |
+| `bool` / `boolean` | `BOOLEAN` | |
 | `bit(1)` | `BOOLEAN` | |
-| `bit(n>1)` / `varbit` | `STRING` | |
-| `int2` / `smallserial` | `SMALLINT` | |
-| `int4` / `serial` | `INT` | |
-| `int8` / `bigserial` | `BIGINT` | |
-| `float4` | `FLOAT` | |
-| `float8` | `DOUBLE` | |
-| `numeric(p,s)` | `DECIMAL(min(p,38), s)` | Precision capped at 38; scale defaults to 9 when unspecified |
-| `bpchar(n)` (i.e. `CHAR(n)`) | `CHAR` / `VARCHAR` | Length scaled ×3 for UTF-8; `> 255` becomes `VARCHAR` |
+| `bit(n>1)` / `varbit` / `bit varying` | `STRING` | Base64-encoded string |
+| `int2` / `smallint` / `smallserial` | `SMALLINT` | |
+| `int4` / `integer` / `serial` | `INT` | |
+| `int8` / `bigint` / `bigserial` | `BIGINT` | |
+| `float4` / `real` | `FLOAT` | |
+| `float8` / `double precision` | `DOUBLE` | |
+| `numeric(p,s)` / `decimal(p,s)` | `DECIMAL(p,s)` / `STRING` | Precision above 38 maps to `STRING` |
+| `bpchar(n)` (i.e. `CHAR(n)`) | `CHAR` / `VARCHAR` | Length scaled ×3 for UTF-8; above 255 becomes `VARCHAR` |
 | `varchar` / `text` | `STRING` | PostgreSQL `varchar` maps to `STRING` (no length) |
 | `date` | `DATE` | |
-| `timestamp` / `timestamptz` | `DATETIME(s)` | Scale 0–6; `timestamptz` normalized to the server time zone |
-| `time` / `timetz` / `interval` | `STRING` | `timetz` keeps its UTC-normalized offset |
-| `uuid` / `inet` / `cidr` / `macaddr` / `macaddr8` | `STRING` | |
+| `timestamp` / `timestamp without time zone` / `timestamptz` / `timestamp with time zone` | `DATETIME(s)` | Scale 0–6; `timestamptz` normalized to the server time zone |
+| `time` / `time without time zone` / `timetz` / `time with time zone` / `interval` | `STRING` | `timetz` keeps its UTC-normalized offset |
+| `uuid` | `UUID` | |
+| `inet` / `cidr` / `macaddr` / `macaddr8` | `STRING` | |
 | `bytea` | `STRING` | Base64-encoded string |
 | `xml` / `hstore` | `STRING` | |
-| `json` / `jsonb` | `JSON` | |
-| Geometry types (`point`, `line`, `polygon`, …) | `STRING` | Serialized as a GeoJSON string (`type` / `coordinates` / `srid`) |
-| Array types (e.g. `int4[]`, `text[]`) | `ARRAY<T>` | One-dimensional only |
-| Other / user-defined types | `STRING` | |
+| `json` / `jsonb` | `STRING` | Stored as JSON text |
+| `point` | `STRING` | Serialized as a GeoJSON string (`type` / `coordinates` / `srid`) |
+| Array types | `ARRAY<T>` | One-dimensional only. Supported element types: `int2`, `int4`, `int8`, `float4`, `float8`, `numeric(p,s)`, `bool`, `bpchar`, `varchar`, `text`, `date`, `timestamp`, `timestamptz`, `json`, `jsonb`, `uuid`. A non-empty source value must be sampled to infer dimensions; `bpchar[]` maps to `ARRAY<STRING>` |
+| Other types | Not supported | |

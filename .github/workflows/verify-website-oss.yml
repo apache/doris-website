@@ -1,0 +1,74 @@
+name: Verify Website OSS OIDC
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# This diagnostic writes only unique probe objects and never publishes asf-site.
+concurrency:
+  group: website-oss-oidc-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: >-
+      github.repository == 'apache/doris-website' &&
+      github.ref == 'refs/heads/master' &&
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      WEBSITE_OSS_BUCKET: ${{ vars.WEBSITE_OSS_BUCKET }}
+      WEBSITE_OSS_REGION: ${{ vars.WEBSITE_OSS_REGION }}
+      WEBSITE_OSS_ENDPOINT: ${{ vars.WEBSITE_OSS_ENDPOINT }}
+      WEBSITE_ASSET_BASE_URL: ${{ vars.WEBSITE_ASSET_BASE_URL }}
+    steps:
+      - name: Checkout trusted probe code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Check repository and non-secret configuration
+        run: python3 .github/scripts/website_oss_probe.py --check-config
+
+      # Load the pinned action from this repository, following the Doris
+      # submodule pattern used for Actions outside the ASF allowlist.
+      - name: Initialize the pinned Alibaba Cloud action
+        run: git submodule update --init --depth 1 -- .github/actions/configure-aliyun-credentials
+
+      - name: Install pinned ossutil
+        shell: bash
+        run: |
+          set -euo pipefail
+          tool_dir="$RUNNER_TEMP/website-ossutil"
+          mkdir -p "$tool_dir"
+          curl --fail --location --retry 3 \
+            'https://gosspublic.alicdn.com/ossutil/v2/2.4.1/ossutil-2.4.1-linux-amd64.zip' \
+            --output "$tool_dir/ossutil.zip"
+          echo '57ee4c56796a40144acd6b0b96b53b4ba75e5cec09c01d8d0313c09a5524022f  '"$tool_dir/ossutil.zip" | sha256sum --check
+          unzip -q "$tool_dir/ossutil.zip" -d "$tool_dir"
+          install -m 0755 "$tool_dir/ossutil-2.4.1-linux-amd64/ossutil" "$tool_dir/ossutil"
+          echo "$tool_dir" >> "$GITHUB_PATH"
+
+      - name: Authenticate using GitHub OIDC
+        id: aliyun
+        uses: ./.github/actions/configure-aliyun-credentials
+        with:
+          oidc-provider-arn: ${{ vars.ALIYUN_OIDC_PROVIDER_ARN }}
+          role-to-assume: ${{ vars.ALIYUN_WEBSITE_ROLE_ARN }}
+          audience: sts.aliyuncs.com
+          role-session-name: doris-probe-${{ github.run_id }}-${{ github.run_attempt }}
+          role-session-expiration: 900
+
+      - name: Verify website permissions and private-origin delivery
+        env:
+          OSS_ACCESS_KEY_ID: ${{ steps.aliyun.outputs.aliyun-access-key-id }}
+          OSS_ACCESS_KEY_SECRET: ${{ steps.aliyun.outputs.aliyun-access-key-secret }}
+          OSS_SESSION_TOKEN: ${{ steps.aliyun.outputs.aliyun-security-token }}
+        run: python3 .github/scripts/website_oss_probe.py

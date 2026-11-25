@@ -36,7 +36,7 @@ Discover 페이지는 고성능 로그 분석에 최적화된, Kibana Discover�
 
 ## Discover 페이지 개요 {#discover-page-overview}
 
-![Discover 페이지 개요](https://cdnd.selectdb.com/images/upload/dogstack/search_overview.png)
+![Discover 페이지 개요](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_overview.png)
 
 Discover 페이지는 네 가지 핵심 영역으로 구성됩니다.
 
@@ -80,7 +80,7 @@ Discover 페이지는 네 가지 핵심 영역으로 구성됩니다.
 
 쿼리 입력 영역의 드롭다운 메뉴에서 데이터 소스, 데이터베이스, 테이블, 시간 필드, 시간 범위를 선택합니다. 데이터 소스, 데이터베이스, 테이블의 기본값은 설정 페이지에서 변경할 수 있습니다. 기본 시간 필드는 테이블에서 처음으로 나타나는 `DATETIME` 또는 `DATE` 열입니다.
 
-![쿼리 입력 예시](https://cdnd.selectdb.com/images/upload/dogstack/search_input.gif)
+![쿼리 입력 예시](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_input.gif)
 
 검색 입력창은 SQL과 Lucene 구문을 모두 지원합니다. Lucene 구문은 내부적으로 SQL `WHERE` 조건으로 변환됩니다. 지원되는 Lucene 구문과 Kibana, SQL 간의 대응 관계는 다음과 같습니다.
 
@@ -131,7 +131,7 @@ SQL 구문의 핵심 사항:
 2. 추이 차트에서 드래그로 구간을 선택하여 쿼리의 시간 범위를 변경할 수 있습니다.
 3. 버킷 길이는 기본적으로 `Auto`이며, 전체 시간 범위에 따라 조정됩니다. 드롭다운에서 초, 분, 시간 등 다른 단위를 선택할 수도 있습니다.
 
-![시간별 추이 예시](https://cdnd.selectdb.com/images/upload/dogstack/search_trend.gif)
+![시간별 추이 예시](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_trend.gif)
 
 
 
@@ -141,19 +141,19 @@ SQL 구문의 핵심 사항:
 
 1. 레코드는 시간 필드를 기준으로 내림차순 정렬되어 최신 데이터가 먼저 표시됩니다. 각 페이지에는 50개의 레코드가 표시되며, 페이지를 넘겨 더 많은 레코드를 확인할 수 있습니다. 기본적으로 시간 필드와 `_source`라는 두 필드가 표시됩니다. `_source`는 모든 필드를 가상으로 이어 붙인 것으로, `key: value` 쌍으로 표시되며 읽기 쉽도록 키가 강조됩니다. 왼쪽 필드 탐색기에서 필드 이름 옆의 "+"를 클릭하여 오른쪽에 표시할 필드를 지정할 수 있습니다. 여러 필드를 추가할 수 있으며, 오른쪽의 "x"를 클릭하면 제거할 수 있습니다. 모든 필드를 제거하면 기본값인 `_source`가 다시 표시됩니다.
 
-![상세 데이터 예시](https://cdnd.selectdb.com/images/upload/dogstack/search_detail.gif)
+![상세 데이터 예시](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_detail.gif)
 
 2. 맨 왼쪽의 "->" 화살표를 클릭하면 레코드의 상세 정보가 펼쳐집니다. **테이블**과 **JSON**이라는 두 가지 형식이 있습니다. 테이블 형식에서는 필드 옆의 "+" 또는 "-"를 클릭하여 `severity_text=INFO`와 같은 필터 조건을 대화형으로 추가할 수 있습니다.
 
-![레코드 펼치기 예시](https://cdnd.selectdb.com/images/upload/dogstack/search_expand.gif)
+![레코드 펼치기 예시](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_expand.gif)
 
 3. 레코드를 펼친 후 **주변 항목**을 클릭하면 해당 레코드의 "컨텍스트", 즉 시간상 앞뒤에 있는 5개의 레코드를 확인할 수 있습니다. 이 기능은 주로 문제 분석 중 특정 로그 주변의 로그를 살펴보는 데 사용되므로, 시간 외의 다른 쿼리 필터 조건은 무시합니다. 그렇지 않으면 상세 데이터 테이블과 동일하게 동작하기 때문입니다. 주변 레코드를 5개보다 많이 조회하거나, 특정 호스트로 제한하는 등의 필터를 직접 추가할 수도 있습니다.
 
-![컨텍스트 보기 예시](https://cdnd.selectdb.com/images/upload/dogstack/search_context.gif)
+![컨텍스트 보기 예시](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_context.gif)
 
 4. 레코드에 `trace_id` 필드가 있으면 관련 트레이스가 있는 것으로 인식합니다. 필드 값이 클릭 가능한 링크로 표시되며, 클릭하면 트레이스 워터폴 패널이 열려 로그와 트레이스를 연계하여 확인할 수 있습니다.
 
-![로그와 트레이스 연계 예시](https://cdnd.selectdb.com/images/upload/dogstack/search_trace.gif)
+![로그와 트레이스 연계 예시](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_trace.gif)
 
 
 
@@ -164,4 +164,4 @@ SQL 구문의 핵심 사항:
 1. 필드 오른쪽의 "+"를 클릭하면 상세 데이터 테이블에 해당 필드가 추가됩니다.
 2. 필드 이름을 클릭하면 가장 자주 나타나는 상위 5개 값을 확인할 수 있습니다. 값 옆의 "+" / "-"를 클릭하면 필터 조건을 동적으로 추가할 수 있습니다.
 
-![필드 탐색기 예시](https://cdnd.selectdb.com/images/upload/dogstack/search_fields.gif)
+![필드 탐색기 예시](https://assets-cdn.selectdb.com/site/images/upload/dogstack/search_fields.gif)

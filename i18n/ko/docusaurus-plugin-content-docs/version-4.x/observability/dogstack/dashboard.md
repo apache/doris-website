@@ -64,7 +64,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 
 1. **저장 및 테스트**를 클릭하여 연결이 정상적으로 작동하는지 확인합니다.
 
-![MySQL 데이터 소스 구성](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_datasource.png)
+![MySQL 데이터 소스 구성](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_datasource.png)
 
 
 
@@ -103,7 +103,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - 디스크: 디스크 공간 사용량 테이블, 읽기/쓰기 처리량
 - 네트워크: 유입/유출 트래픽, 오류 및 패킷 손실
 
-![호스트 메트릭 대시보드](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_host.png)
+![호스트 메트릭 대시보드](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_host.png)
 
 **JVM 모니터링 대시보드**
 
@@ -112,7 +112,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - GC: 소요 시간(Young / Old) 및 횟수
 - 스레드 및 CPU: 스레드 수 추이, CPU 사용률
 
-![JVM 모니터링 대시보드](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_jvm.png)
+![JVM 모니터링 대시보드](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_jvm.png)
 
 **K8s 관측 가능성 대시보드**
 
@@ -120,7 +120,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - Node: CPU / 메모리 추이, 상태 테이블
 - Namespace: CPU / 메모리 집계, 상태 테이블
 
-![K8s 관측 가능성 대시보드](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_k8s.png)
+![K8s 관측 가능성 대시보드](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_k8s.png)
 
 **Nginx 로그 대시보드**
 
@@ -129,7 +129,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - 분석: 상위 URL, 상위 IP, HTTP 메서드 분포, 주요 오류 메시지
 - 최근 로그: 액세스 / 오류 로그 세부 정보
 
-![Nginx 로그 대시보드](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_nginx.png)
+![Nginx 로그 대시보드](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_nginx.png)
 
 **PostgreSQL 메트릭 대시보드**
 
@@ -138,7 +138,7 @@ Apps / Infrastructure  →  OpenTelemetry Collector  →  Doris Exporter  →  D
 - 스토리지: 데이터베이스 크기(데이터베이스별), 데이터베이스 수, 테이블 수
 - BGWriter: 체크포인트 횟수(예약 / 요청), 버퍼 쓰기, BGWriter 소요 시간
 
-![PostgreSQL 메트릭 대시보드](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_postgresql.png)
+![PostgreSQL 메트릭 대시보드](https://assets-cdn.selectdb.com/site/images/upload/dogstack/dashboard_postgresql.png)
 
 
 

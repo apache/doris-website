@@ -1,0 +1,57 @@
+name: Upload website assets
+description: Upload the public website copy with short-lived OIDC credentials and verify CDN delivery
+runs:
+  using: composite
+  steps:
+    - name: Prepare public website copy
+      shell: bash
+      run: |
+        python3 .github/scripts/website_oss_publish.py prepare \
+          --destination "$RUNNER_TEMP/website-public" \
+          --manifest "$RUNNER_TEMP/website-public-manifest.json"
+
+    - name: Install pinned ossutil
+      shell: bash
+      run: |
+        set -euo pipefail
+        tool_dir="$RUNNER_TEMP/website-ossutil"
+        mkdir -p "$tool_dir"
+        curl --fail --location --retry 3 \
+          'https://gosspublic.alicdn.com/ossutil/v2/2.4.1/ossutil-2.4.1-linux-amd64.zip' \
+          --output "$tool_dir/ossutil.zip"
+        echo '57ee4c56796a40144acd6b0b96b53b4ba75e5cec09c01d8d0313c09a5524022f  '"$tool_dir/ossutil.zip" | sha256sum --check
+        unzip -q "$tool_dir/ossutil.zip" -d "$tool_dir"
+        install -m 0755 "$tool_dir/ossutil-2.4.1-linux-amd64/ossutil" "$tool_dir/ossutil"
+        echo "$tool_dir" >> "$GITHUB_PATH"
+
+    - name: Authenticate to Alibaba Cloud
+      id: aliyun
+      uses: ./.github/actions/configure-aliyun-credentials
+      with:
+        oidc-provider-arn: ${{ env.ALIYUN_OIDC_PROVIDER_ARN }}
+        role-to-assume: ${{ env.ALIYUN_WEBSITE_ROLE_ARN }}
+        audience: sts.aliyuncs.com
+        role-session-name: doris-${{ github.run_id }}-${{ github.run_attempt }}
+        role-session-expiration: 3600
+
+    - name: Upload public files to the website prefix
+      shell: bash
+      env:
+        OSS_ACCESS_KEY_ID: ${{ steps.aliyun.outputs.aliyun-access-key-id }}
+        OSS_ACCESS_KEY_SECRET: ${{ steps.aliyun.outputs.aliyun-access-key-secret }}
+        OSS_SESSION_TOKEN: ${{ steps.aliyun.outputs.aliyun-security-token }}
+      run: |
+        set -euo pipefail
+        ossutil cp "$RUNNER_TEMP/website-public/" "oss://$WEBSITE_OSS_BUCKET/site/" \
+          --recursive --force --mode StsToken --config-file /dev/null \
+          --region "$WEBSITE_OSS_REGION" --endpoint "$WEBSITE_OSS_ENDPOINT" \
+          --cache-control 'public,max-age=3600' \
+          --retry-times 3 --read-timeout 120 --connect-timeout 30 \
+          --job 16 --parallel 4 --checkpoint-dir "$RUNNER_TEMP/website-oss-checkpoints"
+
+    - name: Verify CDN delivery before publishing HTML
+      shell: bash
+      run: |
+        python3 .github/scripts/website_oss_publish.py verify \
+          --manifest "$RUNNER_TEMP/website-public-manifest.json"
+        cp "$RUNNER_TEMP/website-public-manifest.json" .i18n-build/publish-metrics/website-public-manifest.json

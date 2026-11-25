@@ -8701,5 +8701,14 @@
   },
   "homepage.blogs.next": {
     "message": "Следующие статьи"
+  },
+  "landing.download.unavailable": {
+    "message": "Недоступно"
+  },
+  "landing.download.unavailableNote": {
+    "message": "Этот файл сейчас недоступен. Выберите другой вариант загрузки."
+  },
+  "landing.download.documentUnavailableNote": {
+    "message": "Некоторые пакеты из этого документа сейчас недоступны. Соответствующие команды загрузки могут не работать до восстановления файлов."
   }
 }

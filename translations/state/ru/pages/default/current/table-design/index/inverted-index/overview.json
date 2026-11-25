@@ -8,22 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/inverted-index/overview.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/overview.md",
-    "sourceCommit": "8e67abf21c68f906197d311b397b7e39f92e619e",
-    "sourceHash": "3dbc99cdf17d79e84bbf68ac482c51e6c5ed5b5aa35286a4a70fb52f0a3ecaea",
-    "sourceTechnicalHash": "a7013fc4d2b2b506afc560eac7422a1141cd8243d68dea824a5889da95506beb",
-    "targetHash": "40374436a4ad215f4206c2e16181e52b946eea43d2a659b11f3ec72a7aa3731a",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "de353099ebbb9fb5f8d99889ad8fe6f4c76beb208d347ee2c1b88314a7f2def0",
+    "sourceTechnicalHash": "1141786b39dff90c7ad11aa4d2504f5550c6a62d3a39adbff6acfb49b1016e7c",
+    "targetHash": "b8d00ae3d91f62990b1f76ec401bf666518c026996d8abc662cf4a94e274eb45",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-11-19T20:31:50.148Z",
+    "translatedAt": "2026-11-21T10:10:20.576Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
       "reason": "chinese-reference-changed",
-      "attempts": 2,
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "3dbc99cdf17d79e84bbf68ac482c51e6c5ed5b5aa35286a4a70fb52f0a3ecaea",
-      "targetHash": "40374436a4ad215f4206c2e16181e52b946eea43d2a659b11f3ec72a7aa3731a",
+      "sourceHash": "de353099ebbb9fb5f8d99889ad8fe6f4c76beb208d347ee2c1b88314a7f2def0",
+      "targetHash": "b8d00ae3d91f62990b1f76ec401bf666518c026996d8abc662cf4a94e274eb45",
       "warnings": [],
       "history": [
         {
@@ -31,12 +31,21 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature introduction + Quick start -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: введение в функцию + быстрый старт -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Keyword search / Phrase matching / RAG hybrid retrieval / Relevance ranking -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: поиск по ключевым словам / сопоставление фраз / гибридное извлечение RAG / ранжирование по релевантности -->\"]"
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature introduction + Quick start -->\"]; received [\"html\",null,null,\"<!-- Тип материала: обзор функции и краткое руководство -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Keyword search / Phrase matching / RAG hybrid retrieval / Relevance ranking -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: поиск по ключевым словам / поиск фраз / гибридный поиск для RAG / ранжирование по релевантности -->\"]"
             }
           ]
         },
         {
           "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 54: expected [\"inlineCode\",null,null,\"SHOW BUILD INDEX\"]; received [\"inlineCode\",null,null,\"FINISHED\"]\nprotected node 55: expected [\"inlineCode\",null,null,\"FINISHED\"]; received [\"inlineCode\",null,null,\"SHOW BUILD INDEX\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
@@ -44,11 +53,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/table-design/index/inverted-index/overview.md",
-        "blob": "b856863f2c62008ba6ed31ebc47ea8a68c59436c"
+        "blob": "d68b234cb2c1829ace184d9fa67bcf063bb9b6fb"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/overview.md",
-        "blob": "9874bab26c0c11e2b436858a2ac2a40659b918dd"
+        "blob": "651ec5b96d503ca0844e7f63f7ea77f878dacb09"
       }
     }
   }

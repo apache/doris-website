@@ -8,35 +8,26 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/parquet.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
-    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
-    "sourceHash": "a87392751451893c002c2f57d021622c61905ee7305559d38b1d6aaff87a7f2b",
-    "sourceTechnicalHash": "38c5aa1fc8e41b3081866fe16fa4b89a22bc764e846ec59bedc8f074e8c882e6",
-    "targetHash": "22a9446c7b1ea15f021d8d44e23a3366152ea964349f274707f5f1c193133b32",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "5ed93e5be0a26b8d1102585db55aaa340045e837c1f9809b5151595ee56d9e06",
+    "sourceTechnicalHash": "30d547bb07d2f6b8b7ce4e2709bcf4d1e99d88461f1b5d4ef9c327c9c5fff0c7",
+    "targetHash": "a342f0a42cd750101867d402ecade4a7e184e1f82bb482237b9898d430e7fa93",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-11-04T09:49:20.266Z",
+    "translatedAt": "2026-11-21T09:45:14.173Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
       "reason": "chinese-reference-changed",
-      "attempts": 3,
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "a87392751451893c002c2f57d021622c61905ee7305559d38b1d6aaff87a7f2b",
-      "targetHash": "22a9446c7b1ea15f021d8d44e23a3366152ea964349f274707f5f1c193133b32",
+      "sourceHash": "5ed93e5be0a26b8d1102585db55aaa340045e837c1f9809b5151595ee56d9e06",
+      "targetHash": "a342f0a42cd750101867d402ecade4a7e184e1f82bb482237b9898d430e7fa93",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "issues": [
-            {
-              "check": "request",
-              "message": "Codex translation failed: 1"
-            }
-          ]
-        },
-        {
-          "attempt": 2,
           "issues": [
             {
               "check": "protected-content",
@@ -45,7 +36,7 @@
           ]
         },
         {
-          "attempt": 3,
+          "attempt": 2,
           "issues": []
         }
       ]
@@ -53,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/lakehouse/file-formats/parquet.md",
-        "blob": "24be88ccceda270531b2b696ce9d9c2047ab0356"
+        "blob": "10d5bb60afc1dd38d5e317155b49401c070d75de"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
-        "blob": "105f7b5b4de7f2bbd08dfd26a0ca69205686b482"
+        "blob": "4c04f8ae929cddf6e3085f51babc31e0f1d22bde"
       }
     }
   }

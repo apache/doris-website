@@ -158,9 +158,11 @@ async function verify({site, directory, output, origin: publicOrigin, requireCom
         await context.route('**/*', async route => {
             const url = new URL(route.request().url());
             if (url.origin === origin) return route.continue();
-            if (['cdnd.selectdb.com', 'cdn.selectdb.com'].includes(url.hostname)) {
-                if (publicOrigin) return route.continue();
-                return route.fulfill({response: await context.request.get(origin + url.pathname + url.search)});
+            if (url.hostname === 'assets-cdn.selectdb.com') {
+                const local = require('../../config/asset-origin').getLocalAssetPath(url);
+                if (publicOrigin || !local || url.pathname.startsWith('/site/images/upload/dogstack/')) return route.continue();
+                const response = await context.request.get(origin + local);
+                return route.fulfill({response, headers:{...response.headers(),'access-control-allow-origin':'*'}});
             }
             return route.abort();
         });
@@ -169,7 +171,7 @@ async function verify({site, directory, output, origin: publicOrigin, requireCom
         page.on('console', message => {if (/hydration|did not match|server HTML/i.test(message.text())) report.errors.push(message.text());});
         page.on('response', response => {
             const url = new URL(response.url());
-            if ((url.origin === origin || ['cdnd.selectdb.com', 'cdn.selectdb.com'].includes(url.hostname))
+            if ((url.origin === origin || url.hostname === 'assets-cdn.selectdb.com')
                 && /\.(js|css|svg|png|jpe?g|webp|woff2?)$/.test(url.pathname)) assets.set(url.href, url.pathname);
         });
         const open = async route => {

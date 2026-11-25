@@ -8,42 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/DML/INSERT.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/DML/INSERT.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "8f7e7a7bd0a33fdfe819f40886000448884bdc49dc180c0861a3e5e5b42c4310",
-    "sourceTechnicalHash": "276a6d811601098fc4043d4775fad1e19c66dddf001278e29e64e50c03da40ea",
-    "targetHash": "12516b6be5114899a28d56ea1db36b339512c5a47a98f1964f136df2c70f7118",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "0434684f5d53d7c6332fd4782967bc04c21f02240536ab770947f7f9d5878445",
+    "sourceTechnicalHash": "f7fb729996af3e43f38bd584ed179e0f830b8eff3aa434a43dfd734a2a0637b5",
+    "targetHash": "9c17adf3320f615066ce927892e6e98fd0e8e1c60fec1bb28c39014e99bf9125",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-23T00:06:06.798Z",
+    "translatedAt": "2026-11-22T10:31:00.277Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "8f7e7a7bd0a33fdfe819f40886000448884bdc49dc180c0861a3e5e5b42c4310",
-      "targetHash": "12516b6be5114899a28d56ea1db36b339512c5a47a98f1964f136df2c70f7118",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0434684f5d53d7c6332fd4782967bc04c21f02240536ab770947f7f9d5878445",
+      "targetHash": "9c17adf3320f615066ce927892e6e98fd0e8e1c60fec1bb28c39014e99bf9125",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 24: expected [\"inlineCode\",null,null,\"c2\"]; received [\"inlineCode\",null,null,\"test\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"test\"]; received [\"inlineCode\",null,null,\"c2\"]\nprotected node 52: expected [\"link\",\"../../../../data-operate/transaction.md\",null]; received [\"inlineCode\",null,null,\"max(insert_timeout, query_timeout)\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 24: expected [\"inlineCode\",null,null,\"c2\"]; received [\"inlineCode\",null,null,\"test\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"test\"]; received [\"inlineCode\",null,null,\"c2\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"status\"]; received [\"inlineCode\",null,null,\"label\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 24: expected [\"inlineCode\",null,null,\"c2\"]; received [\"inlineCode\",null,null,\"test\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"test\"]; received [\"inlineCode\",null,null,\"c2\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 24: expected [\"inlineCode\",null,null,\"c2\"]; received [\"inlineCode\",null,null,\"test\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"test\"]; received [\"inlineCode\",null,null,\"c2\"]\nprotected node 52: expected [\"link\",\"../../../../data-operate/transaction.md\",null]; received [\"inlineCode\",null,null,\"max(insert_timeout, query_timeout)\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "sql-manual/sql-statements/data-modification/DML/INSERT",
-        "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/INSERT.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/INSERT.md",
-        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-        "sourceHash": "8f7e7a7bd0a33fdfe819f40886000448884bdc49dc180c0861a3e5e5b42c4310",
-        "targetHash": "12516b6be5114899a28d56ea1db36b339512c5a47a98f1964f136df2c70f7118",
-        "commit": "d5ac930e1a15d171738ddccbd717b10b31ba98d3",
-        "pr": "https://github.com/apache/doris-website/pull/4455"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/DML/INSERT.md",
+        "blob": "54c0477a1f5b44d2fc6d3fcf93dd8da81a39983b"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/DML/INSERT.md",
+        "blob": "cf655c0a297f4e34d4d104a1bddd682708881c32"
       }
     }
   }

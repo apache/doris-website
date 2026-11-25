@@ -103,6 +103,38 @@ SET parquet_write_data_page_size = 1048576;
 
 Indexes add metadata and write-side work. Smaller pages can improve selective reads, especially when values are clustered, but also create more index entries and page headers. Benefits depend on the consuming engine and data distribution; enabling indexes does not guarantee faster queries. Readers can still read the files without using the optional indexes. These settings do not change the Parquet format version or data-page version.
 
+## Writing Bloom Filters (Dev Version)
+
+Enable Bloom filter output when downstream readers can use equality or `IN` predicates to skip row groups. Set the following session variable before an OUTFILE statement, an insert into a writable file table-valued function, or an insert into a Hive or Iceberg table stored as Parquet. It affects newly written files only.
+
+| Variable | Type | Default | Behavior |
+| --- | --- | --- | --- |
+| `enable_parquet_write_bloom_filter` | Boolean | `false` | Writes standard Parquet Bloom filters for eligible physical leaf columns in each row group, including leaves nested in ARRAY, MAP, and STRUCT. BOOLEAN and legacy INT96 columns do not receive filters. |
+
+For example, prepare a writable S3 bucket and credentials as described in [OUTFILE](../../data-operate/export/outfile.md), then replace the storage placeholders and export with Bloom filters enabled:
+
+```sql
+SET enable_parquet_write_bloom_filter = true;
+
+SELECT 1 AS id, 'example' AS label
+INTO OUTFILE 's3://example-bucket/export/bloom_result_'
+FORMAT AS PARQUET
+PROPERTIES (
+    "s3.endpoint" = "https://s3.example.com",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<access_key>",
+    "s3.secret_key" = "<secret_key>"
+);
+
+SET enable_parquet_write_bloom_filter = false;
+```
+
+The new files contain a Bloom filter for each eligible column in each row group. The final `SET` restores the default for subsequent writes in this session; it does not remove filters from files already written. The same setting applies before `INSERT INTO` or `INSERT OVERWRITE` for a destination configured to write Parquet.
+
+Bloom filters remain available when dictionary encoding is retained, falls back to plain encoding, or is disabled. They do not require disabling dictionaries and are independent of the page-index write settings above. NULL values are not inserted into Bloom filters. Doris's read-side switch, `enable_parquet_filter_by_bloom_filter`, controls filter use separately; enabling output does not force a reader to use it. Readers that ignore the optional Bloom metadata can still read the files.
+
+Enable this option selectively, for example for equality predicates on high-cardinality columns after dictionary overflow. The writer uses a default expected distinct count of 1,048,576 and target false-positive probability of 0.05, allocating approximately 1 MiB per eligible leaf column per row group, including all-null columns. Bloom buffers accumulate across row groups until the file is closed and count against the query memory limit. Wide schemas or many row groups can therefore increase memory substantially. Filters also add hashing work and file size, and do not guarantee faster reads. This version provides no column-selection, Bloom sizing, or separate per-file Bloom memory-limit setting.
+
 ## Parameters
 
 ### Timestamp and Date Compatibility (Since 4.1.5) {#timestamp-and-date-compatibility}

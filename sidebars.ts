@@ -401,8 +401,10 @@ const sidebars: SidebarsConfig = {
                                             type: 'category',
                                             label: 'Prerequisites',
                                             items: [
+                                                'data-operate/import/import-way/streaming-job/prerequisites/generic-mysql',
                                                 'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql',
                                                 'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/azure-mysql',
                                             ],
                                         },
                                     ],
@@ -419,8 +421,10 @@ const sidebars: SidebarsConfig = {
                                             type: 'category',
                                             label: 'Prerequisites',
                                             items: [
+                                                'data-operate/import/import-way/streaming-job/prerequisites/generic-postgresql',
                                                 'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql',
                                                 'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/azure-postgresql',
                                             ],
                                         },
                                     ],
@@ -709,6 +713,7 @@ const sidebars: SidebarsConfig = {
                     label: 'Data Catalogs',
                     link: {type: 'doc', id: 'lakehouse/catalog-overview'},
                     items: [
+                        'lakehouse/catalog-property-masking',
                         {
                             type: 'category',
                             label: 'Hive Catalog',
@@ -987,6 +992,7 @@ const sidebars: SidebarsConfig = {
                                         'admin-manual/auth/certificate',
                                         'admin-manual/auth/fe-certificate',
                                         'admin-manual/auth/tls-framework',
+                                        'admin-manual/auth/private-rpc-tls',
                                     ],
                                 },
                                 'admin-manual/auth/encryption-function',

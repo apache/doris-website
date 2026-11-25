@@ -29,7 +29,7 @@ DOG Stack には Grafana が統合されているため、Grafana で直接ア�
 3. 発火条件が満たされると、アラートインスタンスが生成されます。
 4. アラートはコンタクトポイントに直接送信されるか、通知ポリシーを通じて柔軟に振り分けられます。
 
-![Grafana のアラートの仕組み](https://cdnd.selectdb.com/images/upload/dogstack/alert_overview.png)
+![Grafana のアラートの仕組み](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_overview.png)
 
 
 
@@ -37,7 +37,7 @@ DOG Stack には Grafana が統合されているため、Grafana で直接ア�
 
 **1. Grafana Alerting → Alert rules を開き、「Create alert」をクリックする**
 
-![アラートの作成画面](https://cdnd.selectdb.com/images/upload/dogstack/alert_create.png)
+![アラートの作成画面](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_create.png)
 
 
 
@@ -51,7 +51,7 @@ DOG Stack には Grafana が統合されているため、Grafana で直接ア�
 
 詳しくは、[Grafana のドキュメント](https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-grafana-managed-rule/)を参照してください。
 
-![クエリとアラート条件の設定画面](https://cdnd.selectdb.com/images/upload/dogstack/alert_condition.png)
+![クエリとアラート条件の設定画面](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_condition.png)
 
 
 
@@ -61,7 +61,7 @@ DOG Stack には Grafana が統合されているため、Grafana で直接ア�
 
 詳しくは、[Grafana のドキュメント](https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rule-evaluation/)を参照してください。
 
-![アラートの評価間隔の設定画面](https://cdnd.selectdb.com/images/upload/dogstack/alert_evaluation.png)
+![アラートの評価間隔の設定画面](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_evaluation.png)
 
 
 
@@ -71,9 +71,9 @@ Grafana は Email、Slack、Discord、PagerDuty、Webhook など、多くの通�
 
 詳しくは、[Grafana のドキュメント](https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/)を参照してください。
 
-![アラートのラベル設定画面](https://cdnd.selectdb.com/images/upload/dogstack/alert_lable.png)
+![アラートのラベル設定画面](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_lable.png)
 
-![コンタクトポイントの設定画面](https://cdnd.selectdb.com/images/upload/dogstack/alert_contact.png)
+![コンタクトポイントの設定画面](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_contact.png)
 
 
 
@@ -81,7 +81,7 @@ Grafana は Email、Slack、Discord、PagerDuty、Webhook など、多くの通�
 
 通知を受け取る人が状況をすばやく把握できるよう、概要、説明、対応手順を示すランブックの URL など、通知内容をカスタマイズできます。
 
-![アラートの通知メッセージ設定画面](https://cdnd.selectdb.com/images/upload/dogstack/alert_message.png)
+![アラートの通知メッセージ設定画面](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_message.png)
 
 
 
@@ -91,4 +91,4 @@ Grafana は Email、Slack、Discord、PagerDuty、Webhook など、多くの通�
 
 詳しくは、[Grafana のドキュメント](https://grafana.com/docs/grafana/latest/alerting/monitor-status/)を参照してください。
 
-![アラートの管理画面](https://cdnd.selectdb.com/images/upload/dogstack/alert_management.png)
+![アラートの管理画面](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_management.png)

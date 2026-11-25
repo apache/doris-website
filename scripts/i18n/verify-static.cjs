@@ -12,7 +12,7 @@ const htmlLangFor = locale => localeRegistry.find(item => item.code === locale)?
 // current locale itself still run; a counterpart page that the subset did not
 // build is reported as skipped instead of read. Publishing always verifies the
 // complete site, where every counterpart must be present.
-function verify({site, manifest, partial = false, headCache = new Map()}) {
+function verify({site, manifest, partial = false, headCache = new Map(), groupCache = new Set()}) {
     const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
     const locale = data.locale;
     const contentFile = path.join(path.dirname(path.dirname(manifest)), 'content-manifests', locale + '.json');
@@ -40,30 +40,14 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
     readIndexes(path.join(site, locale));
     let verified = 0;
     let skipped = 0;
-    const headingIds = $ => $('.theme-doc-markdown h1,.theme-doc-markdown h2,.theme-doc-markdown h3,.theme-doc-markdown h4,.theme-doc-markdown h5,.theme-doc-markdown h6')
-        .map((i, node) => $(node).attr('id') ?? '').get();
-    function head(file, $) {
-        if (!headCache.has(file)) {
-            $ ??= cheerio.load(fs.readFileSync(file, 'utf8'));
-            // Retain only immutable metadata, not tens of thousands of DOMs.
-            const alternates = new Map();
-            for (const node of $('link[rel="alternate"][hreflang]').toArray()) {
-                const lang = $(node).attr('hreflang');
-                if (!alternates.has(lang)) alternates.set(lang, []);
-                alternates.get(lang).push($(node).attr('href'));
-            }
-            headCache.set(file, {headingIds:headingIds($), alternates,
-                htmlLang:$('html').attr('lang'), bodyLang:$('.theme-doc-markdown,.course-doc-content').attr('lang'),
-                translationStatus:$('[data-translation-status]').attr('data-translation-status'),
-                canonicals:$('link[rel="canonical"]').toArray().map(node=>$(node).attr('href')),
-                robots:$('meta[name="robots"]').attr('content'),
-                ogUrl:$('meta[property="og:url"]').attr('content'), ogLocale:$('meta[property="og:locale"]').attr('content')});
-        }
+    function head(file) {
+        if (!headCache.has(file)) headCache.set(file,
+            require('./static-metadata.cjs').readMetadata(fs.readFileSync(file, 'utf8')));
         return headCache.get(file);
     }
     function counterpart(permalink, check) {
         const file = path.join(site, decodeURIComponent(permalink), 'index.html');
-        if (fs.existsSync(file)) return head(file);
+        if (headCache.has(file) || fs.existsSync(file)) return head(file);
         assert(partial, `Missing counterpart page (${check}): ${permalink}`);
         skipped++;
         return null;
@@ -89,7 +73,7 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
             assert(!indexedPaths.has(page.permalink), `Fallback/stale page in local search index: ${page.permalink}`);
             for (const permalink of Object.values(alternateGroup)) {
                 const file = path.join(site, permalink, 'index.html');
-                if (fs.existsSync(file)) {
+                if (headCache.has(file) || fs.existsSync(file)) {
                     assert.equal(head(file).alternates.get(htmlLang)?.length ?? 0, 0,
                         `Fallback/stale localized alternate in ${permalink}`);
                 }
@@ -99,17 +83,21 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
             assert(sitemapPaths.has(page.permalink), `Current page missing from sitemap: ${page.permalink}`);
             const english = counterpart(page.englishPermalink, 'source heading IDs');
             if (english) assert.deepEqual(metadata.headingIds, english.headingIds, `Source heading IDs: ${page.permalink}`);
-            for (const [lang, permalink] of Object.entries(alternateGroup)) {
-                const counterpart$ = counterpart(permalink, 'reciprocal alternates');
-                if (!counterpart$) continue;
-                for (const [otherLang, otherPath] of Object.entries(alternateGroup)) {
-                    const otherHtmlLang = htmlLangFor(otherLang);
-                    const links = counterpart$.alternates.get(otherHtmlLang) ?? [];
-                    assert.equal(links[0], `https://doris.apache.org${otherPath}`,
-                        `Non-reciprocal alternates ${lang} -> ${otherLang}: ${permalink}`);
-                    assert.equal(links.length, 1, `Duplicate hreflang: ${permalink}`);
+            const groupKey = JSON.stringify(Object.entries(alternateGroup).sort());
+            if (!groupCache.has(groupKey)) {
+                for (const [lang, permalink] of Object.entries(alternateGroup)) {
+                    const counterpart$ = counterpart(permalink, 'reciprocal alternates');
+                    if (!counterpart$) continue;
+                    for (const [otherLang, otherPath] of Object.entries(alternateGroup)) {
+                        const otherHtmlLang = htmlLangFor(otherLang);
+                        const links = counterpart$.alternates.get(otherHtmlLang) ?? [];
+                        assert.equal(links[0], `https://doris.apache.org${otherPath}`,
+                            `Non-reciprocal alternates ${lang} -> ${otherLang}: ${permalink}`);
+                        assert.equal(links.length, 1, `Duplicate hreflang: ${permalink}`);
+                    }
                 }
             }
+            groupCache.add(groupKey);
         }
         verified++;
     }
@@ -150,9 +138,9 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
 
 function verifyAll({site, manifestDir, locales}) {
     // One immutable artifact per invocation. Never share this cache across runs.
-    const headCache = new Map();
+    const headCache = new Map(), groupCache = new Set();
     return locales.map(locale => ({locale, ...verify({site,
-        manifest:path.join(manifestDir, locale + '.json'), headCache})}));
+        manifest:path.join(manifestDir, locale + '.json'), headCache, groupCache})}));
 }
 
 if (require.main === module) {

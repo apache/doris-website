@@ -25,24 +25,25 @@ Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
 
 | PostgreSQL 类型 | Doris 类型 | 备注 |
 | --- | --- | --- |
-| `bool` | `BOOLEAN` | |
+| `bool` / `boolean` | `BOOLEAN` | |
 | `bit(1)` | `BOOLEAN` | |
-| `bit(n>1)` / `varbit` | `STRING` | |
-| `int2` / `smallserial` | `SMALLINT` | |
-| `int4` / `serial` | `INT` | |
-| `int8` / `bigserial` | `BIGINT` | |
-| `float4` | `FLOAT` | |
-| `float8` | `DOUBLE` | |
-| `numeric(p,s)` | `DECIMAL(min(p,38), s)` | 精度上限 38；未指定 scale 时默认 9 |
+| `bit(n>1)` / `varbit` / `bit varying` | `STRING` | Base64 编码字符串 |
+| `int2` / `smallint` / `smallserial` | `SMALLINT` | |
+| `int4` / `integer` / `serial` | `INT` | |
+| `int8` / `bigint` / `bigserial` | `BIGINT` | |
+| `float4` / `real` | `FLOAT` | |
+| `float8` / `double precision` | `DOUBLE` | |
+| `numeric(p,s)` / `decimal(p,s)` | `DECIMAL(p,s)` / `STRING` | 精度超过 38 时转为 `STRING` |
 | `bpchar(n)`（即 `CHAR(n)`） | `CHAR` / `VARCHAR` | 长度 ×3 以兼容 UTF-8；`> 255` 转为 `VARCHAR` |
 | `varchar` / `text` | `STRING` | 注意：PostgreSQL `varchar` 映射为 `STRING`（不带长度） |
 | `date` | `DATE` | |
-| `timestamp` / `timestamptz` | `DATETIME(s)` | 精度 0–6；`timestamptz` 按 server 时区归一 |
-| `time` / `timetz` / `interval` | `STRING` | `timetz` 保留其 UTC 归一后的偏移量 |
-| `uuid` / `inet` / `cidr` / `macaddr` / `macaddr8` | `STRING` | |
+| `timestamp` / `timestamp without time zone` / `timestamptz` / `timestamp with time zone` | `DATETIME(s)` | 精度 0–6；`timestamptz` 按 server 时区归一 |
+| `time` / `time without time zone` / `timetz` / `time with time zone` / `interval` | `STRING` | `timetz` 保留其 UTC 归一后的偏移量 |
+| `uuid` | `UUID` | |
+| `inet` / `cidr` / `macaddr` / `macaddr8` | `STRING` | |
 | `bytea` | `STRING` | Base64 编码字符串 |
 | `xml` / `hstore` | `STRING` | |
-| `json` / `jsonb` | `JSON` | |
-| 几何类型（`point`、`line`、`polygon` 等） | `STRING` | 序列化为 GeoJSON 字符串（`type` / `coordinates` / `srid`） |
-| 数组类型（如 `int4[]`、`text[]`） | `ARRAY<T>` | 仅支持一维 |
-| 其他 / 用户自定义类型 | `STRING` | |
+| `json` / `jsonb` | `STRING` | 以 JSON 文本存储 |
+| `point` | `STRING` | 序列化为 GeoJSON 字符串（`type` / `coordinates` / `srid`） |
+| 数组类型 | `ARRAY<T>` | 仅支持一维。支持的元素类型： `int2`、`int4`、`int8`、`float4`、`float8`、`numeric(p,s)`、`bool`、`bpchar`、`varchar`、`text`、`date`、`timestamp`、`timestamptz`、`json`、`jsonb`、`uuid`。须采样到非空源端数组值以推断维度；`bpchar[]` 映射为 `ARRAY<STRING>` |
+| 其他类型 | 不支持 | |

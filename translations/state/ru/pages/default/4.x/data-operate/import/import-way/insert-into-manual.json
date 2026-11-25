@@ -8,42 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/insert-into-manual.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/insert-into-manual.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
-    "sourceTechnicalHash": "aafbe862faafb879d27048e0ffbf1af4024d94f395bd9dbfc14dd913e9e1c2e6",
-    "targetHash": "0618bbefa8e388a8672d44682d56571d6304beff7f0c2e5de74d08a1a7eb23e8",
+    "sourceCommit": "3385bce4672ec271e2f5bb545314fd18d2ae6ca9",
+    "sourceHash": "b22c676279353bf82e159b9ddeaa8ff2e0d513063428be8f4f8afb1686fa77fe",
+    "sourceTechnicalHash": "2b1f3067087f9f9e66030746457b1a8157798af87fc8c587b80263c09dc11585",
+    "targetHash": "ff057925ae445e3f0d8f1ce4d942f70c9aa301d0ca4f7c1f587a4f251c0dd139",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:29:41.907Z",
+    "translatedAt": "2026-11-21T10:14:46.150Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
-      "targetHash": "0618bbefa8e388a8672d44682d56571d6304beff7f0c2e5de74d08a1a7eb23e8",
+      "sourceHash": "b22c676279353bf82e159b9ddeaa8ff2e0d513063428be8f4f8afb1686fa77fe",
+      "targetHash": "ff057925ae445e3f0d8f1ce4d942f70c9aa301d0ca4f7c1f587a4f251c0dd139",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operation steps + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип сведений: порядок действий + параметры конфигурации -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data import / ETL transformation / External data source integration -->\"]; received [\"html\",null,null,\"<!-- Сценарии применения: импорт данных / ETL-преобразование / интеграция с внешними источниками данных -->\"]\nprotected node 21: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип сведений: параметры конфигурации -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "data-operate/import/import-way/insert-into-manual",
-        "sourcePath": "docs/data-operate/import/import-way/insert-into-manual.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-manual.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
-        "targetHash": "0618bbefa8e388a8672d44682d56571d6304beff7f0c2e5de74d08a1a7eb23e8",
-        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
-        "pr": "https://github.com/apache/doris-website/pull/4436"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/insert-into-manual.md",
+        "blob": "500dceb8014c6a67bea058a300de7884f28d829b"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/insert-into-manual.md",
+        "blob": "2d490006062960959649ae52197ee8acf509f470"
       }
     }
   }

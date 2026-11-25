@@ -30,6 +30,30 @@ test('production search reads its configured CDN and preserves version, locale a
     assert.deepEqual(requests,['https://cdnd.selectdb.com/ko/search-index-docs-dev-aabb.json?probe=1']);
 });
 
+test('prefixed CDN search URLs preserve the asset directory, locale, version, and query', async () => {
+    for (const assetOrigin of ['https://assets-cdn.selectdb.com/site', 'https://assets-cdn.selectdb.com/site/']) {
+        const requests = [];
+        await fetchSearchIndex('/ko/docs/4.x/search-index-docs-aabb.json?probe=1', {...base, assetOrigin,
+            fetchImpl: async url => {requests.push(url);return {ok:true,json:async()=>[]};}});
+        assert.deepEqual(requests, ['https://assets-cdn.selectdb.com/site/ko/docs/4.x/search-index-docs-aabb.json?probe=1']);
+    }
+});
+
+test('prefixed CDN failures fall back to the page origin without the CDN directory', async () => {
+    const requests = [];
+    const result = await fetchSearchIndex('/zh-CN/search-index-docs-aabb.json', {...base,
+        assetOrigin: 'https://assets-cdn.selectdb.com/site',
+        fetchImpl: async url => {
+            requests.push(url);
+            return requests.length === 1 ? {ok:false,status:503} : {ok:true,json:async()=>[]};
+        }});
+    assert.deepEqual(result, []);
+    assert.deepEqual(requests, [
+        'https://assets-cdn.selectdb.com/site/zh-CN/search-index-docs-aabb.json',
+        'https://doris.apache.org/zh-CN/search-index-docs-aabb.json',
+    ]);
+});
+
 test('CDN HTTP, JSON and network failures fall back to the same-origin index', async () => {
     for (const failure of ['http','json','network']) {
         const requests=[];

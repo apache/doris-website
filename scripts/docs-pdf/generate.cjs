@@ -9,6 +9,7 @@ const cheerio = require('cheerio');
 const GithubSlugger = require('github-slugger');
 const puppeteer = require('puppeteer');
 const {inventory, filename} = require('../docs-inventory.cjs');
+const {rewriteAssetReferences} = require('./recovered-assets.cjs');
 const root = path.resolve(__dirname, '../..');
 const escape = text => String(text).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const ts = require('typescript');
@@ -186,7 +187,7 @@ async function generate({version, locales, output, python = 'python3', chrome, l
                         while (next < selected.length) {
                             const index = next++, doc = selected[index];
                             let normalized;
-                            try {normalized = normalize(doc.content);} catch (error) {throw new Error(`${doc.source}: ${error.message}`);}
+                            try {normalized = rewriteAssetReferences(normalize(doc.content), {locale});} catch (error) {throw new Error(`${doc.source}: ${error.message}`);}
                             const converted = await markdownToHtml(`# ${escape(doc.title)} {.doc-title}\n\n${normalized}`);
                             // Repair legacy raw HTML in isolation so an unclosed
                             // tag cannot consume the following document.

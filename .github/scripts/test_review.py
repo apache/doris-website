@@ -298,10 +298,34 @@ class WorkflowTests(unittest.TestCase):
             workflow = workflows[name]
             build = workflow["jobs"]["build"]
             self.assertNotIn("environment", build)
+            # Retries retain the producer job outputs; run_attempt names would
+            # incorrectly select a nonexistent artifact on deploy-only reruns.
+            self.assertIn("artifact_id", build["outputs"])
+            download = next(step for step in workflow["jobs"]["deploy"]["steps"]
+                            if step.get("uses", "").startswith("actions/download-artifact@"))
+            self.assertEqual(download["with"]["artifact-ids"], "${{ needs.build.outputs.artifact_id }}")
+            self.assertTrue(download["with"]["merge-multiple"])
+            self.assertNotIn("name", download["with"])
             self.assertNotIn("secrets.", json.dumps(build))
             self.assertEqual(workflow["permissions"], {"contents": "read"})
             deploy = workflow["jobs"]["deploy"]
-            self.assertEqual(deploy["environment"], "Production")
+            if name == "manual-generate-pdf.yml":
+                self.assertNotIn("environment", deploy)
+                self.assertEqual(deploy["permissions"]["id-token"], "write")
+                self.assertEqual(deploy["permissions"]["contents"], "read")
+                self.assertIn("vars.WEBSITE_PDF_UPLOAD_ENABLED == 'true'", deploy["if"])
+                self.assertNotIn("secrets.", json.dumps(deploy))
+            else:
+                self.assertNotIn("environment", deploy)
+                self.assertEqual(deploy["permissions"]["id-token"], "write")
+                self.assertIn("vars.WEBSITE_PUBLISH_ENABLED == 'true'", deploy["if"])
+                self.assertIn("vars.WEBSITE_ASSET_UPLOAD_ENABLED == 'true'", deploy["if"])
+                self.assertIn("github.repository == 'apache/doris-website'", deploy["if"])
+                self.assertIn("needs.source.outputs.branch == 'master'", deploy["if"])
+                self.assertNotIn("secrets.", json.dumps(deploy))
+                self.assertTrue(any(step.get("uses") == "./.github/actions/upload-website-assets" for step in deploy["steps"]))
+                publisher = next(step for step in deploy["steps"] if step.get("name") == "Deploy Website")
+                self.assertEqual(publisher["if"], "vars.WEBSITE_PUBLISH_ENABLED == 'true'")
             self.assertEqual(deploy["steps"][0]["with"]["ref"], "${{ github.sha }}")
             self.assertEqual(workflow["jobs"]["source"]["steps"][-1]["env"]["DEPLOY_BRANCH"],
                              "${{ inputs.branch }}" if name.startswith("manual") else "master")

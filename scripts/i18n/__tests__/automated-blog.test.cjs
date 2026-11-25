@@ -19,7 +19,7 @@ test('blog automation fixtures select real content validation when changed on th
         'scripts/i18n/create-blog-baseline.cjs',
         'scripts/i18n/__tests__/fixtures/blog.cjs',
     ])
-        assert(policy([file]).runContentFixture, file);
+        assert(policy([file]).runBlogAutomationFixture, file);
 });
 function fixture(t) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'new-blog-policy-'));

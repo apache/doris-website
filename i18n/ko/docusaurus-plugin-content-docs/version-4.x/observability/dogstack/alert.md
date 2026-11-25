@@ -29,7 +29,7 @@ DOG Stack에는 Grafana가 통합되어 있으므로 Grafana에서 직접 경고
 3. 트리거 조건이 충족되면 경고 인스턴스가 생성됩니다.
 4. 경고가 연락 지점으로 직접 전송되거나 알림 정책에 따라 유연하게 라우팅됩니다.
 
-![경고 개요](https://cdnd.selectdb.com/images/upload/dogstack/alert_overview.png)
+![경고 개요](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_overview.png)
 
 
 
@@ -37,7 +37,7 @@ DOG Stack에는 Grafana가 통합되어 있으므로 Grafana에서 직접 경고
 
 **1. Grafana의 경고 → 경고 규칙으로 이동한 후 "경고 만들기"를 클릭합니다**
 
-![경고 생성](https://cdnd.selectdb.com/images/upload/dogstack/alert_create.png)
+![경고 생성](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_create.png)
 
 
 
@@ -51,7 +51,7 @@ DOG Stack에는 Grafana가 통합되어 있으므로 Grafana에서 직접 경고
 
 자세한 내용은 [Grafana 문서](https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-grafana-managed-rule/)를 참고하세요.
 
-![경고 조건](https://cdnd.selectdb.com/images/upload/dogstack/alert_condition.png)
+![경고 조건](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_condition.png)
 
 
 
@@ -61,7 +61,7 @@ DOG Stack에는 Grafana가 통합되어 있으므로 Grafana에서 직접 경고
 
 자세한 내용은 [Grafana 문서](https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rule-evaluation/)를 참고하세요.
 
-![경고 평가](https://cdnd.selectdb.com/images/upload/dogstack/alert_evaluation.png)
+![경고 평가](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_evaluation.png)
 
 
 
@@ -71,9 +71,9 @@ Grafana는 이메일, Slack, Discord, PagerDuty, Webhook 등 다양한 알림 �
 
 자세한 내용은 [Grafana 문서](https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/)를 참고하세요.
 
-![경고 레이블](https://cdnd.selectdb.com/images/upload/dogstack/alert_lable.png)
+![경고 레이블](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_lable.png)
 
-![경고 연락 지점](https://cdnd.selectdb.com/images/upload/dogstack/alert_contact.png)
+![경고 연락 지점](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_contact.png)
 
 
 
@@ -81,7 +81,7 @@ Grafana는 이메일, Slack, Discord, PagerDuty, Webhook 등 다양한 알림 �
 
 수신자가 상황을 더 빠르게 파악할 수 있도록 요약, 설명, 대응 방법을 안내하는 런북 URL 등 알림 내용을 사용자 지정할 수 있습니다.
 
-![경고 메시지](https://cdnd.selectdb.com/images/upload/dogstack/alert_message.png)
+![경고 메시지](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_message.png)
 
 
 
@@ -91,4 +91,4 @@ Grafana는 이메일, Slack, Discord, PagerDuty, Webhook 등 다양한 알림 �
 
 자세한 내용은 [Grafana 문서](https://grafana.com/docs/grafana/latest/alerting/monitor-status/)를 참고하세요.
 
-![경고 관리](https://cdnd.selectdb.com/images/upload/dogstack/alert_management.png)
+![경고 관리](https://assets-cdn.selectdb.com/site/images/upload/dogstack/alert_management.png)

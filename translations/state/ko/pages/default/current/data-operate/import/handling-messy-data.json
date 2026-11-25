@@ -8,29 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/handling-messy-data.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/handling-messy-data.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-    "sourceTechnicalHash": "59c9fe52f4658a8061ab29193716e29568582041a5064030b0e6deb4f7d77ee4",
-    "targetHash": "5ea1536a031bbce725f408dc796f4ae4cd2897a2d6e299b8aeea16974e529dff",
+    "sourceCommit": "a3be05907cb03a32905c451a9bd9bd61ae5b7e24",
+    "sourceHash": "8e2403bf71bc3e2293fdf2db7987be2c7860e34dd77027445394567ec7114f09",
+    "sourceTechnicalHash": "35470e070d1b31f6e4a3789cbf149a582f98d4dad02d664d0355bdf567745e64",
+    "targetHash": "18c8a595138f26b0193897e7d2ba59d8b47107453771b00a3d5c7ae74f8f28e2",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T02:52:13.723Z",
+    "translatedAt": "2026-11-18T19:17:15.311Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "80cbb07b9ab95b025b6258c4592a30ab88e4199f1e583635f60d16dc8acb618e",
-      "targetHash": "5ea1536a031bbce725f408dc796f4ae4cd2897a2d6e299b8aeea16974e529dff",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "8e2403bf71bc3e2293fdf2db7987be2c7860e34dd77027445394567ec7114f09",
+      "targetHash": "18c8a595138f26b0193897e7d2ba59d8b47107453771b00a3d5c7ae74f8f28e2",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 91: expected [\"inlineCode\",null,null,\"insert_max_filter_ratio\"]; received [\"inlineCode\",null,null,\"enable_insert_strict = false\"]\nprotected node 92: expected [\"inlineCode\",null,null,\"enable_insert_strict = false\"]; received [\"inlineCode\",null,null,\"insert_max_filter_ratio\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters + Operational steps -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 구성 매개변수 + 작업 절차 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data import / Dirty data governance / Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 데이터 적재 / 불량 데이터 관리 / 문제 해결 -->\"]\nprotected node 12: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameter description -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 구성 매개변수 설명 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 34: expected [\"inlineCode\",null,null,\"TinyInt\"]; received [\"inlineCode\",null,null,\"abc\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"abc\"]; received [\"inlineCode\",null,null,\"2000\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"2000\"]; received [\"inlineCode\",null,null,\"TinyInt\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 91: expected [\"inlineCode\",null,null,\"insert_max_filter_ratio\"]; received [\"inlineCode\",null,null,\"enable_insert_strict = false\"]\nprotected node 92: expected [\"inlineCode\",null,null,\"enable_insert_strict = false\"]; received [\"inlineCode\",null,null,\"insert_max_filter_ratio\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/handling-messy-data.md",
+        "blob": "8f872d023edaa5dcb01c726fadb77517b8ba16ea"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/handling-messy-data.md",
+        "blob": "8535a7e60b342d61c3b1ad8f371578577615ef0d"
+      }
     }
   }
 }

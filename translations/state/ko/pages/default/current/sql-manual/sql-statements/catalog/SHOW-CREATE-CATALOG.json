@@ -8,23 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "dc31c7fbf63ad6cede489f0f7f8d632d01e058e18c92376f49a7126f01e8b1ae",
-    "sourceTechnicalHash": "6d6c52855099f15410830ec14525099a7d80b8ab776ea447ef36c27bc9936a6a",
-    "targetHash": "82250bb3d5a6ed1488c17afa7965e55e6d15f578d781d4e4f7db92ada123ca9a",
+    "sourceCommit": "e3308dcaf8a63cccb98bd71edd1edb12eb046c94",
+    "sourceHash": "6af5b46daa314728776975183535fce6ffb2ad766ee758c918d2ca377af9a4ef",
+    "sourceTechnicalHash": "4cefa8e5ae59fd7de3b003ab8f8bb9fb579764c45ae6994c1381cd073c0724d6",
+    "targetHash": "a377c62259e7b041a48598a1463acfbbe7b35648c8b53b08adf4edb983752d15",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T07:06:15.431Z",
+    "translatedAt": "2026-11-23T07:35:11.354Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "dc31c7fbf63ad6cede489f0f7f8d632d01e058e18c92376f49a7126f01e8b1ae",
-      "targetHash": "82250bb3d5a6ed1488c17afa7965e55e6d15f578d781d4e4f7db92ada123ca9a",
+      "sourceHash": "6af5b46daa314728776975183535fce6ffb2ad766ee758c918d2ca377af9a4ef",
+      "targetHash": "a377c62259e7b041a48598a1463acfbbe7b35648c8b53b08adf4edb983752d15",
       "warnings": [],
       "history": [
         {
@@ -32,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG.md",
+        "blob": "2bf72bd580f9f8fd6a41914bed876f43b1e76200"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/SHOW-CREATE-CATALOG.md",
+        "blob": "96cd774449bcad8fad29cd80b57f27d24b99ea68"
+      }
     }
   }
 }
