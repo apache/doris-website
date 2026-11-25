@@ -134,6 +134,10 @@ Query OK, 4 rows affected (0.25 sec)
 {'status':'COMMITTED', 'txnId':'10088'}
 ```
 
+:::tip
+如果要将 PostgreSQL、MySQL 等业务数据库中的数据持续同步到供 Doris 查询的 Iceberg 表，可以使用支持 CDC 的开源数据抽取与加载工具 OLake Go。请参阅 [OLake 集成指南](../../connection-integration/data-integration/olake.md)。
+:::
+
 ### 05 数据查询
 
 - 简单查询

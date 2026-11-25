@@ -135,7 +135,7 @@ Query OK, 4 rows affected (0.25 sec)
 ```
 
 :::tip
-To continuously replicate operational databases (for example PostgreSQL or MySQL) into Iceberg tables queried by Doris, you can use [OLake Go](https://olake.io/), an open-source EL platform that writes to Apache Iceberg with CDC support. See the [OLake Go + Apache Doris integration guide](https://olake.io/docs/integrations/doris/).
+To continuously replicate operational databases (for example PostgreSQL or MySQL) into Iceberg tables queried by Doris, you can use [OLake Go](https://olake.io/), an open-source EL platform that writes to Apache Iceberg with CDC support. See the [OLake integration guide](../../connection-integration/data-integration/olake.md).
 :::
 
 ### 05 Data Query

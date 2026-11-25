@@ -25,6 +25,10 @@ Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数�
 | 数据集成 | 读取 Iceberg 数据并写入到 Doris 内表。或通过 Doris 计算引擎进行 ZeroETL 操作。 |
 | 数据写回 | 将任意 Doris 支持读取的数据源数据进行加工后，写回到 Iceberg 表存储。              |
 
+:::tip
+如果要将业务数据库中的数据持续同步到供 Doris 查询的 Iceberg 表，可以使用支持 CDC 的开源数据抽取与加载工具 OLake Go。请参阅 [OLake 集成指南](../../connection-integration/data-integration/olake.md)。
+:::
+
 ## 配置 Catalog
 
 ### 语法
