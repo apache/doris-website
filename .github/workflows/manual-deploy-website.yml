@@ -211,7 +211,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 55
     permissions:
-      contents: write
+      contents: read
       actions: read
       id-token: write
     env:
@@ -248,19 +248,6 @@ jobs:
         id: oss-upload
         uses: ./.github/actions/upload-website-assets
 
-      - name: Deploy Website
-        if: vars.WEBSITE_PUBLISH_ENABLED == 'true'
-        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
-        with:
-            github_token: ${{ github.token }}
-            publish_branch: asf-site
-            force_orphan: true
-            publish_dir: ./build
-            destination_dir: ./
-            user_name: 'github-actions[bot]'
-            user_email: 'github-actions[bot]@users.noreply.github.com'
-            commit_message: 'Automated deployment with doris branch ${{ needs.source.outputs.branch }}@${{ env.DORIS_COMMIT }}'
-
       - name: Report publishing measurements
         if: always() && steps.metrics-start.outcome == 'success'
         env:
@@ -276,3 +263,50 @@ jobs:
           path: .i18n-build/publish-metrics/
           if-no-files-found: error
           retention-days: 14
+
+  publish-site:
+    needs: [source, build, deploy]
+    if: >-
+      github.repository == 'apache/doris-website' &&
+      github.ref == 'refs/heads/master' &&
+      vars.WEBSITE_PUBLISH_ENABLED == 'true' &&
+      needs.source.outputs.branch == 'master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    # The deploy App private key is an environment secret. The environment's
+    # branch policy keeps it away from workflows running on writer branches.
+    environment: Production
+    permissions:
+      contents: read
+      actions: read
+    env:
+      DORIS_COMMIT: ${{ needs.source.outputs.source_sha }}
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          merge-multiple: true
+          path: build
+      # Requires the repository variable DEPLOY_APP_ID and the Production
+      # environment secret DEPLOY_APP_PRIVATE_KEY.
+      - name: Create deployment token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
+        with:
+          app-id: ${{ vars.DEPLOY_APP_ID }}
+          private-key: ${{ secrets.DEPLOY_APP_PRIVATE_KEY }}
+          owner: apache
+          repositories: doris-website
+          permission-contents: write
+      - name: Deploy Website
+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+        with:
+            github_token: ${{ steps.app-token.outputs.token }}
+            publish_branch: asf-site
+            force_orphan: true
+            publish_dir: ./build
+            destination_dir: ./
+            user_name: 'github-actions[bot]'
+            user_email: 'github-actions[bot]@users.noreply.github.com'
+            commit_message: 'Automated deployment with doris branch ${{ needs.source.outputs.branch }}@${{ env.DORIS_COMMIT }}'
