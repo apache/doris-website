@@ -1,0 +1,198 @@
+---
+title: 'How Apache Doris optimizes Apache Fluss reads: from JNI conversion to native Arrow batches'
+summary: 'A native Arrow prototype cut a 20-million-row Fluss scan from 2.59 s to 0.81 s. See where JNI spends CPU time and how lookup planning speeds up point queries.'
+description: 'Doris Summit 2026 profiling of Apache Fluss reads in Apache Doris, with prototype results for native Arrow batches, filter pushdown, and key lookups.'
+keywords:
+  - 'Apache Doris'
+  - 'Apache Fluss'
+  - 'Apache Arrow'
+  - 'JNI'
+  - 'Union Read'
+  - 'primary key lookups'
+date: '2026-11-24'
+author: 'Apache Fluss · Anton Borisov'
+tags:
+  - 'Tech Sharing'
+image: '/images/blogs/apache-doris-fluss-native-arrow-reader/cover.jpg'
+---
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements. See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership. The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<YouTube
+  videoId="f0iRSrWUo1k"
+  title="How Apache Doris optimizes Apache Fluss reads"
+  poster="/images/blogs/apache-doris-fluss-native-arrow-reader/video-poster.jpg"
+/>
+
+> This article draws on *Building a Real-Time Streaming Lakehouse with Apache Fluss and Apache Doris*, presented by Apache Fluss PMC member Anton Borisov at Doris Summit 2026. [Fluss](https://fluss.apache.org/) provides streaming storage for real-time analytics, and [Doris](https://doris.apache.org/) runs SQL queries and analytics. The Fluss Catalog lets Doris read historical data in the lake together with the latest log records. Anton profiled CPU costs along this read path and described prototypes for native Arrow batch transfer and primary key lookup planning. All figures come from his presentation slides.
+
+Scanning 20 million Fluss log rows consumed about 15.5 CPU-seconds across the Doris backend. **Java decoding and cell-by-cell copying accounted for about 12 CPU-seconds, or 78% of that work.**
+
+Fluss already stores and serves logs in columnar [Arrow](https://arrow.apache.org/) batches, and Doris uses columnar execution. Why did moving data between them require so much CPU time for conversion?
+
+**The native reader and lookup planning discussed below are prototypes Anton presented in the talk. All performance figures come from tests of those prototypes.**
+
+<YouTube
+  videoId="huTlmR7XXJk"
+  title="Building a Real-Time Streaming Lakehouse with Apache Fluss and Apache Doris"
+  poster="/images/blogs/apache-doris-fluss-native-arrow-reader/talk-video-poster.jpg"
+/>
+
+[View this session on the Doris Summit 2026 website](https://apache-doris-summit.org/watch/fluss-streaming-lakehouse).
+
+## Reading the stream and the lake as one table
+
+Real-time dashboards need to show what just happened and compare the latest changes with historical data. Fluss holds the latest events, while a tiering service continuously writes historical data to [Paimon](https://paimon.apache.org/). Tiering takes time, so the query engine needs to know which records it can read from the lake and which it must still read from the live log.
+
+Fluss divides a table into buckets. Each bucket contains an ordered log, and an offset identifies a record's position within it. When the tiering service commits a Paimon lake snapshot, it also records the offset up to which each bucket's data has reached the lake.
+
+Doris uses the lake snapshot and its associated offset boundaries together. It reads the history covered by the snapshot from Paimon and the records beyond each boundary from the Fluss log. This is [Union Read](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog/#tiered-lake-tables-and-union-read). The three buckets in Figure 1 have different tiering boundaries. Within each bucket, the two sources meet at that bucket's boundary: **Doris avoids reading tiered records twice and includes records that have not yet reached the lake.**
+
+![Union Read combines a Paimon lake snapshot with live Fluss logs at each bucket's offset boundary.](/images/blogs/apache-doris-fluss-native-arrow-reader/union-read.png)
+
+*Figure 1: The lake snapshot and live logs use the same offset boundaries. Original slide 7.*
+
+For an append-only Log Table, a query reads the log records in the relevant range. For a PrimaryKey Table, it must also apply changes to the base data to obtain the latest state for each primary key. If order 101 has status NEW in the lake snapshot and a later log record changes it to PAID, the result should retain PAID. If order 102 is deleted, it should no longer appear in the result.
+
+The read path handles these details, so applications can query one logical table. In the talk, Anton used Wikipedia edit events to count edits by wiki over the past hour:
+
+```sql
+SELECT wiki, COUNT(*) AS edits
+FROM fluss.wiki.edits
+WHERE ts >= NOW() - INTERVAL 1 HOUR
+GROUP BY wiki
+ORDER BY edits DESC
+LIMIT 5;
+```
+
+In this integration, Doris frontend nodes (FE) select the lake snapshot and read boundaries. Backend execution nodes (BE) read lake files and Fluss logs, then perform filtering, aggregation, and other computation. The cost examined here is the work of bringing those log records into the BE.
+
+## Where the JNI path spends CPU time
+
+Anton first profiled the baseline path, which calls the Fluss Java client through [JNI](https://docs.oracle.com/en/java/javase/25/docs/specs/jni/intro.html). The Fluss server returns compressed Arrow batches. The Java client decompresses them and converts the data into Java row objects. The JNI scanner then copies each value into Doris columns for filtering and aggregation in the BE.
+
+Figure 2 shows this path and the backend CPU breakdown for a scan of 20 million log rows.
+
+![The JNI path converts Arrow batches into Java row objects, then copies values into Doris columns. Decoding and copying account for about 78% of backend CPU work.](/images/blogs/apache-doris-fluss-native-arrow-reader/jni-cpu-profile.png)
+
+*Figure 2: The JNI read path and backend CPU breakdown. Values are rounded. Original slide 10.*
+
+Of approximately 15.5 CPU-seconds, zstd decompression accounted for about 2.1, Java decoding and cell-by-cell copying for about 12.0, and Doris plus kernel work for about 1.3. CPU-seconds measure cumulative CPU time across execution threads. The query durations reported later measure elapsed time from start to finish. Parallel execution can make these measures differ substantially.
+
+**Both ends use columnar data, yet the read path converts columns to rows and back to columns.** For every batch, it constructs row objects, extracts fields, and writes values into destination columns. This intermediate work was the largest CPU cost in the measurement.
+
+The optimization target was the object construction and per-value copying before data entered Doris. Decompression would still be necessary.
+
+## Passing Arrow batches directly to the Doris BE
+
+The prototype loads the [fluss-rust](https://clients.fluss.apache.org/) client into the BE. After decompression, the client produces Arrow arrays and passes them to C++ through a small C ABI and the [Arrow C Data Interface](https://arrow.apache.org/docs/format/CDataInterface.html). Doris then imports the data by column.
+
+**The new handoff passes whole arrays, bypassing Java row objects and the JNI scanner's cell-by-cell copying.** The prototype still receives, decompresses, and processes data, but reduces the conversion work when columnar data crosses the language boundary.
+
+Figure 3 shows the native reader's main path alongside the other optimizations.
+
+![The native path uses fluss-rust to decompress data into Arrow arrays and passes them to the Doris BE through a C ABI and the Arrow C Data Interface. It also supports filter pushdown and primary key access.](/images/blogs/apache-doris-fluss-native-arrow-reader/native-arrow-reader.png)
+
+*Figure 3: Native reader batch transfer, filter pushdown, and primary key access paths. Original slide 11.*
+
+The prototype also adds range filter pushdown. Fluss can use column statistics to skip irrelevant batches. For a query over a time window, for example, it can skip any batch whose entire timestamp range falls outside that window.
+
+These changes address different costs. **Batch transfer reduces conversion overhead for each batch read. Pruning with column statistics reduces how many batches need to be read and processed.** Narrow filters can therefore reduce the work further.
+
+Primary key table reads must preserve their existing semantics. Whether the base data comes from a KV snapshot or a Paimon lake snapshot, the reader must merge subsequent changelog updates and deletes by primary key. The new handoff must return the same current state.
+
+## Scan results: conversion overhead and batch pruning
+
+Anton compared the paths on a 16-core machine shared by Doris and Fluss. The scan results report median elapsed time for a single query. He said all paths and runs returned the same results. Figure 4 shows scan times on the left and point-lookup throughput on the right.
+
+![Scan time and point-lookup throughput for JNI and native readers. The slide notes that the tests used a shared 16-core machine and prototype implementations.](/images/blogs/apache-doris-fluss-native-arrow-reader/scan-and-lookup-results.png)
+
+*Figure 4: Prototype test results. The left chart reports seconds; the right chart reports point lookups per second with eight clients. Original slide 12.*
+
+The scan measurements were:
+
+| Test scenario | JNI elapsed time | Native reader elapsed time | Speedup |
+| --- | ---: | ---: | ---: |
+| Scan of 20 million log rows | 2.59 s | 0.81 s | 3.2x |
+| 5% time window, native reader uses column statistics to skip batches | 1.57 s | 0.06 s | 26x |
+| 5% time window, without batch skipping based on column statistics | 1.48 s | 0.33 s | 4.5x |
+| Primary key table, lake + log | 1.51 s | 0.88 s | 1.7x |
+| Primary key table, KV snapshot | 0.42 s | 0.33 s | 1.3x |
+
+**The full log scan fell from 2.59 seconds to 0.81 seconds**, showing the overall effect of the new read path on this dataset. The time-window tests show the additional effect of batch skipping: the native reader took 0.33 seconds without column statistics and 0.06 seconds in the test that used them.
+
+**The 26x speedup includes both native reading and pruning with column statistics.** Skipping unnecessary data at the source reduced the work further than the conversion changes alone. Each result needs to be read alongside the mechanism that produced it to understand the contribution of each change.
+
+The two primary key table scans improved by approximately 1.7x and 1.3x. Their smaller gains reflect different costs along those read paths. All these figures describe the prototype on the specified machine, queries, and data. Other workloads need measurements of their own read paths.
+
+Primary key queries also exposed a separate problem. The underlying store supported access by key, but the query plan did not necessarily use it.
+
+## Using key lookups for primary key queries
+
+Anton demonstrated the problem with a query against a primary key table. **The SQL supplied a complete key predicate, yet the execution plan read the entire table before filtering for the target record.** Faster reads still left a large amount of avoidable work.
+
+The prototype adds lookup planning: it recognizes predicates that identify a primary key and lets the reader access the Fluss key store directly. The eight-client test in Figure 4 compares three paths:
+
+| Point-lookup path | Throughput |
+| --- | ---: |
+| Original Doris 5.0 JNI path, full table scan for each lookup | About 4 lookups/s |
+| JNI path with lookup planning | About 1,836 lookups/s |
+| Native reader with direct key store access | About 1,943 lookups/s |
+
+The JNI path also improved substantially once it used lookup planning. **Switching from a full table scan to a key lookup accounted for much of the gain in this test.** The increase from 4 to 1,943 lookups per second reflects both the planning changes and the reader changes.
+
+For a separate sample table containing lake data, Figure 4 reports about 74 lookups per second for JNI and about 1,845 for the native reader. Lookup costs depend on where the data resides and how the reader accesses it. These samples need to be compared within their own read paths.
+
+### Looking up records in historical partitions
+
+A primary key table's retention policy can expire older partitions from live storage while keeping their data in the lake. Applications may still query those records by primary key, so the reader needs an access path that works after the live partition expires.
+
+Anton also described prototype support for historical partition lookups, which brings Fluss 1.0's [historical partition lookup](https://fluss.apache.org/docs/table-design/data-distribution/partitioning/#historical-partition-access) into fluss-rust. For active partitions, the reader accesses the Fluss key store. For expired partitions, it sends the key to the table's `__historical__` partition, where the Fluss service queries Paimon's local lookup files. Figure 5 shows the two paths.
+
+![Active partitions use the Fluss key store. Expired partitions use the \_\_historical\_\_ partition and Paimon's local lookup files.](/images/blogs/apache-doris-fluss-native-arrow-reader/historical-partition-lookup.png)
+
+*Figure 5: Primary key access after partition expiration, with the corresponding test results. Original slide 13.*
+
+In this separate eight-client test, the original path planned a Union Read and scanned lake data, reaching about 56 lookups per second. The prototype reached about 1,934 lookups per second for active partitions and about 1,957 for expired partitions. The results show room to improve historical primary key lookups: **a dedicated lookup path can still access records after their partitions leave live storage.**
+
+## Planning and scheduling become the next bottleneck
+
+As the cost of finding a record fell, Doris's query preparation accounted for more of the remaining work. Anton profiled the native reader in the eight-client point-lookup test. Each lookup consumed about 5.2 ms of cumulative CPU time, distributed as shown in Figure 6.
+
+![Each point lookup consumes about 5.2 ms of cumulative CPU time, mostly in Doris FE parsing, planning, and scheduling, and BE execution preparation.](/images/blogs/apache-doris-fluss-native-arrow-reader/lookup-cpu-profile.png)
+
+*Figure 6: Cumulative CPU cost per point lookup. The values represent CPU time. Original slide 14.*
+
+FE parsing, planning, and scheduling accounted for about 3.07 ms. BE fragment setup and execution accounted for about 1.88 ms. By comparison, the Fluss server used about 0.10 ms and the client about 0.15 ms. The 5.2 ms is cumulative CPU cost across these components; measuring end-to-end response latency requires separate timing.
+
+**Fetching one row still incurs general query planning and execution setup.** Anton proposed a shorter execution path for Fluss point lookups to reduce this overhead for requests already identified as key lookups. Caching partition lists and avoiding repeated metadata access could also lower the fixed cost of each query.
+
+## Further work on the Fluss read path
+
+The Fluss and Doris integration lets applications query live logs and lake history through one SQL interface. Improving its performance means examining the work at each step: **preserving columnar batches reduces format conversion, source statistics help skip irrelevant data, and lookup planning routes primary key queries to key-based access.** Each round of changes needs fresh measurements to find the largest remaining cost.
+
+The Apache Doris community has already merged some of the prototype optimizations. The Fluss Catalog will be officially released in Apache Doris 5.0. Once the Fluss Native Reader is ready, the community will follow up promptly with further integration and performance work. Thanks to Anton for his profiling, prototype implementation, and work across the two communities to improve this read path.
+
+The prototype code is available on the [fluss-native-reader branch in fresh-borzoni/doris](https://github.com/fresh-borzoni/doris/commits/fluss-native-reader/), including changes for the Fluss Rust reader, Arrow column imports, and metadata caching. To try it, check out the branch in a test environment and run your own log scans, time-window filters, and primary key point lookups. Share the test conditions, query profiles, and any issues with the Doris and Fluss communities to help improve the reader.
+
+## Related links
+
+- [Fluss blog: Apache Doris x Fluss: Unified Queries Across Stream and Lake](https://fluss.apache.org/blog/apache-doris-fluss-stream-lake-analytics/)
+- [Apache Doris Fluss Catalog documentation](https://doris.apache.org/docs/dev/lakehouse/catalogs/fluss-catalog)
+- [Join the Apache Doris Slack community](https://doris.apache.org/slack)
