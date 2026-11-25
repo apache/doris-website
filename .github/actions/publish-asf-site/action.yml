@@ -1,0 +1,56 @@
+name: Publish the ASF website
+description: Push an orphan commit and record the exact commit sent to asf-site
+inputs:
+  source-sha:
+    description: The master commit used to build the website
+    required: true
+  commit-message:
+    description: The subject of the generated deployment commit
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Push website and record its commit
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        SOURCE_SHA: ${{ inputs.source-sha }}
+        COMMIT_MESSAGE: ${{ inputs.commit-message }}
+      run: |
+        set -euo pipefail
+        test -s build/.asf.yaml
+        [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+
+        publish_dir=$(mktemp -d "$RUNNER_TEMP/asf-site.XXXXXX")
+        trap 'rm -rf -- "$publish_dir"' EXIT
+        cp -a build/. "$publish_dir/"
+        cd "$publish_dir"
+        rm -rf -- .git .github
+        touch .nojekyll
+
+        git init --quiet --initial-branch=asf-site
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git add --all
+        git commit --quiet -m "$COMMIT_MESSAGE $GITHUB_SHA"
+        site_sha=$(git rev-parse HEAD)
+
+        auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')
+        echo "::add-mask::$auth"
+        GIT_TERMINAL_PROMPT=0 GIT_CONFIG_COUNT=1 \
+          GIT_CONFIG_KEY_0="http.$GITHUB_SERVER_URL/.extraheader" \
+          GIT_CONFIG_VALUE_0="Authorization: Basic $auth" \
+          git push --force "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" "$site_sha:refs/heads/asf-site"
+
+        # Record the local commit after a successful push. Reading the remote
+        # ref here could bless a separate push made immediately after ours.
+        printf '{"site_sha":"%s","source_sha":"%s"}\n' "$site_sha" "$SOURCE_SHA" \
+          > "$RUNNER_TEMP/asf-site-publish.json"
+
+    - name: Save the publication record
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      with:
+        name: asf-site-publish
+        path: ${{ runner.temp }}/asf-site-publish.json
+        if-no-files-found: error
+        overwrite: true
