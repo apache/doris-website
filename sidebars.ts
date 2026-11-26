@@ -1489,7 +1489,6 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Scalar Functions',
                             items: [
-                                'sql-manual/sql-functions/scalar-functions/to-file',
                                 'sql-manual/sql-functions/scalar-functions/fl-get-binary',
                                 {
                                     type: 'category',
@@ -2367,7 +2366,6 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-valued-functions/cdc-stream',
                                 'sql-manual/sql-functions/table-valued-functions/catalogs',
                                 'sql-manual/sql-functions/table-valued-functions/file',
-                                'sql-manual/sql-functions/table-valued-functions/list-file',
                                 'sql-manual/sql-functions/table-valued-functions/frontends',
                                 'sql-manual/sql-functions/table-valued-functions/frontends_disks',
                                 'sql-manual/sql-functions/table-valued-functions/hdfs',

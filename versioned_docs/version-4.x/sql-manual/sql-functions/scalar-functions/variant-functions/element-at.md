@@ -134,17 +134,17 @@ ELEMENT_AT(container, key_or_index)
     +----------------------------------------+
     ```
 
-6. Accessing a `FILE` field by its case-insensitive name.
-
-    Use the resource and object from the [TO_FILE example](../to-file.md).
+6. Accessing a `FILE` field by its case-insensitive name (conceptual example assuming a data source provides a `FILE` column `f`; SQL `FILE` constructors and table columns are not yet enabled in the current release).
 
     ```sql
     SELECT ELEMENT_AT(f, 'URI') AS uri,
-           ELEMENT_AT(f, 'size') AS size
-    FROM (SELECT TO_FILE('file_test_s3_resource',
-        's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f) t;
+           f['size'] AS size
+    FROM file_source;
     ```
     ```text
-    uri	size
-    s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg	158663
+    +-----------------------------+--------+
+    | uri                         | size   |
+    +-----------------------------+--------+
+    | s3://bucket/path/avatar.jpg | 158663 |
+    +-----------------------------+--------+
     ```

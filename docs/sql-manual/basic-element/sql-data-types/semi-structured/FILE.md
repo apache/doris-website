@@ -2,18 +2,18 @@
 {
     "title": "FILE | Semi Structured",
     "language": "en",
-    "description": "FILE fields, constraints, construction, and field access.",
-    "sidebar_label": "FILE"
+    "description": "FILE fields, type constraints, and field access."
 }
 ---
 
 # FILE
 
+
 ## Type Description
 
-- `FILE` represents a file in a query: it can store the file location or hold its binary contents directly.
-- A FILE value can also carry information such as size and content type. Its six fields have fixed names and types, and all allow NULL.
-- It can be nested in ARRAY, STRUCT, and MAP values.
+- `FILE` represents a file in a query: it can refer to a remote file by location or hold its binary contents inline.
+- A `FILE` value carries six fixed fields, and all six fields are nullable.
+- `FILE` can be nested in `ARRAY`, `STRUCT`, and `MAP` values (as `MAP` values, not keys).
 
 ```sql
 FILE
@@ -21,80 +21,46 @@ FILE
 
 | Field | Type | Description |
 | --- | --- | --- |
-| uri | VARCHAR(65533) | File location, preserved as supplied. |
-| offset | BIGINT | Starting byte offset; NULL or a nonnegative value. A non-NULL offset requires size. |
-| size | BIGINT | Declared content length in bytes; NULL or a nonnegative value, including 0. |
-| content_type | VARCHAR(1024) | NULL or a valid, nonempty MIME media type, such as `image/png`. |
-| checksum | VARCHAR(1024) | NULL or a nonempty `algorithm:digest` declaration. |
-| inline | VARBINARY | NULL or binary content, including empty bytes, subject to the VARBINARY value length limit. |
+| uri | STRING | File location (nullable). |
+| offset | BIGINT | Starting byte offset (nullable). |
+| size | BIGINT | Declared content length in bytes (nullable). |
+| content_type | STRING | MIME media type, such as `image/png` (nullable). |
+| checksum | STRING | Checksum or ETag declaration, such as `ETAG:...` (nullable). |
+| inline | VARBINARY | Inline binary content, subject to the `VARBINARY` value length limit (nullable). |
 
-- For a non-NULL FILE, uri or inline must be non-NULL. When inline is present, the other five fields may all be NULL. Inline can also coexist with metadata; any supplied fields must satisfy their own constraints.
-- URI strings are stored without syntax validation, encoding, or decoding. Doris does not check whether inline matches the URI, size, or checksum.
-- When offset is NULL, a supplied size describes the range starting at 0. When both are present, the range is `[offset, offset + size)`; their sum must not exceed the BIGINT maximum, `9223372036854775807`.
-- Checksum declarations use `ETAG`, `MD5`, `CRC32`, `CRC32C`, or `SHA-256` for known algorithms. ETAG is an opaque nonempty value; MD5, CRC32/CRC32C, and SHA-256 require 32, 8, and 64 lowercase hexadecimal digits respectively. Other algorithm names and digests must both be nonempty. Doris validates the declaration without calculating or verifying the content digest.
-- MySQL query results display FILE as a six-field JSON object, with inline encoded as Base64.
+- MySQL query results display `FILE` as a six-field JSON object, with `inline` encoded as Base64 (empty bytes become `""`, and NULL fields become JSON `null`).
 
 ## Type Constraints
 
-- FILE is available in query expressions. FILE columns cannot be declared in internal tables or external catalogs, including FILE nested in containers.
-- Whole FILE values and containers containing FILE cannot be used for comparison, sorting, hashing, grouping, DISTINCT, or MAP keys. Extract an ordinary scalar field for these operations.
-- CAST and TRY_CAST do not support conversion between FILE and other types, including nested FILE. See [FILE Type Conversion](../conversion/file-conversion.md) for NULL and identity casts.
-- FILE arguments, return values, and aggregate intermediate types are unsupported in UDFs, including nested FILE.
-
-## Obtaining FILE Values
-
-### Obtain remote object metadata
-
-Use [TO_FILE](../../../sql-functions/scalar-functions/to-file.md) with an existing S3 resource to obtain one object's metadata. The result contains the URI, size, content type, and checksum derived from ETag; offset and inline are NULL.
-
-```sql
-SELECT TO_FILE('file_test_s3_resource', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f;
-```
-```text
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| f                                                                                                                                                                                           |
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":158663,"content_type":"image/jpeg","checksum":"ETAG:9CE0C3466E8F035CD0A6CE3389982B15","inline":null} |
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-```
-
-### Obtain FILE values from a directory listing
-
-[LIST_FILES](../../../sql-functions/table-valued-functions/list-file.md) returns path, size, and file. It recursively lists files by default; with `recursive=false`, it includes immediate subdirectories with size=0 and file=NULL. Listing obtains metadata without downloading contents.
-
-```sql
-SELECT path, file
-FROM LIST_FILES(
-    "resource" = "file_test_s3_resource",
-    "uri" = "s3://linrrzqqq/doris-file-type-test/",
-    "recursive" = "false"
-)
-WHERE file IS NOT NULL;
-```
-```text
-+----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| path                                                     | file                                                                                                                                                                                        |
-+----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg | {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":158663,"content_type":"image/jpeg","checksum":"ETAG:9CE0C3466E8F035CD0A6CE3389982B15","inline":null} |
-+----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-```
-
-The resource setup and access requirements are described in the respective function documents.
+- **Query-only type**: `FILE` is available in query expressions. `FILE` columns cannot be declared in internal tables, external catalog tables, `CREATE TABLE ... AS SELECT`, `CREATE TABLE ... LIKE`, or materialized views, including `FILE` nested in `ARRAY`, `STRUCT`, `MAP`, or `AGG_STATE`.
+- **No direct SQL constructor yet**: SQL `FILE` constructor functions and `FILE` table columns are not enabled in the current release; non-NULL `FILE` values will be produced by subsequent data source integrations or constructor functions.
+- **No comparison, ordering, hashing, or grouping**: Whole `FILE` values and containers containing `FILE` cannot be used in comparison predicates (`=`, etc.), `IN`, `ORDER BY`, `GROUP BY`, `DISTINCT`, `UNION`/`INTERSECT`, `MAP` keys, or functions requiring comparison/ordering/deduplication (`MIN`, `MAX`, `COLLECT_SET`, `ARRAY_DISTINCT`, `ARRAY_SORT`, `ARRAY_SORTED_MERGE`, `TOPN_ARRAY`, `GROUP_ARRAY_INTERSECT`, `GROUP_ARRAY_UNION`, `GREATEST`, `LEAST`, `NULLIF`). Extract an ordinary scalar field via `ELEMENT_AT` for these operations.
+- **Payload-only operations and aggregates**: Pass-through conditional expressions (`IF`, `CASE`, `COALESCE`, `NVL`), window value functions (`FIRST_VALUE`, `LAST_VALUE`, `NTH_VALUE`), and payload-only aggregates (`COUNT`, `ANY_VALUE`, `ARRAY_AGG`, `COLLECT_LIST`, `GROUP_ARRAY`, `MIN_BY(f, k)`, `MAX_BY(f, k)`, `MAP_AGG(k, f)`) support `FILE` and containers containing `FILE`.
+- **No CAST / TRY_CAST**: `CAST` and `TRY_CAST` reject conversions to or from `FILE` (including `NULL`, identity casts, and nested `FILE`). See [FILE Type Conversion](../conversion/file-conversion.md).
+- **No UDFs or file export**: `FILE` and nested `FILE` are unsupported as UDF/UDAF/UDTF arguments, return values, or aggregate intermediate types, as well as in `SELECT ... INTO OUTFILE`, Arrow/Flight output, and ORC output.
 
 ## Element Access
 
-Use [FL_GET_BINARY](../../../sql-functions/scalar-functions/fl-get-binary.md) to read the stored binary contents. A NULL FILE or NULL `inline` field returns NULL.
+- Use [FL_GET_BINARY](../../../sql-functions/scalar-functions/fl-get-binary.md) to read the stored `inline` binary contents. A NULL `FILE` or NULL `inline` field returns `NULL`.
+- Read `uri`, `offset`, `size`, `content_type`, or `checksum` with [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at.md) (`ELEMENT_AT(f, 'field_name')` or `f['field_name']`). The field name must be a non-NULL constant string and is case-insensitive. The `inline` selector, unknown field names, dynamic selectors, and numeric indexes produce errors.
+- Expand all six fields into separate columns with [EXPLODE_FILE](../../../sql-functions/table-functions/explode-file.md) or [EXPLODE_FILE_OUTER](../../../sql-functions/table-functions/explode-file-outer.md).
+- Convert a `FILE` value to `JSONB` with [TO_JSON](../../../sql-functions/scalar-functions/json-functions/to-json.md).
 
-Read `uri`, `offset`, `size`, `content_type`, or `checksum` with `ELEMENT_AT(f, 'field_name')` or the equivalent bracket syntax `f['field_name']`. The field name must be a non-NULL constant string and is case-insensitive. The `inline` selector, unknown field names, dynamic selectors, and numeric indexes produce errors. Accessing a NULL FILE or a NULL metadata field returns NULL.
+The following queries illustrate the expected usage once a data source provides a `FILE` column `f` (SQL `FILE` constructors and table columns are not yet enabled in this release):
 
 ```sql
-SELECT ELEMENT_AT(f, 'uri') AS uri,
-       f['size'] AS size,
-       FROM_BINARY(FL_GET_BINARY(f)) AS inline_hex
-FROM (SELECT TO_FILE('file_test_s3_resource',
-    's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f) t;
-```
-```text
-uri	size	inline_hex
-s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg	158663	NULL
+-- Metadata fields via ELEMENT_AT (or bracket syntax); inline bytes via FL_GET_BINARY
+SELECT
+    ELEMENT_AT(f, 'uri')          AS uri,
+    f['offset']                   AS file_offset,
+    ELEMENT_AT(f, 'size')         AS file_size,
+    ELEMENT_AT(f, 'content_type') AS content_type,
+    ELEMENT_AT(f, 'checksum')     AS checksum,
+    FL_GET_BINARY(f)              AS file_inline
+FROM file_source;
+
+-- Expand all six fields via EXPLODE_FILE / EXPLODE_FILE_OUTER
+SELECT u, o, s, c, h, b
+FROM file_source
+LATERAL VIEW EXPLODE_FILE(f) e AS u, o, s, c, h, b;
 ```

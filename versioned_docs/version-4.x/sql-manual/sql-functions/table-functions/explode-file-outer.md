@@ -8,7 +8,7 @@
 
 ## Description
 
-Expands one FILE value into its six fields in a LATERAL VIEW. A NULL FILE produces one row containing six NULLs. This function expands metadata already stored in the value and does not access remote storage.
+Expands one `FILE` value into its six fields in a `LATERAL VIEW`. A NULL `FILE` produces one row containing six `NULL`s. This function expands metadata already stored in the value and does not access remote storage.
 
 :::note
 Since 4.2.0
@@ -25,42 +25,46 @@ AS <uri>, <offset>, <size>, <content_type>, <checksum>, <inline>
 
 | Parameter | Description |
 | --- | --- |
-| `<file>` | Required FILE expression or NULL FILE. |
+| `<file>` | Required `FILE` expression or `NULL` (`FILE`). |
 | `<table_alias>` | Alias for the expanded row. |
 | Field aliases | Exactly six aliases, in the displayed order. |
 
 ## Return Value
 
-Returns the following six nullable columns. A non-NULL FILE produces exactly one row, even when some or all metadata fields other than inline are NULL.
+Returns the following six nullable columns. A non-NULL `FILE` produces exactly one row, even when some or all fields are `NULL`.
 
 | Column | Type |
 | --- | --- |
-| uri | VARCHAR(65533) |
+| uri | STRING |
 | offset | BIGINT |
 | size | BIGINT |
-| content_type | VARCHAR(1024) |
-| checksum | VARCHAR(1024) |
+| content_type | STRING |
+| checksum | STRING |
 | inline | VARBINARY |
 
 ## Example
 
-Use the resource and object from the [TO_FILE example](../scalar-functions/to-file.md).
+Conceptual example assuming a data source provides a `FILE` column `f` (SQL `FILE` constructors and table columns are not yet enabled in the current release):
 
 ```sql
 SELECT uri, size, HEX(CAST(inline_bytes AS STRING)) AS inline_hex
-FROM (SELECT TO_FILE('file_test_s3_resource',
-    's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f) t
+FROM file_source
 LATERAL VIEW EXPLODE_FILE_OUTER(f) e AS uri, off, size, mime, checksum, inline_bytes;
 ```
 
 ```text
-uri	size	inline_hex
-s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg	158663	NULL
++-----------------------------+--------+------------+
+| uri                         | size   | inline_hex |
++-----------------------------+--------+------------+
+| s3://bucket/path/avatar.jpg | 158663 | NULL       |
++-----------------------------+--------+------------+
 ```
+
+When `f` is `NULL`:
 
 ```sql
 SELECT uri, size
-FROM (SELECT CAST(NULL AS FILE) AS f) t
+FROM (SELECT IF(false, f, NULL) AS f FROM file_source) t
 LATERAL VIEW EXPLODE_FILE_OUTER(f) e AS uri, off, size, mime, checksum, inline_bytes;
 ```
 
@@ -72,4 +76,4 @@ LATERAL VIEW EXPLODE_FILE_OUTER(f) e AS uri, off, size, mime, checksum, inline_b
 +------+------+
 ```
 
-See [EXPLODE_FILE](explode-file.md) for the other NULL-row behavior, and [FILE](../../basic-element/sql-data-types/semi-structured/FILE.md) for field constraints.
+See [EXPLODE_FILE](explode-file.md) for the other NULL-row behavior, and [FILE](../../basic-element/sql-data-types/semi-structured/FILE.md) for field descriptions and constraints.

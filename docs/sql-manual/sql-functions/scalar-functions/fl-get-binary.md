@@ -8,7 +8,7 @@
 
 ## Description
 
-Returns the binary contents stored in the `inline` field of a [FILE](../../basic-element/sql-data-types/semi-structured/FILE.md) value. This function does not access the URI or download file contents.
+Returns the binary contents stored in the `inline` field of a [FILE](../../basic-element/sql-data-types/semi-structured/FILE.md) value. This function does not access the URI or download remote file contents.
 
 ## Syntax
 
@@ -20,35 +20,39 @@ FL_GET_BINARY(<file>)
 
 | Parameter | Description |
 | --- | --- |
-| `<file>` | A FILE expression or NULL. Other argument types produce an error. |
+| `<file>` | A `FILE` expression or `NULL`. Other argument types produce an error. |
 
 ## Return Value
 
-The return type is nullable `VARBINARY`. A NULL FILE or NULL `inline` field returns NULL. Empty binary contents remain empty. The stored bytes are returned unchanged; `offset` and `size` do not select a range within them.
+The return type is nullable `VARBINARY`. A `NULL` `FILE` or `NULL` `inline` field returns `NULL`. Empty binary contents remain empty. The stored bytes are returned unchanged; `offset` and `size` do not select a range within them.
 
-FILE values obtained from TO_FILE or LIST_FILES currently have NULL `inline` fields, so FL_GET_BINARY returns NULL for those values.
+## Example
 
-## Examples
-
-Use the resource and object from the [TO_FILE example](to-file.md):
-
-```sql
-SELECT FL_GET_BINARY(TO_FILE('file_test_s3_resource',
-    's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg')) AS binary_value;
-```
-
-```text
-binary_value
-NULL
-```
-
-NULL input:
+`NULL` input:
 
 ```sql
 SELECT FL_GET_BINARY(NULL) AS binary_value;
 ```
 
 ```text
-binary_value
-NULL
++--------------+
+| binary_value |
++--------------+
+| NULL         |
++--------------+
+```
+
+Conceptual usage when reading from a data source that provides a `FILE` column `f` (SQL `FILE` constructors and table columns are not yet enabled in the current release):
+
+```sql
+SELECT FROM_BINARY(FL_GET_BINARY(f)) AS inline_hex
+FROM file_source;
+```
+
+```text
++------------+
+| inline_hex |
++------------+
+| 00FF80     |
++------------+
 ```

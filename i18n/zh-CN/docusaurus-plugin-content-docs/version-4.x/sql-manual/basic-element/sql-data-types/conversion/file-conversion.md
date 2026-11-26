@@ -2,7 +2,7 @@
 {
     "title": "FILE 类型转换",
     "language": "zh-CN",
-    "description": "FILE 类型转换限制及 NULL 处理规则。"
+    "description": "FILE 类型在 CAST 与 TRY_CAST 中的转换限制。"
 }
 ---
 
@@ -12,19 +12,20 @@
 Since 4.2
 :::
 
-CAST 和 TRY_CAST 不支持 FILE 与其他类型之间的转换，包括 STRUCT、STRING、JSON 和 VARIANT。该限制也适用于包含 FILE 的 ARRAY、STRUCT 和 MAP 类型。不支持的转换会在分析阶段报错，TRY_CAST 同样如此。
 
-使用 [TO_FILE](../../../sql-functions/scalar-functions/to-file.md) 或 [LIST_FILES](../../../sql-functions/table-valued-functions/list-file.md) 获取 FILE 值。使用 [TO_JSON](../../../sql-functions/scalar-functions/json-functions/to-json.md) 将 FILE 序列化为 JSON。
+`CAST` 和 `TRY_CAST` 不支持向 `FILE` 或从 `FILE` 进行转换，包括 `STRUCT`、`STRING`、`JSON`、`VARIANT`、`NULL` 以及向相同 `FILE` 类型的转换。该限制也适用于包含 `FILE` 的 `ARRAY`、`STRUCT` 和 `MAP` 类型。不支持的转换均会在分析阶段报错，`TRY_CAST` 同样如此。
 
-## NULL 与相同类型转换
+如需将 `FILE` 值序列化为 `JSONB`，请使用 [TO_JSON](../../../sql-functions/scalar-functions/json-functions/to-json.md)。如需读取 `FILE` 值的元数据字段或内联二进制内容，请使用 [ELEMENT_AT](../../../sql-functions/scalar-functions/variant-functions/element-at.md)、[FL_GET_BINARY](../../../sql-functions/scalar-functions/fl-get-binary.md) 或 [EXPLODE_FILE](../../../sql-functions/table-functions/explode-file.md)。
 
-SQL NULL 可以转换为 FILE。将值转换为其原有类型的操作也继续支持。
+## 限制示例
+
+所有涉及 `FILE` 或嵌套 `FILE` 类型的 `CAST` 和 `TRY_CAST` 表达式均会在分析阶段报错：
 
 ```sql
-SELECT CAST(NULL AS FILE) AS f;
+SELECT CAST(NULL AS FILE);
+SELECT TRY_CAST(NULL AS FILE);
 ```
 
 ```text
-f
-NULL
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from origin type NULL to target type=FILE
 ```

@@ -143,17 +143,17 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     +-------------------------------------------+
     ```
 
-6. 按字段名访问 `FILE`，字段名不区分大小写。
-
-    使用 [TO_FILE 示例](../to-file.md)中的 resource 和对象。
+6. 按字段名访问 `FILE`，字段名不区分大小写（以下为概念示例，假设上游数据源提供 `FILE` 列 `f`；当前版本尚未启用 SQL `FILE` 构造函数与表列）。
 
     ```sql
     SELECT ELEMENT_AT(f, 'URI') AS uri,
-           ELEMENT_AT(f, 'size') AS size
-    FROM (SELECT TO_FILE('file_test_s3_resource',
-        's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f) t;
+           f['size'] AS size
+    FROM file_source;
     ```
     ```text
-    uri	size
-    s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg	158663
+    +-----------------------------+--------+
+    | uri                         | size   |
+    +-----------------------------+--------+
+    | s3://bucket/path/avatar.jpg | 158663 |
+    +-----------------------------+--------+
     ```

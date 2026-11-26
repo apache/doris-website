@@ -66,23 +66,15 @@ When the input `value` is SQL NULL, the function returns SQL NULL (not a JSON nu
 
 ### FILE values
 
-Use the resource and object from the [TO_FILE example](../to-file.md).
+Conceptual example assuming a data source provides a `FILE` column `f` (SQL `FILE` constructors and table columns are not yet enabled in the current release):
 
 ```sql
-SELECT TO_JSON(TO_FILE('file_test_s3_resource',
-    's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg')) AS j;
+SELECT TO_JSON(f) AS j
+FROM file_source;
 ```
 
 ```text
-{"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":158663,"content_type":"image/jpeg","checksum":"ETAG:9CE0C3466E8F035CD0A6CE3389982B15","inline":null}
-```
-
-```sql
-SELECT TO_JSON(CAST(NULL AS FILE)) AS j;
-```
-
-```text
-NULL
+{"uri":"s3://bucket/path/avatar.jpg","offset":null,"size":158663,"content_type":"image/jpeg","checksum":"ETAG:9CE0C3466E8F035CD0A6CE3389982B15","inline":null}
 ```
 
 ### Basic scalar values
