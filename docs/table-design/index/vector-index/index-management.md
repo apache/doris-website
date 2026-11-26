@@ -65,7 +65,7 @@ Before creating an ANN index, confirm the following:
 
 ## Empty vectors and segment indexes {#empty-vectors-and-segment-indexes}
 
-In dev, BE configuration provides an opt-in for empty-array writes. Apply consistent settings to every BE; see [BE Configuration](../../../admin-manual/config/be-config.md) for how to set them.
+BE configuration provides an opt-in for empty-array writes. Apply consistent settings to every BE; see [BE Configuration](../../../admin-manual/config/be-config.md) for how to set them.
 
 | BE setting | Type | Default | Dynamic | Effect |
 | --- | --- | --- | --- | --- |

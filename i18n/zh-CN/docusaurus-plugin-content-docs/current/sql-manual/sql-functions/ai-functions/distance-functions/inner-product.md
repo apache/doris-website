@@ -10,8 +10,6 @@
 
 计算两个由数组表示的稠密向量，或两个由 Map 表示的稀疏向量的标量积。对于稀疏向量，每个 Map 的 key 表示一个维度，value 表示该维度的坐标值。只有同时出现在两个 Map 中的维度才参与计算。
 
-dev 版本的数组输入支持缺失向量：整个数组为 `NULL` 或空数组 `[]` 时返回 `NULL`；非法输入的处理见返回值说明。
-
 ## 语法
 
 ```sql
@@ -23,8 +21,8 @@ INNER_PRODUCT(<map1>, <map2>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<array1>` | 第1个向量，类型为 `ARRAY<FLOAT>`，其他数值数组可转换为此类型。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
-| `<array2>` | 第2个向量，类型为 `ARRAY<FLOAT>`，其他数值数组可转换为此类型。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
+| `<array1>` | 第一个向量，输入数组的元素类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
+| `<array2>` | 第二个向量，输入数组的元素类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
 | `<map1>` | 第一个稀疏向量。类型必须为 `MAP<K, FLOAT>`，其中 `K` 可以是整数类型（TINYINT、SMALLINT、INT、BIGINT 或 LARGEINT）或字符串类型（CHAR、VARCHAR 或 STRING）。其 key 类型必须与 `<map2>` 的 key 类型属于同一类型族。 |
 | `<map2>` | 第二个稀疏向量，类型约束与 `<map1>` 相同。两个 Map 的元素数量可以不同。 |
 
@@ -34,7 +32,7 @@ MAP 重载接收两个 `MAP<K, FLOAT>` 参数 `<map1>` 和 `<map2>`，键必须�
 
 ## 返回值
 
-对于数组输入，返回两个向量的标量积，类型为可空的 `FLOAT`。dev 版本的数组输入遵循以下规则：
+对于数组输入，返回两个向量的标量积，类型为可空的 `FLOAT`。数组输入遵循以下规则：
 
 - 任一数组整体为 `NULL` 或空数组 `[]` 时，返回 `NULL`，包括 `NULL` 与 `NULL`、`[]` 与 `[]` 的组合。
 - 非空数组包含 `NULL` 元素时，报错；另一参数为 `NULL` 或 `[]` 不会使这个非法数组变为有效输入。
@@ -99,7 +97,7 @@ SELECT INNER_PRODUCT(
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product cannot have null
 ```
 
-以下示例无需创建表，展示 dev 版本的空数组与 NULL 输入行为：
+以下示例展示空数组与 NULL 输入的行为：
 
 ```sql
 SELECT INNER_PRODUCT(CAST([] AS ARRAY<FLOAT>), [1, 2]) AS empty_result,

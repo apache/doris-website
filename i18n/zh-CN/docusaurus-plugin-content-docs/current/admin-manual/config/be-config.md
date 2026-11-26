@@ -344,8 +344,6 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 ### ANN 索引
 
-以下空数组行为适用于 dev 版本。
-
 #### `enable_ann_index_empty_array`
 
 * 类型：bool

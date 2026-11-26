@@ -65,7 +65,7 @@ Apache Doris 的近似最近邻 (Approximate Nearest Neighbor，简称 ANN) 索�
 
 ## 空向量与 segment 索引 {#empty-vectors-and-segment-indexes}
 
-dev 版本支持通过 BE 配置选择性地写入空数组。所有 BE 必须使用一致的配置；设置方法见 [BE 配置](../../../admin-manual/config/be-config.md)。
+可通过 BE 配置选择性地写入空数组。所有 BE 必须使用一致的配置；设置方法见 [BE 配置](../../../admin-manual/config/be-config.md)。
 
 | BE 配置 | 类型 | 默认值 | 动态修改 | 作用 |
 | --- | --- | --- | --- | --- |

@@ -10,8 +10,6 @@
 
 Approximate version of `l2_distance`. If related array column has ann index built on it, result of this function could be collected from index.
 
-In dev, array inputs support missing vectors: a whole `NULL` array or an empty array (`[]`) produces `NULL`; see Return Value for invalid-input handling.
-
 ## Syntax
 
 ```sql
@@ -22,14 +20,14 @@ L2_DISTANCE_APPROXIMATE(<array1>, <array2>)
 
 | Parameter | Description |
 | -- | -- |
-| `<array1>` | Vector 1, of type `ARRAY<FLOAT>`; other numeric arrays can be converted to this type. The whole array can be `NULL` or empty (`[]`); a non-empty array must not contain `NULL` elements. |
-| `<array2>` | Vector 2, of type `ARRAY<FLOAT>`; other numeric arrays can be converted to this type. The whole array can be `NULL` or empty (`[]`); a non-empty array must not contain `NULL` elements. |
+| `<array1>` | The first vector. Supported array element types are TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, and DOUBLE. The whole array can be `NULL` or empty (`[]`); a non-empty array must not contain `NULL` elements. |
+| `<array2>` | The second vector. Supported array element types are TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, and DOUBLE. The whole array can be `NULL` or empty (`[]`); a non-empty array must not contain `NULL` elements. |
 
 When both arrays are non-empty, they must have the same number of elements.
 
 ## Return Value
 
-Returns the Euclidean distance between two vectors as a nullable `FLOAT`. In the dev version, array inputs follow these rules:
+Returns the Euclidean distance between two vectors as a nullable `FLOAT`. Array inputs follow these rules:
 
 - If either whole array is `NULL` or empty (`[]`), the result is `NULL`, including `NULL`/`NULL` and `[]`/`[]`.
 - A non-empty array containing a `NULL` element raises an error. Passing `NULL` or `[]` as the other argument does not make that invalid array valid.
@@ -109,7 +107,7 @@ SELECT L2_DISTANCE_APPROXIMATE([1, NULL], [1, 2]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function l2_distance_approximate cannot have null
 ```
 
-The following examples need no table and show empty-array and NULL input behavior in dev:
+The following examples show empty-array and NULL input behavior:
 
 ```sql
 SELECT L2_DISTANCE_APPROXIMATE(CAST([] AS ARRAY<FLOAT>), [1, 2]) AS empty_result,

@@ -539,8 +539,6 @@ SET enable_profile = false;
 
 ## 空向量与 NULL 距离 {#empty-vectors-and-null-distances}
 
-本节描述 dev 版本的行为，不适用于 4.x 文档所描述的版本。
-
 ### 写入空向量
 
 默认情况下，ANN 索引列不接受空数组 `[]`。在所有 FE 和 BE 都升级到支持此功能的版本后，可在所有 BE 上设置 [`enable_ann_index_empty_array=true`](../../../admin-manual/config/be-config.md#enable_ann_index_empty_array)。此时 `[]` 保存在数据行中，但不生成 ANN 索引条目，适用于尚未生成 embedding 的记录。
@@ -566,7 +564,7 @@ SET enable_profile = false;
 
 使用 Doris 向量索引时，需要注意以下限制：
 
-1. **数据类型限制**：ANN Index 对应的列必须是 `ARRAY<FLOAT> NOT NULL`。非空向量的长度必须等于索引属性 `dim`，且不能包含 `NULL` 元素。dev 版本可通过 `enable_ann_index_empty_array=true` 允许写入空数组 `[]`，详见[空向量与 NULL 距离](#empty-vectors-and-null-distances)。
+1. **数据类型限制**：ANN Index 对应的列必须是 `ARRAY<FLOAT> NOT NULL`。非空向量的长度必须等于索引属性 `dim`，且不能包含 `NULL` 元素。可通过 `enable_ann_index_empty_array=true` 允许写入空数组 `[]`，详见[空向量与 NULL 距离](#empty-vectors-and-null-distances)。
 
 2. **表模型限制**：ANN Index 只能在 **DuplicateKey** 表模型，或开启了 Merge-on-Write（`enable_unique_key_merge_on_write = true`）的 **UniqueKey** 表模型上使用（UniqueKey 表的支持自 4.1.4 版本开始）。Merge-on-Read 的 UniqueKey 表以及 AggregateKey 表仍不支持，建索引时会报错：`ANN index can only be used in DUP_KEYS table or UNIQUE_KEYS table with merge-on-write enabled`。
 

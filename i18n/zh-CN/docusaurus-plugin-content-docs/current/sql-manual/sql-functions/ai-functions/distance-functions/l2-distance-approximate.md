@@ -10,8 +10,6 @@
 
 `l2_distance` 的近似版本。如果相关的数组列在其上构建了 ANN 索引，则该函数的结果可以从索引中获取。
 
-dev 版本的数组输入支持缺失向量：整个数组为 `NULL` 或空数组 `[]` 时返回 `NULL`；非法输入的处理见返回值说明。
-
 ## 语法
 
 ```sql
@@ -22,14 +20,14 @@ L2_DISTANCE_APPROXIMATE(<array1>, <array2>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<array1>` | 第1个向量，类型为 `ARRAY<FLOAT>`，其他数值数组可转换为此类型。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
-| `<array2>` | 第2个向量，类型为 `ARRAY<FLOAT>`，其他数值数组可转换为此类型。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
+| `<array1>` | 第一个向量，输入数组的元素类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
+| `<array2>` | 第二个向量，输入数组的元素类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
 
 两个数组都非空时，元素个数必须一致。
 
 ## 返回值
 
-返回两个向量的欧几里得距离，类型为可空的 `FLOAT`。dev 版本的数组输入遵循以下规则：
+返回两个向量的欧几里得距离，类型为可空的 `FLOAT`。数组输入遵循以下规则：
 
 - 任一数组整体为 `NULL` 或空数组 `[]` 时，返回 `NULL`，包括 `NULL` 与 `NULL`、`[]` 与 `[]` 的组合。
 - 非空数组包含 `NULL` 元素时，报错；另一参数为 `NULL` 或 `[]` 不会使这个非法数组变为有效输入。
@@ -109,7 +107,7 @@ SELECT L2_DISTANCE_APPROXIMATE([1, NULL], [1, 2]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function l2_distance_approximate cannot have null
 ```
 
-以下示例无需创建表，展示 dev 版本的空数组与 NULL 输入行为：
+以下示例展示空数组与 NULL 输入的行为：
 
 ```sql
 SELECT L2_DISTANCE_APPROXIMATE(CAST([] AS ARRAY<FLOAT>), [1, 2]) AS empty_result,

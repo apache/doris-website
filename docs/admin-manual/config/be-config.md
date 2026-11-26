@@ -339,8 +339,6 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 ### ANN indexes
 
-The empty-array behavior below applies to dev.
-
 #### `enable_ann_index_empty_array`
 
 * Type: bool

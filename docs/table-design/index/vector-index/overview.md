@@ -539,8 +539,6 @@ In the AI era, Python has become the mainstream language for data processing and
 
 ## Empty vectors and NULL distances {#empty-vectors-and-null-distances}
 
-This section describes dev behavior and does not apply to the versions covered by the 4.x documentation.
-
 ### Writing empty vectors
 
 By default, ANN-indexed columns reject empty arrays (`[]`). After upgrading all FEs and BEs to a version supporting this feature, set [`enable_ann_index_empty_array=true`](../../../admin-manual/config/be-config.md#enable_ann_index_empty_array) on every BE. An empty array remains in the data row but has no ANN index entry. This supports records whose embedding has not yet been generated.
@@ -566,7 +564,7 @@ Declaring an ANN index in the schema does not guarantee a physical index on ever
 
 When using the Doris vector index, note the following limitations:
 
-1. **Data type limitation**: An ANN-indexed column must be `ARRAY<FLOAT> NOT NULL`. Non-empty vectors must match the index dimension `dim` and must not contain `NULL` elements. In dev, `enable_ann_index_empty_array=true` allows empty arrays (`[]`); see [Empty vectors and NULL distances](#empty-vectors-and-null-distances).
+1. **Data type limitation**: An ANN-indexed column must be `ARRAY<FLOAT> NOT NULL`. Non-empty vectors must match the index dimension `dim` and must not contain `NULL` elements. Setting `enable_ann_index_empty_array=true` allows empty arrays (`[]`); see [Empty vectors and NULL distances](#empty-vectors-and-null-distances).
 
 2. **Table model limitation**: ANN Index can only be used on the **Duplicate Key** table model, or on a **Unique Key** table with merge-on-write enabled (`enable_unique_key_merge_on_write = true`). Support for Unique Key tables was added in version 4.1.4. Merge-on-read Unique Key tables and Aggregate Key tables are still unsupported; creating an index on them reports: `ANN index can only be used in DUP_KEYS table or UNIQUE_KEYS table with merge-on-write enabled`.
 
