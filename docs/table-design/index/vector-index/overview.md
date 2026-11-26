@@ -553,7 +553,7 @@ Scalar evaluation of the array overloads of `l1_distance`, `l2_distance`, `cosin
 
 - **ANN TopN path**: Searches only indexed, non-empty vectors. `NULLS FIRST` or `NULLS LAST` does not cause a fallback to include empty-vector rows, and the result can contain fewer rows than `LIMIT`. A segment containing only empty arrays with a persisted empty index contributes zero ANN candidates.
 - **Scalar or brute-force path**: `NULL` distances from empty vectors still participate in SQL sorting according to `NULLS FIRST` / `NULLS LAST`. A `NULL` or `[]` query vector also uses this path. Use exact functions such as `l2_distance` or `inner_product` when you need distances for all rows with SQL NULL ordering preserved.
-- **Mixed-path limitation**: One query can use ANN on some segments and brute-force evaluation on others, for example when a physical index is absent. The latter segments can contribute `NULL` distances to the final result, especially with `NULLS FIRST`. Do not rely on approximate TopN to exclude empty vectors uniformly across all segments. If you must exclude NULL distances, explicitly filter with `IS NOT NULL` on the distance expression and assess how that filter affects index use.
+- **Mixed-path limitation**: One query can use ANN on some segments and brute-force evaluation on others, for example when a physical index is absent. The latter segments can contribute `NULL` distances to the final result, especially with `NULLS FIRST`. Do not rely on approximate TopN to exclude empty vectors uniformly across all segments. Explicitly specify `NULLS LAST` to prioritize non-NULL distances in TopN sorting. This does not itself trigger ANN fallback, but it does not filter out NULL rows either.
 - **Range queries**: An empty vector has a `NULL` distance and does not satisfy `<`, `<=`, `>`, or `>=` distance comparisons. Empty vectors are also outside the candidate set for ANN range-index searches.
 
 Declaring an ANN index in the schema does not guarantee a physical index on every segment. Too few non-empty vectors can cause index construction to be skipped, with queries falling back on that segment; see [segment index build rules](./index-management.md#empty-vectors-and-segment-indexes). Fewer index entries than data rows alone does not trigger TopN fallback.
@@ -571,16 +571,16 @@ Suppose an existing table `vector_examples` declares a two-dimensional L2 ANN in
 | B | 3 | `[2, 0]` | `2` |
 | B | 4 | `[]` | `NULL` |
 
-The query has this form:
+The query explicitly specifies `NULLS LAST` to prioritize non-NULL distances:
 
 ```sql
 SELECT id, l2_distance_approximate(embedding, [0, 0]) AS distance
 FROM vector_examples
-ORDER BY distance ASC NULLS FIRST
+ORDER BY distance ASC NULLS LAST
 LIMIT 4;
 ```
 
-Replacing `NULLS FIRST` with `NULLS LAST` gives different results depending on the path each segment actually uses:
+The following table compares `NULLS FIRST` with `NULLS LAST`, depending on the path each segment actually uses:
 
 | Execution | id order with `NULLS FIRST` | id order with `NULLS LAST` |
 | --- | --- | --- |
@@ -592,7 +592,13 @@ This example illustrates candidate selection and NULL ordering, assuming ANN sea
 
 When both segments use ANN, even `LIMIT 4` does not add `id=2` or `id=4`. In the mixed path, `id=2` is outside A's ANN candidates, while `id=4` enters sorting through B's scan. `NULLS LAST` places that row after non-NULL distances; it does not filter the row out.
 
-Use an exact distance function to include all rows, including empty-vector rows, in distance sorting. To exclude NULL distances, explicitly apply `IS NOT NULL` to the distance expression instead of relying on `NULLS LAST`. This filter can also affect ANN index use.
+### Recommended usage
+
+To prioritize valid vectors while retaining ANN TopN acceleration, explicitly use `NULLS LAST`: `ORDER BY distance ASC NULLS LAST` for L2 distance, or `ORDER BY score DESC NULLS LAST` for inner product. This prevents NULL distances produced by brute-force scans from sorting ahead of valid results. It does not itself prevent ANN index use; other index eligibility conditions still apply.
+
+Do not add `IS NOT NULL` on the distance expression in `WHERE` merely to place NULL distances last. The current implementation cannot evaluate this filter through the ANN index. It remains a predicate requiring scalar evaluation, preventing ANN TopN acceleration and causing a brute-force fallback.
+
+`NULLS LAST` does not filter out NULLs. If non-NULL candidates cannot fill `LIMIT`, rows with NULL distances from brute-force paths can still appear at the end of the result. Use `IS NOT NULL` on the distance expression only when the application requires strict exclusion of those rows and accepts the cost of scalar evaluation. Use an exact distance function when all rows, including empty-vector rows, must participate in distance sorting.
 
 ## Usage Limitations
 

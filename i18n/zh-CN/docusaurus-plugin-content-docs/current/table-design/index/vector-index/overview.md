@@ -553,7 +553,7 @@ SET enable_profile = false;
 
 - **ANN TopN 路径**：只在非空的已索引向量中搜索。即使指定 `NULLS FIRST` 或 `NULLS LAST`，也不会为了补入空向量行而改为暴力扫描；结果可能少于 `LIMIT`。只含空数组且已生成空索引的 segment 返回零个 ANN 候选。
 - **标量或暴力扫描路径**：空向量产生的 `NULL` 距离仍按 SQL 的 `NULLS FIRST` / `NULLS LAST` 参与排序。查询向量本身为 `NULL` 或 `[]` 时也走此路径。需要对所有行计算距离并保留 SQL NULL 排序语义时，使用 `l2_distance` 或 `inner_product` 等精确函数。
-- **混合路径的限制**：同一查询可在部分 segment 上使用 ANN，而在缺少物理索引等情况下对其他 segment 暴力扫描。后者的 `NULL` 距离可能进入最终结果，尤其在 `NULLS FIRST` 时。因此，不能依赖近似 TopN 在所有 segment 上统一排除空向量。若必须排除 NULL 距离，应显式使用距离表达式 `IS NOT NULL` 过滤，并评估该过滤对索引使用的影响。
+- **混合路径的限制**：同一查询可在部分 segment 上使用 ANN，而在缺少物理索引等情况下对其他 segment 暴力扫描。后者的 `NULL` 距离可能进入最终结果，尤其在 `NULLS FIRST` 时。因此，不能依赖近似 TopN 在所有 segment 上统一排除空向量。建议显式指定 `NULLS LAST`，让非空距离优先参与 TopN 排序；它本身不会触发 ANN 回退，但也不会过滤 NULL 行。
 - **范围查询**：空向量的距离为 `NULL`，不满足 `<`、`<=`、`>`、`>=` 距离比较条件；走 ANN 范围索引时，空向量也不属于候选集合。
 
 表中声明了 ANN 索引，并不保证每个 segment 都已生成物理索引。非空向量不足可能跳过构建，查询该 segment 时回退；详见 [segment 索引构建规则](./index-management.md#empty-vectors-and-segment-indexes)。仅仅索引条目数少于数据行数，不会触发 TopN 回退。
@@ -571,16 +571,16 @@ SET enable_profile = false;
 | B | 3 | `[2, 0]` | `2` |
 | B | 4 | `[]` | `NULL` |
 
-查询使用如下形式：
+查询显式指定 `NULLS LAST`，优先返回非空距离：
 
 ```sql
 SELECT id, l2_distance_approximate(embedding, [0, 0]) AS distance
 FROM vector_examples
-ORDER BY distance ASC NULLS FIRST
+ORDER BY distance ASC NULLS LAST
 LIMIT 4;
 ```
 
-将 `NULLS FIRST` 改为 `NULLS LAST` 后，结果取决于各 segment 实际使用的路径：
+下面对比使用 `NULLS FIRST` 与 `NULLS LAST` 时的结果，具体行为取决于各 segment 实际使用的路径：
 
 | 执行情况 | `NULLS FIRST` 的 id 顺序 | `NULLS LAST` 的 id 顺序 |
 | --- | --- | --- |
@@ -592,7 +592,13 @@ LIMIT 4;
 
 全部走 ANN 时，即使 `LIMIT 4`，也不会补入 `id=2` 和 `id=4`。混合路径下，`id=2` 不在 A 的 ANN 候选中，而 `id=4` 会从 B 的扫描结果进入排序；`NULLS LAST` 只是把它放到非空距离之后，并不将其过滤掉。
 
-如果需要把所有行（包括空向量行）都纳入距离排序，使用精确距离函数。如果业务上需要排除 NULL 距离，应显式对距离表达式添加 `IS NOT NULL`，而不是依赖 `NULLS LAST`；这样的过滤也可能影响 ANN 索引的使用。
+### 推荐用法
+
+对于希望优先返回有效向量并保留 ANN TopN 加速的查询，建议显式使用 `NULLS LAST`：L2 距离使用 `ORDER BY distance ASC NULLS LAST`，内积使用 `ORDER BY score DESC NULLS LAST`。它可以避免暴力扫描产生的 NULL 距离排在有效结果之前，本身不会阻止 ANN 索引的使用；其他索引使用条件仍需满足。
+
+不要仅为了把 NULL 距离排在最后，就在 `WHERE` 中对距离表达式添加 `IS NOT NULL`。当前实现无法通过 ANN 索引完成这个过滤，它会成为需要逐行计算的剩余条件，阻止 ANN TopN 加速并回退到暴力计算。
+
+`NULLS LAST` 不等价于过滤 NULL：如果非空候选不足以填满 `LIMIT`，暴力扫描路径产生的 NULL 距离行仍可能出现在结果末尾。只有业务要求严格排除这些行、并接受逐行计算开销时，才使用距离表达式的 `IS NOT NULL` 过滤。如果需要把所有行（包括空向量行）都纳入距离排序，则使用精确距离函数。
 
 ## 使用限制
 
