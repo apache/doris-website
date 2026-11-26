@@ -6,7 +6,7 @@
 }
 ---
 
-## 功能
+## 描述 {#功能}
 
 `ELEMENT_AT` 函数用于从数组、map、struct、variant 或 FILE 中按指定的索引、键或字段名提取对应的值。
 
@@ -19,18 +19,15 @@
 ## 语法
 
 ```sql
-ELEMENT_AT(container, key_or_index)
+ELEMENT_AT(<container>, <key_or_index>)
 ```
 
 ## 参数
 
-- `container`：可以是`ARRAY`, `MAP`, `STRUCT`, `VARIANT`, `FILE`。
-- `key_or_index`：
-  - 对于 `ARRAY`：为整数类型，索引从 **1** 开始；
-  - 对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。
-  - 对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。
-  - 对于 `VARIANT`： 为字符串类型
-  - 对于 `FILE`：为非 NULL 常量字符串，字段名为 `uri`、`offset`、`size`、`content_type` 或 `checksum`，不区分大小写。访问 `inline` 会报错；读取二进制内容请使用 [FL_GET_BINARY](../fl-get-binary.md)。
+| 参数 | 描述 |
+| --- | --- |
+| `<container>` | 可以是`ARRAY`, `MAP`, `STRUCT`, `VARIANT`, `FILE`。 |
+| `<key_or_index>` | 对于 `ARRAY`：为整数类型，索引从 **1** 开始；<br />对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。<br />对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。<br />对于 `VARIANT`： 为字符串类型<br />对于 `FILE`：为非 NULL 常量字符串，字段名为 `uri`、`offset`、`size`、`content_type` 或 `checksum`，不区分大小写。访问 `inline` 会报错；读取二进制内容请使用 [FL_GET_BINARY](../fl-get-binary.md)。 |
 
 ## 返回值
 
@@ -53,15 +50,23 @@ ELEMENT_AT(container, key_or_index)
 
 1. `ELEMENT_AT` 函数的功能与 `[]` 作用一致。
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 2);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 2) |
     +--------------------------+
     |                        2 |
     +--------------------------+
+    ```
 
+    ```sql
     SELECT [1, 2, 3][2];
+    ```
+
+    ```text
     +--------------+
     | [1, 2, 3][2] |
     +--------------+
@@ -71,15 +76,23 @@ ELEMENT_AT(container, key_or_index)
 
 2. 数组下标从 1 开始，越界会返回 `NULL`。
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 0);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 0) |
     +--------------------------+
     |                     NULL |
     +--------------------------+
+    ```
 
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 4);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 4) |
     +--------------------------+
@@ -89,8 +102,11 @@ ELEMENT_AT(container, key_or_index)
 
 3. 访问 `MAP` 中不存在的 KEY，会返回 `NULL`。
 
-    ```SQL
-     SELECT ELEMENT_AT({"a": 1, "b": 2}, "c");
+    ```sql
+    SELECT ELEMENT_AT({"a": 1, "b": 2}, "c");
+    ```
+
+    ```text
     +-----------------------------------+
     | ELEMENT_AT({"a": 1, "b": 2}, "c") |
     +-----------------------------------+
@@ -100,15 +116,23 @@ ELEMENT_AT(container, key_or_index)
 
 4. 按位置或字段名访问 `STRUCT` 的子列（等价于 `STRUCT_ELEMENT`）。
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1);
+    ```
+
+    ```text
     +------------------------------------------------------------+
     | ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1) |
     +------------------------------------------------------------+
     | Jack                                                       |
     +------------------------------------------------------------+
+    ```
 
+    ```sql
     SELECT NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'];
+    ```
+
+    ```text
     +--------------------------------------------------+
     | NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'] |
     +--------------------------------------------------+
@@ -118,15 +142,23 @@ ELEMENT_AT(container, key_or_index)
 
 5. 访问 `VARIANT` 的某个子列，如果 `VARIANT` 的值不是 OBJECT，返回空
 
-    ```SQL
-     SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");
+    ```sql
+    SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");
+    ```
+
+    ```text
     +------------------------------------------------------+
     | ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a") |
     +------------------------------------------------------+
     | 1                                                    |
     +------------------------------------------------------+
+    ```
 
+    ```sql
     SELECT ELEMENT_AT(CAST('123' AS VARIANT), "");
+    ```
+
+    ```text
     +----------------------------------------+
     | ELEMENT_AT(CAST('123' AS VARIANT), "") |
     +----------------------------------------+
