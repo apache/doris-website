@@ -207,6 +207,7 @@ const sidebars: SidebarsConfig = {
                         'connection-integration/data-integration/logstash',
                         'connection-integration/data-integration/loongcollector',
                         'connection-integration/data-integration/metabase',
+                        'connection-integration/data-integration/olake',
                         'connection-integration/data-integration/opentelemetry',
                         'connection-integration/data-integration/powerbi',
                         'connection-integration/data-integration/quickbi',

@@ -25,6 +25,10 @@ Users can access Iceberg tables using Hive Metastore as metadata through the Hiv
 | Data Integration  | Read Iceberg data and write it to internal Doris tables, or perform ZeroETL operations using the Doris computing engine. |
 | Data Write-back   | Process data from any Doris-supported data source and write it back to Iceberg table storage.       |
 
+:::tip
+To continuously replicate operational databases into Iceberg tables that Doris queries, you can use [OLake Go](https://olake.io/), an open-source EL platform that writes to Apache Iceberg with CDC support. See the [OLake integration guide](../../connection-integration/data-integration/olake.md).
+:::
+
 ## Configuring Catalog
 
 ### Syntax
