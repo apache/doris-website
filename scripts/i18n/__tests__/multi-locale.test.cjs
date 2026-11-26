@@ -113,7 +113,7 @@ test('native doc metadata, browser groups and per-locale manifests agree, across
     }
 });
 
-test('scheduled Japanese jobs select ja and PR admission checks only changed locales with fail-fast behavior', async t => {
+test('Japanese jobs select ja and PR admission checks only changed locales with fail-fast behavior', async t => {
     const workflow = file => yaml.load(fs.readFileSync(path.join(repoRoot, '.github/workflows', file), 'utf8'));
     const translation = workflow('japanese-translation.yml');
     assert.equal(translation.on.workflow_dispatch.inputs.locale, undefined);

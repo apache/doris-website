@@ -19,8 +19,7 @@ test('Russian coverage is a separate read-only scheduled report with no PR or mo
     assert(!JSON.stringify(audit).includes('secrets.'));assert(!JSON.stringify(audit).includes('workflow-generate'));
 });
 
-test('Russian scheduled and manual generation use the shared run, lock and explicit secrets', () => {
-    assert.deepEqual(Object.keys(russian.on), ['workflow_dispatch', 'schedule']);
+test('Russian manual generation uses the shared run, lock and explicit secrets', () => {
     const inputs = russian.on.workflow_dispatch.inputs;
     const koreanInputs = callers.ko.on.workflow_dispatch.inputs;
     assert.deepEqual(inputs, koreanInputs);
@@ -50,21 +49,13 @@ test('one-page validation rejects an exact batch list before creating scan artif
     assert(!fs.existsSync(output));
 });
 
-test('each language workflow passes one fixed locale to the shared run under one lock', () => {
-    const expected = {
-        ja: {workspace: 'japanese-translation', cron: '23 4,16 * * *'},
-        // Twenty minutes later; the shared lock queues it behind a Japanese run.
-        ko: {workspace: 'korean-translation', cron: '43 4,16 * * *'},
-        // Another twenty minutes later, including the hour rollover.
-        ru: {workspace: 'russian-translation', cron: '3 5,17 * * *'},
-    };
+test('each language workflow runs only on manual dispatch and uses the same lock', () => {
+    const workspaces = {ja: 'japanese-translation', ko: 'korean-translation', ru: 'russian-translation'};
     for (const [locale, workflow] of Object.entries(callers)) {
-        assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch', 'schedule']);
-        assert.deepEqual(workflow.on.schedule, [{cron: expected[locale].cron}]);
+        assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch'], locale);
         const inputs = workflow.on.workflow_dispatch.inputs;
         // No locale input: each workflow runs only its own language.
         assert.deepEqual(Object.keys(inputs), ['mode', 'plugin', 'version', 'path', 'paths']);
-        // Manual runs generate by default, like scheduled ones; dry-run stays selectable.
         assert.equal(inputs.mode.default, 'generate');
         assert.deepEqual(inputs.mode.options, ['dry-run', 'validate', 'generate']);
         assert.deepEqual(workflow.permissions, {'contents': 'read', 'pull-requests': 'read'});
@@ -72,7 +63,7 @@ test('each language workflow passes one fixed locale to the shared run under one
         assert.deepEqual(Object.keys(workflow.jobs), ['translation']);
         const job = workflow.jobs.translation;
         assert.equal(job.uses, './.github/workflows/translation-run.yml');
-        assert.deepEqual(job.with, {locale, workspace: expected[locale].workspace,
+        assert.deepEqual(job.with, {locale, workspace: workspaces[locale],
             mode: "${{ inputs.mode || 'generate' }}", plugin: '${{ inputs.plugin }}', version: '${{ inputs.version }}',
             path: '${{ inputs.path }}', paths: '${{ inputs.paths }}'});
         assert.deepEqual(Object.keys(job.secrets).sort(), Object.keys(shared.on.workflow_call.secrets).sort());
@@ -80,12 +71,8 @@ test('each language workflow passes one fixed locale to the shared run under one
     }
 });
 
-test('scheduled and default manual runs resolve to a mode that the generation gate accepts', () => {
-    // Discovery marks every scheduled run eligible, so the input-less fallback
-    // must be a mode that workflow-generate.cjs will run, not a dry run.
+test('manual runs generate by default and can opt into read-only discovery', () => {
     for (const workflow of Object.values(callers)) {
-        const fallback = /\|\| '([a-z-]+)' \}\}$/.exec(workflow.jobs.translation.with.mode)[1];
-        assert.equal(allowGeneration({I18N_MODE: fallback, GITHUB_EVENT_NAME: 'schedule', I18N_MAX_PAGES: '10'}), true);
         assert.equal(allowGeneration({I18N_MODE: workflow.on.workflow_dispatch.inputs.mode.default,
             GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), true);
     }

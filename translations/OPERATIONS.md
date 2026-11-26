@@ -8,7 +8,7 @@ This runbook covers managed documentation maintenance, version changes and recov
 | --- | --- | --- |
 | Version support, native routes, sidebars and redirects | Website and release maintainers | Reviewed source/configuration PR and native navigation checks |
 | Terminology and manual prose changes | Reviewer for the affected language | Git-bound source/target revisions; repository edits and complete human proofreading are reported separately |
-| Scheduled discovery, provider access and automation credentials | Translation workflow maintainers | Run URL, source SHA, mode, failure stage and sanitized diagnostics |
+| Translation discovery, provider access and automation credentials | Translation workflow maintainers | Run URL, source SHA, mode, failure stage and sanitized diagnostics |
 | Publishing and public rollback | Website deployment maintainers | Production source SHA, immutable asf-site SHA and public content/resource checks |
 
 These are operational roles, not assignments of human proofreading to a named person. Confirm the current people responsible during handoff. Set response expectations from observed queue, generation, review and deployment times; this repository does not promise an automatic merge or a fixed translation SLA.
@@ -25,14 +25,14 @@ These are operational roles, not assignments of human proofreading to a named pe
 | `translations/release-notes-baseline.json` | Fixed historical release-note boundary; never advance it to hide work |
 | `translations/blog-baseline.json` | Fixed blog boundary and historical fallback languages; never advance it during discovery |
 
-Course UI, weekly report source groups and landing pages remain outside scheduled generation unless explicitly admitted. New blogs are admitted as `BLOG` for Japanese, Korean and Russian. Historical blogs are excluded from generation and render English in all four non-English languages, including Chinese. A registered supplemental group is not automatically a required generation backlog.
+Course UI, weekly report source groups and landing pages remain outside workflow generation unless explicitly admitted. New blogs are admitted as `BLOG` for Japanese, Korean and Russian. Historical blogs are excluded from generation and render English in all four non-English languages, including Chinese. A registered supplemental group is not automatically a required generation backlog.
 
 ## Correct a translation manually
 
 Developers edit only the Japanese, Korean or Russian body under `i18n/<locale>/` and submit the usual PR. They do not edit state shards, calculate hashes, migrate a legacy record or set ownership/review flags. For a Dev document, edit `i18n/ja/docusaurus-plugin-content-docs/current/<path>.md`; use `version-4.x/` for 4.x. The same procedure applies to Korean and Russian and to admitted new blogs.
 
 1. Start from current `master`, revise the translation against its source, and preserve routing, links, code and technical facts.
-2. Submit only the body changes. Normal PR admission checks syntax, source consistency, protected technical content and the applicable native build. Open human PRs reserve or block their targets during scheduled reconciliation.
+2. Submit only the body changes. Normal PR admission checks syntax, source consistency, protected technical content and the applicable native build. Open human PRs reserve or block their targets during workflow reconciliation.
 3. Merge after review and CI. The `master` push triggers the normal website publishing workflow; the correction appears after that publication succeeds.
 4. Subsequent translation scans retain the correction while the corresponding English and Chinese input bytes are unchanged. Unrelated documents, ledger timestamps, glossary/tool changes and translation-body edits alone do not permit retranslation.
 5. When either corresponding source changes, automatic maintenance may update the translation and its internal state through the usual PR flow. English remains authoritative for technical facts; the current Chinese counterpart is supplementary context. A missing Chinese counterpart is tracked too, so creating or deleting it is a source change.
@@ -45,7 +45,7 @@ Target/state changes during a model request still discard its candidate; English
 
 ## New-blog policy
 
-The cutoff is source commit `5e9ed76441890c1096e7c562746d00702e93f038`, recorded with 206 native posts, 206 source files and 308 historical paths. A post's filename date or front matter date does not determine eligibility. Git lineage, IDs, paths and source hashes exclude historical moves, copies and re-registration; ambiguous identities require manual reconciliation. Genuinely new posts committed after this cutoff, including their later updates, use the existing scheduled Japanese, Korean and Russian workflows.
+The cutoff is source commit `5e9ed76441890c1096e7c562746d00702e93f038`, recorded with 206 native posts, 206 source files and 308 historical paths. A post's filename date or front matter date does not determine eligibility. Git lineage, IDs, paths and source hashes exclude historical moves, copies and re-registration; ambiguous identities require manual reconciliation. Genuinely new posts committed after this cutoff, including their later updates, are eligible for translation through the manually dispatched Japanese, Korean and Russian workflows.
 
 Historical articles, including the existing Chinese and three-language pilot targets, render the English body with English canonical URLs and `noindex` on localized fallback routes. Their files and legacy manual shards remain preserved as archival inputs. Editing an archived historical target does not enable its publication under this policy. Chinese new-blog translations remain manually maintained.
 
@@ -74,7 +74,7 @@ I18N_LOCALE=ru node scripts/i18n/plan-translations.cjs \
   --output /tmp/ru-plan.json --audit-output /tmp/ru-audit.json
 ```
 
-Refresh discovery after a source merge, a target edit, a candidate merge/closure or a scope change. Do not generate from a saved plan just because its task IDs still exist. The scheduled workflow performs this reconciliation itself.
+Refresh discovery after a source merge, a target edit, a candidate merge/closure or a scope change. Do not generate from a saved plan just because its task IDs still exist. Each workflow run reconciles open PRs during discovery.
 
 For trusted-main discovery without provider calls or PR writes:
 

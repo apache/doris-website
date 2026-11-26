@@ -21,8 +21,6 @@ on:
       paths:
         description: Optional JSON array of exact English .md/.mdx/.ts/.tsx files (exclusive with path)
         type: string
-  schedule:
-    - cron: '23 4,16 * * *'
 
 permissions:
   contents: read
@@ -42,7 +40,6 @@ jobs:
     with:
       locale: ja
       workspace: japanese-translation
-      # Scheduled runs have no inputs and generate.
       mode: ${{ inputs.mode || 'generate' }}
       plugin: ${{ inputs.plugin }}
       version: ${{ inputs.version }}
