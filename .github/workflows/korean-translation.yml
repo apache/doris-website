@@ -21,10 +21,6 @@ on:
       paths:
         description: Optional JSON array of exact English .md/.mdx/.ts/.tsx files (exclusive with path)
         type: string
-  # Twenty minutes after the Japanese schedule; the shared lock below holds
-  # this run while a Japanese run is still in progress.
-  schedule:
-    - cron: '43 4,16 * * *'
 
 permissions:
   contents: read
@@ -44,7 +40,6 @@ jobs:
     with:
       locale: ko
       workspace: korean-translation
-      # Scheduled runs have no inputs and generate.
       mode: ${{ inputs.mode || 'generate' }}
       plugin: ${{ inputs.plugin }}
       version: ${{ inputs.version }}

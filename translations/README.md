@@ -7,7 +7,7 @@ browser language order, the regional fallback table and detection rollback.
 
 The [manual blog contract](BLOG.md) covers per-article fallback, indexing,
 aggregates, feeds and the initial four-article/four-language pilot. It is separate
-from scheduled documentation generation.
+from documentation generation.
 
 ## Supported documentation versions
 
@@ -163,11 +163,9 @@ rebuild through the existing process; retain source translations and state.
 
 `.github/workflows/russian-translation.yml` calls the existing
 `translation-run.yml` with `locale: ru` and the `russian-translation` workspace.
-It runs at 05:03 and 17:03 UTC daily, twenty minutes after Korean discovery, and
-also accepts manual dispatch. Scheduled runs and default manual runs use
-`generate`. Select `dry-run` explicitly to discover pending work without calling
-a model. Japanese, Korean and Russian runs share the whole-run
-`docs-translation` lock, including discovery and validation.
+Dispatch it manually to generate translations. Select `dry-run` to discover
+pending work without calling a model. Japanese, Korean and Russian runs share
+the `docs-translation` lock, including discovery and validation.
 
 The separate `russian-coverage-audit.yml` is a read-only weekly report at
 05:49 UTC on Mondays and supports manual dispatch. It has only `contents: read`,
@@ -283,18 +281,14 @@ existing source/technical hash algorithms unchanged. Offline Korean fixtures
 exercise these boundaries without real credentials or model calls; actual
 single-page generation is a separate validation step.
 
-The `Korean translation discovery` workflow runs at 04:43 and 16:43 UTC daily
-and on manual dispatch. Like the Japanese workflow, it calls the shared
-`.github/workflows/translation-run.yml`, here with the locale fixed to `ko` and
-its own `korean-translation-*` artifacts; both workflows hold the same
-`docs-translation` lock. The schedule starts twenty minutes after the Japanese
-one, so a Korean run waits while a Japanese run is still in progress. A scheduled run generates a
-batch when eligible Korean documents are pending, with the same limits as a
-manual `generate` run: the planner considers at most 20 targets and a batch has
-at most 10 pages. It opens a normal labeled PR that maintainers review and merge
-like any other; nothing is merged automatically. With nothing pending, a
-scheduled run only scans and makes no model call. Manual dispatch also defaults
-to `generate`; choose `dry-run` for read-only discovery on master:
+The `Korean translation discovery` workflow runs on manual dispatch. It calls
+`.github/workflows/translation-run.yml` with locale `ko` and writes
+`korean-translation-*` artifacts. It shares the `docs-translation` lock with the
+Japanese and Russian workflows. In the default `generate` mode, the planner
+considers up to 20 targets and generates up to 10 pages per batch. Maintainers
+review and merge the resulting labeled PR. When no eligible documents are
+pending, the run ends after discovery. Choose `dry-run` for read-only discovery
+on master:
 
 ```bash
 gh workflow run korean-translation.yml --repo apache/doris-website --ref master -f mode=dry-run
@@ -654,17 +648,12 @@ review are recommended before running batch generation.
 
 ## Asynchronous discovery and generation
 
-`.github/workflows/japanese-translation.yml` runs at 04:23 and 16:23 UTC daily
-and on manual dispatch; `.github/workflows/korean-translation.yml` runs twenty
-minutes later. Each sets only its triggers, manual defaults and the lock, then
-calls `.github/workflows/translation-run.yml` with its locale and artifact
-prefix. Russian runs another twenty minutes later, at 05:03 and 17:03 UTC, using
-the same steps and lock. All three support manual dispatch and default to
-`generate`; select `dry-run` explicitly for a read-only scan. None has a push
-trigger. The description below uses Japanese; the other languages differ in
-locale, label, artifact names and scheduled times. Every run first recounts
-the current configured translation scope, including Dev, 4.x, community,
-courses, release notes and reports, reads every open master
+The Japanese, Korean and Russian translation workflows run only on manual
+dispatch. Each uses the shared `.github/workflows/translation-run.yml` with its
+own locale and artifact prefix. All three default to `generate`. Select
+`dry-run` for a read-only scan. Each language uses its own PR label and artifact
+names. Every run first recounts the configured translation scope, including
+Dev, 4.x, community, courses, release notes and reports, reads every open master
 PR's changed files, and checks Japanese target files against that PR's state
 records. Each run uploads `plan.json`, `coverage.json`,
 `active-candidates.json` and `open-pr-reconciliation.json` and writes a short
@@ -675,10 +664,8 @@ attention and neither closes nor overwrites the existing PR. A PR whose
 candidate cannot be verified blocks that target from robot generation and
 appears in the exception report.
 
-Japanese and Korean manual dispatch default to `generate`; Russian defaults to
-`dry-run`. Each workflow
-accepts optional plugin, version and source path prefix filters, or an exact
-`paths` list. `validate` mode requires one exact English source path
+Each workflow accepts optional plugin, version and source path prefix filters,
+or an exact `paths` list. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a regular PR for one
 page. It provides a single-page live check after OSS model access is available.
 With OSS access but no GitHub write credential, `validate` still writes the
@@ -700,10 +687,9 @@ discovery, it reuses the discovery plan instead of recounting every native
 document. Translation PR merges do not trigger this workflow. It does not participate in website
 builds or release deployment.
 
-The mode controls generation directly: manual `generate` runs and scheduled
-runs generate batches when eligible documents are pending, while `dry-run`
-only scans. No repository enablement variables are required. The workflow
-uses the same verified Codex CLI package and numbered ChatGPT auth
+The `generate` mode produces a batch when eligible documents are pending.
+The `dry-run` mode only scans. No repository enablement variables are required.
+The workflow uses the same verified Codex CLI package and numbered ChatGPT auth
 snapshots in OSS as the Apache Doris code-review runner. The repository's
 `OSS_AK` and `OSS_SK` secrets must be able to read those objects and update the
 selected auth snapshot if Codex refreshes it. `I18N_CODEX_MODEL` is optional
@@ -849,8 +835,8 @@ fresh scan immediately before generation. `validate` still requires one exact
 targets and generation still produces at most 10. Exact selection preserves
 full coverage counts, current-page and active-PR exclusion, human ownership,
 scope/version checks, and protection against relevant master changes. Unknown, duplicate,
-malformed or out-of-scope source paths fail before model calls. Scheduled runs
-do not use this input; they plan from the full scope.
+malformed or out-of-scope source paths fail before model calls. Omit the
+optional filters to plan from the full scope.
 
 The planner CLI exposes the same filter as `--paths '<JSON array>'`.
 

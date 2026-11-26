@@ -21,10 +21,6 @@ on:
       paths:
         description: Optional JSON array of exact English .md/.mdx/.ts/.tsx files (exclusive with path)
         type: string
-  # Twenty minutes after the Korean schedule; the shared lock queues this
-  # run while another language's discovery or generation is still in progress.
-  schedule:
-    - cron: '3 5,17 * * *'
 
 permissions:
   contents: read
@@ -42,7 +38,6 @@ jobs:
     with:
       locale: ru
       workspace: russian-translation
-      # Scheduled runs have no inputs and generate.
       mode: ${{ inputs.mode || 'generate' }}
       plugin: ${{ inputs.plugin }}
       version: ${{ inputs.version }}
