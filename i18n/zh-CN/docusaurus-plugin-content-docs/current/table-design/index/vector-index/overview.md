@@ -45,6 +45,7 @@ Apache Doris 自 4.0 版本起原生支持 ANN（Approximate Nearest Neighbor，
 | 基于距离阈值进行过滤 | [近似范围搜索](#近似范围搜索) |
 | 同时使用 TopN 与范围条件 | [组合搜索](#组合搜索) |
 | 在 ANN 检索前先用其他列过滤 | [带过滤条件的 ANN 搜索](#带过滤条件的-ann-搜索) |
+| 写入空向量并了解 NULL 排序 | [空向量与 NULL 距离](#empty-vectors-and-null-distances) |
 | 调节查询行为参数 | [查询参数](#查询参数) |
 | 节省内存与索引大小 | [向量量化](#向量量化) |
 | 提升 QPS 与降低延迟 | [性能调优](#性能调优) |
@@ -536,13 +537,36 @@ SET enable_profile = false;
 
 ---
 
+## 空向量与 NULL 距离 {#empty-vectors-and-null-distances}
+
+本节描述 dev 版本的行为，不适用于 4.x 文档所描述的版本。
+
+### 写入空向量
+
+默认情况下，ANN 索引列不接受空数组 `[]`。在所有 FE 和 BE 都升级到支持此功能的版本后，可在所有 BE 上设置 [`enable_ann_index_empty_array=true`](../../../admin-manual/config/be-config.md#enable_ann_index_empty_array)。此时 `[]` 保存在数据行中，但不生成 ANN 索引条目，适用于尚未生成 embedding 的记录。
+
+索引列仍须为 `ARRAY<FLOAT> NOT NULL`，不能存储 SQL `NULL`。非空向量必须满足 `dim`，且不能包含 `NULL` 元素，例如 `[1, NULL, 3]` 仍是非法输入。`[0, 0, 0]` 是普通的非空向量，不是缺失向量。
+
+写入空数组后，后续 compaction、索引重建以及 Group Commit WAL 回放仍需要开启此配置。关闭配置不会删除已存储的空数组，也不会改变已有索引的读取方式，但后续写入或重建可能失败。不支持将这些数据降级到不支持稀疏 ANN 行号的旧版本。配置及构建规则见 [ANN 索引管理](./index-management.md#empty-vectors-and-segment-indexes)。
+
+### 距离计算与排序
+
+`l1_distance`、`l2_distance`、`cosine_distance`、`cosine_similarity`、`inner_product` 的数组重载，以及两个 `*_approximate` 函数，在标量计算时将 `[]` 或整个 `NULL` 数组视为缺失向量，返回 `NULL`。这一规则不依赖写入配置；包含 `NULL` 元素的非空数组仍会报错。
+
+- **ANN TopN 路径**：只在非空的已索引向量中搜索。即使指定 `NULLS FIRST` 或 `NULLS LAST`，也不会为了补入空向量行而改为暴力扫描；结果可能少于 `LIMIT`。只含空数组且已生成空索引的 segment 返回零个 ANN 候选。
+- **标量或暴力扫描路径**：空向量产生的 `NULL` 距离仍按 SQL 的 `NULLS FIRST` / `NULLS LAST` 参与排序。查询向量本身为 `NULL` 或 `[]` 时也走此路径。需要对所有行计算距离并保留 SQL NULL 排序语义时，使用 `l2_distance` 或 `inner_product` 等精确函数。
+- **混合路径的限制**：同一查询可在部分 segment 上使用 ANN，而在缺少物理索引等情况下对其他 segment 暴力扫描。后者的 `NULL` 距离可能进入最终结果，尤其在 `NULLS FIRST` 时。因此，不能依赖近似 TopN 在所有 segment 上统一排除空向量。若必须排除 NULL 距离，应显式使用距离表达式 `IS NOT NULL` 过滤，并评估该过滤对索引使用的影响。
+- **范围查询**：空向量的距离为 `NULL`，不满足 `<`、`<=`、`>`、`>=` 距离比较条件；走 ANN 范围索引时，空向量也不属于候选集合。
+
+表中声明了 ANN 索引，并不保证每个 segment 都已生成物理索引。非空向量不足可能跳过构建，查询该 segment 时回退；详见 [segment 索引构建规则](./index-management.md#empty-vectors-and-segment-indexes)。仅仅索引条目数少于数据行数，不会触发 TopN 回退。
+
 ## 使用限制
 
 <!-- 知识类型: 限制约束 + 故障排查 -->
 
 使用 Doris 向量索引时，需要注意以下限制：
 
-1. **数据类型限制**：ANN Index 对应的列必须是 `NOT NULLABLE` 的 `Array<Float>`。导入时需确保该列每个向量的长度均等于索引属性中指定的维度（`dim`），否则会报错。
+1. **数据类型限制**：ANN Index 对应的列必须是 `ARRAY<FLOAT> NOT NULL`。非空向量的长度必须等于索引属性 `dim`，且不能包含 `NULL` 元素。dev 版本可通过 `enable_ann_index_empty_array=true` 允许写入空数组 `[]`，详见[空向量与 NULL 距离](#empty-vectors-and-null-distances)。
 
 2. **表模型限制**：ANN Index 只能在 **DuplicateKey** 表模型，或开启了 Merge-on-Write（`enable_unique_key_merge_on_write = true`）的 **UniqueKey** 表模型上使用（UniqueKey 表的支持自 4.1.4 版本开始）。Merge-on-Read 的 UniqueKey 表以及 AggregateKey 表仍不支持，建索引时会报错：`ANN index can only be used in DUP_KEYS table or UNIQUE_KEYS table with merge-on-write enabled`。
 

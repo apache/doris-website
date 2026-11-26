@@ -63,6 +63,27 @@ Before creating an ANN index, confirm the following:
 -   A suitable metric type has been chosen: `l2_distance` (Euclidean distance) or `inner_product`.
 -   An index algorithm (HNSW, IVF, or IVF On-Disk) has been chosen based on data scale and recall/performance requirements.
 
+## Empty vectors and segment indexes {#empty-vectors-and-segment-indexes}
+
+In dev, BE configuration provides an opt-in for empty-array writes. Apply consistent settings to every BE; see [BE Configuration](../../../admin-manual/config/be-config.md) for how to set them.
+
+| BE setting | Type | Default | Dynamic | Effect |
+| --- | --- | --- | --- | --- |
+| `enable_ann_index_empty_array` | bool | `false` | Yes | Allows `[]` in ANN-indexed columns. Empty arrays remain in data rows but have no index entries. |
+| `ann_index_build_min_segment_rows` | int64 | `0` | Yes | Minimum non-empty vector count for building a segment's ANN index. Must be non-negative. `0` adds no extra threshold; the algorithm's training requirements still apply. |
+
+Non-empty vectors must match `dim` and contain no `NULL` elements. The column must still be `ARRAY<FLOAT> NOT NULL`; empty-array support does not enable nullable ANN-indexed columns.
+
+Each segment independently determines whether to persist a physical index:
+
+- If it has non-empty vectors, their count must reach the greater of `ann_index_build_min_segment_rows` and the algorithm's minimum training sample count. Otherwise, index construction is skipped for that segment. Empty arrays do not count toward this threshold.
+- If it has data rows but all arrays are empty, it persists an empty index without training. ANN search returns zero candidates and does not fall back merely because the index is empty.
+- If it has no data rows, it does not persist an index.
+
+Skipping construction does not remove the schema's index definition or any data rows. `SHOW INDEX` / `SHOW CREATE TABLE` show the table-level definition, not proof of a physical index in every segment. Reading a missing physical ANN index causes that segment to fall back to brute-force evaluation. Other index read errors are not all treated as “index not found.”
+
+Upgrade all FEs and BEs before enabling empty arrays. After writing such data, keep the setting enabled for compaction, index rebuilds, and Group Commit WAL replay. Downgrading to older versions without sparse ANN row-ID support is unsupported. See [Empty vectors and NULL distances](./overview.md#empty-vectors-and-null-distances) for query behavior and NULL-ordering limitations.
+
 ## Create an ANN Index
 
 Doris provides two ways to create an ANN index. Choose one based on whether the data has already been loaded:

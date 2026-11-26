@@ -63,6 +63,27 @@ Apache Doris 的近似最近邻 (Approximate Nearest Neighbor，简称 ANN) 索�
 -   已选择合适的度量类型：`l2_distance`（欧式距离）或 `inner_product`（内积）。
 -   已根据数据规模与召回率/性能要求选定索引算法（HNSW、IVF 或 IVF On-Disk）。
 
+## 空向量与 segment 索引 {#empty-vectors-and-segment-indexes}
+
+dev 版本支持通过 BE 配置选择性地写入空数组。所有 BE 必须使用一致的配置；设置方法见 [BE 配置](../../../admin-manual/config/be-config.md)。
+
+| BE 配置 | 类型 | 默认值 | 动态修改 | 作用 |
+| --- | --- | --- | --- | --- |
+| `enable_ann_index_empty_array` | bool | `false` | 支持 | 是否允许在 ANN 索引列写入 `[]`。空数组保留在数据行中，但不生成索引条目。 |
+| `ann_index_build_min_segment_rows` | int64 | `0` | 支持 | 构建 segment ANN 索引所需的最少非空向量数，须为非负数。`0` 不增加额外门槛，算法自身的训练要求仍然生效。 |
+
+非空向量必须满足 `dim` 且不包含 `NULL` 元素，列仍须声明为 `ARRAY<FLOAT> NOT NULL`。空数组支持不等于支持可空的 ANN 索引列。
+
+每个 segment 独立决定是否生成物理索引：
+
+- 有非空向量时，数量必须达到 `ann_index_build_min_segment_rows` 和算法最少训练样本数中的较大值，否则跳过该 segment 的索引构建。空数组不计入这个数量。
+- 有数据行但全为空数组时，保存一个无需训练的空索引；ANN 搜索返回零个候选，不会仅因为索引为空而回退。
+- 没有数据行时，不保存索引。
+
+跳过构建不会删除表中的索引定义或数据行。`SHOW INDEX` / `SHOW CREATE TABLE` 显示的是表级定义，不能证明每个 segment 都有物理索引。查询读取到缺失的物理 ANN 索引时，该 segment 回退到暴力计算；其他索引读取错误不会一律按“索引不存在”处理。
+
+启用空数组前，应先升级所有 FE 和 BE。写入此类数据后，应保持配置开启，以支持 compaction、索引重建和 Group Commit WAL 回放；不支持降级到缺少稀疏 ANN 行号支持的旧版本。查询行为及 NULL 排序限制见[空向量与 NULL 距离](./overview.md#empty-vectors-and-null-distances)。
+
 ## 创建 ANN 索引
 
 Doris 提供两种创建 ANN 索引的方式，可根据数据是否已经入库来选择：
