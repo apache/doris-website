@@ -558,6 +558,42 @@ SET enable_profile = false;
 
 表中声明了 ANN 索引，并不保证每个 segment 都已生成物理索引。非空向量不足可能跳过构建，查询该 segment 时回退；详见 [segment 索引构建规则](./index-management.md#empty-vectors-and-segment-indexes)。仅仅索引条目数少于数据行数，不会触发 TopN 回退。
 
+### NULL 排序示例
+
+`NULLS FIRST` / `NULLS LAST` 决定的是参与排序的行中 NULL 距离的位置，并不会把没有 ANN 索引条目的空向量行补入候选集合。
+
+假设已有表 `vector_examples`，向量列 `embedding` 上声明了二维 L2 ANN 索引，允许写入空数组，数据分布如下。查询向量为 `[0, 0]`：
+
+| segment | id | embedding | 逐行计算的 L2 距离 |
+| --- | --- | --- | --- |
+| A | 1 | `[1, 0]` | `1` |
+| A | 2 | `[]` | `NULL` |
+| B | 3 | `[2, 0]` | `2` |
+| B | 4 | `[]` | `NULL` |
+
+查询使用如下形式：
+
+```sql
+SELECT id, l2_distance_approximate(embedding, [0, 0]) AS distance
+FROM vector_examples
+ORDER BY distance ASC NULLS FIRST
+LIMIT 4;
+```
+
+将 `NULLS FIRST` 改为 `NULLS LAST` 后，结果取决于各 segment 实际使用的路径：
+
+| 执行情况 | `NULLS FIRST` 的 id 顺序 | `NULLS LAST` 的 id 顺序 |
+| --- | --- | --- |
+| A、B 都走 ANN | `1, 3` | `1, 3` |
+| A 走 ANN，B 因缺少物理索引而暴力扫描 | `4, 1, 3` | `1, 3, 4` |
+| 全部逐行计算，例如将函数改为 `l2_distance` | `2` 和 `4` 在前，随后 `1, 3` | `1, 3` 在前，随后 `2` 和 `4` |
+
+这个示例用于说明候选集合和 NULL 排序，假设 ANN 搜索召回了两个非空向量；不是通过插入四行即可固定复现的执行计划。实际是否建索引、是否回退取决于构建门槛、查询条件等。两个 NULL 距离相等，未指定其他排序键时，`2` 和 `4` 的相对顺序不确定。
+
+全部走 ANN 时，即使 `LIMIT 4`，也不会补入 `id=2` 和 `id=4`。混合路径下，`id=2` 不在 A 的 ANN 候选中，而 `id=4` 会从 B 的扫描结果进入排序；`NULLS LAST` 只是把它放到非空距离之后，并不将其过滤掉。
+
+如果需要把所有行（包括空向量行）都纳入距离排序，使用精确距离函数。如果业务上需要排除 NULL 距离，应显式对距离表达式添加 `IS NOT NULL`，而不是依赖 `NULLS LAST`；这样的过滤也可能影响 ANN 索引的使用。
+
 ## 使用限制
 
 <!-- 知识类型: 限制约束 + 故障排查 -->

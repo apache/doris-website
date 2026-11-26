@@ -33,9 +33,7 @@ Returns the Euclidean distance between two vectors as a nullable `FLOAT`. Array 
 - A non-empty array containing a `NULL` element raises an error. Passing `NULL` or `[]` as the other argument does not make that invalid array valid.
 - Two non-empty arrays with different numbers of elements raise an error.
 
-These scalar evaluation rules do not depend on `enable_ann_index_empty_array`, which only controls whether ANN-indexed columns accept empty arrays on writes.
-
-When TopN uses an ANN index, only indexed, non-empty vectors participate. Empty-vector rows do not pad the result to `LIMIT`, and `NULLS FIRST` or `NULLS LAST` alone does not trigger fallback. Segments without a physical index, among other cases, fall back to scalar evaluation, whose `NULL` distances still participate in SQL sorting. See [Empty vectors and NULL distances](../../../../table-design/index/vector-index/overview.md#empty-vectors-and-null-distances).
+For ANN index eligibility and query behavior, see the [vector search overview](../../../../table-design/index/vector-index/overview.md#empty-vectors-and-null-distances).
 
 ## Example
 

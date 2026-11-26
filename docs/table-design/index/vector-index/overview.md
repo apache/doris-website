@@ -558,6 +558,42 @@ Scalar evaluation of the array overloads of `l1_distance`, `l2_distance`, `cosin
 
 Declaring an ANN index in the schema does not guarantee a physical index on every segment. Too few non-empty vectors can cause index construction to be skipped, with queries falling back on that segment; see [segment index build rules](./index-management.md#empty-vectors-and-segment-indexes). Fewer index entries than data rows alone does not trigger TopN fallback.
 
+### NULL ordering example
+
+`NULLS FIRST` / `NULLS LAST` determines where NULL distances appear among rows that participate in sorting. It does not add empty-vector rows without ANN index entries to the candidate set.
+
+Suppose an existing table `vector_examples` declares a two-dimensional L2 ANN index on `embedding`, allows empty-array writes, and has the following data layout. The query vector is `[0, 0]`:
+
+| Segment | id | embedding | Scalar L2 distance |
+| --- | --- | --- | --- |
+| A | 1 | `[1, 0]` | `1` |
+| A | 2 | `[]` | `NULL` |
+| B | 3 | `[2, 0]` | `2` |
+| B | 4 | `[]` | `NULL` |
+
+The query has this form:
+
+```sql
+SELECT id, l2_distance_approximate(embedding, [0, 0]) AS distance
+FROM vector_examples
+ORDER BY distance ASC NULLS FIRST
+LIMIT 4;
+```
+
+Replacing `NULLS FIRST` with `NULLS LAST` gives different results depending on the path each segment actually uses:
+
+| Execution | id order with `NULLS FIRST` | id order with `NULLS LAST` |
+| --- | --- | --- |
+| Both A and B use ANN | `1, 3` | `1, 3` |
+| A uses ANN; B scans because its physical index is missing | `4, 1, 3` | `1, 3, 4` |
+| All rows use scalar evaluation, for example by replacing the function with `l2_distance` | `2` and `4` first, then `1, 3` | `1, 3` first, then `2` and `4` |
+
+This example illustrates candidate selection and NULL ordering, assuming ANN search recalls both non-empty vectors. Inserting four rows does not guarantee these execution plans: index construction and fallback depend on build thresholds, query conditions, and other factors. The two NULL distances are equal, so the relative order of `2` and `4` is unspecified without another sort key.
+
+When both segments use ANN, even `LIMIT 4` does not add `id=2` or `id=4`. In the mixed path, `id=2` is outside A's ANN candidates, while `id=4` enters sorting through B's scan. `NULLS LAST` places that row after non-NULL distances; it does not filter the row out.
+
+Use an exact distance function to include all rows, including empty-vector rows, in distance sorting. To exclude NULL distances, explicitly apply `IS NOT NULL` to the distance expression instead of relying on `NULLS LAST`. This filter can also affect ANN index use.
+
 ## Usage Limitations
 
 <!-- Knowledge type: limitations and constraints + troubleshooting -->

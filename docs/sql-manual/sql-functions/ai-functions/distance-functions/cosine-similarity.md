@@ -34,8 +34,6 @@ Returns the cosine similarity between two vectors as a nullable `FLOAT`. Array i
 - A non-empty array containing a `NULL` element raises an error. Passing `NULL` or `[]` as the other argument does not make that invalid array valid.
 - Two non-empty arrays with different numbers of elements raise an error.
 
-These scalar evaluation rules do not depend on `enable_ann_index_empty_array`, which only controls whether ANN-indexed columns accept empty arrays on writes.
-
 When both arrays are valid and non-empty, a zero vector such as `[0, 0]` still produces `0.0`; it is different from an empty array.
 
 ## Example

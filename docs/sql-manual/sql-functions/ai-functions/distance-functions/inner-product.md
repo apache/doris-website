@@ -38,8 +38,6 @@ For array inputs, returns the scalar product between two vectors as a nullable `
 - A non-empty array containing a `NULL` element raises an error. Passing `NULL` or `[]` as the other argument does not make that invalid array valid.
 - Two non-empty arrays with different numbers of elements raise an error.
 
-These scalar evaluation rules do not depend on `enable_ann_index_empty_array`, which only controls whether ANN-indexed columns accept empty arrays on writes.
-
 The MAP overload is unchanged: it returns a non-nullable `FLOAT`, with `0` for an empty MAP or no shared keys. A whole `NULL` MAP or a retained `NULL` value after key deduplication raises an error. Duplicate keys use the last value, and a `NULL` key can match a `NULL` key in the other MAP.
 
 ## Example

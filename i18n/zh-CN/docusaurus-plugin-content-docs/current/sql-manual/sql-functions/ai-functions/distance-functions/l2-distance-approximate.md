@@ -33,9 +33,7 @@ L2_DISTANCE_APPROXIMATE(<array1>, <array2>)
 - 非空数组包含 `NULL` 元素时，报错；另一参数为 `NULL` 或 `[]` 不会使这个非法数组变为有效输入。
 - 两个数组都非空但元素个数不一致时，报错。
 
-这些标量计算规则不依赖 `enable_ann_index_empty_array` 配置；该配置仅控制 ANN 索引列是否接受空数组写入。
-
-使用 ANN 索引执行 TopN 时，仅非空的已索引向量参与搜索，不会用空向量行补足 `LIMIT`；`NULLS FIRST` 或 `NULLS LAST` 本身不会触发回退。没有物理索引等情况会回退到逐行计算，其 `NULL` 距离仍参与 SQL 排序。详见[空向量与 NULL 距离](../../../../table-design/index/vector-index/overview.md#empty-vectors-and-null-distances)。
+ANN 索引的使用条件与查询行为见[向量检索概述](../../../../table-design/index/vector-index/overview.md#empty-vectors-and-null-distances)。
 
 ## 示例
 
