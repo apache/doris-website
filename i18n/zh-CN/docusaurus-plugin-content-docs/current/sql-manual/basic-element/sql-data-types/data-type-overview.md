@@ -63,13 +63,15 @@
 
 ## 半结构化类型
 
-针对 JSON 半结构化数据，支持 3 类不同场景的半结构化数据类型：
+Doris 提供以下半结构化数据类型，适用于不同场景：
 
 1. 支持嵌套的固定 schema，适合分析的数据类型 **[ARRAY](../../basic-element/sql-data-types/semi-structured/ARRAY.md)、 [MAP](../../basic-element/sql-data-types/semi-structured/MAP.md) [STRUCT](../../basic-element/sql-data-types/semi-structured/STRUCT.md)**：常用于用户行为和画像分析，湖仓一体查询数据湖中 Parquet 等格式的数据等场景。由于 schema 相对固定，没有动态 schema 推断的开销，写入和分析性能很高。
 
 2. 支持嵌套的不固定 schema，适合分析的数据类型 **[VARIANT](../../basic-element/sql-data-types/semi-structured/VARIANT.md)**：常用于 Log, Trace, IoT 等分析场景，schema 灵活可以写入任何合法的 JSON 数据，并自动展开成子列采用列式存储，存储压缩率高，聚合 过滤 排序等分析性能很好。
 
 3. 支持嵌套的不固定 schema，适合点查的数据类型 **[JSON](../../basic-element/sql-data-types/semi-structured/JSON.md)**：常用于高并发点查场景，schema 灵活可以写入任何合法的 JSON 数据，采用二进制格式存储，提取字段的性能比普通 JSON String 快 2 倍以上。
+
+4. **[FILE](semi-structured/FILE.md)**：在查询中表示一个文件，可以用地址指向远端文件，也可以直接保存文件的二进制内容，同时携带大小、内容类型等信息。
 
 ## 聚合类型
 

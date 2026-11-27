@@ -190,11 +190,11 @@ mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:
 ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 -- CAST is based on the defined order, not field names
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- Element CAST fails, the whole CAST reports an error
@@ -240,11 +240,11 @@ mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:
 ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 -- CAST is based on the defined order, not field names
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- Element CAST fails, the corresponding element is set to null

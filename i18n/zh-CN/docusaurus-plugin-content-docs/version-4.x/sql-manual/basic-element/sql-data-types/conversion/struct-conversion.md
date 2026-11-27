@@ -191,11 +191,11 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 
 -- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- STRUCT 中的元素 CAST 失败，整个 CAST 报错
@@ -244,19 +244,11 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 
 -- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
-+------------------------+
-
--- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
-+------------------------+
-| renamed_struct         |
-+------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- STRUCT 中的元素 CAST 失败，对应元素设置为 null

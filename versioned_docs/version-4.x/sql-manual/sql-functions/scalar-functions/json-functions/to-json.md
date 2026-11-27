@@ -32,12 +32,14 @@ Converts Doris internal data types to JSONB type. This function allows for conve
 ## Syntax
 
 ```sql
-TO_JSON(value)
+TO_JSON(<value>)
 ```
 
 ## Parameters
 
-**value** - The value to be converted to JSONB type.
+| Parameter | Description |
+| --- | --- |
+| `<value>` | A value or NULL to convert to JSONB. Accepted types are listed below. |
 
 The following types have direct mapping to JSONB types and can be converted directly:
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
@@ -49,9 +51,12 @@ Additionally, the function supports converting the following types:
 - Date types: DATETIME, DATE, TIME
 - IP types: IPV4, IPV6
 - Complex types: MAP
+- File type: FILE (supported since 4.2.0)
 
 For DATETIME, DATE, TIME, IPV4, IPV6 types that don't have corresponding JSONB types, they will be converted to STRING type.
 For MAP type, it will be converted to JSONB Object type. The Map keys must be STRING type, as JSON standard requires Object keys to be strings.
+
+For FILE, the result is a JSONB object containing all six fields: `uri`, `offset`, `size`, `content_type`, `checksum`, and `inline`. The binary `inline` field becomes a Base64 string; empty bytes become an empty string, and NULL fields become JSON null. FILE values within ARRAY, STRUCT, and MAP values use the same representation.
 
 ## Return Value
 
@@ -60,6 +65,23 @@ Returns a value of JSONB type.
 When the input `value` is SQL NULL, the function returns SQL NULL (not a JSON null value). When NULL values appear within arrays or structs, they are converted to JSON null values.
 
 ## Examples
+
+### FILE values
+
+:::note
+Since 4.2.0
+:::
+
+Conceptual example assuming a data source provides a `FILE` column `f` (SQL `FILE` constructors and table columns are not yet enabled in the current release):
+
+```sql
+SELECT TO_JSON(f) AS j
+FROM file_source;
+```
+
+```text
+{"uri":"s3://bucket/path/avatar.jpg","offset":null,"size":158663,"content_type":"image/jpeg","checksum":"ETAG:9CE0C3466E8F035CD0A6CE3389982B15","inline":null}
+```
 
 ### Basic scalar values
 
