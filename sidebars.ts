@@ -726,6 +726,7 @@ const sidebars: SidebarsConfig = {
                             link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
                             items: [
                                 'lakehouse/catalogs/iceberg-catalog/doris-type-mapping',
+                                'lakehouse/catalogs/iceberg-catalog/iceberg-encryption',
                                 'lakehouse/best-practices/doris-iceberg-capability-matrix',
                                 'lakehouse/best-practices/doris-iceberg',
                                 'lakehouse/best-practices/doris-aws-s3tables',

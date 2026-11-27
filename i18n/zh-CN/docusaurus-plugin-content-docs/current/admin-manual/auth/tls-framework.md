@@ -61,6 +61,12 @@
 
 因此，上面的配置表是兼容性契约，不是开源默认包中直接启用 TLS 的完整操作手册。
 
+## 5.0 中用于 Iceberg PME 的私有 RPC
+
+Iceberg PME 加密读取计划自 Doris 5.0.0 起支持，需要匹配 FE/BE 包中的内置私有 RPC provider。FE 向 BE 下发执行片段，以及 BE 向 FE 获取 split 的 RPC，都要求受信任的双向 TLS。初始 provider 使用静态证书、强制对端校验和阻塞式 Thrift；协议排除配置和启用步骤见 [Iceberg 加密读取（PME）](../../lakehouse/catalogs/iceberg-catalog/iceberg-encryption.md#1-配置私有双向-tls)。
+
+该私有 provider 不负责 REST Catalog、KMS、对象存储或公共 SQL/HTTP 的 TLS，这些连接和认证配置分别管理。
+
 ## 实现建议
 
 如果你实现自定义 TLS module，请遵循以下规则：
