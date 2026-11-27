@@ -50,6 +50,23 @@ github:
       # deploy key) because the built-in Actions app cannot be a bypass actor.
       restrict_deletion: true
       restrict_force_push: false
+
+    - name: Master branch protection
+      type: branch
+      branches:
+        includes:
+          - master
+      restrict_deletion: true
+      restrict_force_push: true
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_last_push_approval: true
+      required_status_checks_strict: false
+      required_status_checks:
+        - Build Check
+        - check-md-links
+        - check-file-sizes
   enabled_merge_buttons:
     squash:  true
     merge:   false
