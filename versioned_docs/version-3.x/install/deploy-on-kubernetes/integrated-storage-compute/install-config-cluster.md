@@ -64,6 +64,8 @@ spec:
 ```
 Update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).
 
+Starting with Doris Operator 26.1.0, new clusters with `feSpec.limits.memory` set default to 80% of the container limit for both the initial and maximum FE JVM heap. For configuration precedence and how to opt in after an upgrade, see [FE JVM heap and Pod memory](../separating-storage-compute/config-fe.md#fe-jvm-memory).
+
 **BE computing resource configuration**    
 The default compute resource configuration for BE is 8 CPUs and 16Gi of memory. To modify it to 16 CPUs and 32Gi of memory, use the following configuration:  
 ```yaml
@@ -84,7 +86,7 @@ The minimum required resources for FE and BE to start are 4 CPUs and 8Gi of memo
 
 ## Custom startup configuration
 
-Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services use the default configurations in the image as startup parameter configurations. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../admin-manual/config/fe-config) and the [BE Configuration Document](../../../admin-manual/config/be-config.md). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
+Doris uses ConfigMap to decouple configuration files from services, in Kubernetes. By default, services load their startup configuration from the image. On Operator 26.1.0 and later, the Operator adjusts the image's default heap settings when the FE cluster uses the automatic sizing policy and has a memory limit. To customize the startup parameters, create a specific ConfigMap following the instructions in the [FE Configuration Document](../../../admin-manual/config/fe-config) and the [BE Configuration Document](../../../admin-manual/config/be-config.md). Then deploy the customized ConfigMap to the namespace where the [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster) is to be deployed.
 
 ### Custom FE startup configuration
 #### Step 1:  Create and deploy the FE ConfigMap

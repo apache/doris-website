@@ -84,6 +84,8 @@ spec:
 
 Update the configuration in the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed.
 
+Starting with Doris Operator 26.1.0, new clusters with `feSpec.limits.memory` set default to 80% of the container limit for both the initial and maximum FE JVM heap. For configuration precedence and how to opt in after an upgrade, see [FE JVM heap and Pod memory](../separating-storage-compute/config-fe.md#fe-jvm-memory).
+
 **BE Compute Resource Settings**
 
 The default BE compute resource is 8c 16Gi. To change it to 16c 32Gi, configure it as follows:
@@ -107,7 +109,7 @@ The minimum startup resource required for FE and BE is 4c 8Gi. For normal capabi
 
 ## Customized Startup Configuration
 
-In Kubernetes, Doris uses `ConfigMap` to separate configuration files from services. By default, services use the default configuration in the image as startup parameters. According to the [FE configuration document](../../../admin-manual/config/fe-config) and the [BE configuration document](../../../admin-manual/config/be-config), prepare the customized startup parameters in a specific `ConfigMap` in advance. Once configured, deploy it to the namespace where the target [`DorisCluster` resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) is located.
+In Kubernetes, Doris uses `ConfigMap` to separate configuration files from services. By default, services load their startup configuration from the image. On Operator 26.1.0 and later, the Operator adjusts the image's default heap settings when the FE cluster uses the automatic sizing policy and has a memory limit. According to the [FE configuration document](../../../admin-manual/config/fe-config) and the [BE configuration document](../../../admin-manual/config/be-config), prepare the customized startup parameters in a specific `ConfigMap` in advance. Once configured, deploy it to the namespace where the target [`DorisCluster` resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) is located.
 
 ### FE Customized Startup Configuration
 

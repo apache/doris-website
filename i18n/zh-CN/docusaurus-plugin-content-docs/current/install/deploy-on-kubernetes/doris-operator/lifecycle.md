@@ -119,6 +119,10 @@ spec:
 - 确认客户端具备重试能力。
 - 升级顺序遵循 Doris 版本升级文档。
 
+### 升级 Operator 后的 FE JVM 堆配置
+
+从 Doris Operator 26.1.0 开始，新建集群配置了 FE 容器内存上限时，FE JVM 初始堆和最大堆默认都按上限的 80% 设置。升级 Operator 时，已有集群默认沿用原有堆配置。要在维护窗口切换并滚动更新 FE，请按 [升级 Operator 后启用自动适配](../separating-storage-compute/config-fe.md#enable-fe-heap-after-operator-upgrade) 操作。
+
 ## 删除集群
 
 删除 Doris 自定义资源后，Operator 会进入清理流程，移除其管理的 Kubernetes 资源。

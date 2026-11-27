@@ -48,11 +48,34 @@ spec:
 
 ### JVM 堆与 Pod 内存 {#fe-jvm-memory}
 
-Kubernetes 的 `requests.memory` 用于调度，`limits.memory` 限制容器总内存。Doris Operator 不会根据这两个值自动计算 FE 的 JVM 堆大小。堆、Metaspace、线程栈、直接内存及其他本地内存分配都必须计入容器内存预算。
+从 Doris Operator **26.1.0** 开始，新建的 `DorisCluster` 和 `DorisDisaggregatedCluster` 配置了 `spec.feSpec.limits.memory` 时，FE JVM 的初始堆和最大堆默认都为 **FE 容器内存上限的 80%**。更早的 Operator 版本沿用镜像默认值或自定义启动配置。仅配置 `requests.memory` 时，FE 也沿用这些启动配置。
 
-降低内存限制前，先从待部署镜像中复制 `fe.conf`，同时调整 JVM 参数中的 `-Xms` 和 `-Xmx`。使用 JDK 17 的镜像应修改 `JAVA_OPTS_FOR_JDK_17`，并保留其中的其他参数。例如，下方 ConfigMap 在上方 8 GiB 容器限制内使用 4 GiB 堆；生产环境应按元数据规模和负载确定堆大小。按“自定义启动配置”中的步骤，通过 `feSpec.configMaps` 挂载文件并重启 FE，使其生效。
+| JVM | 默认堆参数 | 内存上限为 `8Gi` 时的示例 |
+| --- | --- | --- |
+| JDK 8 | `-Xms` 和 `-Xmx` 均为内存上限的 80%，向下取整到 MiB。 | `-Xms6553m -Xmx6553m` |
+| JDK 17 | `-XX:InitialRAMPercentage=80 -XX:MaxRAMPercentage=80`。JVM 根据识别到的容器内存上限计算。 | 初始堆和最大堆均约为 6.4 GiB |
 
-如果 Kubernetes 报告 `OOMKilled`，请对比实际 JVM 参数与 Pod 内存限制。提高容器限制后仍需为非堆内存留出空间；降低堆大小时，不能只减小 `-Xmx` 而保留更大的 `-Xms`。
+自动适配会调整镜像默认的堆参数，并保留其他 JVM 参数。如果 ConfigMap 中的 `fe.conf` 配置了 `JAVA_OPTS`（JDK 8）或 `JAVA_OPTS_FOR_JDK_17`（JDK 17），对应的整项配置优先。若要使用自动计算的默认值，请省略对应配置项。[下方的 ConfigMap 示例](#第-1-步编写-fe-启动配置-configmap)将 JDK 17 的初始堆和最大堆都显式设为 4 GiB。
+
+80% 用于 JVM 堆，其余容器内存还需容纳 Metaspace、线程栈、直接内存及其他本地内存分配。如果 Kubernetes 报告 `OOMKilled`，请核对实际 JVM 堆大小与容器内存上限。手动设置堆大小时，请同时设置 `-Xms` 和 `-Xmx`，并确保 `-Xms` 不超过 `-Xmx`。
+
+#### 升级 Operator 后启用自动适配 {#enable-fe-heap-after-operator-upgrade}
+
+从旧版本升级到 26.1.0 或更高版本时，Operator 会为尚未显式指定策略的已有集群设置 `legacy`。这些集群沿用原有 FE 堆配置，仅升级 Operator 时继续使用原有 FE Pod 模板。新建集群默认采用 `auto`。
+
+已有集群要启用自动适配，请先设置 `spec.feSpec.limits.memory`，并检查 `fe.conf` 中的自定义 JVM 参数。随后在维护窗口执行与部署模式对应的命令。将 `namespace` 和 `cluster_name` 设为集群资源所在的命名空间和资源名称。
+
+```shell
+# 存算一体
+kubectl annotate dcr "${cluster_name}" -n "${namespace}" doris.apache.org/fe-heap-policy=auto --overwrite
+
+# 存算分离
+kubectl annotate ddc "${cluster_name}" -n "${namespace}" doris.apache.org/fe-heap-policy=auto --overwrite
+```
+
+对于满足自动适配条件的集群，设置注解会更新 FE Pod 模板，配置随 FE Pod 滚动更新生效。自定义 JVM 配置仍然优先。滚动完成后，如果镜像包含 `jcmd`，可在各 FE 容器内运行 `jcmd <fe-java-pid> VM.flags`，检查 `InitialHeapSize` 和 `MaxHeapSize`。
+
+将集群资源的 `doris.apache.org/fe-heap-policy` 注解设为 `legacy` 可恢复原有行为。已启用自动适配的集群切回 `legacy` 时也需要滚动更新 FE。
 
 ## 配置 Follower 节点数量
 
