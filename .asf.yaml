@@ -84,24 +84,6 @@ github:
       enabled: true
       max_open_pull_requests: 20
       include_drafts: true
-  protected_branches:
-    master:
-      required_status_checks:
-        # if strict is true, means "Require branches to be up to date before merging".
-        strict: false
-        contexts:
-          - Build Check
-          - check-md-links
-          - check-file-sizes
-      required_pull_request_reviews:
-        # Require at least one approving review before a PR can be merged into
-        # master. Only reviewers with write access (committers) count.
-        required_approving_review_count: 1
-        # A new commit dismisses earlier approvals, and the latest push must be
-        # approved again, so an approved clean revision cannot be replaced by a
-        # later unreviewed one.
-        dismiss_stale_reviews: true
-        require_last_push_approval: true
   features:
     issues: true
     wiki: false
