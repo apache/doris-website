@@ -1,0 +1,21 @@
+<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 1000002439">
+<rect width="16" height="16" transform="translate(0 0.41333)" fill="white"/>
+<g id="Group 1000002181">
+<path id="Vector 603" d="M5 1.74658V4.74658M11.375 1.74658V4.74658" stroke="#4C576C" stroke-width="0.96"/>
+<g id="Rectangle 34625298">
+<mask id="path-2-inside-1_81_4915" fill="white">
+<rect x="2" y="2.87158" width="12" height="12" rx="0.666667"/>
+</mask>
+<rect x="2" y="2.87158" width="12" height="12" rx="0.666667" stroke="#4C576C" stroke-width="1.92" mask="url(#path-2-inside-1_81_4915)"/>
+</g>
+<g id="Rectangle 34625299">
+<mask id="path-3-inside-2_81_4915" fill="white">
+<rect x="2" y="5.87158" width="12" height="9" rx="0.666667"/>
+</mask>
+<rect x="2" y="5.87158" width="12" height="9" rx="0.666667" stroke="#4C576C" stroke-width="1.92" mask="url(#path-3-inside-2_81_4915)"/>
+</g>
+<path id="Rectangle 34625300" d="M5.75 9.80354L7.62504 11.6786L10.807 8.49665" stroke="#4C576C" stroke-width="0.96"/>
+</g>
+</g>
+</svg>
