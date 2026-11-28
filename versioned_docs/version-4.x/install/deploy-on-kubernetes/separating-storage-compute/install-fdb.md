@@ -37,7 +37,7 @@ This guide describes a new FDB installation. If an FDB Operator is already insta
 
 ## Versions and image sources
 
-This guide uses the [deployment examples provided by VeloDB FDB Operator](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/samples/velodb). CRDs are downloaded from the [VeloDB FDB Operator repository on branch-2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/crd/bases), matching Operator v2.35.0. Compatibility and deployment customizations are described in the [sample guide](https://github.com/velodb/fdb-kubernetes-operator/blob/branch-2.35.0/config/samples/velodb/README.md). The examples use the following images:
+This guide uses the [deployment examples provided by VeloDB FDB Operator](https://github.com/velodb/fdb-kubernetes-operator/tree/d062b417991432f511bf907ba8649bf919ebc17d/config/samples/velodb). The CRDs come from the [config/crd/bases](https://github.com/velodb/fdb-kubernetes-operator/tree/d062b417991432f511bf907ba8649bf919ebc17d/config/crd/bases) directory of the same repository and match Operator v2.35.0. So that every download returns the same content, the download URLs in this guide are pinned to commit `d062b417991432f511bf907ba8649bf919ebc17d` on the `branch-2.35.0` branch. Compatibility and deployment customizations are described in the [sample guide](https://github.com/velodb/fdb-kubernetes-operator/blob/d062b417991432f511bf907ba8649bf919ebc17d/config/samples/velodb/README.md). The examples use the following images:
 
 | Component | Version | VeloDB image |
 | --- | --- | --- |
@@ -98,10 +98,10 @@ kubectl --kubeconfig "$KUBECONFIG" get storageclass
 If FDB CRDs or a controller already exist, first check whether they can be reused. For a new environment, download the deployment files with the following commands:
 
 ```shell
-mkdir fdb-install-v2.35.0
-cd fdb-install-v2.35.0
-FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/crd/bases
-FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/samples/velodb
+FDB_REF=d062b417991432f511bf907ba8649bf919ebc17d
+FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/${FDB_REF}/config/crd/bases
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/${FDB_REF}/config/samples/velodb
+mkdir -p fdb-install && cd fdb-install
 for resource in clusters backups restores; do
   curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done
@@ -118,7 +118,8 @@ The downloaded Operator, initializer and database profiles already use the VeloD
 Deploy the CRDs, Operator and Monitor RBAC with the following commands:
 
 ```shell
-kubectl --kubeconfig "$KUBECONFIG" create namespace fdb-system
+kubectl --kubeconfig "$KUBECONFIG" create namespace fdb-system --dry-run=client -o yaml | \
+  kubectl --kubeconfig "$KUBECONFIG" apply -f -
 kubectl --kubeconfig "$KUBECONFIG" apply --server-side \
   -f fdb-clusters-crd.yaml -f fdb-backups-crd.yaml -f fdb-restores-crd.yaml
 kubectl --kubeconfig "$KUBECONFIG" wait --for=condition=Established --timeout=60s \
@@ -131,7 +132,7 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
 kubectl --kubeconfig "$KUBECONFIG" -n fdb-system apply -f fdb-monitor-rbac.yaml
 ```
 
-When all three CRDs are Established and the Operator Deployment has rolled out successfully, continue with the FDB cluster. The CRDs use `--server-side` because the files are too large for the client-side last-applied annotation. If an existing resource conflicts, check its version and ownership before proceeding rather than overwriting it with `--force-conflicts`.
+When all three CRDs are Established and the Operator Deployment has rolled out successfully, continue with the FDB cluster. These commands can be run repeatedly. The CRDs use `--server-side` because the files are too large for the client-side last-applied annotation. If an existing resource conflicts, check its version and ownership before proceeding rather than overwriting it with `--force-conflicts`.
 
 `fdb-monitor-rbac.yaml` creates a dedicated `fdb-monitor` ServiceAccount for FDB Pods, with get/list/watch/patch permissions on Pods in this namespace.
 
@@ -155,9 +156,19 @@ The single example creates `fdb-single`; the double example creates `fdb-double`
 
 ### Step 4: Verify availability and reconciliation
 
+Wait until the cluster is available, then check its status, Pods, and PVCs:
+
 ```shell
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system wait --for=jsonpath='{.status.health.available}'=true \
+  foundationdbcluster/fdb-single --timeout=900s
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get fdb fdb-single -o jsonpath='configured={.status.configured} available={.status.health.available} fullReplication={.status.health.fullReplication} generation={.metadata.generation} reconciled={.status.generations.reconciled}{"\n"}'
 kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get pods,pvc
-kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get fdb fdb-single -o yaml
+```
+
+When the single-replica example is ready, the expected output of the second command is:
+
+```text
+configured=true available=true fullReplication=true generation=1 reconciled=1
 ```
 
 After deployment, check the following:
@@ -170,11 +181,19 @@ Once these checks pass, configure MetaService with the generated ConfigMap and v
 
 ## Get the ConfigMap that contains FoundationDB access information {#get-the-configmap-that-contains-foundationdb-access-information}
 
-The Operator creates `<FoundationDBCluster name>-config` in the database namespace:
+The Operator creates `<FoundationDBCluster name>-config` in the database namespace. Its `cluster-file` is the connection string of FDB:
 
 ```shell
-kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get configmap fdb-single-config -o yaml
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get configmap fdb-single-config -o jsonpath='{.data.cluster-file}{"\n"}'
 ```
+
+The output is similar to the following:
+
+```text
+fdb_single:CkSr0MxcWyVky600RxkO7zXqwuTK1TcM@fdb-single-log-57659.fdb-single.fdb-system.svc.cluster.local:4501
+```
+
+If the output is empty, the FDB cluster has not finished its configuration yet; complete the checks in Step 4 first. Doris Operator reads `cluster-file` when it creates MetaService. If the ConfigMap does not contain this field, MetaService cannot connect to FDB.
 
 Configure the Doris resource as follows; use `fdb-double-config` for the double example:
 
@@ -190,7 +209,7 @@ spec:
 Add this configuration to your `DorisDisaggregatedCluster` resource. For details, see [Configure MetaService](config-ms.md).
 
 :::tip
-Several Doris clusters can share one FDB. Keep the shared FDB when deleting an individual Doris cluster. Deleting FDB resources or PVCs can cause metadata loss, so prepare a backup and recovery plan.
+Several Doris clusters can share one FDB. Keep the shared FDB when deleting an individual Doris cluster. When you delete a `FoundationDBCluster` resource, the FDB Operator also deletes its PVCs and its connection information ConfigMap, and the metadata in them cannot be recovered. Prepare a backup and recovery plan in advance.
 :::
 
 ## Option for MetaService builds requiring FDB 7.1 {#fdb-71}
@@ -208,7 +227,7 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
 
 Change `spec.version` and the main image config's `version` and `tag` to `7.1.67` in the copied cluster YAML. The 7.1.67 image is amd64-only: in mixed-architecture clusters, set `nodeSelector: {kubernetes.io/arch: amd64}` on the controller and every database Pod template. Use this configuration to create a new cluster compatible with your MetaService; it is not a procedure for downgrading an existing FDB cluster.
 
-## Private registries and troubleshooting
+## Private registries and troubleshooting {#private-registries-and-troubleshooting}
 
 If your environment cannot access Docker Hub, copy the required images to a private registry and update the deployment files:
 

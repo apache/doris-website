@@ -2,36 +2,36 @@
 {
     "title": "Deploy a Storage-Compute Integrated Cluster",
     "language": "en",
-    "description": "Use Doris Operator to deploy an Apache Doris storage-compute integrated cluster on Kubernetes"
+    "description": "Use Doris Operator to deploy an Apache Doris storage-compute integrated cluster on Kubernetes: install the Operator, deploy a cluster with 1 FE and 1 BE and verify reads and writes, and configure the cluster and its access methods."
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-Follow the steps below to deploy an Apache Doris storage-compute integrated cluster on Kubernetes.
+Complete the [preparation checks](../doris-operator/preparation.mdx) before you start. For a first deployment, follow 01 and then 03 to get a cluster that you can read from and write to. Use 02 to customize the cluster and 04 to access it from outside the Kubernetes cluster.
 
 <div className="cards-grid">
 <GettingStartedCard
     title="01 Deploy Doris Operator"
-    description="Learn how to deploy Doris Operator"
+    description="Use Doris Operator 26.0.1 as an example to install the CRDs and Doris Operator and wait for the controller to become ready"
     link="install-doris-operator"
 />
 
 <GettingStartedCard
     title="02 Configure Doris Cluster"
-    description="Configure the Doris cluster"
+    description="Adjust images, replicas, resources, startup configuration, persistent storage, access methods, and admin users as needed"
     link="install-config-cluster"
 />
 
 <GettingStartedCard
     title="03 Deploy Doris Cluster"
-    description="Deploy the Doris cluster"
+    description="Deploy a cluster with 1 FE and 1 BE, then create a table, write data, and query it from the FE Pod"
     link="install-doris-cluster"
 />
 
 <GettingStartedCard
     title="04 Access Doris Cluster"
-    description="Access the Doris cluster"
+    description="Access the cluster through ClusterIP, NodePort, LoadBalancer, or port-forward"
     link="access-cluster"
 />
 </div>

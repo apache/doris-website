@@ -395,4 +395,4 @@ spec:
 
 ### Step 4: Use Kerberos authentication in Hive Catalog
 
-Once Kerberos is configured, you can enable Kerberos authentication when creating a Hive Catalog. For specific configuration, refer to the [Hive Catalog configuration documentation](../../../lakehouse/catalogs/hive-catalog#配置-catalog).
+Once Kerberos is configured, you can enable Kerberos authentication when creating a Hive Catalog. For specific configuration, refer to the [Hive Catalog configuration documentation](../../../lakehouse/catalogs/hive-catalog#configuring-catalog).

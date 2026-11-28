@@ -89,7 +89,7 @@ Although compute groups are independent of each other, it is recommended that th
 
 ## Scenario 3: Limit the Compute Resources of a Compute Group
 
-In the [default deployment example](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml) for storage-compute decoupling, no limits are placed on the compute resources used by the BE service. `DorisDisaggregatedCluster` uses Kubernetes [resources.requests and resources.limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits) to specify CPU and memory resources.
+In the [default deployment example](https://github.com/apache/doris-operator/blob/26.0.1/doc/examples/disaggregated/cluster/ddc-sample.yaml) for storage-compute decoupling, no limits are placed on the compute resources used by the BE service. `DorisDisaggregatedCluster` uses Kubernetes [resources.requests and resources.limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits) to specify CPU and memory resources.
 
 For example, to configure the BE in the compute group named `cg1` to use 8c 8Gi of resources:
 
@@ -105,7 +105,7 @@ spec:
       memory: 8Gi
 ```
 
-Update the configuration above into the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#2-modify-key-configurations) to be deployed for it to take effect.
+Update the configuration above into the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#ddc-manifest) to be deployed for it to take effect.
 
 ## Scenario 4: Configure the Access Method of a Compute Group
 
@@ -250,7 +250,7 @@ Parameter descriptions:
 
 ### Step 3: Update the DorisDisaggregatedCluster Resource
 
-Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#2-modify-key-configurations) to mount the ConfigMap. The configuration is as follows:
+Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#ddc-manifest) to mount the ConfigMap. The configuration is as follows:
 
 ```yaml
 spec:

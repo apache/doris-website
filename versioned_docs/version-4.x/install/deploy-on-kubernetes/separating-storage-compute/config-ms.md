@@ -74,9 +74,9 @@ spec:
 
 Parameter description:
 
-- `${fdbEndpoint}`: the address used to access FoundationDB
+- `${fdbEndpoint}`: the connection string of FoundationDB, in the format `<description>:<ID>@<IP>:<port>[,<IP>:<port>...]`
 
-For physical machine deployments, to locate this address, see [Introduction to obtaining `fdb_cluster` for MetaService deployment](../../deploy-manually/separating-storage-compute-deploy-manually) in the storage-compute decoupled chapter.
+For how to get the connection string and the network and version requirements, see [Use an existing FoundationDB](install-doris-cluster.md#use-existing-fdb). For the steps to deploy FoundationDB on physical machines, see [Deploy a Compute-Storage Decoupled Cluster Manually](../../deploy-manually/separating-storage-compute-deploy-manually).
 
 ## 2. Customize the image
 
@@ -107,7 +107,7 @@ spec:
       memory: 4Gi
 ```
 
-Apply the above configuration to the [DorisDisaggregatedCluster resource you want to deploy](./install-doris-cluster.md#2-modify-key-configurations).
+Apply the above configuration to the [DorisDisaggregatedCluster resource you want to deploy](./install-doris-cluster.md#ddc-manifest).
 
 ## 4. Customize startup configuration
 
@@ -177,7 +177,7 @@ Parameter description:
 - `${msConfigMapName}`: the name of the ConfigMap that contains the MetaService startup configuration
 - `mountPath`: the mount point must be `/etc/doris`
 
-Apply the above configuration to the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#2-modify-key-configurations) you want to deploy.
+Apply the above configuration to the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#ddc-manifest) you want to deploy.
 
 ### Customize the management HTTP token {#ms-http-token}
 
