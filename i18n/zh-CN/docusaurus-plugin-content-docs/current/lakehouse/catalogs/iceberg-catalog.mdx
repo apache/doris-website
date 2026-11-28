@@ -2430,7 +2430,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 * **删除**
 
-  可以通过 `DROP TABLE` 语句删除一个 Iceberg 表。当前删除表后，会同时删除数据，包括分区数据。
+  可以通过 `DROP TABLE` 语句删除一个 Iceberg 表。默认情况下，删除表时会同时请求删除数据，包括分区数据。对于 Iceberg REST Catalog，从 4.1 系列的 4.1.6 版本和 4.2.0 版本起，可将 `iceberg.rest.drop-with-purge-enabled` 设置为 `false`，仅移除表而保留数据和元数据文件。详见 [Iceberg REST Catalog 参数说明](../metastores/iceberg-rest.md)。
 
   例如：
 

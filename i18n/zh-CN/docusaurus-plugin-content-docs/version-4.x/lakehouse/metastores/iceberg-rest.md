@@ -20,6 +20,7 @@
 | iceberg.rest.oauth2.credential | | `oauth2` 凭证，用于访问 `server-uri` 获取 token | - | 否 |
 | iceberg.rest.oauth2.server-uri | | 用于获取 `oauth2` token 的 uri 地址，配合 `iceberg.rest.oauth2.credential` 使用 | - | 否 |
 | iceberg.rest.vended-credentials-enabled | | 是否启用 `vended-credentials` 功能。启用后，会同 rest 服务端获取访问存储系统的凭证信息，如 `access-key` 和 `secret-key`，不再需要手动指定。需要 rest 服务端本身支持该能力。| `false` | 否 |
+| iceberg.rest.drop-with-purge-enabled | | 布尔类型。删除表时是否同时请求删除数据和元数据文件。设置为 `false` 时，仅从 Catalog 中移除表，保留文件。从 4.1 系列的 4.1.6 版本和 4.2.0 版本起支持。 | `true` | 否 |
 | iceberg.rest.nested-namespace-enabled | | （自 3.1.2+ 版本支持）是否启用对 Nested Namespace 的支持。默认为 `false`。如果为 `true`，则 Nested Namespace 会被打平作为 Database 名称显示，如 `parent_ns.child_ns`。某些 Rest Catalog 服务不支持 Nested Namespace，如 AWS Glue，责改参数需设置为 `false` | 否 |
 
 > 注：
@@ -29,6 +30,28 @@
 > 2. 3.1.0 之前的版本，请使用曾用名。
 >
 > 3. AWS Glue Rest Catalog 请参阅 [AWS Glue 文档](./aws-glue.md)
+
+## 删除表时保留文件
+
+从 4.1 系列的 4.1.6 版本和 4.2.0 版本起支持。
+
+对于 Iceberg REST Catalog，`iceberg.rest.drop-with-purge-enabled` 是可选的布尔类型属性，默认值为 `true`：
+
+- `true`：删除表时，请求同时删除数据和元数据文件。
+- `false`：删除表时，仅从 REST Catalog 中移除表，保留数据和元数据文件。
+
+以下示例假定 REST Catalog 和表已存在，且执行用户具有 Catalog 的 `ALTER_PRIV` 权限和表的 `DROP_PRIV` 权限：
+
+```sql
+ALTER CATALOG iceberg_rest SET PROPERTIES (
+    "iceberg.rest.drop-with-purge-enabled" = "false"
+);
+DROP TABLE iceberg_rest.example_db.example_table;
+```
+
+删除成功后，Catalog 中不再注册该表，但存储中的文件仍然保留。保留文件的生命周期需要另行管理。
+
+该属性也控制 `DROP DATABASE ... FORCE` 执行的逐表删除操作。它仅适用于 Iceberg REST Catalog，不会授予额外的 Doris 或 REST 服务权限。
 
 ## Nested Namespace
 

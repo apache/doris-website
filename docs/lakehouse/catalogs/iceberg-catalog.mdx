@@ -2416,7 +2416,7 @@ For an Iceberg Database, you must first drop all tables under the database befor
 
 * **Dropping Tables**
 
-  You can drop an Iceberg table using the `DROP TABLE` statement. Dropping a table will also remove its data, including partition data.
+  You can drop an Iceberg table using the `DROP TABLE` statement. By default, dropping a table also requests deletion of its data, including partition data. For Iceberg REST catalogs, starting with 4.1.6 in the 4.1 series and with 4.2.0, set `iceberg.rest.drop-with-purge-enabled` to `false` to unregister the table while retaining its data and metadata files. See the [Iceberg REST catalog parameters](../metastores/iceberg-rest.md).
 
   For example:
 

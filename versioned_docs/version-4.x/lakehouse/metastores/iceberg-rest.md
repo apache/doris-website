@@ -20,6 +20,7 @@ This document describes the supported parameters when connecting to and accessin
 | iceberg.rest.oauth2.credential | | `oauth2` credentials used to access `server-uri` to obtain token | - | No |
 | iceberg.rest.oauth2.server-uri | | URI address for obtaining `oauth2` token, used in conjunction with `iceberg.rest.oauth2.credential` | - | No |
 | iceberg.rest.vended-credentials-enabled | | Whether to enable `vended-credentials` functionality. When enabled, it will obtain storage system access credentials such as `access-key` and `secret-key` from the rest server, eliminating the need for manual specification. Requires rest server support for this capability. | `false` | No |
+| iceberg.rest.drop-with-purge-enabled | | Boolean. Whether dropping a table also requests deletion of its data and metadata files. Set to `false` to unregister the table while retaining its files. Supported from 4.1.6 in the 4.1 series and from 4.2.0. | `true` | No |
 | iceberg.rest.nested-namespace-enabled | | (Supported since version 3.1.2+) Whether to enable support for Nested Namespace. Default is `false`. If `true`, Nested Namespace will be flattened and displayed as Database names, such as `parent_ns.child_ns`. Some Rest Catalog services do not support Nested Namespace, such as AWS Glue, so this parameter should be set to `false` | No |
 
 > Note:
@@ -29,6 +30,28 @@ This document describes the supported parameters when connecting to and accessin
 > 2. For versions prior to 3.1.0, please use the legacy names.
 >
 > 3. For AWS Glue Rest Catalog, please refer to the [AWS Glue documentation](./aws-glue.md)
+
+## Retaining Files When Dropping Tables
+
+Supported from 4.1.6 in the 4.1 series and from 4.2.0.
+
+For Iceberg REST catalogs, `iceberg.rest.drop-with-purge-enabled` is an optional Boolean property with a default value of `true`:
+
+- `true`: dropping a table requests deletion of its data and metadata files.
+- `false`: dropping a table unregisters it from the REST catalog while retaining its data and metadata files.
+
+The following example assumes an existing REST catalog and table, and a user with `ALTER_PRIV` on the catalog and `DROP_PRIV` on the table:
+
+```sql
+ALTER CATALOG iceberg_rest SET PROPERTIES (
+    "iceberg.rest.drop-with-purge-enabled" = "false"
+);
+DROP TABLE iceberg_rest.example_db.example_table;
+```
+
+After the drop succeeds, the table is no longer registered in the catalog, but its files remain in storage. You must manage the lifecycle of retained files separately.
+
+This property also controls the per-table drops performed by `DROP DATABASE ... FORCE`. It applies only to Iceberg REST catalogs and does not grant additional Doris or REST service permissions.
 
 ## Nested Namespace
 
