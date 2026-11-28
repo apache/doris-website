@@ -18,16 +18,22 @@ L2_DISTANCE_APPROXIMATE(<array1>, <array2>)
 
 ## 参数
 
-| 参数 | 描述 |
-| -- |--|
-| `<array1>` | 第一个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素个数必须与 `array2` 一致 |
-| `<array2>` | 第二个向量（向量值为坐标），输入数组的子类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE，元素个数必须与 `array1` 一致 |
+| 参数 | 说明 |
+| -- | -- |
+| `<array1>` | 第一个向量，输入数组的元素类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
+| `<array2>` | 第二个向量，输入数组的元素类型支持：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE。允许整个数组为 `NULL` 或空数组 `[]`；非空数组不能包含 `NULL` 元素。 |
+
+两个数组都非空时，元素个数必须一致。
 
 ## 返回值
 
-返回欧氏空间中两个点（向量值为坐标）之间的距离，返回类型为 `FLOAT`。
+返回两个向量的欧几里得距离，类型为可空的 `FLOAT`。数组输入遵循以下规则：
 
-如果任一输入数组为 `NULL`，或包含 `NULL` 元素，函数会报错。
+- 任一数组整体为 `NULL` 或空数组 `[]` 时，返回 `NULL`，包括 `NULL` 与 `NULL`、`[]` 与 `[]` 的组合。
+- 非空数组包含 `NULL` 元素时，报错；另一参数为 `NULL` 或 `[]` 不会使这个非法数组变为有效输入。
+- 两个数组都非空但元素个数不一致时，报错。
+
+ANN 索引的使用条件与查询行为见[向量检索概述](../../../../table-design/index/vector-index/overview.md#empty-vectors-and-null-distances)。
 
 ## 示例
 
@@ -88,15 +94,6 @@ LIMIT  10
 10 rows in set (0.08 sec)
 ```
 
-如果输入数组为 `NULL`，函数会报错：
-
-```sql
-SELECT L2_DISTANCE_APPROXIMATE(NULL, [1, 2]);
-```
-
-```text
-ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function l2_distance_approximate cannot be null
-```
 
 如果输入数组包含 `NULL` 元素，函数会报错：
 
@@ -106,4 +103,19 @@ SELECT L2_DISTANCE_APPROXIMATE([1, NULL], [1, 2]);
 
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function l2_distance_approximate cannot have null
+```
+
+以下示例展示空数组与 NULL 输入的行为：
+
+```sql
+SELECT L2_DISTANCE_APPROXIMATE(CAST([] AS ARRAY<FLOAT>), [1, 2]) AS empty_result,
+       L2_DISTANCE_APPROXIMATE(CAST(NULL AS ARRAY<FLOAT>), [1, 2]) AS null_result;
+```
+
+```text
++--------------+-------------+
+| empty_result | null_result |
++--------------+-------------+
+|         NULL |        NULL |
++--------------+-------------+
 ```

@@ -20,19 +20,25 @@ INNER_PRODUCT(<map1>, <map2>)
 ## Parameters
 
 | Parameter | Description |
-|---|---|
-| `<array1>` | The first dense vector. Supported element types are TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, and DOUBLE. The number of elements must equal that of `<array2>`. |
-| `<array2>` | The second dense vector. Supported element types are TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, and DOUBLE. The number of elements must equal that of `<array1>`. |
+| -- | -- |
+| `<array1>` | The first vector. Supported array element types are TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, and DOUBLE. The whole array can be `NULL` or empty (`[]`); a non-empty array must not contain `NULL` elements. |
+| `<array2>` | The second vector. Supported array element types are TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, and DOUBLE. The whole array can be `NULL` or empty (`[]`); a non-empty array must not contain `NULL` elements. |
 | `<map1>` | The first sparse vector. Its type must be `MAP<K, FLOAT>`, where `K` is an integer type (TINYINT, SMALLINT, INT, BIGINT, or LARGEINT) or a string type (CHAR, VARCHAR, or STRING). Its key type must be from the same type family as that of `<map2>`. |
 | `<map2>` | The second sparse vector. It has the same type constraints as `<map1>`. The two maps can contain different numbers of entries. |
 
+When both arrays are non-empty, they must have the same number of elements.
+
+The MAP overload accepts `<map1>` and `<map2>` of type `MAP<K, FLOAT>`. Keys must belong to the same integer or string type family and be convertible to a common type; other numeric values can be converted to FLOAT. It computes a sparse-vector dot product over shared keys.
+
 ## Return Value
 
-Returns the scalar product as a `FLOAT`.
+For array inputs, returns the scalar product between two vectors as a nullable `FLOAT`. Array inputs follow these rules:
 
-For array inputs, corresponding elements are multiplied and summed. If either array is `NULL`, contains a `NULL` element, or the arrays have different lengths, the function returns an error.
+- If either whole array is `NULL` or empty (`[]`), the result is `NULL`, including `NULL`/`NULL` and `[]`/`[]`.
+- A non-empty array containing a `NULL` element raises an error. Passing `NULL` or `[]` as the other argument does not make that invalid array valid.
+- Two non-empty arrays with different numbers of elements raise an error.
 
-For map inputs, values with the same key are multiplied and summed. A key that occurs in only one map has no effect, which is equivalent to treating the missing coordinate as zero. `NULL` keys match other `NULL` keys. If a key occurs more than once, its last value is used. If either map is `NULL`, or the value retained for any key is `NULL`, the function returns an error.
+The MAP overload is unchanged: it returns a non-nullable `FLOAT`, with `0` for an empty MAP or no shared keys. A whole `NULL` MAP or a retained `NULL` value after key deduplication raises an error. Duplicate keys use the last value, and a `NULL` key can match a `NULL` key in the other MAP.
 
 ## Example
 
@@ -65,15 +71,6 @@ SELECT INNER_PRODUCT(
 +--------+
 ```
 
-If an input array is `NULL`, the function returns an error:
-
-```sql
-SELECT INNER_PRODUCT(NULL, [1, 2]);
-```
-
-```text
-ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product cannot be null
-```
 
 If an input array contains a `NULL` element, the function returns an error:
 
@@ -96,4 +93,32 @@ SELECT INNER_PRODUCT(
 
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]First argument for function inner_product cannot have null
+```
+
+The following examples show empty-array and NULL input behavior:
+
+```sql
+SELECT INNER_PRODUCT(CAST([] AS ARRAY<FLOAT>), [1, 2]) AS empty_result,
+       INNER_PRODUCT(CAST(NULL AS ARRAY<FLOAT>), [1, 2]) AS null_result;
+```
+
+```text
++--------------+-------------+
+| empty_result | null_result |
++--------------+-------------+
+|         NULL |        NULL |
++--------------+-------------+
+```
+
+```sql
+SELECT INNER_PRODUCT(MAP(1, 2.0, 2, 3.0), MAP(2, 4.0, 3, 5.0)) AS map_result,
+       INNER_PRODUCT(CAST(MAP() AS MAP<INT, FLOAT>), MAP(1, 2.0)) AS empty_map_result;
+```
+
+```text
++------------+------------------+
+| map_result | empty_map_result |
++------------+------------------+
+|         12 |                0 |
++------------+------------------+
 ```

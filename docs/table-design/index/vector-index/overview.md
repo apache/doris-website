@@ -45,6 +45,7 @@ The essence of vector retrieval is: encode the query and documents into semantic
 | Filter by distance threshold | [Approximate Range Search](#approximate-range-search) |
 | Combine TopN with range conditions | [Compound Search](#compound-search) |
 | Filter by other columns before ANN retrieval | [ANN Search with Filters](#ann-search-with-filters) |
+| Store empty vectors and understand NULL ordering | [Empty vectors and NULL distances](#empty-vectors-and-null-distances) |
 | Tune query behavior parameters | [Query Parameters](#query-parameters) |
 | Save memory and reduce index size | [Vector Quantization](#vector-quantization) |
 | Improve QPS and reduce latency | [Performance Tuning](#performance-tuning) |
@@ -536,13 +537,76 @@ In the AI era, Python has become the mainstream language for data processing and
 
 ---
 
+## Empty vectors and NULL distances {#empty-vectors-and-null-distances}
+
+### Writing empty vectors
+
+By default, ANN-indexed columns reject empty arrays (`[]`). After upgrading all FEs and BEs to a version supporting this feature, set [`enable_ann_index_empty_array=true`](../../../admin-manual/config/be-config.md#enable_ann_index_empty_array) on every BE. An empty array remains in the data row but has no ANN index entry. This supports records whose embedding has not yet been generated.
+
+The indexed column must still be `ARRAY<FLOAT> NOT NULL` and cannot store SQL `NULL`. Non-empty vectors must match `dim` and contain no `NULL` elements: `[1, NULL, 3]` remains invalid. A zero vector such as `[0, 0, 0]` is a normal non-empty vector, not a missing vector.
+
+After writing empty arrays, keep this setting enabled for subsequent compaction, index rebuilds, and Group Commit WAL replay. Disabling it does not remove stored empty arrays or change how existing indexes are read, but later writes or rebuilds can fail. Downgrading these data to older versions without sparse ANN row-ID support is unsupported. See [ANN Index Management](./index-management.md#empty-vectors-and-segment-indexes) for configuration and build rules.
+
+### Distance evaluation and sorting
+
+Scalar evaluation of the array overloads of `l1_distance`, `l2_distance`, `cosine_distance`, `cosine_similarity`, and `inner_product`, and of both `*_approximate` functions, treats `[]` or a whole `NULL` array as a missing vector and returns `NULL`. This does not depend on the write setting. Non-empty arrays containing `NULL` elements still raise an error.
+
+- **ANN TopN path**: Searches only indexed, non-empty vectors. `NULLS FIRST` or `NULLS LAST` does not cause a fallback to include empty-vector rows, and the result can contain fewer rows than `LIMIT`. A segment containing only empty arrays with a persisted empty index contributes zero ANN candidates.
+- **Scalar or brute-force path**: `NULL` distances from empty vectors still participate in SQL sorting according to `NULLS FIRST` / `NULLS LAST`. A `NULL` or `[]` query vector also uses this path. Use exact functions such as `l2_distance` or `inner_product` when you need distances for all rows with SQL NULL ordering preserved.
+- **Mixed-path limitation**: One query can use ANN on some segments and brute-force evaluation on others, for example when a physical index is absent. The latter segments can contribute `NULL` distances to the final result, especially with `NULLS FIRST`. Do not rely on approximate TopN to exclude empty vectors uniformly across all segments. Explicitly specify `NULLS LAST` to prioritize non-NULL distances in TopN sorting. This does not itself trigger ANN fallback, but it does not filter out NULL rows either.
+- **Range queries**: An empty vector has a `NULL` distance and does not satisfy `<`, `<=`, `>`, or `>=` distance comparisons. Empty vectors are also outside the candidate set for ANN range-index searches.
+
+Declaring an ANN index in the schema does not guarantee a physical index on every segment. Too few non-empty vectors can cause index construction to be skipped, with queries falling back on that segment; see [segment index build rules](./index-management.md#empty-vectors-and-segment-indexes). Fewer index entries than data rows alone does not trigger TopN fallback.
+
+### NULL ordering example
+
+`NULLS FIRST` / `NULLS LAST` determines where NULL distances appear among rows that participate in sorting. It does not add empty-vector rows without ANN index entries to the candidate set.
+
+Suppose an existing table `vector_examples` declares a two-dimensional L2 ANN index on `embedding`, allows empty-array writes, and has the following data layout. The query vector is `[0, 0]`:
+
+| Segment | id | embedding | Scalar L2 distance |
+| --- | --- | --- | --- |
+| A | 1 | `[1, 0]` | `1` |
+| A | 2 | `[]` | `NULL` |
+| B | 3 | `[2, 0]` | `2` |
+| B | 4 | `[]` | `NULL` |
+
+The query explicitly specifies `NULLS LAST` to prioritize non-NULL distances:
+
+```sql
+SELECT id, l2_distance_approximate(embedding, [0, 0]) AS distance
+FROM vector_examples
+ORDER BY distance ASC NULLS LAST
+LIMIT 4;
+```
+
+The following table compares `NULLS FIRST` with `NULLS LAST`, depending on the path each segment actually uses:
+
+| Execution | id order with `NULLS FIRST` | id order with `NULLS LAST` |
+| --- | --- | --- |
+| Both A and B use ANN | `1, 3` | `1, 3` |
+| A uses ANN; B scans because its physical index is missing | `4, 1, 3` | `1, 3, 4` |
+| All rows use scalar evaluation, for example by replacing the function with `l2_distance` | `2` and `4` first, then `1, 3` | `1, 3` first, then `2` and `4` |
+
+This example illustrates candidate selection and NULL ordering, assuming ANN search recalls both non-empty vectors. Inserting four rows does not guarantee these execution plans: index construction and fallback depend on build thresholds, query conditions, and other factors. The two NULL distances are equal, so the relative order of `2` and `4` is unspecified without another sort key.
+
+When both segments use ANN, even `LIMIT 4` does not add `id=2` or `id=4`. In the mixed path, `id=2` is outside A's ANN candidates, while `id=4` enters sorting through B's scan. `NULLS LAST` places that row after non-NULL distances; it does not filter the row out.
+
+### Recommended usage
+
+To prioritize valid vectors while retaining ANN TopN acceleration, explicitly use `NULLS LAST`: `ORDER BY distance ASC NULLS LAST` for L2 distance, or `ORDER BY score DESC NULLS LAST` for inner product. This prevents NULL distances produced by brute-force scans from sorting ahead of valid results. It does not itself prevent ANN index use; other index eligibility conditions still apply.
+
+Do not add `IS NOT NULL` on the distance expression in `WHERE` merely to place NULL distances last. The current implementation cannot evaluate this filter through the ANN index. It remains a predicate requiring scalar evaluation, preventing ANN TopN acceleration and causing a brute-force fallback.
+
+`NULLS LAST` does not filter out NULLs. If non-NULL candidates cannot fill `LIMIT`, rows with NULL distances from brute-force paths can still appear at the end of the result. Use `IS NOT NULL` on the distance expression only when the application requires strict exclusion of those rows and accepts the cost of scalar evaluation. Use an exact distance function when all rows, including empty-vector rows, must participate in distance sorting.
+
 ## Usage Limitations
 
 <!-- Knowledge type: limitations and constraints + troubleshooting -->
 
 When using the Doris vector index, note the following limitations:
 
-1. **Data type limitation**: The column on which an ANN Index is built must be a `NOT NULLABLE` `Array<Float>`. During data load, the length of every vector in this column must equal the dimension specified in the index property (`dim`), otherwise an error is reported.
+1. **Data type limitation**: An ANN-indexed column must be `ARRAY<FLOAT> NOT NULL`. Non-empty vectors must match the index dimension `dim` and must not contain `NULL` elements. Setting `enable_ann_index_empty_array=true` allows empty arrays (`[]`); see [Empty vectors and NULL distances](#empty-vectors-and-null-distances).
 
 2. **Table model limitation**: ANN Index can only be used on the **Duplicate Key** table model, or on a **Unique Key** table with merge-on-write enabled (`enable_unique_key_merge_on_write = true`). Support for Unique Key tables was added in version 4.1.4. Merge-on-read Unique Key tables and Aggregate Key tables are still unsupported; creating an index on them reports: `ANN index can only be used in DUP_KEYS table or UNIQUE_KEYS table with merge-on-write enabled`.
 

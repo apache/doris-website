@@ -337,6 +337,24 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Description:  When using the odbc external table, if a column type of the odbc source table is not HLL, CHAR or VARCHAR, and the length of the column value exceeds this value, the query will report an error 'column value length longer than buffer length'. You can increase this value
 * Default value: 100
 
+### ANN indexes
+
+#### `enable_ann_index_empty_array`
+
+* Type: bool
+* Default value: false
+* Dynamically configurable: Yes
+* Description: Allows empty arrays (`[]`) in ANN-indexed `ARRAY<FLOAT> NOT NULL` columns. Data rows are retained, but empty arrays have no ANN index entries. Non-empty vectors must still match `dim` and contain no `NULL` elements; SQL `NULL` vectors are not supported. This setting does not control the NULL return rules of scalar distance functions.
+
+Enable this on every BE only after all FEs and BEs have been upgraded to support the feature. After writing empty arrays, keep it enabled for compaction, index rebuilds, and Group Commit WAL replay. Disabling it does not change reads of existing data, but later writes or rebuilds can fail. Downgrading to older versions without sparse ANN row-ID support is unsupported. See [Empty vectors and NULL distances](../../table-design/index/vector-index/overview.md#empty-vectors-and-null-distances) for query and sorting limitations.
+
+#### `ann_index_build_min_segment_rows`
+
+* Type: int64
+* Default value: 0
+* Dynamically configurable: Yes
+* Description: Minimum non-empty vector count for building a segment's ANN index. Must be at least `0`. The effective threshold is the greater of this value and the algorithm's minimum training sample count. `0` adds no extra threshold and does not disable algorithm training requirements. A segment with data rows but only empty arrays persists an empty index without this threshold. See [ANN Index Management](../../table-design/index/vector-index/index-management.md#empty-vectors-and-segment-indexes).
+
 ### Query
 
 #### `ignore_not_found_file_in_external_table`

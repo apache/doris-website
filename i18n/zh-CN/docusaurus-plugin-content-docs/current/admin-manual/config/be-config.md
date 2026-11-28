@@ -342,6 +342,24 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 * 描述：当使用 odbc 外表时，如果 odbc 源表的某一列类型不是 HLL, CHAR 或者 VARCHAR，并且列值长度超过该值，则查询报错'column value length longer than buffer length'. 可增大该值
 * 默认值：100
 
+### ANN 索引
+
+#### `enable_ann_index_empty_array`
+
+* 类型：bool
+* 默认值：false
+* 是否支持动态修改：是
+* 描述：允许向 `ARRAY<FLOAT> NOT NULL` 的 ANN 索引列写入空数组 `[]`。数据行保留，但空数组不生成 ANN 索引条目。非空向量仍须符合 `dim`，且不含 `NULL` 元素；不支持 SQL `NULL` 向量。此配置不控制标量距离函数的 NULL 返回规则。
+
+所有 FE 和 BE 升级到支持此功能的版本后，再在所有 BE 上开启。写入空数组后，后续 compaction、索引重建和 Group Commit WAL 回放仍需要开启。关闭配置不会改变已有数据的读取，但后续写入或重建可能失败。不支持降级到不支持稀疏 ANN 行号的旧版本。查询及排序限制见[空向量与 NULL 距离](../../table-design/index/vector-index/overview.md#empty-vectors-and-null-distances)。
+
+#### `ann_index_build_min_segment_rows`
+
+* 类型：int64
+* 默认值：0
+* 是否支持动态修改：是
+* 描述：构建 segment ANN 索引所需的最少非空向量数，必须大于等于 `0`。实际门槛为此值与算法最少训练样本数的较大值。`0` 表示不增加额外门槛，不会关闭算法自身的训练要求。包含数据行但全为空数组的 segment 会保存空索引，不受此门槛限制。详见 [ANN 索引管理](../../table-design/index/vector-index/index-management.md#empty-vectors-and-segment-indexes)。
+
 ### 查询
 
 #### `ignore_not_found_file_in_external_table`

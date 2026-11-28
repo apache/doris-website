@@ -45,6 +45,7 @@ Apache Doris 自 4.0 版本起原生支持 ANN（Approximate Nearest Neighbor，
 | 基于距离阈值进行过滤 | [近似范围搜索](#近似范围搜索) |
 | 同时使用 TopN 与范围条件 | [组合搜索](#组合搜索) |
 | 在 ANN 检索前先用其他列过滤 | [带过滤条件的 ANN 搜索](#带过滤条件的-ann-搜索) |
+| 写入空向量并了解 NULL 排序 | [空向量与 NULL 距离](#empty-vectors-and-null-distances) |
 | 调节查询行为参数 | [查询参数](#查询参数) |
 | 节省内存与索引大小 | [向量量化](#向量量化) |
 | 提升 QPS 与降低延迟 | [性能调优](#性能调优) |
@@ -536,13 +537,76 @@ SET enable_profile = false;
 
 ---
 
+## 空向量与 NULL 距离 {#empty-vectors-and-null-distances}
+
+### 写入空向量
+
+默认情况下，ANN 索引列不接受空数组 `[]`。在所有 FE 和 BE 都升级到支持此功能的版本后，可在所有 BE 上设置 [`enable_ann_index_empty_array=true`](../../../admin-manual/config/be-config.md#enable_ann_index_empty_array)。此时 `[]` 保存在数据行中，但不生成 ANN 索引条目，适用于尚未生成 embedding 的记录。
+
+索引列仍须为 `ARRAY<FLOAT> NOT NULL`，不能存储 SQL `NULL`。非空向量必须满足 `dim`，且不能包含 `NULL` 元素，例如 `[1, NULL, 3]` 仍是非法输入。`[0, 0, 0]` 是普通的非空向量，不是缺失向量。
+
+写入空数组后，后续 compaction、索引重建以及 Group Commit WAL 回放仍需要开启此配置。关闭配置不会删除已存储的空数组，也不会改变已有索引的读取方式，但后续写入或重建可能失败。不支持将这些数据降级到不支持稀疏 ANN 行号的旧版本。配置及构建规则见 [ANN 索引管理](./index-management.md#empty-vectors-and-segment-indexes)。
+
+### 距离计算与排序
+
+`l1_distance`、`l2_distance`、`cosine_distance`、`cosine_similarity`、`inner_product` 的数组重载，以及两个 `*_approximate` 函数，在标量计算时将 `[]` 或整个 `NULL` 数组视为缺失向量，返回 `NULL`。这一规则不依赖写入配置；包含 `NULL` 元素的非空数组仍会报错。
+
+- **ANN TopN 路径**：只在非空的已索引向量中搜索。即使指定 `NULLS FIRST` 或 `NULLS LAST`，也不会为了补入空向量行而改为暴力扫描；结果可能少于 `LIMIT`。只含空数组且已生成空索引的 segment 返回零个 ANN 候选。
+- **标量或暴力扫描路径**：空向量产生的 `NULL` 距离仍按 SQL 的 `NULLS FIRST` / `NULLS LAST` 参与排序。查询向量本身为 `NULL` 或 `[]` 时也走此路径。需要对所有行计算距离并保留 SQL NULL 排序语义时，使用 `l2_distance` 或 `inner_product` 等精确函数。
+- **混合路径的限制**：同一查询可在部分 segment 上使用 ANN，而在缺少物理索引等情况下对其他 segment 暴力扫描。后者的 `NULL` 距离可能进入最终结果，尤其在 `NULLS FIRST` 时。因此，不能依赖近似 TopN 在所有 segment 上统一排除空向量。建议显式指定 `NULLS LAST`，让非空距离优先参与 TopN 排序；它本身不会触发 ANN 回退，但也不会过滤 NULL 行。
+- **范围查询**：空向量的距离为 `NULL`，不满足 `<`、`<=`、`>`、`>=` 距离比较条件；走 ANN 范围索引时，空向量也不属于候选集合。
+
+表中声明了 ANN 索引，并不保证每个 segment 都已生成物理索引。非空向量不足可能跳过构建，查询该 segment 时回退；详见 [segment 索引构建规则](./index-management.md#empty-vectors-and-segment-indexes)。仅仅索引条目数少于数据行数，不会触发 TopN 回退。
+
+### NULL 排序示例
+
+`NULLS FIRST` / `NULLS LAST` 决定的是参与排序的行中 NULL 距离的位置，并不会把没有 ANN 索引条目的空向量行补入候选集合。
+
+假设已有表 `vector_examples`，向量列 `embedding` 上声明了二维 L2 ANN 索引，允许写入空数组，数据分布如下。查询向量为 `[0, 0]`：
+
+| segment | id | embedding | 逐行计算的 L2 距离 |
+| --- | --- | --- | --- |
+| A | 1 | `[1, 0]` | `1` |
+| A | 2 | `[]` | `NULL` |
+| B | 3 | `[2, 0]` | `2` |
+| B | 4 | `[]` | `NULL` |
+
+查询显式指定 `NULLS LAST`，优先返回非空距离：
+
+```sql
+SELECT id, l2_distance_approximate(embedding, [0, 0]) AS distance
+FROM vector_examples
+ORDER BY distance ASC NULLS LAST
+LIMIT 4;
+```
+
+下面对比使用 `NULLS FIRST` 与 `NULLS LAST` 时的结果，具体行为取决于各 segment 实际使用的路径：
+
+| 执行情况 | `NULLS FIRST` 的 id 顺序 | `NULLS LAST` 的 id 顺序 |
+| --- | --- | --- |
+| A、B 都走 ANN | `1, 3` | `1, 3` |
+| A 走 ANN，B 因缺少物理索引而暴力扫描 | `4, 1, 3` | `1, 3, 4` |
+| 全部逐行计算，例如将函数改为 `l2_distance` | `2` 和 `4` 在前，随后 `1, 3` | `1, 3` 在前，随后 `2` 和 `4` |
+
+这个示例用于说明候选集合和 NULL 排序，假设 ANN 搜索召回了两个非空向量；不是通过插入四行即可固定复现的执行计划。实际是否建索引、是否回退取决于构建门槛、查询条件等。两个 NULL 距离相等，未指定其他排序键时，`2` 和 `4` 的相对顺序不确定。
+
+全部走 ANN 时，即使 `LIMIT 4`，也不会补入 `id=2` 和 `id=4`。混合路径下，`id=2` 不在 A 的 ANN 候选中，而 `id=4` 会从 B 的扫描结果进入排序；`NULLS LAST` 只是把它放到非空距离之后，并不将其过滤掉。
+
+### 推荐用法
+
+对于希望优先返回有效向量并保留 ANN TopN 加速的查询，建议显式使用 `NULLS LAST`：L2 距离使用 `ORDER BY distance ASC NULLS LAST`，内积使用 `ORDER BY score DESC NULLS LAST`。它可以避免暴力扫描产生的 NULL 距离排在有效结果之前，本身不会阻止 ANN 索引的使用；其他索引使用条件仍需满足。
+
+不要仅为了把 NULL 距离排在最后，就在 `WHERE` 中对距离表达式添加 `IS NOT NULL`。当前实现无法通过 ANN 索引完成这个过滤，它会成为需要逐行计算的剩余条件，阻止 ANN TopN 加速并回退到暴力计算。
+
+`NULLS LAST` 不等价于过滤 NULL：如果非空候选不足以填满 `LIMIT`，暴力扫描路径产生的 NULL 距离行仍可能出现在结果末尾。只有业务要求严格排除这些行、并接受逐行计算开销时，才使用距离表达式的 `IS NOT NULL` 过滤。如果需要把所有行（包括空向量行）都纳入距离排序，则使用精确距离函数。
+
 ## 使用限制
 
 <!-- 知识类型: 限制约束 + 故障排查 -->
 
 使用 Doris 向量索引时，需要注意以下限制：
 
-1. **数据类型限制**：ANN Index 对应的列必须是 `NOT NULLABLE` 的 `Array<Float>`。导入时需确保该列每个向量的长度均等于索引属性中指定的维度（`dim`），否则会报错。
+1. **数据类型限制**：ANN Index 对应的列必须是 `ARRAY<FLOAT> NOT NULL`。非空向量的长度必须等于索引属性 `dim`，且不能包含 `NULL` 元素。可通过 `enable_ann_index_empty_array=true` 允许写入空数组 `[]`，详见[空向量与 NULL 距离](#empty-vectors-and-null-distances)。
 
 2. **表模型限制**：ANN Index 只能在 **DuplicateKey** 表模型，或开启了 Merge-on-Write（`enable_unique_key_merge_on_write = true`）的 **UniqueKey** 表模型上使用（UniqueKey 表的支持自 4.1.4 版本开始）。Merge-on-Read 的 UniqueKey 表以及 AggregateKey 表仍不支持，建索引时会报错：`ANN index can only be used in DUP_KEYS table or UNIQUE_KEYS table with merge-on-write enabled`。
 
