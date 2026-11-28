@@ -72,6 +72,20 @@ SELECT array_map(x -> round(x), [1.1, 2.7, 3.3, 4.9, 5.5]);
 +--------------------------------------------------+
 ```
 
+Convert each integer in an array to a string, showing both the input and the mapped result:
+```sql
+SELECT
+    [1, 2, 3, 4, 5] AS c_array1,
+    array_map(x -> CAST(x AS STRING), [1, 2, 3, 4, 5]) AS mapped_array;
+```
+```text
++-----------------+---------------------------+
+| c_array1        | mapped_array              |
++-----------------+---------------------------+
+| [1, 2, 3, 4, 5] | ["1", "2", "3", "4", "5"] |
++-----------------+---------------------------+
+```
+
 Calculate the length of each element in a string array:
 ```sql
 SELECT array_map(x -> length(x), ['a', 'bb', 'ccc', 'dddd', 'eeeee']);
