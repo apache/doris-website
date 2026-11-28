@@ -64,9 +64,12 @@ github:
         require_last_push_approval: true
       required_status_checks_strict: false
       required_status_checks:
-        - Build Check
-        - check-md-links
-        - check-file-sizes
+        - name: Build Check
+          app_slug: github-actions
+        - name: check-md-links
+          app_slug: github-actions
+        - name: check-file-sizes
+          app_slug: github-actions
   enabled_merge_buttons:
     squash:  true
     merge:   false
