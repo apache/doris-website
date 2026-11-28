@@ -89,7 +89,7 @@ spec:
 
 ## 场景 3：限制计算组的计算资源
 
-存算分离[默认部署样例](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml)中，没有对 BE 服务使用的计算资源做限制。`DorisDisaggregatedCluster` 使用 Kubernetes 的 [resources.requests 和 resources.limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits) 指定 CPU 和内存资源。
+存算分离[默认部署样例](https://github.com/apache/doris-operator/blob/26.0.1/doc/examples/disaggregated/cluster/ddc-sample.yaml)中，没有对 BE 服务使用的计算资源做限制。`DorisDisaggregatedCluster` 使用 Kubernetes 的 [resources.requests 和 resources.limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits) 指定 CPU 和内存资源。
 
 例如，配置名称为 `cg1` 的计算组 BE 可使用 8c 8Gi 的资源：
 
@@ -105,7 +105,7 @@ spec:
       memory: 8Gi
 ```
 
-将上述配置更新到需要部署的 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#2-修改关键配置)中即可生效。
+将上述配置更新到需要部署的 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#ddc-manifest)中即可生效。
 
 ## 场景 4：配置计算组的访问方式
 
@@ -250,7 +250,7 @@ kubectl apply -n ${namespace} -f ${beConfigMapFileName}.yaml
 
 ### 第 3 步：更新 DorisDisaggregatedCluster 资源
 
-更新 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#2-修改关键配置)以挂载 ConfigMap，配置如下：
+更新 [`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#ddc-manifest)以挂载 ConfigMap，配置如下：
 
 ```yaml
 spec:

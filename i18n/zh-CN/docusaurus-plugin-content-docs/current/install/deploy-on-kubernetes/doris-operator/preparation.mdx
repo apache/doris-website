@@ -2,13 +2,217 @@
 {
     "title": "部署前准备",
     "language": "zh-CN",
-    "description": "在云厂商 Kubernetes 服务上使用 Doris Operator 部署 Doris 前的环境准备和部署建议。"
+    "description": "使用 Doris Operator 在 Kubernetes 上部署 Apache Doris 前的环境检查：Kubernetes 版本与权限、节点架构与可调度资源、StorageClass、镜像拉取、Pod 安全策略，以及存算分离所需的对象存储信息。",
+    "keywords": ["Doris Operator", "Kubernetes", "部署前准备", "StorageClass", "Pod Security", "对象存储", "存算分离"]
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-使用 Doris Operator 部署 Apache Doris 前，需要根据云厂商环境确认 Kubernetes 服务形态、节点系统参数、镜像仓库、存储和特权模式等前置条件。
+使用 Doris Operator 部署 Apache Doris 前，请先逐项完成下面的检查。存算一体和存算分离都需要完成第 1 至 5 项；存算分离还需要提前准备好[对象存储](#object-storage)，否则集群部署后无法写入数据。
+
+本页的示例输出以单节点 kind 集群（Kubernetes v1.35.8，arm64）为例，实际的节点名、版本和资源数值会有所不同。
+
+## 1. 确认连接的集群和权限
+
+```shell
+kubectl config current-context
+kubectl version
+```
+
+示例输出：
+
+```text
+kind-doris-k8s-docs
+Client Version: v1.36.1
+Kustomize Version: v5.8.1
+Server Version: v1.35.8
+```
+
+- `current-context` 应为目标集群。后续命令都在这个 context 下执行，请勿在错误的集群上安装。
+- `Server Version` 为 Kubernetes 版本。Doris Operator 要求 Kubernetes 1.19 及以上；本系列文档以 Kubernetes v1.35.8 为例。
+
+安装 Doris Operator 需要创建 CRD、ClusterRole、ClusterRoleBinding 和 Webhook 配置等集群级资源。执行以下命令检查当前账号的权限：
+
+```shell
+kubectl auth can-i create customresourcedefinitions --all-namespaces
+kubectl auth can-i create clusterrolebindings --all-namespaces
+kubectl auth can-i create validatingwebhookconfigurations --all-namespaces
+```
+
+三条命令都应返回 `yes`。任一命令返回 `no` 时，请由集群管理员安装 CRD 和 Operator。
+
+## 2. 确认节点架构和可调度资源
+
+```shell
+kubectl get nodes -o custom-columns='NAME:.metadata.name,ARCH:.status.nodeInfo.architecture,CPU:.status.allocatable.cpu,MEMORY:.status.allocatable.memory'
+```
+
+示例输出：
+
+```text
+NAME                           ARCH    CPU   MEMORY
+doris-k8s-docs-control-plane   arm64   18    28690160Ki
+```
+
+- `ARCH` 为节点架构。文档示例使用的 Doris 4.1.5、Doris Operator 26.0.1 和 FoundationDB 7.3.69 镜像都提供 `linux/amd64` 和 `linux/arm64` 版本。
+- `CPU` 和 `MEMORY` 为节点可分配资源。所有 Pod 的 `requests` 之和不能超过节点可分配资源，否则 Pod 会处于 `Pending`。已运行的其他工作负载也会占用资源，可以通过 `kubectl describe nodes` 查看 `Allocated resources`。
+
+快速入门教程中的资源申请如下：
+
+| 部署内容 | requests（CPU / 内存） | limits（CPU / 内存） |
+| --- | --- | --- |
+| Doris Operator | 1 / 2Gi | 2 / 4Gi |
+| 存算一体测试集群：1 FE + 1 BE | 4 / 8Gi | 8 / 18Gi |
+| 存算分离测试集群：1 FE + 1 MS + 1 BE | 5 / 9Gi | 10 / 20Gi |
+| FoundationDB 单副本（存算分离，含 FDB Operator） | 4.9 / 5.25Gi | 4.9 / 9.25Gi |
+
+因此，存算一体教程至少需要 5 CPU / 10Gi 可分配资源；存算分离教程至少需要 11 CPU / 16.25Gi。以上为功能测试规格，生产环境请按业务负载规划资源。
+
+## 3. 确认 StorageClass
+
+```shell
+kubectl get storageclass
+```
+
+示例输出：
+
+```text
+NAME                 PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+standard (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  16s
+```
+
+- 名称后带 `(default)` 的是默认 StorageClass。教程中的 Doris 样例未指定 `storageClassName`，会使用默认 StorageClass 自动创建 PVC。如果集群没有默认 StorageClass，请在样例中显式设置 `storageClassName`。
+- FoundationDB 样例要求显式填写 StorageClass，生产环境应使用 SSD。
+- `VOLUMEBINDINGMODE` 为 `WaitForFirstConsumer` 时，PVC 在 Pod 调度前保持 `Pending`，属于正常现象。
+- `RECLAIMPOLICY` 为 `Delete` 时，删除 PVC 会同时删除底层数据卷。
+
+## 4. 确认镜像可以拉取
+
+节点需要能拉取以下镜像。所有镜像都来自 Docker Hub：
+
+| 镜像 | 用途 | 发布方 |
+| --- | --- | --- |
+| `apache/doris:operator-26.0.1` | Doris Operator | Apache Doris |
+| `apache/doris:fe-4.1.5`、`apache/doris:be-4.1.5` | FE、BE，两种模式都需要 | Apache Doris |
+| `apache/doris:ms-4.1.5` | MetaService，仅存算分离需要 | Apache Doris |
+| `velodb/fdb-kubernetes-operator:v2.35.0`、`velodb/fdb-kubernetes-monitor:7.3.69` | 在 Kubernetes 上部署 FoundationDB，仅存算分离需要 | VeloDB |
+
+BE 默认初始化容器直接使用所配置的 BE 镜像，不需要额外拉取其他镜像。FE 和 BE 镜像较大（arm64 压缩后分别约 1.6GB 和 3.1GB），首次拉取需要较长时间。
+
+如果节点无法访问 Docker Hub，请先将镜像同步到私有仓库，再修改 YAML 中的 `image` 字段；私有仓库需要鉴权时，在对应组件中配置 `imagePullSecrets`。
+
+## 5. 确认 Pod 安全策略和节点系统参数 {#pod-security}
+
+Doris 有以下两类容器需要较高权限，请在部署前确认目标命名空间（教程使用 `doris`）的准入策略允许它们运行：
+
+| 容器 | 所需权限 | 是否默认启用 |
+| --- | --- | --- |
+| FE、BE、MS 主容器 | 以 root（UID `0`）运行 | 是 |
+| BE 初始化容器 `default-init` | 特权模式（`privileged: true`） | 是。存算一体的 BE 和存算分离计算组的 BE 都会添加 |
+
+`default-init` 使用 BE 镜像，执行以下命令设置 BE 运行所需的系统参数：
+
+```shell
+sysctl -w vm.max_map_count=2000000 && swapoff -a
+```
+
+这些命令修改的是节点的系统设置，会影响该节点上的其他工作负载。即使没有开启 `enableWorkloadGroup`，BE 也需要这个特权初始化容器。
+
+### 检查准入策略
+
+可以通过以下命令查看命名空间上的 Pod Security 标签（`doris` 命名空间在安装 Operator 时创建）：
+
+```shell
+kubectl get namespace doris --show-labels
+```
+
+示例输出（没有 Pod Security 标签）：
+
+```text
+NAME    STATUS   AGE   LABELS
+doris   Active   72m   app.kubernetes.io/component=doris-operator,app.kubernetes.io/instance=doris,app.kubernetes.io/name=namespace,app.kubernetes.io/part-of=doris-operator,control-plane=doris-operator,kubernetes.io/metadata.name=doris
+```
+
+如果输出中有 `pod-security.kubernetes.io/enforce=baseline` 或 `pod-security.kubernetes.io/enforce=restricted`，BE Pod 会被拒绝创建，BE 的 StatefulSet 事件中会出现类似信息：
+
+```text
+pods "doriscluster-sample-be-0" is forbidden: violates PodSecurity "baseline:latest": privileged (container "default-init" must not set securityContext.privileged=true)
+```
+
+没有这些标签不代表一定允许运行：集群也可能通过准入控制配置设置了默认的 Pod Security 级别，或者使用 Kyverno、OPA Gatekeeper 等工具。不确定时请向集群管理员确认。
+
+集群强制执行 `baseline` 或 `restricted` Pod Security Standard，或者通过 Kyverno、OPA Gatekeeper 等工具禁止 root 容器或特权容器时，请联系集群管理员选择以下一种处理方式：
+
+- 为 Doris 所在命名空间配置命名空间级或工作负载级的策略例外。请勿放宽整个集群的安全策略。
+- 由节点管理员预先完成系统参数设置，然后[跳过默认初始化](#skip-default-system-init)。
+
+如需显式声明容器以 root 运行，可以在 `DorisCluster` 资源中配置容器安全上下文：
+
+```yaml
+spec:
+  feSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+  beSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+```
+
+此配置不能绕过 Kubernetes 准入策略。当 BE 配置 `enableWorkloadGroup: true` 时，Doris Operator 还会以特权模式运行 BE 主容器以管理 cgroup，请确认安全策略同时允许，否则请关闭此功能。
+
+### 检查节点 swap
+
+BE 启动脚本检测到节点开启了 swap 时会拒绝启动。生产节点通常已关闭 swap，此时 `swapoff -a` 不做任何操作。
+
+如果节点开启了 swap，而 swap 文件在容器中不可见（例如在 Docker Desktop 中运行 kind），`swapoff -a` 会失败，`default-init` 以退出码 32 退出，BE Pod 停留在 `Init:CrashLoopBackOff`。请先关闭节点的 swap；测试环境也可以[跳过默认初始化](#skip-default-system-init)。
+
+### 跳过默认初始化 {#skip-default-system-init}
+
+由节点管理员在每个运行 BE 的节点上将 `vm.max_map_count` 设置为不小于 `2000000`（生产环境同时关闭 swap），然后在首次部署前设置 `skipDefaultSystemInit: true`：
+
+```yaml
+# 存算一体：在 beSpec 中设置
+spec:
+  beSpec:
+    skipDefaultSystemInit: true
+```
+
+```yaml
+# 存算分离：在每个计算组中分别设置
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    skipDefaultSystemInit: true
+```
+
+设置后，Operator 不再添加 `default-init`，并为 BE 注入环境变量 `SKIP_CHECK_ULIMIT=true`，使 BE 启动时跳过 `vm.max_map_count`、swap 和文件句柄数检查。该开关只在首次创建 BE 时生效：对已部署的集群修改该开关，`default-init` 不会被移除，需要删除集群资源（PVC 会保留）后重新部署。存算分离的详细说明见[节点系统初始化](../separating-storage-compute/config-cg.md#be-system-initialization)。
+
+## 6. 存算分离：准备对象存储 {#object-storage}
+
+存算分离集群的数据写入对象存储。Doris 不提供对象存储服务，请在部署前准备一个 S3 兼容的对象存储，并拿到以下信息。这些值会在创建 Storage Vault 时使用：
+
+| 信息 | 示例 | 对应 Storage Vault 属性 |
+| --- | --- | --- |
+| Endpoint | `oss-cn-beijing-internal.aliyuncs.com` | `s3.endpoint` |
+| Region | `cn-beijing` | `s3.region` |
+| Bucket | `doris-data` | `s3.bucket` |
+| 数据目录前缀 | `doris/cluster1` | `s3.root.path` |
+| Access Key / Secret Key | - | `s3.access_key` / `s3.secret_key` |
+| 服务商类型 | `COS`、`OSS`、`S3`、`OBS`、`BOS`、`AZURE`、`GCP` 之一，MinIO 等自建 S3 兼容服务使用 `S3` | `provider` |
+| URL 访问方式 | 公有云对象存储通常为 `false`（virtual-hosted-style），自建 S3 兼容服务通常为 `true`（path-style） | `use_path_style`（默认 `true`） |
+
+同时确认：
+
+- **网络**：FE、MetaService 和 BE 的 Pod 都能访问 Endpoint。部署前可以在 Kubernetes 节点上执行 `curl -I https://<endpoint>` 测试连通性。云上部署时，优先使用与集群同地域的内网 Endpoint。
+- **权限**：凭证对 `s3.root.path` 前缀下的对象具有 `head`、`get`、`list`、`put`、`multipartUpload` 和 `delete` 权限。MetaService 会回收已删除数据对应的对象，因此需要删除权限。
+- **前缀**：每个 Doris 集群使用独立的 Bucket 或前缀，避免与其他集群或应用的数据混在一起。
+
+各类对象存储的属性说明及示例，参见[管理 Storage Vault](../../../compute-storage-decoupled/managing-storage-vault.md)。如果只是做功能测试且没有云上对象存储，可以自行部署 S3 兼容的对象存储服务，部署和运维由你自己负责。
+
+## 云厂商 Kubernetes 服务的部署建议
 
 <div className="cards-grid">
 <GettingStartedCard
@@ -23,25 +227,3 @@ import GettingStartedCard from '@site/src/components/getting-started-card/gettin
     link="on-aws"
 />
 </div>
-
-## Pod 安全策略要求
-
-当前官方 Doris FE 和 BE 镜像以 root 用户运行，因为启动脚本需要更新 `/opt/apache-doris` 下的配置文件，并可能初始化系统参数。部署前，请确认 Doris 命名空间适用的安全策略允许容器以 UID `0` 运行。
-
-例如，可以在 `DorisCluster` 资源中显式配置容器安全上下文：
-
-```yaml
-spec:
-  feSpec:
-    containerSecurityContext:
-      runAsUser: 0
-      runAsNonRoot: false
-  beSpec:
-    containerSecurityContext:
-      runAsUser: 0
-      runAsNonRoot: false
-```
-
-此配置不能绕过 Kubernetes 准入策略。如果集群强制执行 `restricted` Pod Security Standard，或者通过 Kyverno、OPA Gatekeeper 等工具要求容器以非 root 用户运行，请联系集群管理员，为 Doris 配置命名空间级或工作负载级策略例外。请勿放宽整个集群的安全策略。
-
-当 BE 配置 `enableWorkloadGroup: true` 时，Doris Operator 会以特权模式运行 BE 容器以管理 cgroup。请确认安全策略同时允许特权容器，否则请关闭此功能。
