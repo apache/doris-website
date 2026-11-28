@@ -9,11 +9,13 @@
 ## Description
 
 Displays the thread that the user is running.  
-This command can only display the connection information of the current FE.  
-If you need to view the connection information of the entire cluster, you need to add a session variable:
+Since 4.0.0, the command lists the connections of all FEs in the cluster by default, and the `FE` column shows the FE each connection belongs to.
+
+To list only the connections of the current FE, set the session variable:
+```sql
+SET fetch_all_fe_for_system_table = false;
 ```
-SET SHOW_ALL_FE_CONNECTION = TRUE;
-```
+Before 4.0.0, the command lists only the connections of the current FE by default, and the session variable is `show_all_fe_connection` (default `false`).
 
 ## Syntax
 
@@ -42,7 +44,10 @@ SHOW [FULL] PROCESSLIST
 | Time             | Time when the previous command is submitted to the current status, in seconds                 |
 | State            | State of thread                                |
 | QueryId          | ID of the current query statement                           |
+| TraceId          | Trace ID that the client set for the session with `SET session_context = 'trace_id:<id>'`; empty if not set |
 | Info             | Generally, the statement executed by the thread is recorded, and only the first 100 characters are displayed by default         |
+| FE               | The FE that the connection is on |
+| CloudCluster     | In compute-storage decoupled mode, the compute group recorded for the connection; NULL if none is recorded |
 
 Common Command types are as follows:
 
@@ -68,12 +73,12 @@ SHOW PROCESSLIST
 ```
 
 ```text
-+------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
-| CurrentConnected | Id   | User | Host            | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info                  |
-+------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
-| Yes              |    0 | root | 127.0.0.1:34650 | 2025-01-21 12:01:02 | internal | test | Query   |    0 | OK    | c84e397193a54fe7-bbe9bc219318b75e | select 1              |
-|                  |    1 | root | 127.0.0.1:34776 | 2025-01-21 12:01:07 | internal |      | Sleep   |   29 | EOF   | 886ffe2894314f50-8dd73a6ca06699e4 | show full processlist |
-+------------------+------+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+-----------------------+
++------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+---------+-----------------------+------------+--------------+
+| CurrentConnected | Id | User | Host            | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | TraceId | Info                  | FE         | CloudCluster |
++------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+---------+-----------------------+------------+--------------+
+| Yes              |  0 | root | 127.0.0.1:34650 | 2025-01-21 12:01:02 | internal | test | Query   |    0 | OK    | c84e397193a54fe7-bbe9bc219318b75e |         | select 1              | 10.16.10.6 | NULL         |
+| No               |  1 | root | 127.0.0.1:34776 | 2025-01-21 12:01:07 | internal |      | Sleep   |   29 | EOF   | 886ffe2894314f50-8dd73a6ca06699e4 |         | show full processlist | 10.16.10.6 | NULL         |
++------------------+----+------+-----------------+---------------------+----------+------+---------+------+-------+-----------------------------------+---------+-----------------------+------------+--------------+
 ```
 
 

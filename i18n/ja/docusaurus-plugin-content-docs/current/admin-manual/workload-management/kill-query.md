@@ -52,18 +52,22 @@ SHOW PROCESSLIST;
 - `Id`：接続を一意に識別する Connection ID です。
 - `QueryId`：直近に実行した、または現在実行中の SQL を一意に識別する Query ID です。
 
-**デフォルトの動作**：`SHOW PROCESSLIST` には、現在の接続先 FE ノード上のセッションのみが表示され、ほかの FE ノード上のセッションは含まれません。すべての FE ノード上のセッションを表示するには、クエリの実行前に次の変数を設定します。
+**デフォルトの動作**：4.0.0 以降、`SHOW PROCESSLIST` にはすべての FE ノード上のセッションが表示され、`FE` 列に各セッションが存在する FE ノードが表示されます。現在の接続先 FE ノード上のセッションのみを表示するには、クエリの実行前に次の変数を設定します。
 
 ```sql
-SET show_all_fe_connection = true;
+SET fetch_all_fe_for_system_table = false;
 SHOW PROCESSLIST;
 ```
 
-`information_schema` システムテーブルも使用できます。デフォルトですべての FE ノード上のセッションが表示され、追加の設定は不要です。
+4.0.0 より前のバージョンでは、`SHOW PROCESSLIST` にはデフォルトで現在の FE ノード上のセッションのみが表示され、対応する変数は `show_all_fe_connection`（デフォルトは `false`）です。`information_schema.processlist` も同じ変数に従います。
+
+`information_schema` システムテーブルも使用できます。4.0.0 以降は、デフォルトですべての FE ノード上のセッションが表示され、追加の設定は不要です。
 
 ```sql
 SELECT * FROM information_schema.processlist;
 ```
+
+`information_schema.processlist` も同じ変数に従います。このセッションで先に `SET fetch_all_fe_for_system_table = false` を実行した場合、このテーブルにも現在の FE ノードのセッションのみが表示されます。すべての FE ノードを表示するには、先に `SET fetch_all_fe_for_system_table = true;` を実行してください。
 
 ### Trace ID でクエリを特定する
 
