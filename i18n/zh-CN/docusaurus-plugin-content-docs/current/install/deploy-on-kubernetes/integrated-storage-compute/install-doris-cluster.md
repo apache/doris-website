@@ -142,7 +142,7 @@ persistentvolumeclaim/fe-meta-doriscluster-sample-fe-0      Bound    pvc-2548f70
 
 判断标准：`FESTATUS` 和 `BESTATUS` 都为 `available`，FE、BE Pod 都为 `1/1 Running`，两个 PVC 都为 `Bound`。部署过程中 `FESTATUS` 和 `BESTATUS` 会先显示为 `initializing`。
 
-### 排查部署问题
+### 排查部署问题 {#troubleshooting}
 
 如果等待超时，先查看 Pod 状态和事件：
 

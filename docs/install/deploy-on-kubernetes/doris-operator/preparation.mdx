@@ -2,13 +2,217 @@
 {
     "title": "Preparation",
     "language": "en",
-    "description": "Environment preparation and deployment recommendations before deploying Doris with Doris Operator on cloud Kubernetes services."
+    "description": "Environment checks before deploying Apache Doris on Kubernetes with Doris Operator: Kubernetes version and permissions, node architecture and allocatable resources, StorageClass, image pulls, Pod security policies, and the object storage information required by the compute-storage decoupled mode.",
+    "keywords": ["Doris Operator", "Kubernetes", "preparation", "StorageClass", "Pod Security", "object storage", "compute-storage decoupled"]
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-Before deploying Apache Doris with Doris Operator, check the Kubernetes service, node system parameters, image registry, storage, and privilege requirements for your cloud environment.
+Before deploying Apache Doris with Doris Operator, go through the following checks. Both the integrated storage and compute mode and the compute-storage decoupled mode require checks 1 to 5. The compute-storage decoupled mode also requires [object storage](#object-storage) to be ready in advance; otherwise, the deployed cluster cannot write data.
+
+The sample output on this page uses a single-node kind cluster (Kubernetes v1.35.8, arm64) as an example. Your node names, versions, and resource values will differ.
+
+## 1. Check the target cluster and permissions
+
+```shell
+kubectl config current-context
+kubectl version
+```
+
+Sample output:
+
+```text
+kind-doris-k8s-docs
+Client Version: v1.36.1
+Kustomize Version: v5.8.1
+Server Version: v1.35.8
+```
+
+- `current-context` must be the target cluster. All subsequent commands run in this context, so make sure you do not install into the wrong cluster.
+- `Server Version` is the Kubernetes version. Doris Operator requires Kubernetes 1.19 or later. This documentation uses Kubernetes v1.35.8 as an example.
+
+Installing Doris Operator creates cluster-scoped resources such as CRDs, ClusterRoles, ClusterRoleBindings, and webhook configurations. Run the following commands to check the permissions of the current account:
+
+```shell
+kubectl auth can-i create customresourcedefinitions --all-namespaces
+kubectl auth can-i create clusterrolebindings --all-namespaces
+kubectl auth can-i create validatingwebhookconfigurations --all-namespaces
+```
+
+All three commands should return `yes`. If any of them returns `no`, ask the cluster administrator to install the CRDs and the Operator.
+
+## 2. Check node architecture and allocatable resources
+
+```shell
+kubectl get nodes -o custom-columns='NAME:.metadata.name,ARCH:.status.nodeInfo.architecture,CPU:.status.allocatable.cpu,MEMORY:.status.allocatable.memory'
+```
+
+Sample output:
+
+```text
+NAME                           ARCH    CPU   MEMORY
+doris-k8s-docs-control-plane   arm64   18    28690160Ki
+```
+
+- `ARCH` is the node architecture. The Doris 4.1.5, Doris Operator 26.0.1, and FoundationDB 7.3.69 images used in the examples are all available for `linux/amd64` and `linux/arm64`.
+- `CPU` and `MEMORY` are the allocatable resources of the node. The sum of all Pod `requests` cannot exceed the allocatable resources of the nodes; otherwise, Pods stay `Pending`. Other running workloads also consume resources. Check `Allocated resources` with `kubectl describe nodes`.
+
+The quick-start tutorials request the following resources:
+
+| Workload | requests (CPU / memory) | limits (CPU / memory) |
+| --- | --- | --- |
+| Doris Operator | 1 / 2Gi | 2 / 4Gi |
+| Integrated storage and compute test cluster: 1 FE + 1 BE | 4 / 8Gi | 8 / 18Gi |
+| Compute-storage decoupled test cluster: 1 FE + 1 MS + 1 BE | 5 / 9Gi | 10 / 20Gi |
+| Single-replica FoundationDB (compute-storage decoupled, including the FDB Operator) | 4.9 / 5.25Gi | 4.9 / 9.25Gi |
+
+Therefore, the integrated storage and compute tutorial needs at least 5 CPU / 10Gi of allocatable resources, and the compute-storage decoupled tutorial needs at least 11 CPU / 16.25Gi. These sizes are for functional testing. For production, plan resources based on your workload.
+
+## 3. Check the StorageClass
+
+```shell
+kubectl get storageclass
+```
+
+Sample output:
+
+```text
+NAME                 PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+standard (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  16s
+```
+
+- The StorageClass marked `(default)` is the default StorageClass. The Doris examples in the tutorials do not set `storageClassName`, so PVCs are created with the default StorageClass. If the cluster has no default StorageClass, set `storageClassName` explicitly in the examples.
+- The FoundationDB example requires an explicit StorageClass. Use SSD-backed storage in production.
+- When `VOLUMEBINDINGMODE` is `WaitForFirstConsumer`, PVCs stay `Pending` until their Pods are scheduled. This is expected.
+- When `RECLAIMPOLICY` is `Delete`, deleting a PVC also deletes the underlying volume.
+
+## 4. Check that images can be pulled
+
+The nodes must be able to pull the following images. All of them are hosted on Docker Hub:
+
+| Image | Purpose | Publisher |
+| --- | --- | --- |
+| `apache/doris:operator-26.0.1` | Doris Operator | Apache Doris |
+| `apache/doris:fe-4.1.5`, `apache/doris:be-4.1.5` | FE and BE, required by both modes | Apache Doris |
+| `apache/doris:ms-4.1.5` | MetaService, compute-storage decoupled only | Apache Doris |
+| `velodb/fdb-kubernetes-operator:v2.35.0`, `velodb/fdb-kubernetes-monitor:7.3.69` | FoundationDB on Kubernetes, compute-storage decoupled only | VeloDB |
+
+The default BE init container uses the configured BE image, so no additional image is required. The FE and BE images are large (about 1.6 GB and 3.1 GB compressed for arm64), so the first pull takes a while.
+
+If the nodes cannot access Docker Hub, mirror the images to a private registry first and change the `image` fields in the YAML. If the private registry requires authentication, configure `imagePullSecrets` for the corresponding components.
+
+## 5. Check Pod security policies and node system settings {#pod-security}
+
+Two kinds of Doris containers need elevated privileges. Before deployment, make sure that the admission policy of the target namespace (`doris` in the tutorials) allows them:
+
+| Container | Required privilege | Enabled by default |
+| --- | --- | --- |
+| FE, BE, and MS main containers | Run as root (UID `0`) | Yes |
+| BE init container `default-init` | Privileged mode (`privileged: true`) | Yes. It is added to BE in the integrated storage and compute mode and to BE in compute groups of the compute-storage decoupled mode |
+
+`default-init` uses the BE image and runs the following command to set the system parameters required by BE:
+
+```shell
+sysctl -w vm.max_map_count=2000000 && swapoff -a
+```
+
+These commands change system settings of the node and affect other workloads on the same node. BE requires this privileged init container even if `enableWorkloadGroup` is not enabled.
+
+### Check admission policies
+
+Run the following command to view the Pod Security labels on the namespace. The `doris` namespace is created when you install the Operator:
+
+```shell
+kubectl get namespace doris --show-labels
+```
+
+Sample output (no Pod Security labels):
+
+```text
+NAME    STATUS   AGE   LABELS
+doris   Active   72m   app.kubernetes.io/component=doris-operator,app.kubernetes.io/instance=doris,app.kubernetes.io/name=namespace,app.kubernetes.io/part-of=doris-operator,control-plane=doris-operator,kubernetes.io/metadata.name=doris
+```
+
+If the output contains `pod-security.kubernetes.io/enforce=baseline` or `pod-security.kubernetes.io/enforce=restricted`, the BE Pod is rejected, and the events of the BE StatefulSet contain a message like the following:
+
+```text
+pods "doriscluster-sample-be-0" is forbidden: violates PodSecurity "baseline:latest": privileged (container "default-init" must not set securityContext.privileged=true)
+```
+
+The absence of these labels does not guarantee that the Pods are allowed: the cluster may set a default Pod Security level through its admission configuration, or use tools such as Kyverno or OPA Gatekeeper. If in doubt, ask the cluster administrator.
+
+If the cluster enforces the `baseline` or `restricted` Pod Security Standard, or uses tools such as Kyverno or OPA Gatekeeper to forbid root or privileged containers, ask the cluster administrator to choose one of the following options:
+
+- Create a namespace- or workload-scoped exception for the namespace that runs Doris. Do not relax the policy cluster-wide.
+- Let the node administrator prepare the system settings in advance, then [skip the default initialization](#skip-default-system-init).
+
+To declare explicitly that the containers run as root, configure the container security context in the `DorisCluster` resource:
+
+```yaml
+spec:
+  feSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+  beSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+```
+
+This configuration does not bypass Kubernetes admission policies. When `enableWorkloadGroup: true` is configured for BE, Doris Operator also runs the BE main container in privileged mode to manage cgroups. Make sure that the security policy permits this as well, or disable the feature.
+
+### Check node swap {#node-swap}
+
+The BE startup script refuses to start when swap is enabled on the node. Production nodes usually have swap disabled, in which case `swapoff -a` does nothing.
+
+If swap is enabled on the node and the swap file is not visible inside the container (for example, kind running in Docker Desktop), `swapoff -a` fails, `default-init` exits with code 32, and the BE Pod stays in `Init:CrashLoopBackOff`. Disable swap on the node first. For test environments, you can also [skip the default initialization](#skip-default-system-init).
+
+### Skip the default initialization {#skip-default-system-init}
+
+Let the node administrator set `vm.max_map_count` to at least `2000000` on every node that runs BE (and disable swap in production), then set `skipDefaultSystemInit: true` before the first deployment:
+
+```yaml
+# Integrated storage and compute: set it in beSpec
+spec:
+  beSpec:
+    skipDefaultSystemInit: true
+```
+
+```yaml
+# Compute-storage decoupled: set it in each compute group
+spec:
+  computeGroups:
+  - uniqueId: cg1
+    skipDefaultSystemInit: true
+```
+
+With this setting, the Operator no longer adds `default-init` and injects the environment variable `SKIP_CHECK_ULIMIT=true` into BE, so that BE skips the `vm.max_map_count`, swap, and file descriptor checks at startup. The setting takes effect only when BE is created for the first time: changing it on a deployed cluster does not remove `default-init`. In that case, delete the cluster resource (the PVCs are kept) and deploy it again. For details about the compute-storage decoupled mode, see [Node system initialization](../separating-storage-compute/config-cg.md#be-system-initialization).
+
+## 6. Compute-storage decoupled: prepare object storage {#object-storage}
+
+A compute-storage decoupled cluster writes data to object storage. Doris does not provide an object storage service. Prepare S3-compatible object storage before deployment and collect the following information, which is used when you create the Storage Vault:
+
+| Information | Example | Storage Vault property |
+| --- | --- | --- |
+| Endpoint | `oss-cn-beijing.aliyuncs.com` | `s3.endpoint` |
+| Region | `cn-beijing` | `s3.region` |
+| Bucket | `doris-data` | `s3.bucket` |
+| Data path prefix | `doris/cluster1` | `s3.root.path` |
+| Access Key / Secret Key | - | `s3.access_key` / `s3.secret_key` |
+| Provider | One of `COS`, `OSS`, `S3`, `OBS`, `BOS`, `AZURE`, and `GCP`. Self-hosted S3-compatible services such as MinIO use `S3` | `provider` |
+| URL style | Usually `false` (virtual-hosted-style) for public cloud object storage and `true` (path-style) for self-hosted S3-compatible services | `use_path_style` (default `true`) |
+
+Also confirm the following:
+
+- **Network**: the FE, MetaService, and BE Pods can all reach the endpoint. Before deployment, you can run `curl -I https://<endpoint>` on a Kubernetes node to test connectivity. On a cloud platform, prefer an internal endpoint in the same region as the cluster, such as `oss-cn-beijing-internal.aliyuncs.com`.
+- **Permissions**: the credentials have the `head`, `get`, `list`, `put`, `multipartUpload`, and `delete` permissions on objects under the `s3.root.path` prefix. MetaService recycles the objects of deleted data, so the delete permission is required.
+- **Prefix**: each Doris cluster uses its own bucket or prefix, so that its data is not mixed with data from other clusters or applications.
+
+For the properties and examples of each object storage type, see [Managing Storage Vaults](../../../compute-storage-decoupled/managing-storage-vault.md). If you only need functional testing and have no cloud object storage, you can deploy an S3-compatible object storage service yourself; you are responsible for deploying and operating it.
+
+## Deployment recommendations for cloud Kubernetes services
 
 <div className="cards-grid">
 <GettingStartedCard
@@ -23,25 +227,3 @@ Before deploying Apache Doris with Doris Operator, check the Kubernetes service,
     link="on-aws"
 />
 </div>
-
-## Pod security requirements
-
-The official Doris FE and BE images currently run as the root user because their startup scripts update configuration files under `/opt/apache-doris` and may initialize system settings. Before deployment, make sure that the security policy applied to the Doris namespace allows containers to run as UID `0`.
-
-For example, you can explicitly configure the container security context in a `DorisCluster` resource:
-
-```yaml
-spec:
-  feSpec:
-    containerSecurityContext:
-      runAsUser: 0
-      runAsNonRoot: false
-  beSpec:
-    containerSecurityContext:
-      runAsUser: 0
-      runAsNonRoot: false
-```
-
-This configuration does not bypass Kubernetes admission policies. If the cluster enforces the `restricted` Pod Security Standard or a non-root policy through tools such as Kyverno or OPA Gatekeeper, ask the cluster administrator to create a namespace- or workload-scoped exception for Doris. Avoid relaxing the policy cluster-wide.
-
-When `enableWorkloadGroup: true` is configured for BE, Doris Operator runs the BE container in privileged mode to manage cgroups. Make sure that the security policy also permits privileged containers, or disable this feature.

@@ -2,7 +2,7 @@
 {
     "title": "Deploy on Kubernetes",
     "language": "en",
-    "description": "Deploy Apache Doris on Kubernetes with Doris Operator."
+    "description": "Deploy Apache Doris on Kubernetes with Doris Operator: choose the integrated storage and compute mode or the compute-storage decoupled mode, review the example versions, and complete the first read and write by following the preparation checks and tutorials."
 }
 ---
 
@@ -10,24 +10,61 @@ import GettingStartedCard from '@site/src/components/getting-started-card/gettin
 
 # Deploy on Kubernetes
 
-On Kubernetes, Apache Doris is managed by Doris Operator. Choose the guide that matches the architecture you want to deploy.
+On Kubernetes, Apache Doris is managed by Doris Operator. For a first deployment, follow this order:
+
+1. Complete the [preparation checks](doris-operator/preparation.mdx) for cluster permissions, resources, StorageClass, image pulls, and Pod security policies.
+2. Choose the integrated storage and compute mode or the compute-storage decoupled mode, and deploy the cluster by following the corresponding tutorial.
+3. Connect to the cluster as described in the tutorial, then create a table, write data, and query it.
+
+## Choose a deployment mode
+
+| Item | Integrated storage and compute | Compute-storage decoupled |
+| --- | --- | --- |
+| Where data is stored | BE local disks (PVCs) | Object storage; BE local disks are used only as cache |
+| Components to deploy | FE, BE | FE, MetaService (MS), compute groups (BE), and FoundationDB for metadata |
+| What to prepare before deployment | A Kubernetes cluster and a default StorageClass | The same, plus S3-compatible object storage and its credentials |
+| Resources requested by the tutorial | About 5 CPU / 10Gi | About 11 CPU / 16.25Gi |
+
+If you do not have object storage yet, or just want to try Doris first, choose the integrated storage and compute mode. For a detailed comparison of the two architectures, see [Choosing a Deployment Mode](../choosing-deployment-mode.md#storage-compute-integrated-vs-storage-compute-decoupled).
+
+## Example versions
+
+This documentation uses the following versions as examples. The commands, YAML, and sample output in the tutorials are based on these versions:
+
+| Component | Version | Image or file source |
+| --- | --- | --- |
+| Doris Operator | 26.0.1 | Image `apache/doris:operator-26.0.1`; the CRDs and deployment manifests come from the `26.0.1` tag of [apache/doris-operator](https://github.com/apache/doris-operator/tree/26.0.1) |
+| Doris (FE, BE, MS) | 4.1.5 | `apache/doris:fe-4.1.5`, `apache/doris:be-4.1.5`, `apache/doris:ms-4.1.5` |
+| FoundationDB Operator (compute-storage decoupled only) | v2.35.0 | `velodb/fdb-kubernetes-operator:v2.35.0`, published by VeloDB |
+| FoundationDB (compute-storage decoupled only) | 7.3.69 | `velodb/fdb-kubernetes-monitor:7.3.69`, published by VeloDB |
+| Kubernetes | v1.35.8 | Single-node kind cluster, arm64 |
+
+All of the Doris, Doris Operator, and FoundationDB images above are available for `linux/amd64` and `linux/arm64`. When you use another Doris version, FE, BE, and MS must use the same version. For the compute-storage decoupled mode, also make sure that the FoundationDB client built into MetaService is compatible with your FoundationDB version.
+
+## Get started
 
 <div className="cards-grid">
 <GettingStartedCard
-    title="Pre-deployment Preparation"
-    description="Learn what Doris Operator can do and how to install it on Kubernetes services from different cloud providers"
-    link="doris-operator/intro"
+    title="Preparation"
+    description="Check cluster permissions, node architecture and resources, StorageClass, image pulls, Pod security policies, and object storage"
+    link="doris-operator/preparation"
 />
 
 <GettingStartedCard
     title="Integrated Storage and Compute Deployment"
-    description="Deploy a Doris cluster on Kubernetes in integrated storage and compute mode"
+    description="Deploy a cluster with 1 FE and 1 BE, then verify reads and writes"
     link="integrated-storage-compute/intro"
 />
 
 <GettingStartedCard
-    title="Storage-Compute Separation Deployment"
-    description="Deploy a Doris cluster on Kubernetes in storage-compute separation mode"
+    title="Compute-Storage Decoupled Deployment"
+    description="Deploy FoundationDB, MetaService, FE, and a compute group, configure a Storage Vault, then verify reads and writes"
     link="separating-storage-compute/install-doris-cluster"
+/>
+
+<GettingStartedCard
+    title="Doris Operator Concepts and Capabilities"
+    description="Learn the architecture, resource model, lifecycle, and status troubleshooting of Doris Operator"
+    link="doris-operator/intro"
 />
 </div>

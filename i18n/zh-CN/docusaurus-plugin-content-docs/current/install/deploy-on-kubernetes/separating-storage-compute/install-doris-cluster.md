@@ -198,7 +198,7 @@ kubectl -n fdb-system get events --sort-by=.lastTimestamp
 kubectl -n fdb-system logs deployment/fdb-kubernetes-operator-controller-manager -c manager --tail=100
 ```
 
-常见原因包括：StorageClass 写错导致 PVC 无法创建、节点资源不足、存储卷不支持 `fsGroup: 4059` 的写权限。更多排查方法见[部署 FoundationDB](install-fdb.md#私有仓库与常见问题)。
+常见原因包括：StorageClass 写错导致 PVC 无法创建、节点资源不足、存储卷不支持 `fsGroup: 4059` 的写权限。更多排查方法见[部署 FoundationDB](install-fdb.md#private-registries-and-troubleshooting)。
 
 ### 5. 确认连接信息
 
@@ -440,8 +440,8 @@ MS 启动时可能输出一条包含 `The protocol version of the cluster has ch
 | 现象 | 可能原因与处理方法 |
 | --- | --- |
 | MS 不断重启，或日志中没有 `fdb txn kv is initialized` | FDB 未就绪、ConfigMap 名称或命名空间写错，或 MS 无法访问 FDB。执行 `kubectl -n doris describe ddc test-disaggregated-cluster`，如果 Events 中有 `FDBAddressNotConfiged`，说明 Operator 没有读到 ConfigMap 中的 `cluster-file`，请回到第 1 步第 5 小节检查 |
-| Pod 为 `Pending`、`ImagePullBackOff` 或 `ErrImagePull` | 处理方法与存算一体相同，参见[排查部署问题](../integrated-storage-compute/install-doris-cluster.md#排查部署问题) |
-| BE 为 `Init:CrashLoopBackOff` | 执行 `kubectl -n doris logs test-disaggregated-cluster-cg1-0 -c default-init`。退出码为 32 时，通常是节点开启了 swap，参见[检查节点 swap](../doris-operator/preparation.mdx#检查节点-swap) |
+| Pod 为 `Pending`、`ImagePullBackOff` 或 `ErrImagePull` | 处理方法与存算一体相同，参见[排查部署问题](../integrated-storage-compute/install-doris-cluster.md#troubleshooting) |
+| BE 为 `Init:CrashLoopBackOff` | 执行 `kubectl -n doris logs test-disaggregated-cluster-cg1-0 -c default-init`。退出码为 32 时，通常是节点开启了 swap，参见[检查节点 swap](../doris-operator/preparation.mdx#node-swap) |
 | BE 持续 `CrashLoopBackOff` | 执行 `kubectl -n doris logs test-disaggregated-cluster-cg1-0 --previous` 查看上一次启动的日志 |
 
 ## 第 4 步：创建 Storage Vault {#create-storage-vault}

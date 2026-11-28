@@ -2,7 +2,7 @@
 {
     "title": "Kubernetes 部署",
     "language": "zh-CN",
-    "description": "使用 Doris Operator 在 Kubernetes 上部署 Apache Doris。"
+    "description": "使用 Doris Operator 在 Kubernetes 上部署 Apache Doris：选择存算一体或存算分离模式、了解文档示例使用的版本，并按部署前准备和教程完成首次读写验证。"
 }
 ---
 
@@ -10,24 +10,61 @@ import GettingStartedCard from '@site/src/components/getting-started-card/gettin
 
 # Kubernetes 部署
 
-Apache Doris 在 Kubernetes 上由 Doris Operator 管理。请根据您要部署的架构选择对应指南。
+Apache Doris 在 Kubernetes 上由 Doris Operator 管理。首次部署按以下顺序进行：
+
+1. 完成[部署前准备](doris-operator/preparation.mdx)，确认集群权限、资源、StorageClass、镜像拉取和 Pod 安全策略。
+2. 选择存算一体或存算分离模式，按对应教程部署集群。
+3. 按教程连接集群，完成建表、写入和查询验证。
+
+## 选择部署模式
+
+| 对比项 | 存算一体 | 存算分离 |
+| --- | --- | --- |
+| 数据存放位置 | BE 本地磁盘（PVC） | 对象存储；BE 本地磁盘只作缓存 |
+| 部署的组件 | FE、BE | FE、MetaService（MS）、计算组（BE），以及存放元数据的 FoundationDB |
+| 部署前需要准备 | Kubernetes 集群、默认 StorageClass | 同左；另需 S3 兼容对象存储及访问凭证 |
+| 教程所需资源（requests） | 约 5 CPU / 10Gi | 约 11 CPU / 16.25Gi |
+
+如果没有现成的对象存储，或只想先体验 Doris，请选择存算一体。两种架构的详细对比参见[选择部署模式](../choosing-deployment-mode.md#存算一体-vs-存算分离)。
+
+## 示例版本
+
+本文档使用以下版本为例，教程中的命令、YAML 和示例输出均基于这些版本：
+
+| 组件 | 版本 | 镜像或文件来源 |
+| --- | --- | --- |
+| Doris Operator | 26.0.1 | 镜像 `apache/doris:operator-26.0.1`；CRD 与部署清单来自 [apache/doris-operator](https://github.com/apache/doris-operator/tree/26.0.1) 的 `26.0.1` tag |
+| Doris（FE、BE、MS） | 4.1.5 | `apache/doris:fe-4.1.5`、`apache/doris:be-4.1.5`、`apache/doris:ms-4.1.5` |
+| FoundationDB Operator（仅存算分离） | v2.35.0 | `velodb/fdb-kubernetes-operator:v2.35.0`，由 VeloDB 发布 |
+| FoundationDB（仅存算分离） | 7.3.69 | `velodb/fdb-kubernetes-monitor:7.3.69`，由 VeloDB 发布 |
+| Kubernetes | v1.35.8 | kind 单节点集群，arm64 |
+
+以上 Doris、Doris Operator 和 FoundationDB 镜像均提供 `linux/amd64` 和 `linux/arm64` 版本。使用其他 Doris 版本时，FE、BE 和 MS 必须使用同一版本；存算分离还要确认 MetaService 内置的 FoundationDB 客户端与 FoundationDB 版本兼容。
+
+## 开始部署
 
 <div className="cards-grid">
 <GettingStartedCard
     title="部署前准备"
-    description="了解 Doris Operator 的能力, 以及在不同云厂商 Kubernetes 服务上的安装方式"
-    link="doris-operator/intro"
+    description="检查集群权限、节点架构与资源、StorageClass、镜像拉取、Pod 安全策略和对象存储"
+    link="doris-operator/preparation"
 />
 
 <GettingStartedCard
     title="存算一体部署"
-    description="在 Kubernetes 上以存算一体模式部署 Doris 集群"
+    description="部署 1 FE + 1 BE 的存算一体集群，并完成读写验证"
     link="integrated-storage-compute/intro"
 />
 
 <GettingStartedCard
     title="存算分离部署"
-    description="在 Kubernetes 上以存算分离模式部署 Doris 集群"
+    description="部署 FoundationDB、MetaService、FE 和计算组，配置 Storage Vault 后完成读写验证"
     link="separating-storage-compute/install-doris-cluster"
+/>
+
+<GettingStartedCard
+    title="Doris Operator 原理与能力"
+    description="了解 Doris Operator 的架构、资源模型、生命周期和状态排障"
+    link="doris-operator/intro"
 />
 </div>

@@ -74,9 +74,9 @@ spec:
 
 参数说明：
 
-- `${fdbEndpoint}`：可访问 FoundationDB 的地址信息
+- `${fdbEndpoint}`：FoundationDB 的连接串，格式为 `<描述>:<ID>@<IP>:<端口>[,<IP>:<端口>...]`
 
-物理机部署情况下查找该地址，请参考存算分离章节 [MetaService 部署获取 `fdb_cluster` 介绍](../../deploy-manually/separating-storage-compute-deploy-manually)
+连接串的获取方法和网络、版本要求，参见[接入已有的 FoundationDB](install-doris-cluster.md#use-existing-fdb)。物理机部署 FoundationDB 的步骤，请参考[手动部署存算分离集群](../../deploy-manually/separating-storage-compute-deploy-manually)。
 
 ## 2. 自定义镜像
 
@@ -107,7 +107,7 @@ spec:
       memory: 4Gi
 ```
 
-将上述配置更新到需要[部署的 DorisDisaggregatedCluster 资源](./install-doris-cluster.md#2-修改关键配置)中。
+将上述配置更新到需要[部署的 DorisDisaggregatedCluster 资源](./install-doris-cluster.md#ddc-manifest)中。
 
 ## 4. 定制化启动配置
 
@@ -177,7 +177,7 @@ spec:
 - `${msConfigMapName}`：包含 MetaService 启动配置的 ConfigMap 名称
 - `mountPath`：挂载点必须为 `/etc/doris`
 
-将上述配置更新到需要部署的 [DorisDisaggregatedCluster 资源](./install-doris-cluster.md#2-修改关键配置)中。
+将上述配置更新到需要部署的 [DorisDisaggregatedCluster 资源](./install-doris-cluster.md#ddc-manifest)中。
 
 ### 自定义管理 HTTP token {#ms-http-token}
 

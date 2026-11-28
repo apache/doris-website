@@ -2,36 +2,36 @@
 {
     "title": "部署存算一体集群",
     "language": "zh-CN",
-    "description": "使用 Doris Operator 在 Kubernetes 上部署 Apache Doris 的存算一体集群"
+    "description": "使用 Doris Operator 在 Kubernetes 上部署 Apache Doris 的存算一体集群：安装 Operator、部署 1 FE + 1 BE 集群并完成读写验证、配置集群和访问方式。"
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-参考以下步骤，在 Kubernetes 上部署 Apache Doris 的存算一体集群。
+开始前请完成[部署前准备](../doris-operator/preparation.mdx)。首次部署按 01、03 的顺序操作即可得到一个可读写的集群；02 和 04 分别用于按需定制集群和从集群外部访问。
 
 <div className="cards-grid">
 <GettingStartedCard
     title="01 部署 Doris Operator"
-    description="了解如何部署 Doris Operator"
+    description="以 Doris Operator 26.0.1 为例，安装 CRD 和 Doris Operator，并等待控制器就绪"
     link="install-doris-operator"
 />
 
 <GettingStartedCard
     title="02 配置 Doris 集群"
-    description="配置 Doris 集群"
+    description="按需调整镜像、副本数、资源、启动配置、持久化存储、访问方式和管理用户"
     link="install-config-cluster"
 />
 
 <GettingStartedCard
     title="03 部署 Doris 集群"
-    description="部署 Doris 集群"
+    description="部署 1 FE + 1 BE 的集群，在 FE Pod 内完成建表、写入和查询验证"
     link="install-doris-cluster"
 />
 
 <GettingStartedCard
     title="04 访问 Doris 集群"
-    description="访问 Doris 集群"
+    description="通过 ClusterIP、NodePort、LoadBalancer 或 port-forward 访问集群"
     link="access-cluster"
 />
 </div>

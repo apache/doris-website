@@ -227,7 +227,7 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
 
 将下载的集群 YAML 中 `spec.version`、主镜像配置的 `version` 和 `tag` 一起改为 `7.1.67`。7.1.67 镜像仅支持 amd64；混合架构集群需在控制器及所有数据库 Pod 模板中设置 `nodeSelector: {kubernetes.io/arch: amd64}`。该配置用于新建兼容当前 MetaService 的集群，不用于已有 FDB 集群的降级。
 
-## 私有仓库与常见问题
+## 私有仓库与常见问题 {#private-registries-and-troubleshooting}
 
 如果环境无法直接访问 Docker Hub，可以先将所需镜像同步到私有仓库，再修改部署文件中的镜像地址：
 

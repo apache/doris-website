@@ -29,7 +29,7 @@ In storage-compute separation mode, FE (Frontend) is mainly responsible for quer
 
 ## Configure compute resources
 
-In the [deployment example](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml) provided by the Doris-Operator repository, FE has no resource limits by default. For production environments, it is recommended to explicitly configure FE compute resources via Kubernetes [requests and limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+In the [deployment example](https://github.com/apache/doris-operator/blob/26.0.1/doc/examples/disaggregated/cluster/ddc-sample.yaml) provided by the Doris-Operator repository, FE has no resource limits by default. For production environments, it is recommended to explicitly configure FE compute resources via Kubernetes [requests and limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 The following example allocates 8c8Gi of compute resources to FE:
 
@@ -44,7 +44,7 @@ spec:
             memory: 8Gi
 ```
 
-Apply this configuration to the [`DorisDisaggregatedCluster` resource you want to deploy](./install-doris-cluster.md#2-modify-key-configurations).
+Apply this configuration to the [`DorisDisaggregatedCluster` resource you want to deploy](./install-doris-cluster.md#ddc-manifest).
 
 ### JVM heap and Pod memory {#fe-jvm-memory}
 
@@ -131,7 +131,7 @@ Parameter description:
 
 ### Step 3: Reference the ConfigMap in DorisDisaggregatedCluster
 
-Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#2-modify-key-configurations) and mount the ConfigMap through the `feSpec.configMaps` array, as shown below:
+Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#ddc-manifest) and mount the ConfigMap through the `feSpec.configMaps` array, as shown below:
 
 ```yaml
 spec:
@@ -178,32 +178,31 @@ After the cluster is deployed, view the Services exposed by FE with the followin
 kubectl -n doris get svc
 ```
 
-A sample result is shown below:
+Taking `test-disaggregated-cluster` from [Deploying a Complete Doris Compute-Storage Decoupled Cluster](install-doris-cluster.md) as an example, the result is as follows:
 
-```shell
-NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
-doriscluster-sample-fe-internal   ClusterIP   None          <none>        9030/TCP                              14m
-doriscluster-sample-fe            ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
+```text
+NAME                                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                               AGE
+test-disaggregated-cluster-cg1            ClusterIP   None            <none>        9050/TCP                              41s
+test-disaggregated-cluster-cg1-external   ClusterIP   10.96.254.80    <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   41s
+test-disaggregated-cluster-fe             ClusterIP   10.96.116.105   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   90s
+test-disaggregated-cluster-fe-internal    ClusterIP   None            <none>        9030/TCP                              90s
+test-disaggregated-cluster-ms             ClusterIP   10.96.156.209   <none>        5000/TCP                              96s
 ```
 
-The result contains two kinds of Services:
+FE has two Services:
 
-- With the `internal` suffix: used only for Doris internal communication (such as heartbeat and data exchange), and is not exposed externally
-- Without the `internal` suffix: used for external access to the FE service
+- `test-disaggregated-cluster-fe-internal`: a headless Service used only for internal Doris communication, not by clients
+- `test-disaggregated-cluster-fe`: used to access the FE service. Its default type is ClusterIP, which is reachable only from inside the Kubernetes cluster
 
-#### Step 3: Access Doris from inside a container
+#### Step 3: Access Doris inside the cluster
 
-Run the following command to create a Pod that contains a MySQL client in the current Kubernetes cluster:
-
-```shell
-kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
-```
-
-Inside the container, connect to the Doris cluster using the Service name without the `internal` suffix:
+Applications in the cluster connect to Doris with `test-disaggregated-cluster-fe.doris.svc.cluster.local:9030`. You can also connect from inside the FE Pod with the MySQL client included in the image:
 
 ```shell
-mysql -uroot -P9030 -hdoriscluster-sample-fe
+kubectl -n doris exec -it test-disaggregated-cluster-fe-0 -- mysql -h test-disaggregated-cluster-fe -P 9030 -uroot
 ```
+
+If a MySQL client is installed on your local computer, you can run `kubectl -n doris port-forward svc/test-disaggregated-cluster-fe 9030:9030` to forward the port to your computer, then run `mysql -h 127.0.0.1 -P 9030 -uroot` in another terminal.
 
 ### NodePort mode
 
@@ -252,20 +251,20 @@ Choose one of the following configurations as needed:
 
 #### Step 2: Get the Service
 
-After the cluster is deployed, view the `Service` with the following command:
+After the cluster is deployed, view the FE Service with the following command:
 
 ```shell
-kubectl get service
+kubectl -n doris get svc test-disaggregated-cluster-fe
 ```
 
 The result is shown below:
 
-```shell
-NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                       AGE
-kubernetes                        ClusterIP   10.152.183.1     <none>        443/TCP                                                       169d
-doriscluster-sample-fe-internal   ClusterIP   None             <none>        9030/TCP                                                      2d
-doriscluster-sample-fe            NodePort    10.152.183.58    <none>        8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
+```text
+NAME                            TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                       AGE
+test-disaggregated-cluster-fe   NodePort   10.152.183.58   <none>        8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 ```
+
+In `PORT(S)`, `9030:31545/TCP` means that Service port 9030 is mapped to node port 31545.
 
 #### Step 3: Access Doris through NodePort
 
@@ -274,12 +273,12 @@ Take a MySQL connection as an example. Assume the Doris Query Port is mapped to 
 1. Get the IP address of any node in the Kubernetes cluster:
 
     ```shell
-    kubectl get nodes -owide
+    kubectl get nodes -o wide
     ```
 
     Sample result:
 
-    ```shell
+    ```text
     NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
     r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
     r61    Ready    <none>          14d   v1.28.2   192.168.88.61   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
@@ -312,24 +311,24 @@ spec:
 
 #### Step 2: Get the Service
 
-After the cluster is deployed, view the `Service` with the following command:
+After the cluster is deployed, view the FE Service with the following command:
 
 ```shell
-kubectl get service
+kubectl -n doris get svc test-disaggregated-cluster-fe
 ```
 
 Sample result:
 
-```shell
-NAME                              TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                                                       AGE
-kubernetes                        ClusterIP      10.152.183.1     <none>                                                                          443/TCP                                                       169d
-doriscluster-sample-fe-internal   ClusterIP      None             <none>                                                                          9030/TCP                                                      2d
-doriscluster-sample-fe            LoadBalancer   10.152.183.58    ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com         8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
+```text
+NAME                            TYPE           CLUSTER-IP      EXTERNAL-IP                                                               PORT(S)                                                       AGE
+test-disaggregated-cluster-fe   LoadBalancer   10.152.183.58   ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com   8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 ```
+
+`EXTERNAL-IP` is the address assigned by the load balancer. In `PORT(S)`, `9030:31545/TCP` means that the load balancer listens on Service port 9030, and 31545 is the node port that is allocated at the same time. If `EXTERNAL-IP` stays `<pending>`, run `kubectl -n doris describe svc test-disaggregated-cluster-fe` to view the Events. If the cluster has no load balancer controller, `EXTERNAL-IP` stays `<pending>`.
 
 #### Step 3: Access through the LoadBalancer
 
-Take a MySQL connection as an example. Assume the Query Port listens on 9030. Connect to the Doris cluster with the following command:
+Take a MySQL connection as an example. Connect to the Doris cluster with `EXTERNAL-IP` and Service port 9030, not node port 31545:
 
 ```shell
 mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 9030 -uroot
@@ -337,7 +336,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 
 ## Persistent storage
 
-In the [default deployment](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml), the FE service uses Kubernetes [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) as the metadata storage mode. Because `EmptyDir` is a non-persistent storage mode, **metadata is lost after the service restarts**.
+In the [default deployment](https://github.com/apache/doris-operator/blob/26.0.1/doc/examples/disaggregated/cluster/ddc-sample.yaml), the FE service uses Kubernetes [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) as the metadata storage mode. Because `EmptyDir` is a non-persistent storage mode, **metadata is lost after the service restarts**.
 
 To ensure FE metadata is not lost after a restart, configure persistent storage for FE. Doris Operator provides the following three options. Choose one based on your needs:
 

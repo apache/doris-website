@@ -163,7 +163,7 @@ spec:
 
 此配置不能绕过 Kubernetes 准入策略。当 BE 配置 `enableWorkloadGroup: true` 时，Doris Operator 还会以特权模式运行 BE 主容器以管理 cgroup，请确认安全策略同时允许，否则请关闭此功能。
 
-### 检查节点 swap
+### 检查节点 swap {#node-swap}
 
 BE 启动脚本检测到节点开启了 swap 时会拒绝启动。生产节点通常已关闭 swap，此时 `swapoff -a` 不做任何操作。
 
@@ -196,7 +196,7 @@ spec:
 
 | 信息 | 示例 | 对应 Storage Vault 属性 |
 | --- | --- | --- |
-| Endpoint | `oss-cn-beijing-internal.aliyuncs.com` | `s3.endpoint` |
+| Endpoint | `oss-cn-beijing.aliyuncs.com` | `s3.endpoint` |
 | Region | `cn-beijing` | `s3.region` |
 | Bucket | `doris-data` | `s3.bucket` |
 | 数据目录前缀 | `doris/cluster1` | `s3.root.path` |
@@ -206,7 +206,7 @@ spec:
 
 同时确认：
 
-- **网络**：FE、MetaService 和 BE 的 Pod 都能访问 Endpoint。部署前可以在 Kubernetes 节点上执行 `curl -I https://<endpoint>` 测试连通性。云上部署时，优先使用与集群同地域的内网 Endpoint。
+- **网络**：FE、MetaService 和 BE 的 Pod 都能访问 Endpoint。部署前可以在 Kubernetes 节点上执行 `curl -I https://<endpoint>` 测试连通性。云上部署时，优先使用与集群同地域的内网 Endpoint，例如 `oss-cn-beijing-internal.aliyuncs.com`。
 - **权限**：凭证对 `s3.root.path` 前缀下的对象具有 `head`、`get`、`list`、`put`、`multipartUpload` 和 `delete` 权限。MetaService 会回收已删除数据对应的对象，因此需要删除权限。
 - **前缀**：每个 Doris 集群使用独立的 Bucket 或前缀，避免与其他集群或应用的数据混在一起。
 

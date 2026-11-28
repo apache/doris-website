@@ -9,7 +9,7 @@
 
 ## 集群规划
 
-默认部署的 `DorisCluster` 资源中，FE 和 BE 的镜像可能并非最新版本，且默认副本数均为 3。默认情况下，FE 使用的计算资源配置为 6c 12Gi，BE 使用的资源是 8c 16Gi。以下介绍如何根据需求调整这些默认配置。
+[部署 Doris 集群](install-doris-cluster.md#prepare-doriscluster)中的样例是 1 FE + 1 BE 的功能测试规格。本页介绍如何按需调整镜像、副本数、计算资源、启动配置、持久化存储、访问方式和管理用户。以下配置片段都需要合并到同一个 `DorisCluster` 资源文件中，再执行 `kubectl -n doris apply -f doriscluster-sample.yaml` 使其生效。
 
 ### Image 设置
 
@@ -25,7 +25,7 @@ spec:
     image: ${image}
 ```
 
-将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe) 可供使用。
+将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中。Doris 官方提供的 [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe) 可供使用。
 
 **BE Image 设置**  
 
@@ -37,39 +37,39 @@ spec:
     image: ${image}
 ```
 
-将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。Doris 官方提供的 [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be) 可供使用。
+将 `${image}` 替换想要部署的 image 名称后，将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中。Doris 官方提供的 [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be) 可供使用。
 
 ### 副本数设定
 
 **FE 副本数修改**
 
-将默认的 FE 副本数 3 改为 5，可按以下方式进行配置：
+例如将 FE 副本数设置为 3，可按以下方式进行配置：
 
 ```yaml
 spec:
   feSpec:
-    replicas: 5
+    replicas: 3
 ```
 
-将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
+将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中。
 
 **BE 副本数修改**
 
-将默认的 BE 副本数 3 改为 5，可按以下方式进行配置：
+例如将 BE 副本数设置为 3，可按以下方式进行配置：
 
 ```yaml
 spec:
   beSpec:
-    replicas: 5
+    replicas: 3
 ```
 
-将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
+将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中。
 
 ### 计算资源设定
 
 **FE 计算资源设定**
 
-默认部署的 FE 计算资源为 6c 12Gi，若需修改为 8c 16Gi，可按以下方式进行配置：
+例如将 FE 的计算资源设置为 8c 16Gi，可按以下方式进行配置：
 
 ```yaml
 spec:
@@ -82,11 +82,11 @@ spec:
       memory: 16Gi
 ```
 
-将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
+将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中。
 
 **BE 计算资源设定**
 
-默认部署的 BE 计算资源为 8c 16Gi, 如需修改为 16c 32Gi，可按以下方式进行配置：
+例如将 BE 的计算资源设置为 16c 32Gi，可按以下方式进行配置：
 
 ```yaml
 spec:
@@ -99,15 +99,16 @@ spec:
       memory: 32Gi
 ```
 
-将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中。
+将配置更新到需要部署的 [DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中。
 
-:::tip 提示  
-FE 和 BE 所需要的最小启动资源为 4c 8Gi，如果需要进行正常能力测试，建议配置为 8c 8Gi。  
+:::tip 提示
+- Doris Operator 不会根据内存 `limits` 调整 FE 的 JVM 堆。FE 镜像默认的最大堆为 8GB（`-Xmx8192m -Xms8192m`），FE 的内存 `limits` 需要高于 8Gi，并为 Metaspace、线程栈等非堆内存留出余量。需要更小的内存配额时，请通过 [FE 定制化启动配置](#fe-定制化启动配置)同时调小 `-Xmx` 和 `-Xms`。
+- 快速入门样例的 `requests` 小于 `limits`，便于在资源有限的测试环境中调度。生产环境建议将 `requests` 和 `limits` 设为相同的值，并按业务负载规划资源。
 :::
 
 ## 定制化启动配置
 
-在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../../admin-manual/config/fe-config)和 [BE 配置文档](../../../admin-manual/config/be-config)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)所在的命名空间中。
+在 Kubernetes 中，Doris 使用 `ConfigMap` 将配置文件和服务分离。默认情况下，服务使用镜像里默认配置作为启动参数。请根据 [FE 配置文档](../../../admin-manual/config/fe-config)和 [BE 配置文档](../../../admin-manual/config/be-config)介绍，预先将定制好的启动参数配置到特定的 `ConfigMap` 中。配置完成后，将其部署到目标[ `DorisCluster` 资源](install-doris-cluster.md#prepare-doriscluster)所在的命名空间中。
 
 ### FE 定制化启动配置
 
@@ -182,7 +183,7 @@ kubectl -n ${namespace} apply -f ${feConfigMapFile}.yaml
 
 #### 第 2 步：配置 DorisCluster 资源
 
-以 fe-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下信息：
+以 fe-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](install-doris-cluster.md#prepare-doriscluster)中添加如下信息：
 
 ```yaml
 spec:
@@ -292,7 +293,7 @@ kubectl -n ${namespace} apply -f ${beConfigMapFile}.yaml
 
 #### 第 2 步：配置 DorisCluster 资源
 
-以 be-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下信息：
+以 be-conf 对应的 ConfigMap 为例，需要在[部署的 `DorisCluster` 资源](install-doris-cluster.md#prepare-doriscluster)中添加如下信息：
 
 ```yaml
 spec:
@@ -352,7 +353,7 @@ spec:
 
 #### FE 元数据持久化
 
-使用默认配置文件时，需要在[部署的 DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下内容：
+使用默认配置文件时，需要在[部署的 DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中添加如下内容：
 
 ```yaml
 spec:
@@ -375,7 +376,7 @@ spec:
 
 #### FE 日志持久化
 
-使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中：
+使用默认配置文件时，将如下配置添加到需要[部署的 DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中：
 
 ```yaml
 spec:
@@ -408,7 +409,7 @@ spec:
 
 - 默认持久化存储路径  
 
-  如果 BE 使用默认配置，需要在[部署的 DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下内容：
+  如果 BE 使用默认配置，需要在[部署的 DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中添加如下内容：
   ```yaml
   beSpec:
     persistentVolumes:
@@ -427,7 +428,7 @@ spec:
 
 - 多存储路径持久化
 
-  如果自定义配置中通过 `storage_root_path` 指定了多个存储目录（如： `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD` ）, 需要在部署 [DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中添加如下配置：
+  如果自定义配置中通过 `storage_root_path` 指定了多个存储目录（如： `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD` ）, 需要在部署 [DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中添加如下配置：
 
   ```yaml
   beSpec:
@@ -454,7 +455,7 @@ spec:
   
 #### BE 日志持久化
 
-使用默认配置文件时，在需要[部署的 DorisCluster 资源](install-doris-cluster.md#第-2-步安装自定义部署模板)中，添加以下内容：
+使用默认配置文件时，在需要[部署的 DorisCluster 资源](install-doris-cluster.md#prepare-doriscluster)中，添加以下内容：
 
 ```yaml
 beSpec:
@@ -474,19 +475,19 @@ beSpec:
 
 ## 访问配置
 
-Kubernetes 通过 Service 作为 vip 和负载均衡器的能力，Service 有三种对外暴漏模式 `ClusterIP` 、 `NodePort` 、 `LoadBalancer` .
+Doris Operator 为 FE 和 BE 分别创建 Kubernetes Service。Service 支持三种暴露方式：`ClusterIP`、`NodePort` 和 `LoadBalancer`。访问步骤与示例见[访问 Doris 集群](access-cluster.md)。
 
 ### ClusterIP
 
-Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供了一个内部地址，该地址作为服务在 Kubernetes 内部的被访问地址。
+Doris 在 Kubernetes 上默认使用 [ClusterIP 访问模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。ClusterIP 访问模式在 Kubernetes 集群内提供一个内部地址，只能在 Kubernetes 集群内访问。
 
 #### 第 1 步：配置使用 ClusterIP 作为 Service 类型
 
-  Doris 默认在 Kubernetes 上启用 ClusterIP 访问模式，用户无需额外修改即可使用该模式。
+Doris 默认使用 ClusterIP 访问模式，无需额外配置。
 
 #### 第 2 步：获取 Service 访问地址
 
-部署集群后，通过以下命令可以查看 Doris Operator 暴露的 service：
+部署集群后，通过以下命令查看 Doris Operator 创建的 Service：
 
 ```shell
 kubectl -n doris get svc
@@ -494,54 +495,53 @@ kubectl -n doris get svc
 
 返回结果如下：
 
-```shell
-NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
-doriscluster-sample-be-internal   ClusterIP   None          <none>        9050/TCP                              9m
-doriscluster-sample-be-service    ClusterIP   10.1.68.128   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   9m
-doriscluster-sample-fe-internal   ClusterIP   None          <none>        9030/TCP                              14m
-doriscluster-sample-fe-service    ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
+```text
+NAME                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                               AGE
+doris-operator-service            ClusterIP   10.96.125.220   <none>        443/TCP                               37m
+doriscluster-sample-be-internal   ClusterIP   None            <none>        9050/TCP                              116s
+doriscluster-sample-be-service    ClusterIP   10.96.154.191   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   116s
+doriscluster-sample-fe-internal   ClusterIP   None            <none>        9030/TCP                              3m9s
+doriscluster-sample-fe-service    ClusterIP   10.96.181.183   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   3m9s
 ```
 
-在上述结果中，FE 与 BE 各自有两类 Service，分别以 internal 与 service 作为后缀：
+FE 和 BE 各有两类 Service：
 
-以 internal 后缀的 Service 仅供 Doris 内部通信使用，如心跳，数据交换等，不对外暴漏。 
+- 以 `-internal` 为后缀的 Service 供 Doris 内部通信使用（如心跳和数据交换），不用于客户端访问。
+- 以 `-service` 为后缀的 Service 用于访问集群服务。`doris-operator-service` 属于 Operator，与 Doris 集群无关。
 
-以 service 后缀的 Service 用于访问集群服务。
+#### 第 3 步：在集群内访问 Doris
 
-#### 第 3 步：在容器内部访问 Doris
+集群内的应用通过 FE Service 的 DNS 名称访问 Doris：
 
-使用如下命令在当前的 Kubernetes 集群中创建一个包含 MySQL 客户端 的 Pod：
-
-```shell
-kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
+```text
+doriscluster-sample-fe-service.doris.svc.cluster.local:9030
 ```
 
-在容器内部，可以通过访问带有 `service` 后缀的 Service 名称连接 Doris 集群：
+也可以直接在 FE Pod 内使用镜像自带的 MySQL 客户端连接：
 
 ```shell
-mysql -uroot -P9030 -hdoriscluster-sample-fe-service
+kubectl -n doris exec -it doriscluster-sample-fe-0 -- mysql -h doriscluster-sample-fe-service -P 9030 -uroot
 ```
 
 ### NodePort
 
 若需从 Kubernetes 集群外部访问 Doris，可以选择 [NodePort 的模式](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)。NodePort 模式提供两种配置方式：静态宿主机端口映射和动态宿主机端口分配。
 
-- **动态宿主机端口分配**：如果未显示设置端口映射，Kubernetes 会在创建 pod 的时自动分配一个宿主机未被使用的端口（默认范围为 30000-32767）；
+- **动态宿主机端口分配**：如果未显式设置端口映射，Kubernetes 会在创建 Service 时自动分配一个未被使用的节点端口（默认范围为 30000-32767）。
 
-- **静态宿主机端口分配**：如果显示指定了端口映射，当宿主机端口未被占用且无冲突的时，Kubernetes 会固定分配该端口。
+- **静态宿主机端口分配**：如果显式指定了端口映射，当节点端口未被占用且无冲突时，Kubernetes 会固定分配该端口。
 
 静态分配需要规划端口映射，Doris 提供以下端口用于与外部交互：
 
-| 端口名称 | 默认端口 | 端口描述                     |
-|------| ---- |--------------------------|
+| 端口名称 | 默认端口 | 端口描述 |
+| --- | --- | --- |
 | Query Port | 9030 | 用于通过 MySQL 协议访问 Doris 集群 |
-| HTTP Port | 8030 | FE 上的 http server 端口，用于查看 FE 的信息 |
-| Web Server Port | 8040 | BE 上的 http server 端口，用于查看 BE 的信息 |
-
+| HTTP Port | 8030 | FE 上的 HTTP Server 端口，用于查看 FE 的信息 |
+| Web Server Port | 8040 | BE 上的 HTTP Server 端口，用于查看 BE 的信息 |
 
 #### 第 1 步：配置 FE 和 BE 的 NodePort
 
-**FE NodePort**  
+**FE NodePort**
 
 - 动态分配配置：
 
@@ -580,44 +580,48 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe-service
 - 静态分配配置示例：
 
   ```yaml
-  beSpec:
-    service:
-      type: NodePort
-      servicePorts:
-      - nodePort: 31006
-        targetPort: 8040
+  spec:
+    beSpec:
+      service:
+        type: NodePort
+        servicePorts:
+        - nodePort: 31006
+          targetPort: 8040
   ```
+
+修改 Service 类型不会重启 FE 和 BE。
 
 #### 第 2 步：获取 Service
 
-集群部署完成后，通过以下命令查看 `Service` ：
+集群部署完成后，通过以下命令查看 Service：
 
 ```shell
-kubectl get service
+kubectl -n doris get svc
 ```
 
 返回结果如下：
 
-```shell
+```text
 NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                       AGE
-kubernetes                        ClusterIP   10.152.183.1     <none>        443/TCP                                                       169d
 doriscluster-sample-fe-internal   ClusterIP   None             <none>        9030/TCP                                                      2d
 doriscluster-sample-fe-service    NodePort    10.152.183.58    <none>        8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 doriscluster-sample-be-internal   ClusterIP   None             <none>        9050/TCP                                                      2d
 doriscluster-sample-be-service    NodePort    10.152.183.244   <none>        9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
 
+`PORT(S)` 中的 `9030:31545/TCP` 表示 Service 端口 9030 映射到节点端口 31545。
+
 #### 第 3 步：使用 NodePort 访问服务
 
-以 mysql 连接为例，Doris 的 Query Port 默认端口 9030，在上述示例中，端口  9030 被映射到本地端口 31545。要访问 Doris 集群，需要获取到集群的节点 IP 地址，可以使用以下命令查看：
+以 MySQL 连接为例，Doris 的 Query Port 默认为 9030，在上述示例中被映射到节点端口 31545。要访问 Doris 集群，需要获取集群的节点 IP 地址，可以使用以下命令查看：
 
 ```shell
-kubectl get nodes -owide
+kubectl get nodes -o wide
 ```
 
 返回结果如下：
 
-```shell
+```text
 NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
 r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
 r61    Ready    <none>          14d   v1.28.2   192.168.88.61   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
@@ -625,7 +629,7 @@ r62    Ready    <none>          14d   v1.28.2   192.168.88.62   <none>        Ce
 r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
 ```
 
-在 NodePort 模式下，可以通过任意 node 节点的 IP 地址与映射的宿主机端口方位 Kubernetes 集群内的服务。在本例中，可以使用的 node 节点 IP 包括 192.168.88.61、192.168.88.62、192.168.88.63。以下示例展示了如何使用节点 192.168.88.62 和 `query port` 映射的宿主机端口 31545 连接 Doris：
+在 NodePort 模式下，可以通过任意节点的 IP 地址和映射的节点端口访问 Kubernetes 集群内的服务。以下示例使用节点 192.168.88.62 和 Query Port 映射的节点端口 31545 连接 Doris：
 
 ```shell
 mysql -h 192.168.88.62 -P 31545 -uroot
@@ -633,7 +637,7 @@ mysql -h 192.168.88.62 -P 31545 -uroot
 
 ### LoadBalancer
 
-[LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) 是由云服务商提供的负载均衡器。此配置仅适用于云平台提供的 Kubernetes 环境。
+[LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) 由云服务商或集群中部署的负载均衡控制器提供。没有负载均衡控制器的集群（例如自建集群或本地 kind 集群）无法分配外部地址。
 
 #### 第 1 步：配置 LoadBalancer 模式
 
@@ -648,43 +652,52 @@ spec:
 
 **BE 配置 LoadBalancer**
 
-  ```yaml
-  spec:
-    beSpec:
-      service:
-        type: LoadBalancer
-  ```
+```yaml
+spec:
+  beSpec:
+    service:
+      type: LoadBalancer
+```
+
+云厂商的负载均衡器通常通过 Service 注解配置，例如是否创建内网负载均衡器。可以在 `feSpec.service.annotations` 和 `beSpec.service.annotations` 中填写云厂商要求的注解。
 
 #### 第 2 步：获取 Service
 
-在部署集群后，通过以下命令可以查看可访问 `Doris` 的 `Service`：
+部署集群后，通过以下命令查看 Service：
 
 ```shell
-kubectl get service
+kubectl -n doris get svc
 ```
 
 返回结果如下：
 
-```shell
+```text
 NAME                              TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                                                       AGE
-kubernetes                        ClusterIP      10.152.183.1     <none>                                                                          443/TCP                                                       169d
 doriscluster-sample-fe-internal   ClusterIP      None             <none>                                                                          9030/TCP                                                      2d
 doriscluster-sample-fe-service    LoadBalancer   10.152.183.58    ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com         8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 doriscluster-sample-be-internal   ClusterIP      None             <none>                                                                          9050/TCP                                                      2d
 doriscluster-sample-be-service    LoadBalancer   10.152.183.244   ac4828493dgrftb884g67wg4tb68gyut-1137823345.us-east-1.elb.amazonaws.com         9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
 
+`EXTERNAL-IP` 为负载均衡器分配的地址。`PORT(S)` 中的 `9030:31545/TCP` 表示负载均衡器在 Service 端口 9030 上监听，31545 是同时分配的节点端口。
+
+如果 `EXTERNAL-IP` 一直为 `<pending>`，说明负载均衡器尚未创建成功。请执行 `kubectl -n doris describe svc doriscluster-sample-fe-service` 查看 Events；集群中没有负载均衡控制器时，Events 为空，`EXTERNAL-IP` 会一直保持 `<pending>`。
+
 #### 第 3 步：使用 LoadBalancer 模式访问
 
-以 MySQL 连接为例：
+使用 `EXTERNAL-IP` 和 Service 端口 9030 连接，而不是节点端口 31545：
 
 ```shell
-mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot
+mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 9030 -uroot
 ```
+
+:::caution 注意
+将 Doris 暴露到 Kubernetes 集群外部之前，请先[设置 root 用户密码](#集群部署后设置-root-用户密码)，并通过云厂商的安全组、访问控制列表等方式限制可访问的来源地址。
+:::
 
 ## 配置管理用户名和密码
 
-Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/security-overview)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authorization/internal#所有权限) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
+Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/security-overview)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authorization/internal#所有权限项) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
 
 DorisCluster 资源提供两种方式来配置管理集群节点所需的用户名、密码，包括：环境变量配置的方式，以及使用 [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) 配置的方式。配置集群管理的用户名和密码分为 3 种情况：
 
@@ -851,7 +864,7 @@ func main() {
 
 ### 集群部署后设置 root 用户密码
 
-Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../admin-manual/auth/authorization/internal#所有权限) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户，请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
+Doris 集群在部署后，若未设置 root 用户的密码。需要配置一个具有 [Node_priv](../../../admin-manual/auth/authorization/internal#所有权限项) 权限的用户，便于 Doris Operator 自动化的管理集群节点。建议不要使用 root 用户，请参考[用户新建和权限赋值章节](../../../sql-manual/sql-statements/account-management/CREATE-USER)来创建新用户并赋予 Node_priv 权限。创建用户后，通过环境变量或者 Secret 配置新的管理用户和密码，并在 DorisCluster 资源中配置。
 
 #### 第 1 步：新建拥有 Node_priv 权限用户
 

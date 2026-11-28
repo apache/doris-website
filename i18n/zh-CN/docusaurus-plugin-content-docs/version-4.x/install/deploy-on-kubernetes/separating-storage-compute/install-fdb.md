@@ -37,7 +37,7 @@
 
 ## 版本与镜像来源
 
-本章使用 [VeloDB FDB Operator 仓库提供的部署样例](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/samples/velodb)。CRD 从 [VeloDB FDB Operator 仓库的 branch-2.35.0 分支](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/crd/bases) 下载，与本章使用的 Operator v2.35.0 配套。兼容版本及部署定制说明可查看[样例指南](https://github.com/velodb/fdb-kubernetes-operator/blob/branch-2.35.0/config/samples/velodb/README.md)。部署样例使用的镜像如下：
+本章使用 [VeloDB FDB Operator 仓库提供的部署样例](https://github.com/velodb/fdb-kubernetes-operator/tree/d062b417991432f511bf907ba8649bf919ebc17d/config/samples/velodb)。CRD 来自同一仓库的 [config/crd/bases](https://github.com/velodb/fdb-kubernetes-operator/tree/d062b417991432f511bf907ba8649bf919ebc17d/config/crd/bases) 目录，与本章使用的 Operator v2.35.0 配套。为保证每次下载的内容一致，本章的下载地址固定到 `branch-2.35.0` 分支上的提交 `d062b417991432f511bf907ba8649bf919ebc17d`。兼容版本及部署定制说明可查看[样例指南](https://github.com/velodb/fdb-kubernetes-operator/blob/d062b417991432f511bf907ba8649bf919ebc17d/config/samples/velodb/README.md)。部署样例使用的镜像如下：
 
 | 组件 | 版本 | VeloDB 镜像 |
 | --- | --- | --- |
@@ -98,10 +98,10 @@ kubectl --kubeconfig "$KUBECONFIG" get storageclass
 如果已有 FDB CRD 或控制器，请先确认是否可以复用。新建环境可以通过以下命令下载部署文件：
 
 ```shell
-mkdir fdb-install-v2.35.0
-cd fdb-install-v2.35.0
-FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/crd/bases
-FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/samples/velodb
+FDB_REF=d062b417991432f511bf907ba8649bf919ebc17d
+FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/${FDB_REF}/config/crd/bases
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/${FDB_REF}/config/samples/velodb
+mkdir -p fdb-install && cd fdb-install
 for resource in clusters backups restores; do
   curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done
@@ -118,7 +118,8 @@ curl -fSL "$FDB_ASSETS/cluster-single.yaml" -o fdb-cluster.yaml
 通过以下命令部署 CRD、Operator 和 Monitor RBAC：
 
 ```shell
-kubectl --kubeconfig "$KUBECONFIG" create namespace fdb-system
+kubectl --kubeconfig "$KUBECONFIG" create namespace fdb-system --dry-run=client -o yaml | \
+  kubectl --kubeconfig "$KUBECONFIG" apply -f -
 kubectl --kubeconfig "$KUBECONFIG" apply --server-side \
   -f fdb-clusters-crd.yaml -f fdb-backups-crd.yaml -f fdb-restores-crd.yaml
 kubectl --kubeconfig "$KUBECONFIG" wait --for=condition=Established --timeout=60s \
@@ -131,7 +132,7 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
 kubectl --kubeconfig "$KUBECONFIG" -n fdb-system apply -f fdb-monitor-rbac.yaml
 ```
 
-三个 CRD 均为 Established，且 Operator Deployment rollout 成功后，即可继续部署 FDB 集群。CRD 文件较大，因此使用 `--server-side` 避免超出 last-applied 注解大小限制。如果与已有资源发生冲突，请先检查版本和资源归属，不要直接使用 `--force-conflicts` 覆盖。
+三个 CRD 均为 Established，且 Operator Deployment rollout 成功后，即可继续部署 FDB 集群。以上命令可以重复执行。CRD 文件较大，因此使用 `--server-side` 避免超出 last-applied 注解大小限制。如果与已有资源发生冲突，请先检查版本和资源归属，不要直接使用 `--force-conflicts` 覆盖。
 
 `fdb-monitor-rbac.yaml` 为 FDB Pod 创建独立的 `fdb-monitor` ServiceAccount，授予本 namespace 中 Pod 的 get/list/watch/patch 权限。
 
@@ -155,9 +156,19 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get fdb
 
 ### 第 4 步：验证可用性与调谐状态
 
+等待集群可用，然后检查状态、Pod 和 PVC：
+
 ```shell
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system wait --for=jsonpath='{.status.health.available}'=true \
+  foundationdbcluster/fdb-single --timeout=900s
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get fdb fdb-single -o jsonpath='configured={.status.configured} available={.status.health.available} fullReplication={.status.health.fullReplication} generation={.metadata.generation} reconciled={.status.generations.reconciled}{"\n"}'
 kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get pods,pvc
-kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get fdb fdb-single -o yaml
+```
+
+单副本样例就绪后，第二条命令的期望输出为：
+
+```text
+configured=true available=true fullReplication=true generation=1 reconciled=1
 ```
 
 部署完成后，检查以下状态：
@@ -170,11 +181,19 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get fdb fdb-single -o yaml
 
 ## 获取包含 FoundationDB 访问信息的 ConfigMap {#get-the-configmap-that-contains-foundationdb-access-information}
 
-Operator 在数据库所在 namespace 生成 `<FoundationDBCluster 名称>-config`：
+Operator 在数据库所在 namespace 生成 `<FoundationDBCluster 名称>-config`，其中的 `cluster-file` 是 FDB 的连接串：
 
 ```shell
-kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get configmap fdb-single-config -o yaml
+kubectl --kubeconfig "$KUBECONFIG" -n fdb-system get configmap fdb-single-config -o jsonpath='{.data.cluster-file}{"\n"}'
 ```
+
+期望输出类似：
+
+```text
+fdb_single:CkSr0MxcWyVky600RxkO7zXqwuTK1TcM@fdb-single-log-57659.fdb-single.fdb-system.svc.cluster.local:4501
+```
+
+输出为空时，说明 FDB 集群尚未完成配置，请先完成第 4 步的检查。Doris Operator 创建 MetaService 时读取 `cluster-file`，ConfigMap 中没有该字段时 MetaService 无法连接 FDB。
 
 在 Doris 资源中配置如下；双副本样例使用 `fdb-double-config`：
 
@@ -190,7 +209,7 @@ spec:
 将以上配置更新到 `DorisDisaggregatedCluster` 资源中，完整说明见[配置 MetaService](config-ms.md)。
 
 :::tip 提示
-多个 Doris 集群可以共享同一个 FDB，删除其中一个 Doris 集群时需要保留共享的 FDB。删除 FDB 资源或 PVC 可能导致元数据丢失，请提前做好备份和恢复规划。
+多个 Doris 集群可以共享同一个 FDB，删除其中一个 Doris 集群时需要保留共享的 FDB。删除 `FoundationDBCluster` 资源时，FDB Operator 会同时删除该集群的 PVC 和连接信息 ConfigMap，其中的元数据无法恢复，请提前做好备份和恢复规划。
 :::
 
 ## MetaService 需要 FDB 7.1 时的方案 {#fdb-71}
@@ -208,7 +227,7 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
 
 将下载的集群 YAML 中 `spec.version`、主镜像配置的 `version` 和 `tag` 一起改为 `7.1.67`。7.1.67 镜像仅支持 amd64；混合架构集群需在控制器及所有数据库 Pod 模板中设置 `nodeSelector: {kubernetes.io/arch: amd64}`。该配置用于新建兼容当前 MetaService 的集群，不用于已有 FDB 集群的降级。
 
-## 私有仓库与常见问题
+## 私有仓库与常见问题 {#private-registries-and-troubleshooting}
 
 如果环境无法直接访问 Docker Hub，可以先将所需镜像同步到私有仓库，再修改部署文件中的镜像地址：
 

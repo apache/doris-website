@@ -29,7 +29,7 @@ FE（Frontend）在存算分离模式下主要负责查询解析和规划等相�
 
 ## 配置计算资源
 
-Doris-Operator 仓库提供的[部署样例](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml)中，FE 默认不限制资源使用。生产环境建议通过 Kubernetes 的 [requests 和 limits](https://kubernetes.io/zh-cn/docs/concepts/configuration/manage-resources-containers/) 显式配置 FE 的计算资源。
+Doris-Operator 仓库提供的[部署样例](https://github.com/apache/doris-operator/blob/26.0.1/doc/examples/disaggregated/cluster/ddc-sample.yaml)中，FE 默认不限制资源使用。生产环境建议通过 Kubernetes 的 [requests 和 limits](https://kubernetes.io/zh-cn/docs/concepts/configuration/manage-resources-containers/) 显式配置 FE 的计算资源。
 
 为 FE 分配 8c8Gi 计算资源的配置示例如下：
 
@@ -44,7 +44,7 @@ spec:
             memory: 8Gi
 ```
 
-将上述配置信息更新到[需要部署的 `DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#2-修改关键配置)中。
+将上述配置信息更新到[需要部署的 `DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#ddc-manifest)中。
 
 ### JVM 堆与 Pod 内存 {#fe-jvm-memory}
 
@@ -131,7 +131,7 @@ kubectl apply -n ${namespace} -f ${feConfigMapName}.yaml
 
 ### 第 3 步：在 DorisDisaggregatedCluster 中引用 ConfigMap
 
-更新[`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#2-修改关键配置)，通过 `feSpec.configMaps` 数组挂载 ConfigMap，示例如下：
+更新[`DorisDisaggregatedCluster` 资源](./install-doris-cluster.md#ddc-manifest)，通过 `feSpec.configMaps` 数组挂载 ConfigMap，示例如下：
 
 ```yaml
 spec:
@@ -178,32 +178,31 @@ ClusterIP 是默认访问模式，**无需额外修改**即可使用。
 kubectl -n doris get svc
 ```
 
-示例返回结果如下：
+以[部署完整 Doris 存算分离集群](install-doris-cluster.md)中的 `test-disaggregated-cluster` 为例，返回结果如下：
 
-```shell
-NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
-doriscluster-sample-fe-internal   ClusterIP   None          <none>        9030/TCP                              14m
-doriscluster-sample-fe            ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
+```text
+NAME                                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                               AGE
+test-disaggregated-cluster-cg1            ClusterIP   None            <none>        9050/TCP                              41s
+test-disaggregated-cluster-cg1-external   ClusterIP   10.96.254.80    <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   41s
+test-disaggregated-cluster-fe             ClusterIP   10.96.116.105   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   90s
+test-disaggregated-cluster-fe-internal    ClusterIP   None            <none>        9030/TCP                              90s
+test-disaggregated-cluster-ms             ClusterIP   10.96.156.209   <none>        5000/TCP                              96s
 ```
 
-返回结果中包含两类 Service：
+FE 有两个 Service：
 
-- 带 `internal` 后缀：仅供 Doris 内部通信使用（如心跳和数据交换），不对外暴露
-- 不带 `internal` 后缀：用于外部访问 FE 服务
+- `test-disaggregated-cluster-fe-internal`：Headless Service，仅供 Doris 内部通信使用，不用于客户端访问
+- `test-disaggregated-cluster-fe`：用于访问 FE 服务。默认类型为 ClusterIP，只能在 Kubernetes 集群内访问
 
-#### 第 3 步：在容器内部访问 Doris
+#### 第 3 步：在集群内访问 Doris
 
-使用如下命令在当前的 Kubernetes 集群中创建一个包含 MySQL 客户端的 Pod：
-
-```shell
-kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
-```
-
-在容器内部，通过不带 `internal` 后缀的 Service 名称连接 Doris 集群：
+集群内的应用使用 `test-disaggregated-cluster-fe.doris.svc.cluster.local:9030` 连接 Doris。也可以直接在 FE Pod 内使用镜像自带的 MySQL 客户端连接：
 
 ```shell
-mysql -uroot -P9030 -hdoriscluster-sample-fe
+kubectl -n doris exec -it test-disaggregated-cluster-fe-0 -- mysql -h test-disaggregated-cluster-fe -P 9030 -uroot
 ```
+
+如果本地电脑已安装 MySQL 客户端，可以先执行 `kubectl -n doris port-forward svc/test-disaggregated-cluster-fe 9030:9030` 将端口转发到本地，再在另一个终端中执行 `mysql -h 127.0.0.1 -P 9030 -uroot`。
 
 ### NodePort 模式
 
@@ -252,20 +251,20 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe
 
 #### 第 2 步：获取 Service
 
-集群部署完成后，通过以下命令查看 `Service`：
+集群部署完成后，通过以下命令查看 FE 的 Service：
 
 ```shell
-kubectl get service
+kubectl -n doris get svc test-disaggregated-cluster-fe
 ```
 
 返回结果如下：
 
-```shell
-NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                       AGE
-kubernetes                        ClusterIP   10.152.183.1     <none>        443/TCP                                                       169d
-doriscluster-sample-fe-internal   ClusterIP   None             <none>        9030/TCP                                                      2d
-doriscluster-sample-fe            NodePort    10.152.183.58    <none>        8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
+```text
+NAME                            TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                       AGE
+test-disaggregated-cluster-fe   NodePort   10.152.183.58   <none>        8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 ```
+
+`PORT(S)` 中的 `9030:31545/TCP` 表示 Service 端口 9030 映射到节点端口 31545。
 
 #### 第 3 步：使用 NodePort 访问 Doris
 
@@ -274,12 +273,12 @@ doriscluster-sample-fe            NodePort    10.152.183.58    <none>        803
 1. 获取 Kubernetes 集群任一节点的 IP 地址：
 
     ```shell
-    kubectl get nodes -owide
+    kubectl get nodes -o wide
     ```
 
     示例返回：
 
-    ```shell
+    ```text
     NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
     r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
     r61    Ready    <none>          14d   v1.28.2   192.168.88.61   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
@@ -312,24 +311,24 @@ spec:
 
 #### 第 2 步：获取 Service
 
-集群部署后，通过以下命令查看 `Service`：
+集群部署后，通过以下命令查看 FE 的 Service：
 
 ```shell
-kubectl get service
+kubectl -n doris get svc test-disaggregated-cluster-fe
 ```
 
 示例返回结果：
 
-```shell
-NAME                              TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                                                       AGE
-kubernetes                        ClusterIP      10.152.183.1     <none>                                                                          443/TCP                                                       169d
-doriscluster-sample-fe-internal   ClusterIP      None             <none>                                                                          9030/TCP                                                      2d
-doriscluster-sample-fe            LoadBalancer   10.152.183.58    ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com         8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
+```text
+NAME                            TYPE           CLUSTER-IP      EXTERNAL-IP                                                               PORT(S)                                                       AGE
+test-disaggregated-cluster-fe   LoadBalancer   10.152.183.58   ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com   8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 ```
+
+`EXTERNAL-IP` 为负载均衡器分配的地址。`PORT(S)` 中的 `9030:31545/TCP` 表示负载均衡器在 Service 端口 9030 上监听，31545 是同时分配的节点端口。如果 `EXTERNAL-IP` 一直为 `<pending>`，请执行 `kubectl -n doris describe svc test-disaggregated-cluster-fe` 查看 Events；集群中没有负载均衡控制器时，`EXTERNAL-IP` 会一直保持 `<pending>`。
 
 #### 第 3 步：使用 LoadBalancer 访问
 
-以 MySQL 连接为例，假设 Query Port 的监听端口为 9030，可使用如下命令连接 Doris 集群：
+以 MySQL 连接为例，使用 `EXTERNAL-IP` 和 Service 端口 9030 连接 Doris 集群，而不是节点端口 31545：
 
 ```shell
 mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 9030 -uroot
@@ -337,7 +336,7 @@ mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com
 
 ## 持久化存储
 
-[默认部署](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml)中，FE 服务使用 Kubernetes 的 [EmptyDir](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#emptydir) 作为元数据存储模式。由于 `EmptyDir` 是非持久化存储模式，**服务重启后元数据会丢失**。
+[默认部署](https://github.com/apache/doris-operator/blob/26.0.1/doc/examples/disaggregated/cluster/ddc-sample.yaml)中，FE 服务使用 Kubernetes 的 [EmptyDir](https://kubernetes.io/zh-cn/docs/concepts/storage/volumes/#emptydir) 作为元数据存储模式。由于 `EmptyDir` 是非持久化存储模式，**服务重启后元数据会丢失**。
 
 为保证 FE 元数据在重启后不丢失，需要为 FE 配置持久化存储。Doris Operator 提供以下三种方案，可根据使用需求选择：
 

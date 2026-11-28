@@ -9,7 +9,7 @@
 
 ## Cluster Planning
 
-In the default `DorisCluster` resource, the FE and BE images may not be the latest versions, and both default to 3 replicas. By default, FE uses 6c 12Gi compute resources and BE uses 8c 16Gi. The following sections describe how to adjust these defaults to match your needs.
+The example in [Deploy Doris Cluster](install-doris-cluster.md#prepare-doriscluster) is a functional test size with 1 FE and 1 BE. This page describes how to adjust images, replicas, compute resources, startup configuration, persistent storage, access methods, and admin users as needed. Merge the following configuration snippets into the same `DorisCluster` resource file, then run `kubectl -n doris apply -f doriscluster-sample.yaml` to apply them.
 
 ### Image Settings
 
@@ -25,7 +25,7 @@ spec:
     image: ${image}
 ```
 
-Replace `${image}` with the image name to deploy, then update the configuration in the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed. The official [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe) provided by Doris is available for use.
+Replace `${image}` with the image name to deploy, then update the configuration in the [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster) to be deployed. The official [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe) provided by Doris is available for use.
 
 **BE Image Settings**
 
@@ -37,39 +37,39 @@ spec:
     image: ${image}
 ```
 
-Replace `${image}` with the image name to deploy, then update the configuration in the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed. The official [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be) provided by Doris is available for use.
+Replace `${image}` with the image name to deploy, then update the configuration in the [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster) to be deployed. The official [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be) provided by Doris is available for use.
 
 ### Replica Settings
 
 **Modify FE Replicas**
 
-To change the default FE replica count from 3 to 5, configure it as follows:
+For example, to set the FE replica count to 3, configure it as follows:
 
 ```yaml
 spec:
   feSpec:
-    replicas: 5
+    replicas: 3
 ```
 
-Update the configuration in the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed.
+Update the configuration in the [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster) to be deployed.
 
 **Modify BE Replicas**
 
-To change the default BE replica count from 3 to 5, configure it as follows:
+For example, to set the BE replica count to 3, configure it as follows:
 
 ```yaml
 spec:
   beSpec:
-    replicas: 5
+    replicas: 3
 ```
 
-Update the configuration in the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed.
+Update the configuration in the [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster) to be deployed.
 
 ### Compute Resource Settings
 
 **FE Compute Resource Settings**
 
-The default FE compute resource is 6c 12Gi. To change it to 8c 16Gi, configure it as follows:
+For example, to set the FE compute resources to 8c 16Gi, configure it as follows:
 
 ```yaml
 spec:
@@ -82,11 +82,11 @@ spec:
       memory: 16Gi
 ```
 
-Update the configuration in the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed.
+Update the configuration in the [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster) to be deployed.
 
 **BE Compute Resource Settings**
 
-The default BE compute resource is 8c 16Gi. To change it to 16c 32Gi, configure it as follows:
+For example, to set the BE compute resources to 16c 32Gi, configure it as follows:
 
 ```yaml
 spec:
@@ -99,15 +99,16 @@ spec:
       memory: 32Gi
 ```
 
-Update the configuration in the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed.
+Update the configuration in the [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster) to be deployed.
 
 :::tip Tip
-The minimum startup resource required for FE and BE is 4c 8Gi. For normal capability testing, 8c 8Gi is recommended.
+- Doris Operator does not adjust the FE JVM heap based on the memory `limits`. The default maximum heap of the FE image is 8 GB (`-Xmx8192m -Xms8192m`), so the FE memory `limits` must be higher than 8Gi and leave room for non-heap memory such as Metaspace and thread stacks. If you need a smaller memory quota, reduce both `-Xmx` and `-Xms` through the [FE customized startup configuration](#fe-customized-startup-configuration).
+- In the quick-start example, `requests` are smaller than `limits` so that the cluster can be scheduled in test environments with limited resources. For production, set `requests` and `limits` to the same values and plan resources based on your workload.
 :::
 
 ## Customized Startup Configuration
 
-In Kubernetes, Doris uses `ConfigMap` to separate configuration files from services. By default, services use the default configuration in the image as startup parameters. According to the [FE configuration document](../../../admin-manual/config/fe-config) and the [BE configuration document](../../../admin-manual/config/be-config), prepare the customized startup parameters in a specific `ConfigMap` in advance. Once configured, deploy it to the namespace where the target [`DorisCluster` resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) is located.
+In Kubernetes, Doris uses `ConfigMap` to separate configuration files from services. By default, services use the default configuration in the image as startup parameters. According to the [FE configuration document](../../../admin-manual/config/fe-config) and the [BE configuration document](../../../admin-manual/config/be-config), prepare the customized startup parameters in a specific `ConfigMap` in advance. Once configured, deploy it to the namespace where the target [`DorisCluster` resource](install-doris-cluster.md#prepare-doriscluster) is located.
 
 ### FE Customized Startup Configuration
 
@@ -182,7 +183,7 @@ Here, `${namespace}` is the namespace where the target `DorisCluster` resource w
 
 #### Step 2: Configure the DorisCluster Resource
 
-Taking the ConfigMap corresponding to fe-conf as an example, add the following information to the [deployed `DorisCluster` resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template):
+Taking the ConfigMap corresponding to fe-conf as an example, add the following information to the [deployed `DorisCluster` resource](install-doris-cluster.md#prepare-doriscluster):
 
 ```yaml
 spec:
@@ -292,7 +293,7 @@ Here, `${namespace}` is the namespace where the `DorisCluster` resource will be 
 
 #### Step 2: Configure the DorisCluster Resource
 
-Taking the ConfigMap corresponding to be-conf as an example, add the following information to the [deployed `DorisCluster` resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template):
+Taking the ConfigMap corresponding to be-conf as an example, add the following information to the [deployed `DorisCluster` resource](install-doris-cluster.md#prepare-doriscluster):
 
 ```yaml
 spec:
@@ -352,7 +353,7 @@ When deploying a Doris cluster on Kubernetes, it is recommended to persist the `
 
 #### FE Metadata Persistence
 
-When using the default configuration file, add the following content to the [deployed DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template):
+When using the default configuration file, add the following content to the [deployed DorisCluster resource](install-doris-cluster.md#prepare-doriscluster):
 
 ```yaml
 spec:
@@ -375,7 +376,7 @@ In the configuration above, ${your_storageclass} is the name of the specified [S
 
 #### FE Log Persistence
 
-When using the default configuration file, add the following content to the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed:
+When using the default configuration file, add the following content to the [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster) to be deployed:
 
 ```yaml
 spec:
@@ -408,7 +409,7 @@ When deploying a Doris cluster on Kubernetes, it is recommended to persist the `
 
 - Default persistent storage path
 
-  If BE uses the default configuration, add the following content to the [deployed DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template):
+  If BE uses the default configuration, add the following content to the [deployed DorisCluster resource](install-doris-cluster.md#prepare-doriscluster):
   ```yaml
   beSpec:
     persistentVolumes:
@@ -427,7 +428,7 @@ When deploying a Doris cluster on Kubernetes, it is recommended to persist the `
 
 - Multi-storage-path persistence
 
-  If multiple storage directories are specified via `storage_root_path` in the customized configuration (for example, `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD`), add the following configuration to the deployed [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template):
+  If multiple storage directories are specified via `storage_root_path` in the customized configuration (for example, `storage_root_path=/home/disk1/doris.HDD;/home/disk2/doris.SSD`), add the following configuration to the deployed [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster):
 
   ```yaml
   beSpec:
@@ -454,7 +455,7 @@ When deploying a Doris cluster on Kubernetes, it is recommended to persist the `
   
 #### BE Log Persistence
 
-When using the default configuration file, add the following content to the [DorisCluster resource](install-doris-cluster.md#step-2-install-the-customized-deployment-template) to be deployed:
+When using the default configuration file, add the following content to the [DorisCluster resource](install-doris-cluster.md#prepare-doriscluster) to be deployed:
 
 ```yaml
 beSpec:
@@ -474,19 +475,19 @@ In the configuration above, ${your_storageclass} is the name of the [StorageClas
 
 ## Access Configuration
 
-Kubernetes uses Service to provide vip and load balancing capability. A Service has three external exposure modes: `ClusterIP`, `NodePort`, and `LoadBalancer`.
+Doris Operator creates Kubernetes Services for FE and BE. A Service can be exposed in three ways: `ClusterIP`, `NodePort`, and `LoadBalancer`. For access steps and examples, see [Access the Doris Cluster](access-cluster.md).
 
 ### ClusterIP
 
-By default, Doris on Kubernetes uses the [ClusterIP access mode](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip). The ClusterIP access mode provides an internal address inside the Kubernetes cluster, which serves as the access address for the service within Kubernetes.
+By default, Doris on Kubernetes uses the [ClusterIP access mode](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip). The ClusterIP access mode provides an internal address that is reachable only from inside the Kubernetes cluster.
 
 #### Step 1: Configure ClusterIP as the Service Type
 
-  Doris enables the ClusterIP access mode on Kubernetes by default. You can use this mode without any extra modification.
+Doris uses the ClusterIP access mode by default. No extra configuration is required.
 
 #### Step 2: Get the Service Access Address
 
-After deploying the cluster, run the following command to view the services exposed by Doris Operator:
+After deploying the cluster, run the following command to view the Services created by Doris Operator:
 
 ```shell
 kubectl -n doris get svc
@@ -494,50 +495,49 @@ kubectl -n doris get svc
 
 The result is as follows:
 
-```shell
-NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
-doriscluster-sample-be-internal   ClusterIP   None          <none>        9050/TCP                              9m
-doriscluster-sample-be-service    ClusterIP   10.1.68.128   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   9m
-doriscluster-sample-fe-internal   ClusterIP   None          <none>        9030/TCP                              14m
-doriscluster-sample-fe-service    ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
+```text
+NAME                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                               AGE
+doris-operator-service            ClusterIP   10.96.125.220   <none>        443/TCP                               37m
+doriscluster-sample-be-internal   ClusterIP   None            <none>        9050/TCP                              116s
+doriscluster-sample-be-service    ClusterIP   10.96.154.191   <none>        9060/TCP,8040/TCP,9050/TCP,8060/TCP   116s
+doriscluster-sample-fe-internal   ClusterIP   None            <none>        9030/TCP                              3m9s
+doriscluster-sample-fe-service    ClusterIP   10.96.181.183   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   3m9s
 ```
 
-In the result above, FE and BE each have two types of Services, suffixed with internal and service respectively:
+FE and BE each have two kinds of Services:
 
-Services with the internal suffix are used only for internal communication inside Doris, such as heartbeats and data exchange, and are not exposed externally.
+- Services with the `-internal` suffix are used for internal Doris communication, such as heartbeats and data exchange, and are not used by clients.
+- Services with the `-service` suffix are used to access the cluster. `doris-operator-service` belongs to the Operator and is not part of the Doris cluster.
 
-Services with the service suffix are used to access cluster services.
+#### Step 3: Access Doris Inside the Cluster
 
-#### Step 3: Access Doris Inside a Container
+Applications in the cluster access Doris through the DNS name of the FE Service:
 
-Use the following command to create a Pod containing the MySQL client in the current Kubernetes cluster:
-
-```shell
-kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
+```text
+doriscluster-sample-fe-service.doris.svc.cluster.local:9030
 ```
 
-Inside the container, you can connect to the Doris cluster by accessing the Service name with the `service` suffix:
+You can also connect from inside the FE Pod with the MySQL client included in the image:
 
 ```shell
-mysql -uroot -P9030 -hdoriscluster-sample-fe-service
+kubectl -n doris exec -it doriscluster-sample-fe-0 -- mysql -h doriscluster-sample-fe-service -P 9030 -uroot
 ```
 
 ### NodePort
 
 To access Doris from outside the Kubernetes cluster, you can choose [NodePort mode](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport). NodePort mode provides two configuration methods: static host port mapping and dynamic host port allocation.
 
-- **Dynamic host port allocation**: If port mapping is not explicitly set, Kubernetes automatically allocates an unused port on the host (default range 30000-32767) when creating the pod.
+- **Dynamic host port allocation**: If port mapping is not explicitly set, Kubernetes automatically allocates an unused node port (default range 30000-32767) when creating the Service.
 
-- **Static host port allocation**: If port mapping is explicitly specified, Kubernetes allocates that fixed port when the host port is unused and there is no conflict.
+- **Static host port allocation**: If port mapping is explicitly specified, Kubernetes allocates that port as long as the node port is not in use and there is no conflict.
 
 Static allocation requires planning the port mapping. Doris provides the following ports for external interaction:
 
-| Port Name | Default Port | Port Description                     |
-|------| ---- |--------------------------|
-| Query Port | 9030 | Used to access the Doris cluster via the MySQL protocol |
-| HTTP Port | 8030 | The http server port on FE, used to view FE information |
-| Web Server Port | 8040 | The http server port on BE, used to view BE information |
-
+| Port name | Default port | Description |
+| --- | --- | --- |
+| Query Port | 9030 | Used to access the Doris cluster over the MySQL protocol |
+| HTTP Port | 8030 | The HTTP server port on FE, used to view FE information |
+| Web Server Port | 8040 | The HTTP server port on BE, used to view BE information |
 
 #### Step 1: Configure NodePort for FE and BE
 
@@ -580,44 +580,48 @@ Static allocation requires planning the port mapping. Doris provides the followi
 - Static allocation configuration example:
 
   ```yaml
-  beSpec:
-    service:
-      type: NodePort
-      servicePorts:
-      - nodePort: 31006
-        targetPort: 8040
+  spec:
+    beSpec:
+      service:
+        type: NodePort
+        servicePorts:
+        - nodePort: 31006
+          targetPort: 8040
   ```
+
+Changing the Service type does not restart FE or BE.
 
 #### Step 2: Get the Service
 
-After the cluster is deployed, run the following command to view the `Service`:
+After the cluster is deployed, run the following command to view the Services:
 
 ```shell
-kubectl get service
+kubectl -n doris get svc
 ```
 
 The result is as follows:
 
-```shell
+```text
 NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                       AGE
-kubernetes                        ClusterIP   10.152.183.1     <none>        443/TCP                                                       169d
 doriscluster-sample-fe-internal   ClusterIP   None             <none>        9030/TCP                                                      2d
 doriscluster-sample-fe-service    NodePort    10.152.183.58    <none>        8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 doriscluster-sample-be-internal   ClusterIP   None             <none>        9050/TCP                                                      2d
 doriscluster-sample-be-service    NodePort    10.152.183.244   <none>        9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
 
+In `PORT(S)`, `9030:31545/TCP` means that Service port 9030 is mapped to node port 31545.
+
 #### Step 3: Access the Service Using NodePort
 
-Take MySQL connection as an example. The default Doris Query Port is 9030. In the example above, port 9030 is mapped to local port 31545. To access the Doris cluster, you need to obtain the IP address of a cluster node. Run the following command to view it:
+Take a MySQL connection as an example. The default Doris Query Port is 9030, which is mapped to node port 31545 in the example above. To access the Doris cluster, you need the IP address of a cluster node. Run the following command to view it:
 
 ```shell
-kubectl get nodes -owide
+kubectl get nodes -o wide
 ```
 
 The result is as follows:
 
-```shell
+```text
 NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
 r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
 r61    Ready    <none>          14d   v1.28.2   192.168.88.61   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
@@ -625,7 +629,7 @@ r62    Ready    <none>          14d   v1.28.2   192.168.88.62   <none>        Ce
 r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
 ```
 
-In NodePort mode, you can access services inside the Kubernetes cluster through the IP address of any node and the mapped host port. In this example, the available node IPs include 192.168.88.61, 192.168.88.62, and 192.168.88.63. The following example shows how to use node 192.168.88.62 and the host port 31545 mapped from the `query port` to connect to Doris:
+In NodePort mode, you can access services in the Kubernetes cluster through the IP address of any node and the mapped node port. The following example connects to Doris through node 192.168.88.62 and node port 31545, which is mapped from the Query Port:
 
 ```shell
 mysql -h 192.168.88.62 -P 31545 -uroot
@@ -633,7 +637,7 @@ mysql -h 192.168.88.62 -P 31545 -uroot
 
 ### LoadBalancer
 
-[LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) is a load balancer provided by the cloud service provider. This configuration applies only to Kubernetes environments provided by cloud platforms.
+[LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) is provided by the cloud provider or by a load balancer controller deployed in the cluster. A cluster without a load balancer controller (for example, a self-managed cluster or a local kind cluster) cannot assign an external address.
 
 #### Step 1: Configure LoadBalancer Mode
 
@@ -648,43 +652,52 @@ spec:
 
 **BE LoadBalancer Configuration**
 
-  ```yaml
-  spec:
-    beSpec:
-      service:
-        type: LoadBalancer
-  ```
+```yaml
+spec:
+  beSpec:
+    service:
+      type: LoadBalancer
+```
+
+Cloud load balancers are usually configured through Service annotations, for example to create an internal load balancer. Add the annotations required by your cloud provider in `feSpec.service.annotations` and `beSpec.service.annotations`.
 
 #### Step 2: Get the Service
 
-After deploying the cluster, run the following command to view the `Service` that can access `Doris`:
+After deploying the cluster, run the following command to view the Services:
 
 ```shell
-kubectl get service
+kubectl -n doris get svc
 ```
 
 The result is as follows:
 
-```shell
+```text
 NAME                              TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                                                       AGE
-kubernetes                        ClusterIP      10.152.183.1     <none>                                                                          443/TCP                                                       169d
 doriscluster-sample-fe-internal   ClusterIP      None             <none>                                                                          9030/TCP                                                      2d
 doriscluster-sample-fe-service    LoadBalancer   10.152.183.58    ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com         8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 doriscluster-sample-be-internal   ClusterIP      None             <none>                                                                          9050/TCP                                                      2d
 doriscluster-sample-be-service    LoadBalancer   10.152.183.244   ac4828493dgrftb884g67wg4tb68gyut-1137823345.us-east-1.elb.amazonaws.com         9060:30940/TCP,8040:32713/TCP,9050:30621/TCP,8060:30926/TCP   2d
 ```
 
+`EXTERNAL-IP` is the address assigned by the load balancer. In `PORT(S)`, `9030:31545/TCP` means that the load balancer listens on Service port 9030, and 31545 is the node port that is allocated at the same time.
+
+If `EXTERNAL-IP` stays `<pending>`, the load balancer has not been created successfully. Run `kubectl -n doris describe svc doriscluster-sample-fe-service` to view the Events. If the cluster has no load balancer controller, the Events are empty and `EXTERNAL-IP` stays `<pending>`.
+
 #### Step 3: Access in LoadBalancer Mode
 
-Take MySQL connection as an example:
+Connect with `EXTERNAL-IP` and Service port 9030, not node port 31545:
 
 ```shell
-mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 31545 -uroot
+mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 9030 -uroot
 ```
+
+:::caution Caution
+Before exposing Doris outside the Kubernetes cluster, [set a password for the root user](#set-the-root-user-password-after-cluster-deployment), and restrict the allowed source addresses with the security groups or access control lists of your cloud provider.
+:::
 
 ## Configure Admin Username and Password
 
-Doris node management requires connecting to a live FE node via the MySQL protocol with a username and password. Doris implements an [RBAC-like permission management mechanism](../../../admin-manual/auth/authentication-and-authorization). Node management requires the user to have [Node_priv](../../../admin-manual/auth/authentication-and-authorization#permission-types) privilege. By default, Doris Operator deploys and manages the cluster configured by the DorisCluster resource using the root user with all privileges and no password. After a password is set for the root user, you must explicitly configure a username and password with Node_Priv privilege in the DorisCluster resource so that Doris Operator can perform automated management on the cluster.
+Doris node management requires connecting to a live FE node via the MySQL protocol with a username and password. Doris implements an [RBAC-like permission management mechanism](../../../admin-manual/auth/authentication-and-authorization). Node management requires the user to have [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions) privilege. By default, Doris Operator deploys and manages the cluster configured by the DorisCluster resource using the root user with all privileges and no password. After a password is set for the root user, you must explicitly configure a username and password with Node_Priv privilege in the DorisCluster resource so that Doris Operator can perform automated management on the cluster.
 
 The DorisCluster resource provides two ways to configure the username and password used to manage cluster nodes: configuration via environment variables, and configuration via [Secret](https://kubernetes.io/docs/concepts/configuration/secret/). There are 3 scenarios for configuring the cluster admin username and password:
 
@@ -851,7 +864,7 @@ During the first deployment, if you do not set the root initialization password,
 
 ### Set the Root User Password After Cluster Deployment
 
-After a Doris cluster is deployed, if no password has been set for the root user, you need to configure a user with [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#permission-types) privilege so that Doris Operator can manage cluster nodes automatically. It is recommended not to use the root user. Refer to the [user creation and privilege grant section](../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant Node_priv privilege. After creating the user, configure the new admin user and password via environment variables or a Secret, and set them in the DorisCluster resource.
+After a Doris cluster is deployed, if no password has been set for the root user, you need to configure a user with [Node_priv](../../../admin-manual/auth/authentication-and-authorization.md#types-of-permissions) privilege so that Doris Operator can manage cluster nodes automatically. It is recommended not to use the root user. Refer to the [user creation and privilege grant section](../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant Node_priv privilege. After creating the user, configure the new admin user and password via environment variables or a Secret, and set them in the DorisCluster resource.
 
 #### Step 1: Create a User With Node_priv Privilege
 
@@ -973,7 +986,7 @@ Doris Operator uses a `ConfigMap` resource to mount the krb5.conf file, and a `S
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-   ${krb5ConfigMapName} is the name of the ConfigMap that contains the `krb5.conf` file to use. ${keytabSecretName} is the name of the Secret that contains the keytab file. ${keytabPath} is the path where the Secret is mounted into the container. This path is the directory where the keytab file resides, as specified by `hadoop.kerberos.keytab` when creating the catalog. For creating a catalog, refer to the [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.mdx#configure-catalog) documentation.
+   ${krb5ConfigMapName} is the name of the ConfigMap that contains the `krb5.conf` file to use. ${keytabSecretName} is the name of the Secret that contains the keytab file. ${keytabPath} is the path where the Secret is mounted into the container. This path is the directory where the keytab file resides, as specified by `hadoop.kerberos.keytab` when creating the catalog. For creating a catalog, refer to the [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.mdx#configuring-catalog) documentation.
 
 ## Configure Shared Storage
 Starting from version 25.4.0, Doris Operator supports mounting a `ReadWriteMany` shared storage to all Pods of multiple components. Before use, create the shared storage `PersistentVolume` and `PersistentVolumeClaim` resources in advance. Configure the `DorisCluster` resource as follows before deploying the Doris cluster:
