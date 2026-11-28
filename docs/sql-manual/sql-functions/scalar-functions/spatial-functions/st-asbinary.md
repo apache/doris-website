@@ -29,7 +29,8 @@ under the License.
 
 Converts a geometric object into a standard WKB (Well-Known Binary) binary representation. WKB is a binary format for representing geospatial data, widely used in Geographic Information Systems (GIS).
 
-Currently supported geometric types include: Point, LineString, and Polygon.
+The description and examples below use string-encoded Point, LineString, and Polygon values. For native spatial types, see [Typed Geometry and Geography](#typed-spatial).
+
 ## Syntax
 
 ```sql
@@ -44,7 +45,7 @@ ST_ASBINARY( <geo>)
 
 ## Return Value
 
-Returns the WKB binary representation of the geometric object, displayed as a hexadecimal string (e.g., \x01010000...).
+For the legacy STRING input, returns a `VARCHAR` representation, such as `\x01010000...`.
 
 ST_ASBINARY has the following edge cases:
 
@@ -119,3 +120,18 @@ mysql> SELECT ST_AsBinary(NULL);
 +-------------------+
 ```
 
+## Typed Geometry and Geography {#typed-spatial}
+
+The development version of Doris returns the original ISO WKB as `VARBINARY`. It accepts the seven basic WKB shapes, including values with Z or M coordinates and `EMPTY`. A `NULL` input returns `NULL`. See [Iceberg spatial types](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types).
+
+Use `HEX` to display the returned bytes. This example constructs the point `(1, 2)` from WKB and reads back the same bytes.
+
+```sql
+SELECT HEX(ST_AsBinary(ST_GeometryFromWKBTyped(
+    '0101000000000000000000F03F0000000000000040'
+))) AS wkb_hex;
+```
+
+```text
+0101000000000000000000F03F0000000000000040
+```

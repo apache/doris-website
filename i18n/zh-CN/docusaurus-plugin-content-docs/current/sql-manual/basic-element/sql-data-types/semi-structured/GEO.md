@@ -7,7 +7,7 @@
 ---
 
 :::info
-本文档所述的 GEO 类型，在 Doris 中并非一种实际的数据类型，而是基于 String/Varchar 类型存储的特定格式数据及配套函数用法。
+本页介绍如何用 `STRING`、`VARCHAR` 保存空间数据并调用原有空间函数。开发版的原生 `GEOMETRY` 和 `GEOGRAPHY` 用法见 [Iceberg V3 空间类型](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types)。
 :::
 
 

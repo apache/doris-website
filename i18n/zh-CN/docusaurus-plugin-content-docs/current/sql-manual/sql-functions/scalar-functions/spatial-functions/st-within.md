@@ -32,6 +32,8 @@ under the License.
 
 ## 描述
 
+以下说明和示例适用于空间构造函数返回的字符串编码值。原生空间类型的用法见 [原生 GEOGRAPHY](#typed-geography)。
+
 判断一个几何图形（shape1）是否完全位于另一个几何图形（shape2）的内部。若 shape1 的所有点都位于 shape2 内部，则返回 1；否则返回 0。
 
 `ST_WITHIN(shape1, shape2)` 在逻辑上等价于 `ST_CONTAINS(shape2, shape1)`。
@@ -194,3 +196,13 @@ SELECT ST_Within(ST_Point(0.5, 0.5), ST_Polygon("POLYGON ((0 0, 1 1, 0 1, 1 0, 0
 |                                                                              NULL |
 +-----------------------------------------------------------------------------------+
 ```
+
+## 原生 GEOGRAPHY {#typed-geography}
+
+Doris 开发版支持默认 `GEOGRAPHY('OGC:CRS84', 'spherical')` 的二维点、线和多边形，可任意两两组合。传入 `EMPTY` 会报错，任一参数为 `NULL` 时返回 `NULL`。
+
+第二个形状覆盖第一个形状的所有点，且两者内部相交时，返回 `true`。`ST_Within(a, b)` 与 `ST_Contains(b, a)` 使用同一判断规则。
+
+球面计算规则和精度限制见 [空间函数](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-functions)。
+
+参见 [线段端点示例](st-contains.md#geography-boundary-example)。

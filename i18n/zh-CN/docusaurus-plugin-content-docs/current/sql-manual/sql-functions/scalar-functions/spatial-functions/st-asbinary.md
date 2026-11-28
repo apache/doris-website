@@ -30,7 +30,7 @@ under the License.
 
 将一个几何图形转换为标准的 WKB (Well-Known Binary) 二进制表示形式。WKB 是一种用于表示地理空间数据的二进制格式，广泛应用于地理信息系统 (GIS) 中。
 
-目前支持的几何图形类型包括：Point（点）、LineString（线）、Polygon（多边形）
+以下说明和示例使用字符串编码的点、线和多边形。原生空间类型的用法见 [原生 GEOMETRY 和 GEOGRAPHY](#typed-spatial)。
 
 ## 语法
 
@@ -46,7 +46,7 @@ ST_ASBINARY( <geo>)
 
 ## 返回值
 
-返回该几何图形的 WKB 二进制表示，以十六进制字符串形式展示（例如：\x01010000...）。
+对于原有 STRING 输入，返回 WKB 的 `VARCHAR` 表示，例如 `\x01010000...`。
 
 ST_ASBINARY 存在以下边缘情况：
 
@@ -121,3 +121,18 @@ mysql> SELECT ST_AsBinary(NULL);
 +-------------------+
 ```
 
+## 原生 GEOMETRY 和 GEOGRAPHY {#typed-spatial}
+
+Doris 开发版以 `VARBINARY` 返回空间值的原始 ISO WKB。支持七种基础形状，包括带 Z 或 M 坐标的值和 `EMPTY`。输入为 `NULL` 时返回 `NULL`。参见 [Iceberg 空间类型](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types)。
+
+用 `HEX` 查看返回的字节。下面将点 `(1, 2)` 的 WKB 写入空间值，再读回相同的字节。
+
+```sql
+SELECT HEX(ST_AsBinary(ST_GeometryFromWKBTyped(
+    '0101000000000000000000F03F0000000000000040'
+))) AS wkb_hex;
+```
+
+```text
+0101000000000000000000F03F0000000000000040
+```
